@@ -1,0 +1,35 @@
+## date
+2026-11-18T16:00:09Z
+## iot hubs in rg
+WARNING: The behavior of this command has been altered by the following extension: azure-iot
+[
+  {
+    "cap": 1,
+    "n": "iot-cutover-test-rzsrg",
+    "owner": "[name removed]",
+    "purpose": "non-production-demonstrator",
+    "sku": "B1",
+    "state": "Active"
+  }
+]
+## iot budget
+budget-forward-test amount 300.0 Monthly spend 90.61 {'actual80': ('80.0', 'GreaterThan', True, 1), 'forecast100': ('100.0', 'GreaterThan', True, 1)}
+budget-cutover-test amount 300.0 Monthly spend 90.61 {'actual80': ('80.0', 'GreaterThan', True, 1), 'forecast100': ('100.0', 'GreaterThan', True, 1)}
+budget-iot-cutover-test-rzsrg amount 25.0 Monthly spend 5.48 {'actual80': ('80.0', 'GreaterThan', True, 1), 'forecast100': ('100.0', 'GreaterThan', True, 1)}
+## sim jobs
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+job-cutover-test-init
+job-cutover-test-verify
+job-cutover-test-ledger-verify
+job-cutover-test-import
+job-cutover-test-orchestrator
+job-cutover-test-smoke
+job-cutover-test-mi-http
+job-cutover-test-public-audit
+## sim env on demo api
+(no ZF_SIM/CONTROL/LIVE setting)
+## action groups
+N                                     E
+------------------------------------  ----
+ag-cutover-test-ops                   True
+Application Insights Smart Detection  True

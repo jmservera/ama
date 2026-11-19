@@ -14,9 +14,10 @@ import threading
 import time
 import uuid
 from collections.abc import Mapping
-from contextlib import contextmanager
 from copy import deepcopy
+import contextvars
 from datetime import date, datetime, timezone
+from contextlib import contextmanager
 from typing import Any
 
 from . import assistant_release as rel
@@ -35,6 +36,7 @@ from . import (
     rai_release,
     sensor_map,
     sensor_view,
+    telemetry,
 )
 from zava_forward.core.ai import FORBIDDEN, Ai
 from zava_forward.core.regulatory_output_guard import (
@@ -1447,6 +1449,14 @@ class Assistants:
 
     @contextmanager
     def transaction(self):
+        with telemetry.operation("db.transaction") as observation:
+            if observation.span is not None:
+                observation.span.set_attribute("db.system.name", "microsoft.sql_server" if self.mssql else "sqlite")
+            with self._transaction() as db:
+                yield db
+
+    @contextmanager
+    def _transaction(self):
         db = self.store.assistant_connection()
         try:
             if self.mssql:
@@ -1477,10 +1487,10 @@ class Assistants:
         return float(db.execute(query).fetchone()[0])
 
     def event(self, db, tid, **body):
-        db.execute(
-            "INSERT INTO assistant_events (id, task_id, at, body) VALUES (?,?,?,?)",
-            (uuid.uuid4().hex, tid, self.now(db), canonical(body)),
-        )
+        if correlation := telemetry.correlation():
+            body["trace_context"] = correlation
+        db.execute("INSERT INTO assistant_events (id, task_id, at, body) VALUES (?,?,?,?)",
+                   (uuid.uuid4().hex, tid, self.now(db), canonical(body)))
 
     def authorize(self, db, user, capability, case_id=None):
         if capability not in REGISTRY:
@@ -1935,6 +1945,10 @@ class Assistants:
         return None
 
     def _enqueue(self, db, capability, c, mode, actor, replaced=None):
+        with telemetry.operation("messaging.publish", backend="other_sql"):
+            return self._enqueue_task(db, capability, c, mode, actor, replaced)
+
+    def _enqueue_task(self, db, capability, c, mode, actor, replaced=None):
         if denial := self.quality_scope_denial(capability, c["id"], mode != "proactive"):
             raise ValueError(denial)
         snapshot = self.snapshot(db, capability, c)
@@ -1946,25 +1960,13 @@ class Assistants:
         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
         if row is None:
             reason = self.disabled(db, capability)
-            body = dict(
-                id=tid,
-                capability=capability,
-                version=VERSION,
-                case_id=c["id"],
-                proposal_identity=identity,
-                source_signature=signature_,
-                snapshot=snapshot,
-                output=None,
-                verification=None,
-                review=None,
-                envelope=None,
-                manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
-                release=release,
-                reason=reason,
-                continuity_epoch=epoch,
-                created_at=self.now(db),
-                manual_requested=mode != "proactive",
-            )
+            body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
+                        source_signature=signature_, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
+                        manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
+                        release=release, reason=reason, continuity_epoch=epoch, created_at=self.now(db),
+                        manual_requested=mode != "proactive")
+            if traceparent := telemetry.carrier():
+                body["traceparent"] = traceparent
             state = "disabled" if reason else "pending"
             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
                 state, body["reason"] = (
@@ -3571,8 +3573,14 @@ class Assistants:
         if task is None:
             self.call_slots.release()
             return False
+        with telemetry.operation("invoke_workflow", parent=task.get("traceparent"),
+                                 capability=task["capability"]) as observation:
+            return self._execute_claimed(task, observation)
+
+    def _execute_claimed(self, task, observation):
         system, prompt = build_request(task)
         if len(system) + len(prompt) > self.limits.input_chars:
+            observation.fail("rejected")
             self.call_slots.release()
             return self.complete(
                 task,
@@ -3647,6 +3655,7 @@ class Assistants:
                     "not sent. Use the manual route."
                 )
         if held:
+            observation.fail("rejected")
             self.call_slots.release()
             return self.complete(
                 task,
@@ -3658,8 +3667,10 @@ class Assistants:
             with self.dispatch_lock:
                 stopped = self.stop_event.is_set()
                 if not stopped:
-                    threading.Thread(target=call, daemon=True, name="retrofit-provider").start()
+                    thread_context = contextvars.copy_context()
+                    threading.Thread(target=thread_context.run, args=(call,), daemon=True, name="retrofit-provider").start()
         except RuntimeError:
+            observation.fail()
             self.call_slots.release()
             return self.complete(
                 task,
@@ -3668,6 +3679,7 @@ class Assistants:
                 "Provider dispatch unavailable; use manual work.",
             )
         if stopped:
+            observation.fail("cancelled")
             self.call_slots.release()
             return self.complete(
                 task,
@@ -3686,6 +3698,8 @@ class Assistants:
         envelope, output, failure = shape_result(
             task, result, self.limits, guard_telemetry=self.guard_telemetry
         )
+        if failure:
+            observation.fail("timeout" if result.get("outcome") == "timeout" else "error")
         try:
             self._guard_local.already_guarded = True
             try:
@@ -3695,12 +3709,8 @@ class Assistants:
         except Exception:
             # Completion acknowledgement may have been lost. Never dispatch the provider again here.
             with self.transaction() as db:
-                current = self._row(db, tid)
-                return current["fence"] == task["fence"] and current["state"] in (
-                    "ready",
-                    "failed",
-                    "pending",
-                )
+                current = self._row(db, task["id"])
+                return current["fence"] == task["fence"] and current["state"] in ("ready", "failed", "pending")
 
     def review(self, user, tid, action, revision, note="", output=None, source_verified=False):
         if not self.sql:

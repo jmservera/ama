@@ -1,0 +1,184 @@
+== ca-cutover-test-demo-api
+{
+  "active": "ca-cutover-test-demo-api--0000031",
+  "containers": [
+    {
+      "env": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING",
+        "OTEL_SERVICE_NAMESPACE",
+        "AZURE_CLIENT_ID",
+        "SQL_SERVER",
+        "SQL_DATABASE",
+        "BLOB_ENDPOINT",
+        "QUEUE_ENDPOINT",
+        "KEY_VAULT_URI",
+        "EVIDENCE_STORE",
+        "SHAREPOINT_SITE_ID",
+        "ZF_TILE_URL",
+        "ZF_TILE_ATTRIBUTION",
+        "ZF_STORE",
+        "ZF_SQL_SERVER",
+        "ZF_SQL_DATABASE",
+        "ZF_SQL_AUTH",
+        "ZF_SQL_CLIENT_ID",
+        "ZF_DOC_STORE",
+        "ZF_BLOB_ACCOUNT_URL",
+        "ZF_BLOB_CONTAINER",
+        "ZF_BLOB_CLIENT_ID",
+        "ZF_AUTH",
+        "ZF_TRUSTED_PROXY",
+        "ZF_ENV",
+        "ZF_ENTRA_TENANT_ID",
+        "ENTRA_TENANT_ID",
+        "ENTRA_CLIENT_ID",
+        "AI_ENDPOINT",
+        "AI_DEPLOYMENT",
+        "AI_DEPLOYMENT_STRONG",
+        "CHAT_DPIA_REF",
+        "CHAT_LAWFUL_BASIS_REF",
+        "CHAT_NOTICE_REF",
+        "CHAT_RETENTION_REF",
+        "CHAT_RETENTION_DAYS",
+        "ZF_CHAT_DEMO_ACTIVATION",
+        "ZF_DEPLOYMENT_PROFILE",
+        "AI_MODEL_VERSION",
+        "AI_MODEL_VERSION_STRONG"
+      ],
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+      "n": "api",
+      "probes": [
+        "Liveness",
+        "Readiness",
+        "Startup"
+      ],
+      "res": {
+        "cpu": 0.5,
+        "ephemeralStorage": "2Gi",
+        "memory": "1Gi"
+      }
+    }
+  ],
+  "mode": "Single",
+  "rev": "ca-cutover-test-demo-api--0000031",
+  "scale": {
+    "cooldownPeriod": 300,
+    "maxReplicas": 4,
+    "minReplicas": 0,
+    "pollingInterval": 30,
+    "rules": [
+      {
+        "http": {
+          "metadata": {
+            "concurrentRequests": "50"
+          }
+        },
+        "name": "http"
+      }
+    ]
+  },
+  "securityContext": null,
+  "volumes": null
+}
+== ca-resident-demo
+{
+  "active": "ca-resident-demo--0000012",
+  "containers": [
+    {
+      "env": [
+        "ZF_DEMO_EXPIRES_AT",
+        "ZF_DEMO_ALLOWED_HOSTS",
+        "ZF_DEMO_CLIENT_ADDRESS",
+        "ZF_DEMO_PASSWORD_VERIFIER",
+        "ZF_DEMO_SESSION_KEY",
+        "ZF_SQL_AUTH",
+        "ZF_SQL_CLIENT_ID",
+        "ZF_SQL_SERVER",
+        "ZF_SQL_DATABASE",
+        "PORT",
+        "CHAT_DPIA_REF",
+        "CHAT_LAWFUL_BASIS_REF",
+        "CHAT_NOTICE_REF",
+        "CHAT_RETENTION_REF",
+        "CHAT_RETENTION_DAYS"
+      ],
+      "image": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19",
+      "n": "resident-demo",
+      "probes": [
+        "Liveness",
+        "Readiness",
+        "Startup"
+      ],
+      "res": {
+        "cpu": 0.25,
+        "ephemeralStorage": "1Gi",
+        "memory": "0.5Gi"
+      }
+    }
+  ],
+  "mode": "Single",
+  "rev": "ca-resident-demo--0000012",
+  "scale": {
+    "cooldownPeriod": 300,
+    "maxReplicas": 1,
+    "minReplicas": 0,
+    "pollingInterval": 30,
+    "rules": null
+  },
+  "securityContext": null,
+  "volumes": null
+}
+== ca-cutover-test-agents
+{
+  "active": "ca-cutover-test-agents--0000001",
+  "containers": [
+    {
+      "env": [
+        "APPLICATIONINSIGHTS_CONNECTION_STRING",
+        "OTEL_SERVICE_NAMESPACE",
+        "AZURE_CLIENT_ID",
+        "FOUNDRY_ENDPOINT",
+        "FOUNDRY_PROJECT",
+        "MODEL_DEPLOYMENT_DEFAULT",
+        "MODEL_DEPLOYMENT_CAPABLE",
+        "QUEUE_ENDPOINT",
+        "TASK_QUEUE",
+        "POISON_QUEUE",
+        "API_BASE_URL",
+        "API_AUDIENCE"
+      ],
+      "image": "crcutovertestrzsrg.azurecr.io/zava-forward-agents@sha256:2217d94d1c23e0e076d22d09896781a0c64581fe2eb4de547bf7fe919d56ebae",
+      "n": "agents",
+      "probes": null,
+      "res": {
+        "cpu": 0.5,
+        "ephemeralStorage": "2Gi",
+        "memory": "1Gi"
+      }
+    }
+  ],
+  "mode": "Single",
+  "rev": "ca-cutover-test-agents--0000001",
+  "scale": {
+    "cooldownPeriod": 300,
+    "maxReplicas": 5,
+    "minReplicas": 0,
+    "pollingInterval": 30,
+    "rules": [
+      {
+        "custom": {
+          "identity": "/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents",
+          "metadata": {
+            "accountName": "stcutovertestrzsrg",
+            "cloud": "AzurePublicCloud",
+            "queueLength": "5",
+            "queueName": "agent-tasks"
+          },
+          "type": "azure-queue"
+        },
+        "name": "agent-task-queue"
+      }
+    ]
+  },
+  "securityContext": null,
+  "volumes": null
+}

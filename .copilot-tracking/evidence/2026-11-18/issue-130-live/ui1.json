@@ -1,0 +1,26 @@
+{
+ "me_status": 200,
+ "after_signin_url_path": "/app",
+ "resident_tab": 1,
+ "headings_with_referral": [
+  "Safety referrals and stopped retrofit work",
+  "Representative authority",
+  "Nominations and self-referrals",
+  "Challenge a suggestion or ask for a correction",
+  "Recorded challenges and resolutions"
+ ],
+ "forms": [
+  {
+   "id": "ru-record",
+   "fields": [
+    "purpose",
+    "owner",
+    "due_at",
+    "basis",
+    "safe_contact_ref",
+    "status"
+   ]
+  }
+ ],
+ "rep_selector_options": []
+}

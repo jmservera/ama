@@ -1,0 +1,80 @@
+# aif-cutover-test-rzsrg deployments
+[
+  {
+    "cap": 10,
+    "model": "gpt-4.1-nano",
+    "name": "standard",
+    "rate": [
+      {
+        "c": 10.0,
+        "k": "request",
+        "p": 60.0
+      },
+      {
+        "c": 10000.0,
+        "k": "token",
+        "p": 60.0
+      }
+    ],
+    "sku": "GlobalStandard",
+    "ver": "2025-04-14"
+  }
+]
+# aoai-resident-469 deployments
+[
+  {
+    "cap": 1,
+    "model": "gpt-4.1-mini",
+    "name": "resident-mini",
+    "rate": [
+      {
+        "c": 1.0,
+        "k": "request",
+        "p": 60.0
+      },
+      {
+        "c": 1000.0,
+        "k": "token",
+        "p": 60.0
+      }
+    ],
+    "sku": "Standard",
+    "ver": "2025-04-14"
+  }
+]
+# api config (non-secret)
+[
+  {
+    "n": "ZF_STORE",
+    "v": "mssql"
+  },
+  {
+    "n": "ZF_SQL_AUTH",
+    "v": "msi"
+  },
+  {
+    "n": "AI_ENDPOINT",
+    "v": "https://aif-cutover-test-rzsrg.openai.azure.com/"
+  },
+  {
+    "n": "AI_DEPLOYMENT",
+    "v": "standard"
+  },
+  {
+    "n": "AI_MODEL_VERSION",
+    "v": "gpt-4.1-nano-2025-04-14"
+  }
+]
+# catalog uksouth gpt-4.1-nano
+[
+  {
+    "retire": "2027-04-14T00:00:00Z",
+    "status": "Legacy",
+    "v": "2025-04-14"
+  },
+  {
+    "retire": "2027-04-14T00:00:00Z",
+    "status": "Legacy",
+    "v": "2025-04-14"
+  }
+]

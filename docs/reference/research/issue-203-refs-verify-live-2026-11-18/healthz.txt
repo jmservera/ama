@@ -1,0 +1,2 @@
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io 200
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io 200

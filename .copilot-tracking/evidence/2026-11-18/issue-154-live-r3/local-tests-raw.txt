@@ -1,0 +1,92 @@
+test_case_representative_view_enforces_role_scope_and_recorded_expiry (tests.test_representative_expiry_api.CaseRepresentativeViewApi.test_case_representative_view_enforces_role_scope_and_recorded_expiry) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 181, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 172, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 181, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 172, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 181, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 172, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 181, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-154-live-20261118T1730Z/src/api/src/zava_forward/api/server.py", line 172, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_mid_session_expiry_and_revocation_transition_open_session_and_block_actions (tests.test_representative_expiry_api.ResidentDemoRepresentativeExpiryApi.test_mid_session_expiry_and_revocation_transition_open_session_and_block_actions) ... ok
+test_task_limited_projection_scopes_view_assistant_and_agenda_isolation (tests.test_representative_expiry_api.ResidentDemoRepresentativeExpiryApi.test_task_limited_projection_scopes_view_assistant_and_agenda_isolation) ... ok
+test_assets_are_scriptless_inline_free_and_synthetic_labelled (tests.test_resident_demo_api.AbuseAndHardeningTests.test_assets_are_scriptless_inline_free_and_synthetic_labelled) ... ok
+test_concurrency_cap_returns_503_not_a_hang (tests.test_resident_demo_api.AbuseAndHardeningTests.test_concurrency_cap_returns_503_not_a_hang) ... ok
+test_error_bodies_never_echo_input (tests.test_resident_demo_api.AbuseAndHardeningTests.test_error_bodies_never_echo_input) ... ok
+test_expired_503_omits_retry_after_header (tests.test_resident_demo_api.AbuseAndHardeningTests.test_expired_503_omits_retry_after_header) ... ok
+test_healthz_is_ready_only_with_admitted_residents (tests.test_resident_demo_api.AbuseAndHardeningTests.test_healthz_is_ready_only_with_admitted_residents) ... ok
+test_host_header_must_be_allowlisted (tests.test_resident_demo_api.AbuseAndHardeningTests.test_host_header_must_be_allowlisted) ... ok
+test_ingress_mode_bad_header_uses_the_shared_peer_bucket (tests.test_resident_demo_api.AbuseAndHardeningTests.test_ingress_mode_bad_header_uses_the_shared_peer_bucket) ... ok
+test_ingress_mode_limits_each_trusted_client_separately (tests.test_resident_demo_api.AbuseAndHardeningTests.test_ingress_mode_limits_each_trusted_client_separately) ... ok
+test_limiter_blocks_after_five_failures_and_recovers (tests.test_resident_demo_api.AbuseAndHardeningTests.test_limiter_blocks_after_five_failures_and_recovers) ... ok
+test_one_slot_below_the_cap_still_admits_a_request (tests.test_resident_demo_api.AbuseAndHardeningTests.test_one_slot_below_the_cap_still_admits_a_request) ... ok
+test_overall_cap_still_blocks_every_source_and_is_a_documented_residual (tests.test_resident_demo_api.AbuseAndHardeningTests.test_overall_cap_still_blocks_every_source_and_is_a_documented_residual) ... ok
+test_retry_after_seconds_is_configurable_and_bounded (tests.test_resident_demo_api.AbuseAndHardeningTests.test_retry_after_seconds_is_configurable_and_bounded) ... ok
+test_security_headers_and_static_revalidation_policy (tests.test_resident_demo_api.AbuseAndHardeningTests.test_security_headers_and_static_revalidation_policy) ... ok
+test_sensor_times_use_uk_time_not_utc_jargon (tests.test_resident_demo_api.AbuseAndHardeningTests.test_sensor_times_use_uk_time_not_utc_jargon) ... ok
+test_shed_signed_in_view_carries_retry_guidance (tests.test_resident_demo_api.AbuseAndHardeningTests.test_shed_signed_in_view_carries_retry_guidance) ... ok
+test_shed_view_owns_every_slot_despite_delayed_login_release (tests.test_resident_demo_api.AbuseAndHardeningTests.test_shed_view_owns_every_slot_despite_delayed_login_release) ... ok
+test_sign_in_moves_focus_to_content_heading_and_announces (tests.test_resident_demo_api.AbuseAndHardeningTests.test_sign_in_moves_focus_to_content_heading_and_announces) ... ok
+test_sign_in_page_has_a_lede_for_signed_out_copy (tests.test_resident_demo_api.AbuseAndHardeningTests.test_sign_in_page_has_a_lede_for_signed_out_copy) ... ok
+test_sign_out_focuses_sign_in_heading_and_announces (tests.test_resident_demo_api.AbuseAndHardeningTests.test_sign_out_focuses_sign_in_heading_and_announces) ... ok
+test_slot_ownership_helper_releases_only_what_it_acquired (tests.test_resident_demo_api.AbuseAndHardeningTests.test_slot_ownership_helper_releases_only_what_it_acquired) ... ok
+test_spoofed_forwarded_headers_cannot_change_the_limiter_key (tests.test_resident_demo_api.AbuseAndHardeningTests.test_spoofed_forwarded_headers_cannot_change_the_limiter_key) ... ok
+test_unknown_methods_and_paths (tests.test_resident_demo_api.AbuseAndHardeningTests.test_unknown_methods_and_paths) ... ok
+test_app_does_not_import_the_loopback_preview_or_staff_surfaces (tests.test_resident_demo_api.BoundaryTests.test_app_does_not_import_the_loopback_preview_or_staff_surfaces) ... ok
+test_main_refuses_expired_window_without_echoing_values (tests.test_resident_demo_api.BoundaryTests.test_main_refuses_expired_window_without_echoing_values) ... ok
+test_main_refuses_without_configuration_and_with_mixed_staff_settings (tests.test_resident_demo_api.BoundaryTests.test_main_refuses_without_configuration_and_with_mixed_staff_settings) ... ok
+test_case_ids_and_identity_are_never_in_urls_or_query_choose_nothing (tests.test_resident_demo_api.SessionTests.test_case_ids_and_identity_are_never_in_urls_or_query_choose_nothing) ... ok
+test_changed_database_email_denies_old_and_new_email_and_live_sessions (tests.test_resident_demo_api.SessionTests.test_changed_database_email_denies_old_and_new_email_and_live_sessions) ... ok
+test_database_errors_are_503_with_no_detail (tests.test_resident_demo_api.SessionTests.test_database_errors_are_503_with_no_detail) ... request failed: RuntimeError
+request failed: RuntimeError
+ok
+test_each_resident_sees_only_their_own_case (tests.test_resident_demo_api.SessionTests.test_each_resident_sees_only_their_own_case) ... ok
+test_extended_authority_allows_january_and_stops_at_exact_february_boundary (tests.test_resident_demo_api.SessionTests.test_extended_authority_allows_january_and_stops_at_exact_february_boundary) ... ok
+test_logout_needs_csrf (tests.test_resident_demo_api.SessionTests.test_logout_needs_csrf) ... ok
+test_logout_revokes_and_replay_fails (tests.test_resident_demo_api.SessionTests.test_logout_revokes_and_replay_fails) ... ok
+test_no_cookie_and_forged_cookies_are_401 (tests.test_resident_demo_api.SessionTests.test_no_cookie_and_forged_cookies_are_401) ... ok
+test_other_residents_handle_in_a_forged_token_is_rejected (tests.test_resident_demo_api.SessionTests.test_other_residents_handle_in_a_forged_token_is_rejected) ... ok
+test_restart_invalidates_every_session (tests.test_resident_demo_api.SessionTests.test_restart_invalidates_every_session) ... ok
+test_revoked_or_expired_case_is_denied_on_the_next_request (tests.test_resident_demo_api.SessionTests.test_revoked_or_expired_case_is_denied_on_the_next_request) ... ok
+test_second_tab_does_not_break_first_tab_sign_out (tests.test_resident_demo_api.SessionTests.test_second_tab_does_not_break_first_tab_sign_out) ... ok
+test_session_expires_after_thirty_minutes (tests.test_resident_demo_api.SessionTests.test_session_expires_after_thirty_minutes) ... ok
+test_showcase_ends_at_expiry (tests.test_resident_demo_api.SessionTests.test_showcase_ends_at_expiry) ... ok
+test_account_identity_is_not_disclosed_after_authority_loss (tests.test_resident_demo_api.SignInTests.test_account_identity_is_not_disclosed_after_authority_loss) ... ok
+test_account_identity_is_own_canonical_email_after_reload (tests.test_resident_demo_api.SignInTests.test_account_identity_is_own_canonical_email_after_reload) ... ok
+test_content_type_and_body_size_are_enforced (tests.test_resident_demo_api.SignInTests.test_content_type_and_body_size_are_enforced) ... ok
+test_cookies_are_host_prefixed_secure_samesite_and_session_is_httponly (tests.test_resident_demo_api.SignInTests.test_cookies_are_host_prefixed_secure_samesite_and_session_is_httponly) ... ok
+test_email_is_canonicalised_at_login (tests.test_resident_demo_api.SignInTests.test_email_is_canonicalised_at_login) ... ok
+test_login_requires_csrf_and_same_origin (tests.test_resident_demo_api.SignInTests.test_login_requires_csrf_and_same_origin) ... ok
+test_login_shows_only_own_allowlisted_view (tests.test_resident_demo_api.SignInTests.test_login_shows_only_own_allowlisted_view) ... ok
+test_malformed_bodies_are_refused_without_a_session (tests.test_resident_demo_api.SignInTests.test_malformed_bodies_are_refused_without_a_session) ... ok
+test_sensor_history_is_session_owned_and_rechecked (tests.test_resident_demo_api.SignInTests.test_sensor_history_is_session_owned_and_rechecked) ... ok
+test_session_and_view_surface_agenda_availability_and_agenda_endpoint_fails_closed (tests.test_resident_demo_api.SignInTests.test_session_and_view_surface_agenda_availability_and_agenda_endpoint_fails_closed) ... ok
+test_wrong_password_unknown_email_and_other_domain_get_the_same_401 (tests.test_resident_demo_api.SignInTests.test_wrong_password_unknown_email_and_other_domain_get_the_same_401) ... ok
+
+----------------------------------------------------------------------
+Ran 53 tests in 37.121s
+
+OK

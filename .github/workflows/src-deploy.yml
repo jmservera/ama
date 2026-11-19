@@ -63,7 +63,7 @@ jobs:
         id: build
         env:
           PROJECT: ${{ matrix.project }}
-        run: docker build -f "src/$PROJECT/Dockerfile" -t "zava-forward-$PROJECT:release" src
+        run: docker build -f "src/$PROJECT/Dockerfile" --build-arg "ZF_BUILD_COMMIT=$GITHUB_SHA" -t "zava-forward-$PROJECT:release" src
       - name: Hardened and plain non-root startup checks without cloud credentials
         env:
           PROJECT: ${{ matrix.project }}

@@ -1,0 +1,42 @@
+http-response GET /api/assistants/simulation/quality status=503
+http-error GET /api/assistants/simulation/quality client-disconnect exc=BrokenPipeError phase=response-write
+http-response GET /api/assistants/proposals status=503
+http-error GET /api/assistants/proposals client-disconnect exc=BrokenPipeError phase=response-write
+http-response GET /api/assistants status=503
+http-error GET /api/assistants client-disconnect exc=BrokenPipeError phase=response-write
+http-response GET /api/assistants/proposals status=503
+http-error GET /api/assistants/proposals client-disconnect exc=BrokenPipeError phase=response-write
+PASS authorised Quality request reaches the mock provider
+PASS captured model snapshot holds retained readings
+PASS displayed reading IDs and values equal the captured model snapshot
+PASS draft section is absent while the default-off flag is unset
+PASS empty draft state has no write control
+PASS synthetic-approval draft is stored for the check
+PASS draft markup renders as text
+PASS draft shows no write control
+PASS draft screen shows no sentinel approval reference
+PASS draft has semantic list and time elements
+PASS withheld consent hides the saved draft content
+PASS unauthorised role sees no draft section
+PASS unauthorised role read is denied
+PASS attributed unapproved flag cites readings the model was given
+PASS flag offers no approval control
+PASS withheld consent shows no readings table
+PASS withheld current capture is not reported as missing readings
+PASS stale readings are labelled stale, not live
+PASS unavailable readings are explicit, not an empty normal state
+PASS unavailable current capture is unknown, not missing
+PASS simulation panel is labelled synthetic
+PASS simulation UI readings equal the stored simulation readings
+PASS the guarded-off real-provider route refuses and points to the manual route
+PASS a refused simulation request stores no proposal
+PASS no accept control in the simulation
+PASS the stored proposal says how many readings it was given and how many it cited
+PASS a proposal citing only the home reports zero cited sensor readings
+PASS an empty finding list is stated, not shown as an empty list
+PASS one cited reading of twelve is reported as one of twelve
+PASS the historic request keeps its supplied and cited readings after rotation
+PASS denied role sees no readings
+PASS sensor API denies the same role
+PASS no page errors
+33 checks passed

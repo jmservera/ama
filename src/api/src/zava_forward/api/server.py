@@ -22,11 +22,11 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
-from zava_forward.api import auth, plain_language, sensor_badges, simulator_admin
+from zava_forward.api import auth, build_info, plain_language, sensor_badges, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
-from zava_forward.core import sensor_review_draft, simulation_lane
+from zava_forward.core import sensor_review_draft, simulation_lane, telemetry
 from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
@@ -746,6 +746,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             pass
 
         def send_response(self, code, message=None):
+            if observation := getattr(self, "_telemetry_observation", None):
+                observation.http_status(code)
             try:
                 path = urlparse(getattr(self, "path", "")).path
             except ValueError:
@@ -765,6 +767,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if ok and self._has_body():
                 # Assume the body stays unread (every method) so it can never be parsed as the next pipelined request; _body() lifts this once it has read it.
                 self.close_connection = True
+            if ok:
+                scope = telemetry.operation("http.server", root=True,
+                                            parent=self.headers.get("traceparent"), method=self.command)
+                self._telemetry_observation = scope.__enter__()
+                self._telemetry_scope = scope
             return ok
 
         def _has_body(self):
@@ -776,13 +783,24 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return True
 
         def handle_one_request(self):
+            self._telemetry_scope = None
+            self._telemetry_observation = None
             self._response_started = False
             self._request_parsed = False
             self._body_read_failed = False
             try:
                 super().handle_one_request()
             except Exception as exc:
+                if self._telemetry_observation:
+                    self._telemetry_observation.fail()
                 self._unhandled(exc)
+            finally:
+                if self._telemetry_scope is not None:
+                    if "http.response.status_code" not in self._telemetry_observation.attributes:
+                        self._telemetry_observation.fail()
+                    self._telemetry_scope.__exit__(None, None, None)
+                self._telemetry_observation = None
+                self._telemetry_scope = None
 
         def _unhandled(self, exc):
             """Log class, status, path and the raising frame only (never the message, query, headers or tokens) and answer with a plain 500."""
@@ -2329,6 +2347,14 @@ def main() -> None:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
         raise SystemExit(2) from None
     install_diagnostic_redaction()
+    telemetry.initialize("zava-forward-api")
+    try:
+        _serve()
+    finally:
+        telemetry.shutdown()
+
+
+def _serve() -> None:
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:
         store = open_store()
@@ -2338,6 +2364,7 @@ def main() -> None:
     app = App(store, password, law=law)
     host, port = os.environ.get("ZF_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Zava Forward is running at http://{host}:{port}")
+    print(build_info.startup_line(), flush=True)
     if app.provider.name == "password" and not os.environ.get("ZF_PASSWORD"):
         print(f"Sign in with any staff email and the password {password}")
     app.assistants.start()

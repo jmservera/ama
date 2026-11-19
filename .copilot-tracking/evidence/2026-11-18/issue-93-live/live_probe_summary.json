@@ -1,0 +1,55 @@
+{
+ "role": "Retrofit Programme Manager",
+ "identity_source": "entra",
+ "finance_rows": 13,
+ "finance_status": {
+  "Received": 7,
+  "Exceptions": 6
+ },
+ "finance_on_hold": 6,
+ "finance_keys": [
+  "address",
+  "case_id",
+  "exceptions",
+  "invoice",
+  "on_hold",
+  "ref",
+  "status",
+  "supplier",
+  "total"
+ ],
+ "funding_rows": 167,
+ "funding_status": {
+  "Draft ready": 1,
+  "To prepare": 25,
+  "Not started": 141
+ },
+ "funding_grants_values": {
+  "Not recorded": 4,
+  "No grant record": 163
+ },
+ "exposure": {
+  "status": "Held",
+  "signal": "Pause for human decision",
+  "reason": "No person-approved envelope or tolerances are recorded.",
+  "findings": [],
+  "notice": "Signal for a human decision only. It does not approve, resume or accelerate delivery, and it does not contain or release live activity.",
+  "pause_signal": {
+   "paused": true,
+   "decision_required": true,
+   "decision_owner": null,
+   "automatic_cut": false,
+   "reason": "No person-approved envelope or tolerances are recorded."
+  }
+ },
+ "form_schemas": {
+  "schemas": []
+ },
+ "http": {
+  "/api/me": 200,
+  "/api/finance": 200,
+  "/api/finance/exposure": 200,
+  "/api/funding": 200,
+  "/api/form-schemas": 200
+ }
+}

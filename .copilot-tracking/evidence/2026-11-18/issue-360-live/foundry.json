@@ -1,0 +1,10 @@
+[
+  {
+    "n": "aoai-resident-469",
+    "pub": "Enabled"
+  },
+  {
+    "n": "aif-cutover-test-rzsrg",
+    "pub": "Disabled"
+  }
+]

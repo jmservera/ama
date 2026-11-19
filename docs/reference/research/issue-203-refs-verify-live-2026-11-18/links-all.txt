@@ -1,0 +1,1 @@
+references: 20 violation(s); links: 3585 violation(s) in 13465 document(s) (--all-links, informational, run at a39ae2339 before the fix; per-link list not retained because it would quote retired paths)

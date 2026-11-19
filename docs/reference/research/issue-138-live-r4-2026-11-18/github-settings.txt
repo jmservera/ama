@@ -1,0 +1,26 @@
+# variables
+GH_AW_DEFAULT_MAX_DAILY_AI_CREDITS
+# secrets
+COPILOT_GITHUB_TOKEN
+# runners
+0
+# environments
+copilot	0	true
+dev-plan	0	true
+pilot-plan	0	true
+test-plan	0	true
+# runs infra-plan.yml
+2510
+44293131828	workflow_run	skipped	2026-11-18T11:16:09Z
+44269823449	workflow_run	skipped	2026-11-18T08:46:05Z
+44264773475	workflow_run	skipped	2026-11-18T08:10:47Z
+# runs src-deploy.yml
+0
+# deploy envs referenced
+        environment: [dev, test, pilot]
+      environment:
+    environment: ${{ inputs.environment }}
+    environment: ${{ inputs.environment }}-release
+    environment: ${{ matrix.environment }}-plan
+# workflow blobs/last change
+197e5e3c6 Wed Oct 28 11:30:42 2026 +0100

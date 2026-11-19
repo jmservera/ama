@@ -1,0 +1,4 @@
+anon curl /api/me 401
+anon curl /api/cases 401
+forged principal+role curl /api/me 401
+healthz 200

@@ -1,0 +1,8 @@
+{
+  "softDelete": {
+    "allowPermanentDelete": false,
+    "days": 30,
+    "enabled": true
+  },
+  "versioning": true
+}

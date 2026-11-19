@@ -1,0 +1,44 @@
+{
+ "anon_api": {
+  "/healthz": 200,
+  "/": 200,
+  "/welcome.html": 200,
+  "/api/me": 302,
+  "/api/cases": 302,
+  "/app": 302
+ },
+ "anon_browser_mode_json": {
+  "/api/me": 302,
+  "/api/cases": 302
+ },
+ "staff": {
+  "redirect_host": "login.microsoftonline.com",
+  "returned_to_app": true,
+  "app_title": "Zava Forward | Zava North Homes",
+  "me_status": 200,
+  "me": {
+   "role": "Retrofit Programme Manager",
+   "app_roles": [
+    "ZavaForward.ProgrammeManager"
+   ],
+   "view_only": false,
+   "identity_source": "entra"
+  },
+  "probes": {
+   "/api/cases?view=all": 200,
+   "/api/stats": 200,
+   "/api/sensors": 403,
+   "/api/chat/status": 200,
+   "/healthz": 200
+  },
+  "cases_total": 443,
+  "forged_role_header": [
+   200
+  ],
+  "post_with_session_no_csrf": 403
+ },
+ "resident": {
+  "redirect_host": "login.microsoftonline.com",
+  "error": "TimeoutError: Page.click: Timeout 30000ms exceeded.\nCall log:\n  - waiting for locator(\"#idSIButton9\")\n    - locator resolved to <input disabled value=\"Nex"
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "role": "Retrofit Programme Manager",
+ "identity_source": "entra",
+ "me_top_keys": [
+  "account",
+  "counts",
+  "map",
+  "navigation",
+  "services",
+  "staff",
+  "user",
+  "work_queues"
+ ],
+ "body_mentions": {
+  "usability": false,
+  "sus score": false,
+  "survey": false,
+  "participant": false,
+  "audit-use": false,
+  "session recording": false
+ },
+ "route_probes_status": {
+  "/api/usability": 403,
+  "/api/usability-programme": 403,
+  "/api/telemetry/users": 403,
+  "/usability": 404,
+  "/api/zz-nonexistent-control": 403
+ }
+}

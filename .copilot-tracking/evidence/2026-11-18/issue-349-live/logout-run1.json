@@ -1,0 +1,7 @@
+{
+ "before_logout_me": 200,
+ "forged_header_with_session_me_role": "Retrofit Programme Manager",
+ "logout_final_host": "login.microsoftonline.com",
+ "after_logout_me_status": 302,
+ "after_logout_to_entra": true
+}

@@ -1,0 +1,31 @@
+{
+ "who": "resident",
+ "routes": [],
+ "findings": [
+  {
+   "surface": "landing after sign-in",
+   "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/",
+   "title": "Your home improvement progress - synthetic showcase, not live",
+   "terms": [],
+   "snake_case": [],
+   "ai_lines": [],
+   "chars": 821,
+   "headings": [
+    "Your home improvement progress",
+    "Sign in to the showcase",
+    "We cannot show this page",
+    "Help with your case"
+   ]
+  },
+  {
+   "surface": "unknown route",
+   "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/no-such-page-153",
+   "title": "",
+   "terms": [],
+   "snake_case": [],
+   "ai_lines": [],
+   "chars": 23,
+   "headings": []
+  }
+ ]
+}

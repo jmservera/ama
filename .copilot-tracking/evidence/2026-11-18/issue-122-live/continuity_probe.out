@@ -1,0 +1,235 @@
+{
+ "role": "Retrofit Programme Manager",
+ "/api/continuity": {
+  "status": 200,
+  "shape": {
+   "epoch": 1,
+   "suspensions": [
+    1,
+    {
+     "scope": "all",
+     "scope_kind": "release",
+     "reason": "Demo probe: negative test",
+     "incident_owner": "Demo owner",
+     "containment": "None; probe is refused",
+     "communication": "{...}",
+     "recorded_by": "<str>",
+     "recorded_at": "2026-11-18T11:51",
+     "status": "Suspended",
+     "restart": null,
+     "in_flight_note": "<str>",
+     "synthetic": false,
+     "trigger": "guardrail breach",
+     "evidence": "SYN-221-PROBE",
+     "resident_impact": "None",
+     "remediation": "None",
+     "restart_authority": "TBD",
+     "actor": "{...}",
+     "actual_authority": "Unavailable: OD-35 and RULE-020 acceptance not established.",
+     "actual_hold": true,
+     "proposals": [],
+     "snapshot_complete": false,
+     "incident_versions": "{...}",
+     "id": "SUS-1",
+     "epoch": 1,
+     "affected": [],
+     "affected_assistant_tasks": [],
+     "affected_assistant_total": 0,
+     "affected_assistant_truncated": false
+    }
+   ],
+   "history_valid": true,
+   "changes": [
+    2,
+    {
+     "kind": "configuration",
+     "subject": "zf-demo-continuity-probe-122",
+     "from_version": "v0",
+     "to_version": "v1",
+     "reason": "Synthetic demo probe for issue 122 version, evaluation and reversal evidence",
+     "evaluation": "{...}",
+     "recorded_by": "<str>",
+     "recorded_at": "2026-11-18T10:49",
+     "reverses": null,
+     "synthetic": true,
+     "status": "Reversed",
+     "id": "CHG-1",
+     "superseded_by": "CHG-2"
+    }
+   ],
+   "effective": {
+    "configuration:zf-demo-continuity-probe-122": {
+     "version": "v0",
+     "change": "CHG-2"
+    }
+   },
+   "suspended": [
+    1,
+    {
+     "id": "SUS-1",
+     "scope": "all"
+    }
+   ],
+   "note": "<str>"
+  }
+ },
+ "/api/continuity/export": {
+  "status": 200,
+  "shape": {
+   "format": "zf-evidence-export/1",
+   "generated_by": "<str>",
+   "generated_at": "2026-11-18T15:19",
+   "as_of": "2026-10-16",
+   "independence": "<str>",
+   "registry": {
+    "version": "2026-10-15.1",
+    "tasks": [
+     13,
+     "{...}"
+    ],
+    "registry_hash": "d25f859cfee85dbde3bdc9b9ffabae808a21d19ae25a18a9f7adb9fc70dd4d3d",
+    "note": "<str>"
+   },
+   "ai_records": [
+    317,
+    {
+     "id": "8410a4af1294",
+     "kind": "ai_task",
+     "task": "briefing",
+     "case_ids": [],
+     "created": "2026-10-25T06:57:15",
+     "status": "Not reviewed",
+     "mode": "ai",
+     "source": "template",
+     "model": null,
+     "prompt_version": "b4b77f4cf772b67e",
+     "envelope": "{...}",
+     "provenance": "{...}",
+     "citations": [],
+     "unresolved": [],
+     "verified": false,
+     "fallback_reason": "AI is not configured",
+     "ai_output": null,
+     "workflow_output": "No open cases.",
+     "shown_output": "No open cases.",
+     "reviewer_action": null,
+     "reviewer_reason": "",
+     "override_text": null,
+     "resolved_by": null,
+     "resolved_at": null,
+     "quarantine": null,
+     "continuity_epoch": 0,
+     "user": "<str>",
+     "release": null,
+     "historical_unknowns": [
+      1,
+      "release"
+     ],
+     "epoch_current": true,
+     "actionable": true,
+     "relied_on": false
+    }
+   ],
+   "assistant_proposals": [
+    6,
+    {
+     "capability": "quality-evidence",
+     "case_id": "ZF-2025-0031",
+     "continuity_epoch": 1,
+     "created_at": 1795007301.386,
+     "envelope": null,
+     "id": "0082dd95d2b152b23359a05d223458f89343e4cd46555ac1cc944dfafc4d80a7",
+     "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+     "manual_requested": true,
+     "output": null,
+     "proposal_identity": "{...}",
+     "reason": "Operator authority, finite allowance and expiry are required.",
+     "release": null,
+     "review": null,
+     "snapshot": "{...}",
+     "source_signature": "8d718f278800c9480a8f539db80421d5c79162f434a09fafcc7d9126dd19640d",
+     "verification": null,
+     "version": "1.0.0",
+     "state": "disabled",
+     "fence": 0,
+     "owner": "",
+     "lease_until": 0.0,
+     "attempts": 0,
+     "not_before": 0.0,
+     "revision": 1,
+     "provenance": [
+      1,
+      "{...}"
+     ],
+     "epoch_current": true,
+     "stale": true,
+     "actionable": false,
+     "relied_on": false,
+     "suspension": "SUS-1"
+    }
+   ],
+   "task_releases": {
+    "supported": true,
+    "records": [],
+    "total": 0,
+    "exported": 0,
+    "truncated": false
+   },
+   "assistants": {
+    "supported": true,
+    "total": 6,
+    "exported": 6,
+    "truncated": false,
+    "source_status": "available",
+    "note": null
+   },
+   "complete": true,
+   "incomplete_reasons": [],
+   "versions": {
+    "effective": {
+     "configuration:zf-demo-continuity-probe-122": "{...}"
+    },
+    "changes": [
+     2,
+     "{...}"
+    ]
+   },
+   "continuity": {
+    "epoch": 1,
+    "suspensions": [
+     1,
+     "{...}"
+    ]
+   },
+   "approvals": {
+    "protocol_versions": [],
+    "releases": [],
+    "breaches": []
+   },
+   "ledger": {
+    "entries": [
+     2000,
+     "{...}"
+    ],
+    "report": {
+     "intact": true,
+     "entries": 2000,
+     "head": "444036021fbb874d39f54bb1fc42d2faaef0e421f11e2d645ee5126e7b018637",
+     "problem": null,
+     "digests_checked": 0,
+     "digest_mismatches": []
+    },
+    "head": {
+     "count": 2000,
+     "hash": "444036021fbb874d39f54bb1fc42d2faaef0e421f11e2d645ee5126e7b018637"
+    },
+    "digests": []
+   },
+   "audience": {
+    "scope": "full",
+    "full_ledger_proof": true
+   },
+   "digest": "2eab1b2e5813b78b47b3bf8129d31d9eea6a606eaec7332fc3b6c63aadadacfd"
+  }
+ }
+}

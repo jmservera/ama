@@ -1,0 +1,111 @@
+[
+  {
+    "env": [
+      "ZF_SQL_SERVER",
+      "ZF_SQL_DATABASE",
+      "ZF_SQL_CLIENT_ID",
+      "AZURE_CLIENT_ID",
+      "PROOF_API_CLIENT_ID",
+      "PROOF_IMPORT_CLIENT_ID"
+    ],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72"
+    ],
+    "n": "job-cutover-test-init",
+    "trigger": "Manual"
+  },
+  {
+    "env": [
+      "ZF_SQL_SERVER",
+      "ZF_SQL_DATABASE",
+      "ZF_SQL_CLIENT_ID",
+      "AZURE_CLIENT_ID"
+    ],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72"
+    ],
+    "n": "job-cutover-test-verify",
+    "trigger": "Manual"
+  },
+  {
+    "env": [
+      "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "OTEL_SERVICE_NAMESPACE",
+      "AZURE_CLIENT_ID",
+      "ZF_STORE",
+      "ZF_SQL_SERVER",
+      "ZF_SQL_DATABASE",
+      "ZF_SQL_AUTH",
+      "ZF_SQL_CLIENT_ID",
+      "ZF_DIGEST_ACCOUNT_URL",
+      "ZF_DIGEST_CONTAINER",
+      "ZF_DIGEST_CLIENT_ID",
+      "ZF_DIGEST_DIR"
+    ],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7"
+    ],
+    "n": "job-cutover-test-ledger-verify",
+    "trigger": "Manual"
+  },
+  {
+    "env": [
+      "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "OTEL_SERVICE_NAMESPACE",
+      "AZURE_CLIENT_ID",
+      "SQL_SERVER",
+      "SQL_DATABASE",
+      "BLOB_ENDPOINT",
+      "QUEUE_ENDPOINT",
+      "IMPORT_QUEUE"
+    ],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-importer@sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f"
+    ],
+    "n": "job-cutover-test-import",
+    "trigger": "Manual"
+  },
+  {
+    "env": [
+      "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "OTEL_SERVICE_NAMESPACE",
+      "AZURE_CLIENT_ID",
+      "QUEUE_ENDPOINT",
+      "TASK_QUEUE",
+      "API_BASE_URL",
+      "API_AUDIENCE"
+    ],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7"
+    ],
+    "n": "job-cutover-test-orchestrator",
+    "trigger": "Manual"
+  },
+  {
+    "env": [],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72"
+    ],
+    "n": "job-cutover-test-smoke",
+    "trigger": "Manual"
+  },
+  {
+    "env": [
+      "PROOF_AUDIENCE",
+      "PROOF_BASE_URL"
+    ],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72"
+    ],
+    "n": "job-cutover-test-mi-http",
+    "trigger": "Manual"
+  },
+  {
+    "env": [],
+    "images": [
+      "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d"
+    ],
+    "n": "job-cutover-test-public-audit",
+    "trigger": "Manual"
+  }
+]

@@ -111,6 +111,8 @@ rehearsal happens. Do not fill them in beforehand.
 | 5 Revised deck challenged against the complete assessment guide | Delivered as an offline challenge of the unchanged 55-slide deck: [capstone-assessment-challenge.md](./capstone-assessment-challenge.md) applies the full [assessment guide](../../reference/method/ama-capstone-assessment-guide.md) with floors; it is not an assessor score, and no deck rebuild exists |
 | 6 Every Tokenomics statement sourced and labelled, no price, saving or payback claim | Delivered as a statement audit of the deck and notes: [current-deck-assessment-2026-11-12.md](./current-deck-assessment-2026-11-12.md) with the [Q&A brief](../tokenomics-qa-brief.md); the S18 USD 0.44 per home figure stays a labelled planning scenario, not a price, saving or payback claim |
 
+Update 2026-11-18: the placement decision and the spend authority are evidenced for the synthetic demo in [capstone-pitch-435-live-2026-11-18.md](../../reference/research/capstone-pitch-435-live-2026-11-18.md); the 12-proposal measured batch ran under #432. Mentor confirmation and a timed rehearsal remain unperformed.
+
 ## Decisions Needed From the Owner
 
 * Which format and time limit apply.
