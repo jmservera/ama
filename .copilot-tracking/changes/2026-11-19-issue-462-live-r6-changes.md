@@ -22,3 +22,5 @@ Refs #462. Evidence-only; no source change, focused tier. No secrets read or pri
 | 7. Deployed showcase in browser | Proven for the demo, desktop | r3 note; app still Running on the same digest; unauthenticated paths deny |
 
 Unmet: criterion 2 only. #462 must not be closed. Every remaining criterion needs a human, so no code or test was built.
+
+Witness note: first commit-complete and early plan/implement/review calls were refused because the state file lacked artifact paths; corrected and re-recorded, then a follow-up commit.
