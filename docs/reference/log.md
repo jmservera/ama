@@ -13858,3 +13858,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 223 live run 4 (Refs #223)
 
 * Added [issue-223-live-r4-2026-11-19.md](research/issue-223-live-r4-2026-11-19.md): offline gate re-run and per-criterion table; remaining items need humans.
+
+## [2026-11-19] add | Issue 202 live re-audit (Refs #202)
+
+* Added [issue-202-live-20261119T1540Z-2026-11-19.md](research/issue-202-live-20261119T1540Z-2026-11-19.md): five criteria proven; removal of `mvp-ci` and `mvp-validation` stays unproven because it needs a full-tier change; no required check depends on them.
