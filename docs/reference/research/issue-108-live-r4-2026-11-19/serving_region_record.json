@@ -1,0 +1,36 @@
+{
+ "region": "swedencentral and uksouth",
+ "account": "aoai-resident-469 (OpenAI, swedencentral); aif-cutover-test-rzsrg (AIServices, uksouth)",
+ "retrieved_on": "2026-11-19",
+ "source": "az cognitiveservices account deployment list and model list, resource group ama; see azure_region_facts.txt",
+ "deployments": [
+  {
+   "name": "resident-mini",
+   "model": "gpt-4.1-mini",
+   "version": "2025-04-14",
+   "sku": "Standard",
+   "capacity": 1,
+   "rate_limits": {
+    "requests_per_minute": 1,
+    "tokens_per_minute": 1000
+   },
+   "state": "Succeeded"
+  },
+  {
+   "name": "standard",
+   "model": "gpt-4.1-nano",
+   "version": "2025-04-14",
+   "sku": "GlobalStandard",
+   "capacity": 10,
+   "rate_limits": {
+    "requests_per_minute": 10,
+    "tokens_per_minute": 10000
+   },
+   "state": "Succeeded"
+  }
+ ],
+ "quota_headroom": {
+  "status": "unavailable",
+  "source": "usage list and account list-usage return empty; Microsoft.Quota unregistered"
+ }
+}

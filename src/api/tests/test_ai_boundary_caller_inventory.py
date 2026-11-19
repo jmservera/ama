@@ -21,12 +21,11 @@ INVENTORY = {
     ("core/src/zava_forward/core/ai_tasks.py", "run"): 1,
     ("core/src/zava_forward/core/ai_tasks.py", "look_at"): 2,
     ("core/src/zava_forward/core/simulation_lane.py", "evidence"): 1,
-    ("core/src/zava_forward/core/chat_isolation.py", "_chat"): 1,
     ("core/src/zava_forward/core/assistants.py", "evidence"): 1,
     ("core/src/zava_forward/core/store.py", "run"): 1,
     ("api/src/zava_forward/api/server.py", "evidence"): 2,
 }
-PRIVATE_CALLERS = {"core/src/zava_forward/core/chat_isolation.py"}
+PRIVATE_CALLERS: set[str] = set()
 
 
 def _receiver_is_ai(node: ast.expr) -> bool:
@@ -55,7 +54,7 @@ class ProviderBoundaryCallerInventory(unittest.TestCase):
     def test_every_boundary_caller_is_classified(self) -> None:
         self.assertEqual(dict(callers()), INVENTORY)
 
-    def test_private_chat_is_reached_only_from_the_chat_isolation_wrapper(self) -> None:
+    def test_private_chat_has_no_caller_outside_the_ai_module(self) -> None:
         files = {rel for (rel, method) in callers() if method == "_chat"}
         self.assertEqual(files, PRIVATE_CALLERS)
 
