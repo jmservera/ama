@@ -399,6 +399,41 @@ The earlier Q4 prefix filter already covered this spelling, so the exact-name re
   calibrated benefit remain blocked and unchanged, and a deployment is not an
   evaluated model.
 
+## Current-main Metering Inventory (2026-11-17, Refs #432)
+
+Evidence class: source and unit-test inventory of `main` at `eb51af5c9`, read on
+2026-11-17. It is not a measured financial result, a price, an invoice or an
+acceptance. The issue's own comments record criteria 1 to 4, 6, 7 and 9 as proven
+on `main`; this section maps each to code and tests and corrects older text.
+
+| Area | Code | Test evidence | State |
+| --- | --- | --- | --- |
+| Per-call ledger join (capability, model, tokens, retries, outcome) | `src/core/src/zava_forward/core/ai_consumption.py` (`Consumption.reserve`, `Consumption.complete`) | `src/core/tests/test_ai_consumption.py` | Source-proven; no case text in telemetry |
+| Provider usage validation and settlement | `src/core/src/zava_forward/core/assistants.py` (envelope `usage`, `complete_in`) | `src/core/tests/test_ai_consumption_safety.py` | Missing or invalid usage is recorded as unknown, never estimated |
+| Request call and depth bounds, workflow-only stop | `Consumption.reserve` (`request-call-limit`, `request-depth-limit`) | `test_loop_fanout_exact_calls_depth_and_owned_workflow_stop`, `test_looping_request_stops_while_hazard_recording_and_clocks_continue` | Source-proven |
+| Token, money, expiry, unknown-price and liability stop with owned alert | `Consumption.authorize`, `reserve` | `test_expiry_unknown_price_and_image_liability_stop` | Source-proven; no named live owner or approved budget |
+| Dated price evidence | `Consumption.price`; [source snapshot](./azure-ai-price-source-2026-10-31.json) | `test_ai_consumption.py` | Rates unavailable, so cost is Unknown |
+| Billing reconciliation | `Consumption.billing`, `report` | `test_billing_is_financial_source_not_projection` | Mechanism only; no Azure cost record supplied |
+| Cost per accepted proposal beside quality | `Consumption.report` (`by_capability`) | `test_ai_consumption_api.py` | Mechanism only; Unknown without a price, billing record and accepted count |
+| Measured held-out batch | `src/agents/src/zava_forward/agents/heldout_batch.py`, `heldout_aoai.py`, `ai_consumption.batch_spread` | `src/agents/tests/test_heldout_batch.py`, `test_heldout_aoai.py` | Runner is fail-closed with a hard USD ceiling; `--dry-run` is not evidence and no live run has happened |
+| Resident demo reservation | `src/api/src/zava_forward/api/resident_demo/aoai.py` | `src/api/tests/test_resident_aoai.py` | Separate currency accounting, not joined to the cohort ledger |
+
+Corrections to older text: the 2026-10-31 matrix lists the held-out batch as a
+mechanism only, but the runner now exists; the "Gaps" table below predates the
+price, authority, denominator and quality-floor mechanisms, so its first, second
+and fourth rows now describe missing approved evidence, not missing code.
+
+Unmet criteria stay unmet: 5 (reconciliation against Azure cost records for a
+period, with Finance validation) and 8 (a finite, owner-authorised live batch).
+Neither can be proven from source or from a dry run.
+
+Smallest next step: the owner records a finite spend authority and OD-51 values
+(denominator, quality floor, tolerance, alert owner), the batch runner is run
+once live on held-out cases, and an exact-period Azure cost export for the same
+resource scope is passed to `Consumption.billing`. Until then the pitch states
+cost as Unknown and quotes only the QA observation of 6,884 tokens over five
+runs, which is a token count and not a cost.
+
 ## Gaps
 
 | Gap | Why it matters | Where it is tracked |

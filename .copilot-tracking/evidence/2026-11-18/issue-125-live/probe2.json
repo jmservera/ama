@@ -1,0 +1,18 @@
+{
+ "GET /api/zzz-nonexistent-control": [
+  403,
+  "{'error': 'Your role does not include this.'}"
+ ],
+ "POST /api/zzz-nonexistent-control": [
+  404,
+  "{'error': 'Not found.'}"
+ ],
+ "GET /api/discovery-assistant": [
+  403,
+  "{'error': 'Your role does not include this.'}"
+ ],
+ "POST /api/discovery-assistant": [
+  404,
+  "{'error': 'Not found.'}"
+ ]
+}

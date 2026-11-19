@@ -124,6 +124,29 @@ class OutOfScopeTests(unittest.TestCase):
                 self.assertEqual(hit[0], kind, question)
                 self.assertTrue(hit[1])
 
+    def test_send_style_contact_requests_are_refused_with_the_contact_route(self) -> None:
+        for question in (
+            "Send the resident a text message now telling them the contractor arrives tomorrow.",
+            "Send the tenant an email about the visit",
+            "Send them a message",
+            "Please send Mrs Jones a text message",
+            "Send an SMS to the resident",
+            "Send the tenant a WhatsApp",
+        ):
+            hit = out_of_scope(question)
+            self.assertIsNotNone(hit, question)
+            assert hit
+            self.assertEqual(hit[0], "contact", question)
+            self.assertIn("contact log", hit[1])
+
+    def test_questions_about_past_messages_are_not_refused(self) -> None:
+        for question in (
+            "What message was sent to the resident?",
+            "Was the resident sent a letter?",
+            "Send the report to the file",
+        ):
+            self.assertIsNone(out_of_scope(question), question)
+
     def test_informational_signoff_status_questions_are_not_refused(self) -> None:
         for question in (
             "Has the PAS 2035 design sign-off been given?",

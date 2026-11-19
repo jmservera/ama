@@ -1,0 +1,53 @@
+{
+ "task_id": "issue-203-checker-live",
+ "task_slug": "issue-203-checker-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18/issue-203-checker-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue-203-checker-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue-203-checker-live-details.md",
+  "critique": ".copilot-tracking/reviews/2026-11-18/issue-203-checker-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue-203-checker-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18/issue-203-checker-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "research executed, planning ready",
+   "status": "done",
+   "evidence": ".copilot-tracking/research/2026-11-18/issue-203-checker-live-research.md"
+  },
+  {
+   "decision": "critique executed once, proceed, findings applied",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-18/issue-203-checker-live-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant, follow-ups routed",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-18/issue-203-checker-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "coordinator publishes"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Owner decision on literal criterion 1",
+   "rationale": "checker exemptions need agreement",
+   "evidence": "issue comment 2026-11-17"
+  },
+  {
+   "rank": 2,
+   "task": "Build provenance for deployed digest",
+   "rationale": "unblocks criterion 5",
+   "evidence": "private registry, no deploy run"
+  }
+ ]
+}

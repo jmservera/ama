@@ -1,0 +1,47 @@
+{
+ "task_id": "118",
+ "task_slug": "issue-118-live-r2",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-18/issue-118-live-20261118T1512Z-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-18/issue-118-live-20261118T1512Z-plan.md",
+  "details": ".copilot-tracking/details/2026-11-18/issue-118-live-20261118T1512Z-details.md",
+  "critique": ".copilot-tracking/critiques/2026-11-18/issue-118-live-20261118T1512Z-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-18/issue-118-live-20261118T1512Z-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-18/issue-118-live-20261118T1512Z-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Research executed; tier FOCUSED docs-only",
+   "status": "confirmed",
+   "evidence": "owner brief"
+  },
+  {
+   "decision": "critique executed once, compatible",
+   "status": "done",
+   "evidence": ".copilot-tracking/critiques/2026-11-18/issue-118-live-20261118T1512Z-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-18/issue-118-live-20261118T1512Z-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "owner ticks criterion; coordinator publishes"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Owner ticks 'Azure Policy and Defender plans decided' in #118",
+   "rationale": "demo decision recorded",
+   "evidence": "research note"
+  }
+ ]
+}

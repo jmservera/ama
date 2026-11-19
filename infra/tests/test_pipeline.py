@@ -474,6 +474,36 @@ class PipelineTests(unittest.TestCase):
                     with self.assertRaises(pipeline.PipelineError):
                         pipeline.verify_environment("test")
 
+    def test_federation_check_requires_exact_environment_subject(self):
+        good = {
+            "issuer": "https://token.actions.githubusercontent.com",
+            "audiences": ["api://AzureADTokenExchange"],
+            "subject": "repo:example/example:environment:test-plan",
+        }
+        bad = [
+            [],
+            [{**good, "subject": "repo:example/example:environment:test"}],
+            [{**good, "subject": "repo:example/example:ref:refs/heads/main"}],
+            [{**good, "issuer": "https://example.invalid"}],
+            [{**good, "audiences": ["api://other"]}],
+            [good, {**good, "subject": "repo:other/example:environment:test-plan"}],
+        ]
+        with patch.dict(os.environ, GITHUB_REPOSITORY="example/example"):
+            with patch.object(pipeline, "az", return_value=[good]):
+                pipeline.verify_federation("id-plan", "managed", "test-plan")
+            for credentials in bad:
+                with patch.object(pipeline, "az", return_value=credentials):
+                    with self.assertRaises(pipeline.PipelineError):
+                        pipeline.verify_federation("id-plan", "managed", "test-plan")
+            with patch.object(pipeline, "az", side_effect=[[good], [{"keyId": "x"}]]):
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.verify_federation("app-id", "app", "test-plan")
+            with patch.object(pipeline, "az", side_effect=[[good], []]):
+                pipeline.verify_federation("app-id", "app", "test-plan")
+            for args in (("bad id", "managed", "test"), ("id", "managed", "prod")):
+                with self.assertRaises(pipeline.PipelineError):
+                    pipeline.verify_federation(*args)
+
     def test_sanitized_summary_contains_no_identifiers_or_deltas(self):
         plan = {
             "status": "Succeeded",
@@ -516,6 +546,22 @@ class PipelineTests(unittest.TestCase):
         ):
             with self.assertRaises(pipeline.PipelineError):
                 pipeline.summarize_plan(plan, SUBSCRIPTION, SHA)
+
+    def test_plan_rejects_unsupported_entry_among_valid_changes(self):
+        valid = [
+            {"resourceId": RESOURCE, "changeType": kind}
+            for kind in ("Create", "Modify", "NoChange")
+        ]
+        accepted = pipeline.summarize_plan(
+            {"status": "Succeeded", "changes": valid}, SUBSCRIPTION, SHA
+        )
+        self.assertEqual(accepted["change_counts"], {"Create": 1, "Modify": 1, "NoChange": 1})
+        plan = {
+            "status": "Succeeded",
+            "changes": [*valid, {"resourceId": RESOURCE, "changeType": "Unsupported"}],
+        }
+        with self.assertRaisesRegex(pipeline.PipelineError, "unresolved/unsupported"):
+            pipeline.summarize_plan(plan, SUBSCRIPTION, SHA)
 
     def test_sql_precondition_is_not_vacuous(self):
         for servers in ([], [{}], [{"publicNetworkAccess": "Enabled"}], None):

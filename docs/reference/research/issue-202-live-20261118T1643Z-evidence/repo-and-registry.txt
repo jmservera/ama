@@ -1,0 +1,19 @@
+# tracked files under mvp prototype
+0
+ls: cannot access 'mvp': No such file or directory
+ls: cannot access 'prototype': No such file or directory
+# registry globs
+no match
+# registry removal commits
+a381532dd 2026-10-15 docs(src): split mvp readme and repoint docs (M6 of #199) (#302)
+a413ac3ca 2026-10-09 feat(rubric): score the MVP as solution code (#37)
+# deletion commit
+4a02baf6f 2026-10-27 chore: retire legacy MVP directories after owner sign-off (#499)
+# PR merge times
+292 2026-10-15T16:31:12Z feat(rubric): exclude vendor, data and build paths under src (#198)
+295 2026-10-15T17:00:43Z chore: retire prototype/ (#202 step 1)
+300 2026-10-15T19:02:50Z refactor(src): move api, orchestrator, web and image (M5 of #199)
+302 2026-10-15T19:27:15Z docs(src): split mvp readme and repoint docs (M6 of #199)
+499 2026-10-27T18:51:44Z chore: retire legacy MVP directories after owner sign-off
+851 2026-11-03T10:40:07Z chore(rubric): drop dead mvp excludes from solution-code registry (Refs #198)
+880 2026-11-03T21:02:58Z docs(architecture): record rubric before-and-after score (Refs #198, Refs #203)

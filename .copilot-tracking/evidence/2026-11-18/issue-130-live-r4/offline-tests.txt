@@ -1,0 +1,2 @@
+core: test_nomination_route, test_nomination_bootstrap, test_hazard_referral: Ran 66 tests, OK (skipped=1)
+api: test_nomination_api_routes, test_representative_expiry_api: Ran 9 tests, OK; test_nomination_screen: Ran 8 tests, OK

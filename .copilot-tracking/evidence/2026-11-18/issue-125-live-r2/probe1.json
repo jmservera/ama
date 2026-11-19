@@ -1,0 +1,67 @@
+{
+ "GET /openapi.json": {
+  "status": 404,
+  "snippet": "{'_text': 'Not found'}"
+ },
+ "GET /docs": {
+  "status": 404,
+  "snippet": "{'_text': 'Not found'}"
+ },
+ "GET /api/discovery": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/discovery-assistant": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/discovery/assistant": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/assistant/discovery": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/discovery-demo": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/retrofit-flow-evidence-assistant": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/evidence-assistant": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/me": {
+  "status": 200,
+  "snippet": "[account fields removed]"
+ },
+ "GET /api/health": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "GET /api/version": {
+  "status": 403,
+  "snippet": "{'error': 'Your role does not include this.'}"
+ },
+ "POST /api/discovery": {
+  "status": 404,
+  "snippet": "{'error': 'Not found.'}"
+ },
+ "POST /api/discovery-assistant": {
+  "status": 404,
+  "snippet": "{'error': 'Not found.'}"
+ },
+ "POST /api/discovery/assistant": {
+  "status": 404,
+  "snippet": "{'error': 'Not found.'}"
+ },
+ "cases_list_status": 200,
+ "ui_mentions_discovery_assistant": [
+  false,
+  false
+ ]
+}

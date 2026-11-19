@@ -1,0 +1,11 @@
+----------------------------------------------------------------------
+Ran 1 test in 0.992s
+
+OK
+chat.breakglass.refused {"basis": "demo-only", "purpose": "Investigating a reported misuse, ticket 42", "reason": "policy not decided or role not named", "target": "u4@example.test"}
+chat.breakglass.refused {"basis": "demo-only", "purpose": "short", "reason": "purpose missing", "target": "u4@example.test"}
+chat.breakglass.refused {"basis": "demo-only", "purpose": "Investigating a reported misuse, ticket 42", "reason": "not for your own data", "target": "u5@example.test"}
+chat.breakglass.refused {"basis": "demo-only", "purpose": "Check mail from [email removed] now", "reason": "not for your own data", "target": "u5@example.test"}
+chat.breakglass.refused {"basis": "demo-only", "purpose": "Investigating a reported misuse, ticket 42", "reason": "policy not decided or role not named", "target": "u5@example.test"}
+chat.breakglass.granted {"basis": "demo-only", "expires": "2026-11-18T16:28:00+00:00", "memory": 0, "policy_ref": "SYNTH-POLICY-1", "purpose": "Investigating a reported misuse, ticket 42", "target": "u4@example.test", "threads": 1}
+chat.breakglass.granted {"basis": "demo-only", "expires": "2026-11-18T17:13:00+00:00", "memory": 0, "policy_ref": "SYNTH-POLICY-1", "purpose": "Investigating a reported misuse, ticket 42", "target": "u4@example.test", "threads": 1}

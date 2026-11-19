@@ -1,0 +1,22 @@
+docs/reference/research/issue-198-rubric-src-counting-evidence-2026-11-18.md:14: retired path without archive tag v0.21.0
+docs/reference/research/issue-198-rubric-src-counting-evidence-2026-11-18.md:30: retired path without archive tag v0.21.0
+docs/reference/research/issue-198-rubric-src-counting-evidence-2026-11-18.md:52: retired path without archive tag v0.21.0
+docs/reference/research/issue-198-rubric-src-counting-evidence-2026-11-18.md:53: retired path without archive tag v0.21.0
+docs/reference/research/issue-203-live-references-evidence-2026-11-18.md:13: retired package name outside dated records
+docs/reference/research/src-repoint-live-audit-200-2026-11-18.md:24: retired path without archive tag v0.21.0
+docs/reference/research/src-repoint-live-audit-200-2026-11-18.md:25: retired path without archive tag v0.21.0
+docs/reference/research/src-repoint-live-audit-200-2026-11-18.md:26: retired path without archive tag v0.21.0
+docs/reference/research/src-repoint-live-audit-200-2026-11-18.md:40: retired package name outside dated records
+tools/test_epic_legacy_path_retirement.py:1: retired path without archive tag v0.21.0
+tools/test_epic_legacy_path_retirement.py:25: retired package name outside dated records
+tools/test_epic_legacy_path_retirement.py:37: retired path without archive tag v0.21.0
+tools/test_epic_parity_matrix_old_paths.py:1: retired path without archive tag v0.21.0
+tools/test_epic_parity_matrix_old_paths.py:38: retired path without archive tag v0.21.0
+tools/test_epic_parity_matrix_old_paths.py:63: retired path without archive tag v0.21.0
+tools/test_epic_parity_matrix_old_paths.py:69: retired path without archive tag v0.21.0
+tools/test_epic_parity_matrix_old_paths.py:114: retired path without archive tag v0.21.0
+tools/test_private_mvp_data_exclusion.py:1: retired path without archive tag v0.21.0
+tools/test_private_mvp_data_exclusion.py:33: retired path without archive tag v0.21.0
+tools/test_private_mvp_data_exclusion.py:40: retired path without archive tag v0.21.0
+references: 20 violation(s); links: 0 violation(s) in 1 document(s)
+rc=1

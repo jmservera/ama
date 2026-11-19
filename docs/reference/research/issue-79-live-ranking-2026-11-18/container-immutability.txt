@@ -1,0 +1,7 @@
+# immutability state of throwaway container before deletion
+{
+  "hasImmutabilityPolicy": false,
+  "hasLegalHold": false,
+  "immutableStorageWithVersioning": null,
+  "name": "ranking-archive-demo79"
+}
