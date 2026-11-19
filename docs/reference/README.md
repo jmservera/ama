@@ -518,6 +518,9 @@ criterion is still an owner action and nothing is ticked.
 A [seventh run](./research/issue-184-live-r7-2026-11-19.md) repeats the read-only checks with 91 targeted tests;
 the criterion is still an owner action and nothing is ticked.
 
+An [eighth run](./research/issue-184-child-stories-live-2026-11-19.md) re-reads the five child states live: all closed
+as completed, 5 of 5; the checkbox is left for the owner.
+
 For #109, the [live device monitoring evidence](./research/issue-109-live-device-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of IoT Hub connection state and a connectivity metric alert.
 Hub `lastActivityTime` did not update; the #440 checkpoint and child-closure criteria stay unproven.

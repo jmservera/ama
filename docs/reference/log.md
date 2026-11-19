@@ -14043,3 +14043,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 146 monitoring status r6 (Refs #146)
 
 * Added [issue-146-live-20261119T160746Z-2026-11-19.md](research/issue-146-live-20261119T160746Z-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
+
+## [2026-11-19] add | Issue 184 child stories live re-check (Refs #184)
+
+* Added [issue 184 child stories, live re-check](research/issue-184-child-stories-live-2026-11-19.md): sub-issues #185 to #189 all closed as completed (5 of 5); checkbox left for the owner. Indexed in the README.
