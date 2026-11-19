@@ -389,6 +389,53 @@ def register_schema(store: FormStore, user: Record, body: object) -> Record:
         return deepcopy(row)
 
 
+def approve_schema(
+    store: FormStore, user: Record, schema_id: object, version: object, evidence: object
+) -> Record:
+    """Record the declared reviewer's approval of one exact schema version, once."""
+    with store.lock:
+        actor = _actor(store, user)
+        sid, number = _id(schema_id), _positive(version)
+        text = _text(evidence, "approval evidence", 1000)
+        registry = store.data.get("form_schemas", [])
+        index = next(
+            (
+                i
+                for i, r in enumerate(registry)
+                if r["definition"]["id"] == sid and r["definition"]["version"] == number
+            ),
+            None,
+        )
+        if index is None:
+            raise KeyError(f"{sid}/{number}")
+        current = registry[index]
+        if current["definition"]["reviewer"].lower() != actor["email"].lower():
+            raise PermissionError("Only the schema's declared reviewer can approve this version.")
+        if current["approval"] == "Approved":
+            raise ValueError("This schema version is already approved.")
+        row = dict(
+            current,
+            approval="Approved",
+            approval_evidence=text,
+            approved_by=actor["email"],
+            approved_at=datetime.now(UTC).isoformat(),
+        )
+
+        def restore() -> None:
+            store.data["form_schemas"] = registry
+
+        store.data["form_schemas"] = registry[:index] + [row] + registry[index + 1 :]
+        _commit(
+            store,
+            actor,
+            "form_schema_approved",
+            "-",
+            f"{sid} version {number} digest {row['digest']}",
+            restore,
+        )
+        return deepcopy(row)
+
+
 def list_schemas(store: FormStore, user: Record) -> list[Record]:
     with store.lock:
         _actor(store, user)

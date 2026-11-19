@@ -113,6 +113,29 @@ class FormStaging(unittest.TestCase):
         self.addCleanup(result.db.close)
         return result
 
+    def test_schema_approval_is_reviewer_only_once_and_leaves_source_policy_open(self) -> None:
+        for store in self.stores:
+            forms.register_schema(store, self.actor, schema())
+            other = dict(schema(), id="SYN-OTHER", reviewer="sam@example.test")
+            forms.register_schema(store, self.actor, other)
+            with self.assertRaises(PermissionError):
+                forms.approve_schema(store, self.actor, "SYN-OTHER", 1, "Synthetic sign-off.")
+            with self.assertRaises(ValueError):
+                forms.approve_schema(store, self.actor, "SYN-TECH", 1, "  ")
+            with self.assertRaises(KeyError):
+                forms.approve_schema(store, self.actor, "SYN-TECH", 2, "Synthetic sign-off.")
+            before = forms.list_schemas(store, self.actor)[0]
+            row = forms.approve_schema(store, self.actor, "SYN-TECH", 1, "Synthetic sign-off.")
+            self.assertEqual(row["approval"], "Approved")
+            self.assertEqual(row["approved_by"], self.actor["email"])
+            self.assertEqual(row["digest"], before["digest"])
+            self.assertEqual(row["definition"], before["definition"])
+            self.assertEqual(row["source_policy_status"], "Unapproved")
+            with self.assertRaises(ValueError):
+                forms.approve_schema(store, self.actor, "SYN-TECH", 1, "Again.")
+            listed = forms.list_schemas(self.reopen(store), self.actor)
+            self.assertEqual([r["approval"] for r in listed], ["Approved", "Unapproved"])
+
     def test_schema_contract_immutable_versions_no_approval_or_authority_inference(self) -> None:
         for store in self.stores:
             request = schema()

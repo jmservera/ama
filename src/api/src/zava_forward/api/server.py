@@ -1799,6 +1799,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if body is None:
                         return self._json(200, {"schemas": forms.list_schemas(app.store, user)})
                     return self._json(201, forms.register_schema(app.store, user, body))
+                if len(parts) == 5 and parts[:2] == ["api", "form-schemas"] and parts[4] == "approval":
+                    if not isinstance(body, dict) or set(body) != {"evidence"} or not parts[3].isdigit():
+                        return self._json(400, {"error": "Send only the approval evidence text."})
+                    return self._json(200, forms.approve_schema(app.store, user, parts[2], int(parts[3]), body["evidence"]))
                 if len(parts) == 7:
                     if not held_download_enabled(app.provider.name):
                         return self._json(404, {"error": "Not found."})
@@ -1922,6 +1926,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._chat(u, url.path, body)
             parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
+                    len(parts) == 5 and parts[:2] == ["api", "form-schemas"] and parts[4] == "approval") or (
                     len(parts) == 4 and parts[:2] == ["api", "cases"]
                     and parts[3] in ("form-candidates", "form-review")) or (
                     len(parts) == 7 and parts[:2] == ["api", "cases"]
