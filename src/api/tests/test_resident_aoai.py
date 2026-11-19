@@ -2,6 +2,7 @@
 
 import json
 import unittest
+from typing import Any
 from unittest.mock import Mock, patch
 
 from zava_forward.core.resident_assistant import AssistantUnavailable, CaseProgress, Topic
@@ -261,7 +262,7 @@ class AzureAdvisorTests(unittest.TestCase):
     def test_actual_processing_mode_blocks_both_paths_before_reserve_or_transport(self) -> None:
         base = chat.answer("repair", {})
         with patch.dict("os.environ", {"ZF_DATA_PROCESSING": "actual"}):
-            topic = self.answer()
+            topic: Any = self.answer()
             asked = self.advisor.answer_question("Is it safe?", CASE, resident_key("C-1"), base)
         self.assertEqual(self.events, [])
         self.transport.assert_not_called()
