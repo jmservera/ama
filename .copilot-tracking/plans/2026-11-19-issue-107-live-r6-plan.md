@@ -1,7 +1,6 @@
-# Plan: issue #107 sixth live pass
+# Plan: issue #107 r6 (2026-11-19)
 
-Tier FOCUSED. No source change.
+* Phase 1: record the fresh targeted-test run and the per-criterion table in a research note and the changes record.
+* Phase 2: commit without source changes; no push.
 
-1. Re-run the existing SQLite pass of `test_assistant_restart_non_replenishment` as current-head evidence.
-2. Record the per-criterion table and stop reason in the changes record.
-3. Review once; commit tracking artifacts locally. No push.
+Details: [details](../details/2026-11-19-issue-107-live-r6-details.md).

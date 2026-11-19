@@ -19,22 +19,12 @@
    "decision": "Demo only, desktop; Tier FOCUSED; no push",
    "status": "confirmed",
    "evidence": "Owner decisions 2026-11-18"
-  },
-  {
-   "decision": "Research reused; critique executed once, proceed",
-   "status": "recorded",
-   "evidence": "research and critique files"
-  },
-  {
-   "decision": "Review executed once, conformant",
-   "status": "recorded",
-   "evidence": "review file"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Appoint OQ-017 release holders (human); no code work remains"
+  "action": "Appoint OQ-017 release holders (human)"
  },
  "prioritized_follow_ups": []
 }

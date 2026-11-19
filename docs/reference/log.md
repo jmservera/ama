@@ -14093,3 +14093,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 203 third live run (Refs #203)
 
 * Indexed [issue-203-live-recheck-2026-11-19.md](research/issue-203-live-recheck-2026-11-19.md): the legacy-reference checker now reports 0 violations; the deployed-app and CI criterion stays partly proven. No source change.
+
+## [2026-11-19] add | Issue 107 sixth live pass
+
+* Added [issue-107-live-r6-criteria-2026-11-19.md](research/issue-107-live-r6-criteria-2026-11-19.md): fresh run of the assistant release and non-replenishment tests; the second unticked criterion remains a human step.
