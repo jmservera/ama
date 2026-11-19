@@ -13890,3 +13890,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 344 sixth live pass
 
 * Added research/public-browser-access-live-r6-2026-11-19.md: the time-status 500 is a SQL-path ProgrammingError; the remaining criteria need FULL-tier infra or SQL work.
+## [2026-11-19] add | Issue 126 live criteria proof (Refs #126)
+
+* Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 core and 10 API governance tests OK, read-only live probe (capture closed, 22 RAI findings, no claims) and per-criterion table; the approval, assessment and SQL/Azure criteria stay unproven. No source change.

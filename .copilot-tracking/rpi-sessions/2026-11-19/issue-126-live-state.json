@@ -1,35 +1,47 @@
 {
- "task_id": "issue-126-live-20261119T154409Z",
- "task_slug": "issue-126-live",
- "parent_task": null,
- "mode": "automatic",
- "active_phase": "Follow-up",
- "status": "completed",
- "session_status": "running",
- "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19/issue-126-live-20261119T154409Z-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19/issue-126-live-20261119T154409Z-plan.instructions.md",
-  "details": ".copilot-tracking/details/2026-11-19/issue-126-live-20261119T154409Z-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-19-issue-126-live-20261119T154409Z-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19/issue-126-live-20261119T154409Z-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19/issue-126-live-20261119T154409Z-review.md"
- },
- "confirmed_decisions": [
-  {
-   "decision": "critique executed once, verdict proceed, findings applied",
-   "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-19-issue-126-live-20261119T154409Z-critique.md"
+  "task_id": "2026-11-19-issue-126-live",
+  "task_slug": "issue-126-live",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-19/issue-126-live-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-19/issue-126-live-plan.instructions.md",
+    "details": ".copilot-tracking/details/2026-11-19/issue-126-live-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-19/issue-126-live-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-19/issue-126-live-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-19/issue-126-live-review.md"
   },
-  {
-   "decision": "review executed once, conformant, no source change",
-   "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-19/issue-126-live-20261119T154409Z-review.md"
-  }
- ],
- "blockers": [],
- "next_action": {
-  "phase": "Follow-up",
-  "action": "await owner selection"
- },
- "prioritized_follow_ups": null
+  "confirmed_decisions": [
+    {
+      "decision": "Synthetic DEMO, desktop only; live Azure authorised (rg ama, cap USD 700); DPO/Legal, billing reconciliation and person-run AT testing not needed",
+      "status": "owner decision 2026-11-18",
+      "evidence": "issue brief"
+    },
+    {
+      "decision": "Research executed, Ready; critique executed once, verdict proceed",
+      "status": "done",
+      "evidence": "critique path"
+    },
+    {
+      "decision": "Review executed once; conformant, no open material findings",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-19/issue-126-live-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator publishes; owner approvals pending"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner approves protocol, DPIA and lawful basis",
+      "rationale": "Only way to open Phase 0 capture",
+      "evidence": "capture_open false live"
+    }
+  ]
 }
