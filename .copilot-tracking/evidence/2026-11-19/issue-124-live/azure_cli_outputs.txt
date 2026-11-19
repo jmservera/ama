@@ -1,0 +1,4 @@
+ca-cutover-test-demo-api latestRevisionName ca-cutover-test-demo-api--0000033
+image digest sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb (same as 2026-11-18 r2)
+evhns-cutover-test-demo event hubs: sensor-readings
+consumers of discovery_contract/register/flow outside tests: src/core/README.md, discovery_contract.py, discovery_flow.py

@@ -1,9 +1,9 @@
-# Research: issue #124 live demo audit, third pass (2026-11-19)
+# Research: issue 124 live r3 (2026-11-19)
 
-Refs #124. Demo scope: synthetic, desktop. Owner decisions of 2026-11-18 apply. Tier FOCUSED unless src changes.
+Refs #124. Task slug `issue-124-live-r3`. Disposition: reused (2026-11-18 r1 and r2 evidence, re-verified).
+Evidence: `.copilot-tracking/evidence/2026-11-19/issue-124-live/` (59 discovery tests OK; read-only Azure CLI).
 
-Research disposition: executed (fresh offline test run, repository consumer search, read-only Azure and live probe of the deployed demo, compared with the two earlier passes on 2026-11-18).
-
-Candidate unmet criteria: nomination and endpoint; dictionary validation; constraint register evidence. Each depends on a named human or an approved company extract (see the r2 note). A code candidate would be a deployed discovery surface in `src/api`, which would be a feature needing the FULL tier, not a criterion in itself.
-
-Planning Readiness: Ready (evidence-only pass; source edit only if a code path proves tickable, which the criteria wording does not support).
+* Unticked criteria: owner nominated and endpoint agreed; dictionary validated; constraint register with two-sided evidence.
+* Each needs a named human (sponsor, operational owners) or a real twelve-month company extract. None is buildable for the synthetic demo; the contract rules are already coded and tested (`discovery_contract.py`, `discovery_register.py`).
+* Live: API revision 0000033, same image digest as the r2 pass; Event Hub holds only `sensor-readings`; no discovery consumer in src/api, orchestrator, agents or importer.
+* Planning Readiness: Ready (conclusion: no source change; evidence note only).
