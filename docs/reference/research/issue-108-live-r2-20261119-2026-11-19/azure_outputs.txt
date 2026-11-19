@@ -1,0 +1,44 @@
+# az checks 2026-11-19T15:41:59Z
+[
+  {
+    "cap": 1,
+    "model": "gpt-4.1-mini",
+    "n": "resident-mini",
+    "rl": [
+      {
+        "c": 1.0,
+        "k": "request"
+      },
+      {
+        "c": 1000.0,
+        "k": "token"
+      }
+    ],
+    "sku": "Standard",
+    "ver": "2025-04-14"
+  }
+]
+[]
+
+[
+  {
+    "cap": 10,
+    "model": "gpt-4.1-nano",
+    "n": "standard",
+    "rl": [
+      {
+        "c": 10.0,
+        "k": "request"
+      },
+      {
+        "c": 10000.0,
+        "k": "token"
+      }
+    ],
+    "sku": "GlobalStandard",
+    "ver": "2025-04-14"
+  }
+]
+[]
+
+NotRegistered
