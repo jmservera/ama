@@ -1,0 +1,15 @@
+Read-only az (2026-11-19 run 141800Z); principal IDs omitted
+True	True	None
+      1 EventGrid Contributor	ServicePrincipal	False
+      1 Key Vault Secrets User	ServicePrincipal	True
+      1 Kubernetes Agent Subscription Level Operator	ServicePrincipal	False
+      1 Log Analytics Contributor	ServicePrincipal	False
+      1 Managed Identity Federated Identity Credential Contributor	ServicePrincipal	False
+      1 Managed Identity Operator	ServicePrincipal	False
+      6 Owner	ServicePrincipal	False
+      2 Owner	User	False
+      1 Reader	ServicePrincipal	False
+      1 User Access Administrator	ServicePrincipal	False
+      1 User Access Administrator	User	False
+      1 Virtual Machine Contributor	ServicePrincipal	False
+diag to-log-analytics workspace [('allLogs', True), ('audit', False)]
