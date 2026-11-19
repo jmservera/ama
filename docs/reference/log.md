@@ -12437,6 +12437,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Resource group `ama` only; no SQL, secret, role, employee app or tenant change. No production, whole-WCAG, human or legal acceptance is claimed. The complete gate, hosted checks and independent assessment remain separate.
 * 2026-11-17 correction cycle 1 for #462: restored the full rollback digest in [infra/README.md](../../infra/README.md), narrowed the live-verification claims to what `live-results.json` records and explained its 409 probe value. Documentation and evidence notes only.
 
+## [2026-11-17] update | Issue 107 evidence audit and live-binding mismatch coverage (Refs #107)
+
+* Audited the open criteria against base `eb51af5c9`. Two stay unticked: the composite SQL race, revocation, restart and old-image criterion, and delivered-build real-AI/Azure acceptance (CON-009/AC-057). Nothing here ticks or closes them.
+* Measured one coverage gap. The separate-worker and restart mismatch test in `src/api/tests/test_assistant_restart_non_replenishment.py` varied only prompt, policy, permissions, scope and model version, while the release binds thirteen fields. It now also varies provider, endpoint, deployment, data and provenance. The added cases passed on the first run, so no product defect was found; this is coverage on a local SQLite proxy only.
+* Not covered and still open: execution of an actual earlier image, actual disposable SQL for these variations, and the malformed-completion case tracked in #1840. The prior current-service proxy remains a proxy, not an old image.
 ## [2026-11-17] ingest | Further official-source readings for the ADM and EU AI Act pack (Refs #224)
 
 * Updated the [applicability pack](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) and the [Legal briefing](./research/rai/legal-briefing-adm-ai-act.md) with a dated 2026-11-17 reading: S.I. 2026/82 reg. 5, the EU AI Act as made and Regulation (EU) 2026/1744 (Digital Omnibus on AI, OJ 2026-07-24), which moves the Chapter III high-risk application dates. This supersedes the earlier "retrieval failed" and "unverified delay" statements; the earlier rows are kept.
