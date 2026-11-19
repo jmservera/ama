@@ -53,6 +53,34 @@ class InputRefused(ValueError):
     """The request is outside the approved input bounds; no provider call is made."""
 
 
+def approved_payload(system, user):
+    """Type and size allowlist at the one boundary every provider family shares; raises InputRefused."""
+    if not isinstance(system, str):
+        raise InputRefused("input-type-not-approved")
+    if isinstance(user, str):
+        return
+    if not isinstance(user, list) or not user:
+        raise InputRefused("input-type-not-approved")
+    text = 0
+    for part in user:
+        if not isinstance(part, dict):
+            raise InputRefused("input-type-not-approved")
+        if part.keys() == {"type", "text"} and part["type"] == "text" and isinstance(part["text"], str):
+            text += len(part["text"].encode("utf-8"))
+            continue
+        image = part.get("image_url")
+        url = image.get("url") if isinstance(image, dict) and image.keys() == {"url"} else None
+        if part.keys() != {"type", "image_url"} or part["type"] != "image_url" or not isinstance(url, str):
+            raise InputRefused("input-type-not-approved")
+        head, _, data = url.partition(";base64,")
+        if not head.startswith("data:") or head.removeprefix("data:") not in IMAGE_TYPES:
+            raise InputRefused("input-type-not-approved")
+        if len(data) * 3 // 4 > MAX_IMAGE_BYTES:
+            raise InputRefused("input-image-too-large")
+    if text + len(system.encode("utf-8")) > MAX_TEXT_BYTES:
+        raise InputRefused("input-too-large")
+
+
 class DispatchWitness:
     """Core-written record of one `Ai.evidence` invocation's transport hand-offs.
 
@@ -167,6 +195,7 @@ class Ai:
                     observation.usage(usage["prompt_tokens"], usage["completion_tokens"])
 
     def _request_body(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
+        approved_payload(system, user)
         seal = ai_consumption.SIMULATION_SEAL.get()
         if ai_consumption.CAPTURED_READINGS.get() and seal is None:
             raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
