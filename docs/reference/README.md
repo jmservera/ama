@@ -611,6 +611,7 @@ no model call and a local test re-run; criteria 3 to 8 stay unticked.
 
 For #1288, the [fourth audit](./research/issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md)
 re-runs 304 local sensor tests and a read-only Azure probe; no code gap in criterion 3, criteria 3 to 8 stay unticked.
+The [fifth audit](./research/issue-1288-live-r5-quality-sensor-evidence-2026-11-19.md) repeats this with 272 tests; the result is unchanged.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root

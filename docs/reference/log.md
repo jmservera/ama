@@ -13615,3 +13615,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1274 release-download criteria proof (Refs #1274)
 
 * Added [issue-1274-live-release-download-criteria-2026-11-19.md](research/issue-1274-live-release-download-criteria-2026-11-19.md): failing 504 endpoint from the retained #1243 job log, real actionlint 1.7.7 checksum verification, 12 installer tests, per-criterion table; AWF recovery and hosted CI stay unproven.
+## [2026-11-19] add | Issue 1288 fifth live audit (Refs #1288)
+
+* Added [issue-1288-live-r5-quality-sensor-evidence-2026-11-19.md](research/issue-1288-live-r5-quality-sensor-evidence-2026-11-19.md): 272 local tests OK, read-only Azure probe, per-criterion table; criteria 4 and 8 unproven, no source change.
