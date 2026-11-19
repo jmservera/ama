@@ -51,6 +51,47 @@ class DeviceProvisionTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertIn("CREDENTIAL_OWNER_NOT_NAMED", err)
 
+    def test_cycle_leaves_no_identity_and_prints_no_credential(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        body = dp.run(manifest(), "cycle", True, registry, store)
+        receipt = body["teardown_receipt"]
+        assert isinstance(receipt, dict)
+        self.assertEqual(receipt["removed_count"], 3)
+        self.assertTrue(receipt["verified_zero_residual"])
+        self.assertEqual(list(registry.list_run("run-185")), [])
+        self.assertEqual(list(store.run_references("run-185")), [])
+        self.assertIn("none remain", str(body["credentials"]))
+
+    def test_hub_host_cycle_uses_hub_adapters_and_reports_residual(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        closed: list[bool] = []
+
+        def adapters(m: di.Manifest, host: str) -> tuple[FakeRegistry, FakeStore, object]:
+            self.assertEqual(host, "hub-demo.azure-devices.net")
+            return registry, store, lambda: closed.append(True)
+
+        original = dp.hub_adapters
+        dp.hub_adapters = adapters  # type: ignore[assignment]
+        try:
+            code, out, _ = self.cli(
+                "--homes", "3", "--owner", "Named Owner", "--action", "cycle", "--apply",
+                "--hub-host", "hub-demo.azure-devices.net",
+            )  # fmt: skip
+        finally:
+            dp.hub_adapters = original
+        body = json.loads(out)
+        self.assertEqual(code, 0)
+        self.assertEqual(body["residual_in_hub"], 0)
+        self.assertEqual(body["device_count"], 2)
+        self.assertEqual(closed, [True])
+
+    def test_hub_host_rejects_invalid_host_without_detail(self) -> None:
+        code, _, err = self.cli(
+            "--homes", "3", "--owner", "Named Owner", "--apply", "--hub-host", "bad host"
+        )
+        self.assertEqual(code, 2)
+        self.assertNotIn("bad host", err)
+
     def test_invalid_input_is_refused_without_detail(self) -> None:
         code, _, err = self.cli("--homes", "9")
         self.assertEqual(code, 2)

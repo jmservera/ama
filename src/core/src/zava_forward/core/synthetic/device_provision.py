@@ -2,18 +2,20 @@
 
 The default action only maps each consenting stock home to one `SYN-` device ID and prints
 non-secret references. A live run needs a named credential owner and a Registry and
-CredentialStore supplied by trusted code; this module ships none, so the command line cannot
-touch Azure and creates nothing. Injected trusted adapters may store and revoke credentials;
-the report then says so by outcome and never prints credential material.
+CredentialStore: trusted code may inject them, or `--apply --hub-host` builds the keyless Hub
+adapters (SAS enrolment, Hub-generated keys discarded, in-memory references). The `cycle` action
+provisions then tears down in one process and reports the residual count. The report never
+prints credential material.
 """
 
 import argparse
 import json
 import sys
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from pathlib import Path
 
 from zava_forward.core.synthetic import device_identity as di
+from zava_forward.core.synthetic import device_registry_azure as dra
 from zava_forward.core.synthetic import live_provisioning as lp
 from zava_forward.core.synthetic import privacy, sensor_stock
 
@@ -24,12 +26,14 @@ DEFAULT_CREDENTIAL_OWNER = CREDENTIAL_OWNER_ROLE
 teardown_simulated_identities = lp.teardown_simulated_identities
 deprovision_simulated_devices = lp.deprovision_simulated_devices
 _PLACEHOLDERS = frozenset({"tbc", "tbd", "todo", "n/a", "na", "none", "unknown", "unassigned"})
-ACTIONS = ("provision", "teardown")
+ACTIONS = ("provision", "teardown", "cycle")
 _CREDENTIALS = {
     ("dry-run", "provision"): "none created or stored; dry run only",
     ("dry-run", "teardown"): "none revoked; dry run only",
+    ("dry-run", "cycle"): "none created, stored or revoked; dry run only",
     ("applied", "provision"): "stored by the injected credential store; references only",
     ("applied", "teardown"): "revoked by the injected credential store; none remain",
+    ("applied", "cycle"): "Hub-generated keys discarded on issue; references revoked; none remain",
 }
 
 
@@ -99,8 +103,32 @@ def run(
     if action == "provision":
         result = di.provision(manifest, registry, store)
         return report(result, action, "applied")
+    if action == "cycle":
+        di.provision(manifest, registry, store)
     receipt = di.teardown(manifest, registry, store)
     return report(manifest, action, "applied", teardown_receipt=receipt)
+
+
+def hub_adapters(
+    manifest: di.Manifest, hostname: str
+) -> tuple[di.Registry, di.CredentialStore, Callable[[], None]]:
+    """Keyless Hub registry (SAS enrolment, Hub keys discarded) plus an in-memory reference vault.
+
+    Needs `azure-identity` and the `iothub` extra installed; neither is declared by this project.
+    """
+    try:
+        from azure.identity import DefaultAzureCredential
+    except ImportError:
+        raise ProvisionError("ADAPTER_UNAVAILABLE") from None
+    spec = dra.EnrollmentSpec(
+        manifest.run_id,
+        tuple(dra.SasEnrollment(i.device_id) for i in manifest.identities),
+    )
+    try:
+        registry = dra.AzureIotHubRegistry(hostname, spec, credential=DefaultAzureCredential())
+    except dra.RegistryError as error:
+        raise ProvisionError(str(error)) from None
+    return registry, lp.SymmetricSasCredentialStore(), registry.close
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -112,14 +140,29 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--seed", type=int, default=7)
     parser.add_argument("--action", choices=ACTIONS, default="provision")
     parser.add_argument("--apply", action="store_true", help="live run; refused without adapters")
+    parser.add_argument("--hub-host", help="IoT Hub host name; with --apply uses the Hub registry")
     args = parser.parse_args(argv)
     try:
         manifest = build_manifest(args.register, args.homes, args.run_id, args.owner, args.seed)
-        body = run(manifest, args.action, args.apply)
-    except (ProvisionError, di.DeviceIdentityError, ValueError, OSError) as error:
+        if args.apply and args.hub_host:
+            registry, store, close = hub_adapters(manifest, args.hub_host)
+            try:
+                body = run(manifest, args.action, True, registry, store)
+                body["residual_in_hub"] = len(registry.list_run(manifest.run_id))
+            finally:
+                close()
+        else:
+            body = run(manifest, args.action, args.apply)
+    except (
+        ProvisionError,
+        di.DeviceIdentityError,
+        dra.RegistryError,
+        ValueError,
+        OSError,
+    ) as error:
         code = (
             str(error)
-            if isinstance(error, (ProvisionError, di.DeviceIdentityError))
+            if isinstance(error, (ProvisionError, di.DeviceIdentityError, dra.RegistryError))
             else "INVALID_INPUT"
         )
         print(f"refused: {code}", file=sys.stderr)
