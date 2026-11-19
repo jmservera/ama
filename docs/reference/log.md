@@ -13688,3 +13688,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 189 live re-observation (Refs #189)
 
 * Added [issue-189-live-20261119-2026-11-19.md](research/issue-189-live-20261119-2026-11-19.md) with redacted verifier output: owner tag, B1, USD 25 budget and both alerts pass; recipients unreachable; no simulator job. No source change; the live owned-run criterion stays unticked.
+## [2026-11-19] update | Issue 203 README archive-tag fix (Refs #203)
+
+* Added [issue-203-readme-tag-live-2026-11-19.md](research/issue-203-readme-tag-live-2026-11-19.md): the parity-matrix index row names tag v0.21.0, the legacy-reference checker exits 0; the deployed-app and CI criterion stays unproven.
