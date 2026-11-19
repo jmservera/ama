@@ -13594,3 +13594,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 111 live demo evidence (Refs #111)
 
 * Added [issue-111-live-demo-evidence-2026-11-19.md](research/issue-111-live-demo-evidence-2026-11-19.md): the two ticked criteria re-verified by the sensor analysis tests; R1 to R3 sign-off stays unproven (human reviewer gate). No source change.
+## [2026-11-19] add | Issue 114 live re-run (Refs #114)
+
+* Added [issue-114-live-r2-2026-11-19.md](research/issue-114-live-r2-2026-11-19.md): 62 per-year ledger tests pass; deployed demo image unchanged, so the deployed-image criterion stays unproven.
