@@ -1,0 +1,66 @@
+## revisions --all
+Name                                                   Created                    Active    Img
+-----------------------------------------------------  -------------------------  --------  ----------------------------------------------------------------------------------------------------------------------
+ca-cutover-test-demo-api--0000001                      2026-10-22T14:01:10+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d
+ca-cutover-test-demo-api--0000002                      2026-10-24T13:51:56+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d
+ca-cutover-test-demo-api--0000003                      2026-10-24T21:24:44+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:417a7100669f6d0376cb686132ca3d6db0c19978e899e48f0a0c6653a071e07e
+ca-cutover-test-demo-api--0000004                      2026-10-24T21:29:19+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d
+ca-cutover-test-demo-api--0000005                      2026-10-25T01:04:56+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e
+ca-cutover-test-demo-api--0000006                      2026-10-25T12:18:25+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e
+ca-cutover-test-demo-api--0000007                      2026-11-01T18:14:02+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:7d17911526f72a4f46422c7b74771a8048036e5de44dc3fa6ce5965db1057b46
+ca-cutover-test-demo-api--0000008                      2026-11-01T20:29:09+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:7aa2a317a1fe52ddb22ee72a6489ed7addaab245728f99dc047c8c2ab7b25289
+ca-cutover-test-demo-api--0000009                      2026-11-01T23:16:09+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:72dfb10326dc1e8c9c0eefe2970b6e11490847bb028d1fd6ddfbb699795e57bc
+ca-cutover-test-demo-api--0000010                      2026-11-03T23:52:48+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:bf8d321379b98eaa62c20e1f5a5e268f64a49a2ec02e81e65fa05dc0471ec9de
+ca-cutover-test-demo-api--0000011                      2026-11-04T02:27:56+00:00  False     [registry].azurecr.io/zava-forward-api:891
+ca-cutover-test-demo-api--0000012                      2026-11-04T03:12:43+00:00  False     [registry].azurecr.io/zava-forward-api:891-1022
+ca-cutover-test-demo-api--0000013                      2026-11-04T03:25:13+00:00  False     [registry].azurecr.io/zava-forward-api:891-1022
+ca-cutover-test-demo-api--0000014                      2026-11-04T09:58:39+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000015                      2026-11-04T10:18:53+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000016                      2026-11-04T10:21:59+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000017                      2026-11-04T10:22:23+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000018                      2026-11-04T10:23:12+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000019                      2026-11-04T10:24:57+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000031                      2026-11-17T19:42:06+00:00  True      [registry].azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb
+ca-cutover-test-demo-api--emp-20261028-102834          2026-10-28T10:30:52+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19
+ca-cutover-test-demo-api--emp-live-20261029-102306     2026-10-29T10:23:13+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:5215e019a78a8c7ae07987dcd26dbcabbe87eb4b5ecf2077688f7a9ca5f9034e
+ca-cutover-test-demo-api--emp-live-20261030-091952     2026-10-30T09:19:59+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:e4fa88041d4f4fedfdd230fa3e3eb5f73a53c89c43bace46e0658dcf30cf9799
+ca-cutover-test-demo-api--emp-live-20261030-132643     2026-10-30T13:26:49+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:2aabba75cea68274378bf445d3ef0974971f7671e0f383729d296e824e4fa686
+ca-cutover-test-demo-api--emp-live-20261030-152210     2026-10-30T15:22:17+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:dab5e300f2c05deaaf5b9112b756a4b2dc9ed4dbf26e3a8d78c00125f4443311
+ca-cutover-test-demo-api--emp-live-20261031-011208     2026-10-31T01:12:15+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:5086b5619f0a1a9c8ae0d3aea5d6de19e1c47494182169976ea4dae63dabded0
+ca-cutover-test-demo-api--emp-5fb2e32                  2026-11-01T08:05:37+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:7d17911526f72a4f46422c7b74771a8048036e5de44dc3fa6ce5965db1057b46
+ca-cutover-test-demo-api--d764                         2026-11-02T15:40:20+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:161fa1f0ff29c0deb7d07cacc045a07c0aaa5d34ea2f73f36f51e96f93ffe3d0
+ca-cutover-test-demo-api--e691-221537                  2026-11-02T22:15:51+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:09d2c73c6f4b052c479de6beaa171bf06868475b13f2a88a053dd3804915f12e
+ca-cutover-test-demo-api--0000020                      2026-11-04T10:26:18+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000021                      2026-11-04T10:27:28+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000022                      2026-11-04T10:52:12+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000023                      2026-11-04T11:50:39+00:00  False     [registry].azurecr.io/zava-forward-api:4d56cf609
+ca-cutover-test-demo-api--0000024                      2026-11-04T11:51:38+00:00  False     [registry].azurecr.io/zava-forward-api:4d56cf609
+ca-cutover-test-demo-api--0000025                      2026-11-04T15:13:26+00:00  False     [registry].azurecr.io/zava-forward-api:8b9553d8b
+ca-cutover-test-demo-api--0000026                      2026-11-05T01:07:39+00:00  False     [registry].azurecr.io/zava-forward-api:1f465bf5e
+ca-cutover-test-demo-api--0000027                      2026-11-08T16:20:04+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:1605ca20f06598e62441c2894e4c34b554c31bdd9b1e1e88103d3bc3bcca0f64
+ca-cutover-test-demo-api--0000028                      2026-11-17T18:55:10+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:766fa58bc2b841f1a490a5d95f41c7b32374304e07e1256970f041b2b123ef1e
+ca-cutover-test-demo-api--0000029                      2026-11-17T19:03:21+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:6026f4314eaee7cb38c203e05800b882f85bbce00053e2eea08e45d9d33329a5
+ca-cutover-test-demo-api--0000030                      2026-11-17T19:13:33+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:1dc2dbf57cb1f1e9bf7a6cadda61a998c8dbcc8092213aa74faee599c271d9b2
+ca-cutover-test-demo-api--wncofr9                      2026-10-17T11:14:02+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d
+ca-cutover-test-demo-api--rollback-20261028-103137     2026-10-28T10:32:22+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:0769b52dddc5d6b350c74d6711ae53eda45d3e903ee27fac6b5a6c1d6b8b6e7e
+ca-cutover-test-demo-api--emp-reapply-20261028-110058  2026-10-28T11:01:08+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:e6b6e7440c2b64577e96b6322c852bf630f1c5113608267132ebffc07d39fa19
+ca-cutover-test-demo-api--emp-main-20261029-072248     2026-10-29T07:22:58+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:41db94689ae934e3daa6c7f8fb57d8de5cc58a53995efd50217189231ac1f0c1
+ca-cutover-test-demo-api--recover-20261031-011532      2026-10-31T01:15:39+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:dab5e300f2c05deaaf5b9112b756a4b2dc9ed4dbf26e3a8d78c00125f4443311
+ca-cutover-test-demo-api--emp-live-20261031-011847     2026-10-31T01:18:55+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:5086b5619f0a1a9c8ae0d3aea5d6de19e1c47494182169976ea4dae63dabded0
+ca-cutover-test-demo-api--emp-live-20261031-023859     2026-10-31T02:39:05+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:0bd3a9030d56ff23403ebc40cb083b3c17d42357148393578ff37ba5c0ee2ec1
+ca-cutover-test-demo-api--emp-live-20261031-180457     2026-10-31T18:05:04+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:04538b7606e4f924e94e7d10bb394877ffead5072938e7e8e7e144338241165c
+ca-cutover-test-demo-api--emp-main-ac0c9968            2026-11-01T02:28:32+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:3ad6063340fe6188a0fab464636046830f41071e8034991155dcaa0d1e5d4014
+ca-cutover-test-demo-api--m691-b6242b9                 2026-11-03T02:12:14+00:00  False     [registry].azurecr.io/zava-forward-api@sha256:ee38b306d508bb9c66228a43220df9d40d67f296cfae300166682bd8585b2252
+ca-cutover-test-demo-api--k810                         2026-11-04T09:00:04+00:00  False     [registry].azurecr.io/zava-forward-api:891-1022
+ca-cutover-test-demo-api--t810                         2026-11-04T09:02:59+00:00  False     [registry].azurecr.io/zava-forward-api:891-1022
+## acr show-tags
+ERROR: Looks like you don't have access to registry '[registry].azurecr.io'. To see configured firewall rules, run 'az acr show --query networkRuleSet --name [registry]'. To see if public network access is enabled, run 'az acr show --query publicNetworkAccess'.Please refer to https://aka.ms/acr/errors#connectivity_forbidden_error for more information.
+## acr tasks/agentpool
+WARNING: Command group 'acr agentpool' is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+
+## network rule
+{
+  "bypass": "None",
+  "default": "Deny",
+  "ipRules": []
+}

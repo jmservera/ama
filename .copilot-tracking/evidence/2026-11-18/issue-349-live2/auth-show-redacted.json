@@ -1,0 +1,56 @@
+{
+ "encryptionSettings": {},
+ "globalValidation": {
+  "excludedPaths": [
+   "/healthz",
+   "/readyz",
+   "/",
+   "/welcome.html",
+   "/style.css",
+   "/zava-logo.png",
+   "/sign-in"
+  ],
+  "redirectToProvider": "azureactivedirectory",
+  "unauthenticatedClientAction": "RedirectToLoginPage"
+ },
+ "httpSettings": {
+  "forwardProxy": {
+   "convention": "NoProxy"
+  },
+  "requireHttps": true
+ },
+ "identityProviders": {
+  "azureActiveDirectory": {
+   "enabled": true,
+   "isAutoProvisioned": false,
+   "login": {
+    "loginParameters": [
+     "prompt=select_account"
+    ]
+   },
+   "registration": {
+    "clientId": "<guid>",
+    "clientSecretSettingName": "entra-<hash>",
+    "openIdIssuer": "https://login.microsoftonline.com/<guid>/v2.0"
+   },
+   "validation": {
+    "allowedAudiences": [
+     "<guid>",
+     "api://<guid>"
+    ],
+    "defaultAuthorizationPolicy": {
+     "allowedApplications": []
+    }
+   }
+  }
+ },
+ "login": {
+  "preserveUrlFragmentsForLogins": false,
+  "tokenStore": {
+   "enabled": false
+  }
+ },
+ "platform": {
+  "enabled": true
+ }
+}

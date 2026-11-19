@@ -1,0 +1,8 @@
+  File "/home/azureuser/source/ama-wt/issue-162-live-20261118T1611Z/src/api/src/zava_forward/api/server.py", line 172, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+....
+----------------------------------------------------------------------
+Ran 33 tests in 14.810s
+
+OK

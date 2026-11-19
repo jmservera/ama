@@ -1,0 +1,7 @@
+----------------------------------------------------------------------
+Ran 110 tests in 4.882s
+
+OK
+Success: no issues found in 396 source files
+1 file already formatted
+All checks passed!

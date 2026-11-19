@@ -1,0 +1,10 @@
+## repo variables
+["GH_AW_DEFAULT_MAX_DAILY_AI_CREDITS"]
+## secrets
+["COPILOT_GITHUB_TOKEN"]
+## environments
+[{"admin_bypass":true,"name":"copilot","rules":0},{"admin_bypass":true,"name":"dev-plan","rules":0},{"admin_bypass":true,"name":"pilot-plan","rules":0},{"admin_bypass":true,"name":"test-plan","rules":0}]
+## runners
+0
+## src-deploy runs
+0

@@ -7,8 +7,8 @@ A scanner that cannot answer yet (Defender for Storage is asynchronous) leaves
 the document "pending", which is not available until a rescan returns clean.
 
 * LocalSignatureScanner: development and tests only. It finds a labelled
-  synthetic test marker and checks that the bytes match the declared type. It is
-  not an antivirus engine and gives no assurance about real malware.
+  synthetic test marker and the standard EICAR test file, and checks that the bytes match the declared
+  type. It is not an antivirus engine and gives no assurance about real malware.
 * DefenderForStorageScanner: reads the blob index tag that Microsoft Defender
   for Storage on-upload malware scanning writes. Run only against a fake
   transport; nothing here has been run against a real storage account, and
@@ -37,6 +37,7 @@ from .documents import AzureBlobDocumentStore, DocumentStoreError
 SYNTHETIC = "synthetic-demo"
 LOG = logging.getLogger(__name__)
 TEST_MARKER = b"ZF-SYNTHETIC-MALWARE-TEST-MARKER"
+EICAR_SIGNATURE = (b"X5O!P%@AP[4\\PZX54(P^)7CC)7}$" + b"EICAR-STANDARD-ANTIVIRUS-TEST-FILE" + b"!$H+H*")
 MANAGER_ROLES = ("Retrofit Programme Manager",)
 MAGIC = {"pdf": (b"%PDF",), "png": (b"\x89PNG\r\n\x1a\n",), "jpg": (b"\xff\xd8\xff",), "jpeg": (b"\xff\xd8\xff",),
          "docx": (b"PK\x03\x04",), "xlsx": (b"PK\x03\x04",)}
@@ -68,6 +69,8 @@ class LocalSignatureScanner(Scanner):
     def scan(self, case_id, doc_id, name, data, mime):
         if TEST_MARKER in data:
             return "infected", "synthetic malware test marker found"
+        if EICAR_SIGNATURE in data:
+            return "infected", "standard antivirus test file (EICAR) found"
         ext = name.rsplit(".", 1)[-1].lower() if "." in name else ""
         if ext in MAGIC and not any(data.startswith(m) for m in MAGIC[ext]):
             return "mismatch", f"content does not match the .{ext} type"

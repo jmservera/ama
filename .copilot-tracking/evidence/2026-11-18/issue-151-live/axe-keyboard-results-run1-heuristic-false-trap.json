@@ -1,0 +1,1259 @@
+{
+ "axe": "4.10.3",
+ "tags": [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa"
+ ],
+ "viewport": "1366x900",
+ "screens": {
+  "my-cases": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "My cases today"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 32,
+    "inapplicable": 30
+   },
+   "keyboard": {
+    "stops": 13,
+    "trap": true,
+    "sample": [
+     {
+      "tag": "input",
+      "role": null,
+      "name": "Name, address or postcode",
+      "indicator": true,
+      "visible": true,
+      "id": "f-q"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyChecking leaseContacting residentCont",
+      "indicator": true,
+      "visible": true,
+      "id": "f-stage"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyCounty DurhamDarlingtonGatesheadHartl",
+      "indicator": true,
+      "visible": true,
+      "id": "f-area"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyAd hocWave 1Wave 2Wave 3Wave 4",
+      "indicator": true,
+      "visible": true,
+      "id": "f-wave"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyNewly arrivedApproved priorityStale e",
+      "indicator": true,
+      "visible": true,
+      "id": "f-queue"
+     }
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/polite",
+    "status/",
+    "status/",
+    "status/",
+    "/polite"
+   ]
+  },
+  "all": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "All open cases"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 31,
+    "inapplicable": 31
+   },
+   "keyboard": {
+    "stops": 14,
+    "trap": true,
+    "sample": [
+     {
+      "tag": "input",
+      "role": null,
+      "name": "Name, address or postcode",
+      "indicator": true,
+      "visible": true,
+      "id": "f-q"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyChecking leaseContacting residentCont",
+      "indicator": true,
+      "visible": true,
+      "id": "f-stage"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyCounty DurhamDarlingtonGatesheadHartl",
+      "indicator": true,
+      "visible": true,
+      "id": "f-area"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyAd hocWave 1Wave 2Wave 3Wave 4",
+      "indicator": true,
+      "visible": true,
+      "id": "f-wave"
+     },
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AnyAadi KapoorMOD AdministratorAadi Kapo",
+      "indicator": true,
+      "visible": true,
+      "id": "f-owner"
+     }
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/polite",
+    "status/",
+    "status/",
+    "status/",
+    "/polite"
+   ]
+  },
+  "overview": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Overview"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "tags": [
+       "wcag2aa",
+       "wcag143"
+      ],
+      "nodes": 522,
+      "targets": [
+       [
+        ".key.normal > .normal.map-symbol[aria-hidden=\"true\"] > .marker-code"
+       ],
+       [
+        ".key.long > .long.map-symbol[aria-hidden=\"true\"] > .marker-code"
+       ],
+       [
+        "#map-sensor-alerts-hint"
+       ],
+       [
+        ".muted[role=\"status\"][aria-live=\"polite\"]:nth-child(4)"
+       ],
+       [
+        "#maplist-h"
+       ]
+      ]
+     },
+     {
+      "id": "target-size",
+      "impact": null,
+      "help": "All touch targets must be 24px large, or leave sufficient space",
+      "tags": [
+       "wcag22aa",
+       "wcag258"
+      ],
+      "nodes": 0,
+      "targets": []
+     }
+    ],
+    "passes": 31,
+    "inapplicable": 30
+   },
+   "keyboard": {
+    "stops": 20,
+    "trap": true,
+    "sample": [
+     {
+      "tag": "a",
+      "role": null,
+      "name": "Coordinator heatmap and lifecycle funnel",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     },
+     {
+      "tag": "button",
+      "role": null,
+      "name": "443Open casesSelected",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     },
+     {
+      "tag": "button",
+      "role": null,
+      "name": "22Safety issues openSelect filter",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     },
+     {
+      "tag": "button",
+      "role": null,
+      "name": "71Waiting 60+ daysSelect filter",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     },
+     {
+      "tag": "button",
+      "role": null,
+      "name": "443Awaiting resident decisionSelect filt",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     }
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "/polite",
+    "status/polite",
+    "status/polite"
+   ]
+  },
+  "progress": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Progress dashboard"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "tags": [
+       "wcag2aa",
+       "wcag143"
+      ],
+      "nodes": 168,
+      "targets": [
+       [
+        ".progress-chart:nth-child(7) > .progress-bars[aria-hidden=\"true\"] > .progress-bar-row:nth-child(1) > div > .progress-bar-value:nth-child(3) > span"
+       ],
+       [
+        ".progress-chart:nth-child(7) > .progress-bars[aria-hidden=\"true\"] > .progress-bar-row:nth-child(2) > div > .progress-bar-value:nth-child(3) > span"
+       ],
+       [
+        ".progress-chart:nth-child(7) > .progress-bars[aria-hidden=\"true\"] > .progress-bar-row:nth-child(3) > div > .progress-bar-value:nth-child(3) > span"
+       ],
+       [
+        ".progress-chart:nth-child(7) > .progress-bars[aria-hidden=\"true\"] > .progress-bar-row:nth-child(4) > div > .progress-bar-value:nth-child(3) > span"
+       ],
+       [
+        ".progress-chart:nth-child(7) > .progress-bars[aria-hidden=\"true\"] > .progress-bar-row:nth-child(5) > div > .progress-bar-value:nth-child(2) > span"
+       ]
+      ]
+     }
+    ],
+    "passes": 28,
+    "inapplicable": 34
+   },
+   "keyboard": {
+    "stops": 2,
+    "trap": true,
+    "sample": [
+     {
+      "tag": "input",
+      "role": null,
+      "name": "",
+      "indicator": true,
+      "visible": true,
+      "id": "progress-start"
+     },
+     {
+      "tag": "input",
+      "role": null,
+      "name": "",
+      "indicator": true,
+      "visible": true,
+      "id": "progress-start"
+     }
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/"
+   ]
+  },
+  "visits": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Visits coming up"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 25,
+    "inapplicable": 37
+   },
+   "keyboard": {
+    "stops": 40,
+    "trap": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0,
+    "first": [
+     "a:Download for Excel",
+     "a:AM Dawn Brown",
+     "a:AM Angela Dixon",
+     "a:All day David Noble",
+     "a:All day Gillian Charlton",
+     "a:All day Ryan Carr"
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite"
+   ]
+  },
+  "funding": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Funding applications"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 24,
+    "inapplicable": 38
+   },
+   "keyboard": {
+    "stops": 80,
+    "trap": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0,
+    "first": [
+     "a:Download for Excel",
+     "div:Homes where funding is not yet confirmed",
+     "a:Angela Dixon",
+     "a:Adam Noble",
+     "a:Dennis Hedley",
+     "a:Amy Heron"
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite"
+   ]
+  },
+  "finance": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Finance queue"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 25,
+    "inapplicable": 37
+   },
+   "keyboard": {
+    "stops": 16,
+    "trap": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0,
+    "first": [
+     "a:Download for Excel",
+     "div:Invoices waiting for a decision table",
+     "a:Flat 1, 157,159,161,163,165,167 Tebay Dr",
+     "a:Flat 2, 157,159,161,163,165,167 Tebay Dr",
+     "a:Flat 3, 157,159,161,163,165,167 Tebay Dr",
+     "a:Flat 4, 157,159,161,163,165,167 Tebay Dr"
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/"
+   ]
+  },
+  "capacity": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Capacity and work orders"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:3",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 31,
+    "inapplicable": 31
+   },
+   "keyboard": {
+    "stops": 3,
+    "trap": true,
+    "sample": [
+     {
+      "tag": "input",
+      "role": null,
+      "name": "",
+      "indicator": true,
+      "visible": true,
+      "id": "capacity-field-1"
+     },
+     {
+      "tag": "input",
+      "role": null,
+      "name": "",
+      "indicator": true,
+      "visible": true,
+      "id": "capacity-field-2"
+     },
+     {
+      "tag": "input",
+      "role": null,
+      "name": "",
+      "indicator": true,
+      "visible": true,
+      "id": "capacity-field-2"
+     }
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite",
+    "status/polite"
+   ]
+  },
+  "closed": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Closed cases"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:2",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 30,
+    "inapplicable": 32
+   },
+   "keyboard": {
+    "stops": 3,
+    "trap": true,
+    "sample": [
+     {
+      "tag": "select",
+      "role": null,
+      "name": "AllCompletedExcludedWithdrawn",
+      "indicator": true,
+      "visible": true,
+      "id": "progress-status"
+     },
+     {
+      "tag": "input",
+      "role": null,
+      "name": "",
+      "indicator": true,
+      "visible": true,
+      "id": "progress-start"
+     },
+     {
+      "tag": "input",
+      "role": null,
+      "name": "",
+      "indicator": true,
+      "visible": true,
+      "id": "progress-start"
+     }
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/"
+   ]
+  },
+  "assistants": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Role-owned assistant proposals"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "help": "Elements must meet minimum color contrast ratio thresholds",
+      "tags": [
+       "wcag2aa",
+       "wcag143"
+      ],
+      "nodes": 5,
+      "targets": [
+       [
+        "#proposal-reason-7458e5b6262f444a3739f1702a29c8a45ca90bec3b0982f207e5bafa8024d13c"
+       ],
+       [
+        "#proposal-reason-76ae894b9c3fab34add78d652a774e4a56ae4b6e2561eea6d67f3cc5c9fda38f"
+       ],
+       [
+        "#proposal-reason-80c4346eae7779606a96328e2883d9fe4af2c3938b9250595fdefedc3890de39"
+       ],
+       [
+        "#proposal-reason-f8daefcd09f23a1e135afe48487bd28ed966060663befedd9f1ded4748d93c88"
+       ],
+       [
+        "#proposal-reason-f9d6d98a2b8e89558c7a1c663e932dec9cb1cc05cfe7825f05f1e3587f2a5b22"
+       ]
+      ]
+     }
+    ],
+    "passes": 27,
+    "inapplicable": 35
+   },
+   "keyboard": {
+    "stops": 9,
+    "trap": true,
+    "sample": [
+     {
+      "tag": "button",
+      "role": null,
+      "name": "Refresh queue",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     },
+     {
+      "tag": "a",
+      "role": null,
+      "name": "ZF-2025-0031",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     },
+     {
+      "tag": "summary",
+      "role": null,
+      "name": "Suggestion details (technical, for audit",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     },
+     {
+      "tag": "textarea",
+      "role": null,
+      "name": "Reason",
+      "indicator": true,
+      "visible": true,
+      "id": "proposal-reason-7458e5b6262f444a3739f1702a29c8a45ca90bec3b0982f207e5bafa8024d13c"
+     },
+     {
+      "tag": "button",
+      "role": null,
+      "name": "Reject",
+      "indicator": true,
+      "visible": true,
+      "id": null
+     }
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/",
+    "status/",
+    "status/",
+    "status/",
+    "status/",
+    "status/",
+    "status/",
+    "status/",
+    "status/",
+    "status/",
+    "status/"
+   ]
+  },
+  "time": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Staff time capture"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 22,
+    "inapplicable": 40
+   },
+   "keyboard": {
+    "stops": 1,
+    "trap": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0,
+    "first": [
+     "button:Chat"
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "alert/"
+   ]
+  },
+  "aftercare": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Aftercare concerns"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 27,
+    "inapplicable": 35
+   },
+   "keyboard": {
+    "stops": 3,
+    "trap": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0,
+    "first": [
+     "a:Download concerns for Excel",
+     "div:Observed baseline and late means, with c",
+     "button:Chat"
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite",
+    "status/"
+   ]
+  },
+  "screens": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Specialist screens"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:2",
+    "header:1"
+   ],
+   "axe": {
+    "violations": [],
+    "incomplete": [],
+    "passes": 22,
+    "inapplicable": 40
+   },
+   "keyboard": {
+    "stops": 14,
+    "trap": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0,
+    "first": [
+     "a:Asset and board view",
+     "a:Programme queue and connected home view",
+     "a:Technical queue",
+     "a:Quality queue",
+     "a:Resident choice and update queue",
+     "a:Building safety referral queue"
+    ]
+   },
+   "live_regions": [
+    "status/",
+    "alert/",
+    "status/polite"
+   ]
+  }
+ }
+}

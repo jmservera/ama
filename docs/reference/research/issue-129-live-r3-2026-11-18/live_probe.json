@@ -1,0 +1,19 @@
+{
+ "signed_in": true,
+ "me_status": 200,
+ "navigation_count": 13,
+ "navigation_matches_learning_keywords": [],
+ "probe": {
+  "/api/learning": 403,
+  "/api/learning-bundles": 403,
+  "/api/learning-test-bundles": 403,
+  "/learning-bundles": 404,
+  "/api/zz-control-nonexistent": 403,
+  "/api/bundles": 403,
+  "/api/experiments": 403,
+  "/api/atlas/bundles": 403,
+  "/openapi.json": 404,
+  "/docs": 404
+ },
+ "app_text_keyword_hits": []
+}

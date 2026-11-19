@@ -1,0 +1,268 @@
+{
+ "steps": [
+  {
+   "step": "asset_parity_with_branch",
+   "workspace-shell.js": {
+    "status": 200,
+    "match": true
+   },
+   "app.js": {
+    "status": 200,
+    "match": false
+   },
+   "async-action.js": {
+    "status": 200,
+    "match": true
+   },
+   "style.css": {
+    "status": 200,
+    "match": false
+   }
+  },
+  {
+   "step": "shell_without_javascript",
+   "heading": "Starting the workspace",
+   "status": "Starting the workspace, this can take up to a minute when the service has been idle.",
+   "role": "status",
+   "live": "polite",
+   "noscript_text_in_dom": true,
+   "body_blank": false
+  },
+  {
+   "step": "coldstart_sim_t_initial",
+   "t": 0.3,
+   "status": "Starting the workspace, this can take up to a minute when the service has been idle.",
+   "retry_visible": false,
+   "retry_name": "Try again",
+   "live": "polite",
+   "role": "status",
+   "body_chars": 160
+  },
+  {
+   "step": "coldstart_sim_after_slow_threshold",
+   "t": 5.6,
+   "status": "Still starting the workspace. The service may have been idle. You can wait or try again.",
+   "retry_visible": true,
+   "retry_name": "Try again",
+   "live": "polite",
+   "role": "status",
+   "body_chars": 174
+  },
+  {
+   "step": "coldstart_sim_after_deadline",
+   "t": 16.7,
+   "status": "The workspace is taking longer than expected. Try again. If this continues, contact application support.",
+   "retry_visible": true,
+   "retry_name": "Try again",
+   "live": "polite",
+   "role": "status",
+   "body_chars": 190
+  },
+  {
+   "step": "coldstart_sim_released",
+   "shell_removed": true,
+   "briefing_visible": true,
+   "t": 17.9
+  },
+  {
+   "step": "briefing_structure",
+   "heading": "Today's briefing",
+   "status": "Briefing ready. Check the sources, then choose how to review the draft.",
+   "aiLabel": "Summary by rules. Not an instruction.",
+   "basis": [
+    "Priority: Set by fixed rules, not by AI.",
+    "Wording: Written by rules and templates. No AI was used.",
+    "Your control: Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off."
+   ],
+   "prepared": "18 Nov 2026, 11:44:00 UTC",
+   "preparedDatetime": "2026-11-18T11:44:00+00:00",
+   "sectionHeading": [
+    "All programme cases",
+    "Rules-derived summary and its sources"
+   ],
+   "statements": 3,
+   "sourceSummaries": [
+    "Sources used (2)",
+    "Sources used (2)",
+    "Sources used (2)"
+   ],
+   "notReviewed": "Not reviewed",
+   "draftLabel": [
+    "Template draft, not approved. Not an instruction. Not reviewed by a person yet."
+   ],
+   "confidence": [
+    "Confidence: not provided. Confidence is not accuracy."
+   ],
+   "buttons": [
+    "Hide briefing",
+    "Use this draft",
+    "Edit this draft",
+    "Do not use this draft",
+    "Refresh briefing"
+   ],
+   "toggleOptions": [
+    "Allow AI suggestions",
+    "Use rules and templates, without AI"
+   ],
+   "textareasVisible": 0
+  },
+  {
+   "step": "source_list_expanded",
+   "sources": [
+    {
+     "text": "ZF-2025-0122: Stage: Final checks before ordering",
+     "links": [
+      "#/case/ZF-2025-0122"
+     ]
+    },
+    {
+     "text": "ZF-2025-0122: Days in stage: 372",
+     "links": [
+      "#/case/ZF-2025-0122"
+     ]
+    }
+   ]
+  },
+  {
+   "step": "review_controls_initial",
+   "group_visible": true,
+   "buttons": [
+    "Use this draft",
+    "Edit this draft",
+    "Do not use this draft"
+   ],
+   "textareas_visible": 0
+  },
+  {
+   "step": "edit_opened",
+   "labels": [
+    "How to prepare briefings and draft requests",
+    "Edited draft",
+    "Reason"
+   ],
+   "textareas": 2,
+   "submit": [
+    "Hide briefing",
+    "Use this draft",
+    "Edit this draft",
+    "Do not use this draft",
+    "Save edited draft review",
+    "Cancel review",
+    "Refresh briefing"
+   ]
+  },
+  {
+   "step": "edit_empty_reason_refused",
+   "aria_invalid": "true",
+   "focused": true,
+   "review_requests": 0
+  },
+  {
+   "step": "reject_opened",
+   "labels": [
+    "How to prepare briefings and draft requests",
+    "Reason"
+   ],
+   "edited_draft_hidden": true,
+   "submit": [
+    "Hide briefing",
+    "Use this draft",
+    "Edit this draft",
+    "Do not use this draft",
+    "Record rejection",
+    "Cancel review",
+    "Refresh briefing"
+   ]
+  },
+  {
+   "step": "reject_empty_reason_refused",
+   "aria_invalid": "true",
+   "review_requests": 0
+  },
+  {
+   "step": "review_cancelled_no_submission",
+   "review_requests": 0,
+   "group_visible": true
+  },
+  {
+   "step": "refresh_pending_feedback",
+   "early": {
+    "status": "Reading case summaries... Refreshing today's briefing. The current text stays visible until the new one is ready.",
+    "content_busy": 1,
+    "spinner": 0,
+    "toggle_disabled": [
+     true
+    ]
+   },
+   "after_500ms": {
+    "spinner": 2,
+    "feedback": [
+     "Loading workspace data: working...",
+     "Refresh briefing: working..."
+    ],
+    "workspace_status": "Perspective: Retrofit Programme Manager. My assigned cases. 16 cases. Workflow stage: any. Search: none. All-cases scope: off (my assigned cases). Workflow stage narrows this perspective's own/all scope; it never changes your role or access. Area: any. Wave: any. Owner: any. Show only: any. Work queue: any. Order: Most urgent first. Default: work-queues-1; selection: none.",
+    "aria_busy": true
+   }
+  },
+  {
+   "step": "refresh_finished",
+   "status": "Briefing ready. Check the sources, then choose how to review the draft."
+  },
+  {
+   "step": "simulated_ai_unverified_rendering",
+   "note": "SIMULATION: live response rewritten in the browser; no server AI call",
+   "aiLabel": "AI suggestion, not approved. Not an instruction.",
+   "h3": [
+    "All programme cases",
+    "Generated briefing and its sources"
+   ],
+   "wording": [
+    "Set by fixed rules, not by AI.",
+    "Summarised by AI. Check it against the sources.",
+    "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off."
+   ],
+   "unverified": [
+    "These references do not match the record: ZF-SIM-0000: Stage. Do not rely on this statement.",
+    "Unverified: its sources do not match the case record. Check it before use."
+   ]
+  },
+  {
+   "step": "axe_wcag22aa_briefing",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 20
+  },
+  {
+   "step": "axe_wcag22aa_page",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 28
+  },
+  {
+   "step": "spinner_reduced_motion",
+   "reduce": {
+    "name": "none",
+    "dur": "0s",
+    "count": "1"
+   },
+   "no_preference": {
+    "name": "async-spin",
+    "dur": "1s",
+    "count": "infinite"
+   }
+  },
+  {
+   "step": "script_retry_persistent_failure_sim",
+   "note": "SIMULATION: /ops.js aborted in the browser",
+   "ops_requests": 4,
+   "status_sequence": [
+    "Loading workspace files. Please wait.",
+    "Workspace unavailable: Required workspace files did not load: /ops.js. Reload this page to try again. If this continues, ask application support to check these files."
+   ],
+   "alerts": " | Required workspace files did not load: /ops.js. Reload this page to try again. If this continues, ask application support to check these files.",
+   "reload_button": [
+    "Reload workspace"
+   ]
+  }
+ ]
+}

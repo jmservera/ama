@@ -1,7 +1,7 @@
 ---
 title: Production-build assistive-technology, consent and Fluent 2 / WCAG acceptance protocol (chat widget and case view)
 description: Criterion-by-criterion status, human test scripts and blank record tables for the production acceptance carried over from issues 550 and 552 into issue 619
-ms.date: 2026-11-02
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -54,6 +54,43 @@ engineering result. It does not show what a screen reader announces, it does not
 cover zoom to 400 percent, the resident site or the consent journey, and it is not
 a conformance claim. Every record row above stays `Not run`. When a production
 build exists, re-run the check against it and record the build commit.
+
+## Zoom-equivalent reflow and reduced motion on the production configuration (2026-11-17)
+
+The same `checks.production_config_a11y_browser_check` now also runs, on synthetic
+data and with the pinned axe-core 4.10.3:
+
+* a 320 by 256 CSS px viewport, the size of a 1280 by 1024 px window at 400
+  percent browser zoom: the case view has no horizontal scrolling, and with the
+  employee chat open its input and Send button sit inside the viewport with no
+  horizontal scrolling added;
+* the `prefers-reduced-motion: reduce` setting emulated on a fresh page load:
+  no animation or transition longer than 10 ms is running with the chat open.
+
+Observed 2026-11-17 (local run from the repository at base `eb51af5c9` plus this
+change, Chromium 156.0.8078.4 with Playwright 1.64.1, not a deployed build): the
+earlier assertions were reproduced before the change, and all 50 assertions pass
+after it. A first reduced-motion attempt failed on two tab-button colour
+transitions that started before the setting was emulated; that was a check
+set-up error, fixed by reloading under the setting, not a product defect.
+
+What this does not show: a viewport size is not browser zoom with a person's text
+scaling, it leaves out 200 percent text size, the resident site, voice control,
+what any screen reader announces and the consent journey. It is an engineering
+result, not a conformance claim, and every record row above stays `Not run`.
+
+## Checklist for the person-run production session
+
+Complete this list on the production build, using scripts A to C below, and copy
+results only into the record tables.
+
+* Record build commit, browser and assistive-technology versions before starting.
+* Run the automated check against the production build and attach `results.json`.
+* Script A and B with NVDA and Firefox, then VoiceOver and Safari; keyboard only.
+* 200 percent text size and 400 percent browser zoom with a person (the 320 px
+  automated result does not replace this).
+* Script C only with the written approvals; otherwise record `synthetic only`.
+* Owner confirms the target level (O-1) and the testers (O-3) before closing.
 
 ## Test set-up
 

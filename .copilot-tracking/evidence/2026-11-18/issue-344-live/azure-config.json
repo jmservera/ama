@@ -1,0 +1,35 @@
+ERROR: argument --name/-n: expected one argument
+
+Examples from command's help:
+az containerapp env show -n MyContainerappEnvironment -g MyResourceGroup
+Show the details of an environment.
+
+https://aka.ms/cli_ref
+Read more about the command in reference docs
+{
+  "allowInsecure": false,
+  "ext": true,
+  "prov": "Succeeded",
+  "rev": "ca-cutover-test-demo-api--0000031",
+  "transport": "Http"
+}
+{
+  "enabled": true,
+  "excluded": [
+    "/healthz",
+    "/readyz",
+    "/",
+    "/welcome.html",
+    "/style.css",
+    "/zava-logo.png",
+    "/sign-in"
+  ],
+  "unauth": "RedirectToLoginPage"
+}
+[
+  {
+    "minTls": "1.2",
+    "n": "sql-cutover-test-rzsrg",
+    "pna": "Disabled"
+  }
+]

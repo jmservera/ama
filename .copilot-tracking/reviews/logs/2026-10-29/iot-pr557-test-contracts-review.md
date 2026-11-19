@@ -72,7 +72,7 @@ this Review; updating it after handoff remains parent-owned.
 
 | Related marker | Files | What changed and why | Completion evidence | Validation | Assessment |
 | --- | --- | --- | --- | --- | --- |
-| P01-T01 | infra/tests/test_iothub_module.py | Compile live parameters; compare parsed templateJson with independently compiled self.live; compare all four parameter entries exactly | Approved name iot-cutover-test-rzsrg, location uksouth, SKU B1 and integer unitCount 1 match infra/iot-hub-live.bicepparam | New test passes in IoT discovery | Conformant |
+| P01-T01 | infra/tests/test_iothub_module.py | Compile live parameters; compare parsed templateJson with independently compiled self.live; compare all four parameter entries exactly | Approved name [hub], location uksouth, SKU B1 and integer unitCount 1 match infra/iot-hub-live.bicepparam | New test passes in IoT discovery | Conformant |
 | P01-T02 | infra/tests/test_iothub_module.py | Replace substring check with equality to fixture/events/api-consumer after evaluation | values(template) supplies fixture; evaluator supports format; wrong hub retains old suffix and wrong group changes child name | Both mutation subtests reject through the same positive assertion | Conformant |
 | P02-T01 | infra/tests/test_iothub_module.py | Validate affected IoT contracts and preserve main parameter coverage | 22 IoT tests and 2 parameter tests pass without skips; Ruff and whitespace checks pass | Independent reruns below | Conformant |
 | P02-T02 | Dated task evidence and this record | Preserve one Review, then commit locally | This record provides the single Review; local commit has not occurred | Commit verification remains with parent | Correctly pending, not an unmet test contract |

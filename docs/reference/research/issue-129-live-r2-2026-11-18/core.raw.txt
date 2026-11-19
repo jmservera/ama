@@ -1,0 +1,31 @@
+test_all_five_bundles_report_through_existing_scorer (tests.test_learning_test_bundles.ConstructedReportCommand.test_all_five_bundles_report_through_existing_scorer) ... ok
+test_boundary_values_are_accepted_and_scorer_is_unchanged (tests.test_learning_test_bundles.ConstructedReportCommand.test_boundary_values_are_accepted_and_scorer_is_unchanged) ... ok
+test_closed_standard_input_is_one_line_refusal (tests.test_learning_test_bundles.ConstructedReportCommand.test_closed_standard_input_is_one_line_refusal) ... ok
+test_comparator_lower_is_reported_not_hidden (tests.test_learning_test_bundles.ConstructedReportCommand.test_comparator_lower_is_reported_not_hidden) ... ok
+test_importing_and_help_have_no_side_effects (tests.test_learning_test_bundles.ConstructedReportCommand.test_importing_and_help_have_no_side_effects) ... ok
+test_qualifications_and_o16_choice_are_labelled (tests.test_learning_test_bundles.ConstructedReportCommand.test_qualifications_and_o16_choice_are_labelled) ... ok
+test_refusal_does_not_echo_long_caller_text (tests.test_learning_test_bundles.ConstructedReportCommand.test_refusal_does_not_echo_long_caller_text) ... ok
+test_refusals_exit_nonzero_with_no_report_or_files (tests.test_learning_test_bundles.ConstructedReportCommand.test_refusals_exit_nonzero_with_no_report_or_files) ... ok
+test_stop_is_stated_before_effort_and_exit_is_zero (tests.test_learning_test_bundles.ConstructedReportCommand.test_stop_is_stated_before_effort_and_exit_is_zero) ... ok
+test_ac1_bundles_each_have_a_non_ai_comparator_and_zero_measure (tests.test_learning_test_bundles.LearningTestBundles.test_ac1_bundles_each_have_a_non_ai_comparator_and_zero_measure) ... ok
+test_comparator_win_is_valid_outcome (tests.test_learning_test_bundles.LearningTestBundles.test_comparator_win_is_valid_outcome) ... ok
+test_every_zero_measure_across_all_five_bundles_triggers_stop_rule (tests.test_learning_test_bundles.LearningTestBundles.test_every_zero_measure_across_all_five_bundles_triggers_stop_rule) ... ok
+test_five_bundles_exclude_out_of_scope (tests.test_learning_test_bundles.LearningTestBundles.test_five_bundles_exclude_out_of_scope) ... ok
+test_median_range_and_capacity_label (tests.test_learning_test_bundles.LearningTestBundles.test_median_range_and_capacity_label) ... ok
+test_missing_count_arm_or_case_is_rejected (tests.test_learning_test_bundles.LearningTestBundles.test_missing_count_arm_or_case_is_rejected) ... ok
+test_net_effort_sums_six_components (tests.test_learning_test_bundles.LearningTestBundles.test_net_effort_sums_six_components) ... ok
+test_nonzero_target_zero_count_stops_bundle (tests.test_learning_test_bundles.LearningTestBundles.test_nonzero_target_zero_count_stops_bundle) ... ok
+test_protocol_metadata_matches_prd_and_learning_questions (tests.test_learning_test_bundles.LearningTestBundles.test_protocol_metadata_matches_prd_and_learning_questions) ... ok
+test_rejects_missing_unknown_or_negative (tests.test_learning_test_bundles.LearningTestBundles.test_rejects_missing_unknown_or_negative) ... ok
+test_shifting_staff_minutes_to_resident_effort_is_not_a_saving (tests.test_learning_test_bundles.LearningTestBundles.test_shifting_staff_minutes_to_resident_effort_is_not_a_saving) ... ok
+test_five_bundle_campaign_reconciles_single_o16_owner (tests.test_learning_test_bundles.RunReports.test_five_bundle_campaign_reconciles_single_o16_owner) ... ok
+test_o16_bundle_must_name_owner (tests.test_learning_test_bundles.RunReports.test_o16_bundle_must_name_owner) ... ok
+test_owner_rejected_for_bundle_without_o16 (tests.test_learning_test_bundles.RunReports.test_owner_rejected_for_bundle_without_o16) ... ok
+test_reconcile_o16_rejects_conflict (tests.test_learning_test_bundles.RunReports.test_reconcile_o16_rejects_conflict) ... ok
+test_render_states_stop_first_and_capacity (tests.test_learning_test_bundles.RunReports.test_render_states_stop_first_and_capacity) ... ok
+test_retention_must_be_stated_false (tests.test_learning_test_bundles.RunReports.test_retention_must_be_stated_false) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 4.141s
+
+OK

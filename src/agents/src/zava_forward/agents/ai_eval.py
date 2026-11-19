@@ -39,6 +39,22 @@ from zava_forward.core.store import Store
 
 # The golden file lives in the project evals/ folder, outside the package; an installed image sets ZF_AI_GOLDEN.
 GOLDEN = Path(os.environ.get("ZF_AI_GOLDEN") or Path(__file__).resolve().parents[3] / "evals" / "ai_priority_golden.json")
+
+
+class GoldenFileError(FileNotFoundError):
+    """The AI golden file is missing; a non-editable install must set ZF_AI_GOLDEN."""
+
+
+def load_golden(golden=GOLDEN):
+    try:
+        with open(golden, "rb") as f:
+            return f.read()
+    except FileNotFoundError as exc:
+        raise GoldenFileError(
+            f"AI golden file not found at {golden}; set ZF_AI_GOLDEN to its location"
+        ) from exc
+
+
 OWNER = dict(code="EV-01", name="Eval Owner", email="owner@eval.example", role="Resident Liaison Officer")
 OTHER = dict(code="EV-02", name="Eval Other", email="other@eval.example", role="Resident Liaison Officer")
 
@@ -641,8 +657,7 @@ def cohort_report():
 
 
 def run_eval(golden=GOLDEN):
-    with open(golden, "rb") as f:
-        raw = f.read()
+    raw = load_golden(golden)
     spec = json.loads(raw.decode("utf-8"))
     results = []
     observed = []

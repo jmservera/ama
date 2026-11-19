@@ -1,0 +1,87 @@
+[
+  [
+    62.7171870676194,
+    "Azure Container Apps",
+    "USD"
+  ],
+  [
+    1.812429080943846,
+    "Azure DNS",
+    "USD"
+  ],
+  [
+    63.4278385285762,
+    "Azure Front Door Service",
+    "USD"
+  ],
+  [
+    2.60016801075268,
+    "Azure Monitor",
+    "USD"
+  ],
+  [
+    3.48e-07,
+    "Bandwidth",
+    "USD"
+  ],
+  [
+    62.0568853882,
+    "Container Registry",
+    "USD"
+  ],
+  [
+    2.16e-05,
+    "Event Grid",
+    "USD"
+  ],
+  [
+    0.105001008,
+    "Event Hubs",
+    "USD"
+  ],
+  [
+    0.03547632,
+    "Foundry Models",
+    "USD"
+  ],
+  [
+    10.64516129032258,
+    "IoT Hub",
+    "USD"
+  ],
+  [
+    0.015384,
+    "Key Vault",
+    "USD"
+  ],
+  [
+    5.00323562130677,
+    "Log Analytics",
+    "USD"
+  ],
+  [
+    6.77288141935484,
+    "Microsoft Defender for Cloud",
+    "USD"
+  ],
+  [
+    154.50776097797134,
+    "SQL Database",
+    "USD"
+  ],
+  [
+    5e-07,
+    "Service Bus",
+    "USD"
+  ],
+  [
+    0.08675616,
+    "Storage",
+    "USD"
+  ],
+  [
+    71.1110444444444,
+    "Virtual Network",
+    "USD"
+  ]
+]

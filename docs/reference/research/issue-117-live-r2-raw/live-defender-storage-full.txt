@@ -1,0 +1,14 @@
+{
+ "isEnabled": true,
+ "malwareScanning": {
+  "onUpload": {
+   "capGBPerMonth": 10000,
+   "isEnabled": true
+  }
+ },
+ "sensitiveDataDiscovery": {
+  "isEnabled": true
+ },
+ "overrideSubscriptionLevelSettings": false,
+ "lastModified": null
+}

@@ -1,0 +1,5 @@
+kpis open 443 completed 537 stage sum 443
+map keys ['bounds', 'cap', 'items', 'mode', 'shown', 'total'] items 443
+list all total 443 csv all rows 443
+list mine total 16 csv default rows 133
+closed csv rows 537 completed kpi 537
