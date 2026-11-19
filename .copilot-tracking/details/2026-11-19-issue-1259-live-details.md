@@ -1,5 +1,14 @@
-# Issue 1259 live details (2026-11-19)
+# Details: issue 1259 live DEMO (2026-11-19)
 
-* Current run: `cd src/core && PYTHONPATH=src:tests python3 -m unittest tests.test_ranking_publication_runner -q`.
-* Pre-fix run: `git archive cd687abad^ src/core/src | tar -x -C /tmp/pre1259`, then the same test class with `PYTHONPATH=/tmp/pre1259/src/core/src:tests`.
-* Tier: FOCUSED (documentation and tracking only; no src change). Temporary /tmp/pre1259 is removed afterwards.
+## Phase 1
+
+* Green: `cd src/core && PYTHONPATH=src:tests python3 -m unittest test_ranking_publication_runner test_ranking_publication -q`.
+* Red: detached worktree at `cd687abad^`, overlay the current runner test file and `ranking_blob_fixture.py`, run `UnusableArchivePathTests`, remove the worktree.
+
+## Phase 2
+
+* New note under `docs/reference/research/`, row in `docs/reference/README.md` after the run 2 row, append-only entry in `docs/reference/log.md`.
+
+## Phase 3
+
+* Changes file, review file, state update, markdown link check, commit with trailers.

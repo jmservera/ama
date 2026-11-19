@@ -14075,3 +14075,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 111 live demo evidence (Refs #111)
 
 * Added [issue-111-live-demo-evidence-2026-11-19.md](research/issue-111-live-demo-evidence-2026-11-19.md): the two ticked criteria re-verified by the sensor analysis tests; R1 to R3 sign-off stays unproven (human reviewer gate). No source change.
+## [2026-11-19] add | Issue 1259 live third audit (Refs #1259)
+
+* Added [2026-11-19-ranking-archive-unusable-1259-live-r3.md](research/2026-11-19-ranking-archive-unusable-1259-live-r3.md): fresh red-before output (seven failures on the pre-fix source), green output (110 tests) and a per-criterion table; the FULL receipt, independent assessment and hosted-check gates stay unmet.
