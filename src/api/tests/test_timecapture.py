@@ -554,5 +554,40 @@ class DecisionRecordTests(unittest.TestCase):
         self.assertIn("different roles", section)
 
 
+class MssqlUpgradeTest(unittest.TestCase):
+    def test_ledger_safe_notice_version_upgrade_and_legacy_rows(self):
+        statements = []
+
+        class Conn:
+            def execute(self, sql, args=()):
+                statements.append(sql)
+                return self
+
+            def fetchone(self):
+                return None
+
+            def close(self):
+                pass
+
+        class Store:
+            _env = {}
+
+            def assistant_connection(self):
+                return Conn()
+
+            @staticmethod
+            def _limit(limit, offset):
+                return " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY", [offset, limit]
+
+        t = TimeCapture(Store(), {})
+        t.request()
+        alters = [s for s in statements if "ALTER TABLE" in s]
+        self.assertEqual(len(alters), 2)
+        for sql in alters:
+            self.assertIn("notice_version NVARCHAR(50) NULL", sql)
+            self.assertNotIn("DEFAULT", sql)
+        self.assertTrue(any("COALESCE(notice_version, '')" in s for s in statements))
+
+
 if __name__ == "__main__":
     unittest.main()

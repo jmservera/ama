@@ -129,8 +129,9 @@ class TimeCapture:
                     db.execute(f"IF OBJECT_ID(N'{ddl.split()[2]}', N'U') IS NULL {ddl}")
                 db.execute(MSSQL_INDEX)
                 for table in VERSIONED_TABLES:
+                    # Azure SQL ledger tables only accept nullable columns without a default; legacy rows read as ''.
                     db.execute(f"IF COL_LENGTH(N'{table}', N'notice_version') IS NULL "
-                               f"ALTER TABLE {table} ADD notice_version NVARCHAR(50) NOT NULL DEFAULT N''")
+                               f"ALTER TABLE {table} ADD notice_version NVARCHAR(50) NULL")
             else:
                 for ddl in SQLITE_DDL:
                     db.execute(ddl)
@@ -203,14 +204,14 @@ class TimeCapture:
 
     def request(self):
         """The enabling request, if it was made against the references currently configured."""
-        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version FROM time_request ORDER BY id DESC")
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, COALESCE(notice_version, '') FROM time_request ORDER BY id DESC")
         if not r or tuple(r[3:]) != self._refs():
             return None
         return dict(at=r[0], by=r[1], role=r[2])
 
     def activation(self):
         """The enabling record, if it was taken against the references currently configured."""
-        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version FROM time_enabled ORDER BY id DESC")
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, COALESCE(notice_version, '') FROM time_enabled ORDER BY id DESC")
         if not r or tuple(r[3:]) != self._refs():
             return None
         return dict(at=r[0], by=r[1], role=r[2])

@@ -14111,3 +14111,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1830 fourth pass
 
 * Added [issue-1830-live-r4-2026-11-19.md](research/issue-1830-live-r4-2026-11-19.md): no buildable criterion; retained receipts gone; preflight execution still refused; no source change.
+## [2026-11-19] add | Issue 120 time capture ledger defect (Refs #120)
+
+* Added [issue-120-live-time-capture-ledger-2026-11-19.md](research/issue-120-live-time-capture-ledger-2026-11-19.md): live status 500 reproduced as a ledger-table ALTER refusal; fix in `timecapture.py` with test; not redeployed; FULL tier required.
