@@ -13999,3 +13999,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 164 fifth demo re-check (Refs #164)
 
 * Added [issue-164-live-r6-2026-11-19.md](research/issue-164-live-r6-2026-11-19.md): registry still disabled with unapproved thresholds, 89 offline tests OK, read-only digest unchanged; no source change
+## [2026-11-19] add | Issue 157 criteria recheck (Refs #157)
+
+* Added [issue-157-criteria-recheck-live-2026-11-19.md](research/issue-157-criteria-recheck-live-2026-11-19.md): per-criterion table; both open criteria need owner decisions or a pull request, no source change.
