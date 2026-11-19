@@ -13978,3 +13978,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 138 seventh demo run (Refs #138)
 
 * Added [issue-138-live-r7-2026-11-19.md](research/issue-138-live-r7-2026-11-19.md): read-only recheck with retained output; all six criteria remain unproven and need admin or human setup.
+## [2026-11-19] update | Issue 142 live demo criteria recheck (Refs #142)
+
+* Added [issue-142-live-20261119T1418Z-2026-11-19.md](research/issue-142-live-20261119T1418Z-2026-11-19.md): read-only probe; two criteria unproven for the demo, no source change.
