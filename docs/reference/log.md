@@ -13803,3 +13803,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 203 README archive-tag fix (Refs #203)
 
 * Added [issue-203-readme-tag-live-2026-11-19.md](research/issue-203-readme-tag-live-2026-11-19.md): the parity-matrix index row names tag v0.21.0, the legacy-reference checker exits 0; the deployed-app and CI criterion stays unproven.
+## [2026-11-19] add | Issue 223 live run 3 (Refs #223)
+
+* Added [issue-223-live-r3-2026-11-19.md](research/issue-223-live-r3-2026-11-19.md): focused tests re-run (37 and 6 OK) and per-criterion table; remaining items need humans or an OQ-017 appointment.
