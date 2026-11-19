@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-11-12
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -1570,3 +1570,56 @@ Effects on the leads:
 * The dew point definition of condensation is supported by the BMI guide only
   as a general definition; it does not validate the Magnus constants.
 * Nothing in these documents changes the PAS 2035 finding.
+
+## Epic 109 closure audit against main eb51af5c9 (2026-11-17, Refs #109)
+
+Documentation only. It replaces no source, ticks no criterion, closes no issue and
+grants no approval. It supersedes the 2026-11-04 epic comment, which predates
+PRs 1404, 1412, 1418, 1518 and 1656. Issue states were read live with `gh` on
+2026-11-17. The audit is a mapping of merged evidence to criteria, not an
+acceptance.
+
+### Child state
+
+| Issue | State on 2026-11-17 | Open criteria |
+| --- | --- | --- |
+| 110 Device-to-cloud ingestion | OPEN | Distinct real IoT Hub identity per device |
+| 111 Deterministic versioned analysis | OPEN | R1 to R3 research complete before use beyond an exercise rule |
+| 112 Data protection, access, map reuse | CLOSED COMPLETED 2026-10-17 | None |
+| 440 Stabilization checkpoints | OPEN | Recurring gate, not a child of 109 |
+
+### Epic criteria
+
+| Epic criterion | Merged evidence | Status |
+| --- | --- | --- |
+| Scoped stabilization checkpoint (#440) completed before closure | Local-first checkpoints in the [cutover evidence pack](../../architecture/cutover-evidence-pack.md); PR 1404 integration, PR 1412 actual-main sensor checkpoint, PR 1418 bounded cloud readiness | Unmet. Merged children alone do not satisfy it, and a checkpoint after PRs 1518 and 1656 with an owner pivot or defer decision on the Azure-only residuals is not recorded |
+| All child features closed or deferred | #112 closed; #110 and #111 open with no owner defer decision | Unmet |
+| No sensor signal diagnoses a hazard, starts a clock, releases a hold or changes ranking | Proposed-only, default-off drafts (PR 1404); guarded-context-only aftercare (PR 1149); status text mirror (PR 1075); tests `test_sensor_review_draft.py`, `test_sensor_analysis.py`, `test_sensor_status_text.py` | Already ticked on the issue; local evidence is consistent with it |
+
+### Child criteria and merged evidence
+
+| Child criterion | Evidence | Status |
+| --- | --- | --- |
+| 110: distinct IoT Hub identity, schema version, stable reading ID | PR 1656 enforces a deterministic one-to-one simulated device ID, supported schema version and replay-stable reading ID in code and tests; PRs 1393 and 1418 add a bounded registry backend and readiness record | Unmet. The code enforces identity in the simulator; no real Hub identity is issued, and the 2026-11-10 observation records configuration only |
+| 110: idempotent append, visible rejects, no public endpoint, no key in source | Issue ticks, PRs 411, 508, 910 and 1163 | Ticked on the issue |
+| 111: reproducible outputs, sourced or labelled thresholds | Issue ticks, PRs 871, 1031, 1075, 1087, 1164 and 1278 | Ticked on the issue |
+| 111: R1 to R3 complete before use beyond an exercise rule | None; this plan records R1 to R3 as open | Unmet |
+
+### Unmet criteria and owners
+
+* Epic: an owner-recorded stabilization checkpoint and disposition of the
+  Azure-only residuals (#440, human-blocked).
+* Epic: closure or an owner defer decision for #110 and #111.
+* #110: real distinct IoT Hub identities and approved live Hub to Azure SQL
+  acceptance (OD-43; tier, cost, network and credential-owner decisions).
+* #111: R1 to R3 method approval, approved SENSOR_REVIEW_DUE wiring and UI,
+  assistive-technology and copy acceptance.
+
+### Validation and qualifications
+
+* Local targeted run from `src/core/tests` on 2026-11-17: `test_sensor_review_draft`
+  65 passed with 22 opt-in SQL skips; `test_sensor_analysis`,
+  `test_sensor_status_text` and `test_iot_device_identity_enforcement` 33 passed.
+  The skips are not successes, and no SQL Server run was made here.
+* No live Hub, Azure, provider, resident or professional acceptance is claimed.
+* Recommendation: leave #109 open and reference it with `Refs #109` only.

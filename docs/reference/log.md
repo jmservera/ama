@@ -12441,6 +12441,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Updated the [applicability pack](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) and the [Legal briefing](./research/rai/legal-briefing-adm-ai-act.md) with a dated 2026-11-17 reading: S.I. 2026/82 reg. 5, the EU AI Act as made and Regulation (EU) 2026/1744 (Digital Omnibus on AI, OJ 2026-07-24), which moves the Chapter III high-risk application dates. This supersedes the earlier "retrieval failed" and "unverified delay" statements; the earlier rows are kept.
 * Still `Unknown`: ICO guidance (HTTP 403), consolidated EU text comparison, Article 22D regulations, snapshot line comparison and the EU territorial and role facts. All decisions stay `Pending`; no legal conclusion, approval or classification is made. Added regression test `tools/test_adm_evidence_pack.py`.
+## [2026-11-17] update | Epic 109 closure audit against main (Refs #109)
+
+* Added a dated closure audit to [the IoT sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md#epic-109-closure-audit-against-main-eb51af5c9-2026-11-17-refs-109) and an index entry in the [reference index](./README.md). It maps #110, #111 and #112 to merged evidence (including PR 1656) and lists the unmet criteria.
+* Documentation only. No source change, tick, closure or approval. #109, #110 and #111 stay open; live Hub identity, R1 to R3 and the #440 owner disposition remain unproven.
 ## [2026-11-17] update | Cohort evaluation executable evidence re-measured (Refs #222)
 
 * Added a dated section to the [cohort evaluation review pack](research/evaluation/cohort-evaluation-review-pack.md) recording a re-run of the core and agents cohort tests and the `cohort_ranking_eval` runner (with and without `--defects`) on synthetic data. The draft banner and table are preserved. Criterion 6 (OQ-018 owner and DPO approval) stays unmet; synthetic results are not fairness evidence. Documentation only; no source, threshold, approval or live use changed.
