@@ -14069,3 +14069,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-19 Issue 80 thresholds check
 
 * Added research/excel-transition-thresholds-live-80-2026-11-19.md: the staged transition thresholds criterion of #80 is unproven and needs owner values.
+## [2026-11-19] add | Issue 124 live audit, third pass (Refs #124)
+
+* Added [issue-124-live-r3-phase0-discovery-audit-2026-11-19.md](research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md): 59 contract tests pass, no deployed or in-repo consumer of the discovery modules, live probe against newer demo revisions; the three unticked criteria stay owner-only. No source change.
