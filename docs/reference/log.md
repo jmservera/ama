@@ -13800,3 +13800,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 157 criteria recheck (Refs #157)
 
 * Added [issue-157-criteria-recheck-live-2026-11-19.md](research/issue-157-criteria-recheck-live-2026-11-19.md): per-criterion table; both open criteria need owner decisions or a pull request, no source change.
+## [2026-11-19] update | Issue 203 README archive-tag fix (Refs #203)
+
+* Added [issue-203-readme-tag-live-2026-11-19.md](research/issue-203-readme-tag-live-2026-11-19.md): the parity-matrix index row names tag v0.21.0, the legacy-reference checker exits 0; the deployed-app and CI criterion stays unproven.
