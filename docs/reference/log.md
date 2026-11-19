@@ -13317,3 +13317,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 123 D4 golden-file error (Refs #123)
 
 * Added [issue-123-live-d4-golden-error-2026-11-19.md](research/issue-123-live-d4-golden-error-2026-11-19.md): re-check of the #440 triage drafts on main, D4 golden-file named error with tests, per-criterion table; no criterion ticked (Refs #123)
+## [2026-11-19] add | Epic 73 criterion audit (Refs #73)
+
+* Added [issue-73-epic-live-2026-11-19.md](research/issue-73-epic-live-2026-11-19.md): per-criterion table and a new HTTP test for hazard and safeguarding clocks on list rows; the live safeguarding half stays unproven.
