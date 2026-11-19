@@ -13511,3 +13511,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## 2026-11-19 Issue 80 thresholds check
 
 * Added research/excel-transition-thresholds-live-80-2026-11-19.md: the staged transition thresholds criterion of #80 is unproven and needs owner values.
+## [2026-11-19] add | Issue 1274 criteria proof (Refs #1274)
+
+* Added [issue-1274-live-release-download-2026-11-19.md](research/issue-1274-live-release-download-2026-11-19.md): 12 installer regressions pass and a live exact-version actionlint 1.7.7 install verified size and SHA-256 from the official endpoint; hosted CI, independent review and the AWF bootstrap stay unproven. No source change.
