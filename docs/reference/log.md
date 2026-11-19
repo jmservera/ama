@@ -13827,3 +13827,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 344 fifth live pass (Refs #344)
 
 * Added [public-browser-access-live-r5-2026-11-19.md](research/public-browser-access-live-r5-2026-11-19.md): fresh probes reproduce the 302 for browser-style anonymous API calls; the fix is full tier, so no source change was made.
+## [2026-11-19] add | Issue 203 third live run (Refs #203)
+
+* Indexed [issue-203-live-recheck-2026-11-19.md](research/issue-203-live-recheck-2026-11-19.md): the legacy-reference checker now reports 0 violations; the deployed-app and CI criterion stays partly proven. No source change.
