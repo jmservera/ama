@@ -13356,3 +13356,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 81 audit round 2 (Refs #81)
 
 * Added [the per-criterion note](./research/issue-81-epic-audit-live-r2-2026-11-19.md): #1837 fix on main passes locally, deployed image not updated; criteria 1 and 2 stay unproven.
+## [2026-11-19] add | Public browser access fourth pass (Refs #344)
+
+* Added [public-browser-access-live-r4-2026-11-19.md](research/public-browser-access-live-r4-2026-11-19.md): fresh read-only evidence, criterion 1 unmet for browser clients, fix is infrastructure scope needing the full tier.
