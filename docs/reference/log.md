@@ -13313,3 +13313,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 109 research gate guard (Refs #109)
 
 * Added [issue-109-research-gate-guard-2026-11-19.md](research/issue-109-research-gate-guard-2026-11-19.md): `SOURCED:` sensor thresholds require R1 to R3 references in code; per-criterion table, #440 and children stay unproven.
+
+## [2026-11-19] add | Issue 123 D4 golden-file error (Refs #123)
+
+* Added [issue-123-live-d4-golden-error-2026-11-19.md](research/issue-123-live-d4-golden-error-2026-11-19.md): re-check of the #440 triage drafts on main, D4 golden-file named error with tests, per-criterion table; no criterion ticked (Refs #123)
