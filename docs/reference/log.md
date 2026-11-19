@@ -13651,3 +13651,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 157 criteria recheck (Refs #157)
 
 * Added [issue-157-criteria-recheck-live-2026-11-19.md](research/issue-157-criteria-recheck-live-2026-11-19.md): per-criterion table; both open criteria need owner decisions or a pull request, no source change.
+## [2026-11-19] add | Issue 157 live criteria check (Refs #157)
+
+* Added [issue-157-live-criteria-2026-11-19.md](research/issue-157-live-criteria-2026-11-19.md): both open criteria stay unproven; the index row naming `prototype/` now cites archive tag `v0.21.0`, clearing the last legacy-reference guard violation. No src change.
