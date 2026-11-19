@@ -1,6 +1,2 @@
----
-title: Issue 203 live review
-ms.date: 2026-11-19
----
-
-Executed once. Outcome: Conformant for docs-only scope. Claims match retained raw output; criterion 5 gaps are stated, not hidden; no secrets in evidence; earlier records untouched. Open work routed: criterion 5 needs a `src-deploy.yml` run or registry label access (out of demo scope).
+# Review: issue 203 live
+Executed once. Outcome: conformant for an evidence-only change. Checked: relative links in the note resolve (none outside README/log paths), index row and log entry added, no secrets. Routed work: criterion 5 provenance (FULL tier, later task).

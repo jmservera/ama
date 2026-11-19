@@ -13905,3 +13905,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 223 first buildable demo criterion (Refs #223)
 
 * Indexed [issue-223-first-buildable-criterion-2026-11-19.md](research/issue-223-first-buildable-criterion-2026-11-19.md): 6 core and 37 agents tests plus the offline gate pass; remaining criteria need people or a production injection route. No source change.
+
+## [2026-11-19] update | Issue 203 criteria refresh
+
+* Added [issue-203-refresh-live-2026-11-19.md](research/issue-203-refresh-live-2026-11-19.md): the reference checker still exits 0; the deployed-app and CI criterion stays unproven for lack of build provenance.
