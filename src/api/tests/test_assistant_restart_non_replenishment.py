@@ -271,6 +271,10 @@ class MaterialMismatch(Restart):
         except PermissionError:
             return "disabled"
 
+    def pool_state(self) -> Any:
+        row = self.pool(self.worker())
+        return None if row is None else tuple(row)
+
     @staticmethod
     def rescoped() -> Any:
         original = ai_registry.tasks
@@ -330,6 +334,26 @@ class MaterialMismatch(Restart):
                 self.assertEqual(self.provider.calls, calls)
                 self.assertEqual(self.domain(), domain)
 
+    def test_old_image_after_a_material_mismatch_cannot_reactivate_or_refill(self) -> None:
+        for name, variation in self.variations().items():
+            with self.subTest(variation=name):
+                release_support.install(self.store)
+                queued = self.service.invoke(self.pm, CAP, "ZF-1")
+                with variation():
+                    self.assertFalse(self.worker().execute(queued["id"]))
+                    self.assertEqual(self.invoke_state(self.worker()), "disabled")
+                self.assertEqual(self.statuses(self.worker()), ["revoked"])
+                pool, calls, domain = self.pool_state(), self.provider.calls, self.domain()
+                old_image = self.approver(**LARGER)
+                with self.assertRaises((ValueError, PermissionError)):
+                    old_image.change_release(self.pm, f"fx-{CAP}", "active", "stale image")
+                self.assertEqual(self.statuses(self.worker()), ["revoked"])
+                self.assertEqual(self.invoke_state(old_image), "disabled")
+                self.assertFalse(old_image.execute(queued["id"]))
+                self.assertEqual(self.pool_state(), pool)
+                self.assertEqual(self.provider.calls, calls)
+                self.assertEqual(self.domain(), domain)
+
     def test_mismatch_after_claim_quarantines_the_late_completion_without_domain_writes(
         self,
     ) -> None:
@@ -350,6 +374,20 @@ class MaterialMismatch(Restart):
                 exported = {x["id"]: x for x in self.worker().export()["proposals"]}
                 self.assertFalse(exported[p["id"]]["relied_on"])
         self.assertEqual(self.provider.calls, 0)
+
+
+@unittest.skipUnless(
+    os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)"
+)
+class MssqlAllowance(MssqlFixture, Allowance):
+    """Actual disposable SQL (local service only): restarts cannot refill a finite allowance."""
+
+
+@unittest.skipUnless(
+    os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)"
+)
+class MssqlMaterialMismatch(MssqlFixture, MaterialMismatch):
+    """Actual disposable SQL (local service only): mismatches deny across workers and restarts."""
 
 
 if __name__ == "__main__":

@@ -1,0 +1,32 @@
+{
+ "session_keys": [
+  "agenda_available",
+  "banner",
+  "callbacks_available",
+  "csrf",
+  "session_id",
+  "signed_in"
+ ],
+ "signed_in": true,
+ "password_in_page": false,
+ "title": "Your home improvement progress - synthetic showcase, not live",
+ "view_status_without_session_binding_header": 409,
+ "session_cookie_attrs": [
+  {
+   "name": "__Host-zfdemo-csrf",
+   "secure": true,
+   "httpOnly": false,
+   "sameSite": "Strict",
+   "expires": 1795097192.689045
+  },
+  {
+   "name": "__Host-zfdemo",
+   "secure": true,
+   "httpOnly": true,
+   "sameSite": "Strict",
+   "expires": 1795097189.857262
+  }
+ ],
+ "after_signout_signed_in": false,
+ "fqdn_host_only": "ca-resident-demo"
+}
