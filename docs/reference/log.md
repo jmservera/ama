@@ -13846,3 +13846,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 117 sixth pass
 
 * Added research/issue-117-live-r7-2026-11-19.md: scan tests re-run (api 19 OK, core rescan 40 OK, 20 skipped); the live Defender path stays unproven and needs an owner-approved deployment change.
+
+## [2026-11-19] add | Issue 220 criterion 5 stop note, run 6 (Refs #220)
+
+* Added [issue-220-live-r6-criterion-5-2026-11-19.md](research/issue-220-live-r6-criterion-5-2026-11-19.md): 30 offline tests pass, live image digest unchanged, criterion stays unticked.
