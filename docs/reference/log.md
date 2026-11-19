@@ -13320,3 +13320,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 73 criterion audit (Refs #73)
 
 * Added [issue-73-epic-live-2026-11-19.md](research/issue-73-epic-live-2026-11-19.md): per-criterion table and a new HTTP test for hazard and safeguarding clocks on list rows; the live safeguarding half stays unproven.
+## [2026-11-19] add | Issue 208 epic evidence and child-order audit (Refs #208)
+
+* Added [issue-208-live-epic-evidence-2026-11-19.md](research/issue-208-live-epic-evidence-2026-11-19.md): per-criterion table; 245 local regulatory tests pass; children closed out of ADR phase order; `tools/test_epic_208_child_order.py` pins it
