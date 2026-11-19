@@ -14020,3 +14020,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 76 hazard clock criterion, fifth pass (Refs #76)
 
 * Added [issue-76-live-r5-2026-11-19.md](research/issue-76-live-r5-2026-11-19.md): 33 targeted tests pass; the only gap is an owner data decision for the hazard awareness time. No source change.
+## [2026-11-19] add | Issue 202 mvp workflow retirement evidence (Refs #202)
+
+* Indexed [2026-11-19-issue-202-mvp-workflow-retirement.md](research/2026-11-19-issue-202-mvp-workflow-retirement.md): `mvp/` and `prototype/` are absent; no ruleset requires `mvp-ci` or `mvp-validation`; deleting the two workflows needs the FULL tier and is not done.
