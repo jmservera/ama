@@ -527,6 +527,7 @@ records a 2026-11-18 demo run: installed alert inventory, a fired test alert, th
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
 A [re-run](./research/issue-146-live-monitoring-rerun-2026-11-18.md) adds a job-failure alert that fired on the real failed-job signal (Total aggregation; the Maximum shape did not) and lists the gaps.
 A [second pass](./research/issue-146-live2-monitoring-evidence-2026-11-18.md) retains redacted raw output of the installed alerts, fired alerts, job metric and query-access state.
+A [2026-11-19 triage](./research/issue-146-live-triage-2026-11-19.md) records a fresh read-only inventory and states that the only buildable item is an `infra/` change needing the full tier.
 
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.

@@ -13636,3 +13636,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 145 live audit 6 (Refs #145)
 
 * Added [issue-145-live-1409z-2026-11-19.md](research/issue-145-live-1409z-2026-11-19.md): fresh read-only Azure SQL backup settings and a per-criterion table; C4 has no approved #121 retention decision, R3 needs the FULL tier. No source change.
+## [2026-11-19] add | Issue 146 monitoring criteria triage (Refs #146)
+
+* Indexed [issue-146-live-triage-2026-11-19.md](research/issue-146-live-triage-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
