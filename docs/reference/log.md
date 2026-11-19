@@ -13406,3 +13406,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 154 live round 5 (Refs #154)
 
 * Added [issue-154-live-resident-ux-r5-2026-11-19.md](research/issue-154-live-resident-ux-r5-2026-11-19.md): only criterion 5b is unticked and is out of demo scope; live app lacks the representative grants variable. No source change.
+
+## [2026-11-19] add | Issue 76 live re-check 4 (Refs #76)
+
+* Added [issue-76-live-r4-2026-11-19.md](research/issue-76-live-r4-2026-11-19.md) with evidence folder: read-only probe of revision 33 finds 1 safeguarding clock with named owner (39 h elapsed) and 1 hazard clock with Unknown times; per-criterion table. No source change.

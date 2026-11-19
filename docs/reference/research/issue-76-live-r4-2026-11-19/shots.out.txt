@@ -1,0 +1,4 @@
+ZF-2025-0148 matches: 1
+ text: Safeguarding clock in this recorded view: 39 elapsed hours; referred: 2026-10-14T09:00:00Z; named accountable owner: [synthetic owner name masked]; response due: 2026-10-17T09:00:00Z. Safeguarding lead owns timing. Named accountable owner recorded. Response: Open.
+ZF-2025-0331 matches: 1
+ text: Hazard clock: elapsed time unknown; no response target window recorded; response unknown. Accountable owner: [synthetic owner name masked]. Safety clock in this recorded view: Unknown; awareness: Unknown; named follow-up owner: [synthetic owner name masked]; service response due: Unknown; resident update due: Unknown. Existing hazard and repairs service owns timing. Named follow-up owner recorded. Service response: Unknown; resident update: Unknown.
