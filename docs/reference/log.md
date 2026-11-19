@@ -13866,3 +13866,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 138 live check, run 8 (Refs #138)
 
 * Added [issue-138-live-r8-2026-11-19.md](research/issue-138-live-r8-2026-11-19.md): read-only recheck; 0 federated credentials, 0 protection rules, 0 runners, 0 deploy runs; all six criteria stay unproven. No source change.
+
+## [2026-11-19] update | Issue 126 live RPI re-run
+
+* Re-ran core governance tests (88 OK, 18 skipped) and confirmed [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): no unmet demo criterion needs new code.
