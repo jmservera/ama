@@ -1,0 +1,6 @@
+{
+  "isEnabled": false,
+  "name": "current",
+  "resourceGroup": "ama",
+  "type": "Microsoft.Security/advancedThreatProtectionSettings"
+}

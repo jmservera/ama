@@ -1,0 +1,2 @@
+{"TimeStamp": "2026-11-18T09:41:31.9378878+00:00", "Log": "F 2026-11-18 09:41:31,937 zava_forward.api.server ERROR http-error GET /api/time/status status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False"}
+{"TimeStamp": "2026-11-18T09:41:31.9379977+00:00", "Log": "F 2026-11-18 09:41:31,937 zava_forward.api.server WARNING http-response GET /api/time/status status=500"}

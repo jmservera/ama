@@ -1,0 +1,48 @@
+{
+ "me_top_keys": [
+  "account",
+  "counts",
+  "map",
+  "navigation",
+  "services",
+  "staff",
+  "user",
+  "work_queues"
+ ],
+ "me_flat": {
+  "user": {
+   "role": "Retrofit Programme Manager",
+   "identity_source": "entra",
+   "view_only": false,
+   "app_roles": [
+    "ZavaForward.ProgrammeManager"
+   ]
+  },
+  "counts": {},
+  "account": {
+   "provider": "trusted-proxy"
+  },
+  "services": {},
+  "map": {},
+  "work_queues": {}
+ },
+ "nonstring_forms": [
+  "bool"
+ ],
+ "distinct_reason_values": 4,
+ "literal_reason_value_hits": {
+  "cases_csv": 0,
+  "proposals": 0,
+  "proposals_csv": 0,
+  "ai_report": 0,
+  "assistants": 0,
+  "audit_check": 0,
+  "rai_metrics": 0
+ },
+ "reason_value_sample_lengths": [
+  4,
+  11,
+  11,
+  21
+ ]
+}

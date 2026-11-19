@@ -1,0 +1,61 @@
+{
+ "cases_listed": 16,
+ "live_alert_status": "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.",
+ "live_alert_notice": "Possible emergency or hazard? Use the existing human emergency or hazard service now. Do not wait for alerts, chat or this application. No resident message is sent.",
+ "live_alert_headings": [
+  "Regulatory alerts for this home"
+ ],
+ "live_alerts_api": [
+  503,
+  "{\"status\": \"unknown\", \"error\": \"The law store is not loaded; rule checks are unknown.\", \"safe_route\": \"Use the existing human emergency or hazard service now; do not wait for checks.\"}"
+ ],
+ "live_alert_axe": {
+  "violations": [],
+  "incomplete": []
+ },
+ "plain_toggle_keyboard": {
+  "before": true,
+  "after": false,
+  "announcement": null,
+  "plain_explanations_hidden_display": []
+ },
+ "refresh_by_keyboard_status": "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.",
+ "focus_after_refresh": "Refresh alerts",
+ "alert_tab_walk": [],
+ "mock_alert_dt_per_alert": [],
+ "mock_alert_headings": [],
+ "mock_alert_summaries": [],
+ "mock_no_source_text": [],
+ "mock_status_line": "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.",
+ "mock_status_marker_non_colour": [],
+ "mock_alert_axe": {
+  "violations": [],
+  "incomplete": []
+ },
+ "chat_tab_label": "AI assistance (loading)",
+ "chat_open_by_keyboard": true,
+ "chat_status": "Cited lookup is not available for your role. Owner: your team manager. Next action: ask them for access. Continue with the human owner route; safety and alerts do not depend on chat.",
+ "chat_privacy": "Synthetic data only. Do not enter resident personal or special-category details. DPIA and retention review remain incomplete.",
+ "chat_guidance_doubt_route": "Programme: distinguish policy targets from duties in force. Check source status and dependencies before planning; a target or allocation is not an approved commitment or award.\n\nFor everyone handling data: use only the necessary resident information. Health and vulnerability information needs special care. Consent is not the same as another lawful basis. Significant decisions need meaningful human involvement; ask the DPO owner if unsure.\n\nIn doubt: Juan Manuel Servera is the exercise Legal, Compliance and DPO owner, for synthetic-demo review only. Real safety, consent, finance and legal decisions remain with the relevant authorised humans. No operational approval is claimed.",
+ "chat_question_disabled": true,
+ "chat_axe": {
+  "violations": [],
+  "incomplete": []
+ },
+ "chat_escape_closes_returns_focus": [
+  true,
+  "SUMMARY"
+ ],
+ "chat_tab_walk": [
+  {
+   "tag": "INPUT",
+   "name": "chat-plain-mode",
+   "ring": true
+  },
+  {
+   "tag": "BUTTON",
+   "name": "Open my exercise doubt inbox (named owner only)",
+   "ring": true
+  }
+ ]
+}

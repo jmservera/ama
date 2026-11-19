@@ -1,0 +1,12 @@
+/healthz 200 
+/ 200 
+/welcome.html 200 
+/api/me 401 
+/api/cases 401 
+/app 401 
+/workspace-shell.js 401 
+/api/time/status 401 
+http 301
+xhr 403
+badbearer 401
+browserUA-json 302

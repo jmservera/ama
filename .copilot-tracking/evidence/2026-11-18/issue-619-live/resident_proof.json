@@ -1,0 +1,107 @@
+{
+ "steps": [
+  {
+   "step": "signed_in",
+   "session": true
+  },
+  {
+   "step": "launcher_keyboard",
+   "focused_by_tab": true,
+   "last_focus": {
+    "tag": "BUTTON",
+    "id": "chat-launcher",
+    "name": "Chat"
+   },
+   "name": "Chat",
+   "visible": true
+  },
+  {
+   "step": "panel_open",
+   "role": "dialog",
+   "labelled_by": "assistant-title",
+   "expanded": "true",
+   "focus": {
+    "tag": "H2",
+    "id": "assistant-title",
+    "name": "Help with your case"
+   },
+   "notice": "Advisory only. Chat cannot submit forms, give consent or make decisions.",
+   "notice_visible": false,
+   "saving_notice_present": true,
+   "consent_label": "Use my question and limited own-case details for this chat, including AI when enabled. This is not consent to works.",
+   "consent_checked": false,
+   "intro_human_route": true,
+   "disclaimer_ai_label": true
+  },
+  {
+   "step": "ask_without_consent",
+   "chat_posts": [],
+   "error_text": "Agree to use your own record for this question first.",
+   "focus": {
+    "tag": "INPUT",
+    "id": "assistant-consent",
+    "name": ""
+   },
+   "aria_invalid": "true",
+   "log_text": ""
+  },
+  {
+   "step": "ticked_by_space",
+   "checked": true,
+   "invalid_cleared": true
+  },
+  {
+   "step": "ask_with_consent",
+   "status": 200,
+   "posts": [
+    "/demo/assistant"
+   ],
+   "label": "Summary by rules - AI is not enabled",
+   "sources": 6,
+   "answer_excerpt": "This view does not show which documents have been requested for your case. It cannot tell you what to send. Document D1, EPC: a generated placeholder, not a presented document. The file check result i",
+   "status_region": "",
+   "log_items": 2
+  },
+  {
+   "step": "axe_open_panel",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 21
+  },
+  {
+   "step": "unticked_clears",
+   "checked": false,
+   "log_items": 0,
+   "question_value": "",
+   "status_text": "Record use stopped. Previous answers cleared."
+  },
+  {
+   "step": "works_consent_question",
+   "status": 200,
+   "label": "Summary by rules - workflow only, no AI used",
+   "answer_excerpt": "Works consent is not available in this showcase. I cannot say whether you have given consent. Agreeing to use your record in chat is not consent to works. Ask your housing officer to check your consent record."
+  },
+  {
+   "step": "escape_closes",
+   "hidden": true,
+   "focus": {
+    "tag": "BUTTON",
+    "id": "chat-launcher",
+    "name": "Chat"
+   },
+   "expanded": "false"
+  },
+  {
+   "step": "reflow_400pct_equiv",
+   "no_horizontal_scroll": true
+  },
+  {
+   "step": "reduced_motion_page",
+   "running_long_animations": 0
+  },
+  {
+   "step": "reload_session_state",
+   "signed_in": true
+  }
+ ]
+}

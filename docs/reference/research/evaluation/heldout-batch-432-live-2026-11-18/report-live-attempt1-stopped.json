@@ -1,0 +1,54 @@
+{
+  "accrued_usd": "0.000310",
+  "approved_by": "Juan Manuel Servera",
+  "budget_usd": "0.50",
+  "calls": 1,
+  "currency": "USD",
+  "evidence_label": "dry-run simulation - not measured evidence",
+  "mode": "live",
+  "model": "gpt-4.1-nano",
+  "outcome": "stopped",
+  "problems": [],
+  "rows": [
+    {
+      "id": "h01",
+      "measured": false,
+      "usd": "0.000310"
+    }
+  ],
+  "source": "provider usage envelope via AgentWorker.provider_call",
+  "spend_authority_ref": "Owner decision 2026-11-18 on #432: live Azure authorised for the synthetic demo, resource group ama, demo cap USD 700; this batch capped at USD 0.50 and 12 calls",
+  "spread": {
+    "input": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null,
+      "p50": null,
+      "p90": null
+    },
+    "output": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null,
+      "p50": null,
+      "p90": null
+    },
+    "total": {
+      "count": 0,
+      "max": null,
+      "mean": null,
+      "min": null,
+      "p50": null,
+      "p90": null
+    }
+  },
+  "stop_reason": "unmeasured-call",
+  "tokens": {
+    "cached": 0,
+    "input": 0,
+    "output": 0,
+    "total": 1900
+  }
+}

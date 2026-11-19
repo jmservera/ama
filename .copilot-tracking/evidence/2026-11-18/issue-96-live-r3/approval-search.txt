@@ -1,0 +1,3 @@
+src/core/src/zava_forward/core/form_validation.py:170:        or approval["status"] not in ("Approved", "Unapproved")
+src/core/src/zava_forward/core/form_validation.py:218:    if row["approval"] != "Approved" or not _nonblank(row.get("approval_evidence")):
+src/core/src/zava_forward/core/form_validation.py:232:        approval["status"] != "Approved"

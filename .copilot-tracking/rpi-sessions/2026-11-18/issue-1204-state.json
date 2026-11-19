@@ -1,0 +1,27 @@
+{
+  "task_id": "issue-1204",
+  "task_slug": "issue-1204-delivery-idle",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-18/issue-1204-delivery-idle-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-18/issue-1204-delivery-idle-plan.instructions.md",
+    "details": ".copilot-tracking/details/2026-11-18/issue-1204-delivery-idle-details.md",
+    "critique": ".copilot-tracking/critiques/2026-11-18-issue-1204-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-18/issue-1204-delivery-idle-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-18/issue-1204-delivery-idle-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Validation tier FOCUSED", "status": "confirmed", "evidence": "coordinator brief; instruction-only change"},
+    {"decision": "Critique executed post-hoc as single worker self-critique; verdict proceed", "status": "recorded", "evidence": "critique artifact"},
+    {"decision": "Review executed as worker self-review; outcome conformant for scope, criterion 2 routed", "status": "recorded", "evidence": "review artifact"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator runs independent exact-head review and publishes with Refs #1204"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Wire check-coordinator-handoff.py into CI or rpi-checks.py", "rationale": "Base drifted from the checker undetected", "evidence": "12 violations on base, tool absent from workflows"}
+  ]
+}

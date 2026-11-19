@@ -1,0 +1,78 @@
+{
+ "resident": {
+  "title": "Your home improvement progress - synthetic showcase, not live",
+  "body_chars": 6581,
+  "mentions": {
+   "synthetic": true,
+   "not live": true,
+   "not available in this showcase": true,
+   "message": true,
+   "callback": true,
+   "appointment": true,
+   "consent": true,
+   "complaint": false,
+   "representative": false,
+   "alternative": false,
+   "phone": true,
+   "offer": false
+  },
+  "mailto_tel_links": 0,
+  "forms": [
+   {
+    "id": "signin-form",
+    "action": "/demo/login"
+   },
+   {
+    "id": "",
+    "action": null
+   }
+  ],
+  "visible_buttons": [
+   "Generate AI summary",
+   "Messages",
+   "Uploads",
+   "Downloads",
+   "Operational appointments",
+   "Consent and decisions",
+   "Synthetic callbacks"
+  ],
+  "visible_inputs": [
+   "checkbox"
+  ],
+  "not_available_excerpt": "Not available in this showcase Synthetic demo - not a real resident service. This sign-in uses a shared demo password and does not prove who you are. Messages Messaging is not available in this preview. Uploads Uploading documents is not available in this preview. Downloads Downloading documents is not available in this preview. Operational appointments You cannot change live works appointments here. Consent and decisions You cannot give or change consent here. Synthetic callbacks The local callback agenda is not connected in this showcase. Use the contact routes above. Synthetic showcase for owner feedback only. Not enrolment, not real resident identity, not a live service.",
+  "demo_session_status": 200,
+  "write_probes": {
+   "/api/messages": 404,
+   "/api/appointments": 404,
+   "/api/callback": 404,
+   "/demo/message": 404,
+   "/demo/contact": 404,
+   "/api/consent": 404
+  },
+  "control_nonexistent_post": 404
+ },
+ "employee": {
+  "role": "Retrofit Programme Manager",
+  "identity_source": "entra",
+  "cases_status": "ok",
+  "case_count": 16,
+  "rep_view_no_ref": {
+   "status": 404,
+   "body_head": "{\"error\": \"Case not found.\"}"
+  },
+  "resident_view_probe": {
+   "s": 404,
+   "k": [
+    "error"
+   ]
+  },
+  "body_mentions": {
+   "representative": false,
+   "resident": true,
+   "interpreter": false,
+   "non-digital": false,
+   "offer": false,
+   "commitment": false
+  }
+ }
+}

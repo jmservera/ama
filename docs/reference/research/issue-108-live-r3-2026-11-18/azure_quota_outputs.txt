@@ -1,0 +1,93 @@
+{
+  "state": "Enabled",
+  "sub": null
+}
+== [openai]
+{
+  "kind": "OpenAI",
+  "loc": "swedencentral",
+  "pna": "Enabled",
+  "sku": "S0"
+}
+[
+  {
+    "cap": 1,
+    "model": "gpt-4.1-mini",
+    "n": "resident-mini",
+    "retire": null,
+    "rl": [
+      {
+        "c": 1.0,
+        "k": "request",
+        "r": 60.0
+      },
+      {
+        "c": 1000.0,
+        "k": "token",
+        "r": 60.0
+      }
+    ],
+    "sku": "Standard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  }
+]
+== [foundry]
+{
+  "kind": "AIServices",
+  "loc": "uksouth",
+  "pna": "Disabled",
+  "sku": "S0"
+}
+[
+  {
+    "cap": 10,
+    "model": "gpt-4.1-nano",
+    "n": "standard",
+    "retire": null,
+    "rl": [
+      {
+        "c": 10.0,
+        "k": "request",
+        "r": 60.0
+      },
+      {
+        "c": 10000.0,
+        "k": "token",
+        "r": 60.0
+      }
+    ],
+    "sku": "GlobalStandard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  }
+]
+== usages swedencentral
+[]
+
+WARNING: The command requires the extension quota. It will be installed first.
+ERROR: Operation returned an invalid status 'Bad Request'
+
+== usages uksouth
+[]
+
+ERROR: Operation returned an invalid status 'Bad Request'
+
+== quota swedencentral 2023-06-01-preview
+0
+
+== quota swedencentral 2025-06-01
+0
+
+== Microsoft.Quota swedencentral
+ERROR: Bad Request("{\"error\":{\"code\":\"MissingRegistrationForResourceProvider\",\"message\":\"The subscription is not in registered state for the resource provider: Microsoft.Quota.\"}}")
+
+== quota uksouth 2023-06-01-preview
+0
+
+== quota uksouth 2025-06-01
+0
+
+== Microsoft.Quota uksouth
+ERROR: Bad Request("{\"error\":{\"code\":\"MissingRegistrationForResourceProvider\",\"message\":\"The subscription is not in registered state for the resource provider: Microsoft.Quota.\"}}")
+

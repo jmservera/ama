@@ -1,0 +1,16 @@
+                raise RuntimeError("Registration update could not be verified with all prior redirects and permissions intact.")
+            time.sleep(2)
+    return {"status": "updated" if changed or permission_changed else "already-initialized",
+            "clientId": client_id, "callback": callback}
+
+
+def main() -> int:
+    """Compatibility CLI; the imported callback-only API remains available."""
+    import runpy
+
+    setup = runpy.run_path(str(Path(__file__).with_name("setup-entra.py")))
+    return setup["main"]()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

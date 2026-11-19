@@ -1,0 +1,48 @@
+# command: PYTHONPATH=src:tests python3 -m unittest -v test_recovery test_sqlstore (cwd src/core)
+# started: 2026-11-18T11:47:25Z
+test_grow_clones_to_requested_synthetic_homes_and_run_reports_classes (test_recovery.LoadCheckTests.test_grow_clones_to_requested_synthetic_homes_and_run_reports_classes) ... ok
+test_entry_is_written_before_redaction_so_a_crash_cannot_lose_it (test_recovery.RecoveryTests.test_entry_is_written_before_redaction_so_a_crash_cannot_lose_it) ... ok
+test_erasure_survives_restore_of_an_older_backup (test_recovery.RecoveryTests.test_erasure_survives_restore_of_an_older_backup) ... ok
+test_reason_required (test_recovery.RecoveryTests.test_reason_required) ... ok
+test_register_entry_precedes_redaction_and_unknown_case_writes_nothing (test_recovery.RecoveryTests.test_register_entry_precedes_redaction_and_unknown_case_writes_nothing) ... ok
+test_register_is_in_the_document_backend_not_a_local_register_file (test_recovery.RecoveryTests.test_register_is_in_the_document_backend_not_a_local_register_file) ... ok
+test_register_survives_on_blob_backend_and_blocks_erasure_when_unwritable (test_recovery.RecoveryTests.test_register_survives_on_blob_backend_and_blocks_erasure_when_unwritable) ... ok
+test_unreadable_register_is_an_error_not_an_empty_register (test_recovery.RecoveryTests.test_unreadable_register_is_an_error_not_an_empty_register) ... ok
+test_corrupt_or_malformed_digests_fail_closed_and_sealed_years_are_listed (test_recovery.YearLedgerTests.test_corrupt_or_malformed_digests_fail_closed_and_sealed_years_are_listed) ... ok
+test_dropping_a_sealed_year_is_reported (test_recovery.YearLedgerTests.test_dropping_a_sealed_year_is_reported) ... ok
+test_each_year_verifies_alone_and_with_sealed_digests (test_recovery.YearLedgerTests.test_each_year_verifies_alone_and_with_sealed_digests) ... ok
+test_edit_in_one_year_is_reported_for_that_year_only_and_digest_catches_rewrite (test_recovery.YearLedgerTests.test_edit_in_one_year_is_reported_for_that_year_only_and_digest_catches_rewrite) ... ok
+test_file_store_pre_reliance_seals_past_years_and_passes_across_2024_2025_2026 (test_recovery.YearLedgerTests.test_file_store_pre_reliance_seals_past_years_and_passes_across_2024_2025_2026) ... ok
+test_non_object_digest_file_is_unreadable_and_fails_closed (test_recovery.YearLedgerTests.test_non_object_digest_file_is_unreadable_and_fails_closed) ... ok
+test_pre_reliance_blocks_corrupt_audit_file_non_dir_digests_and_malformed_entry_years (test_recovery.YearLedgerTests.test_pre_reliance_blocks_corrupt_audit_file_non_dir_digests_and_malformed_entry_years) ... ok
+test_pre_reliance_blocks_corrupt_swapped_or_root_mismatched_digests_and_unsealed_past_years (test_recovery.YearLedgerTests.test_pre_reliance_blocks_corrupt_swapped_or_root_mismatched_digests_and_unsealed_past_years) ... ok
+test_pre_reliance_refuses_to_seal_tampered_chain_and_blocks_reliance (test_recovery.YearLedgerTests.test_pre_reliance_refuses_to_seal_tampered_chain_and_blocks_reliance) ... ok
+test_sql_store_seals_past_years_once (test_recovery.YearLedgerTests.test_sql_store_seals_past_years_once) ... ok
+test_unreadable_digest_file_is_reported_not_raised (test_recovery.YearLedgerTests.test_unreadable_digest_file_is_reported_not_raised) ... ok
+test_ai_falls_back_to_template_and_is_audited (test_sqlstore.SqlImproveTests.test_ai_falls_back_to_template_and_is_audited) ... ok
+test_ai_output_claiming_sent_is_rejected (test_sqlstore.SqlImproveTests.test_ai_output_claiming_sent_is_rejected) ... ok
+test_briefing_cached_until_data_changes (test_sqlstore.SqlImproveTests.test_briefing_cached_until_data_changes) ... ok
+test_filter_and_sort (test_sqlstore.SqlImproveTests.test_filter_and_sort) ... ok
+test_funding_in_progress_filter (test_sqlstore.SqlImproveTests.test_funding_in_progress_filter) ... ok
+test_funding_needs_evidence_and_role (test_sqlstore.SqlImproveTests.test_funding_needs_evidence_and_role) ... ok
+test_handover_suggestions_have_reasons (test_sqlstore.SqlImproveTests.test_handover_suggestions_have_reasons) ... ok
+test_stats_and_map (test_sqlstore.SqlImproveTests.test_stats_and_map) ... ok
+test_upload_rejects_bad_type_and_lists_document (test_sqlstore.SqlImproveTests.test_upload_rejects_bad_type_and_lists_document) ... ok
+test_gate_error_leaves_no_partial_change (test_sqlstore.SqlStoreTests.test_gate_error_leaves_no_partial_change) ... ok
+test_health_checks_database (test_sqlstore.SqlStoreTests.test_health_checks_database) ... ok
+test_initial_seed_retains_procurement_and_date_without_reseeding_restart (test_sqlstore.SqlStoreTests.test_initial_seed_retains_procurement_and_date_without_reseeding_restart) ... ok
+test_ledger_is_append_only_and_detects_tampering (test_sqlstore.SqlStoreTests.test_ledger_is_append_only_and_detects_tampering) ... ok
+test_list_filters_use_indexes (test_sqlstore.SqlStoreTests.test_list_filters_use_indexes) ... ok
+test_pre_reliance_detects_sql_audit_head_mismatch_and_missing_head (test_sqlstore.SqlStoreTests.test_pre_reliance_detects_sql_audit_head_mismatch_and_missing_head) ... ok
+test_pre_reliance_multi_year_verification_passes_and_blocks_tampering_and_dropped_years (test_sqlstore.SqlStoreTests.test_pre_reliance_multi_year_verification_passes_and_blocks_tampering_and_dropped_years) ... ok
+test_pre_reliance_scrubs_driver_secrets_and_is_inherited_by_mssqlstore (test_sqlstore.SqlStoreTests.test_pre_reliance_scrubs_driver_secrets_and_is_inherited_by_mssqlstore) ... ok
+test_recommendation_persists_across_instances (test_sqlstore.SqlStoreTests.test_recommendation_persists_across_instances) ... ok
+test_second_process_sees_changes_without_restart (test_sqlstore.SqlStoreTests.test_second_process_sees_changes_without_restart) ... ok
+test_stale_write_is_refused_not_overwritten (test_sqlstore.SqlStoreTests.test_stale_write_is_refused_not_overwritten) ... ok
+test_state_survives_restart (test_sqlstore.SqlStoreTests.test_state_survives_restart) ... ok
+
+----------------------------------------------------------------------
+Ran 40 tests in 35.408s
+
+OK
+# exit: 0

@@ -126,6 +126,49 @@ def chat_widget(page: Page, axe: str, reports: list[dict[str, Any]]) -> None:
     expect(launcher).to_be_focused()
 
 
+def horizontal_overflow(scroll_width: int, client_width: int) -> bool:
+    return scroll_width > client_width
+
+
+def reflow(page: Page) -> None:
+    """320 CSS px is a 1280 px window at 400 percent zoom (WCAG 1.4.10)."""
+    page.set_viewport_size({"width": 320, "height": 256})
+    page.goto(page.url.split("#")[0] + "#/case/ZF-1?tab=overview")
+    page.get_by_role("tablist", name="Case sections").wait_for()
+    widths = page.evaluate("[document.documentElement.scrollWidth, document.documentElement.clientWidth]")
+    check("case view has no horizontal scrolling at 320 px", not horizontal_overflow(*widths))
+    launcher = page.locator("#employee-chat-launcher")
+    launcher.focus()
+    page.keyboard.press("Enter")
+    panel = page.locator(".chat-widget")
+    expect(panel).to_be_visible()
+    for name, locator in (("input", panel.locator("textarea")), ("Send", panel.get_by_role("button", name="Send"))):
+        box = locator.bounding_box()
+        inside = box is not None and box["x"] >= 0 and box["x"] + box["width"] <= 320
+        check(f"chat {name} stays inside the 320 px viewport", inside)
+    widths = page.evaluate("[document.documentElement.scrollWidth, document.documentElement.clientWidth]")
+    check("open chat adds no horizontal scrolling at 320 px", not horizontal_overflow(*widths))
+    page.keyboard.press("Escape")
+    expect(panel).to_be_hidden()
+
+
+def reduced_motion(page: Page) -> None:
+    page.emulate_media(reduced_motion="reduce")
+    page.set_viewport_size({"width": 1280, "height": 800})
+    page.reload()
+    page.get_by_role("tablist", name="Case sections").wait_for()
+    page.locator("#employee-chat-launcher").focus()
+    page.keyboard.press("Enter")
+    expect(page.locator(".chat-widget")).to_be_visible()
+    running: list[str] = page.evaluate(
+        """() => document.getAnimations()
+          .filter(a => a.effect.getComputedTiming().duration > 10)
+          .map(a => (a.animationName || a.transitionProperty || '?') + ' on ' + a.effect.target.tagName)"""
+    )
+    check(f"reduced motion leaves no animation over 10 ms running {running}", not running)
+    page.keyboard.press("Escape")
+
+
 def run_browser(base: str, axe: str, out: Path) -> None:
     reports: list[dict[str, Any]] = []
     results: dict[str, Any] = {"completed": False, "scans": reports, "axe_sha256": AXE_SHA256}
@@ -150,6 +193,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             check("production configuration serves the app through the trusted proxy header", True)
             case_view(page, axe, reports)
             chat_widget(page, axe, reports)
+            reflow(page)
+            reduced_motion(page)
             check("no uncaught page errors", not errors)
             results["completed"] = True
         finally:

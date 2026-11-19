@@ -1,0 +1,81 @@
+## utc
+2026-11-18T16:35:37Z
+## db list
+[
+  {
+    "autoPauseDelay": null,
+    "backupRedundancy": "Local",
+    "capacity": 10,
+    "created": "2026-10-16T12:10:13.140000+00:00",
+    "earliestRestoreDate": "2026-11-04T16:35:38.258756+00:00",
+    "name": "retrofit",
+    "requestedBackupRedundancy": "Local",
+    "sku": "Standard",
+    "status": "Online",
+    "tier": "Standard",
+    "zoneRedundant": false
+  },
+  {
+    "autoPauseDelay": null,
+    "backupRedundancy": "Local",
+    "capacity": 4,
+    "created": "2026-10-16T12:08:56.507000+00:00",
+    "earliestRestoreDate": null,
+    "name": "master",
+    "requestedBackupRedundancy": "Local",
+    "sku": "GP_SYSTEM",
+    "status": "Online",
+    "tier": "System",
+    "zoneRedundant": false
+  }
+]
+## str policy
+{
+  "diffBackupIntervalInHours": 12,
+  "retentionDays": 14
+}
+## ltr policy
+{
+  "monthly": "PT0S",
+  "weekOfYear": 0,
+  "weekly": "PT0S",
+  "yearly": "PT0S"
+}
+## restorable/other dbs absent check
+retrofit
+master
+## jobs with 145
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+(end)
+## all jobs
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+job-cutover-test-init
+job-cutover-test-verify
+job-cutover-test-ledger-verify
+job-cutover-test-import
+job-cutover-test-orchestrator
+job-cutover-test-smoke
+job-cutover-test-mi-http
+job-cutover-test-public-audit
+tmp146d-failjob
+## storage protection
+{
+  "containerSoftDelete": {
+    "allowPermanentDelete": null,
+    "days": 30,
+    "enabled": true
+  },
+  "pitr": null,
+  "softDelete": {
+    "allowPermanentDelete": false,
+    "days": 30,
+    "enabled": true
+  },
+  "versioning": true
+}
+## sql server flags
+{
+  "aadOnly": true,
+  "public": "Disabled",
+  "tls": "1.2"
+}

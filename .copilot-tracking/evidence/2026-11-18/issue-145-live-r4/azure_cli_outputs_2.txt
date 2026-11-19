@@ -1,0 +1,75 @@
+## app settings (non-secret)
+{
+  "env": [
+    {
+      "n": "ZF_STORE",
+      "v": "mssql"
+    },
+    {
+      "n": "ZF_DEPLOYMENT_PROFILE",
+      "v": "demo"
+    }
+  ],
+  "rev": "ca-cutover-test-demo-api--0000032"
+}
+## ledger-verify job executions
+[
+  {
+    "end": "2026-11-18T08:06:51+00:00",
+    "name": "job-cutover-test-ledger-verify-ibj9kvk",
+    "start": "2026-11-18T08:05:47+00:00",
+    "status": "Succeeded"
+  },
+  {
+    "end": null,
+    "name": "job-cutover-test-ledger-verify-zugyt7i",
+    "start": "2026-11-18T08:02:37+00:00",
+    "status": "Failed"
+  },
+  {
+    "end": null,
+    "name": "job-cutover-test-ledger-verify-oluza9i",
+    "start": "2026-11-18T08:00:43+00:00",
+    "status": "Failed"
+  },
+  {
+    "end": "2026-10-26T02:00:49+00:00",
+    "name": "job-cutover-test-ledger-verify-29883000",
+    "start": "2026-10-26T02:00:00+00:00",
+    "status": "Succeeded"
+  },
+  {
+    "end": "2026-10-25T02:00:31+00:00",
+    "name": "job-cutover-test-ledger-verify-29881560",
+    "start": "2026-10-25T02:00:00+00:00",
+    "status": "Succeeded"
+  },
+  {
+    "end": "2026-10-24T02:00:30+00:00",
+    "name": "job-cutover-test-ledger-verify-29880120",
+    "start": "2026-10-24T02:00:00+00:00",
+    "status": "Succeeded"
+  },
+  {
+    "end": "2026-10-23T02:00:35+00:00",
+    "name": "job-cutover-test-ledger-verify-29878680",
+    "start": "2026-10-23T02:00:00+00:00",
+    "status": "Succeeded"
+  },
+  {
+    "end": "2026-10-22T02:00:29+00:00",
+    "name": "job-cutover-test-ledger-verify-29877240",
+    "start": "2026-10-22T02:00:00+00:00",
+    "status": "Succeeded"
+  },
+  {
+    "end": "2026-10-21T02:00:32+00:00",
+    "name": "job-cutover-test-ledger-verify-29875800",
+    "start": "2026-10-21T02:00:00+00:00",
+    "status": "Succeeded"
+  },
+  {
+    "end": "2026-10-20T02:00:26+00:00",
+    "name": "job-cutover-test-ledger-verify-29874360",
+    "start": "2026-10-20T02:00:00+00:00",
+    "status": "Succeeded"
