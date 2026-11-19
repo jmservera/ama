@@ -449,6 +449,7 @@ records a 2026-11-18 demo run: guarantees, assurance flags and forbidden-field r
 live, and a blocking defect that refuses every Entra-signed-in staff write to the route.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 The [fourth run](./research/issue-220-live-r4-challenge-route-2026-11-18.md) finds the same image and 403 on revision 0000032; the open criterion stays unproven live.
+The [epic 218 selection note](./research/issue-218-first-unmet-demo-criterion-2026-11-19.md) adds an offline regression test for the signed-in staff principal and a per-criterion table for the epic.
 For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
 without confirmed authority, writes refused by the same identity defect, and the unticked

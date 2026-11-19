@@ -13323,3 +13323,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 208 epic evidence and child-order audit (Refs #208)
 
 * Added [issue-208-live-epic-evidence-2026-11-19.md](research/issue-208-live-epic-evidence-2026-11-19.md): per-criterion table; 245 local regulatory tests pass; children closed out of ADR phase order; `tools/test_epic_208_child_order.py` pins it
+## [2026-11-19] add | Epic 218 first unmet demo criterion (Refs #218, #220)
+
+* Added [issue-218-first-unmet-demo-criterion-2026-11-19.md](research/issue-218-first-unmet-demo-criterion-2026-11-19.md): #220 criterion 5 selected; new core test proves a bound Entra principal records a staff route step with ranking, hazards and protected state unchanged (mutation probe reproduces the live 403); live proof still needs a redeploy. Per-criterion table included.
