@@ -13496,3 +13496,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 130 live run 6 nomination route audit (Refs #130)
 
 * Added [issue-130-live-r6-nomination-route-audit-2026-11-19.md](research/issue-130-live-r6-nomination-route-audit-2026-11-19.md): API revision 0000033 and resident revision 0000014 on the same API image digest, 66 offline core tests pass; the representative participation criterion stays unproven for the demo. Docs only.
+
+## [2026-11-19] add | Issue 157 live criteria check (Refs #157)
+
+* Added [issue-157-live-criteria-2026-11-19.md](research/issue-157-live-criteria-2026-11-19.md): both open criteria stay unproven; the index row naming `prototype/` now cites archive tag `v0.21.0`, clearing the last legacy-reference guard violation. No src change.
