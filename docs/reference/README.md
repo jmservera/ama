@@ -586,6 +586,8 @@ closed and nothing is ticked.
 A [seventh run](./research/issue-138-live-r7-2026-11-19.md) rechecks GitHub and Azure read-only: state is unchanged,
 every remaining criterion needs owner settings or a pushed run, and nothing is ticked.
 
+An [eighth run](./research/issue-138-live-r8-2026-11-19.md) repeats the read-only checks with the same result.
+
 For #118, the [hardened deployment live evidence](./research/issue-118-hardened-deployment-live-evidence-2026-11-18.md)
 records the Azure Policy and Defender decision and read-only live probes (enactment not proven).
 A [rerun](./research/issue-118-live-20261118T1512Z-2026-11-18.md) retains sanitised raw outputs and adds a per-criterion table;

@@ -13862,3 +13862,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 202 live re-audit (Refs #202)
 
 * Added [issue-202-live-20261119T1540Z-2026-11-19.md](research/issue-202-live-20261119T1540Z-2026-11-19.md): five criteria proven; removal of `mvp-ci` and `mvp-validation` stays unproven because it needs a full-tier change; no required check depends on them.
+
+## [2026-11-19] add | Issue 138 live check, run 8 (Refs #138)
+
+* Added [issue-138-live-r8-2026-11-19.md](research/issue-138-live-r8-2026-11-19.md): read-only recheck; 0 federated credentials, 0 protection rules, 0 runners, 0 deploy runs; all six criteria stay unproven. No source change.
