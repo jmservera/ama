@@ -27,7 +27,7 @@ It is not a code criterion. #440 is OPEN (last updated 2026-11-17) with two unti
 | 1 | Stabilization checkpoint #440 completed, residuals and owner decisions recorded | Not met | Unproven | #440 open with two unticked criteria and unresolved owner decisions on evidence retention and log privacy. Needs #440 closed and owner approval. |
 | 2 | Child features are accepted | Not met | Unproven | Four children closed, but closed is not acceptance (issue text). #153, #154 and #155 remain open; #155 awaits the SA-010 staff agreement. |
 | 3 | Accessibility, content and usability evidence recorded as test results | Already ticked | Proven locally for the engineering baseline | 48 local tests pass; earlier ticks and notes preserved. Person-run assistive technology testing is out of demo scope. |
-| 4 | Design artefacts traceable to journeys and requirements | Already ticked | Not re-executed | Carried from [screen-design-traceability.md](./screen-design-traceability.md); not re-verified today. |
+| 4 | Design artefacts traceable to journeys and requirements | Already ticked | Not re-executed | Carried from [screen-design-traceability.md](./ux/screen-design-traceability.md); not re-verified today. |
 
 ## Residual actions
 
