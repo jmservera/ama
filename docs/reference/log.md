@@ -13824,3 +13824,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 202 mvp workflow retirement evidence (Refs #202)
 
 * Indexed [2026-11-19-issue-202-mvp-workflow-retirement.md](research/2026-11-19-issue-202-mvp-workflow-retirement.md): `mvp/` and `prototype/` are absent; no ruleset requires `mvp-ci` or `mvp-validation`; deleting the two workflows needs the FULL tier and is not done.
+## [2026-11-19] add | Issue 344 fifth live pass (Refs #344)
+
+* Added [public-browser-access-live-r5-2026-11-19.md](research/public-browser-access-live-r5-2026-11-19.md): fresh probes reproduce the 302 for browser-style anonymous API calls; the fix is full tier, so no source change was made.
