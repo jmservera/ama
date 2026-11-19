@@ -13951,3 +13951,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1818 criteria reconciliation (Refs #1818)
 
 * Added [issue-1818-criteria-reconciliation-2026-11-19.md](research/issue-1818-criteria-reconciliation-2026-11-19.md): per-criterion table; corrects that the receiver register fix landed on main via #2105. No source change.
+## [2026-11-19] add | Issue 114 live re-run (Refs #114)
+
+* Added [issue-114-live-r2-2026-11-19.md](research/issue-114-live-r2-2026-11-19.md): 62 per-year ledger tests pass; deployed demo image unchanged, so the deployed-image criterion stays unproven.
