@@ -13909,3 +13909,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 203 criteria refresh
 
 * Added [issue-203-refresh-live-2026-11-19.md](research/issue-203-refresh-live-2026-11-19.md): the reference checker still exits 0; the deployed-app and CI criterion stays unproven for lack of build provenance.
+
+## [2026-11-19] update | Issue 223 live run 4
+
+* Added [issue-223-live-r4-2026-11-19.md](research/issue-223-live-r4-2026-11-19.md): focused tests re-run (37 and 6 OK); remaining criterion parts need human reviewers or an OQ-017 appointment.
