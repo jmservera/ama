@@ -570,6 +570,8 @@ retains raw test output and a redacted staff-signed sensors payload; the R1 to R
 A third #111 re-run, the [live sensor evidence](./research/issue-111-live3-sensor-evidence-2026-11-18.md),
 re-confirms C1 and C2 as engineering evidence on revision 0000032; R1 to R3 stays unproven.
 
+An [R1 to R3 research gate guard](./research/issue-109-research-gate-guard-2026-11-19.md) now rejects a sourced sensor threshold label without R1 to R3 references; the epic table lists what stays unproven.
+
 For #1288, the [quality sensor live evidence](./research/issue-1288-live-quality-sensor-evidence-2026-11-18.md)
 records a 2026-11-18 demo read and denial probe plus local mock-provider and SQL Server runs. Criteria 4
 and 8 cannot be proven on the demo (no approved release record, no simulator run); criteria 3 and 5 to 7
