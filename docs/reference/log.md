@@ -13603,3 +13603,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 124 live audit, third pass (Refs #124)
 
 * Added [issue-124-live-r3-phase0-discovery-audit-2026-11-19.md](research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md): 59 contract tests pass, no deployed or in-repo consumer of the discovery modules, live probe against newer demo revisions; the three unticked criteria stay owner-only. No source change.
+## [2026-11-19] add | Issue 125 live run 4 re-audit (Refs #125)
+
+* Added [issue-125-live-r4-discovery-assistant-2026-11-19.md](research/issue-125-live-r4-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; all three criteria stay open. No source change.

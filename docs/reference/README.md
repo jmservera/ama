@@ -488,6 +488,7 @@ and all three criteria left open with the reason each cannot be fully proven for
 A [second run](./research/issue-125-live-r2-discovery-assistant-2026-11-18.md) repeats the probes and shows
 that the one failing test passes in a clean installed environment (47 of 47); all three criteria stay open.
 A [third run](./research/issue-125-live-r3-discovery-assistant-2026-11-19.md) on main `e3494f476` repeats the result (47 of 47, same live image) and records why no source change is warranted.
+A [fourth run](./research/issue-125-live-r4-discovery-assistant-2026-11-19.md) on main `1dddac2e0` gives the same result (47 of 47, same live image).
 
 For #184, the [live simulator stream evidence](./research/issue-184-live-simulator-stream-evidence-2026-11-18.md)
 records the child-story status on 2026-11-18: #185 and #189 are still open, the demo hub has
