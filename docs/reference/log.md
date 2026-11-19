@@ -13764,3 +13764,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 349 live round 6 resident probe diagnosis (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r6-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r6-2026-11-19.md): the round 5 resident sign-in failure is an unresolved `sts.microsoftonline.com` on the worker host; per-criterion table, no source change.
+## [2026-11-19] add | Issue 1818 live r3 re-observation (Refs #1818)
+
+* Added [issue-1818-live-r3-20261119-2026-11-19.md](research/issue-1818-live-r3-20261119-2026-11-19.md) with redacted retained output: same stale readings, filter and resident view at 14:14 UTC; the only unticked criterion needs the sender and receiver fix, a FULL-tier SQL change, so it was not built. No source change.
