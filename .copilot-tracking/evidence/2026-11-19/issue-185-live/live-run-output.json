@@ -1,0 +1,12 @@
+{
+ "provisioned": [
+  "SYN-S5XEVNABG5B",
+  "SYN-SCMXRPALU52",
+  "SYN-SDBUQXVANHC"
+ ],
+ "owner_tag_ok": true,
+ "one_to_one": true,
+ "after_teardown": [],
+ "receipt_zero_residual": true,
+ "log_bytes": 13896
+}
