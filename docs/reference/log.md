@@ -13818,3 +13818,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 146 monitoring criteria triage (Refs #146)
 
 * Indexed [issue-146-live-triage-2026-11-19.md](research/issue-146-live-triage-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
+## [2026-11-19] add | Issue 117 live closure, fifth pass (Refs #117)
+
+* Added [issue-117-live-r6-2026-11-19.md](research/issue-117-live-r6-2026-11-19.md): Defender for Storage is confirmed enabled on the demo account, but the demo API still uses the local scanner and a direct probe was blocked by storage network rules; the end-to-end Defender criterion stays unproven pending owner approval.
