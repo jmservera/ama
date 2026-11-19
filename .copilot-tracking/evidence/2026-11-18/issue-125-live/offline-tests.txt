@@ -1,0 +1,61 @@
+test_complete_evidence_still_leaves_criteria_unmet_and_unapproved (tests.test_discovery_assistant_acceptance.AcceptanceTests.test_complete_evidence_still_leaves_criteria_unmet_and_unapproved) ... ok
+test_empty_inputs_list_every_blocker (tests.test_discovery_assistant_acceptance.AcceptanceTests.test_empty_inputs_list_every_blocker) ... ok
+test_single_gap_is_named (tests.test_discovery_assistant_acceptance.AcceptanceTests.test_single_gap_is_named) ... ok
+test_complete_never_establishes_criterion (tests.test_discovery_assistant_acceptance.NoWriteTests.test_complete_never_establishes_criterion) ... ok
+test_each_missing_item_blocks (tests.test_discovery_assistant_acceptance.NoWriteTests.test_each_missing_item_blocks) ... ok
+test_invalid_entries_rejected (tests.test_discovery_assistant_acceptance.NoWriteTests.test_invalid_entries_rejected) ... ok
+test_bad_events_are_gaps_not_guesses (tests.test_discovery_assistant_drafting.CalculationTests.test_bad_events_are_gaps_not_guesses) ... ok
+test_durations_are_deterministic_and_sorted (tests.test_discovery_assistant_drafting.CalculationTests.test_durations_are_deterministic_and_sorted) ... ok
+test_good_draft_is_accepted_but_stays_a_draft (tests.test_discovery_assistant_drafting.DraftTests.test_good_draft_is_accepted_but_stays_a_draft) ... ok
+test_invented_number_is_rejected_and_falls_back (tests.test_discovery_assistant_drafting.DraftTests.test_invented_number_is_rejected_and_falls_back) ... ok
+test_no_drafter_uses_plain_text_and_manual_path (tests.test_discovery_assistant_drafting.DraftTests.test_no_drafter_uses_plain_text_and_manual_path) ... ok
+test_no_durations_gives_plain_statement (tests.test_discovery_assistant_drafting.DraftTests.test_no_durations_gives_plain_statement) ... ok
+test_unavailable_model_still_gives_deterministic_result (tests.test_discovery_assistant_drafting.DraftTests.test_unavailable_model_still_gives_deterministic_result) ... ok
+test_uncited_and_empty_drafts_are_rejected (tests.test_discovery_assistant_drafting.DraftTests.test_uncited_and_empty_drafts_are_rejected) ... ok
+test_complete_evidence_is_only_ready_for_owner_decision (tests.test_discovery_assistant_boundary.ReadinessTests.test_complete_evidence_is_only_ready_for_owner_decision) ... ok
+test_deterministic (tests.test_discovery_assistant_boundary.ReadinessTests.test_deterministic) ... ok
+test_each_missing_item_blocks (tests.test_discovery_assistant_boundary.ReadinessTests.test_each_missing_item_blocks) ... ok
+test_empty_is_not_ready_and_lists_every_item (tests.test_discovery_assistant_boundary.ReadinessTests.test_empty_is_not_ready_and_lists_every_item) ... ok
+test_placeholder_unknown_and_duplicate_evidence_rejected (tests.test_discovery_assistant_boundary.ReadinessTests.test_placeholder_unknown_and_duplicate_evidence_rejected) ... ok
+test_allowlisted_tools_never_write_to_source_systems (tests.test_discovery_assistant_boundary.ToolBoundaryTests.test_allowlisted_tools_never_write_to_source_systems) ... ok
+test_every_denied_area_is_refused (tests.test_discovery_assistant_boundary.ToolBoundaryTests.test_every_denied_area_is_refused) ... ok
+test_toolbox_rejects_registering_a_writer (tests.test_discovery_assistant_boundary.ToolBoundaryTests.test_toolbox_rejects_registering_a_writer) ... ok
+test_toolbox_requires_readiness (tests.test_discovery_assistant_boundary.ToolBoundaryTests.test_toolbox_requires_readiness) ... ok
+test_toolbox_runs_allowed_and_records_denials (tests.test_discovery_assistant_boundary.ToolBoundaryTests.test_toolbox_runs_allowed_and_records_denials) ... ok
+test_unknown_tool_denied_by_default (tests.test_discovery_assistant_boundary.ToolBoundaryTests.test_unknown_tool_denied_by_default) ... ok
+test_expectation_mismatch_fails_command (tests.test_discovery_assistant_demo.FailureTests.test_expectation_mismatch_fails_command) ... ok
+test_no_environment_or_file_access (tests.test_discovery_assistant_demo.FailureTests.test_no_environment_or_file_access) ... ok
+test_repeatability_failure_fails_command (tests.test_discovery_assistant_demo.FailureTests.test_repeatability_failure_fails_command) ... ok
+test_unknown_arguments_fail_explicitly (tests.test_discovery_assistant_demo.FailureTests.test_unknown_arguments_fail_explicitly) ... ok
+test_demo_rejects_extra_arguments (tests.test_discovery_assistant_demo.InstalledCommandTests.test_demo_rejects_extra_arguments) ... ok
+test_demo_runs_from_this_worktree_without_inputs (tests.test_discovery_assistant_demo.InstalledCommandTests.test_demo_runs_from_this_worktree_without_inputs) ... FAIL
+test_other_arguments_keep_version_behaviour (tests.test_discovery_assistant_demo.InstalledCommandTests.test_other_arguments_keep_version_behaviour) ... ok
+test_version_unchanged_without_arguments (tests.test_discovery_assistant_demo.InstalledCommandTests.test_version_unchanged_without_arguments) ... ok
+test_draft_is_deterministic_fallback_without_model (tests.test_discovery_assistant_demo.ReportTests.test_draft_is_deterministic_fallback_without_model) ... ok
+test_fixture_hours_references_and_gaps (tests.test_discovery_assistant_demo.ReportTests.test_fixture_hours_references_and_gaps) ... ok
+test_human_and_model_proof_is_absent (tests.test_discovery_assistant_demo.ReportTests.test_human_and_model_proof_is_absent) ... ok
+test_not_ready_deny_and_unapproved (tests.test_discovery_assistant_demo.ReportTests.test_not_ready_deny_and_unapproved) ... ok
+test_refused_decisions_are_never_dispatched (tests.test_discovery_assistant_demo.ReportTests.test_refused_decisions_are_never_dispatched) ... ok
+test_repeatability_and_render_are_stable (tests.test_discovery_assistant_demo.ReportTests.test_repeatability_and_render_are_stable) ... ok
+test_complete_never_prefers_assistant_or_approves (tests.test_discovery_assistant_evaluation.CompareTests.test_complete_never_prefers_assistant_or_approves) ... ok
+test_empty_has_nothing_comparable_and_criterion_unmet (tests.test_discovery_assistant_evaluation.CompareTests.test_empty_has_nothing_comparable_and_criterion_unmet) ... ok
+test_invalid_entries_are_reported_and_not_counted (tests.test_discovery_assistant_evaluation.CompareTests.test_invalid_entries_are_reported_and_not_counted) ... ok
+test_missing_comparator_blocks_measure (tests.test_discovery_assistant_evaluation.CompareTests.test_missing_comparator_blocks_measure) ... ok
+test_partial_measure_reports_only_that_measure_complete (tests.test_discovery_assistant_evaluation.CompareTests.test_partial_measure_reports_only_that_measure_complete) ... ok
+test_deterministic_calculation_is_identical (tests.test_discovery_assistant_evaluation.RepeatabilityTests.test_deterministic_calculation_is_identical) ... ok
+test_non_deterministic_calculation_is_flagged (tests.test_discovery_assistant_evaluation.RepeatabilityTests.test_non_deterministic_calculation_is_flagged) ... ok
+test_single_run_rejected (tests.test_discovery_assistant_evaluation.RepeatabilityTests.test_single_run_rejected) ... ok
+
+======================================================================
+FAIL: test_demo_runs_from_this_worktree_without_inputs (tests.test_discovery_assistant_demo.InstalledCommandTests.test_demo_runs_from_this_worktree_without_inputs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-125-live-20261118T1045Z/src/core/tests/test_discovery_assistant_demo.py", line 175, in test_demo_runs_from_this_worktree_without_inputs
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 1 != 0 : /usr/bin/python3: Error while finding module specification for 'zava_forward.core' (ModuleNotFoundError: No module named 'zava_forward')
+
+
+----------------------------------------------------------------------
+Ran 47 tests in 0.250s
+
+FAILED (failures=1)

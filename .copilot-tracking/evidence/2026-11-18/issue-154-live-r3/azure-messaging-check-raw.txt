@@ -1,0 +1,117 @@
+# az resources in rg ama (type, name only)
+Microsoft.App/containerApps	ca-cutover-test-agents
+Microsoft.App/containerApps	ca-cutover-test-api
+Microsoft.App/containerApps	ca-cutover-test-demo-api
+Microsoft.App/containerApps	ca-resident-demo
+Microsoft.App/jobs	job-cutover-test-import
+Microsoft.App/jobs	job-cutover-test-init
+Microsoft.App/jobs	job-cutover-test-ledger-verify
+Microsoft.App/jobs	job-cutover-test-mi-http
+Microsoft.App/jobs	job-cutover-test-orchestrator
+Microsoft.App/jobs	job-cutover-test-public-audit
+Microsoft.App/jobs	job-cutover-test-smoke
+Microsoft.App/jobs	job-cutover-test-verify
+Microsoft.App/managedEnvironments	cae-cutover-test
+Microsoft.App/managedEnvironments	cae-cutover-test-demo
+Microsoft.CognitiveServices/accounts	[resource]
+Microsoft.CognitiveServices/accounts	aoai-resident-469
+Microsoft.CognitiveServices/accounts/projects	[resource]/zava-forward-agents
+Microsoft.ContainerRegistry/registries	[resource]
+Microsoft.Devices/IotHubs	[resource]
+Microsoft.EventGrid/systemTopics	[resource]
+Microsoft.EventHub/namespaces	evhns-cutover-test-demo
+Microsoft.Insights/actiongroups	ag-cutover-test-ops
+Microsoft.Insights/components	appi-cutover-test
+Microsoft.Insights/metricalerts	alert-cutover-test-api-5xx
+Microsoft.Insights/metricalerts	alert-cutover-test-api-restarts
+Microsoft.Insights/metricalerts	alert-cutover-test-foundry-throttle
+Microsoft.Insights/metricalerts	alert-cutover-test-sql-cpu
+Microsoft.Insights/scheduledqueryrules	alert-cutover-test-ledger-digest-mismatch
+Microsoft.Insights/scheduledqueryrules	alert-cutover-test-ledger-verify-missing
+Microsoft.Insights/scheduledqueryrules	[resource]
+Microsoft.Insights/scheduledqueryrules	[resource]
+Microsoft.KeyVault/vaults	[resource]
+Microsoft.ManagedIdentity/userAssignedIdentities	id-cutover-test-agents
+Microsoft.ManagedIdentity/userAssignedIdentities	id-cutover-test-api
+Microsoft.ManagedIdentity/userAssignedIdentities	id-cutover-test-import
+Microsoft.ManagedIdentity/userAssignedIdentities	id-cutover-test-init
+Microsoft.ManagedIdentity/userAssignedIdentities	id-cutover-test-orchestrator
+Microsoft.ManagedIdentity/userAssignedIdentities	id-resident-demo
+Microsoft.Network/networkInterfaces	[resource]
+Microsoft.Network/networkInterfaces	pe-ampls-cutover-test.nic.[id]
+Microsoft.Network/networkInterfaces	[resource]
+Microsoft.Network/networkInterfaces	[resource]
+Microsoft.Network/networkInterfaces	[resource]
+Microsoft.Network/networkInterfaces	[resource]
+Microsoft.Network/networkInterfaces	[resource]
+Microsoft.Network/networkInterfaces	[resource]
+Microsoft.Network/networkSecurityGroups	nsg-cutover-test-aca
+Microsoft.Network/networkSecurityGroups	nsg-cutover-test-aca-demo
+Microsoft.Network/networkSecurityGroups	nsg-cutover-test-pe
+Microsoft.Network/privateDnsZones	jollytree-20e6e99e.uksouth.azurecontainerapps.io
+Microsoft.Network/privateDnsZones	privatelink.agentsvc.azure-automation.net
+Microsoft.Network/privateDnsZones	privatelink.azure-devices.net
+Microsoft.Network/privateDnsZones	privatelink.azurecr.io
+Microsoft.Network/privateDnsZones	privatelink.blob.core.windows.net
+Microsoft.Network/privateDnsZones	privatelink.cognitiveservices.azure.com
+Microsoft.Network/privateDnsZones	privatelink.database.windows.net
+Microsoft.Network/privateDnsZones	privatelink.monitor.azure.com
+Microsoft.Network/privateDnsZones	privatelink.ods.opinsights.azure.com
+Microsoft.Network/privateDnsZones	privatelink.oms.opinsights.azure.com
+Microsoft.Network/privateDnsZones	privatelink.openai.azure.com
+Microsoft.Network/privateDnsZones	privatelink.queue.core.windows.net
+Microsoft.Network/privateDnsZones	privatelink.servicebus.windows.net
+Microsoft.Network/privateDnsZones	privatelink.services.ai.azure.com
+Microsoft.Network/privateDnsZones	privatelink.vaultcore.azure.net
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	jollytree-20e6e99e.uksouth.azurecontainerapps.io/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.agentsvc.azure-automation.net/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.azure-devices.net/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.azurecr.io/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.blob.core.windows.net/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.cognitiveservices.azure.com/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.database.windows.net/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.monitor.azure.com/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.ods.opinsights.azure.com/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.oms.opinsights.azure.com/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.openai.azure.com/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.queue.core.windows.net/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.servicebus.windows.net/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.services.ai.azure.com/link-cutover-test
+Microsoft.Network/privateDnsZones/virtualNetworkLinks	privatelink.vaultcore.azure.net/link-cutover-test
+Microsoft.Network/privateEndpoints	[resource]
+Microsoft.Network/privateEndpoints	pe-ampls-cutover-test
+Microsoft.Network/privateEndpoints	[resource]
+Microsoft.Network/privateEndpoints	[resource]
+Microsoft.Network/privateEndpoints	[resource]
+Microsoft.Network/privateEndpoints	[resource]
+Microsoft.Network/privateEndpoints	[resource]
+Microsoft.Network/privateEndpoints	[resource]
+Microsoft.Network/virtualNetworks	vnet-cutover-test
+Microsoft.OperationalInsights/workspaces	log-cutover-test
+Microsoft.Sql/servers	[resource]
+Microsoft.Sql/servers/databases	[resource]/master
+Microsoft.Sql/servers/databases	[resource]/retrofit
+Microsoft.Storage/storageAccounts	[resource]
+microsoft.insights/actiongroups	Application Insights Smart Detection
+microsoft.insights/privateLinkScopes	ampls-cutover-test
+
+# messaging/email-type resources
+(end; empty above means none)
+
+# resident app env var NAMES and secret-ref names only
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+CHAT_DPIA_REF
+CHAT_LAWFUL_BASIS_REF
+CHAT_NOTICE_REF
+CHAT_RETENTION_DAYS
+CHAT_RETENTION_REF
+PORT
+ZF_DEMO_ALLOWED_HOSTS
+ZF_DEMO_CLIENT_ADDRESS
+ZF_DEMO_EXPIRES_AT
+ZF_DEMO_PASSWORD_VERIFIER
+ZF_DEMO_SESSION_KEY
+ZF_SQL_AUTH
+ZF_SQL_CLIENT_ID
+ZF_SQL_DATABASE
+ZF_SQL_SERVER

@@ -1,0 +1,269 @@
+{
+  "outcome": "passed",
+  "browser": "156.0.8078.4",
+  "axe_version": "4.10.3",
+  "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+  "resident_post_statuses": [
+    200,
+    200,
+    200
+  ],
+  "scans": [
+    {
+      "state": "routes-forms-open",
+      "violations": [],
+      "target_size_violations": [
+        [
+          [
+            "#nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-channel"
+          ],
+          [
+            "#nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-assisted_channel"
+          ],
+          [
+            "#nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-owner"
+          ],
+          [
+            "#nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-next_update"
+          ],
+          [
+            "#nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d > button"
+          ],
+          [
+            "#nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-assisted_channel"
+          ],
+          [
+            "#nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-reported_subject_ref"
+          ],
+          [
+            "#challenges-html > details > summary"
+          ],
+          [
+            "#challenge-open-route-proposal_id"
+          ],
+          [
+            "#challenge-open-route-target_kind"
+          ],
+          [
+            "#challenge-open-route-channel"
+          ],
+          [
+            "#challenge-open-route-assisted_channel"
+          ],
+          [
+            "#challenge-open-route-raised_by"
+          ],
+          [
+            "#challenge-open-route-representative_ref"
+          ],
+          [
+            "#challenge-open-route-source"
+          ],
+          [
+            "#challenge-open-route-explanation"
+          ],
+          [
+            "#challenge-open-route-owner"
+          ]
+        ]
+      ],
+      "passes": 21,
+      "incomplete": [
+        "color-contrast"
+      ],
+      "controls_under_24px": [
+        {
+          "control": "SUMMARY",
+          "width": 1264,
+          "height": 18
+        },
+        {
+          "control": "nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-channel",
+          "width": 206,
+          "height": 19
+        },
+        {
+          "control": "nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-assisted_channel",
+          "width": 154,
+          "height": 19
+        },
+        {
+          "control": "nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-owner",
+          "width": 259,
+          "height": 19
+        },
+        {
+          "control": "nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-acknowledgement_ref",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-non_digital_route",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "nomination-ack-NOM-02cd7e71b29f4d5f8d26af86cee5622d-next_update",
+          "width": 124.328125,
+          "height": 21.328125
+        },
+        {
+          "control": "BUTTON",
+          "width": 170.109375,
+          "height": 21
+        },
+        {
+          "control": "SUMMARY",
+          "width": 1264,
+          "height": 18
+        },
+        {
+          "control": "nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-channel",
+          "width": 206,
+          "height": 19
+        },
+        {
+          "control": "nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-assisted_channel",
+          "width": 154,
+          "height": 19
+        },
+        {
+          "control": "nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-raised_by",
+          "width": 75,
+          "height": 19
+        },
+        {
+          "control": "nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-representative_ref",
+          "width": 107,
+          "height": 19
+        },
+        {
+          "control": "nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-reported_subject_ref",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-source",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "nomination-correct-NOM-02cd7e71b29f4d5f8d26af86cee5622d-next_update",
+          "width": 124.328125,
+          "height": 21.328125
+        },
+        {
+          "control": "BUTTON",
+          "width": 186.390625,
+          "height": 21
+        },
+        {
+          "control": "SUMMARY",
+          "width": 1264,
+          "height": 18
+        },
+        {
+          "control": "challenge-open-route-proposal_id",
+          "width": 111,
+          "height": 19
+        },
+        {
+          "control": "challenge-open-route-target_kind",
+          "width": 74,
+          "height": 19
+        },
+        {
+          "control": "challenge-open-route-channel",
+          "width": 206,
+          "height": 19
+        },
+        {
+          "control": "challenge-open-route-assisted_channel",
+          "width": 154,
+          "height": 19
+        },
+        {
+          "control": "challenge-open-route-raised_by",
+          "width": 75,
+          "height": 19
+        },
+        {
+          "control": "challenge-open-route-representative_ref",
+          "width": 107,
+          "height": 19
+        },
+        {
+          "control": "challenge-open-route-source",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "challenge-open-route-request",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "challenge-open-route-explanation",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "challenge-open-route-owner",
+          "width": 259,
+          "height": 19
+        },
+        {
+          "control": "challenge-open-route-non_digital_route",
+          "width": 185,
+          "height": 21
+        },
+        {
+          "control": "challenge-open-route-next_update",
+          "width": 124.328125,
+          "height": 21.328125
+        },
+        {
+          "control": "BUTTON",
+          "width": 173.09375,
+          "height": 21
+        }
+      ]
+    },
+    {
+      "state": "routes-after-submissions",
+      "violations": [],
+      "target_size_violations": [
+        [
+          [
+            "#nomination-NOM-02cd7e71b29f4d5f8d26af86cee5622d > details:nth-child(3) > summary"
+          ],
+          [
+            "details:nth-child(4) > summary"
+          ]
+        ]
+      ],
+      "passes": 14,
+      "incomplete": [],
+      "controls_under_24px": [
+        {
+          "control": "SUMMARY",
+          "width": 1264,
+          "height": 18
+        },
+        {
+          "control": "SUMMARY",
+          "width": 1264,
+          "height": 18
+        },
+        {
+          "control": "SUMMARY",
+          "width": 1264,
+          "height": 18
+        }
+      ]
+    }
+  ],
+  "screen_reader": "Not run",
+  "human_acceptance": "Not run",
+  "scope": "Constructed synthetic standalone route forms only; no whole-system conformance"
+}

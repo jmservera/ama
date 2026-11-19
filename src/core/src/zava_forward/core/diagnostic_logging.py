@@ -10,10 +10,12 @@ itself fails the message is withheld. `print` output is not logging and is uncha
 
 from __future__ import annotations
 
+import json
 import logging
 import re
 import sys
 from collections.abc import Mapping
+from datetime import UTC, datetime
 from typing import Any
 
 WITHHELD = "<withheld>"
@@ -135,10 +137,36 @@ def _make_record(
     record: logging.LogRecord = _original(
         self, name, level, fn, lno, text, safe, None, func, None, None
     )
+    from .telemetry import correlation, resource_attributes
+
+    record.zf_trace_context = correlation()
+    record.zf_resource = resource_attributes()
+    if name.startswith("opentelemetry."):
+        record.msg, record.args = "Telemetry SDK diagnostic; inspect collector health.", ()
     return record
 
 
-def install_diagnostic_redaction(*, console: bool = True) -> None:
+class StructuredFormatter(logging.Formatter):
+    """Serialize guarded records only; caller extras never become attributes."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        try:
+            body = safe_text(record.getMessage())
+        except (TypeError, ValueError):
+            body = WITHHELD
+        fields = {
+            "timestamp": datetime.fromtimestamp(record.created, UTC).isoformat(),
+            "severity_text": record.levelname,
+            "severity_number": {10: 5, 20: 9, 30: 13, 40: 17, 50: 21}.get(record.levelno, 0),
+            "body": body,
+            "attributes": {},
+            "resource": getattr(record, "zf_resource", {}),
+        }
+        fields.update(getattr(record, "zf_trace_context", {}))
+        return json.dumps(fields, separators=(",", ":"), ensure_ascii=True)
+
+
+def install_diagnostic_redaction(*, console: bool = True, structured: bool = False) -> None:
     """Idempotently redact every log record in this process.
 
     With `console`, a stderr handler exists and the AI meter logger passes INFO, so the content-free
@@ -154,6 +182,12 @@ def install_diagnostic_redaction(*, console: bool = True) -> None:
                 level=logging.WARNING, format="%(asctime)s %(name)s %(levelname)s %(message)s"
             )
         logging.getLogger(METER_LOGGER).setLevel(logging.INFO)
+        if structured:
+            for handler in logging.getLogger().handlers:
+                if isinstance(handler, logging.StreamHandler) and not isinstance(
+                    handler, logging.FileHandler
+                ):
+                    handler.setFormatter(StructuredFormatter())
 
 
 def uninstall_diagnostic_redaction() -> None:

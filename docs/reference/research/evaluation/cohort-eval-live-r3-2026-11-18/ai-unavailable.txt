@@ -1,0 +1,20 @@
+AI priority task, mode unavailable (synthetic): status blocked, activation allowed False
+sensor_completeness/complete: n=42 errors=0 sufficient=False review_burden=0.1429
+sensor_completeness/partial: n=6 errors=0 sufficient=False review_burden=0.0
+support_need/none: n=42 errors=0 sufficient=False review_burden=0.1429
+support_need/declared: n=6 errors=0 sufficient=False review_burden=0.0
+source_completeness/complete: n=42 errors=0 sufficient=False review_burden=0.0
+source_completeness/partial: n=6 errors=0 sufficient=False review_burden=1.0
+appointment_history/regular: n=42 errors=0 sufficient=False review_burden=0.1429
+appointment_history/missed: n=6 errors=0 sufficient=False review_burden=0.0
+seeded [], detected []
+blocker insufficient_sample: sensor_completeness/complete: n=42 below minimum sample
+blocker insufficient_sample: sensor_completeness/partial: n=6 below minimum sample
+blocker insufficient_sample: support_need/none: n=42 below minimum sample
+blocker insufficient_sample: support_need/declared: n=6 below minimum sample
+blocker insufficient_sample: source_completeness/complete: n=42 below minimum sample
+blocker insufficient_sample: source_completeness/partial: n=6 below minimum sample
+blocker insufficient_sample: appointment_history/regular: n=42 below minimum sample
+blocker insufficient_sample: appointment_history/missed: n=6 below minimum sample
+blocker unapproved_thresholds: cohorts, lawful fields or thresholds lack named owner approval bound to this manifest digest (OQ-018)
+OQ-018: representative cohorts, lawful analysis fields, sample sufficiency and thresholds need owner approval before live use; synthetic results are not fairness evidence.

@@ -1,0 +1,4 @@
+## unauthenticated probes (host omitted)
+/healthz -> 200
+/api/assistants -> 401
+/ -> 200

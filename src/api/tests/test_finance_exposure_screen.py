@@ -57,15 +57,33 @@ class FinanceExposureScreen(unittest.TestCase):
             )
         )
         self.assertIn("Pause for human decision. Breach.", out)
-        self.assertIn("envelope: Breach, 100 of 50 GBP", out)
+        self.assertIn("investment limit: Breach, 100 of 50 GBP", out)
         self.assertIn("restart needs their recorded approval", out)
 
     def test_held_without_approved_limits_is_not_shown_as_within(self) -> None:
         out = render(
             dict(status="Held", signal="Pause for human decision", reason="No limits.", findings=[])
         )
-        self.assertIn("Pause for human decision. Held.", out)
+        self.assertIn("Pause for human decision. Paused.", out)
+        self.assertNotIn("Held", out)
         self.assertNotIn("Within", out)
+
+    def test_limit_wording_has_no_internal_envelope_term(self) -> None:
+        out = render(
+            dict(
+                status="Breach",
+                signal="Pause for human decision",
+                reason="Over approved limit: envelope, annual_plan.",
+                findings=[
+                    dict(limit="envelope", state="Breach", observed=9, maximum=5, unit="GBP"),
+                    dict(limit="envelope", state="Unknown"),
+                ],
+            )
+        )
+        self.assertNotIn("envelope", out.lower())
+        self.assertIn("Over approved limit: investment limit, annual_plan.", out)
+        self.assertIn("investment limit: Breach, 9 of 5 GBP", out)
+        self.assertIn("investment limit: not known", out)
 
     def test_unavailable_signal_falls_back_to_a_manual_check(self) -> None:
         out = render(None)

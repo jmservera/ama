@@ -1,0 +1,42 @@
+image zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c12400
+revision ca-cutover-test-demo-api--0000031 Running
+replicas {'cooldownPeriod': 300, 'maxReplicas': 4, 'minReplicas': 0, 'pollingInterval': 30, 'rules': [{'http': {'metadata': {'concurrentRequests': '50'}}, 'name': 'http'}]}
+APPLICATIONINSIGHTS_CONNECTION_STRING <set>
+OTEL_SERVICE_NAMESPACE = zava-forward
+AZURE_CLIENT_ID = [id redacted]
+SQL_SERVER = sql-cutover-test-rzsrg.database.windows.net
+SQL_DATABASE = retrofit
+BLOB_ENDPOINT = https://stcutovertestrzsrg.blob.core.windows.net
+QUEUE_ENDPOINT = https://stcutovertestrzsrg.queue.core.windows.net
+KEY_VAULT_URI <set>
+EVIDENCE_STORE = blob
+SHAREPOINT_SITE_ID = 
+ZF_TILE_URL = https://tile.openstreetmap.org/{z}/{x}/{y}.png
+ZF_TILE_ATTRIBUTION = &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors
+ZF_STORE = mssql
+ZF_SQL_SERVER = sql-cutover-test-rzsrg.database.windows.net
+ZF_SQL_DATABASE = retrofit
+ZF_SQL_AUTH = msi
+ZF_SQL_CLIENT_ID = [id redacted]
+ZF_DOC_STORE = azure-blob
+ZF_BLOB_ACCOUNT_URL = https://stcutovertestrzsrg.blob.core.windows.net
+ZF_BLOB_CONTAINER = evidence
+ZF_BLOB_CLIENT_ID = [id redacted]
+ZF_AUTH = trusted-proxy
+ZF_TRUSTED_PROXY = 1
+ZF_ENV = production
+ZF_ENTRA_TENANT_ID = [id redacted]
+ENTRA_TENANT_ID = [id redacted]
+ENTRA_CLIENT_ID = [id redacted]
+AI_ENDPOINT = https://aif-cutover-test-rzsrg.openai.azure.com/
+AI_DEPLOYMENT = standard
+AI_DEPLOYMENT_STRONG = standard
+CHAT_DPIA_REF = docs/reference/research/chat-memory-dpia.md
+CHAT_LAWFUL_BASIS_REF = docs/reference/research/chat-demo-storage-approval-2026-11-01.md#lawful-basis
+CHAT_NOTICE_REF = docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice
+CHAT_RETENTION_REF = docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention
+CHAT_RETENTION_DAYS = 30
+ZF_CHAT_DEMO_ACTIVATION = approved-2026-11-03
+ZF_DEPLOYMENT_PROFILE = demo
+AI_MODEL_VERSION = gpt-4.1-nano-2025-04-14
+AI_MODEL_VERSION_STRONG = gpt-4.1-nano-2025-04-14

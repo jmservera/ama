@@ -1,0 +1,31 @@
+INFO: Connecting to the container 'api'...
+[93mUse ctrl + D to exit.[0m
+INFO: Successfully connected to container: 'api'. [ Revision: 'ca-cutover-test-demo-api--0000032', Replica: '<replica>'].
+
+$ id
+uid=10001(app) gid=10001(app) groups=10001(app)
+
+$ grep Cap /proc/self/status
+CapInh:	00000000a80425fb
+CapPrm:	0000000000000000
+CapEff:	0000000000000000
+CapBnd:	00000000a80425fb
+CapAmb:	0000000000000000
+
+$ grep NoNew /proc/self/status
+NoNewPrivs:	0
+
+$ grep overlay /proc/mounts
+overlay / overlay rw,relatime,lowerdir=9:8:7:i/33:6:5:4:3:2,upperdir=/legion/containerFs/<id>/upper,workdir=/legion/containerFs/<id>/work,redirect_dir=on,uuid=on 0 0
+
+$ touch /usr/zz
+touch: cannot touch '/usr/zz': Permission denied
+
+$ touch /tmp/zz144r4 && echo tmp-ok
+tmp-ok
+
+$ rm -f /tmp/zz144r4
+
+$ env | grep -c ZF_CONTAINER
+0
+

@@ -1,0 +1,6 @@
+2026-11-18T09:05:04.6739458Z stdout F {"step": "restored-before-reapply", "case": "ZF-2025-0001", "resident_erased": false, "ledger": {"intact": true, "entries": 602, "head": "c732de9555c0d46fe8ba7dd020a4106d990dd493426d60ddc6713f69170797c8", "problem": null, "digests_checked": 0, "digest_mismatches": []}}
+2026-11-18T09:05:04.9229617Z stdout F {"step": "register-entries", "count": 1}
+2026-11-18T09:05:05.4779855Z stdout F {"step": "reapplied", "cases": ["ZF-2025-0001"]}
+2026-11-18T09:05:05.4948679Z stderr F Traceback (most recent call last):
+2026-11-18T09:05:05.4948855Z stdout F {"step": "restored-after-reapply", "case": "ZF-2025-0001", "resident_erased": true, "ledger": {"intact": true, "entries": 603, "head": "2bddf7684ff955f20bb96bf9072f0c852b7304f8508f31402fca19d3518b3787", "problem": null, "digests_checked": 0, "digest_mismatches": []}}
+2026-11-18T09:05:05.4949553Z stderr F AttributeError: 'MssqlStore' object has no attribute 'verify_ledger_before_reliance'

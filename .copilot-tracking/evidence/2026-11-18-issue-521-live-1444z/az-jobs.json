@@ -1,0 +1,34 @@
+[
+  {
+    "n": "job-cutover-test-init",
+    "t": "Manual"
+  },
+  {
+    "n": "job-cutover-test-verify",
+    "t": "Manual"
+  },
+  {
+    "n": "job-cutover-test-ledger-verify",
+    "t": "Manual"
+  },
+  {
+    "n": "job-cutover-test-import",
+    "t": "Manual"
+  },
+  {
+    "n": "job-cutover-test-orchestrator",
+    "t": "Manual"
+  },
+  {
+    "n": "job-cutover-test-smoke",
+    "t": "Manual"
+  },
+  {
+    "n": "job-cutover-test-mi-http",
+    "t": "Manual"
+  },
+  {
+    "n": "job-cutover-test-public-audit",
+    "t": "Manual"
+  }
+]

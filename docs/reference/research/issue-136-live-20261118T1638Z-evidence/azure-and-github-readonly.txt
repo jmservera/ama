@@ -1,0 +1,90 @@
+## child states (gh)
+137	CLOSED	Environment strategy and parameter sets (dev, test, pilot)
+138	OPEN	CI/CD deployment pipeline with what-if, approvals and image release
+139	CLOSED	Bicep quality gates beyond build and lint
+140	CLOSED	Azure IoT Hub Bicep module with identity, networking and diagnostics
+141	CLOSED	Identity, RBAC and Entra registration as code with least-privilege review
+142	OPEN	Key Vault secret lifecycle: rotation, expiry and access review
+143	OPEN	Private networking and public edge (Front Door Premium and WAF)
+144	OPEN	Container hosting completeness: workers, scaling, revisions and load test
+145	OPEN	Azure SQL pilot tier, backup restore and recovery proof
+146	OPEN	Monitoring coverage: alerts, dashboards and runbooks
+147	CLOSED	Azure Policy, Defender plans, locks and tagging as code
+148	CLOSED	Repeatable from-empty rebuild and teardown automation
+## #440
+OPEN	
+## group list
+     15 Microsoft.Network/privateDnsZones/virtualNetworkLinks
+     15 Microsoft.Network/privateDnsZones
+      9 Microsoft.App/jobs
+      8 Microsoft.Network/privateEndpoints
+      8 Microsoft.Network/networkInterfaces
+      6 Microsoft.ManagedIdentity/userAssignedIdentities
+      5 Microsoft.Insights/metricalerts
+      4 Microsoft.Insights/scheduledqueryrules
+      4 Microsoft.App/containerApps
+      3 Microsoft.Network/networkSecurityGroups
+      2 Microsoft.Sql/servers/databases
+      2 Microsoft.CognitiveServices/accounts
+      2 Microsoft.App/managedEnvironments
+      1 microsoft.insights/privateLinkScopes
+      1 microsoft.insights/actiongroups
+      1 Microsoft.Storage/storageAccounts
+      1 Microsoft.Sql/servers
+      1 Microsoft.OperationalInsights/workspaces
+      1 Microsoft.Network/virtualNetworks
+      1 Microsoft.KeyVault/vaults
+      1 Microsoft.Insights/components
+      1 Microsoft.Insights/actiongroups
+      1 Microsoft.EventHub/namespaces
+      1 Microsoft.EventGrid/systemTopics
+      1 Microsoft.Devices/IotHubs
+      1 Microsoft.ContainerRegistry/registries
+      1 Microsoft.CognitiveServices/accounts/projects
+## apps
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "img": "[registry].azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+  "ing": true,
+  "max": 4,
+  "min": 1,
+  "rev": "ca-cutover-test-demo-api--0000032",
+  "state": "Running"
+}
+## jobs
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+job-cutover-test-init	[registry].azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72
+job-cutover-test-verify	[registry].azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72
+job-cutover-test-ledger-verify	[registry].azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7
+job-cutover-test-import	[registry].azurecr.io/zava-forward-importer@sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f
+job-cutover-test-orchestrator	[registry].azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7
+job-cutover-test-smoke	[registry].azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72
+job-cutover-test-mi-http	[registry].azurecr.io/zava-forward-cutover-proof@sha256:ef0058f8f380cc610d4b7113509293b3ed624d22afac95e807b4c69a4266dc72
+job-cutover-test-public-audit	[registry].azurecr.io/zava-forward-api@sha256:111b26226cad06e229bcf1c3174877510c4c68c5a5fefc885167a2b4c821657d
+tmp146d-failjob	mcr.microsoft.com/azurelinux/base/core:3.0
+## alerts
+alert-cutover-test-foundry-throttle	True	2
+alert-cutover-test-sql-cpu	True	3
+alert-cutover-test-api-5xx	True	2
+alert-cutover-test-api-restarts	True	3
+tmp146d-job-failed-maximum	True	2
+alert-kv-cutovertest-rzsrg-secret-expiry	True
+alert-kv-cutovertest-rzsrg-denied-access	True
+alert-cutover-test-ledger-digest-mismatch	True
+alert-cutover-test-ledger-verify-missing	True
+## budgets/locks/policy
+## federated creds (uami)
+id-cutover-test-orchestrator: 0
+id-cutover-test-api: 0
+id-cutover-test-agents: 0
+id-cutover-test-import: 0
+id-cutover-test-init: 0
+id-resident-demo: 0
+## SQL
+sql-cutover-test-rzsrg	Disabled	None
+## KV
+kv-cutovertest-rzsrg	Disabled	None
+## FD
+## workbooks
+tmp146d-failjob	Microsoft.App/jobs	2026-11-18T16:34:59.524259+00:00
+tmp146d-job-failed-maximum	Microsoft.Insights/metricalerts	2026-11-18T16:35:11.355639+00:00

@@ -1,0 +1,57 @@
+{
+ "axe": "4.10.3",
+ "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+ "tags": [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa"
+ ],
+ "viewport": "1366x900",
+ "target": "employee",
+ "screens": {
+  "overview": {
+   "error": "TypeError",
+   "detail": " = self.iterencode(o, _one_shot=True)\n             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/json/encoder.py\", line 258, in iterencode\n    return _iterencode(o, 0)\n           ^^^^^^^^^^^^^^^^^\n  File \"/usr/lib/python3.12/json/encoder.py\", line 180, in default\n    raise TypeError(f'Object of type {o.__class__.__name__} '\nTypeError: Object of type Error is not JSON serializable\n"
+  },
+  "case-ZF-2025-0331": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Wendy RobsonSafety issue open"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:2",
+    "header:1"
+   ],
+   "live": 21,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 1
+     }
+    ],
+    "contrast_sample": {
+     "sampled": 1,
+     "unresolved": 0,
+     "below": [],
+     "min": 9.4
+    }
+   },
+   "keyboard": {
+    "stops": 16,
+    "trap": true,
+    "element": "input:"
+   },
+   "reflow_320_horizontal_scroll": false
+  }
+ },
+ "me_nav_count": 13,
+ "role": null
+}

@@ -1,0 +1,6 @@
+Sensor consent index could not be reconciled; retained readings stay withheld.
+Sensor consent index could not be reconciled; retained readings stay withheld.
+----------------------------------------------------------------------
+Ran 157 tests in 236.333s
+
+OK (skipped=60)

@@ -1,0 +1,192 @@
+Skip to the main content
+Synthetic showcase - not a live resident service. Everything here is invented test information. The shared demonstration sign-in does not prove who you are. Do not use this to make any decision.
+Legal and Data Protection Officer review is still outstanding. Do not use this for real resident data or decisions.
+Z
+
+Zava North Homes
+Home improvement progress
+
+Your home improvement progress
+
+Your home and works records are read-only. Synthetic callback booking is not connected in this showcase environment. Nobody will call you.
+
+You are signed in. Your progress is shown below.
+ Flat 1, 157,159,161,163,165,167 Tebay Drive, Newcastle upon Tyne, NE5 2XH
+Synthetic showcase record - read-only
+Summary
+Status
+Needed from you
+Timeline
+Documents
+Funding
+Help
+Sensors
+Showcase limits
+Case summary
+
+Based only on the recorded facts shown on this page for your home. Neither rules nor AI can make decisions, approve documents, book works, or give consent.
+
+Summary by rules. Not an instruction.
+
+Your home at Flat 1, 157,159,161,163,165,167 Tebay Drive, Newcastle upon Tyne, NE5 2XH is at the Contact paused stage. Contact is paused. Next step: We will not contact you until the pause is lifted. You can ask for help below. Planned improvements: External wall insulation (block), dMEV ventilation. Document requests are not shown in this view. Nothing is recorded as needed from you right now.
+
+Sources in your record:
+
+Current status and next step
+What is needed from you
+Case timeline and planned improvements
+Documents and checks
+Use my own case record to generate an AI summary (optional). This is not consent to works.
+Generate AI summary
+
+Current status and next step
+
+Stage: Contact paused
+
+Where things are
+
+Contact is paused.
+
+What happens next
+
+We will not contact you until the pause is lifted. You can ask for help below.
+
+What is needed from you
+
+No action needed
+
+Nothing is needed from you right now. Zava North Homes is working on the current step. We will contact you if we need anything.
+
+Case timeline and planned improvements
+1. Survey
+ Current stage
+2. Assessment and design
+ Not started
+3. Resident agreement
+ Not started
+4. Funding and final checks
+ Not started
+5. Installation works
+ Not started
+6. Quality and handover
+ Not started
+Planned improvements
+ External wall insulation (block)
+ dMEV ventilation
+Documents and checks
+
+These are recorded facts from your case file, not a decision that any document is approved. A clean file check only means the file was scanned; a person still needs to review it. Uploading or downloading files is not available in this showcase.
+
+Requested documents
+
+This view does not show which documents have been requested for your case.
+
+Presented documents on file
+EPC (D1) 
+A generated placeholder, not a presented document
+
+The file check result is unknown in this view. Ask staff to check it.
+
+Survey (D2) 
+A generated placeholder, not a presented document
+
+The file check result is unknown in this view. Ask staff to check it.
+
+Design (D3) 
+A generated placeholder, not a presented document
+
+The file check result is unknown in this view. Ask staff to check it.
+
+Consent (D4) 
+A generated placeholder, not a presented document
+
+The file check result is unknown in this view. Ask staff to check it.
+
+Funding evidence (D5) 
+A generated placeholder, not a presented document
+
+The file check result is unknown in this view. Ask staff to check it.
+
+Funding and household costs
+
+Programme funding and grant checks are handled by Zava North Homes staff. You are not asked to pay anything or approve funding on this page. If you are a leaseholder or shared owner, we will explain your reviewed lease position in writing before asking you for any decision. Speak to your housing officer if you have questions.
+
+Help and other ways to reach us
+
+A person can help. You do not need to use this page.
+
+Speak to your housing officer.
+Write to or visit your local Zava North Homes office.
+Ask someone you trust to contact us for you, if you want to.
+
+This preview shows no phone numbers or addresses and promises no response times.
+
+Synthetic callback booking is not connected in this showcase. Use the contact routes above.
+
+Your home sensors and forecast
+
+Synthetic sensor history for your home. These are stored demo readings, not live measurements or safety advice.
+
+Reading status: The newest stored reading is older than 15 minutes. These are stored readings, not live.
+
+Source: Synthetic demo data from the simulator. Not calibrated, so not a verified measurement of your home.
+
+Latest stored reading: 18 Nov 2026, 07:40 (UK time)
+
+Temperature (°C)
+
+7.49 °C
+
+Humidity (%)
+
+89.63 %
+
+Demo display ranges are not safe or unsafe limits. Readings that are missing or look wrong appear as gaps, not zero.
+
+Simple 24-hour synthetic forecast (estimate)
+
+Simple 24-hour synthetic forecast (estimate): calculated from your home's recent synthetic readings and typical daily pattern. It is not a weather forecast or a live sensor feed. Demo display ranges (-10 to 45 °C and 0 to 100 %) are chart limits, not safe or unsafe household limits.
+
+Temperature history and 24-hour forecast (°C)
+-10
+17.5
+45
+Latest stored
+
+Across 33 readings: lowest 6.47 °C, highest 10.32 °C. The latest value is lower than the first. Simple 24-hour forecast (estimate): 5.8 °C to 8.7 °C.
+
+Time (UK time): 17 Nov 2026, 19:00 to 18 Nov 2026, 07:40
+
+Solid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).
+
+Humidity history and 24-hour forecast (%)
+0
+50
+100
+Latest stored
+
+Across 33 readings: lowest 85.2 %, highest 96.72 %. The latest value is higher than the first. Simple 24-hour forecast (estimate): 89 % to 96.4 %.
+
+Time (UK time): 17 Nov 2026, 19:00 to 18 Nov 2026, 07:40
+
+Solid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).
+
+Show sensor history and forecast as a table
+Not available in this showcase
+
+Synthetic demo - not a real resident service. This sign-in uses a shared demo password and does not prove who you are.
+
+Messages
+Messaging is not available in this preview.
+Uploads
+Uploading documents is not available in this preview.
+Downloads
+Downloading documents is not available in this preview.
+Operational appointments
+You cannot change live works appointments here.
+Consent and decisions
+You cannot give or change consent here.
+Synthetic callbacks
+The local callback agenda is not connected in this showcase. Use the contact routes above.
+
+Synthetic showcase for owner feedback only. Not enrolment, not real resident identity, not a live service.

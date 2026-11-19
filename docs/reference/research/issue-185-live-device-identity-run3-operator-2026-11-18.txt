@@ -1,0 +1,27 @@
+# operator output after run 3 (redacted; ids not present)
+# az iot hub show-stats (after teardown)
+ERROR: {'Message': '{"errorCode":401002,"message":"Unauthorized access",,"timestampUtc":"2026-11-18T12:37:52.551476071Z","info":null}', 'ExceptionMessage': ''}
+{
+  "disabledDeviceCount": 0,
+  "enabledDeviceCount": 0,
+  "totalDeviceCount": 2
+}
+# jobs with 185
+# hub role assignments
+Azure Event Hubs Data Receiver	2026-10-16T14:00:50.974673+00:00
+IoT Hub Registry Contributor	2026-10-30T08:27:17.875346+00:00
+# hub settings
+Disabled	True
+# stats recheck
+12:38:26
+{"disabledDeviceCount":0,"enabledDeviceCount":0,"totalDeviceCount":2}
+12:39:08
+{"disabledDeviceCount":0,"enabledDeviceCount":3,"totalDeviceCount":3}
+12:39:49
+{"disabledDeviceCount":0,"enabledDeviceCount":3,"totalDeviceCount":3}
+# registry read-back job (device ids truncated)
+2026-11-18T12:41:22.9971800Z stdout F {"event": "readback", "ours": {"<id-1>": 200, "<id-2>": 200, "<id-3>": 200}}
+2026-11-18T12:41:23.1501984Z stdout F {"event": "registry_list", "status": 200, "count": 3, "ours_present": 3, "prefixes": ["<three ids>"]}
+# after job 185c and 185d cleanup
+Azure Event Hubs Data Receiver	2026-10-16T14:00:50.974673+00:00
+IoT Hub Registry Contributor	2026-10-30T08:27:17.875346+00:00

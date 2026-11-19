@@ -1,0 +1,16 @@
+test_concurrent_connections_never_exceed_the_last_stored_call  ... ok
+test_restart_cannot_replenish_consumed_calls_or_raise_the_stored_ceiling  ... ok
+test_restart_cannot_replenish_token_allowance  ... ok
+test_revoked_release_keeps_its_consumed_allowance_and_a_new_record_does_not_refund_it  ... ok
+test_rotated_authority_spends_only_the_remaining_allowance_once  ... ok
+test_rotating_the_authority_token_cannot_replenish_consumed_calls  ... ok
+test_rotating_the_authority_token_cannot_replenish_token_allowance  ... ok
+test_mismatch_after_claim_quarantines_the_late_completion_without_domain_writes  ... ok
+test_mismatch_on_a_separate_worker_denies_dispatch_and_stays_denied_after_restart  ... ok
+test_old_image_cannot_reactivate_revoked_release_through_the_change_path  ... ok
+test_only_a_new_release_record_reenables_and_never_revives_the_old_task  ... ok
+test_revoked_or_suspended_release_stays_blocked_after_store_reopen  ... ok
+test_suspension_after_claim_stops_a_worker_paused_before_provider_dispatch  ... ok
+test_suspension_on_one_connection_blocks_claim_dispatch_and_completion_on_others  ... ok
+Ran 14 tests in 12.883s
+OK

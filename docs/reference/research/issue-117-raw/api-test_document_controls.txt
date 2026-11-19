@@ -1,0 +1,23 @@
+test_json_store (tests.test_document_controls.RetentionTests.test_json_store) ... ok
+test_not_due_documents_are_refused_and_not_listed (tests.test_document_controls.RetentionTests.test_not_due_documents_are_refused_and_not_listed) ... ok
+test_retention_refusals_explain_reason_owner_next_action_and_change_nothing (tests.test_document_controls.RetentionTests.test_retention_refusals_explain_reason_owner_next_action_and_change_nothing) ... ok
+test_blob_kept_when_save_fails (tests.test_document_controls.ScanTests.test_blob_kept_when_save_fails) ... ok
+test_clean_upload_is_available_and_scan_is_recorded (tests.test_document_controls.ScanTests.test_clean_upload_is_available_and_scan_is_recorded) ... ok
+test_defender_malicious_result_removes_the_document (tests.test_document_controls.ScanTests.test_defender_malicious_result_removes_the_document) ... ok
+test_document_without_scan_field_is_scanned_on_first_use (tests.test_document_controls.ScanTests.test_document_without_scan_field_is_scanned_on_first_use) ... ok
+test_infected_and_mismatched_uploads_are_deleted_and_never_recorded (tests.test_document_controls.ScanTests.test_infected_and_mismatched_uploads_are_deleted_and_never_recorded) ... ok
+test_pending_defender_scan_blocks_until_clean (tests.test_document_controls.ScanTests.test_pending_defender_scan_blocks_until_clean) ... ok
+test_pending_rescans_on_read_and_by_job (tests.test_document_controls.ScanTests.test_pending_rescans_on_read_and_by_job) ... ok
+test_quarantine_blocks_download_and_derivative_use_until_clean (tests.test_document_controls.ScanTests.test_quarantine_blocks_download_and_derivative_use_until_clean) ... ok
+test_scanner_config (tests.test_document_controls.ScanTests.test_scanner_config) ... ok
+test_synthetic_scanner_on_blob_store_warns_but_stays_fail_closed (tests.test_document_controls.ScanTests.test_synthetic_scanner_on_blob_store_warns_but_stays_fail_closed) ... ok
+test_synthetic_stock_fixtures_scan_as_labelled (tests.test_document_controls.ScanTests.test_synthetic_stock_fixtures_scan_as_labelled) ... ok
+test_unscanned_document_is_blocked_while_scan_pending (tests.test_document_controls.ScanTests.test_unscanned_document_is_blocked_while_scan_pending) ... ok
+test_json_store (tests.test_document_controls.SqlRetentionTests.test_json_store) ... ok
+test_not_due_documents_are_refused_and_not_listed (tests.test_document_controls.SqlRetentionTests.test_not_due_documents_are_refused_and_not_listed) ... ok
+test_retention_refusals_explain_reason_owner_next_action_and_change_nothing (tests.test_document_controls.SqlRetentionTests.test_retention_refusals_explain_reason_owner_next_action_and_change_nothing) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 94.371s
+
+OK

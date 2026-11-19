@@ -1,0 +1,89 @@
+{
+ "anon": {
+  "me_browser": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  },
+  "me_nonbrowser_json": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  },
+  "cases": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  },
+  "workspace_shell": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  },
+  "xhr": {
+   "status": 403,
+   "redirect_host": null
+  },
+  "bad_bearer": {
+   "status": 401,
+   "redirect_host": null
+  },
+  "forged_principal": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  },
+  "forged_principal_blob": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  },
+  "forged_role": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  },
+  "healthz": {
+   "status": 200,
+   "redirect_host": null
+  }
+ },
+ "entra_wrong_password": {
+  "still_on_entra": true,
+  "error_shown": true,
+  "app_session": 302
+ },
+ "signin_page_host": "login.microsoftonline.com",
+ "session": {
+  "me_status": 200,
+  "role": "Retrofit Programme Manager",
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "view_only": false,
+  "identity_source": "entra",
+  "auth_provider": "trusted-proxy",
+  "bound": false,
+  "tid_guid": true,
+  "oid_guid": true,
+  "navigation_count": 13
+ },
+ "positive_requests": {
+  "/api/cases": 200,
+  "/api/me": 200,
+  "/healthz": 200
+ },
+ "forged_with_session": {
+  "status": 200,
+  "role_unchanged": true,
+  "identity_unchanged": true
+ },
+ "role_scoped_denial_probe": {
+  "/api/admin/simulator-control": 403,
+  "/api/audit-check": 200
+ },
+ "workbench_path": "/",
+ "after_logout": {
+  "me": {
+   "status": 302,
+   "redirect_host": "login.microsoftonline.com"
+  }
+ },
+ "account_switch": {
+  "picker_or_login_shown": true,
+  "other_account_option": true
+ }
+}

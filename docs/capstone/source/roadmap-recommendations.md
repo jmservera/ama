@@ -1,7 +1,7 @@
 ---
 title: Capstone Roadmap Recommendations
 description: Source-backed next-capability story, potential value, reasons to wait and evidence-led adoption conditions
-ms.date: 2026-10-30
+ms.date: 2026-11-16
 ms.topic: reference
 ---
 
@@ -11,10 +11,13 @@ We built Zava Forward to turn fragmented retrofit work into an owned,
 evidence-linked next step. Establish that product and the reasoning behind
 it before proposing more technology. Today the foundation is the Workbench,
 shared API, SQL/Blob, deterministic rules, bounded AI and existing read-model
-reporting. Neither Microsoft Fabric nor Power BI is part of the current product.
+reporting. Microsoft Fabric, Power BI and Agent 365 are not integrated product
+components.
 
 Near the close, propose how joined portfolio history, consistent definitions
 and relationship-aware agent context could make that foundation stronger.
+Agent 365 is a separate conditional enterprise oversight proposal: inventory,
+accountable identity/lifecycle and Defender/Purview governance surfaces.
 The future is conditional, not a purchase, approved delivery date, installed
 platform or measured benefit. The broader proposal register remains a review
 inventory, not a technology shopping list to read through the main story.
@@ -22,15 +25,16 @@ inventory, not a technology shopping list to read through the main story.
 | Main page | Storytelling job |
 | --- | --- |
 | 8 / S07 | Explain how the brief and sector sources became role-instrument research, journey hypotheses, pain/gain synthesis and bounded design/test decisions |
-| 13 / S12 | Show one genuine resident-journey example, with actions/needs, pain hypotheses and proposed responses; retain editable Excalidraw and source trace |
-| 14 / S13 | Show what we built: scoped case/evidence, owned next action, versioned reviews, bounded help and current reporting |
-| 15 / S14 | Explain existing preview/quarantine/export library and CLI, plus the limits of an unaccepted web/enterprise adoption journey |
-| 23 / S20 | Propose future Fabric/Power BI history and shared measures, plus optional semantic/ontology context for agents; not current product components |
-| 24 / S21 | Verify the current journey, compare analytics for one question and test context independently; cost and authorize execution separately |
-| 26 / S23 | Close on an evidence-led next step rather than a guaranteed pace, platform purchase or automatic scale-up |
+| 14 / S12 | Show one genuine resident-journey example, with actions/needs, pain hypotheses and proposed responses; retain editable Excalidraw and source trace |
+| 15 / S13 | Show what we built: scoped case/evidence, owned next action, versioned reviews, bounded help and current reporting |
+| 16 / S14 | Explain existing preview/quarantine/export library and CLI, plus the limits of an unaccepted web/enterprise adoption journey |
+| 24 / S20 | Propose future history/context and conditional Agent 365 inventory, identity/lifecycle and Defender/Purview oversight; no adoption claim |
+| 25 / S21 | Verify the journey and content-free OTLP traces, compare analytics/context separately, and gate enterprise oversight on privacy-compatible ingestion; cost and authorize separately |
+| 27 / S23 | Close on an evidence-led next step rather than a guaranteed pace, platform purchase or automatic scale-up |
 
 The existing page slots are retained, including 60 seconds each for discovery
-and the resident map. The 54-page structure, 23:45 narration plan, discussion reserve
+and the resident map. The native 55-slide structure, 108 fixed jump actions,
+original timing lines/layouts and current 24:30 narration plan with 5:30 reserve
 within 30 minutes and separate ten-minute demo remain. These are planned,
 unrehearsed timings. Appendix answers retain deeper comparison detail.
 
@@ -57,6 +61,7 @@ not selected for this baseline does not mean universally inferior.
 
 | Proposal / Disposition | Improvement To Test | Why Later / Unlock | Evidence |
 | --- | --- | --- | --- |
+| Agent 365: conditional enterprise oversight proposal | Fleet inventory, accountable agent identity/lifecycle and Defender/Purview governance surfaces | Required content/caller-identity schema conflicts with content-free diagnostics. Supported redacted-payload/omission behavior, feature parity, privacy, tenant identity/admin consent, licenses, egress, full cost and accepted/landed ingestion remain gates. No adoption or SQL/domain authority replacement | [16 November assessment F4-F6](../../../.copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md) |
 | Selective Fabric + Power BI: conditional next option | Reuse cross-source history and definitions; reduce repeated portfolio-report preparation | Need, projection permissions/history and full operating economics unproved. Select a recurring question and compare identical data with governed SQL/history + Power BI Import | [Fabric assessment](../../reference/research/microsoft-fabric-fit-assessment.md) |
 | Data Factory / minimal OneLake or semantic model: selective, not a required bundle | Repeatable preparation across real sources and reporting consumers | Actual source rights, keys, refresh, corrections and ownership required; use only the store/workload needed | [Fabric capability review](../../reference/research/microsoft-fabric-fit-assessment.md#what-fabric-would-add) |
 | Fabric data agent: later analytical Q&A | Easier staff/executive questions over governed measures | First establish trusted tables, audience rights and evaluated answers; not resident chat, PDF extraction or action authority | [Fabric assessment](../../reference/research/microsoft-fabric-fit-assessment.md) |
@@ -112,6 +117,7 @@ are dispositions, not a commitment to implement every option.
 | Platform substitutions | Same contingency row; no inevitable AKS/Cosmos/PostgreSQL/Fabric-SQL migration |
 | Production / pilot readiness | Required-readiness section, not optional future capability |
 | Operations / full AI cost controls | Required-readiness and monitoring gap matrix; no hard-stop claim from alerts |
+| Enterprise agent oversight | Conditional Agent 365 row; inventory and identity/lifecycle, Defender/Purview surfaces, explicit schema/privacy conflict and ingestion gates; never domain authority |
 | Delivery consolidation experiment | Separate ongoing exploratory research row and page-22 coauthor/status update; not product scope or new outcome evidence |
 
 ## Future History And Agent Context
@@ -153,6 +159,76 @@ Mirroring does not inherit application permissions or create retained audit
 history. Fabric SQL ledger limits rule out an equivalent operational swap
 on the assessed evidence, not all selective current-table replication.
 
+## Content-Free Diagnostics And Conditional Enterprise Oversight
+
+The [completed 16 November research](../../../.copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md)
+F1/F4-F6 and W2-W10 is the dated evidence base, not a live tenant inventory.
+The current PRD is in review and unsigned; historical exercise acceptance
+does not approve its later amendments.
+
+The owner selected OTLP first and deferred the direct Azure Monitor exporter
+after installed exporter 1.0.0b59 revealed implicit hostname/locale metadata
+and secondary SDK/control-plane traffic. This supersedes the earlier research
+option of direct Azure export. Validate the content-free OpenTelemetry path
+through OTLP without automatic content capture. A collector/backend connection
+to Azure Monitor or Application Insights needs separate configuration and
+acceptance. The parent supplied P02 completion evidence on 16 November:
+20 core telemetry/diagnostic, 77 worker transport/timeout/lifecycle/dispatch/
+dependency and 9 HTTP/core-composition tests passed, with core/agents/API strict
+types passing. Offline real-SDK tests verified in-process audit joins, failure,
+late physical-thread parent/slot, worker-to-postback and keep-alive isolation.
+The actual core `Ai._request` span records only settled usage, without payloads,
+business IDs or exception events. The opt-in source path is implemented;
+export remains off by default. These parent-reported checks are not a live
+collector/model/Azure/Agent 365 receipt, universal coverage, accepted SLO,
+full gate or independent review.
+
+Agent 365 could add enterprise inventory, accountable agent identity/lifecycle
+and Defender/Purview oversight when an owner establishes that need. The newer
+Microsoft OpenTelemetry Distro is an observability export path; the Agent 365
+SDK's identity/tooling/notification capabilities and the Agent 365 service are
+distinct. The former Agent 365 Observability SDK is deprecated. Custom calls
+to Foundry model endpoints do not establish Foundry Agent Service hosting,
+and no framework migration follows from this proposal.
+
+The canonical schema requires input/output messages, tool arguments/results
+and relevant human caller object ID/IP fields. Those requirements conflict
+with content-free, identity-minimized diagnostics. Vendor confirmation and
+an approved synthetic check must establish supported redacted-payload or
+omission behavior, truthful non-human caller semantics, ingestion and desired
+feature parity. Neither raw export nor working metadata-only adoption is
+assumed. Do not invent a human caller or capture chain of thought.
+
+Separate gates remain for privacy/DPIA and permitted projection, access,
+retention, processing location and egress; tenant readiness, identity/admin
+consent and applicable licenses; full operating cost and named owners.
+The dated quickstart lists an enabled tenant and an assigned Microsoft 365
+E7 or Agent 365 license for observability, with separate feature prerequisites.
+Actual entitlement, pricing and tenant readiness remain unverified.
+HTTP 200 is insufficient: verify accepted destination/routing results, a valid
+`invoke_agent` root, parent grouping and tenant/agent IDs, then landed records
+and required feature behavior. Recognized agent operations and ordinary
+HTTP/SQL diagnostics have different ingestion coverage.
+
+Existing SQL/domain audit, release, financial admission, review, consent and
+safety controls remain authoritative. Traces locate operational evidence;
+they do not prove semantic truth, meaningful review, reconciled bills or
+resident benefit. Optional resident metering joins are path/configuration-specific,
+not universal coverage. No purchase, onboarding, export, deployment,
+communication activation or delegated authority is approved by these slides.
+
+### Delivery And Evidence Boundary
+
+This source revision updates S20/S21 and B27 in place, retaining financial
+slides 6, 11, 22, 33, 37 and 53 unchanged. The source guide and native builder
+remain authoritative for the 55-slide/108-jump package. Generated PPTX/PDF,
+pitch and compact receipt are regenerated together through the existing native
+build/verify and Linux preview route. The compact receipt records only checks
+performed for this candidate; prior review evidence remains historical.
+Native PowerPoint, projector, keyboard/assistive-technology and resident/staff
+acceptance remain separate. No runtime deployment or operational approval follows
+from presentation validation.
+
 ## Audience And Decision
 
 Lead with the next decision for executive/Sergeant preferences, connect to
@@ -164,6 +240,10 @@ Ask for one bounded validation journey, accountable owners and one recurring
 portfolio question. Return with an authorized, costed comparison proposal
 before paid execution or expansion. Formal approval, spending, resident choice,
 legal review, professional judgement and safety routes remain independent.
+Explore enterprise oversight only after a named need and privacy-compatible
+ingestion gates are established. Lead with the bounded next decision, explain
+the evidence and schema conflict when asked, and keep the future opportunity
+distinct from current product claims.
 
 ## Visual Sources
 

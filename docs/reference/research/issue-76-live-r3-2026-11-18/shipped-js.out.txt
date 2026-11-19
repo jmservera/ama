@@ -1,0 +1,3 @@
+/app.js 200 203579 True True 6887887dcee0b2d6
+/web/app.js 404 0 False False e3b0c44298fc1c14
+/static/app.js 404 0 False False e3b0c44298fc1c14

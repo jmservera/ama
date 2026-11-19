@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-11-17
+ms.date: 2026-11-18
 ms.topic: reference
 ---
 
@@ -262,6 +262,16 @@ digital operator exception screens. Both now use plain words.
 capitalised prose literal in an audited file. The guard is lexical; it does not
 parse JavaScript, check dynamic text or replace the named-human wording review.
 No resident comprehension or named human approval is established.
+
+### Live demo audit (2026-11-18, #153)
+
+A Playwright pass over the deployed synthetic demo (desktop, 13 staff views, the signed-in resident page and
+read-only error probes) is recorded in
+[plain-language-live-153-2026-11-18](../plain-language-live-153-2026-11-18.md). Banned terms were absent from the
+scanned views and the exact AI label appeared on Assistant proposals. Open findings: a snake_case record path in
+queue "Source" lines, a requirement code in an aftercare AI line, reason-only API errors (404 and 403) with no
+owner or next action, a bare unknown-page response and two unexplained abbreviations on the resident page.
+The named human wording review is still not run.
 
 ## Human review
 

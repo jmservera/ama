@@ -1,0 +1,668 @@
+{
+ "resident_signed_out": {
+  "audit": {
+   "lang": "en-GB",
+   "title": "Your home improvement progress - synthetic showcase, not live",
+   "h1": [
+    "Your home improvement progress"
+   ],
+   "headings": [
+    "H1:Your home improvement progress",
+    "H2:Sign in to the showcase"
+   ],
+   "landmarks": [
+    "header",
+    "main",
+    "footer"
+   ],
+   "skip_link": true,
+   "unnamed_controls": [],
+   "images_without_alt": 0,
+   "live_regions": [
+    "status/polite",
+    "alert/",
+    "alert/",
+    "log/polite",
+    "status/polite",
+    "alert/polite"
+   ],
+   "expanded_controls": 1,
+   "positive_tabindex": 0,
+   "targets_under_24px": [],
+   "contrast_checked": 16,
+   "contrast_failures": [],
+   "contrast_failure_count": 0,
+   "horizontal_scroll": false,
+   "reduced_motion_rule": true
+  },
+  "keyboard": {
+   "stops": 2,
+   "without_visible_focus_indicator": [],
+   "first": [
+    "button:Sign in",
+    "button:Chat"
+   ]
+  }
+ },
+ "resident_signed_in": {
+  "audit": {
+   "lang": "en-GB",
+   "title": "Your home improvement progress - synthetic showcase, not live",
+   "h1": [
+    "Your home improvement progress"
+   ],
+   "headings": [
+    "H1:Your home improvement progress",
+    "H2:Case summary",
+    "H2:Current status and next step",
+    "H3:Where things are",
+    "H3:What happens next",
+    "H2:What is needed from you",
+    "H2:Case timeline and planned improvements",
+    "H3:Planned improvements",
+    "H2:Documents and checks",
+    "H3:Requested documents",
+    "H3:Presented documents on file",
+    "H2:Funding and household costs",
+    "H2:Help and other ways to reach us",
+    "H2:Your home sensors and forecast",
+    "H3:Simple 24-hour synthetic forecast (estimate)",
+    "H3:Temperature history and 24-hour forecast (\u00b0C)",
+    "H3:Humidity history and 24-hour forecast (%)",
+    "H2:Not available in this showcase"
+   ],
+   "landmarks": [
+    "header",
+    "main",
+    "nav",
+    "footer"
+   ],
+   "skip_link": true,
+   "unnamed_controls": [
+    "<button type=\"button\" id=\"signout\">Sign out</button>"
+   ],
+   "images_without_alt": 0,
+   "live_regions": [
+    "status/polite",
+    "alert/",
+    "alert/",
+    "status/polite",
+    "log/polite",
+    "status/polite",
+    "alert/polite"
+   ],
+   "expanded_controls": 1,
+   "positive_tabindex": 0,
+   "targets_under_24px": [],
+   "contrast_checked": 278,
+   "contrast_failures": [],
+   "contrast_failure_count": 0,
+   "horizontal_scroll": false,
+   "reduced_motion_rule": true
+  },
+  "internal_terms_present": {
+   "gate": false,
+   "hold": false,
+   "provenance": false,
+   "trace": false,
+   "envelope": false,
+   "snapshot": false,
+   "on hold": false,
+   "consent pending": false
+  },
+  "journey_terms": {
+   "representative": false,
+   "interpreter": false,
+   "non-digital": false,
+   "offered": false,
+   "confirmed": false,
+   "commitment": false,
+   "not a booking": false,
+   "not a promise": false,
+   "complaint": false,
+   "withdraw": false,
+   "pause": true,
+   "language": false,
+   "adjustment": false,
+   "easy read": false,
+   "large print": false
+  },
+  "keyboard": {
+   "stops": 8,
+   "without_visible_focus_indicator": [],
+   "first": [
+    "a:Current status and next step",
+    "a:What is needed from you",
+    "a:Case timeline and planned improvements",
+    "a:Documents and checks",
+    "input:on",
+    "button:Generate AI summary",
+    "summary:Show sensor history and forecast as a ta",
+    "button:Chat"
+   ]
+  },
+  "expandable_buttons": 1,
+  "signout_accessible_name": {
+   "text": "Sign out",
+   "aria": null,
+   "visible": true
+  },
+  "expanded": {
+   "chars_before": 6474,
+   "chars_after": 7181,
+   "journey_terms": {
+    "representative": false,
+    "interpreter": false,
+    "non-digital": false,
+    "offered": false,
+    "confirmed": false,
+    "commitment": false,
+    "not a booking": false,
+    "not a promise": false,
+    "complaint": false,
+    "withdraw": false,
+    "pause": true,
+    "language": false,
+    "adjustment": false,
+    "easy read": false,
+    "large print": false
+   },
+   "internal_terms_present": {
+    "gate": false,
+    "hold": false,
+    "provenance": false,
+    "trace": false,
+    "envelope": false,
+    "snapshot": false,
+    "on hold": false,
+    "consent pending": false
+   }
+  },
+  "zoom200_horizontal_scroll": false
+ },
+ "employee": {
+  "role": "Retrofit Programme Manager",
+  "screens": {
+   "resident-choice": {
+    "hash": "#/role/resident_engagement",
+    "chars": 44982,
+    "audit": {
+     "lang": "en-GB",
+     "title": "Zava Forward | Zava North Homes",
+     "h1": [
+      "Resident choice and update queue"
+     ],
+     "headings": [
+      "H1:Resident choice and update queue",
+      "H2:Choose a home",
+      "H2:Choice and update commitments across open homes (portfolio s",
+      "H2:"
+     ],
+     "landmarks": [
+      "header",
+      "nav",
+      "main",
+      "nav",
+      "nav[navigation]",
+      "aside"
+     ],
+     "skip_link": true,
+     "unnamed_controls": [
+      "<button id=\"switch-account\" class=\"alt\" type=\"button\">Use another account</butto",
+      "<button id=\"signout\" type=\"button\">Sign out</button>"
+     ],
+     "images_without_alt": 0,
+     "live_regions": [
+      "status/",
+      "alert/",
+      "status/polite",
+      "status/polite"
+     ],
+     "expanded_controls": 1,
+     "positive_tabindex": 0,
+     "targets_under_24px": [
+      "Back to my work 144x18"
+     ],
+     "contrast_checked": 601,
+     "contrast_failures": [],
+     "contrast_failure_count": 0,
+     "horizontal_scroll": false,
+     "reduced_motion_rule": true
+    },
+    "journey_terms": {
+     "representative": false,
+     "interpreter": false,
+     "non-digital": false,
+     "offered": false,
+     "confirmed": false,
+     "commitment": true,
+     "not a booking": false,
+     "not a promise": false,
+     "complaint": false,
+     "withdraw": true,
+     "pause": true,
+     "language": false,
+     "adjustment": false,
+     "easy read": false,
+     "large print": false
+    },
+    "internal_terms_present": {
+     "gate": false,
+     "hold": false,
+     "provenance": false,
+     "trace": false,
+     "envelope": false,
+     "snapshot": false,
+     "on hold": false,
+     "consent pending": false
+    },
+    "keyboard": {
+     "stops": 25,
+     "without_visible_focus_indicator": [],
+     "first": [
+      "a:Asset and board view",
+      "a:Programme queue and connected home view",
+      "a:Technical queue",
+      "a:Quality queue",
+      "a:Resident choice and update queue",
+      "a:Building safety referral queue",
+      "a:Data steward and operator view",
+      "a:Package queue"
+     ]
+    }
+   },
+   "resident-service-issues": {
+    "hash": "#/role/housing_officer",
+    "chars": 21428,
+    "audit": {
+     "lang": "en-GB",
+     "title": "Zava Forward | Zava North Homes",
+     "h1": [
+      "Resident service issue queue"
+     ],
+     "headings": [
+      "H1:Resident service issue queue",
+      "H2:Choose a home",
+      "H2:Open service issues across this page of homes"
+     ],
+     "landmarks": [
+      "header",
+      "nav",
+      "main",
+      "nav",
+      "nav[navigation]",
+      "aside"
+     ],
+     "skip_link": true,
+     "unnamed_controls": [
+      "<button id=\"switch-account\" class=\"alt\" type=\"button\">Use another account</butto",
+      "<button id=\"signout\" type=\"button\">Sign out</button>"
+     ],
+     "images_without_alt": 0,
+     "live_regions": [
+      "status/",
+      "alert/",
+      "status/polite",
+      "status/polite"
+     ],
+     "expanded_controls": 1,
+     "positive_tabindex": 0,
+     "targets_under_24px": [
+      "Back to my work 144x18"
+     ],
+     "contrast_checked": 273,
+     "contrast_failures": [],
+     "contrast_failure_count": 0,
+     "horizontal_scroll": false,
+     "reduced_motion_rule": true
+    },
+    "journey_terms": {
+     "representative": false,
+     "interpreter": false,
+     "non-digital": false,
+     "offered": false,
+     "confirmed": true,
+     "commitment": true,
+     "not a booking": false,
+     "not a promise": false,
+     "complaint": false,
+     "withdraw": false,
+     "pause": false,
+     "language": false,
+     "adjustment": false,
+     "easy read": false,
+     "large print": false
+    },
+    "internal_terms_present": {
+     "gate": false,
+     "hold": false,
+     "provenance": false,
+     "trace": false,
+     "envelope": false,
+     "snapshot": false,
+     "on hold": false,
+     "consent pending": false
+    },
+    "keyboard": {
+     "stops": 25,
+     "without_visible_focus_indicator": [],
+     "first": [
+      "a:Asset and board view",
+      "a:Programme queue and connected home view",
+      "a:Technical queue",
+      "a:Quality queue",
+      "a:Resident choice and update queue",
+      "a:Building safety referral queue",
+      "a:Data steward and operator view",
+      "a:Package queue"
+     ]
+    }
+   },
+   "package-queue": {
+    "hash": "#/role/procurement",
+    "chars": 18152,
+    "audit": {
+     "lang": "en-GB",
+     "title": "Zava Forward | Zava North Homes",
+     "h1": [
+      "Package queue"
+     ],
+     "headings": [
+      "H1:Package queue",
+      "H2:Choose a home"
+     ],
+     "landmarks": [
+      "header",
+      "nav",
+      "main",
+      "nav",
+      "aside"
+     ],
+     "skip_link": true,
+     "unnamed_controls": [
+      "<button id=\"switch-account\" class=\"alt\" type=\"button\">Use another account</butto",
+      "<button id=\"signout\" type=\"button\">Sign out</button>"
+     ],
+     "images_without_alt": 0,
+     "live_regions": [
+      "status/",
+      "alert/",
+      "status/polite",
+      "status/polite"
+     ],
+     "expanded_controls": 1,
+     "positive_tabindex": 0,
+     "targets_under_24px": [
+      "Back to my work 144x18"
+     ],
+     "contrast_checked": 164,
+     "contrast_failures": [],
+     "contrast_failure_count": 0,
+     "horizontal_scroll": false,
+     "reduced_motion_rule": true
+    },
+    "journey_terms": {
+     "representative": false,
+     "interpreter": false,
+     "non-digital": false,
+     "offered": false,
+     "confirmed": false,
+     "commitment": false,
+     "not a booking": false,
+     "not a promise": false,
+     "complaint": false,
+     "withdraw": false,
+     "pause": false,
+     "language": false,
+     "adjustment": false,
+     "easy read": false,
+     "large print": false
+    },
+    "internal_terms_present": {
+     "gate": false,
+     "hold": false,
+     "provenance": false,
+     "trace": false,
+     "envelope": false,
+     "snapshot": false,
+     "on hold": false,
+     "consent pending": false
+    },
+    "keyboard": {
+     "stops": 25,
+     "without_visible_focus_indicator": [],
+     "first": [
+      "a:Asset and board view",
+      "a:Programme queue and connected home view",
+      "a:Technical queue",
+      "a:Quality queue",
+      "a:Resident choice and update queue",
+      "a:Building safety referral queue",
+      "a:Data steward and operator view",
+      "a:Package queue"
+     ]
+    }
+   },
+   "case-list": {
+    "hash": "#/",
+    "chars": 18691,
+    "audit": {
+     "lang": "en-GB",
+     "title": "Zava Forward | Zava North Homes",
+     "h1": [
+      "My cases today"
+     ],
+     "headings": [
+      "H2:Filter",
+      "H3:",
+      "H2:Today's briefing",
+      "H3:All programme cases",
+      "H3:Rules-derived summary and its sources",
+      "H2:Handoffs waiting for you",
+      "H2:Which cases first? A second opinion",
+      "H1:My cases today"
+     ],
+     "landmarks": [
+      "header",
+      "nav",
+      "main",
+      "aside"
+     ],
+     "skip_link": true,
+     "unnamed_controls": [
+      "<button id=\"switch-account\" class=\"alt\" type=\"button\">Use another account</butto",
+      "<button id=\"signout\" type=\"button\">Sign out</button>",
+      "<a href=\"#/case/ZF-[id]\">ZF-[id]: Stage: Final checks before ordering</a>",
+      "<a href=\"#/case/ZF-[id]\">ZF-[id]: Days in stage: 372</a>",
+      "<a href=\"#/case/ZF-[id]\">ZF-[id]: Stage: Final checks before ordering</a>",
+      "<a href=\"#/case/ZF-[id]\">ZF-[id]: Days in stage: 253</a>",
+      "<a href=\"#/case/ZF-[id]\">ZF-[id]: Stage: Final checks before ordering</a>",
+      "<a href=\"#/case/ZF-[id]\">ZF-[id]: Days in stage: 217</a>"
+     ],
+     "images_without_alt": 0,
+     "live_regions": [
+      "status/",
+      "alert/",
+      "status/polite",
+      "status/polite",
+      "status/",
+      "status/",
+      "status/",
+      "/polite"
+     ],
+     "expanded_controls": 1,
+     "positive_tabindex": 0,
+     "targets_under_24px": [
+      "A 422x18",
+      "A 259x18",
+      "A 422x18",
+      "A 259x18",
+      "A 422x18",
+      "A 259x18",
+      "[name], [address] 202x18",
+      "[name], [address] 221x18",
+      "[name], [address] 202x18",
+      "[name], [address] 240x18"
+     ],
+     "contrast_checked": 465,
+     "contrast_failures": [],
+     "contrast_failure_count": 0,
+     "horizontal_scroll": false,
+     "reduced_motion_rule": true
+    },
+    "journey_terms": {
+     "representative": false,
+     "interpreter": false,
+     "non-digital": false,
+     "offered": false,
+     "confirmed": true,
+     "commitment": false,
+     "not a booking": false,
+     "not a promise": false,
+     "complaint": false,
+     "withdraw": true,
+     "pause": true,
+     "language": false,
+     "adjustment": false,
+     "easy read": false,
+     "large print": false
+    },
+    "internal_terms_present": {
+     "gate": false,
+     "hold": false,
+     "provenance": false,
+     "trace": false,
+     "envelope": false,
+     "snapshot": false,
+     "on hold": false,
+     "consent pending": false
+    },
+    "keyboard": {
+     "stops": 25,
+     "without_visible_focus_indicator": [],
+     "first": [
+      "input:f-q",
+      "select:Any\nChecking lease\nContacting resident\nC",
+      "select:Any\nCounty Durham\nDarlington\nGateshead\nH",
+      "select:Any\nAd hoc\nWave 1\nWave 2\nWave 3\nWave 4",
+      "select:Any\nNewly arrived\nApproved priority\nStal",
+      "select:Any\nSafety issue open\nNeeds extra suppor",
+      "select:Most urgent first\nWaiting longest\nLonges",
+      "button:Reset my queue"
+     ]
+    }
+   },
+   "case-detail": {
+    "chars": 9019,
+    "audit": {
+     "lang": "en-GB",
+     "title": "Zava Forward | Zava North Homes",
+     "h1": [
+      "[name]Safety issue open"
+     ],
+     "headings": [
+      "H1:[name]Safety issue open",
+      "H2:Safety referrals and stopped retrofit work",
+      "H3:Reported safety concern: Damp and mould (Significant)",
+      "H4:What humans need to do next",
+      "H3:Raise a safety observation (also available after retrofit cl",
+      "H2:Blockers and safety (3)",
+      "H2:Review signals",
+      "H2:Recorded task context",
+      "H2:Regulatory alerts for this home",
+      "H2:Send this case back",
+      "H2:Stock source comparisons"
+     ],
+     "landmarks": [
+      "header",
+      "nav",
+      "main",
+      "nav"
+     ],
+     "skip_link": true,
+     "unnamed_controls": [
+      "<button id=\"switch-account\" class=\"alt\" type=\"button\">Use another account</butto",
+      "<button id=\"signout\" type=\"button\">Sign out</button>"
+     ],
+     "images_without_alt": 0,
+     "live_regions": [
+      "status/",
+      "alert/",
+      "status/polite",
+      "status/polite",
+      "status/",
+      "status/polite",
+      "status/",
+      "status/polite",
+      "status/polite",
+      "status/polite",
+      "status/polite",
+      "status/polite",
+      "alert/",
+      "status/polite",
+      "status/",
+      "status/",
+      "status/",
+      "/polite",
+      "log/polite",
+      "status/",
+      "status/"
+     ],
+     "expanded_controls": 1,
+     "positive_tabindex": 0,
+     "targets_under_24px": [
+      "Review the safety actions above the jour 413x18"
+     ],
+     "contrast_checked": 167,
+     "contrast_failures": [],
+     "contrast_failure_count": 0,
+     "horizontal_scroll": false,
+     "reduced_motion_rule": true
+    },
+    "journey_terms": {
+     "representative": false,
+     "interpreter": false,
+     "non-digital": false,
+     "offered": false,
+     "confirmed": true,
+     "commitment": true,
+     "not a booking": false,
+     "not a promise": false,
+     "complaint": false,
+     "withdraw": false,
+     "pause": true,
+     "language": true,
+     "adjustment": false,
+     "easy read": false,
+     "large print": false
+    },
+    "internal_terms_present": {
+     "gate": false,
+     "hold": false,
+     "provenance": false,
+     "trace": false,
+     "envelope": false,
+     "snapshot": false,
+     "on hold": false,
+     "consent pending": false
+    },
+    "keyboard": {
+     "stops": 25,
+     "without_visible_focus_indicator": [
+      "hz-aware"
+     ],
+     "first": [
+      "a:Back to the list",
+      "a:Versioned home case: links, shared build",
+      "button:Open next action",
+      "button:Case: why blocked. Retrofit work is stop",
+      "button:See all blockers",
+      "button:Review AI suggestions",
+      "select:Cassandra Dunn (Building Safety Liaison)",
+      "input:RJ-700309"
+     ]
+    }
+   }
+  }
+ }
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "enabled": true,
+    "freq": "1:00:00",
+    "name": "alert-[vault]-secret-expiry",
+    "sev": 2,
+    "window": "1 day, 0:00:00"
+  },
+  {
+    "enabled": true,
+    "freq": "0:15:00",
+    "name": "alert-[vault]-denied-access",
+    "sev": 3,
+    "window": "1:00:00"
+  },
+  {
+    "enabled": true,
+    "freq": "1:00:00",
+    "name": "alert-cutover-test-ledger-digest-mismatch",
+    "sev": 1,
+    "window": "1:00:00"
+  },
+  {
+    "enabled": true,
+    "freq": "1:00:00",
+    "name": "alert-cutover-test-ledger-verify-missing",
+    "sev": 1,
+    "window": "1 day, 0:00:00"
+  }
+]

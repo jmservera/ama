@@ -20,7 +20,7 @@ from zava_forward.core import (
     projection,
 )
 from zava_forward.core.doc_controls import (DEFENDER_TAG, DefenderForStorageScanner, DocumentUnavailable, LocalSignatureScanner,
-                                          TEST_MARKER, open_scanner)
+                                          EICAR_SIGNATURE, TEST_MARKER, open_scanner)
 from zava_forward.core.documents import AzureBlobDocumentStore
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -87,6 +87,15 @@ class ScanTests(Base):
         self.assertEqual(st.detail("ZF-1")["documents"], [])
         self.assertEqual(st.docstore.list_ids("ZF-1"), [])
         self.assertEqual(self.actions(st).count("upload_document_rejected"), 4)
+
+    def test_standard_eicar_file_is_refused_and_not_kept(self):
+        st = self.make()
+        for name in ("eicar.txt", "eicar.pdf"):
+            with self.assertRaises(ValueError):
+                st.add_document(SAM, "ZF-1", name, "EPC", b"%PDF-1\n" + EICAR_SIGNATURE, metadata=change_metadata(st, "ZF-1"))
+        self.assertEqual(st.detail("ZF-1")["documents"], [])
+        self.assertEqual(st.docstore.list_ids("ZF-1"), [])
+        self.assertEqual(LocalSignatureScanner().scan("ZF-1", "d", "a.txt", b"EICAR-STANDARD-ANTIVIRUS-TEST-FILE", "text/plain")[0], "clean")
 
     def test_unscanned_document_is_blocked_while_scan_pending(self):
         blob = DefenderBlob()

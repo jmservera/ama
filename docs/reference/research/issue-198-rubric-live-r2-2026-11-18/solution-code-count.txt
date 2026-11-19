@@ -1,0 +1,3 @@
+{'title': 'Solution source code', 'criteria': 'list[7]', 'files': 'list[500]', 'file_count': 949}
+listed 500 tests 297 pyproject 3 dockerfile 6 mvp_or_prototype 0 vendor_or_data 0
+baseline total 79 source workflow

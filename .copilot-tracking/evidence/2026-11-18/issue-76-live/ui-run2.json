@@ -1,0 +1,32 @@
+{
+ "row_found": true,
+ "card_hazard_clock_text": true,
+ "card_named_owner": true,
+ "card_owner_status": true,
+ "safety_clock_element": true,
+ "safety_clock_visible": false,
+ "safety_clock_text": "Hazard clock: elapsed time unknown; no response target window recorded; response unknown. Accountable owner: Karen Lawson. Safety clock in this recorded view: Unknown; awareness: Unknown; named follow-up owner: Karen Lawson; service response due: Unknown; resident update due: Unknown. Existing hazard and repairs service owns timing. Named follow-up owner recorded. Service response: Unknown; resident update: Unknown.",
+ "sections_in_card": [
+  "Case: 3 blockers",
+  "Safety referrals and stopped retrofit work",
+  "Reported safety concern: Damp and mould (Significant)",
+  "Raise a safety observation (also available after retrofit closure)",
+  "Resident agreement: 2 blockers",
+  "Contractor: 1 blocker",
+  "Overview",
+  "Where it is up to",
+  "Contact",
+  "Blockers and safety (3)",
+  "Review signals",
+  "Recorded task context",
+  "Regulatory alerts for this home",
+  "Send this case back",
+  "Stock source comparisons",
+  "Survey and assessment",
+  "Assessment and technical sign-offs",
+  "Documents",
+  "Funding",
+  "Funding application"
+ ],
+ "url_path": "/app#/case/ZF-2025-0331"
+}

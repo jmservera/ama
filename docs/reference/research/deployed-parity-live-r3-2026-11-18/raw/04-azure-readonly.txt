@@ -1,0 +1,83 @@
+UTC 2026-11-18T14:06:26Z
+## app env (names only, values of secret-like keys hidden)
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+APPLICATIONINSIGHTS_CONNECTION_STRING	<hidden>
+OTEL_SERVICE_NAMESPACE	<secretRef>
+AZURE_CLIENT_ID	<secretRef>
+SQL_SERVER	<secretRef>
+SQL_DATABASE	<secretRef>
+BLOB_ENDPOINT	<secretRef>
+QUEUE_ENDPOINT	<secretRef>
+KEY_VAULT_URI	<hidden>
+EVIDENCE_STORE	<secretRef>
+SHAREPOINT_SITE_ID	<secretRef>
+ZF_TILE_URL	<secretRef>
+ZF_TILE_ATTRIBUTION	<secretRef>
+ZF_STORE	<secretRef>
+ZF_SQL_SERVER	<secretRef>
+ZF_SQL_DATABASE	<secretRef>
+ZF_SQL_AUTH	<secretRef>
+ZF_SQL_CLIENT_ID	<secretRef>
+ZF_DOC_STORE	<secretRef>
+ZF_BLOB_ACCOUNT_URL	<secretRef>
+ZF_BLOB_CONTAINER	<secretRef>
+ZF_BLOB_CLIENT_ID	<secretRef>
+ZF_AUTH	<secretRef>
+ZF_TRUSTED_PROXY	<secretRef>
+ZF_ENV	<secretRef>
+ZF_ENTRA_TENANT_ID	<secretRef>
+ENTRA_TENANT_ID	<secretRef>
+ENTRA_CLIENT_ID	<secretRef>
+AI_ENDPOINT	<secretRef>
+AI_DEPLOYMENT	<secretRef>
+AI_DEPLOYMENT_STRONG	<secretRef>
+CHAT_DPIA_REF	<secretRef>
+CHAT_LAWFUL_BASIS_REF	<secretRef>
+CHAT_NOTICE_REF	<secretRef>
+CHAT_RETENTION_REF	<secretRef>
+CHAT_RETENTION_DAYS	<secretRef>
+ZF_CHAT_DEMO_ACTIVATION	<secretRef>
+ZF_DEPLOYMENT_PROFILE	<secretRef>
+AI_MODEL_VERSION	<secretRef>
+AI_MODEL_VERSION_STRONG	<secretRef>
+## revision
+ca-cutover-test-demo-api--0000031	2026-11-17T19:42:06+00:00	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb
+## easyauth
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "excl": [
+    "/healthz",
+    "/readyz",
+    "/",
+    "/welcome.html",
+    "/style.css",
+    "/zava-logo.png",
+    "/sign-in"
+  ],
+  "tokenStore": false,
+  "unauth": "RedirectToLoginPage"
+}
+## foundry deployments
+standard	gpt-4.1-nano	2025-04-14	Succeeded
+## eventhub
+Active	Succeeded
+sensor-readings	2
+## jobs
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+job-cutover-test-init	Manual	None
+job-cutover-test-verify	Manual	None
+job-cutover-test-ledger-verify	Manual	None
+job-cutover-test-import	Manual	None
+job-cutover-test-orchestrator	Manual	None
+job-cutover-test-smoke	Manual	None
+job-cutover-test-mi-http	Manual	None
+job-cutover-test-public-audit	Manual	None
+## ledger-verify executions
+job-cutover-test-ledger-verify-ibj9kvk	Succeeded	2026-11-18T08:05:47+00:00
+job-cutover-test-ledger-verify-zugyt7i	Failed	2026-11-18T08:02:37+00:00
+job-cutover-test-ledger-verify-oluza9i	Failed	2026-11-18T08:00:43+00:00
+job-cutover-test-ledger-verify-29883000	Succeeded	2026-10-26T02:00:00+00:00
+job-cutover-test-ledger-verify-29881560	Succeeded	2026-10-25T02:00:00+00:00
+job-cutover-test-ledger-verify-29880120	Succeeded	2026-10-24T02:00:00+00:00
+job-cutover-test-ledger-verify-29878680	Succeeded	2026-10-23T02:00:00+00:00
+job-cutover-test-ledger-verify-29877240	Succeeded	2026-10-22T02:00:00+00:00

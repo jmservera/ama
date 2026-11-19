@@ -1,0 +1,11 @@
+import sys,os
+sys.path[:0]=["tests","src"]
+from test_ranking_publication import snap
+from zava_forward.core import ranking_publication as rp
+from pathlib import Path
+base=Path(sys.argv[1]); arch=base/"a"/"b"/"archive"
+try:
+    rp.publish(snap(),arch,"2026-11-18"); print("CONFIRMED (unexpected)")
+except rp.DurabilityUnconfirmedError as e:
+    print("UNCONFIRMED errno",e.errno,"written",e.written,"path_free",str(base) not in str(e))
+print("RECORDS",[p.name for p in arch.iterdir() if not p.name.startswith(".")],"stage_left",[p.name for p in arch.iterdir() if p.name.startswith(".")])

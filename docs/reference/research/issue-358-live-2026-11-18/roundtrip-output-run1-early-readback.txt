@@ -1,0 +1,5 @@
+listSecrets rows (names, value-bearing only): [('kvref', True, True), ('plain1', True, False)]
+before: [{"identity": "/subscriptions/[subscription-id redacted]/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api", "keyVaultUrl": "https://kv-cutovertest-rzsrg.vault.azure.net/secrets/entra-0dbb6bafc8af414fad0b5daa7695cbc9-7a8a02692e5a", "name": "kvref"}, {"name": "plain1"}]
+after : [{"identity": "/subscriptions/[subscription-id redacted]/resourcegroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api", "keyVaultUrl": "https://kv-cutovertest-rzsrg.vault.azure.net/secrets/entra-0dbb6bafc8af414fad0b5daa7695cbc9-7a8a02692e5a", "name": "kvref"}, {"name": "plain1"}]
+digest before-ref preserved: False digest equal subset: True
+RESULT FAIL

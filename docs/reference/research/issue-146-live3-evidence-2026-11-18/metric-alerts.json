@@ -1,0 +1,58 @@
+[
+  {
+    "agg": "Total",
+    "enabled": true,
+    "metric": "ClientErrors",
+    "name": "alert-cutover-test-foundry-throttle",
+    "sev": 2,
+    "window": "PT15M"
+  },
+  {
+    "agg": "Average",
+    "enabled": true,
+    "metric": "cpu_percent",
+    "name": "alert-cutover-test-sql-cpu",
+    "sev": 3,
+    "window": "PT15M"
+  },
+  {
+    "agg": "Total",
+    "enabled": true,
+    "metric": "Requests",
+    "name": "alert-cutover-test-api-5xx",
+    "sev": 2,
+    "window": "PT5M"
+  },
+  {
+    "agg": "Total",
+    "enabled": true,
+    "metric": "RestartCount",
+    "name": "alert-cutover-test-api-restarts",
+    "sev": 3,
+    "window": "PT15M"
+  },
+  {
+    "agg": "Maximum",
+    "enabled": true,
+    "metric": "Executions",
+    "name": "tmp146d-job-failed-maximum",
+    "sev": 2,
+    "window": "PT15M"
+  },
+  {
+    "agg": "Total",
+    "enabled": true,
+    "metric": "Executions",
+    "name": "tmp146e-job-failed-total",
+    "sev": 3,
+    "window": "PT15M"
+  },
+  {
+    "agg": "Maximum",
+    "enabled": true,
+    "metric": "Executions",
+    "name": "tmp146f-job-failed-max-1h",
+    "sev": 3,
+    "window": "PT1H"
+  }
+]

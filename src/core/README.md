@@ -2,9 +2,20 @@
 title: Zava Forward core library
 description: Domain, store, ledger, law store, chat storage and synthetic-data documentation for the core project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-11-15
+ms.date: 2026-11-18
 ms.topic: reference
 ---
+
+## Opt-in operational tracing
+
+`core[telemetry]` supplies an explicit SDK/OTLP HTTP layer; core alone needs only
+the OTel API and exports nothing. Disabled telemetry does not import the API
+or SDK, preserving deterministic generators and driverless helper commands.
+See the [enablement, privacy contract and
+synthetic receipt](../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16).
+SQL audit/consent/release/consumption remain authoritative. No prompts, outputs,
+SQL text, business identifiers or model reasoning are added to diagnostics.
+Agent 365 and direct Azure export are deferred.
 
 ## Model provider data-handling and region position contract (2026-11-15, Refs #163)
 
@@ -842,6 +853,24 @@ Focused local constructed tests:
 python3 -m unittest discover -s tests -p test_resident_decisions.py -q
 ```
 
+### Nomination test layouts (#1847)
+
+`zava_forward` is a namespace package split across `src/core/src` and `src/agents/src`
+(no `zava_forward/__init__.py`). `src/core/tests/test_nomination_route.py` supports:
+
+* an editable install of `src/core` and `src/agents`, which supplies the distribution
+  metadata and resolves every module under `src/`;
+* the source roots (`src/core/src`, `src/agents/src`, `src/core/tests`) on `PYTHONPATH`;
+* a noneditable copy elsewhere on the path, provided no `zava_forward` module from it is
+  imported before the nomination module, because the source roots are then prepended first.
+
+It rejects any layout where a `zava_forward` module outside `src/` was already imported
+(for example a site-packages install loaded by an earlier test module). The module raises
+`ImportError` starting `unsupported layout` before changing `sys.path` and without removing
+anything from `sys.modules`, so `ConflictError`, `GateError`, `Store` and patch targets keep
+one identity. A post-import check repeats the foreign-module test. Fresh-process coverage in
+both import orders is in `src/core/tests/test_nomination_bootstrap.py`.
+
 ## Formal-complaints route boundary (#86)
 
 `complaints_route.py` defines a small receiver boundary and the
@@ -1291,6 +1320,17 @@ reads Bicep text only and proves nothing about the deployed budget.
 ```bash
 python3 -m zava_forward.core.synthetic.run_plan --homes 30000 --owner "<name>" \
   --budget-usd 10 --alert-reference "<budget alert name>" --out estimate.json
+```
+
+`synthetic.run_live_check` checks a deployed hub and its budgets from `az` JSON (no Azure call
+inside the package): hub owner tag, tier and capacity, a monthly budget cap, enabled actual and
+forecast alerts, and whether any recipient is a noreply or placeholder address. It exits 3 if
+any check fails and never prints an address. It does not prove an alert fires or a run exists.
+
+```bash
+az iot hub show -g <rg> -n <hub> > hub.json
+az consumption budget list -g <rg> > budgets.json
+python3 -m zava_forward.core.synthetic.run_live_check --hub hub.json --budgets budgets.json
 ```
 
 From `src/core`, with the package installed:

@@ -1,0 +1,1 @@
+ERROR: Insufficient privileges to complete the operation.
