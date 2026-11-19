@@ -421,6 +421,8 @@ The [fifth pass](./research/issue-76-live-r5-2026-11-19.md) re-runs 35 targeted 
 revision 33 is still active; no source gap remains.
 The [fifth pass](./research/issue-76-live-r5-2026-11-19.md) re-runs 33 local tests and confirms the
 only gap is a demo-data decision (hazard awareness time); no source change.
+The [sixth pass](./research/issue-76-live-r6-2026-11-19.md) re-runs the same 33 tests; the gap is unchanged
+and needs an owner data decision; no source change.
 For epic #73, the [criterion audit](./research/issue-73-epic-live-2026-11-19.md) tabulates every
 unticked criterion and adds a local HTTP test for the #76 clocks on list rows.
 The [second-pass child disposition audit](./research/issue-73-epic-audit-live-r2-2026-11-19.md)

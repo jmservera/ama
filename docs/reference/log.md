@@ -14031,3 +14031,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 1259 demo evidence
 
 * Added research/issue-1259-live-2026-11-19.md: failure-before-fix demonstration for the archive path regressions; the hosted-check and independent assessment criterion stays unproven.
+
+## [2026-11-19] add | Issue 76 hazard clock criterion, sixth pass (Refs #76)
+
+* Added [issue-76-live-r6-2026-11-19.md](research/issue-76-live-r6-2026-11-19.md): 33 targeted tests pass; the remaining gap is an owner data decision for the hazard awareness time. No source change.
