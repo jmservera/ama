@@ -13984,3 +13984,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 145 live audit 6 (Refs #145)
 
 * Added [issue-145-live-20261119T1419Z-2026-11-19.md](research/issue-145-live-20261119T1419Z-2026-11-19.md): read-only Azure SQL backup re-check; no source change, no drill; every remaining criterion is production-only, human-owned or needs the FULL tier.
+## [2026-11-19] add | Issue 146 live monitoring re-check (Refs #146)
+
+* Added [issue-146-live4-monitoring-2026-11-19.md](research/issue-146-live4-monitoring-2026-11-19.md): read-only alert and workbook inventory and a per-criterion result; no source change.
