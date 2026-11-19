@@ -1,10 +1,9 @@
 ---
-title: Issue 76 live plan 2026-11-19
+title: Issue 76 plan
 ms.date: 2026-11-19
 ---
 
-1. Re-run the focused tests for the criterion (done in Research).
-2. Record the per-criterion verdict in the changes record; no source edit.
-3. Review once, commit locally, do not push.
+Refs #76. Details: [details](../details/2026-11-19-issue-76-live-details.md). Critique: [critique](../research/2026-11-19-issue-76-live-critique.md) (one pass, verdict: proceed, no source change).
 
-Details: [details](../details/2026-11-19-issue-76-live-details.md). Critique: [critique](../critiques/2026-11-19-issue-76-live-critique.md).
+* [x] Phase 1: re-run existing hazard clock and task queue tests on this head.
+* [x] Phase 2: record per-criterion table; no source edit, so no FULL tier.

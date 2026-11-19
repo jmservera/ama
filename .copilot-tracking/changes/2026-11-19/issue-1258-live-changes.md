@@ -13,3 +13,5 @@ Source changes: none. Tier: not FULL (no src change). `rpi-checks.py --all` not 
 Command: `cd src/core && PYTHONPATH=src:tests python3 -m unittest discover -s tests -p "test_ranking_publication*.py" -q` gave `Ran 110 tests, OK`.
 
 Outcome: every remaining criterion is production-only or needs a human; stop.
+
+Rerun 2026-11-19T15:30Z (worktree issue-1258-live-20261119T152225Z): same command, `Ran 110 tests, OK`. No source change; the table above still stands. Live Azure not needed: the remaining criterion is a process and human gate.

@@ -1,24 +1,35 @@
 {
- "task_id": "issue-76-live-20261119",
- "task_slug": "issue-76-live",
+ "task_id": "issue-76-live",
+ "task_slug": "issue-76-live-r5",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19-issue-76-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19-issue-76-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-19-issue-76-live-details.md",
-  "critique": ".copilot-tracking/critiques/2026-11-19-issue-76-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19-issue-76-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19-issue-76-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-19/issue-76-live-r5-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-19/issue-76-live-r5-plan.md",
+  "details": ".copilot-tracking/details/2026-11-19/issue-76-live-r5-phase-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-19/issue-76-live-r5-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-19/issue-76-live-r5-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-19/issue-76-live-r5-review.md"
  },
- "confirmed_decisions": [],
+ "confirmed_decisions": [
+  {
+   "decision": "critique executed once, approved",
+   "status": "done",
+   "evidence": ".copilot-tracking/plans/2026-11-19/issue-76-hazard-clock-owner-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-19/issue-76-hazard-clock-owner-review.md"
+  }
+ ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Owner picks: seed demo data and redeploy"
+  "action": "owner decides whether Unknown hazard times satisfy the criterion"
  },
  "prioritized_follow_ups": []
 }

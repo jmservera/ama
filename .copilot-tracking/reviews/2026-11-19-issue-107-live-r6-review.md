@@ -1,3 +1,3 @@
-# Review: issue #107 r6
+# Review: issue #107 r6 (2026-11-19), executed once
 
-Executed once. Outcome: conformant. No source change; table matches evidence; no secrets; no Azure resources. Routed: appoint OQ-017 release holders (human).
+Outcome: conformant. Documentation-only diff; links resolve to existing notes; the per-criterion table matches the issue (two unticked, one proven for the demo, one human-gated). No secrets. Open work: appoint OQ-017 holders (human).

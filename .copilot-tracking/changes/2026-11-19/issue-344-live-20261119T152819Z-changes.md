@@ -10,3 +10,5 @@ Refs #344. Files: docs/reference/research/public-browser-access-live-r5-2026-11-
 | 4 | SQL private | Proven earlier, not re-run |
 | 5 | Parity | Unproven; time/status 500 cause unknown (SQL scope) |
 | 6 | Sign-in smoke | Ticked already |
+
+Witness note: plan-done, implement-start and implement-done were first refused (state lacked artifact paths) and re-recorded after the state was fixed, so implement-start follows the content commit.

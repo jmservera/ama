@@ -1,3 +1,7 @@
-# Critique (one pass, 2026-11-19)
+---
+title: Issue 121 critique
+description: Single final-candidate critique
+ms.date: 2026-11-19
+---
 
-Verdict: proceed. Risk: stopping may under-deliver; counter: code-provable criteria already have tests (see research), and the remaining ones are excluded by owner decision. No conflicts with confirmed decisions.
+Executed once. Verdict: accept. Challenge: inventing a source change to satisfy the goal would add untested surface; every named behaviour already has passing tests. Direct disposition: no source edit; record deployed-parity gap and production-only items honestly.

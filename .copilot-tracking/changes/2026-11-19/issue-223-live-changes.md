@@ -15,4 +15,3 @@ Files: docs/reference/research/issue-223-first-buildable-criterion-2026-11-19.md
 Validation: core test_human_review_effectiveness_223 6 OK; agents test_review_effectiveness 37 OK; offline gate passed true. mypy, ruff not applicable (no source change).
 
 Witness note: first plan-done to review-done calls were refused for missing state paths (details, changes, review); repaired and re-recorded (seq 8-11). Commit was amended once; a follow-up commit binds commit-complete.
-Second repair: implement-start re-recorded at the amended HEAD (seq 14+) because amend orphaned the first implement-start HEAD.

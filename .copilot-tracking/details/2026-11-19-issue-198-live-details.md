@@ -1,3 +1,3 @@
-# Issue 198 live details
+# Details
 
-Edit only the one test: `if event not in config["on"]: pytest.skip(...)`; replace the `mvp/` sample with `src/api/src/zava_forward/api/app.py`. Done when the file reports 0 failures.
+Phase 1: verify registry has no mvp or prototype globs (done, 0 matches). Phase 2: write changes and review records.
