@@ -1,0 +1,12 @@
+[
+  {
+    "email": 1,
+    "name": "ag-cutover-test-ops",
+    "webhook": 0
+  },
+  {
+    "email": 0,
+    "name": "Application Insights Smart Detection",
+    "webhook": 0
+  }
+]

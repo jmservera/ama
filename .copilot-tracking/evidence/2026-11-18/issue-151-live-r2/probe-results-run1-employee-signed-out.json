@@ -1,0 +1,341 @@
+{
+ "axe": "4.10.3",
+ "viewport": "1366x900",
+ "resident": {
+  "title": "Your home improvement progress - synthetic showcase, not live",
+  "signin_axe": {
+   "violations": [],
+   "incomplete": [
+    {
+     "id": "aria-valid-attr-value",
+     "impact": "critical",
+     "help": "ARIA attributes must conform to valid values",
+     "tags": [
+      "wcag2a",
+      "wcag412"
+     ],
+     "nodes": 1,
+     "targets": [
+      [
+       "#chat-launcher"
+      ]
+     ]
+    }
+   ],
+   "passes": 24,
+   "inapplicable": 38
+  },
+  "signin_keyboard": {
+   "stops": 5,
+   "trap": false,
+   "completed_cycle": false,
+   "without_indicator": 0,
+   "not_in_viewport": 0,
+   "unnamed": 2,
+   "first": [
+    "a:Skip to the main content",
+    "input:",
+    "input:",
+    "button:Sign in",
+    "button:Chat"
+   ]
+  },
+  "empty_error": {
+   "text": "Enter your email address and the password.",
+   "role": "alert",
+   "aria_live": null,
+   "focused_id_after_submit": "email",
+   "email_aria_invalid": "true",
+   "email_described_by": "signin-error"
+  },
+  "error_axe": {
+   "violations": [],
+   "incomplete": [
+    {
+     "id": "aria-valid-attr-value",
+     "impact": "critical",
+     "help": "ARIA attributes must conform to valid values",
+     "tags": [
+      "wcag2a",
+      "wcag412"
+     ],
+     "nodes": 1,
+     "targets": [
+      [
+       "#chat-launcher"
+      ]
+     ]
+    }
+   ],
+   "passes": 25,
+   "inapplicable": 37
+  },
+  "signed_in_h1": [
+   "Your home improvement progress"
+  ],
+  "signed_in_axe": {
+   "violations": [],
+   "incomplete": [
+    {
+     "id": "aria-valid-attr-value",
+     "impact": "critical",
+     "help": "ARIA attributes must conform to valid values",
+     "tags": [
+      "wcag2a",
+      "wcag412"
+     ],
+     "nodes": 1,
+     "targets": [
+      [
+       "#chat-launcher"
+      ]
+     ]
+    },
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "help": "Elements must meet minimum color contrast ratio thresholds",
+     "tags": [
+      "wcag2aa",
+      "wcag143"
+     ],
+     "nodes": 8,
+     "targets": [
+      [
+       "figure:nth-child(9) > svg[viewBox=\"0 0 480 180\"][role=\"img\"] > text[y=\"156\"][x=\"50\"]"
+      ],
+      [
+       "figure:nth-child(9) > svg[viewBox=\"0 0 480 180\"][role=\"img\"] > text[y=\"86\"][x=\"50\"]"
+      ],
+      [
+       "figure:nth-child(9) > svg[viewBox=\"0 0 480 180\"][role=\"img\"] > text[y=\"16\"][x=\"50\"]"
+      ],
+      [
+       "figure:nth-child(9) > svg[viewBox=\"0 0 480 180\"][role=\"img\"] > text[x=\"234.48155339805825\"][y=\"26\"]"
+      ],
+      [
+       "figure:nth-child(10) > svg[viewBox=\"0 0 480 180\"][role=\"img\"] > text[y=\"156\"][x=\"50\"]"
+      ]
+     ]
+    }
+   ],
+   "passes": 27,
+   "inapplicable": 35
+  },
+  "signed_in_keyboard": {
+   "stops": 7,
+   "trap": false,
+   "completed_cycle": true,
+   "without_indicator": 0,
+   "not_in_viewport": 7,
+   "unnamed": 1,
+   "first": [
+    "a:Current status and next step",
+    "a:What is needed from you",
+    "a:Case timeline and planned improvements",
+    "a:Documents and checks",
+    "input:",
+    "button:Generate AI summary"
+   ]
+  },
+  "signed_in_live_regions": [
+   "status/polite",
+   "alert/",
+   "alert/",
+   "status/polite",
+   "log/polite",
+   "status/polite",
+   "alert/polite"
+  ],
+  "signed_in_landmarks": {
+   "main": 1,
+   "header": 1,
+   "nav": 1,
+   "h1": 1,
+   "lang": "en-GB"
+  },
+  "signed_in_contrast_sample": {
+   "n": 284,
+   "fail": 0,
+   "worst": [],
+   "imgbg": 0
+  },
+  "reflow_320_hscroll": false
+ },
+ "employee": {
+  "titles": {
+   "my-cases": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "all": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "overview": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "progress": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "visits": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "funding": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "finance": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "capacity": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "closed": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "assistants": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "time": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "aftercare": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   },
+   "screens": {
+    "title": "Welcome to Zava Forward | Zava North Homes",
+    "h1": "Zava Forward"
+   }
+  },
+  "contrast": {
+   "my-cases": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "all": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "overview": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "progress": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "visits": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "funding": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "finance": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "capacity": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "closed": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "assistants": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "time": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "aftercare": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   },
+   "screens": {
+    "n": 22,
+    "fail": 0,
+    "worst": [],
+    "imgbg": 0
+   }
+  },
+  "keyboard_open_case": {
+   "activated": false,
+   "hash_after": "",
+   "title_after": "Welcome to Zava Forward | Zava North Homes",
+   "focus_after": "a:"
+  },
+  "case_axe": {
+   "violations": [],
+   "incomplete": [
+    {
+     "id": "color-contrast",
+     "impact": "serious",
+     "help": "Elements must meet minimum color contrast ratio thresholds",
+     "tags": [
+      "wcag2aa",
+      "wcag143"
+     ],
+     "nodes": 1,
+     "targets": [
+      [
+       ".btn > span[aria-hidden=\"true\"]"
+      ]
+     ]
+    }
+   ],
+   "passes": 18,
+   "inapplicable": 44
+  },
+  "case_keyboard": {
+   "stops": 1,
+   "trap": false,
+   "completed_cycle": false,
+   "without_indicator": 0,
+   "not_in_viewport": 0,
+   "unnamed": 0,
+   "first": [
+    "a:Sign in to the workbench \u2192"
+   ]
+  },
+  "escape_dialogs": 0
+ }
+}

@@ -1,0 +1,65 @@
+## budgets
+{
+  "amount": "25.0",
+  "cur": {
+    "amount": "5.16129032258064",
+    "unit": "USD"
+  },
+  "end": "2036-10-01T00:00:00Z",
+  "grain": "Monthly",
+  "notifications": {
+    "actual80": {
+      "contactEmails": [
+        "<email>"
+      ],
+      "contactGroups": [],
+      "contactRoles": [],
+      "enabled": true,
+      "operator": "GreaterThan",
+      "threshold": "80.0"
+    },
+    "forecast100": {
+      "contactEmails": [
+        "<email>"
+      ],
+      "contactGroups": [],
+      "contactRoles": [],
+      "enabled": true,
+      "operator": "GreaterThan",
+      "threshold": "100.0"
+    }
+  },
+  "start": "2026-10-01T00:00:00Z"
+}
+## hub
+{
+  "loc": "uksouth",
+  "sku": {
+    "capacity": 1,
+    "name": "B1",
+    "tier": "Basic"
+  },
+  "state": "Active",
+  "tags": {
+    "dataClassification": "constructed-non-identifying",
+    "environment": "test",
+    "owner": "<owner-name>",
+    "purpose": "non-production-demonstrator",
+    "workload": "zava-forward-demonstrator",
+    "zava-forward-deployment-profile": "development"
+  }
+}
+## total-messages-24h
+d2c.telemetry.ingress.success points 24 max 11.0 total 135.0
+dailyMessageQuotaUsed points 24 max 96.0 total 34411.0
+## jobs
+job-cutover-test-init
+job-cutover-test-verify
+job-cutover-test-ledger-verify
+job-cutover-test-import
+job-cutover-test-orchestrator
+job-cutover-test-smoke
+job-cutover-test-mi-http
+job-cutover-test-public-audit
+## simcontrol env
+Wed Nov 18 12:35:41 UTC 2026

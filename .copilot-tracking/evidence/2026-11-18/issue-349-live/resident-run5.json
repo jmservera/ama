@@ -1,0 +1,36 @@
+{
+ "anonymous_view": 401,
+ "resident_login_status": 200,
+ "resident_signed_in": true,
+ "resident_view_status": 200,
+ "resident_view_keys": [
+  "account",
+  "agenda_available",
+  "banner",
+  "callbacks_available",
+  "documents",
+  "help",
+  "home",
+  "measures",
+  "needed",
+  "next_step",
+  "progress",
+  "read_only"
+ ],
+ "staff_path_probe": {
+  "/api/me": 404,
+  "/api/cases": 404,
+  "/api/staff": 404,
+  "/demo/staff": 404,
+  "/demo/admin": 404
+ },
+ "wrong_password_login_status": 401,
+ "wrong_password_signed_in": false,
+ "wrong_password_view": 401,
+ "employee_entra_account_on_resident_app_login_status": 401,
+ "employee_entra_account_on_resident_app_signed_in": false,
+ "employee_entra_account_on_resident_app_view": 401,
+ "signout_control_found": true,
+ "after_signout_view_old_fence": 401,
+ "after_signout_signed_in": false
+}

@@ -4,6 +4,7 @@ Issue #107, RAI criterion 8. Constructed fixtures only. A "worker" or "restart" 
 `SqlStore` and `Assistants` over one file-backed SQLite database; the provider is a counting double.
 """
 
+import os
 import threading
 import unittest
 from collections.abc import Callable
@@ -16,7 +17,7 @@ from zava_forward.core import assistant_release as rel
 from zava_forward.core.assistants import Assistants
 
 from test_assistant_release import CAP, assistants_proposal, body
-from test_assistants import Base, config
+from test_assistants import Base, MssqlFixture, config
 from test_continuity import SUSPEND
 
 LARGER = dict(call_allowance=1000, token_allowance=9000000, expires="2100-01-01T00:00:00Z")
@@ -148,6 +149,13 @@ class RevocationAndSuspension(Restart):
         self.assertNotEqual(fresh.invoke(self.pm, CAP, "ZF-1")["state"], "disabled")
         self.assertFalse(self.worker().execute(old["id"]))
         self.assertEqual(self.statuses(self.worker()).count("revoked"), 1)
+
+
+@unittest.skipUnless(
+    os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)"
+)
+class MssqlRevocationAndSuspension(MssqlFixture, RevocationAndSuspension):
+    """Actual disposable SQL (local service only): old images cannot restore revoked approval."""
 
 
 class Allowance(Restart):

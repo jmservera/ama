@@ -1,0 +1,4 @@
+Pipeline stopped: No federated credential is configured
+exit=1
+Pipeline stopped: No federated credential is configured
+exit=1

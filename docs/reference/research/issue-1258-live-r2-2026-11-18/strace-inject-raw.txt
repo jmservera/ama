@@ -1,0 +1,6 @@
+1667414 fsync(4<<ARCH>/a/b/archive/.ranking-1.0.0-2026-10-09-7502f1822e79.json.31bafea8020fa37f.tmp>) = 0
+1667414 linkat(3<<ARCH>/a/b/archive>, ".ranking-1.0.0-2026-10-09-7502f1822e79.json.31bafea8020fa37f.tmp", 3<<ARCH>/a/b/archive>, "ranking-1.0.0-2026-10-09-7502f1822e79.json", AT_SYMLINK_FOLLOW) = 0
+1667414 fsync(3<<ARCH>/a/b/archive>) = 0
+1667414 fsync(4<<ARCH>/a/b>) = 0
+1667414 fsync(5<<ARCH>/a>) = -1 EIO (Input/output error) (INJECTED)
+1667414 +++ exited with 0 +++

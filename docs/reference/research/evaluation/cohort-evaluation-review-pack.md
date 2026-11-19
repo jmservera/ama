@@ -226,3 +226,25 @@ evaluation and does not read this page.
 * Merged evidence since this pack was written: PR 636 (core cohort record), 697 (ranking policy run), 821 (approval bound to manifest content), 939 (per-cohort record in the AI evaluation report) and 975 (AI priority task cohort evaluation). Behavioural tests for acceptance criteria 1 to 5 now exist on main and the issue ticks them.
 * Criterion 6 remains unmet. Owner and DPO approval of cohorts, lawful analysis fields and thresholds (OQ-018) is absent, the independent reviewer, adjudicator and custodian roles are unfilled, and synthetic results are not fairness evidence.
 * No threshold, approval or live use is inferred. This record changes no code. The issue stays open.
+
+## Executable evidence re-measured (2026-11-17, Refs #222)
+
+The banner and the traceability table above describe the v0.2.0 draft and are
+kept as written. The executable evaluator now on main
+(`zava_forward.core.cohort_eval`, `zava_forward.agents.cohort_ranking_eval`,
+documented in the [agents README](../../../../src/agents/README.md)) was
+re-run on synthetic data only, from a clean worktree at main `eb51af5c`:
+
+| Check | Result |
+| --- | --- |
+| `src/core` `test_cohort_eval` | 25 tests, OK |
+| `src/agents` `test_cohort_ranking_eval`, `test_cohort_ai_eval`, `test_cohort_manifest_draft` | 36 tests, OK |
+| `python3 -m zava_forward.agents.cohort_ranking_eval` | 48 paired constructed cases, `blocked`, activation not allowed; every cohort `sufficient=False` (n=42 and n=6); blockers `insufficient_sample` and `unapproved_thresholds` |
+| Same command with `--defects` | seeded `history-2-b`, `history-3-b`, `sensor-1-b`, `sensor-4-b` all detected, each as `unjustified_exclusion`; errors reported per cohort (for example `support_need/none` 4, `appointment_history/missed` 2), not averaged |
+| Reconciliation | per dimension, cases plus missing observations equal 48; `source_completeness/partial` review burden 1.0 (6 of 6) with a reported error interval of 0.0 to 0.3903 |
+
+No defect was reproduced, so no source or test changed. This supports the
+engineering behaviour behind acceptance criteria 1 to 5 on constructed data.
+Criterion 6 stays unmet: owner and DPO approval of cohorts, lawful analysis
+fields and thresholds (OQ-018) is absent, reviewer roles are unfilled, and
+synthetic results are not fairness evidence.

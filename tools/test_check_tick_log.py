@@ -1,0 +1,101 @@
+"""Focused unit tests for tools/check-tick-log.py (Issue #1204)."""
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+SCRIPT_PATH = Path(__file__).resolve().parent / "check-tick-log.py"
+SPEC = importlib.util.spec_from_file_location("check_tick_log", SCRIPT_PATH)
+assert SPEC is not None and SPEC.loader is not None
+checker = importlib.util.module_from_spec(SPEC)
+sys.modules[SPEC.name] = checker
+SPEC.loader.exec_module(checker)
+
+
+def tick(n: int, **overrides: object) -> dict[str, object]:
+    row: dict[str, object] = {
+        "tick": n,
+        "counts": {"ready": 2, "running": 1, "unassessed": 3},
+        "action": "launched review for PR 10",
+        "evidence": "tmux list-sessions shows rpi-10",
+    }
+    row.update(overrides)
+    return row
+
+
+def rules(rows: list[dict[str, object]]) -> list[str]:
+    return [v.rule for v in checker.check_ticks(rows)]
+
+
+class TickLogTests(unittest.TestCase):
+    def test_clean_log_passes(self) -> None:
+        self.assertEqual(rules([tick(1), tick(2)]), [])
+
+    def test_missing_action_with_ready_work_is_flagged(self) -> None:
+        self.assertEqual(rules([tick(1, action="", evidence="")]), ["no-progress"])
+
+    def test_idle_with_full_capacity_or_no_work_is_allowed(self) -> None:
+        idle = {"action": None, "evidence": None}
+        full = tick(1, counts={"ready": 2, "running": 8, "unassessed": 0}, **idle)
+        empty = tick(2, counts={"ready": 0, "running": 0, "unassessed": 0}, **idle)
+        self.assertEqual(rules([full, empty]), [])
+
+    def test_third_tick_after_two_no_progress_needs_recovery(self) -> None:
+        idle = {"action": None, "evidence": None}
+        full = {"ready": 1, "running": 8, "unassessed": 0}
+        rows = [tick(1, counts=full, **idle), tick(2, counts=full, **idle), tick(3, counts=full)]
+        self.assertEqual(rules(rows), ["recovery"])
+        rows[2]["recovery"] = True
+        self.assertEqual(rules(rows), [])
+
+    def test_closure_batch_bound_and_repeat(self) -> None:
+        big = tick(1, closure_batch=list("abcdef"))
+        again = tick(2, closure_batch=["a"])
+        self.assertEqual(rules([big, again]), ["closure-batch", "closure-repeat"])
+
+    def test_expired_approval_requires_scoped_reclassification(self) -> None:
+        expired = [{"scope": "cap", "tasks": [5, 6]}]
+        partial = [{"task": 5, "to": "human-blocked", "scope": "cap"}]
+        self.assertEqual(
+            rules([tick(1, approvals_expired=expired, reclassified=partial)]), ["approval"]
+        )
+        full = partial + [{"task": 6, "to": "human-blocked", "scope": "cap"}]
+        self.assertEqual(rules([tick(1, approvals_expired=expired, reclassified=full)]), [])
+
+    def test_unrelated_task_not_blocked_by_expiry(self) -> None:
+        expired = [{"scope": "cap", "tasks": [5]}]
+        moves = [
+            {"task": 5, "to": "human-blocked", "scope": "cap"},
+            {"task": 9, "to": "human-blocked", "scope": "cap"},
+        ]
+        self.assertEqual(
+            rules([tick(1, approvals_expired=expired, reclassified=moves)]), ["approval"]
+        )
+
+    def test_granted_approval_becomes_ready_same_tick(self) -> None:
+        granted = [{"scope": "send", "tasks": [7]}]
+        self.assertEqual(rules([tick(1, approvals_granted=granted)]), ["approval"])
+        moves = [{"task": 7, "to": "ready", "scope": "send"}]
+        self.assertEqual(rules([tick(1, approvals_granted=granted, reclassified=moves)]), [])
+
+    def test_global_stop_with_remaining_work_is_flagged(self) -> None:
+        self.assertEqual(rules([tick(1, global_stop=True)]), ["global-stop"])
+
+    def test_cli_exit_codes_and_json_lines(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            good = Path(tmp) / "good.jsonl"
+            good.write_text("\n".join(json.dumps(tick(n)) for n in (1, 2)), encoding="utf-8")
+            bad = Path(tmp) / "bad.json"
+            bad.write_text(json.dumps([tick(1, global_stop=True)]), encoding="utf-8")
+            self.assertEqual(checker.main([str(good)]), 0)
+            self.assertEqual(checker.main([str(bad)]), 1)
+            self.assertEqual(checker.main([str(Path(tmp) / "missing.json")]), 2)
+
+
+if __name__ == "__main__":
+    unittest.main()

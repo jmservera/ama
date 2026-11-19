@@ -1,0 +1,5 @@
+1863533 fsync(4</var/tmp/zf1258.xpjq/a/b/archive/.ranking-1.0.0-2026-10-09-7502f1822e79.json.5a2fb6ed9dbebd1a.tmp>) = 0
+1863533 fsync(3</var/tmp/zf1258.xpjq/a/b/archive>) = 0
+1863533 fsync(4</var/tmp/zf1258.xpjq/a/b>) = 0
+1863533 fsync(5</var/tmp/zf1258.xpjq/a>) = -1 EIO (Input/output error) (INJECTED)
+1863533 +++ exited with 0 +++

@@ -725,6 +725,52 @@ class NominationApiRoutesTests(unittest.TestCase):
             "acknowledgement"
         ]
         self.assertEqual(stored_ack["reference"], "SYN-STANDALONE-ACK")
+        detail = self.call_json("/api/cases/ZF-1", "sam")[1]
+        record = detail["nomination_records"][0]
+        self.assertEqual(record["owner"]["email"], "sam@example.test")
+        self.assertEqual(record["original"]["account"], "SYN resident referral account")
+        self.assertEqual(
+            [c["source"] for c in record["corrections"]], ["SYN-STANDALONE-CORRECTION"]
+        )
+        self.assertIn("SYN-STANDALONE-CHALLENGE", json.dumps(detail["affected_challenges"]))
+
+    def test_native_form_encoding_is_refused_and_writes_nothing(self) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        nom_id = before["nomination_records"][0]["id"]
+        form = (
+            f"action=nomination_acknowledge&case_id=ZF-1&id={nom_id}&expected_version=1"
+            "&channel=digital&acknowledgement_ref=SYN-NATIVE&next_update=2099-03-01"
+        ).encode()
+        req = Request(
+            self.base + "/api/cases/ZF-1/resident",
+            form,
+            headers={
+                "Cookie": self._login_cookie("sam"),
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-ZF-CSRF": "1",
+            },
+        )
+        with self.assertRaises(HTTPError) as refused:
+            urlopen(req, timeout=10)
+        self.assertEqual(refused.exception.code, 400)
+        self.assertEqual(json.loads(refused.exception.read())["error"], "Could not read that.")
+        self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+
+    def test_route_form_script_posts_json_with_csrf_header_and_page_loads_it(self) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        _, ctype, html = self.request_raw("/api/cases/ZF-1?view=nomination-routes-html", "sam")
+        self.assertIn("text/html", ctype)
+        self.assertIn('<script src="/nomination-routes.js" defer></script>', html)
+        status, ctype, script = self.request_raw("/nomination-routes.js", "sam")
+        self.assertEqual(status, 200)
+        self.assertIn("javascript", ctype)
+        self.assertIn('"Content-Type": "application/json"', script)
+        self.assertIn('"X-ZF-CSRF": "1"', script)
 
 
 if __name__ == "__main__":

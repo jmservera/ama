@@ -1,0 +1,9 @@
+{
+  "isEnabled": true,
+  "malwareScanning": {
+    "capGBPerMonth": 10000,
+    "isEnabled": true
+  },
+  "override": false,
+  "sensitive": true
+}

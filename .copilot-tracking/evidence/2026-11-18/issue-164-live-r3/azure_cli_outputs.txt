@@ -1,0 +1,42 @@
+# az containerapp show (read-only, non-secret fields), 2026-11-18T15:22:18Z
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "env": [
+    {
+      "n": "ZF_STORE",
+      "v": "mssql"
+    },
+    {
+      "n": "AI_ENDPOINT",
+      "v": "https://aif-cutover-test-rzsrg.openai.azure.com/"
+    },
+    {
+      "n": "AI_DEPLOYMENT",
+      "v": "standard"
+    },
+    {
+      "n": "AI_DEPLOYMENT_STRONG",
+      "v": "standard"
+    },
+    {
+      "n": "ZF_CHAT_DEMO_ACTIVATION",
+      "v": "approved-2026-11-03"
+    },
+    {
+      "n": "ZF_DEPLOYMENT_PROFILE",
+      "v": "demo"
+    },
+    {
+      "n": "AI_MODEL_VERSION",
+      "v": "gpt-4.1-nano-2025-04-14"
+    },
+    {
+      "n": "AI_MODEL_VERSION_STRONG",
+      "v": "gpt-4.1-nano-2025-04-14"
+    }
+  ],
+  "image": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+  "minReplicas": 0,
+  "ready": "ca-cutover-test-demo-api--0000031",
+  "revision": "ca-cutover-test-demo-api--0000031"
+}

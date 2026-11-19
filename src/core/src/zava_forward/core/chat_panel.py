@@ -250,9 +250,11 @@ OUT_OF_SCOPE: tuple[tuple[str, re.Pattern[str], str], ...] = tuple(
         ),
         (
             "contact",
-            rf"(?:(?:contact|email|e-mail|phone|call|ring|text|message|write\s+to|notify)"
-            rf"\s+(?:{_PERSON}|{_NAMED_PERSON})\b"
-            r"|send\s+(?:the\s+|a\s+)?(?:letter|email|message|text)\b)",
+            rf"(?:(?:contact|email|e-mail|phone|call|ring|text|sms|whatsapp|message|write\s+to"
+            rf"|notify)\s+(?:{_PERSON}|{_NAMED_PERSON})\b"
+            r"|send\s+(?:the\s+|a\s+|an\s+)?(?:letter|email|e-mail|message|text|sms|whatsapp)\b"
+            rf"|send\s+(?:{_PERSON}|{_NAMED_PERSON})\s+(?:a\s+|an\s+|the\s+)?"
+            r"(?:letter|email|e-mail|message|text|sms|whatsapp)\b)",
             "Contact with a resident is made by the case owner and logged in the case contact log.",
         ),
         (

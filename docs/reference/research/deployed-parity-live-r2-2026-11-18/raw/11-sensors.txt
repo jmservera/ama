@@ -1,0 +1,2 @@
+403 /api/cases/<CASE>/sensors | error=Case is outside your current scope.
+404 /api/buildings/x | error=Building not found; shared context is unknown.

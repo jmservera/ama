@@ -1,7 +1,7 @@
 ---
 title: Capstone Authoring Source
 description: Complete native-template and JSON editing contract, retained media and technology-decision evidence
-ms.date: 2026-11-08
+ms.date: 2026-11-16
 ms.topic: how-to
 ---
 
@@ -88,6 +88,50 @@ The old brief is now historical. Integrate approved wording through
 `slides.json` and regenerate the deck/notes/question bank under this guide;
 do not hand-edit generated pitch outputs or alter protected cost arithmetic.
 This source-only delivery changes no generated deck, slide notes or rehearsal.
+
+## Agent Observability Roadmap (16 November)
+
+S20/S21 (physical pages 24-25) and B27 retain the native structure and add
+Agent 365 only as a conditional enterprise inventory, identity/lifecycle and
+Defender/Purview oversight proposal. The
+[roadmap register](./roadmap-recommendations.md#content-free-diagnostics-and-conditional-enterprise-oversight)
+reuses the completed 16 November research, records its mandatory-content/
+caller-identity conflict with content-free diagnostics, and keeps supported
+redacted-payload/feature-parity, privacy, tenant, license and ingestion gates
+unresolved. No chain-of-thought capture or SQL/domain authority replacement
+is proposed. The current PRD remains unsigned.
+
+The owner selected OTLP first and deferred the direct Azure Monitor exporter
+after installed exporter 1.0.0b59 revealed implicit hostname/locale metadata
+and secondary SDK/control-plane traffic. No Azure Monitor/Application Insights
+or Agent 365 integration is claimed. The parent supplied P02 offline evidence: 20 core, 77 worker and
+9 HTTP/core-composition cases passed, with strict types for core/agents/API.
+Real-SDK tests cover audit joins, failure, physical-thread lifecycle,
+worker/post-back and keep-alive isolation. These checks do not establish live
+collector/model/backend coverage, accepted SLOs, full gate or independent review.
+
+Use the existing native Build/Verify and Linux preview route, inspect pages
+23-26 and B27, and regenerate the matching deck, PDF, pitch and compact
+receipt together. The receipt records current checks, not inherited metrics
+or acceptance from earlier reviews. Native PowerPoint and direct keyboard/
+assistive-technology acceptance remain unperformed unless separately evidenced.
+Preserve 55 slides, 108 jumps, original layouts/timing, the immutable baseline
+and all six protected financial records.
+
+The 16 November rebuild also repairs six stale architecture SVG/native catalog
+pins left after the 13 November metadata refresh (commit `1ccfae43`). Current
+editable models were compared with the formerly pinned versions: all visual
+elements, geometry and content are identical after excluding source/evidence
+metadata and links. PNG bytes remain unchanged. This pin repair does not refresh
+the diagrams' dynamic evidence locators. A later exact-HEAD control at
+`723d502` reproduced both generator failures and the same four architecture
+test failures (7/11 pass), including stale importer/sensor-consumer evidence
+and executive/technical SVG native-source bindings. The observability patch
+adds hash/line drift to referenced agent/API guides and assistant source, plus
+API server/core AI references in the root views; it introduces none of these
+six failure statuses. No broad diagram regeneration was performed because it
+would also refresh unrelated baseline provenance. The failures remain explicit
+in the compact receipt and are not waived by a successful native package build.
 
 ## Make An Edit
 
@@ -182,7 +226,7 @@ adoption. Fabric and Power BI are not current components: page 24 proposes
 future history, measures and preview ontology context; page 25 separates current
 verification, analytics comparison and an independent context experiment.
 The [full proposal register](./roadmap-recommendations.md)
-maps all 25 reviewed families into 22 grouped dispositions. This is not a
+retains the reviewed families and conditional enterprise oversight proposal. This is not a
 commitment to every option, a purchase or a new approved product requirement.
 
 Captured `media.slides` records describe baseline usage; retained media can
@@ -305,6 +349,7 @@ ADR approvals, current provider-price checks or production acceptance.
 | Source-backed regulatory cards; conditional chat | [ADR 0005](../../adrs/0005-regulatory-compliance-assistant.md) does not make chat or fine-tuning the legal clock. Deterministic cards remain the comparator and manual path | Better source navigation must demonstrate comprehension value; currentness and named legal approval remain separate |
 | IoT Hub Basic plus private Event Hub adapter | [ADR 0003](../../adrs/0003-journey-derived-capabilities-runtime-fit.md) and [IoT synthesis](../../reference/research/iot-sensor-analytics-research-plan.md) separate device identity/one-way intake from private keyless consumption. Standard device-control features and a complete streaming estate are not automatically needed | Bounded synthetic engineering is not live device, calibration, consent or safety evidence; page 47 |
 | Selective Fabric analytics later | [Fabric assessment](../../reference/research/microsoft-fabric-fit-assessment.md) preserves reporting requirements, SQL ledger/workflow authority and a governed SQL/history + Power BI comparator. Dedicated always-on Fabric and operational SQL replacement are not recommended on current evidence | Potential reusable cross-source history, shared measures and repeated-report preparation. Require a named workload, approved data projection/capacity and a favourable quality/effort/freshness/full-cost comparison; page 48 |
+| OTLP first; enterprise Agent 365 separately gated | [16 November assessment F4-F6](../../../.copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md) separates operational traces from SQL/domain audit and enterprise oversight. Owner deferred direct Azure export after exporter 1.0.0b59 metadata/secondary-traffic findings | Validate content-free traces without a live-backend claim. Agent 365 inventory, identity/lifecycle and Defender/Purview value needs supported redacted-payload/feature parity, privacy, tenant, license and landed-ingestion proof; pages 24-25 and B27 |
 
 Fabric mirroring does not inherit application permissions or automatically
 retain the business-event/audit history. Fabric SQL ledger-creation limits
