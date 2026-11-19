@@ -13842,3 +13842,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 145 live audit 7
 
 * Added [issue-145-live-20261119T152518Z-2026-11-19.md](research/issue-145-live-20261119T152518Z-2026-11-19.md): read-only Azure SQL re-check and per-criterion table; no source change, no drill.
+
+## [2026-11-19] update | Issue 117 sixth pass
+
+* Added research/issue-117-live-r7-2026-11-19.md: scan tests re-run (api 19 OK, core rescan 40 OK, 20 skipped); the live Defender path stays unproven and needs an owner-approved deployment change.
