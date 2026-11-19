@@ -13329,3 +13329,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 195 build provenance (Refs #195)
 
 * Added [issue-195-build-provenance-live-2026-11-19.md](research/issue-195-build-provenance-live-2026-11-19.md): live revision 0000033 read, commit provenance added to the api image, criteria 1 and 2 unproven, criterion 3 partly proven.
+## [2026-11-19] add | Management Overview AI economics (Refs #100)
+
+* Added [management-tokenomics-overview-100-live-2026-11-19.md](research/management-tokenomics-overview-100-live-2026-11-19.md): Overview card with denominators and Unknown-not-zero, per-criterion table; #440 stabilization stays unproven.
