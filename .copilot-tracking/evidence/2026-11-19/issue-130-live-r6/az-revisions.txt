@@ -1,0 +1,3 @@
+az containerapp show -g ama (read-only), 2026-11-19
+ca-cutover-test-demo-api: revision --0000033, Running, image zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb (same digest as runs 3-5)
+ca-resident-demo: revision --0000014, Running, image zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19

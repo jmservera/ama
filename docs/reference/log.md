@@ -13493,3 +13493,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 126 live criteria proof (Refs #126)
 
 * Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 core and 10 API governance tests OK, read-only live probe (capture closed, 22 RAI findings, no claims) and per-criterion table; the approval, assessment and SQL/Azure criteria stay unproven. No source change.
+## [2026-11-19] add | Issue 130 live run 6 nomination route audit (Refs #130)
+
+* Added [issue-130-live-r6-nomination-route-audit-2026-11-19.md](research/issue-130-live-r6-nomination-route-audit-2026-11-19.md): API revision 0000033 and resident revision 0000014 on the same API image digest, 66 offline core tests pass; the representative participation criterion stays unproven for the demo. Docs only.

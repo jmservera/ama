@@ -472,6 +472,7 @@ unchanged image, adds 105 offline tests and a per-criterion table, and separates
 The [fourth audit](./research/issue-130-live-r4-nomination-route-audit-2026-11-18.md) sees a new revision on the
 same image digest, the same 403 write refusal, and explains the form-encoded 400 as a JSON-only API.
 The [fifth audit](./research/issue-130-live-r5-nomination-route-audit-2026-11-18.md) finds the same revision, image and 403, and adds a resident-app route check.
+The [sixth audit](./research/issue-130-live-r6-nomination-route-audit-2026-11-19.md) records newer revisions on the same API image digest and a fresh offline run; the representative-evidence criterion stays unproven.
 The [identity 403 fix note](./research/issue-130-identity-403-live-2026-11-18.md) explains the cause of that 403 (whole-dict actor comparison), the key-based fix, its regression tests and the unproven representative-evidence criterion.
 For #124, the [Phase 0 discovery evidence](./research/issue-124-phase0-discovery-evidence-2026-11-18.md)
 records a 2026-11-18 offline and synthetic-data run: nomination, endpoint, dictionary and two-sided
