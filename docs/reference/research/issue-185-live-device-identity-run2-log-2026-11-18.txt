@@ -1,0 +1,45 @@
+2026-11-18T10:12:04.85700  Connecting to the container 'probe'...
+2026-11-18T10:12:04.94897  Successfully Connected to container: 'probe' [Execution: 'job-185b-probe-5zbah1m', Replica: 'job-185b-probe-5zbah1m-2kznc']
+{
+ "pre_existing": [],
+ "unique_keys": true,
+ "devices": {
+  "SYN-185B-H01": {
+   "create": 200,
+   "type": "sas",
+   "primary": true,
+   "secondary": true,
+   "distinct": true,
+   "send_primary": 204,
+   "send_secondary": 204,
+   "send_wrong": 401,
+   "delete": 204,
+   "readback": 404
+  },
+  "SYN-185B-H02": {
+   "create": 200,
+   "type": "sas",
+   "primary": true,
+   "secondary": true,
+   "distinct": true,
+   "send_primary": 204,
+   "send_secondary": 204,
+   "send_wrong": 401,
+   "delete": 204,
+   "readback": 404
+  },
+  "SYN-185B-H03": {
+   "create": 200,
+   "type": "sas",
+   "primary": true,
+   "secondary": true,
+   "distinct": true,
+   "send_primary": 204,
+   "send_secondary": 204,
+   "send_wrong": 401,
+   "delete": 204,
+   "readback": 404
+  }
+ },
+ "key_in_output": false
+}

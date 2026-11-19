@@ -1,0 +1,13 @@
+test_changed_permission_process_revokes_and_fresh_process_stays_denied (test_assistant_release.MssqlUnleasedRevocation.test_changed_permission_process_revokes_and_fresh_process_stays_denied) ... ok
+test_changed_policy_process_revokes_and_fresh_process_stays_denied (test_assistant_release.MssqlUnleasedRevocation.test_changed_policy_process_revokes_and_fresh_process_stays_denied) ... ok
+test_changed_prompt_process_revokes_and_fresh_process_stays_denied (test_assistant_release.MssqlUnleasedRevocation.test_changed_prompt_process_revokes_and_fresh_process_stays_denied) ... ok
+test_independent_worker_revocation_denial_is_durable_for_an_unleased_task (test_assistant_release.MssqlUnleasedRevocation.test_independent_worker_revocation_denial_is_durable_for_an_unleased_task) ... ok
+test_processes_after_revocation_and_restart_are_denied_without_calls_or_replenishment (test_assistant_release.MssqlUnleasedRevocation.test_processes_after_revocation_and_restart_are_denied_without_calls_or_replenishment) ... ok
+test_racing_processes_cannot_overspend_or_replenish_a_finite_allowance (test_assistant_release.MssqlUnleasedRevocation.test_racing_processes_cannot_overspend_or_replenish_a_finite_allowance) ... ok
+test_restarted_processes_keep_partially_used_allowance_and_stop_at_stored_calls (test_assistant_release.MssqlUnleasedRevocation.test_restarted_processes_keep_partially_used_allowance_and_stop_at_stored_calls) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 34.522s
+
+OK
+exit 0

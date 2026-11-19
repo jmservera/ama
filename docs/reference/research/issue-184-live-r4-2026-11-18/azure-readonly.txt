@@ -1,0 +1,30 @@
+# hub (public access) and stats
+demo-hub	B1	1	Disabled
+{
+  "disabledDeviceCount": 0,
+  "enabledDeviceCount": 3,
+  "totalDeviceCount": 3
+}
+# RG budgets (subscription scope list is RBAC denied)
+budget-A	300.0	90.60676648730548
+budget-B	300.0	90.60676648730548
+budget-hub	25.0	5.48387096774193
+# IoT budget notifications
+[
+  {
+    "emails": 1,
+    "enabled": true,
+    "op": "GreaterThan",
+    "threshold": 80.0
+  },
+  {
+    "emails": 1,
+    "enabled": true,
+    "op": "GreaterThan",
+    "threshold": 100.0
+  }
+]
+# residue: resources with 184 in name
+0
+0
+# recheck 16:13 UTC: enabledDeviceCount 0, totalDeviceCount 0 (the earlier 3 were a transient count from a concurrent actor; I created no device and no job in this run)

@@ -1,0 +1,244 @@
+[
+ {
+  "surface": "nav:Zava ForwardZava North Homes",
+  "error": "TimeoutError"
+ },
+ {
+  "surface": "nav:My cases",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [
+   "measure_decisions"
+  ],
+  "ai_lines": [
+   "Allow AI suggestions",
+   "Use rules and templates, without AI",
+   "This choice applies to your briefing and draft requests until you sign out or reload. Rules and templates never call AI. Ordinary case work stays available.",
+   "Set by fixed rules, not by AI.",
+   "Written by rules and templates. No AI was used.",
+   "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off."
+  ],
+  "chars": 19590,
+  "headings": [
+   "Filter",
+   "Today's briefing",
+   "Handoffs waiting for you",
+   "Which cases first? A second opinion",
+   "My cases today"
+  ]
+ },
+ {
+  "surface": "nav:All cases",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/all",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [
+   "measure_decisions"
+  ],
+  "ai_lines": [
+   "Allow AI suggestions",
+   "Use rules and templates, without AI",
+   "This choice applies to your briefing and draft requests until you sign out or reload. Rules and templates never call AI. Ordinary case work stays available.",
+   "Set by fixed rules, not by AI.",
+   "Written by rules and templates. No AI was used.",
+   "Open any case from the list or the sources below. Use rules and templates, without AI, to turn AI off."
+  ],
+  "chars": 46994,
+  "headings": [
+   "Filter",
+   "Today's briefing",
+   "All open cases"
+  ]
+ },
+ {
+  "surface": "nav:Overview",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/overview",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [],
+  "chars": 3697,
+  "headings": [
+   "Overview",
+   "Map of open cases",
+   "Cases by stage",
+   "Cases by local authority",
+   "How long cases have waited",
+   "Cases by wave",
+   "Funding status",
+   "Contractors",
+   "Team workload"
+  ]
+ },
+ {
+  "surface": "nav:Progress dashboard",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/progress",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [
+   "Explicitly synthetic AI briefing reviews recorded in the selected UTC dates. Accepted, Changed and Rejected describe draft review, not approval, consent or a safety decision. Unmarked activity never counts. 0 eligible briefing records; 0 with unknown review date; 0 unreviewed or unavailable; 0 rules/template records excluded from AI outcomes.",
+   "No recorded synthetic AI briefing usage. No usage has been inferred.",
+   "AI briefing review outcomes"
+  ],
+  "chars": 2451,
+  "headings": [
+   "Progress dashboard",
+   "Progress summary",
+   "What these figures mean",
+   "Cases opened and closed per day",
+   "Cases opened and closed per week",
+   "Backlog trend",
+   "Cases by journey step now",
+   "Workload by team now",
+   "AI briefing review outcomes"
+  ]
+ },
+ {
+  "surface": "nav:Visits",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/visits",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [],
+  "chars": 6090,
+  "headings": [
+   "Visits coming up",
+   "13 Oct 2026",
+   "14 Oct 2026",
+   "15 Oct 2026",
+   "16 Oct 2026",
+   "18 Oct 2026",
+   "19 Oct 2026",
+   "20 Oct 2026",
+   "21 Oct 2026",
+   "22 Oct 2026",
+   "25 Oct 2026",
+   "26 Oct 2026"
+  ]
+ },
+ {
+  "surface": "nav:Funding",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/funding",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [
+   "Homes where funding is not yet confirmed. Open one to draft the application with AI, add evidence, and have it approved."
+  ],
+  "chars": 11862,
+  "headings": [
+   "Funding applications"
+  ]
+ },
+ {
+  "surface": "nav:Finance",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/finance",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [],
+  "chars": 2373,
+  "headings": [
+   "Finance queue",
+   "Investment limits"
+  ]
+ },
+ {
+  "surface": "nav:Capacity and work orders",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/capacity",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [],
+  "chars": 26254,
+  "headings": [
+   "Capacity and work orders",
+   "New package",
+   "Packages",
+   "Synthetic year-one delivery (PKG-SYN-001)",
+   "Work orders"
+  ]
+ },
+ {
+  "surface": "nav:Closed cases",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/closed",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [],
+  "chars": 3829,
+  "headings": [
+   "Closed cases"
+  ]
+ },
+ {
+  "surface": "nav:Assistant proposals",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/assistants",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [
+   "AI suggestion, not approved. Not an instruction.",
+   "AI suggestion, not approved. Not an instruction.",
+   "AI suggestion, not approved. Not an instruction.",
+   "AI suggestion, not approved. Not an instruction.",
+   "AI suggestion, not approved. Not an instruction."
+  ],
+  "chars": 6061,
+  "headings": [
+   "Role-owned assistant proposals"
+  ]
+ },
+ {
+  "surface": "nav:Time capture",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/time",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [],
+  "chars": 452,
+  "headings": [
+   "Staff time capture"
+  ]
+ },
+ {
+  "surface": "nav:Aftercare concerns",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/aftercare",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [
+   "Optional AI concern pack (FR-036): not active (unapproved). Any draft pack stays a proposal for the named owner to review and cannot change a concern."
+  ],
+  "chars": 2681,
+  "headings": [
+   "Aftercare concerns",
+   "Recorded concerns (0)",
+   "Aftercare view for a synthetic cohort",
+   "How the baseline is measured",
+   "What is not known"
+  ]
+ },
+ {
+  "surface": "nav:Specialist screens",
+  "url": "https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/screens",
+  "title": "Zava Forward | Zava North Homes",
+  "terms": [],
+  "snake_case": [],
+  "ai_lines": [],
+  "chars": 727,
+  "headings": [
+   "Specialist screens"
+  ]
+ },
+ {
+  "surface": "nav:Use another account",
+  "error": "TimeoutError"
+ },
+ {
+  "surface": "nav:Reset my queue",
+  "error": "TimeoutError"
+ }
+]

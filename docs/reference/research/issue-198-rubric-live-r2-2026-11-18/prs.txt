@@ -1,0 +1,8 @@
+#292 MERGED 2026-10-15T16:31:12Z feat(rubric): exclude vendor, data and build paths under src (#198)
+#295 MERGED 2026-10-15T17:00:43Z chore: retire prototype/ (#202 step 1)
+#300 MERGED 2026-10-15T19:02:50Z refactor(src): move api, orchestrator, web and image (M5 of #199)
+#302 MERGED 2026-10-15T19:27:15Z docs(src): split mvp readme and repoint docs (M6 of #199)
+#705 MERGED 2026-11-01T09:03:53Z docs(rubric): record src counting state and reassess failures
+#748 MERGED 2026-11-01T20:04:38Z ci(rubric): record score on main only and document advisory Copilot review (D1, D2)
+#851 MERGED 2026-11-03T10:40:07Z chore(rubric): drop dead mvp excludes from solution-code registry (Refs #198)
+#880 MERGED 2026-11-03T21:02:58Z docs(architecture): record rubric before-and-after score (Refs #198, Refs #203)

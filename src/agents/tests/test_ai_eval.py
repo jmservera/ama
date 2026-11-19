@@ -2,6 +2,7 @@ import copy
 import json
 import tempfile
 import unittest
+from pathlib import Path
 from unittest import mock
 
 from zava_forward.agents import ai_eval
@@ -17,6 +18,15 @@ class AiEvalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             failures, measures = ai_eval.run_scenario(sc, tmp)
         return failures, measures, ai_eval.summarise([dict(name=sc["name"], measures=measures)])
+
+    def test_missing_golden_file_names_the_configuration_variable(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            absent = Path(tmp) / "absent.json"
+            with self.assertRaises(ai_eval.GoldenFileError) as ctx:
+                ai_eval.run_eval(golden=absent)
+        self.assertIn("ZF_AI_GOLDEN", str(ctx.exception))
+        self.assertIn(str(absent), str(ctx.exception))
+        self.assertIsInstance(ctx.exception, FileNotFoundError)
 
     def test_golden_run_and_scenario_denominators_reconcile(self):
         report = ai_eval.run_eval()

@@ -1,0 +1,448 @@
+{
+ "axe": "4.10.3",
+ "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+ "tags": [
+  "wcag2a",
+  "wcag2aa",
+  "wcag21a",
+  "wcag21aa",
+  "wcag22aa"
+ ],
+ "viewport": "1366x900",
+ "target": "employee",
+ "screens": {
+  "my-cases": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "My cases today"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 8,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 46,
+    "trap": false,
+    "completed_cycle": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "all": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "All open cases"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 8,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 10,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 1,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "overview": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Overview"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 6,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 524
+     },
+     {
+      "id": "target-size",
+      "impact": null,
+      "nodes": 0
+     }
+    ],
+    "contrast_sample": {
+     "sampled": 524,
+     "unresolved": 0,
+     "below": [],
+     "min": 4.66
+    }
+   },
+   "keyboard": {
+    "stops": 120,
+    "trap": false,
+    "completed_cycle": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 1
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "progress": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Progress dashboard"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 4,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 168
+     }
+    ],
+    "contrast_sample": {
+     "sampled": 168,
+     "unresolved": 0,
+     "below": [],
+     "min": 15.52
+    }
+   },
+   "keyboard": {
+    "stops": 15,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 2
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "visits": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Visits coming up"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 3,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 39,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "funding": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Funding applications"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 3,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 120,
+    "trap": false,
+    "completed_cycle": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "finance": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Finance queue"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 4,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 15,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "capacity": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Capacity and work orders"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:3",
+    "header:1"
+   ],
+   "live": 491,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 102,
+    "trap": false,
+    "completed_cycle": false,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 21
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "closed": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Closed cases"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:2",
+    "header:1"
+   ],
+   "live": 4,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 30,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 3
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "assistants": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Role-owned assistant proposals"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 14,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 5
+     }
+    ],
+    "contrast_sample": {
+     "sampled": 5,
+     "unresolved": 0,
+     "below": [],
+     "min": 21
+    }
+   },
+   "keyboard": {
+    "stops": 22,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "time": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Staff time capture"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 4,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 0,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "aftercare": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Aftercare concerns"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:1",
+    "header:1"
+   ],
+   "live": 4,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 2,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "screens": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Specialist screens"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:2",
+    "header:1"
+   ],
+   "live": 3,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": []
+   },
+   "keyboard": {
+    "stops": 13,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 0
+   },
+   "reflow_320_horizontal_scroll": false
+  },
+  "case-ZF-2025-0331": {
+   "title": "Zava Forward | Zava North Homes",
+   "h1": [
+    "Wendy RobsonSafety issue open"
+   ],
+   "landmarks": [
+    "main:1",
+    "nav:2",
+    "header:1"
+   ],
+   "live": 21,
+   "lang": "en-GB",
+   "text": "Skip to main content\nZava Forward\nZava North Homes\nMy cases\nAll cases\nOverview\nProgress dashboard\nVisits\nFunding\nFinance\nCapacity and work orders\nClosed cases\nA",
+   "axe": {
+    "violations": [],
+    "incomplete": [
+     {
+      "id": "color-contrast",
+      "impact": "serious",
+      "nodes": 1
+     }
+    ],
+    "contrast_sample": {
+     "sampled": 1,
+     "unresolved": 0,
+     "below": [],
+     "min": 9.4
+    }
+   },
+   "keyboard": {
+    "stops": 37,
+    "trap": false,
+    "completed_cycle": true,
+    "without_indicator": 0,
+    "not_in_viewport": 0,
+    "unnamed": 9
+   },
+   "reflow_320_horizontal_scroll": false
+  }
+ },
+ "me_nav_count": 13,
+ "role": null
+}

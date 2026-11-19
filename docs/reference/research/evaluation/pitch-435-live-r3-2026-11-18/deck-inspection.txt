@@ -1,0 +1,26 @@
+sha256 949e207731707bad194ab3eafb350fd7e0ee2d9ab0ce7d0adb35cbb472fa7fca
+slides 55
+--- slide 22
+ACT 4 · BUILT TO BE TRUSTED |  
+Model inference. Measure accepted value.
+E21: assumed workload; secondary price, 23 Oct 2026, not current verified price. E19: usage only. E05: controls coded; #435 not accepted.
+S18 · Answers: B05 · B25 · B26 · B27 |  
+INFERENCE PLANNING SCENARIO | USD 0.44/home | USD 6,873 / 15,600 homes
+20 tasks x 13,768 tokens | x USD 1.60/million
+NOTES: S18 | Model inference. Measure accepted value. SAY (50 seconds, existing slot): Our planning calculation puts model inference at about 44 US cents per home: twenty assumed tasks, each using ten times the historical mean token count. Across 15,600 modelled homes, that is about USD 6,873; double the workload and it becomes about USD 0.88 per home. The rate is a dated secondary-source assumption, not a verified deployment price. Only inference has this modelled unit cost; the full project still nee
+--- slide 53
+APPENDIX · B25 · CFO / PANEL |  
+What is your Tokenomics unit and can the AI bill run away? |  
+Sources E19 / E05 / E11 / E21. #435 not accepted; no saving, payback or full-project price established.
+B25 · Index: slide 28
+Return to caller
+Planning: USD 0.440576/home inference; accepted-outcome TCA unknown
+NOTES: B25 | What is your Tokenomics unit and can the AI bill run away? Question-led appendix answer, CFO/panel; outside spoken route. EXACT INFERENCE WORKINGS: 6,884 historical tokens / five runs = 1,376.8/run, not human-accepted work. Assumed x10 = 13,768/task; assumed x20 tasks = 275,360/home. All tokens at the historical secondary-source GPT-4.1-mini output-rate assumption USD 1.60/million (2026-10-23): USD 0.440576/home; x15,600 = USD 6,872.9856. Doubled workload = USD 0.881152/home and USD 13,745
+--- slide 55
+APPENDIX · B27 · CTO / CIO / PANEL |  
+What stops chat and agent sprawl multiplying hidden calls?
+Sources: API bounded-skills and core consumption guides, 8 Nov 2026. Source controls, not live financial acceptance.
+B27 · Index: slide 28
+Return to caller
+Topic: S18 / slide 22
+NOTES: B27 | What stops chat and agent sprawl multiplying hidden calls? SHORT ANSWER: the employee chooses one advisory skill and gets one bounded ChatModel call, not a router followed by a model swarm. The case workflow is coded separately. Financial admission also binds durable task/period and request call/depth ceilings; missing approval, price or unresolved liability keeps dispatch off. CORRECTION TO THE HISTORICAL ANSWER: the current core consumption ledger has source-coded currency, task/period a

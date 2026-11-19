@@ -1658,7 +1658,7 @@ class MssqlFixture:
             master.close()
         db = _Conn(connection_string(self.sql_env))
         try:
-            for name in ("assistant_dispatch_gate", "assistant_schedule",
+            for name in ("assistant_releases", "assistant_dispatch_gate", "assistant_schedule",
                          "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance",
                          "continuity_open_holds", "continuity_gate_state",
                          "audit_head", "audit", "recommendations", "cases", "staff", "meta"):

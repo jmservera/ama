@@ -243,7 +243,14 @@ class BicepArchitectureInventory136Tests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(
             self.pipeline_ops,
-            ("plan", "deploy", "publish", "changed-images", "verify-environment"),
+            (
+                "plan",
+                "deploy",
+                "publish",
+                "changed-images",
+                "verify-environment",
+                "verify-federation",
+            ),
         )
         self.assertEqual(self.rebuild_stages[0], "parameters")
         self.assertEqual(self.rebuild_stages[-1], "restart")

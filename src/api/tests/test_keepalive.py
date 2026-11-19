@@ -4,6 +4,9 @@ import http.client
 import socket
 import threading
 import unittest
+from unittest.mock import patch
+
+from telemetry_support import capture_telemetry
 
 from test_auth import ENV, Base
 from zava_forward.api import auth
@@ -11,6 +14,49 @@ from zava_forward.api.server import App, _Server, make_handler
 
 
 class KeepAliveTests(Base):
+    def test_request_without_response_is_not_a_successful_span(self) -> None:
+        with capture_telemetry() as captured:
+            with patch.object(
+                self.httpd.RequestHandlerClass,
+                "do_GET",
+                side_effect=TimeoutError("PRIVATE_PAYLOAD"),
+            ):
+                self.conn.request("GET", "/healthz")
+                with self.assertRaises(http.client.RemoteDisconnected):
+                    self.conn.getresponse()
+            spans = captured.spans.get_finished_spans()
+            self.assertEqual(len(spans), 1)
+            self.assertEqual((spans[0].attributes or {})["error.type"], "error")
+            self.assertNotIn("http.response.status_code", spans[0].attributes or {})
+            self.assertNotIn("PRIVATE_PAYLOAD", spans[0].to_json())
+
+    def test_trace_context_is_scoped_to_each_keepalive_request(self) -> None:
+        parent = "00-11111111111111111111111111111111-2222222222222222-01"
+        with capture_telemetry() as captured:
+            self.conn.request(
+                "GET",
+                "/healthz?resident=PRIVATE_PAYLOAD",
+                headers={"traceparent": parent, "baggage": "user.email=private@example.invalid"},
+            )
+            response = self.conn.getresponse()
+            self.assertEqual(response.status, 200)
+            response.read()
+            self.conn.request("GET", "/healthz", headers={"Connection": "close"})
+            response = self.conn.getresponse()
+            response.read()
+            self.conn.close()
+            spans = captured.spans.get_finished_spans()
+            self.assertEqual(len(spans), 2)
+            first, second = spans
+            assert first.parent is not None
+            self.assertEqual(first.parent.span_id, int("2222222222222222", 16))
+            self.assertIsNone(second.parent)
+            self.assertNotEqual(first.context.trace_id, second.context.trace_id)
+            exported = " ".join(s.to_json() for s in spans)
+            self.assertNotIn("PRIVATE_PAYLOAD", exported)
+            self.assertNotIn("private@example.invalid", exported)
+            self.assertEqual((first.attributes or {})["http.response.status_code"], 200)
+
     def setUp(self) -> None:
         super().setUp()  # type: ignore[no-untyped-call]
         self.app = App(  # type: ignore[no-untyped-call]

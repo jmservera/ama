@@ -1,0 +1,11 @@
+test_nfr_014_end_to_end_suspension_manual_fallback_hazard_and_restart_drill (tests.test_operator_suspension_drill.JsonOperatorSuspensionDrillTest.test_nfr_014_end_to_end_suspension_manual_fallback_hazard_and_restart_drill) ... ok
+test_rule_024_rejects_invalid_authority_and_enforces_multi_actor_separation (tests.test_operator_suspension_drill.JsonOperatorSuspensionDrillTest.test_rule_024_rejects_invalid_authority_and_enforces_multi_actor_separation) ... ok
+test_self_designation_distinct_actor_and_privacy_non_echo (tests.test_operator_suspension_drill.RestartAuthorityUnitTest.test_self_designation_distinct_actor_and_privacy_non_echo) ... ok
+test_validate_restart_authority_rejects_blank_placeholder_memory_and_ai (tests.test_operator_suspension_drill.RestartAuthorityUnitTest.test_validate_restart_authority_rejects_blank_placeholder_memory_and_ai) ... ok
+test_nfr_014_end_to_end_suspension_manual_fallback_hazard_and_restart_drill (tests.test_operator_suspension_drill.SqlOperatorSuspensionDrillTest.test_nfr_014_end_to_end_suspension_manual_fallback_hazard_and_restart_drill) ... ok
+test_rule_024_rejects_invalid_authority_and_enforces_multi_actor_separation (tests.test_operator_suspension_drill.SqlOperatorSuspensionDrillTest.test_rule_024_rejects_invalid_authority_and_enforces_multi_actor_separation) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.712s
+
+OK

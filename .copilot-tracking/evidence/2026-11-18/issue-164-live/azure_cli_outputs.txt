@@ -1,0 +1,16 @@
+ZF_STORE	mssql
+AI_ENDPOINT	https://aif-cutover-test-rzsrg.openai.azure.com/
+AI_DEPLOYMENT	standard
+AI_DEPLOYMENT_STRONG	standard
+ZF_CHAT_DEMO_ACTIVATION	approved-2026-11-03
+ZF_DEPLOYMENT_PROFILE	demo
+AI_MODEL_VERSION	gpt-4.1-nano-2025-04-14
+AI_MODEL_VERSION_STRONG	gpt-4.1-nano-2025-04-14
+{
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+  "min": 0,
+  "rev": "ca-cutover-test-demo-api--0000031"
+}
+{
+  "pna": "Disabled"
+}

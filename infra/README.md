@@ -27,7 +27,7 @@ private production profile. They do not authorize deployment.
 * `secret-inventory.json`, `scripts/secret_lifecycle.py`: Key Vault secret inventory, staged zero-downtime Entra client-secret rotation verifier, 90-day data-plane `AzureDiagnostics` access auditor and HMAC-SHA256 signed review ledger CLI; see [Key Vault secret lifecycle](#key-vault-secret-lifecycle).
 * `scripts/bicep_inventory.py`: offline architecture-to-Bicep resource inventory, 20-module delivery matrix and from-empty deployment sequence verifier (`python3 infra/scripts/bicep_inventory.py --check`).
 * `scripts/reproducibility_check.py`: offline from-empty step registration, defaultless parameter coverage, and deterministic 6-step dry-run verifier (`python3 infra/scripts/reproducibility_check.py --check --dry-run`).
-* `scripts/pipeline.py`: CI deployment and verification CLI (`plan`, `deploy`, `publish`, `changed-images`, `verify-environment`) and canonical `FROM_EMPTY_STEPS` registry.
+* `scripts/pipeline.py`: CI deployment and verification CLI (`plan`, `deploy`, `publish`, `changed-images`, `verify-environment`, `verify-federation`) and canonical `FROM_EMPTY_STEPS` registry.
 * `scripts/create-sql-users.sql`: contained SQL users for the managed identities. `scripts/create-sql-users.py` runs the same grants idempotently from the Azure CLI login.
 * `scripts/create-api-app-registration.sh`: Entra app registration, app roles and secret (Key Vault) for API sign-in.
 * `scripts/setup-entra.py`: direct-demo or optional edge discovery, additive Entra registration/roles, private-roster assignments and auth wiring.
@@ -389,6 +389,12 @@ needs an approved ama-scoped deployment/resource custom role, template-required
 role-assignment rights and registry **AcrPull only**, without quarantine bypass.
 Do not grant subscription Owner or move governance/policy into this pipeline.
 Actual RBAC/federation and runner isolation require platform-owner verification.
+
+After creating each identity, check its trust with the read-only helper:
+`GITHUB_REPOSITORY=<owner>/<repo> python3 infra/scripts/pipeline.py verify-federation --identity <name> --identity-kind managed|app --github-environment <environment-name>`.
+It fails unless the identity has at least one federated credential, every credential has the
+GitHub issuer, the `api://AzureADTokenExchange` audience and the exact environment subject, and (for
+`app`) no client secret exists. It prints no identifiers.
 
 Quarantine is never disabled or bypassed. Test/pilot registries retain their
 quarantine policy: an independently approved scan/release process must make
@@ -4108,7 +4114,7 @@ paths maps to checked-in repository templates and scripts:
 
 | Step | Rebuild stage(s) | Action | Repository template or script | Verification check |
 | --- | --- | --- | --- | --- |
-| 1 | `prerequisite` | Confirm target Azure subscription, pre-created `ama` resource group, Entra SQL admin group/object ID, and (for CI) GitHub environment reviewers/OIDC owned by Juan Manuel Servera (@jmservera) | `infra/main.bicepparam`, `infra/main.test.bicepparam`, `infra/main.pilot.example.bicepparam`, `infra/scripts/pipeline.py` (`verify-environment`) | `az group show -n ama` succeeds; `python3 infra/scripts/pipeline.py verify-environment` confirms protected environment reviewers in CI |
+| 1 | `prerequisite` | Confirm target Azure subscription, pre-created `ama` resource group, Entra SQL admin group/object ID, and (for CI) GitHub environment reviewers/OIDC owned by Juan Manuel Servera (@jmservera) | `infra/main.bicepparam`, `infra/main.test.bicepparam`, `infra/main.pilot.example.bicepparam`, `infra/scripts/pipeline.py` (`verify-environment`, `verify-federation`) | `az group show -n ama` succeeds; `python3 infra/scripts/pipeline.py verify-environment` confirms protected environment reviewers in CI; `python3 infra/scripts/pipeline.py verify-federation` lists the deploy identity's federated credentials read-only |
 | 2 | `parameters` | Validate Bicep parameter files, compile-time guards and subscription policy/Defender baseline (`what-if` preview before apply) | `infra/main.bicep`, `infra/governance.bicep`, `infra/defender-decision.json`, `infra/scripts/deploy.py`, `infra/scripts/pipeline.py` (`plan`) | `az bicep build --file infra/main.bicep` and `python3 infra/scripts/deploy.py` (default `what-if`) or `python3 infra/scripts/pipeline.py plan` exit 0 |
 | 3 | `dependencies` | Provision foundational resource-group infrastructure (identities, VNet/DNS/NSGs, monitoring/AMPLS/alerts, Key Vault, Storage/WORM/queues, ACR, Entra-only SQL + Ledger, Foundry, IoT Hub + Event Hubs, Container Apps environment) | `infra/main.bicep`, `infra/scripts/deploy.py` (`--apply`), `infra/scripts/pipeline.py` (`deploy`) | ARM deployment succeeds with `provisioningState == Succeeded` and outputs resource names/endpoints |
 | 4 | `discover` | Resolve provisioned ACR, Key Vault, SQL server/database, Storage, Foundry and Container Apps endpoints from the resource group | `src/orchestrator/src/zava_forward/orchestrator/rebuild_azure.py`, `infra/scripts/pipeline.py` (`changed-images`) | Discovered resource inventory has non-empty endpoints and matching workload managed identity client/principal IDs |
@@ -4309,9 +4315,10 @@ The executor, under separate admission, runs these in order and stops at the fir
    and the control share mounted read-only. The receiver identity needs AcrPull, Azure Event Hubs
    Data Receiver on `sensor-readings`, `SELECT` on `dbo.cases`,
    `dbo.sensor_consumer_control` and `dbo.sensor_consumer_policy`, and `SELECT, INSERT` on
-   `dbo.sensor_reading`, `dbo.sensor_delivery` and `dbo.sensor_data_quality_exception`; the
-   list was checked against the statements `SensorConsumer.process` runs (no `sensor_register`
-   read, no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
+   `dbo.sensor_reading`, `dbo.sensor_register`, `dbo.sensor_delivery` and
+   `dbo.sensor_data_quality_exception`; the list was checked against the statements
+   `SensorConsumer.process` runs (an accepted reading also inserts its sensor's `sensor_register`
+   row when absent, so the resident view and map join find it; no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
    already exist: a setup or admin identity provisions them separately, and the receiver
    refuses rather than creating schema. The
    simulator identity stays read-only on `dbo.cases`. Start one execution per window; the receiver

@@ -1,0 +1,38 @@
+[
+  {
+    "img": "[registry].azurecr.io/zava-forward-api@sha256:161fa1f0ff29c0deb7d07cacc045a07c0aaa5d34ea2f73f36f51e96f93ffe3d0",
+    "max": 4,
+    "min": 1,
+    "n": "ca-cutover-test-api",
+    "rev": "ca-cutover-test-api--0000009",
+    "sc": null,
+    "vol": null
+  },
+  {
+    "img": "[registry].azurecr.io/zava-forward-agents@sha256:2217d94d1c23e0e076d22d09896781a0c64581fe2eb4de547bf7fe919d56ebae",
+    "max": 5,
+    "min": 1,
+    "n": "ca-cutover-test-agents",
+    "rev": "ca-cutover-test-agents--0000002",
+    "sc": null,
+    "vol": null
+  },
+  {
+    "img": "[registry].azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+    "max": 4,
+    "min": 1,
+    "n": "ca-cutover-test-demo-api",
+    "rev": "ca-cutover-test-demo-api--0000032",
+    "sc": null,
+    "vol": null
+  },
+  {
+    "img": "[registry].azurecr.io/zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19",
+    "max": 1,
+    "min": 1,
+    "n": "ca-resident-demo",
+    "rev": "ca-resident-demo--0000013",
+    "sc": null,
+    "vol": null
+  }
+]

@@ -2252,7 +2252,7 @@
       "part_number": 23,
       "baseline_number": 23,
       "notes": "S20 | Validate, pilot, scale: on the clock to April 2030.\r\nTIMING: 60 s for this slide (all builds together) · 20:30-21:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nHere is the plan, on the real calendar.\r\n\r\nPhase 0, six to eight weeks: validate one connected journey against a paired comparator, so we measure what the workflow improves and what the AI adds on top.\r\n\r\nThen a six to nine month pilot with clear targets from our requirements: at least 50 accepted handovers from 80 to 100 candidate homes, cycle time at least 20 per cent shorter and 25 per cent fewer coordination hours per home. It lands inside the wave 3 funding window, which runs to March 2028.\r\n\r\nThen scale. The arithmetic is fixed: 88 homes a week to reach 15,600 homes by 1 April 2030. The workbench is how Zava runs that pace with control intact.\r\n\r\nSOURCES AND CALCULATIONS\r\nBRD BG-011 pilot proposal (Phase 0 6-8 weeks; pilot 6-9 months; ≥50 accepted handovers from 80-100 candidates; ≥20% shorter cycle time; 25% fewer coordination hours per home; targets under review, OD-18); measurement design (E10); Awaab's Law phase 2 30 Nov 2026 (MHCLG); WH:SHF wave 3 spend by 31 Mar 2028; EPC C 1 Apr 2030 (MHCLG/DESNZ); pace from the forecast slide.\r\n\r\nRELATED ANSWERS: B17 = slide 44. Question index = slide 27.\r\n",
-      "title": "Future: connected history and better agent context.",
+      "title": "Future: connected insight and governed agents.",
       "layout": "native",
       "keep_ids": [
         31210,
@@ -2262,7 +2262,7 @@
       "headers": [
         {
           "id": 31212,
-          "text": "Future: connected history and better agent context.",
+          "text": "Future: connected insight and governed agents.",
           "size": 30,
           "box": [
             0.6,
@@ -2284,7 +2284,7 @@
         },
         {
           "id": 31215,
-          "text": "Sources: Fabric assessment + 30 Oct ontology follow-up. Preview; no integration or value gain proven.",
+          "text": "Sources: Fabric assessment (30 Oct); Agent 365 research (16 Nov). Conditional options; no adoption claimed.",
           "size": 12,
           "box": [
             0.6,
@@ -2303,7 +2303,7 @@
             12.13,
             0.28
           ],
-          "text": "FUTURE OPTIONS ONLY / Neither Fabric nor Power BI is a current Zava Forward component.",
+          "text": "FUTURE ONLY / Fabric, Power BI and Agent 365 are not integrated Zava Forward components.",
           "size": 14,
           "bold": true,
           "color": "885500"
@@ -2623,7 +2623,7 @@
             11.69,
             0.36
           ],
-          "text": "WHY LATER  |  Prove the value, permissions, curated data and full cost first. Scale alone proves no platform need.",
+          "text": "Agent 365: inventory, identity/lifecycle, Defender/Purview oversight. Privacy and tenant gates first.",
           "size": 14,
           "color": "885500",
           "bold": true
@@ -2632,16 +2632,20 @@
       "sources": [
         "docs/reference/research/microsoft-fabric-fit-assessment.md",
         "docs/reference/research/iot-sensor-analytics-research-plan.md",
-        "docs/capstone/source/roadmap-recommendations.md"
+        "docs/capstone/source/roadmap-recommendations.md",
+        ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md"
       ],
       "revised_notes": [
-        "S20 | Future: connected history and better agent context.",
-        "SAY in the retained 60-second slot: Our built foundation is the Workbench, API, SQL and Blob, rules, bounded assistance and read-model reporting. Fabric and Power BI are not part of today's product. They are a future option for joined portfolio history. Keep the scales separate: sixty thousand fictional homes, nine hundred and eighty retained programme cases, and 43.8 million synthetic daily readings over 730 days. Managed analytics could reuse history and shared measures. A semantic model or preview ontology could make relationships between homes, assessments, measures and evidence explicit for permitted agent context. That might improve relevance, but we have not demonstrated a quality gain. Neither stock size nor row volume proves SQL inadequate. Context grants no permissions or decision authority.",
+        "S20 | Future: connected insight and governed agents.",
+        "SAY in the retained 60-second slot: Keep the Workbench, API, SQL and domain controls as the foundation. Three future needs deserve separate tests. Joined portfolio history could reuse measures; preview ontology could improve permitted agent context. Neither volume nor a graph proves value. Agent 365 could add enterprise inventory, accountable identity and lifecycle, with Defender and Purview oversight. None of these platforms is integrated here. Agent 365's required content and identity fields conflict with our content-free diagnostics: a supported redacted mode and useful feature coverage remain unproved. First validate content-free tracing through OTLP, the standard telemetry export protocol. Direct Azure Monitor export is deferred. SQL remains the business evidence store; resident consent, safety and approval rights stay with their existing owners.",
+        "AGENT 365 FIT / FUTURE ONLY: the 16 November research F5-F6 supports a conditional enterprise inventory, identity/lifecycle and Defender/Purview governance proposal. It is not deployment, adoption, tenant onboarding or replacement of SQL-owned release, financial, consent, safety or review controls. Enterprise visibility is not semantic correctness, lawful processing, reconciled billing or accepted benefit.",
+        "SCHEMA CONFLICT: the dated canonical Agent 365 schema requires input/output messages, tool arguments/results and relevant human caller object ID/IP fields. That conflicts with content-free, identity-minimized diagnostics. Supported redacted-payload or omission behavior, ingestion and downstream feature parity remain unresolved. Require vendor confirmation and an approved synthetic check; assume neither raw export nor working metadata-only adoption. Never invent a human caller for a scheduled purpose-principal run. No chain-of-thought capture.",
+        "PRODUCT DISTINCTIONS: Microsoft OpenTelemetry Distro is the newer observability export path; the former Agent 365 Observability SDK is deprecated. The Agent 365 SDK's identity/tooling/notification capabilities and the Agent 365 service are separate from that distro. No framework migration or broad SDK adoption is required by this proposal. Custom calls to Foundry model endpoints do not establish Foundry Agent Service hosting.",
         "AI OPPORTUNITY: the 30 October official-documentation check describes ontology as a preview business-context layer, with entity types, properties, relationships, rules, metrics and source bindings. Supported agents can consume that context. A proposed Zava vocabulary might link Home, Building, Assessment, Measure, Evidence and Quality Review with source/version/time ownership. It is not a new operational store, a guaranteed integration with the existing assistants or a deterministic approval engine.",
         "ILLUSTRATIVE QUESTION: which current assessment and permitted evidence support this measure, and which related reviews would be affected by a source change? Unknown stock-to-case links, stale or disputed evidence and forbidden relationships remain unknown/refused; no guessed joins, inferred vulnerability or consent. Application checks still enforce role, case, field and representative rights. Ontology rules in natural language cannot replace the domain's deterministic gates or named human decisions.",
         "WHY LATER: prove the connected product journey and value first, select a recurring historical decision and define the minimum governed projection. Compare existing SQL/read-model context/reporting, a curated SQL projection and the optional managed semantic path on quality, preparation/review effort, freshness, latency, operating burden and full cost. Preview maturity, consumer compatibility, permissions across every read path, retention/corrections and recovery remain separate checks.",
         "SCALE CLASSIFICATION: 60,000 is fictional stock, not devices, residents, concurrent users or current cases. The 980-case lineage is separate. The 43.8M generated daily observations over 730 days are reconciled synthetic history, not actual sensors, calibrated conditions, a live throughput test or evidence of platform inadequacy.",
-        "SOURCES: docs/reference/research/microsoft-fabric-fit-assessment.md, Future Agent Context Option (30 October); official Learn Fabric IQ and ontology overviews retrieved 30 October, ontology source/update 16 October and explicitly preview; docs/reference/research/iot-sensor-analytics-research-plan.md. The research follow-up records URLs and evidence limits. Official icons indicate the proposal, not deployment or partnership.",
+        "SOURCES: docs/reference/research/microsoft-fabric-fit-assessment.md, Future Agent Context Option (30 October); docs/reference/research/iot-sensor-analytics-research-plan.md; .copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md F4-F6 and W2-W10 (official documentation retrieved 16 November). The owner-selected OTLP-first/direct-Azure-export deferral supersedes the research's earlier exporter option. Official icons indicate proposals, not deployment or partnership.",
         "TRANSITION: the final decision is to keep the current product's strengths, then evaluate the next need in stages rather than buy the whole future architecture."
       ],
       "images": [
@@ -2777,7 +2781,7 @@
             3.87,
             1
           ],
-          "text": "Access, recovery and review\nResident and staff effort\nRelevant actual evidence",
+          "text": "Journey, access and recovery\nContent-free trace validation\nResident and staff effort",
           "size": 17
         },
         {
@@ -2878,7 +2882,7 @@
             2.86,
             0.83
           ],
-          "text": "Test richer\nagent context",
+          "text": "Test context\nand oversight",
           "size": 22,
           "bold": true
         },
@@ -2901,7 +2905,7 @@
             3.87,
             1
           ],
-          "text": "Current context vs ontology\nChecked answers and refusals\nStale and forbidden-link tests",
+          "text": "Context: SQL vs ontology\nAgent 365: gated proposal\nPrivacy and ingestion proof",
           "size": 17
         },
         {
@@ -2932,15 +2936,20 @@
       "sources": [
         "docs/reference/research/company/pilot-measurement-challenge.md",
         "docs/reference/research/microsoft-fabric-fit-assessment.md",
-        "docs/capstone/source/roadmap-recommendations.md"
+        "docs/capstone/source/roadmap-recommendations.md",
+        ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md"
       ],
       "revised_notes": [
         "S21 | Prove the need. Choose the smallest next step.",
-        "SAY in the retained 60-second slot: The next decision is not to add a platform. First verify one connected home journey and prioritise the original scope gaps: complete review-ready Assessment and Funding drafts, then evaluate preference-bounded Coordination actions and raise-only Quality flags with their owners. Keep resident access optional and test comprehension, assisted recovery and total effort. Those are product questions, not an instruction to switch autonomy on. If portfolio history or richer context then solves a demonstrated need, compare it against existing SQL and scoped context using the same permitted data and full costs. Keep the simpler route if it wins. Agree priorities, owners and a review point before paid execution or expansion.",
+        "SAY in the retained 60-second slot: Agree one connected validation journey, accountable owners and a review point. Keep the original gaps visible: review-ready Assessment and Funding drafts, preference-bounded Coordination and raise-only Quality flags need their own evidence. Keep resident access optional; test comprehension, assisted recovery and total effort. For diagnostics, validate content-free OTLP traces without treating them as business audit or proof of quality. Compare portfolio history and richer context against SQL using the same permitted data and full costs. Explore Agent 365 only if enterprise oversight is needed and privacy-compatible ingestion is proven. Tenant rights, licensing, retention and feature coverage are still gates. Cost and authorize execution separately; no platform adoption or new decision authority is requested.",
+        "OTLP FIRST / NO LIVE CLAIM: the owner deferred the direct Azure Monitor exporter after installed exporter 1.0.0b59 revealed implicit hostname/locale metadata and secondary SDK/control-plane traffic. Keep direct export deferred pending a separately approved privacy/egress design. An OTLP collector/backend route to Azure Monitor or Application Insights would need its own configuration and acceptance; neither Azure/AppInsights nor Agent 365 integration is claimed.",
+        "P02 OFFLINE EVIDENCE (parent-reported, 16 November): 20 core telemetry/diagnostic cases, 77 worker transport/timeout/lifecycle/dispatch/dependency cases and 9 HTTP/core-composition tests passed, with core/agents/API strict types passing. Real-SDK in-process audit joins, failure, late physical-thread parent/slot, worker-to-postback and keep-alive isolation were verified offline. The actual core Ai._request span records settled usage only, without payloads, business IDs or exception events. This supports source-level instrumentation and tested correlation paths, not a live collector/model/Azure/Agent 365 receipt, universal path coverage, approved SLO, full gate or independent review.",
+        "AGENT 365 ADOPTION GATES: establish a named enterprise need and accountable tenant/privacy/security owners; confirm supported redacted-payload and identity-minimized behavior, feature parity and truthful service-principal semantics; approve projection, access, retention, processing location and egress; verify actual tenant readiness, identity/admin consent, applicable license entitlement and full cost. Microsoft documentation lists an enabled tenant and an assigned Microsoft 365 E7 or Agent 365 license for observability, with separate feature prerequisites. No entitlement or price is assumed here.",
+        "INGESTION PROOF: HTTP 200 is insufficient. Verify accepted destination/routing results, a valid invoke_agent root and parent grouping, matching tenant/agent IDs and landed records with the required features. Agent 365 recognizes specific agent operations; ordinary HTTP/SQL diagnostics need a separately validated backend. Do not send resident/staff content or identities to fill a dashboard. Do not capture chain of thought.",
         "PRODUCT MANAGEMENT: retain the original task-specific ladder as the candidate target unless reviewed evidence and an explicit owner decision justify a change. Current preparation is not a permanent veto on L3/L4. Complete-task verification, higher-authority evaluation, analytics and context-quality tests are different decisions. Bound planning effort; invent no dates, staffing, prices or delegations.",
         "COMPARATORS: current workflow without AI versus bounded help on the same permitted tasks; current SQL/read-model reporting versus a justified future Power BI/Fabric path for the same portfolio question; existing scoped agent context versus a curated SQL context and optional ontology context. Compare quality floors, critical misses, abstention, reviewer correction and complete effort/cost, not tokens or graph size alone.",
-        "AUTHORITY: no approval transfers to an agent, ontology, semantic model or analytics report. Resident choice, professional acceptance, Finance decisions, data/privacy rights and safety handling remain independently owned. Named roles are proposed review functions, not appointed company postholders. Later narrow exercise approvals do not automatically fund this future option.",
-        "SOURCES: docs/reference/research/company/pilot-measurement-challenge.md; docs/reference/research/microsoft-fabric-fit-assessment.md; docs/capstone/source/roadmap-recommendations.md. No paid experiment, current acceptance, benefit result or production decision is claimed.",
+        "AUTHORITY: no approval transfers to an agent, ontology, semantic model, analytics report or Agent 365. Existing SQL/domain release, financial, review, consent and safety controls remain authoritative. The current PRD is in review and unsigned; historical exercise acceptance does not approve later amendments. Resident choice, professional acceptance, Finance decisions and privacy rights remain independently owned. Named roles are proposed review functions, not appointed company postholders. No new spending or activation authority follows.",
+        "SOURCES: docs/reference/research/company/pilot-measurement-challenge.md; docs/reference/research/microsoft-fabric-fit-assessment.md; docs/capstone/source/roadmap-recommendations.md; .copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md F1, F4-F6. Owner decision: OTLP first, direct Azure exporter deferred after 1.0.0b59 inspection. No paid experiment, live integration, current acceptance, benefit result or production decision is claimed.",
         "TRANSITION: the demo is the current same-home evidence/ownership story, not a demonstration of the future platform. The close returns to the built foundation and the next proof, before optional questions."
       ]
     },
@@ -4771,7 +4780,7 @@
       "keep_ids": [11303, 11435, 11568, 11702],
       "headers": [
         {"id": 11435, "text": "What stops chat and agent sprawl multiplying hidden calls?", "size": 30, "box": [0.6, 0.92, 12.13, 0.72]},
-        {"id": 11568, "text": "Sources: API bounded-skills and core consumption guides, 8 Nov 2026. Source controls, not live financial acceptance.", "size": 12, "box": [0.6, 6.7, 8.0, 0.3]}
+        {"id": 11568,         "text": "Sources: core/API guides; Agent 365 research, 16 Nov. No live integration or acceptance.", "size": 12, "box": [0.6, 6.7, 8.0, 0.3]}
       ],
       "elements": [
         {"key": "question-frame", "geometry": "rect", "box": [0.6, 1.94, 3.78, 2.44], "fill": "FAF9F6", "stroke": "C7D8CF", "stroke_width": 1},
@@ -4789,14 +4798,18 @@
         {"key": "coded-title", "box": [0.6, 4.82, 5.87, 0.31], "text": "SOURCE-CODED BOUNDS", "size": 15, "bold": true},
         {"key": "coded-body", "box": [0.6, 5.3, 5.87, 1.0], "text": "Calls/tokens/expiry + task/period money limits.\nDurable request call/depth ceilings.\nApproved evidence required before dispatch.", "size": 18},
         {"key": "unproved-title", "box": [6.87, 4.82, 5.87, 0.31], "text": "LIVE ACCEPTANCE STILL SEPARATE", "size": 15, "bold": true, "color": "885500"},
-        {"key": "unproved-body", "box": [6.87, 5.3, 5.87, 1.0], "text": "Billing and whole-journey coverage unproved.\nHistorical calls and resident accounting\nremain explicitly unjoined.", "size": 18}
+        {"key": "unproved-body", "box": [6.87, 5.3, 5.87, 1.0],         "text": "Billing and whole-journey coverage unproved.\nResident metering joins are optional,\nnot universal or reconciled.", "size": 18}
       ],
-      "sources": ["src/api/README.md", "src/core/README.md", "src/core/src/zava_forward/core/ai_consumption.py"],
+      "sources": ["src/api/README.md", "src/core/README.md", "src/core/src/zava_forward/core/ai_consumption.py", ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md"],
       "revised_notes": [
         "B27 | What stops chat and agent sprawl multiplying hidden calls?",
         "SHORT ANSWER: the employee chooses one advisory skill and gets one bounded ChatModel call, not a router followed by a model swarm. The case workflow is coded separately. Financial admission also binds durable task/period and request call/depth ceilings; missing approval, price or unresolved liability keeps dispatch off.",
         "CORRECTION TO THE HISTORICAL ANSWER: the current core consumption ledger has source-coded currency, task/period and root call/depth bounds. Those are no longer merely a proposed hard-stop design. This does not prove live activation, complete billing reconciliation or a complete cost-per-resident/employee journey. The older captured notes remain historical.",
-        "SCOPE: explicit skill selection is not an assistant proposal invocation. Employee chat has no tool, booking, consent, approval or domain-write operation. Other retained inference paths and retries still require attribution/admission; no gateway, semantic cache or open-ended graph runtime is introduced by this diagram. Historical calls and the separate resident SQL accounting remain unjoined.",
+        "SCOPE: explicit skill selection is not an assistant proposal invocation. Employee chat has no tool, booking, consent, approval or domain-write operation. Other retained inference paths and retries still require attribution/admission; no gateway, semantic cache or open-ended graph runtime is introduced by this diagram. Optional resident metering joins are path/configuration-specific, not universal attribution or reconciliation.",
+        "Q: WOULD AGENT 365 SOLVE AGENT SPRAWL? It could add enterprise inventory, agent identity/lifecycle and Defender/Purview oversight as a future conditional service. It is not integrated or adopted here and cannot replace protected SQL audit, admission/release controls, human review, resident consent or safety authority. OTel traces explain run order, latency and failure; they do not prove answer truth, meaningful review or complete billing.",
+        "Q: WHY NOT CONNECT IT NOW? The 16 November canonical schema requires messages/tool payloads and relevant caller object ID/IP fields, conflicting with content-free diagnostics. Supported redacted-payload or omission behavior, identity minimization, ingestion and downstream feature parity remain unresolved. Obtain vendor confirmation plus an approved synthetic test; assume neither raw export nor feature-complete metadata-only adoption. Do not invent a human caller or capture chain of thought. Tenant identity/admin consent, licensing, privacy/retention/location, network/egress and full cost are separate gates; HTTP 200 alone does not prove accepted, landed and correctly grouped records.",
+        "Q: WHAT IS THE OBSERVABILITY STEP NOW? The opt-in content-free OpenTelemetry path is implemented with offline real-SDK correlation checks; export is off by default. The parent reports 20 core, 77 worker and 9 HTTP/core-composition tests passing, plus strict types, on 16 November. These are offline checks, not a live collector/model receipt or universal coverage. Validate the OTLP destination next. Direct Azure Monitor export is deferred after installed exporter 1.0.0b59 revealed implicit hostname/locale metadata and secondary SDK/control-plane traffic. An Azure/AppInsights collector/backend integration needs separate acceptance; neither it nor Agent 365 is integrated. The newer Microsoft OpenTelemetry Distro, Agent 365 SDK and Agent 365 service are distinct; the former Agent 365 Observability SDK is deprecated. The current PRD remains unsigned; full gate and independent review are separate.",
+        "OBSERVABILITY SOURCES: .copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md F1, F4-F6, W2-W10 (official documentation retrieved 16 November); owner OTLP-first/exporter-deferral decision. Research reuse is not tenant inspection, operational acceptance or authority to adopt.",
         "KNOWN / ASSUMED / NEXT: known source contracts are one selected-skill call and serialized admission limits. Applicable live prices, owners, approval and reconciled accepted-value costs are still required. Test missing/overrun/failure cases and the workflow-only stop on an authorised exact source; do not infer savings or permission from a bounded test.",
         "SOURCES: src/api/README.md:707-734, Employee chat with bounded skills; src/core/README.md:94-144, AI consumption ledger; src/core/src/zava_forward/core/ai_consumption.py. All are source evidence, not a current production control attestation.",
         "NAVIGATION: B27/page 54; index 27; fixed Topic S18/page 21. Native destinations remain unchanged. Return to the actual interrupted page deliberately."
@@ -4804,6 +4817,6 @@
       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     }
   ],
-  "content_date": "2026-11-08",
+  "content_date": "2026-11-16",
   "visual_revision": "2026-11-08 / home IoT receiving chain, SQL telemetry/history and on-read averages, resident site and added main-route Azure deployment; baseline mapping/actions/costs retained; narration 24:30"
 }

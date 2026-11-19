@@ -1,0 +1,4 @@
+# key/connection-string scan (src, infra) files with matches
+src/core/tests/test_live_provisioning.py
+src/api/tests/test_iot_credential_hygiene.py
+infra/tests/test_network_posture.py

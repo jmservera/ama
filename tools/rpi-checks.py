@@ -76,10 +76,10 @@ WORKFLOWS = (
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "9346fcfb84d15ba69f5449ba55652a51457fd866e709808c7606acd9f62a6b18",
+    "src-ci.yml": "26592e2db04031c64c8e162a410576f931e5105f889844dae1bd4758762b9abd",
     "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
-    "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
+    "src-deploy.yml": "bd0b6277ce104b698110cd88a63846c36ec7be463164db327f00dd5d32489623",
     "infra-plan.yml": "4240d803e33e68e63e03d201f241fa21101e2e260848c276b32817624cca6056",
 }
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
@@ -528,6 +528,14 @@ def validate_stack(root: Path, base: str, heads: list[str]) -> list[str]:
     return resolved
 
 
+def docker_host() -> str:
+    """Select an explicit local daemon without inheriting Docker configuration."""
+    host = os.environ.get("DOCKER_HOST", "unix:///var/run/docker.sock")
+    if not re.fullmatch(r"unix://(/[^\x00-\x20?#]+)", host):
+        raise GateError("DOCKER_HOST must select an absolute local Unix socket")
+    return host
+
+
 def tool_identity() -> dict[str, dict[str, str]]:
     result: dict[str, dict[str, str]] = {}
     for name in TOOLS:
@@ -535,10 +543,12 @@ def tool_identity() -> dict[str, dict[str, str]]:
         if not path:
             raise GateError(f"Missing required tool: {name}")
         result[name] = {"sha256": digest(Path(path).resolve())}
+    host = docker_host()
     result["docker-server"] = {
+        "endpoint": host,
         "version": subprocess.check_output(
-            ["docker", "version", "--format={{.Server.Version}}"], text=True
-        ).strip()
+            ["docker", "--host", host, "version", "--format={{.Server.Version}}"], text=True
+        ).strip(),
     }
     return result
 
@@ -1941,6 +1951,7 @@ class Runner:
         self.sql_identity: dict[str, str] = {}
         self.env = {
             "PATH": os.environ.get("PATH", os.defpath),
+            "DOCKER_HOST": docker_host(),
             "HOME": str(out / "home"),
             "TMPDIR": str(out / "tmp"),
             "XDG_CACHE_HOME": str(out / "cache"),

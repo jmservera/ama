@@ -1,0 +1,19 @@
+run 2026-11-18T08:37:27Z
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io /healthz native=200
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io /readyz native=404
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io / native=200
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io /welcome.html native=200
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io /api/me native=401
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io /api/cases native=401
+ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io /app native=401
+http->https: 301 https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz
+tls: * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / RSASSA-PSS *  issuer: C=US; O=Microsoft Corporation; CN=Microsoft TLS G2 RSA CA OCSP 16 
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io /healthz native=200
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io /readyz native=404
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io / native=200
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io /welcome.html native=404
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io /api/me native=404
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io /api/cases native=404
+ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io /app native=404
+http->https: 301 https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io/healthz
+tls: * SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384 / X25519 / RSASSA-PSS *  issuer: C=US; O=Microsoft Corporation; CN=Microsoft TLS G2 RSA CA OCSP 16 

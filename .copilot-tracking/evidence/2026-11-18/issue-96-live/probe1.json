@@ -1,0 +1,47 @@
+{
+ "role": "Retrofit Programme Manager",
+ "services": {
+  "photo": false,
+  "law_alerts": false,
+  "assistants": true,
+  "cases": true
+ },
+ "case_count": 16,
+ "/api/form-schemas": {
+  "status": 200,
+  "ctype": "application/json",
+  "len": 15,
+  "body_redacted": "{\"schemas\": []}",
+  "top_keys": [
+   "schemas"
+  ],
+  "schema_count": 0,
+  "approvals": []
+ },
+ "/api/form-schemas.csv": {
+  "status": 200,
+  "ctype": "text/csv; charset=utf-8",
+  "len": 2,
+  "body_redacted": "\r\n"
+ },
+ "/api/cases/[id]/form-candidates": {
+  "status": 200,
+  "ctype": "application/json",
+  "len": 15,
+  "body_redacted": "{\"batches\": []}",
+  "top_keys": [
+   "batches"
+  ]
+ },
+ "/api/cases/[id]/form-review": {
+  "status": 200,
+  "ctype": "application/json",
+  "len": 199,
+  "body_redacted": "{\"drafts\": [], \"decision_holds\": [], \"notice\": \"Unapproved working notes only. Not a reviewed application or claim pack; no eligibility, approval, submission, award, payment or cash is established.\"}",
+  "top_keys": [
+   "decision_holds",
+   "drafts",
+   "notice"
+  ]
+ }
+}
