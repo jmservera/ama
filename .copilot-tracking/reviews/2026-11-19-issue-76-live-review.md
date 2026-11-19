@@ -1,6 +1,6 @@
 ---
-title: Issue 76 review
+title: Issue 76 live review 2026-11-19
 ms.date: 2026-11-19
 ---
 
-Review executed once. Outcome: conformant for the no-change scope. Boundary: docs and tracking only. Open item routed to the issue owner: decide whether an Unknown hazard clock satisfies the criterion; the box stays unticked. Independent exact-head review and hosted CI remain outstanding.
+Single review. Outcome: conformant for an evidence-only change. The verdict does not overclaim: the criterion stays unticked. Routed follow-up: seed a synthetic hazard with aware_at and one safeguarding item in the demo dataset when a redeploy is authorised.

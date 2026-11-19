@@ -1,16 +1,18 @@
 ---
-title: Issue 76 changes
+title: Issue 76 live changes 2026-11-19
 ms.date: 2026-11-19
 ---
 
-Refs #76. No source change; tier FOCUSED. Validation: targeted tests below (9 tests OK, run on this head). mypy, ruff and web-baseline checks not applicable (no src or web edit).
+No source change. Only these RPI artifacts were added.
 
-| Criterion | Status | Evidence |
+| Criterion | Status | Basis |
 | --- | --- | --- |
-| Default view single list, one status, one next action | Ticked | Already ticked in issue |
-| No perspective picker | Ticked | Already ticked |
-| Queue with visible definitions | Ticked | Already ticked |
-| Blocked steps reason, owner, action | Ticked | Already ticked |
-| Hazard and safeguarding show clock and named owner | Proven for safeguarding live (r4, revision 33); hazard clock and owner proven, time values Unknown (no awareness timestamp in synthetic record). Code and unit tests exist and pass. Left unticked: whether Unknown counts as a clock is an issue-owner call | [r4 note](../../docs/reference/research/issue-76-live-r4-2026-11-19.md), `src/api/tests/test_workbench_hazard_clock_owner.py` |
-| Ownership agreement (FR-034) | Ticked | Already ticked |
-| Single reset (FR-032) | Ticked | Already ticked |
+| Default view is one list with one status and one next action | Ticked earlier, not reopened | Issue body |
+| No perspective picker in user views | Ticked earlier, not reopened | Issue body |
+| Queue with visible definitions | Ticked earlier, not reopened | Issue body |
+| Blocked steps show reason, owner, next action | Ticked earlier, not reopened | Issue body |
+| Hazard and safeguarding items show a clock and named owner | Unproven live; code and tests pass | Hazard: owner named, clock "Unknown" (no awareness timestamp) in the demo data; safeguarding: 0 demo items. 10 api tests and 29 core tests OK today. Live evidence from 2026-11-18 (docs/reference/research/issue-76-live-r2-2026-11-18.md). Fixing it needs demo data writes or a redeploy, outside the authorised scope. |
+| Ownership, reason, unknowns agree across views (FR-034) | Ticked earlier, not reopened | Issue body |
+| Single reset to default (FR-032) | Ticked earlier, not reopened | Issue body |
+
+Commands: see the research note. Not run: mypy, ruff (no src change), complete gate, hosted CI.
