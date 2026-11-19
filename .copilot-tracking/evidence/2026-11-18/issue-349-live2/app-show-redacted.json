@@ -1,0 +1,210 @@
+{
+  "env": [
+    {
+      "hasval": true,
+      "n": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "OTEL_SERVICE_NAMESPACE",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "AZURE_CLIENT_ID",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "SQL_SERVER",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "SQL_DATABASE",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "BLOB_ENDPOINT",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "QUEUE_ENDPOINT",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "KEY_VAULT_URI",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "EVIDENCE_STORE",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "SHAREPOINT_SITE_ID",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_TILE_URL",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_TILE_ATTRIBUTION",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_STORE",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_SQL_SERVER",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_SQL_DATABASE",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_SQL_AUTH",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_SQL_CLIENT_ID",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_DOC_STORE",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_BLOB_ACCOUNT_URL",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_BLOB_CONTAINER",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_BLOB_CLIENT_ID",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_AUTH",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_TRUSTED_PROXY",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_ENV",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_ENTRA_TENANT_ID",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ENTRA_TENANT_ID",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ENTRA_CLIENT_ID",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "AI_ENDPOINT",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "AI_DEPLOYMENT",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "AI_DEPLOYMENT_STRONG",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "CHAT_DPIA_REF",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "CHAT_LAWFUL_BASIS_REF",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "CHAT_NOTICE_REF",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "CHAT_RETENTION_REF",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "CHAT_RETENTION_DAYS",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_CHAT_DEMO_ACTIVATION",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "ZF_DEPLOYMENT_PROFILE",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "AI_MODEL_VERSION",
+      "s": null
+    },
+    {
+      "hasval": true,
+      "n": "AI_MODEL_VERSION_STRONG",
+      "s": null
+    }
+  ],
+  "fqdnset": true,
+  "identity": "UserAssigned",
+  "ing": true,
+  "minr": 0,
+  "secrets": [
+    {
+      "kv": true,
+      "n": "entra-0dbb6bafc8af414fad0b5daa7695cbc9-7a8a02692e5a"
+    }
+  ],
+  "vnet": true
+}

@@ -1,0 +1,16 @@
+{
+ "guarantees": [
+  "A challenge or correction never lowers your priority, eligibility or place in the queue.",
+  "It never records you as refusing or withdrawing, or changes your consent.",
+  "It never pauses, holds or extends the clock on any hazard or safeguarding response."
+ ],
+ "assurance": {
+  "no_retaliation": true,
+  "inferred_refusal": false,
+  "hazard_response_delayed": false,
+  "text": "Raising this challenge or correction will not be held against you. We have not recorded you as refusing, and no safety or hazard response has been paused or delayed."
+ },
+ "targets": [],
+ "challenges": null,
+ "html_text": " Referral and challenge routes for ZF-2025-0331 Referral, acknowledgement, and challenge routes (ZF-2025-0331) Urgent hazards use the hazard reporting route immediately and are never queued here. A named person owns every review and response. Referrals and self-referrals No referrals recorded. Priority suggestions and challenges No challenges recorded. "
+}

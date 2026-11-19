@@ -1,0 +1,25 @@
+{
+ "manual_contrast": [
+  {
+   "sel": "#chat-demo-disclaimer",
+   "fg": "rgb(36, 36, 36)",
+   "bg": "rgb(255, 255, 255)",
+   "ratio": 15.52,
+   "size": "12.8px"
+  },
+  {
+   "sel": "#employee-chat-question",
+   "fg": "rgb(36, 36, 36)",
+   "bg": "rgb(255, 255, 255)",
+   "ratio": 15.52,
+   "size": "16px"
+  },
+  {
+   "sel": "#employee-chat-unsupported",
+   "fg": "rgb(66, 66, 66)",
+   "bg": "rgb(255, 255, 255)",
+   "ratio": 10.05,
+   "size": "12.8px"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+test_bundle_1_story_once_and_promise_ownership_boundaries (tests.test_learning_test_bundle_scenarios.LearningTestBundleRoleScreenScenarios.test_bundle_1_story_once_and_promise_ownership_boundaries) ... ok
+test_bundle_2_pre_visit_pack_and_readiness_rehearsal_boundaries (tests.test_learning_test_bundle_scenarios.LearningTestBundleRoleScreenScenarios.test_bundle_2_pre_visit_pack_and_readiness_rehearsal_boundaries) ... ok
+test_bundle_3_change_impact_and_evidence_reuse_boundaries (tests.test_learning_test_bundle_scenarios.LearningTestBundleRoleScreenScenarios.test_bundle_3_change_impact_and_evidence_reuse_boundaries) ... ok
+test_bundle_4_accessible_handover_and_aftercare_keeps_open_remedies_visible (tests.test_learning_test_bundle_scenarios.LearningTestBundleRoleScreenScenarios.test_bundle_4_accessible_handover_and_aftercare_keeps_open_remedies_visible) ... ok
+test_bundle_5_review_ready_funding_evidence_and_o16_reconciliation (tests.test_learning_test_bundle_scenarios.LearningTestBundleRoleScreenScenarios.test_bundle_5_review_ready_funding_evidence_and_o16_reconciliation) ... ok
+test_governance_gate_excludes_out_of_scope_and_unapproved_runner_wiring (tests.test_learning_test_bundle_scenarios.LearningTestBundleRoleScreenScenarios.test_governance_gate_excludes_out_of_scope_and_unapproved_runner_wiring) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.523s
+
+OK

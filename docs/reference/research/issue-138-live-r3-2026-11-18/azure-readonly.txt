@@ -1,0 +1,17 @@
+# federated credentials
+id-cutover-test-orchestrator 0
+id-cutover-test-api 0
+id-cutover-test-agents 0
+id-cutover-test-import 0
+id-cutover-test-init 0
+id-resident-demo 0
+# app regs
+ERROR: Insufficient privileges to complete the operation.
+# acr
+<demo-registry>	Premium	Disabled
+# apps
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+ca-cutover-test-api	<demo-registry>/zava-forward-api@sha256:161fa1f0ff29...
+ca-cutover-test-agents	<demo-registry>/zava-forward-agents@sha256:2217d94d1c23...
+ca-cutover-test-demo-api	<demo-registry>/zava-forward-api@sha256:5368f4e4009c...
+ca-resident-demo	<demo-registry>/zava-resident-demo@sha256:65481780cb3f...

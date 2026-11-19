@@ -1,0 +1,225 @@
+{
+ "/api/me": {
+  "status": 200,
+  "body": {
+   "user": {
+    "role": "Retrofit Programme Manager"
+   }
+  }
+ },
+ "/api/finance": {
+  "status": 200,
+  "body": [
+   {
+    "case_id": "ZF-2025-0029",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0029",
+    "status": "Received",
+    "exceptions": 0,
+    "on_hold": false,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0030",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0030",
+    "status": "Exceptions",
+    "exceptions": 2,
+    "on_hold": true,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0031",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0031",
+    "status": "Received",
+    "exceptions": 0,
+    "on_hold": false,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0032",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0032",
+    "status": "Exceptions",
+    "exceptions": 2,
+    "on_hold": true,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0041",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0041",
+    "status": "Received",
+    "exceptions": 0,
+    "on_hold": false,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0054",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0054",
+    "status": "Exceptions",
+    "exceptions": 2,
+    "on_hold": true,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0090",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0090",
+    "status": "Received",
+    "exceptions": 0,
+    "on_hold": false,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0098",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Wearside Heating and Gas Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0098",
+    "status": "Exceptions",
+    "exceptions": 2,
+    "on_hold": true,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0101",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Tyne Fabric Insulation Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0101",
+    "status": "Received",
+    "exceptions": 0,
+    "on_hold": false,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0111",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Tyne Fabric Insulation Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0111",
+    "status": "Exceptions",
+    "exceptions": 2,
+    "on_hold": true,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0113",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0113",
+    "status": "Received",
+    "exceptions": 0,
+    "on_hold": false,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0119",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-001",
+    "supplier": "Northern Facade Systems Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0119",
+    "status": "Exceptions",
+    "exceptions": 2,
+    "on_hold": true,
+    "total": 500
+   },
+   {
+    "case_id": "ZF-2025-0123",
+    "address": "[address removed]",
+    "invoice": "INV-SYN-002",
+    "supplier": "Wearside Heating and Gas Ltd",
+    "ref": "SYNTHETIC-ZF-2025-0123",
+    "status": "Received",
+    "exceptions": 0,
+    "on_hold": false,
+    "total": 500
+   }
+  ]
+ },
+ "/api/finance/exposure": {
+  "status": 200,
+  "body": {
+   "status": "Held",
+   "signal": "Pause for human decision",
+   "reason": "No person-approved envelope or tolerances are recorded.",
+   "findings": [],
+   "notice": "Signal for a human decision only. It does not approve, resume or accelerate delivery, and it does not contain or release live activity.",
+   "pause_signal": {
+    "paused": true,
+    "decision_required": true,
+    "decision_owner": null,
+    "automatic_cut": false,
+    "reason": "No person-approved envelope or tolerances are recorded."
+   }
+  }
+ },
+ "/api/funding": {
+  "status": 200,
+  "body": [
+   {
+    "id": "ZF-2025-0030",
+    "resident": "Angela Dixon",
+    "address": "[address removed]",
+    "area": "Newcastle upon Tyne",
+    "route": "Not decided",
+    "status": "Draft ready",
+    "owner": "Aadi Kapoor",
+    "have": 3,
+    "need": 4,
+    "days": 212,
+    "grants": "Zava Forward Exercise Fund: Not recorded"
+   },
+   {
+    "id": "ZF-2025-0351",
+    "resident": "Adam Noble",
+    "address": "[address removed]",
+    "area": "Northumberland",
+    "route": "WH:SHF Wave 3",
+    "status": "To prepare",
+    "owner": "Miguel Garcia",
+    "have": 3,
+    "need": 4,
+    "days": 70,
+    "grants": "No grant record"
+   },
+   {
+    "id": "ZF-2026-0765",
+    "resident": "Dennis Hedley",
+    "address": "[address removed]",
+    "area": "County Durham",
+    "route": "WH:SHF Wave 3",
+    "status": "To prepare",
+    "owner": "Colin Ballinger",
+    "have": 3,
+    "need": 4,
+    "days": 37,
+    "grants": "No grant record"
+   }
+  ]
+ },
+ "/api/form-schemas": {
+  "status": 200,
+  "body": {
+   "schemas": []
+  }
+ }
+}

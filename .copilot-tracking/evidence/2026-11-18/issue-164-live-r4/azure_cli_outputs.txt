@@ -1,0 +1,159 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "env": [
+    {
+      "n": "APPLICATIONINSIGHTS_CONNECTION_STRING",
+      "v": "InstrumentationKey=8e3114a8-2aad-487f-b16d-797ac1bd21d7;IngestionEndpoint=https://uksouth-1.in.applicationinsights.azure.com/;LiveEndpoint=https://uksouth.livediagnostics.monitor.azure.com/;ApplicationId=ebe710dc-ee27-493e-af25-b694a53a1e13"
+    },
+    {
+      "n": "OTEL_SERVICE_NAMESPACE",
+      "v": "zava-forward"
+    },
+    {
+      "n": "AZURE_CLIENT_ID",
+      "v": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3"
+    },
+    {
+      "n": "SQL_SERVER",
+      "v": "[sql-server].database.windows.net"
+    },
+    {
+      "n": "SQL_DATABASE",
+      "v": "retrofit"
+    },
+    {
+      "n": "BLOB_ENDPOINT",
+      "v": "https://[storage].blob.core.windows.net"
+    },
+    {
+      "n": "QUEUE_ENDPOINT",
+      "v": "https://[storage].queue.core.windows.net"
+    },
+    {
+      "n": "EVIDENCE_STORE",
+      "v": "blob"
+    },
+    {
+      "n": "SHAREPOINT_SITE_ID",
+      "v": ""
+    },
+    {
+      "n": "ZF_TILE_URL",
+      "v": "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+    },
+    {
+      "n": "ZF_TILE_ATTRIBUTION",
+      "v": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+    },
+    {
+      "n": "ZF_STORE",
+      "v": "mssql"
+    },
+    {
+      "n": "ZF_SQL_SERVER",
+      "v": "[sql-server].database.windows.net"
+    },
+    {
+      "n": "ZF_SQL_DATABASE",
+      "v": "retrofit"
+    },
+    {
+      "n": "ZF_SQL_AUTH",
+      "v": "msi"
+    },
+    {
+      "n": "ZF_SQL_CLIENT_ID",
+      "v": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3"
+    },
+    {
+      "n": "ZF_DOC_STORE",
+      "v": "azure-blob"
+    },
+    {
+      "n": "ZF_BLOB_ACCOUNT_URL",
+      "v": "https://[storage].blob.core.windows.net"
+    },
+    {
+      "n": "ZF_BLOB_CONTAINER",
+      "v": "evidence"
+    },
+    {
+      "n": "ZF_BLOB_CLIENT_ID",
+      "v": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3"
+    },
+    {
+      "n": "ZF_AUTH",
+      "v": "trusted-proxy"
+    },
+    {
+      "n": "ZF_TRUSTED_PROXY",
+      "v": "1"
+    },
+    {
+      "n": "ZF_ENV",
+      "v": "production"
+    },
+    {
+      "n": "ZF_ENTRA_TENANT_ID",
+      "v": "bccd6ad2-b77b-461c-bbc5-5b032e7930ba"
+    },
+    {
+      "n": "ENTRA_TENANT_ID",
+      "v": "bccd6ad2-b77b-461c-bbc5-5b032e7930ba"
+    },
+    {
+      "n": "ENTRA_CLIENT_ID",
+      "v": "0dbb6baf-c8af-414f-ad0b-5daa7695cbc9"
+    },
+    {
+      "n": "AI_ENDPOINT",
+      "v": "https://[foundry].openai.azure.com/"
+    },
+    {
+      "n": "AI_DEPLOYMENT",
+      "v": "standard"
+    },
+    {
+      "n": "AI_DEPLOYMENT_STRONG",
+      "v": "standard"
+    },
+    {
+      "n": "CHAT_DPIA_REF",
+      "v": "docs/reference/research/chat-memory-dpia.md"
+    },
+    {
+      "n": "CHAT_LAWFUL_BASIS_REF",
+      "v": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#lawful-basis"
+    },
+    {
+      "n": "CHAT_NOTICE_REF",
+      "v": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice"
+    },
+    {
+      "n": "CHAT_RETENTION_REF",
+      "v": "docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention"
+    },
+    {
+      "n": "CHAT_RETENTION_DAYS",
+      "v": "30"
+    },
+    {
+      "n": "ZF_CHAT_DEMO_ACTIVATION",
+      "v": "approved-2026-11-03"
+    },
+    {
+      "n": "ZF_DEPLOYMENT_PROFILE",
+      "v": "demo"
+    },
+    {
+      "n": "AI_MODEL_VERSION",
+      "v": "gpt-4.1-nano-2025-04-14"
+    },
+    {
+      "n": "AI_MODEL_VERSION_STRONG",
+      "v": "gpt-4.1-nano-2025-04-14"
+    }
+  ],
+  "img": "[registry].azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb",
+  "rev": "ca-cutover-test-demo-api--0000032"
+}

@@ -1,0 +1,1 @@
+Single critique. Verdict: compatible. Risk: host AV may flag a literal EICAR in a test; mitigated by building the string at runtime. Risk: overclaiming; docstring keeps "not an antivirus engine". Disposition: applied directly. No user decision needed.

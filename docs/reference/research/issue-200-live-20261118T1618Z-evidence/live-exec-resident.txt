@@ -1,0 +1,4 @@
+INFO: Successfully connected to container: 'resident-demo'. [ Revision: 'ca-resident-demo--0000012', Replica: 'ca-resident-demo--0000012-f9f55c9cc-z8mxp'].
+uid=10001(app) gid=10001(app) groups=10001(app)
+python_-m_zava_forward.api.resident_demo_INFO: received success status from cluster
+[93mDisconnecting...[0m

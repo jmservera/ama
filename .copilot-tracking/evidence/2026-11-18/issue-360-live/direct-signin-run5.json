@@ -1,0 +1,87 @@
+{
+ "welcome_title": "Welcome to Zava Forward | Zava North Homes",
+ "app_anonymous_url_host": "login.microsoftonline.com",
+ "callback_returned_to_app": true,
+ "app_title": "Zava Forward | Zava North Homes",
+ "me_status": 200,
+ "me": {
+  "role": "Retrofit Programme Manager",
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "view_only": false,
+  "identity_source": "entra",
+  "auth_provider": "trusted-proxy"
+ },
+ "stats_status": 200,
+ "stats_keys": [
+  "ages",
+  "areas",
+  "contractors",
+  "funding",
+  "kpis",
+  "stages",
+  "team",
+  "waves"
+ ],
+ "stats": {},
+ "chat_status_http": 200,
+ "chat_activation": "demo-only",
+ "ai": {
+  "thread": 200,
+  "ask": 200,
+  "ask_keys": [
+   "kind",
+   "reply",
+   "answer_source",
+   "answer_source_label",
+   "citations",
+   "label",
+   "model",
+   "workflow_only",
+   "skill",
+   "context",
+   "consumption",
+   "withheld"
+  ],
+  "model": "workflow-only",
+  "consumption": {
+   "thread_id": "CT-11de31dd3ea84c70",
+   "task": "chat-case-conversation",
+   "model_calls": 0,
+   "tokens": null,
+   "provider_outcome": "not-called",
+   "outcome": "abstain",
+   "cost": "Unknown",
+   "missing_cost_inputs": [
+    "dated model price",
+    "complete review effort"
+   ],
+   "context_limit_chars": 16000,
+   "history_limit_chars": 4000,
+   "memory_used": false,
+   "calls_per_request": 1,
+   "role_limits": {
+    "access": true,
+    "calls_per_request": 1,
+    "turns_per_thread": 30,
+    "output_tokens": 600
+   },
+   "thread_turns_used": 1,
+   "thread_turn_limit": 30,
+   "context_chars": 0,
+   "history_chars": 0
+  },
+  "withheld": false,
+  "answer_excerpt": "{\"kind\":\"abstain\",\"reply\":\"I cannot answer that from the sources you are permitted to see for this case. Check the case card or ask the data owner.\",\"answer_source\":\"abstain\",\"answer_source_label\":\"No answer was given. The permitted sources do not cover the question.\",\"citations\":[],\"label\":\"AI sugg",
+  "delete": 200,
+  "threads_after": 200
+ },
+ "role_probe": {
+  "/api/sensors": 403
+ },
+ "forged_with_session": [
+  "Retrofit Programme Manager",
+  "Retrofit Programme Manager"
+ ]
+}

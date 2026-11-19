@@ -1,0 +1,50 @@
+{
+ "steps": [
+  {
+   "step": "asset_parity_with_branch",
+   "workspace-shell.js": {
+    "status": 200,
+    "match": true
+   },
+   "app.js": {
+    "status": 200,
+    "match": false
+   },
+   "async-action.js": {
+    "status": 200,
+    "match": true
+   },
+   "style.css": {
+    "status": 200,
+    "match": false
+   }
+  },
+  {
+   "step": "reject_recorded_via_ui",
+   "review_responses": [
+    [
+     "/api/ai/review/353a19020893/reject",
+     "POST",
+     200
+    ]
+   ],
+   "status": "Briefing ready. Check the sources, then choose how to review the draft.",
+   "review_state": "Rejected",
+   "text": [
+    "Briefing ready. Check the sources, then choose how to review the draft.",
+    "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+    "",
+    "Rejected as a draft by a person. This is not an approval, consent or safety decision. Reason: Synthetic live check for issue 531: reject path, no action taken. Recorded in the audit log."
+   ],
+   "buttons": [
+    "Hide briefing",
+    "Refresh briefing"
+   ]
+  },
+  {
+   "step": "app_get_ms",
+   "ms": 54,
+   "status": 200
+  }
+ ]
+}

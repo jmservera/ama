@@ -1,0 +1,6 @@
+INFO: Successfully connected to container: 'api'. [ Revision: 'ca-cutover-test-demo-api--0000031', Replica: 'ca-cutover-test-demo-api--0000031-84949d7db9-655xw'].
+python_-m_zava_forward.api_
+0
+evals
+INFO: received success status from cluster
+[93mDisconnecting...[0m

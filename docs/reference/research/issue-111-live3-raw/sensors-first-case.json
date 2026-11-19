@@ -1,0 +1,159 @@
+{
+ "version": "retained-reading-view-v2",
+ "kind": "synthetic-retained-readings",
+ "units": {
+  "temperature_c": "degC",
+  "humidity_pct": "%RH"
+ },
+ "home_id": "ZF-2025-0031",
+ "max_readings": {
+  "window": 12,
+  "context_each": 4
+ },
+ "calibrated": false,
+ "retrofit_context": {
+  "available": false,
+  "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+ },
+ "anchor": {
+  "name": "quality_record_anchor",
+  "at": "2026-10-13T09:00:00Z",
+  "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+ },
+ "state": "ok",
+ "readings": [
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0710Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T07:10:00Z",
+   "temperature_c": "6.39",
+   "humidity_pct": "93.21",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0715Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T07:15:00Z",
+   "temperature_c": "6.42",
+   "humidity_pct": "93.57",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0720Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T07:20:00Z",
+   "temperature_c": "6.47",
+   "humidity_pct": "93.88",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0725Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T07:25:00Z",
+   "temperature_c": "6.53",
+   "humidity_pct": "94.05",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0730Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T07:30:00Z",
+   "temperature_c": "6.61",
+   "humidity_pct": "93.97",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0735Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T07:35:00Z",
+   "temperature_c": "6.70",
+   "humidity_pct": "93.71",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T0740Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T07:40:00Z",
+   "temperature_c": "6.79",
+   "humidity_pct": "93.43",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1250Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T12:50:00Z",
+   "temperature_c": "9.98",
+   "humidity_pct": "82.33",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1255Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T12:55:00Z",
+   "temperature_c": "9.91",
+   "humidity_pct": "82.21",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1300Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T13:00:00Z",
+   "temperature_c": "9.89",
+   "humidity_pct": "82.16",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1350Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T13:50:00Z",
+   "temperature_c": "11.21",
+   "humidity_pct": "77.68",
+   "provenance_class": "synthetic-weather-derived"
+  },
+  {
+   "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1355Z",
+   "sensor_id": "S7XBQ3HG3P5",
+   "observed_at": "2026-11-18T13:55:00Z",
+   "temperature_c": "11.32",
+   "humidity_pct": "77.82",
+   "provenance_class": "synthetic-weather-derived"
+  }
+ ],
+ "before": [],
+ "after": [],
+ "latest": {
+  "reading_id": "LIVE-S7XBQ3HG3P5-20261118T1355Z",
+  "sensor_id": "S7XBQ3HG3P5",
+  "observed_at": "2026-11-18T13:55:00Z",
+  "temperature_c": "11.32",
+  "humidity_pct": "77.82",
+  "provenance_class": "synthetic-weather-derived"
+ },
+ "before_absent": "No retained readings before the first quality evidence record.",
+ "after_absent": "No retained readings from the first quality evidence record onward.",
+ "future_dated_excluded": false,
+ "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+ "provenance": {
+  "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+ },
+ "citation_keys": [
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0710Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0715Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0720Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0725Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0730Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0735Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T0740Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1250Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1255Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1300Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1350Z",
+  "sensor:S7XBQ3HG3P5:LIVE-S7XBQ3HG3P5-20261118T1355Z"
+ ],
+ "generated_at": "2026-11-18T17:27:39Z",
+ "freshness": "stale",
+ "freshness_text": "Latest reading is older than 15 minutes. Treat it as out of date.",
+ "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+ "age_seconds": 12759,
+ "case_id": "ZF-2025-0031"
+}

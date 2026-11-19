@@ -1,0 +1,51 @@
+{
+  "ag": 1,
+  "agg": "Maximum",
+  "dims": [
+    {
+      "n": "state",
+      "v": [
+        "Failed"
+      ]
+    }
+  ],
+  "freq": "PT5M",
+  "n": "tmp146d-job-failed-maximum",
+  "op": "GreaterThan",
+  "thr": 0.0,
+  "win": "PT15M"
+}
+{
+  "ag": 1,
+  "agg": "Total",
+  "dims": [
+    {
+      "n": "state",
+      "v": [
+        "Failed"
+      ]
+    }
+  ],
+  "freq": "PT5M",
+  "n": "tmp146e-job-failed-total",
+  "op": "GreaterThan",
+  "thr": 0.0,
+  "win": "PT15M"
+}
+{
+  "ag": 1,
+  "agg": "Maximum",
+  "dims": [
+    {
+      "n": "state",
+      "v": [
+        "Failed"
+      ]
+    }
+  ],
+  "freq": "PT5M",
+  "n": "tmp146f-job-failed-max-1h",
+  "op": "GreaterThan",
+  "thr": 0.0,
+  "win": "PT1H"
+}

@@ -1,0 +1,55 @@
+{
+  "landed": "<demo-api>/app",
+  "/api/ranking/policy": {
+    "status": 200,
+    "shape": {
+      "policy_id": "str",
+      "version": "str",
+      "owner": "str",
+      "status": "str",
+      "effective_date": "str",
+      "content_hash": "str",
+      "rules": {
+        "list_len": 5,
+        "item": {
+          "order": "int",
+          "code": "str",
+          "label": "str"
+        }
+      },
+      "versions": {
+        "list_len": 1,
+        "item": "str"
+      }
+    }
+  },
+  "/api/ranking/snapshot": {
+    "status": 200,
+    "shape": {
+      "policy_id": "str",
+      "policy_version": "str",
+      "policy_hash": "str",
+      "as_of": "str",
+      "total": "int",
+      "entries": {
+        "list_len": 443,
+        "item": {
+          "id": "str",
+          "rank": "int",
+          "reason_codes": {
+            "list_len": 4,
+            "item": "str"
+          },
+          "deciding_rule": "NoneType"
+        }
+      },
+      "snapshot_hash": "str"
+    }
+  },
+  "/api/ai/priority": {
+    "status": 200,
+    "shape": {
+      "recommendation": "NoneType"
+    }
+  }
+}
