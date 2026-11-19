@@ -14097,3 +14097,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 107 sixth live pass
 
 * Added [issue-107-live-r6-criteria-2026-11-19.md](research/issue-107-live-r6-criteria-2026-11-19.md): fresh run of the assistant release and non-replenishment tests; the second unticked criterion remains a human step.
+## [2026-11-19] add | Issue 76 hazard and safeguarding clock, fifth pass (Refs #76)
+
+* Added [issue-76-live-r5-2026-11-19.md](research/issue-76-live-r5-2026-11-19.md): 35 targeted tests pass, live revision 33 still active, per-criterion verdict. No source change.
