@@ -59,3 +59,9 @@ Waive or reword criteria 3 and 4 as historically unsatisfiable (suggested: "curr
 * Counts rest on a local `prepare.py` run on one base ref; the listed file set is capped at 500 of 949.
 * GitHub data retrieved 2026-11-18 and reflects PR state at that time.
 * Not checked: hosted CI for this commit, and whether the PR bodies were edited after merge.
+
+## Update 2026-11-19: stale-mvp test fixture fixed
+
+* `test_tracking_only_changes_do_not_trigger_workflows` now skips events a workflow does not declare and uses a `src/` sample path. Re-run in `.github/rubric/scripts`: `test_safe_output_runtime.py` plus `test_prepare.py` gave 84 passed, 16 skipped, 0 failed (before: 10 failed in the safe-output file).
+* `artifacts.json` still has no `mvp` or `prototype` glob. Criteria 3 and 4 stay unproven; the owner waiver above is still the open decision. The `mvp-*.yml` workflows (workflow_dispatch only) remain a separate follow-up.
+* Records: `.copilot-tracking/changes/2026-11-19-issue-198-live-changes.md`.

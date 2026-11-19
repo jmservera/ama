@@ -1,0 +1,13 @@
+{
+  "excludedPaths": [
+    "/healthz",
+    "/readyz",
+    "/",
+    "/welcome.html",
+    "/style.css",
+    "/zava-logo.png",
+    "/sign-in"
+  ],
+  "redirectToProvider": "azureactivedirectory",
+  "unauthenticatedClientAction": "RedirectToLoginPage"
+}
