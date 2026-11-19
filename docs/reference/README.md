@@ -1945,3 +1945,5 @@ For #144, the [deployed image audit](./research/issue-144-live-deployed-images-2
 records 12 live containers as real digest-pinned references; pipeline provenance, tags and deployed hardening remain unproven.
 
 The [old-image incomplete completion note](./research/old-image-incomplete-completion-1840.md) records per-criterion fixture evidence for issue 1840 (2026-11-18).
+
+For #1274, the [release-download criteria proof](./research/issue-1274-live-release-download-criteria-2026-11-19.md) records the retained 504 log, real checksum verification and the unproven AWF and hosted-CI criteria.
