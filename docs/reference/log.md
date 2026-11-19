@@ -13618,3 +13618,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1288 fifth live audit (Refs #1288)
 
 * Added [issue-1288-live-r5-quality-sensor-evidence-2026-11-19.md](research/issue-1288-live-r5-quality-sensor-evidence-2026-11-19.md): 272 local tests OK, read-only Azure probe, per-criterion table; criteria 4 and 8 unproven, no source change.
+## [2026-11-19] add | Issue 130 live run 6 nomination route audit (Refs #130)
+
+* Added [issue-130-live-r6-nomination-route-audit-2026-11-19.md](research/issue-130-live-r6-nomination-route-audit-2026-11-19.md): API revision 0000033 and resident revision 0000014 on the same API image digest, 66 offline core tests pass; the representative participation criterion stays unproven for the demo. Docs only.
