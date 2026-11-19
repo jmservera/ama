@@ -13697,3 +13697,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 223 live run 3 (Refs #223)
 
 * Added [issue-223-live-r3-2026-11-19.md](research/issue-223-live-r3-2026-11-19.md): focused tests re-run (37 and 6 OK) and per-criterion table; remaining items need humans or an OQ-017 appointment.
+## [2026-11-19] add | Issue 349 live round 6 resident probe diagnosis (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r6-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r6-2026-11-19.md): the round 5 resident sign-in failure is an unresolved `sts.microsoftonline.com` on the worker host; per-criterion table, no source change.

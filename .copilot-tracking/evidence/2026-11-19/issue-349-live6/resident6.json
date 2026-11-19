@@ -1,0 +1,14 @@
+{
+ "nav": [
+  "login.microsoftonline.com/<GUID>/oa",
+  "login.microsoftonline.com/<GUID>/oa",
+  "login.microsoftonline.com/<GUID>/oa",
+  "login.microsoftonline.com/<GUID>/oa",
+  "login.microsoftonline.com/<GUID>/oa",
+  "login.microsoftonline.com/<GUID>/oa",
+  "FAIL sts.microsoftonline.com net::ERR_NAME_NOT_RESOLVED",
+  "chromewebdata/"
+ ],
+ "host_after_next": "chromewebdata",
+ "text": ""
+}
