@@ -13427,3 +13427,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 145 live audit 5 (Refs #145)
 
 * Added [issue-145-live-20261119T1024Z-2026-11-19.md](research/issue-145-live-20261119T1024Z-2026-11-19.md): read-only Azure SQL backup re-check, per-criterion table; R3 reapply gap needs FULL tier and was not implemented. No source change.
+
+## [2026-11-19] add | Issue 1844 live audit (Refs #1844)
+
+* Added [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): per-criterion table; all criteria are mobile or delivery-gate scope, none unmet for the desktop-only demo. No source change.
