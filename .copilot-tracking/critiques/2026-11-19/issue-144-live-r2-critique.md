@@ -1,0 +1,1 @@
+# Critique (executed once): verdict proceed with no-build outcome. Building another script would duplicate infra/scripts/deployed_images.py; a throwaway hardened app needs registry pulls from a private ACR and is a deployment change.
