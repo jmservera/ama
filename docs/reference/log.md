@@ -2932,6 +2932,7 @@ metadata when the knowledge base was created.
 * No regulatory snapshot changed. Open: DPO and Legal confirmation of the roles
   allowed to see a vulnerability reason (OD-14, OD-19), Entra B2B guest
   contractor identity model, and browser acceptance for every role.
+
 ## 2026-10-15 Azure Policy, Defender plans, locks and tagging as code (#147)
 
 * infra/README.md gains a Governance controls section; ADR 0001 open item updated. New `infra/governance.bicep`, `main.pilot.example.bicepparam`, `policy-exceptions.json` and tests.
@@ -2942,6 +2943,7 @@ metadata when the knowledge base was created.
 
 * `mvp/README.md` documents the sensor backfill generator, its volume and size estimate (about 1.05 billion hourly rows, about 118 GiB CSV for 60,000 homes over two years), manifest and idempotent load.
 * No regulatory snapshot changed. Open: Met Office and Environment Agency data retrieval, reconciliation with #110 validation, and a full-stock storage and cost decision.
+
 ## 2026-10-15 IoT Hub Bicep module (#140)
 
 * `infra/README.md` records the proposed IoT Hub tier, region, retention, identity, network and credential-owner decisions; ADR 0003 open items point to them. No regulatory snapshot changed.
@@ -2955,6 +2957,7 @@ metadata when the knowledge base was created.
 ## 2026-10-15 ADR 0004 review fixes (#158)
 
 * Removed an unsourced deployment sentence, restored the original fallback and A-or-B wording, and updated stale proposal wording in the ADR, BRD and PRD. OD-45 to OD-49 stay open. No regulatory snapshot changed.
+
 ## 2026-10-15 Identity and RBAC as code (#141)
 
 * `infra/role-assignments.json`, `infra/entra/app-registration.json`, `infra/tests/test_identity_rbac.py` and an `infra/README.md` section added; index row added. No regulatory snapshot changed.
@@ -7205,6 +7208,7 @@ FIFO-safe verifier file open, stronger malformed-value assertion and README dry-
 ## 2026-10-26 issue 462 execution-readiness local stage
 
 Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff across core, SQL, secret helper, docs and tests. Added the resident-only infra/resident-demo.bicep and infra/scripts/resident_demo_deploy.py (what-if deny guard, min 0 / max 1, no main stack or schedules). Local only; no cloud action. See the 2026-10-26 execution-readiness plan, changes and review under .copilot-tracking.
+
 ## 2026-10-25 query | Presentation Paper and Journey Story Review
 
 * Updated the owner-selected 54-slide Cowork v2 PPTX and native PDF with
@@ -7789,6 +7793,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Merged main `ea5577b2` into the #440 branch without rewriting history and appended a dated reconciliation note to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#reconciliation-with-later-main-2026-10-25-440).
 * The first checkpoint is kept as historical evidence for main `140d8f49`; native discovery is recorded as attested only, the failed 17383 ms receipt remains a repository record with unknown root cause and an unwaived threshold, and no acceptance, Conformant outcome, publication or cloud approval is claimed.
 * Earlier log entries, the original case study and memory are unchanged.
+
 ## 2026-10-25: obsolete synthetic proof case removed from the live demo database
 
 * Removed the single obsolete synthetic proof case from the deployed `retrofit` database at the owner's request (issue 360): 981 to 980 cases, 444 to 443 open, one appended audit entry, no seed case or earlier audit row changed. The API cache needs a revision restart after an external delete.
@@ -9167,6 +9172,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   record (households already had it); goldens re-pinned and a per-record
   test added. Updated the retrofit synthetic data README coverage section.
   Owner confirmation of the mapping and deferrals remains open.
+
 ## 2026-11-01
 
 * Added `research/ux/supported-devices-proposal.md`, a proposal for owner
@@ -12367,6 +12373,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   Agent 365 stays future-only with unresolved schema/content/identity,
   tenant/license/privacy/ingestion gates; no cloud, legal, SLO or human
   explanation acceptance follows.
+
 ## [2026-11-16] add | Resident demo threat model for the synthetic Azure showcase (Refs #462)
 
 * Added the [threat model](research/resident-demo-threat-model-2026-11-16.md) covering public fake-email login, the shared demo credential, session handling, cross-case access, database fields and deployment isolation, and linked it from the showcase section of the API README and this index.
@@ -12441,43 +12448,53 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Measured on main `eb51af5c9`: 0 of 7 `design_ref` anchors in `journey_register.draft()` (`#j1` to `#r1`) matched a heading in [resident journeys](research/ux/customer-journeys/residents.md). The anchors now use the heading slug (for example `#j1-choose-each-proposed-measure`), and a regression test resolves each one against the document headings.
 * Updated the [equity and journey test plan](research/ux/equity-journey-test-plan.md). No criterion is newly proven: keyboard and screen reader runs, owner assignment and protocol agreement remain human work. Targeted core tests, ruff and mypy only; no full gate.
+
 ## [2026-11-17] update | Work-package guardrail breach now pauses case events (Refs #126)
 
 * Assessed #126 against main `eb51af5c9`. The checked criteria have code and test evidence; the five unchecked criteria (protocol, DPIA and lawful-basis approval, residual and unassessed dispositions with qualified owners, fresh assessment, owner acceptance, real AI, SQL and Azure contract) remain human or cloud gated and no tick is proposed.
 * Found and fixed one RULE-024 gap: a `work package` breach was recorded as Paused but `guard_case_event` did not check it. Case events now stop for a case with an active work order in the paused package, and restart lifts the pause. A workstream breach has no case mapping and stays recorded-only, as now stated in [src/core/README.md](../../src/core/README.md).
 * Evidence: [research](../../.copilot-tracking/research/2026-11-17/issue-126-frozen-protocol-research.md) and [changes](../../.copilot-tracking/changes/2026-11-17/issue-126-frozen-protocol-changes.md). Focused tier; SQL, hosted CI and independent review remain separate.
+
 ## [2026-11-17] update | Map tile provider decision record (Refs #119)
 
 * Added the [decision record](../design/map-tile-provider-decision-record.md): no licensed provider selected, OSM for the synthetic demo only, production loads no tiles without `ZF_TILE_URL`, the gate before selection, and the accessible list as a standing requirement for every provider. Linked it from the [options review](research/ux/map-tile-provider-options.md) and the index, and added a focused test.
 * Documentation and one unit test only. No key, account, spend or UI change. Both issue criteria stay unmet: binding provider terms and a human screen-reader run.
+
 ## [2026-11-17] update | ADR 0002 decision 7 aligned with the built time-capture gates (Refs #120)
 
 * Added a "Current build" list and an unmet-evidence table to decision 7 of [ADR 0002](../adrs/0002-pilot-readiness-architecture.md): the notice approval reference and version match, the two-role request and enable steps, the per-person notice acknowledgement, and retention as an open DPIA input. Added one regression test in `src/api/tests/test_timecapture.py`.
 * No code behaviour changed. The DPIA, notice approval, consultation and administrator ratification remain unmet human evidence, so criterion 3 of #120 stays unticked.
+
 ## [2026-11-17] update | Issue 108 closure audit against main (Refs #108)
 
 * Added the [issue 108 closure audit](research/evaluation/issue-108-closure-audit.md): a per-criterion matrix against main `eb51af5c9`. It records that #1771 sits on the #1641 parent branch and not on main, that seven tasks remain not evaluated by the harness on main, and that subgroup accounting is not on main.
 * Added `ClosureAuditDocTests` in `src/agents/tests/test_ai_eval.py`, which fails if the page omits any task the harness reports as not evaluated. Offline accounting only; no model call, no tick, the issue stays open.
+
 ## [2026-11-17] update | Issue 110 closure audit and no-public-ingestion guard (Refs #110)
 
 * Added a [closure audit table](research/iot-sensor-analytics-research-plan.md#issue-110-closure-audit-against-main-2026-11-17-refs-110) for #110 and a focused test, `src/api/tests/test_no_public_ingestion_surface.py`, guarding criterion C4. C1 stays unmet; no live Azure, spend or human approval is claimed.
+
 ## [2026-11-17] update | Issue 107 evidence audit and live-binding mismatch coverage (Refs #107)
 
 * Audited the open criteria against base `eb51af5c9`. Two stay unticked: the composite SQL race, revocation, restart and old-image criterion, and delivered-build real-AI/Azure acceptance (CON-009/AC-057). Nothing here ticks or closes them.
 * Measured one coverage gap. The separate-worker and restart mismatch test in `src/api/tests/test_assistant_restart_non_replenishment.py` varied only prompt, policy, permissions, scope and model version, while the release binds thirteen fields. It now also varies provider, endpoint, deployment, data and provenance. The added cases passed on the first run, so no product defect was found; this is coverage on a local SQLite proxy only.
 * Not covered and still open: execution of an actual earlier image, actual disposable SQL for these variations, and the malformed-completion case tracked in #1840. The prior current-service proxy remains a proxy, not an old image.
+
 ## [2026-11-17] ingest | Further official-source readings for the ADM and EU AI Act pack (Refs #224)
 
 * Updated the [applicability pack](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) and the [Legal briefing](./research/rai/legal-briefing-adm-ai-act.md) with a dated 2026-11-17 reading: S.I. 2026/82 reg. 5, the EU AI Act as made and Regulation (EU) 2026/1744 (Digital Omnibus on AI, OJ 2026-07-24), which moves the Chapter III high-risk application dates. This supersedes the earlier "retrieval failed" and "unverified delay" statements; the earlier rows are kept.
 * Still `Unknown`: ICO guidance (HTTP 403), consolidated EU text comparison, Article 22D regulations, snapshot line comparison and the EU territorial and role facts. All decisions stay `Pending`; no legal conclusion, approval or classification is made. Added regression test `tools/test_adm_evidence_pack.py`.
+
 ## [2026-11-17] update | Document scan, retention and legal hold design (Refs #117)
 
 * Added the [design](../design/document-scan-retention-legal-hold.md) separating built behaviour from proposals, with an index row and an offline drift test (`tools/test_document_controls_design.py`).
 * Recorded that blob soft delete (30 days) and versioning leave bytes recoverable after an approved retention deletion. Real scanning, retention periods and hold authority stay open owner decisions. Documentation only; no live resource touched.
+
 ## [2026-11-17] update | Epic 109 closure audit against main (Refs #109)
 
 * Added a dated closure audit to [the IoT sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md#epic-109-closure-audit-against-main-eb51af5c9-2026-11-17-refs-109) and an index entry in the [reference index](./README.md). It maps #110, #111 and #112 to merged evidence (including PR 1656) and lists the unmet criteria.
 * Documentation only. No source change, tick, closure or approval. #109, #110 and #111 stay open; live Hub identity, R1 to R3 and the #440 owner disposition remain unproven.
+
 ## [2026-11-17] update | Cohort evaluation executable evidence re-measured (Refs #222)
 
 * Added a dated section to the [cohort evaluation review pack](research/evaluation/cohort-evaluation-review-pack.md) recording a re-run of the core and agents cohort tests and the `cohort_ranking_eval` runner (with and without `--defects`) on synthetic data. The draft banner and table are preserved. Criterion 6 (OQ-018 owner and DPO approval) stays unmet; synthetic results are not fairness evidence. Documentation only; no source, threshold, approval or live use changed.
@@ -13295,9 +13312,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 1258 third live re-verification (Refs #1258)
 
 * Added [issue-1258-live-r3-2026-11-18.md](research/issue-1258-live-r3-2026-11-18.md) with raw outputs: 110 core and 36 API wiring tests pass, real ext4 syscall order and injected fsync EIO reproduced; criterion 5 stays unproven for the demo.
+
 ## [2026-11-18] add | Issue 1818 receiver sensor_register fix (Refs #1818)
 
 * Added [issue-1818-sensor-register-receiver-fix-2026-11-18.md](research/issue-1818-sensor-register-receiver-fix-2026-11-18.md): the held fix as a candidate, focused test results, and a per-criterion table. The full gate was not run because the heavy lock was held.
+
 ## [2026-11-18] add | Issue 203 checker exemption (Refs #203)
 
 * Added [issue-203-checker-live-evidence-2026-11-18.md](research/issue-203-checker-live-evidence-2026-11-18.md): the legacy-reference checker exempts three regression-test files and dated live-evidence notes (47 violations to 0, 8 tests pass); criterion 1 stays unproven pending owner agreement and criterion 5 stays partly proven.
@@ -13305,15 +13324,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | RPI gate preflight and timing tools re-created (Refs #1830)
 
 * Re-created `tools/rpi-preflight.py`, `tools/rpi-gate-timing.py`, their two unit test files and the [method](method/rpi-gate-preflight.md) from retained candidate `a2c27fda6`, and recorded a per-criterion audit in [issue-1830-live-r2-tools-2026-11-18.md](research/issue-1830-live-r2-tools-2026-11-18.md). The preflight still refuses all selected execution (exit 5); no gate file changed, no full gate run, no live Azure. No #1830 criterion is ticked.
+
 ## [2026-11-18] add | Issue 130 identity 403 fix evidence (Refs #130)
 
 * Added [issue-130-identity-403-live-2026-11-18.md](research/issue-130-identity-403-live-2026-11-18.md): root cause of the live 403 on Entra staff writes in `resident_decisions._operation`, key-based fix with three regression tests (JSON and SQLite), mutation probe, and the representative-evidence criterion stated as unproven for the demo. Code candidate, not deployed.
+
 ## [2026-11-18] add | Issue 138 fifth run, summarize_plan Unsupported regression test (Refs #138)
 
 * Added [issue-138-live-r5-2026-11-18.md](research/issue-138-live-r5-2026-11-18.md): `summarize_plan` already rejects `Unsupported`; a new infra test pins it (33 tests pass, mutation check fails as expected); settings checks unchanged, no criterion ticked
+
 ## [2026-11-18] add | Issue 1837 standalone nomination forms evidence (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-18.md](research/issue-1837-live-demo-evidence-2026-11-18.md) with failing-first, axe and live negative-probe evidence; the deployed demo image predates the repaired script and an axe target-size finding stays open.
+
 ## [2026-11-18] add | Issue 153 wording defect fix (Refs #153)
 
 * Added [wording-defects-fix-153-live-r5-2026-11-18.md](research/wording-defects-fix-153-live-r5-2026-11-18.md): Finance limit and handoff owner wording fixed in source with tests; per-criterion table, named human review still unproven.
@@ -13341,9 +13364,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 189 deployed run-control verifier (Refs #189)
 
 * Added `synthetic.run_live_check` with tests and [issue-189-live-state-verifier-evidence-2026-11-18.md](research/issue-189-live-state-verifier-evidence-2026-11-18.md): live read-only check passes owner, tier, budget and alert configuration and fails recipient reachability; criterion 3 stays unproven for the demo.
+
 ## [2026-11-19] add | Issue 129 criterion status, fourth pass (Refs #129)
 
 * Added [issue-129-live-r4-2026-11-19.md](./research/issue-129-live-r4-2026-11-19.md): the only unticked criterion is the Atlas-owner mapping confirmation, a human decision; no code criterion is unmet and no source changed.
+
 ## [2026-11-19] add | Issue 144 deployed image audit (Refs #144)
 
 * Added [issue-144-live-deployed-images-2026-11-19.md](research/issue-144-live-deployed-images-2026-11-19.md) and `infra/scripts/deployed_images.py`: 12 live containers are digest-pinned; pipeline provenance and deployed hardening unproven, no criterion ticked
@@ -13351,9 +13376,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 116 round 4 evidence (Refs #116)
 
 * Added [issue-116-live-r4-evidence-2026-11-19.md](research/issue-116-live-r4-evidence-2026-11-19.md): reason-role set confirmed for the demo, `ZF_REASON_ROLES` can no longer grant the contractor the reason, per-criterion table; criteria 2 to 4 stay unproven and the FULL gate was not run.
+
 ## [2026-11-19] add | Issue 138 federation verifier (Refs #138)
 
 * Added [issue-138-live-r6-2026-11-19.md](research/issue-138-live-r6-2026-11-19.md): `verify-federation` helper with tests and live read-only evidence; all six criteria remain unproven.
+
 ## [2026-11-19] add | Issue 109 research gate guard (Refs #109)
 
 * Added [issue-109-research-gate-guard-2026-11-19.md](research/issue-109-research-gate-guard-2026-11-19.md): `SOURCED:` sensor thresholds require R1 to R3 references in code; per-criterion table, #440 and children stay unproven.
@@ -13361,21 +13388,27 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 123 D4 golden-file error (Refs #123)
 
 * Added [issue-123-live-d4-golden-error-2026-11-19.md](research/issue-123-live-d4-golden-error-2026-11-19.md): re-check of the #440 triage drafts on main, D4 golden-file named error with tests, per-criterion table; no criterion ticked (Refs #123)
+
 ## [2026-11-19] add | Epic 73 criterion audit (Refs #73)
 
 * Added [issue-73-epic-live-2026-11-19.md](research/issue-73-epic-live-2026-11-19.md): per-criterion table and a new HTTP test for hazard and safeguarding clocks on list rows; the live safeguarding half stays unproven.
+
 ## [2026-11-19] add | Issue 208 epic evidence and child-order audit (Refs #208)
 
 * Added [issue-208-live-epic-evidence-2026-11-19.md](research/issue-208-live-epic-evidence-2026-11-19.md): per-criterion table; 245 local regulatory tests pass; children closed out of ADR phase order; `tools/test_epic_208_child_order.py` pins it
+
 ## [2026-11-19] add | Epic 218 first unmet demo criterion (Refs #218, #220)
 
 * Added [issue-218-first-unmet-demo-criterion-2026-11-19.md](research/issue-218-first-unmet-demo-criterion-2026-11-19.md): #220 criterion 5 selected; new core test proves a bound Entra principal records a staff route step with ranking, hazards and protected state unchanged (mutation probe reproduces the live 403); live proof still needs a redeploy. Per-criterion table included.
+
 ## [2026-11-19] add | Issue 195 build provenance (Refs #195)
 
 * Added [issue-195-build-provenance-live-2026-11-19.md](research/issue-195-build-provenance-live-2026-11-19.md): live revision 0000033 read, commit provenance added to the api image, criteria 1 and 2 unproven, criterion 3 partly proven.
+
 ## [2026-11-19] add | Management Overview AI economics (Refs #100)
 
 * Added [management-tokenomics-overview-100-live-2026-11-19.md](research/management-tokenomics-overview-100-live-2026-11-19.md): Overview card with denominators and Unknown-not-zero, per-criterion table; #440 stabilization stays unproven.
+
 ## [2026-11-18] add | Old-image incomplete completion classification (Refs #1840)
 
 * Added [the per-criterion note](./research/old-image-incomplete-completion-1840.md): fixture-level proof that incomplete mismatch completion is INSUFFICIENT; independent review and full tier remain open (Refs #1840).
@@ -13383,33 +13416,43 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 100 live demo check (Refs #100)
 
 * Added [issue-100-live-2026-11-19.md](research/issue-100-live-2026-11-19.md): live probe shows the deployed demo image lacks the AI economics field, so criterion 2 is proven locally only; #440 stabilization stays unproven. No src change.
+
 ## [2026-11-19] add | Epic 113 first unmet demo criterion (Refs #113)
 
 * Added [issue-113-first-unmet-demo-criterion-2026-11-19.md](research/issue-113-first-unmet-demo-criterion-2026-11-19.md): criterion 1 (#440 checkpoint) is first unmet and not code-satisfiable; live GitHub and Azure reads, per-criterion table, no source change.
+
 ## [2026-11-19] add | Discovery assistant demo re-audit, run 3 (Refs #125)
 
 * Added [issue-125-live-r3-discovery-assistant-2026-11-19.md](research/issue-125-live-r3-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; per-criterion table keeps all three criteria open and records why no source change is warranted.
+
 ## [2026-11-19] add | Epic 81 audit round 2 (Refs #81)
 
 * Added [the per-criterion note](./research/issue-81-epic-audit-live-r2-2026-11-19.md): #1837 fix on main passes locally, deployed image not updated; criteria 1 and 2 stay unproven.
+
 ## [2026-11-19] add | Public browser access fourth pass (Refs #344)
 
 * Added [public-browser-access-live-r4-2026-11-19.md](research/public-browser-access-live-r4-2026-11-19.md): fresh read-only evidence, criterion 1 unmet for browser clients, fix is infrastructure scope needing the full tier.
+
 ## [2026-11-19] add | Issue 349 tenant prerequisites live round 4 (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r4-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r4-2026-11-19.md): live reproduction of round 3; no source change, criterion 1 needs a tenant owner; per-criterion table included.
+
 ## [2026-11-19] add | Issue 164 fourth demo re-check (Refs #164)
 
 * Added [the per-criterion note](./research/issue-164-live-20261119T0909Z-2026-11-19.md): registered and disabled chat task confirmed, thresholds and real-model evidence stay person-gated; no source change.
+
 ## [2026-11-19] update | Issue 198 stale-mvp test fixture (Refs #198)
 
 * Updated [issue-198-rubric-live-r2-2026-11-18.md](research/issue-198-rubric-live-r2-2026-11-18.md): the 10 stale-mvp test failures are fixed; criteria 3 and 4 stay unproven.
+
 ## [2026-11-19] add | Issue 200 live audit 3 (Refs #200)
 
 * Added [issue-200-live-20261119T0848Z-2026-11-19.md](research/issue-200-live-20261119T0848Z-2026-11-19.md) with evidence folder: read-only live probes of revision 33, per-criterion table; 3d proven by history only. No source change.
+
 ## [2026-11-19] add | Epic 93 first unmet criterion re-check (Refs #93)
 
 * Added [issue-93-first-unmet-criterion-live-2026-11-19.md](research/issue-93-first-unmet-criterion-live-2026-11-19.md): 269 offline tests OK (45 skipped), read-only live finance probe, BRD identifier mismatch in the issue body, per-criterion table; checkpoint and child closure stay unproven.
+
 ## [2026-11-19] add | Epic 73 child disposition audit, second pass (Refs #73)
 
 * Added [issue-73-epic-audit-live-r2-2026-11-19.md](research/issue-73-epic-audit-live-r2-2026-11-19.md) and `tools/test_epic_73_child_disposition.py`: one disposition per child, residual of #76, #79 and #80, read-only live check of revision 33; no criterion ticked.
@@ -13417,6 +13460,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 104 criteria recheck (Refs #104)
 
 * Added [issue-104-criteria-recheck-live-2026-11-19.md](research/issue-104-criteria-recheck-live-2026-11-19.md): per-criterion table; the first unmet criterion needs owner decisions, not code. No source change.
+
 ## [2026-11-19] add | Issue 136 live audit 2 (Refs #136)
 
 * Added [issue-136-live-20261119T0945Z-2026-11-19.md](research/issue-136-live-20261119T0945Z-2026-11-19.md) with evidence folder: per-criterion table; the #440 checkpoint is the first unmet criterion and is not closable by code. No source change.
@@ -13424,6 +13468,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 149 first unmet demo criterion (Refs #149)
 
 * Added [issue-149-first-unmet-demo-criterion-2026-11-19.md](research/issue-149-first-unmet-demo-criterion-2026-11-19.md): criterion 1 (#440 checkpoint) is first unmet and not code-satisfiable; live GitHub and Azure reads, 48 local UX baseline tests, per-criterion table, no source change.
+
 ## [2026-11-19] add | Issue 154 live round 5 (Refs #154)
 
 * Added [issue-154-live-resident-ux-r5-2026-11-19.md](research/issue-154-live-resident-ux-r5-2026-11-19.md): only criterion 5b is unticked and is out of demo scope; live app lacks the representative grants variable. No source change.
@@ -13431,6 +13476,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 76 live re-check 4 (Refs #76)
 
 * Added [issue-76-live-r4-2026-11-19.md](research/issue-76-live-r4-2026-11-19.md) with evidence folder: read-only probe of revision 33 finds 1 safeguarding clock with named owner (39 h elapsed) and 1 hazard clock with Unknown times; per-criterion table. No source change.
+
 ## [2026-11-19] add | Issue 165 scoped checkpoint live demo (Refs #165)
 
 * Added [issue-165-live-20261119T1001Z-2026-11-19.md](research/issue-165-live-20261119T1001Z-2026-11-19.md): local tests pass, IoT Hub is private and keyless with no device, per-criterion table; criteria 2 and 3 unproven. No source change.
@@ -13438,9 +13484,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 360 live recheck (Refs #360)
 
 * Added [issue-360-live-20261119-2026-11-19.md](research/issue-360-live-20261119-2026-11-19.md) with evidence folder: read-only configuration, anonymous and staff sign-in probes; c and e unproven (owner decisions), d partly proven, browser-mode 302 noted as FULL-tier infra follow-up. No source change.
+
 ## [2026-11-19] add | Issue 349 live round 5 (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r5-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r5-2026-11-19.md): live reproduction of round 4 plus a failed resident wrong-role probe; no source change.
+
 ## [2026-11-19] add | Issue 120 criterion 3 recheck (Refs #120)
 
 * Added [issue-120-live-2026-11-19.md](research/issue-120-live-2026-11-19.md): criterion 3 mechanics exist and pass 38 local tests; not exercised on the deployed demo. No source change.
@@ -13456,12 +13504,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 1288 live audit 4 (Refs #1288)
 
 * Added [issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md](research/issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md): 304 local tests OK, read-only Azure probe, per-criterion table; criteria 4 and 8 unproven.
+
 ## [2026-11-19] add | Issue 1258 criteria proof (Refs #1258)
 
 * Added [2026-11-19-ranking-archive-ancestor-durability-1258-live.md](research/2026-11-19-ranking-archive-ancestor-durability-1258-live.md): per-criterion table; criteria 1 to 4 proven by 57 passing tests, criterion 5 unproven for the demo. No source change.
+
 ## [2026-11-19] add | Issue 184 live re-verification, run 6 (Refs #184)
 
 * Added [issue-184-live-r6-2026-11-19.md](research/issue-184-live-r6-2026-11-19.md) with retained outputs: read-only live and local checks; the child-closure criterion stays unproven (owner action) and no source change was made.
+
 ## [2026-11-19] add | Issue 185 live device identity proof (Refs #185)
 
 * Added [issue-185-live-20261119-2026-11-19.md](research/issue-185-live-20261119-2026-11-19.md): shipped IoT Hub registry adapter provisioned and tore down three identities on a throwaway F1 hub (deleted); storage of credentials and demo-hub teardown stay unproven. No source change.
@@ -13469,15 +13520,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 1837 target-size repair (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-19.md](research/issue-1837-live-demo-evidence-2026-11-19.md) with axe evidence: the standalone routes page links `/style.css` and the browser check asserts zero target-size violations; live write and hosted checks stay unproven.
+
 ## [2026-11-19] add | Issue 1258 live run 4 criteria proof (Refs #1258)
 
 * Added [issue-1258-live-r4-2026-11-19.md](research/issue-1258-live-r4-2026-11-19.md): real ext4 ancestor-sync order and 110 passing tests; criterion 5 stays unproven for the demo. No source change.
+
 ## [2026-11-19] add | Issue 1274 release-download criteria proof (Refs #1274)
 
 * Added [issue-1274-live-release-download-criteria-2026-11-19.md](research/issue-1274-live-release-download-criteria-2026-11-19.md): failing 504 endpoint from the retained #1243 job log, real actionlint 1.7.7 checksum verification, 12 installer tests, per-criterion table; AWF recovery and hosted CI stay unproven.
+
 ## [2026-11-19] add | Issue 1818 live retained-reading re-observation (Refs #1818)
 
 * Added [issue-1818-live-20261119-2026-11-19.md](research/issue-1818-live-20261119-2026-11-19.md) with redacted retained output: read-only map, stale filter and resident sensor view; the Hub to SQL leg was not re-run and the sender and receiver fix stay off main.
+
 ## [2026-11-19] add | Issue 107 actual SQL coverage (Refs #107)
 
 * Added [issue-107-live-r4-criteria-2026-11-19.md](research/issue-107-live-r4-criteria-2026-11-19.md): material-mismatch and allowance race tests run on a throwaway SQL Server, plus a composite old-image test; delivered-build acceptance stays unproven.
@@ -13493,6 +13548,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 126 live criteria proof (Refs #126)
 
 * Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 core and 10 API governance tests OK, read-only live probe (capture closed, 22 RAI findings, no claims) and per-criterion table; the approval, assessment and SQL/Azure criteria stay unproven. No source change.
+
 ## [2026-11-19] add | Issue 130 live run 6 nomination route audit (Refs #130)
 
 * Added [issue-130-live-r6-nomination-route-audit-2026-11-19.md](research/issue-130-live-r6-nomination-route-audit-2026-11-19.md): API revision 0000033 and resident revision 0000014 on the same API image digest, 66 offline core tests pass; the representative participation criterion stays unproven for the demo. Docs only.
@@ -13504,6 +13560,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Chat grounding fifth re-check (Refs #164)
 
 * Added [the per-criterion note](./research/issue-164-live-20261119T134556Z-2026-11-19.md): registered and disabled chat task re-confirmed, 76 offline tests OK, thresholds and real-model evidence stay person-gated; no source change.
+
 ## [2026-11-19] add | Issue 521 live check, run 3 (Refs #521)
 
 * Added [resident-demo-authority-live-521-r3-2026-11-19.md](research/resident-demo-authority-live-521-r3-2026-11-19.md): live expiry `2028-01-01T00:00:00Z` re-observed on revision `0000014` with retained output; criterion 4 partly proven, SQL window, image commit and apply time unproven. No source change.
@@ -13511,6 +13568,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## 2026-11-19 Issue 80 thresholds check
 
 * Added research/excel-transition-thresholds-live-80-2026-11-19.md: the staged transition thresholds criterion of #80 is unproven and needs owner values.
+
 ## [2026-11-19] add | Issue 1274 criteria proof (Refs #1274)
 
 * Added [issue-1274-live-release-download-2026-11-19.md](research/issue-1274-live-release-download-2026-11-19.md): 12 installer regressions pass and a live exact-version actionlint 1.7.7 install verified size and SHA-256 from the official endpoint; hosted CI, independent review and the AWF bootstrap stay unproven. No source change.
+
+## [2026-11-19] add | Issue 114 first unmet demo criterion (Refs #114)
+
+* Indexed [issue-114-first-unmet-demo-criterion-2026-11-19.md](research/issue-114-first-unmet-demo-criterion-2026-11-19.md): per-year verification proven by 62 repository tests; the deployed-image check stays unproven and the load and backup criteria were not re-run. No source change.

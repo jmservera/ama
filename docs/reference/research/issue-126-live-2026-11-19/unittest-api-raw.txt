@@ -1,6 +1,6 @@
 RAI claim persisted; response encoding failed
 Traceback (most recent call last):
-  File "/home/azureuser/source/ama-wt/issue-126-live-20261119T134539Z/src/api/src/zava_forward/api/server.py", line 2033, in do_POST
+  File "<worktree>/src/api/src/zava_forward/api/server.py", line 2033, in do_POST
     encoded = json.dumps(result)
               ^^^^^^^^^^^^^^^^^^
   File "/usr/lib/python3.12/json/__init__.py", line 231, in dumps
@@ -17,7 +17,7 @@ Traceback (most recent call last):
 TypeError: Object of type object is not JSON serializable
 RAI claim persisted; response encoding failed
 Traceback (most recent call last):
-  File "/home/azureuser/source/ama-wt/issue-126-live-20261119T134539Z/src/api/src/zava_forward/api/server.py", line 2033, in do_POST
+  File "<worktree>/src/api/src/zava_forward/api/server.py", line 2033, in do_POST
     encoded = json.dumps(result)
               ^^^^^^^^^^^^^^^^^^
   File "/usr/lib/python3.12/json/__init__.py", line 231, in dumps

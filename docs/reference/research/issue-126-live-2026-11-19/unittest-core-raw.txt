@@ -165,9 +165,9 @@ Release record store unavailable; dispatch denied.
 Release record store unavailable; dispatch denied.
 RAI claim SQL recovery failed
 Traceback (most recent call last):
-  File "/home/azureuser/source/ama-wt/issue-126-live-20261119T134539Z/src/core/src/zava_forward/core/governance.py", line 475, in _rai_evidence_append
+  File "<worktree>/src/core/src/zava_forward/core/governance.py", line 475, in _rai_evidence_append
     self.save()
-  File "/home/azureuser/source/ama-wt/issue-126-live-20261119T134539Z/src/core/src/zava_forward/core/sqlstore.py", line 1236, in save
+  File "<worktree>/src/core/src/zava_forward/core/sqlstore.py", line 1236, in save
     self._append_audit(pending)
   File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
     return self._mock_call(*args, **kwargs)
@@ -183,9 +183,9 @@ RAI SQL recovery failed; reload to establish the durable outcome.
 During handling of the above exception, another exception occurred:
 
 Traceback (most recent call last):
-  File "/home/azureuser/source/ama-wt/issue-126-live-20261119T134539Z/src/core/src/zava_forward/core/governance.py", line 487, in _rai_evidence_append
+  File "<worktree>/src/core/src/zava_forward/core/governance.py", line 487, in _rai_evidence_append
     self._discard(self.local.pending[:])
-  File "/home/azureuser/source/ama-wt/issue-126-live-20261119T134539Z/src/core/src/zava_forward/core/sqlstore.py", line 1389, in _discard
+  File "<worktree>/src/core/src/zava_forward/core/sqlstore.py", line 1389, in _discard
     self._proc_sync()
   File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
     return self._mock_call(*args, **kwargs)
