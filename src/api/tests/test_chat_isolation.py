@@ -100,7 +100,7 @@ class ChatIsolationTests(Matrix):
                      ("/api/chat/threads/CT-x/messages", {"content": "x"}), ("/api/chat/threads/CT-x/archive", {}),
                      ("/api/chat/threads/CT-x/delete", {}), ("/api/chat/memory", None), ("/api/chat/memory", {"content": "x"}),
                      ("/api/chat/memory/erase", {}), ("/api/chat/memory/opt-in", {}), ("/api/chat/memory/MEM-x/delete", {}), ("/api/chat/memory/global", {"enabled": True}), ("/api/chat/breakglass", {"target": "u1@example.test", "purpose": "investigating a report"}),
-                     ("/api/chat/nothing", None)]
+                     ("/api/chat/breakglass/notices", None), ("/api/chat/nothing", None)]
         for role in ROLES:
             for path, body in endpoints:
                 code, _ = self.api(role, path, body)
@@ -310,3 +310,21 @@ class ChatIsolationTests(Matrix):
 
 if __name__ == "__main__":
     unittest.main()
+
+    def test_user_sees_break_glass_grants_about_own_data_only(self):
+        admin, target, other = "Retrofit Programme Manager", "Quality Inspector", "Retrofit Coordinator"
+        os.environ.update(CHAT_BREAKGLASS_REF="SYNTH-POLICY-1", CHAT_BREAKGLASS_ROLES=admin)
+        try:
+            self.api(admin, "/api/chat/breakglass", dict(target=self.email(target), purpose="Investigating a reported misuse, ticket 42"))
+            self.api(admin, "/api/chat/breakglass", dict(target=self.email(target), purpose="short"))
+        finally:
+            for k in ("CHAT_BREAKGLASS_REF", "CHAT_BREAKGLASS_ROLES"):
+                os.environ.pop(k, None)
+        code, d = self.api(target, "/api/chat/breakglass/notices")
+        self.assertEqual(code, 200)
+        self.assertEqual(len(d["notices"]), 1)
+        self.assertEqual(d["notices"][0]["by"], self.email(admin))
+        self.assertIn("ticket 42", d["notices"][0]["purpose"])
+        self.assertIn("not been reviewed by the DPO or Legal", d["disclaimer"])
+        self.assertEqual(self.api(other, "/api/chat/breakglass/notices")[1]["notices"], [])
+        self.assertEqual(self.api(admin, "/api/chat/breakglass/notices")[1]["notices"], [])

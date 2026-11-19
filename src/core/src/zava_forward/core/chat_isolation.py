@@ -9,7 +9,7 @@ Builds on the chat repository (chatthreads.py, #160) and the privacy rules (chat
   is untrusted data inside delimiters. The channel has no tools: the model reply is text, never executed, and a reply
   that carries tool-call or record-change syntax or a withheld value is withheld.
 * Break-glass access is refused until an owner decision reference is recorded. When allowed it returns metadata only,
-  needs a purpose, is time-limited and is written to the audit ledger, including refusals. The policy is the owner's
+  needs a purpose, is time-limited and is written to the audit ledger, including refusals. The target user can read the granted entries about their own data. The policy is the owner's
   demo-only decision (2026-11-03), unreviewed by the DPO or Legal; the response and every audit entry say so.
 """
 import json
@@ -219,6 +219,20 @@ class ChatIsolation:
             dict(target=owner, purpose=purpose, policy_ref=ref, basis=DEMO_BASIS, expires=expires, threads=len(held["threads"]), memory=len(held["memory"])), sort_keys=True))
         return dict(target=owner, expires=expires, disclaimer=DEMO_DISCLAIMER, threads=len(held["threads"]), messages=held["messages"], memory=len(held["memory"]),
                     content="Not available: content access needs an owner policy decision (BRD OD-46)")
+
+    def access_notices(self, user):
+        """Granted break-glass access to the caller's own data, newest first. Keyed by the authenticated user only."""
+        owner, out = user_key(self.current_user(user)), []
+        for e in self.store.audit_entries():
+            if e.get("action") != "chat.breakglass.granted":
+                continue
+            try:
+                d = json.loads(e["detail"])
+            except (ValueError, KeyError):
+                continue
+            if d.get("target") == owner:
+                out.append(dict(at=e["at"], by=e["who"], purpose=d.get("purpose"), expires=d.get("expires"), basis=d.get("basis")))
+        return out[::-1]
 
     def erase_memory(self, user):
         owner, repo = user_key(self.current_user(user)), self.store.chat_repo

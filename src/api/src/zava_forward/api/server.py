@@ -29,7 +29,7 @@ from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core import sensor_review_draft, simulation_lane, telemetry
 from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
-from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
+from zava_forward.core.chat_isolation import DEMO_DISCLAIMER, ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
 from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
@@ -1747,6 +1747,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if parts[2] == "delete":
                         s.chat_delete(u, tid)
                         return self._json(200, {"ok": True})
+                if not post and parts == ["breakglass", "notices"]:
+                    return self._json(200, {"notices": c.access_notices(user), "disclaimer": DEMO_DISCLAIMER})
                 if post and parts == ["memory"]:
                     return self._json(200, {"id": c.privacy.add_memory(c.current_user(user), body.get("content", ""), task=str(body.get("task") or ""))})
                 if post and parts == ["memory", "opt-in"]:
