@@ -13972,3 +13972,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 189 live re-observation (Refs #189)
 
 * Added [issue-189-live-20261119-2026-11-19.md](research/issue-189-live-20261119-2026-11-19.md) with redacted verifier output: owner tag, B1, USD 25 budget and both alerts pass; recipients unreachable; no simulator job. No source change; the live owned-run criterion stays unticked.
+## [2026-11-19] add | Issue 125 live run 4 re-audit (Refs #125)
+
+* Added [issue-125-live-r4-discovery-assistant-2026-11-19.md](research/issue-125-live-r4-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; all three criteria stay open. No source change.
