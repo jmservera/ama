@@ -1,3 +1,8 @@
-# Research 2026-11-19 issue 470 (r2, 1511Z)
+---
+title: Issue 470 live r2 research (2026-11-19)
+ms.date: 2026-11-19
+---
 
-Issue #470 has one unticked criterion: measured full-run time before and after recorded in the PR. Proving it needs a new `rpi-checks.py --all` run (forbidden by the brief) and a PR (not allowed). Criteria 1, 2, 3 and 5 are ticked and were re-proven earlier today in docs/reference/research/issue-470-live-2026-11-19.md. Planning Readiness: Ready (no buildable criterion remains). Research disposition: reused.
+Task: issue-470-live, head 7ea3a1ff6. Research disposition: reused. Planning Readiness: Ready.
+
+Issue 470 has one unticked criterion: "Measured full-run time before and after is recorded in the PR". Criteria 1, 2, 3 and 5 are already ticked. The measurement needs two matched `tools/rpi-checks.py --all` runs (forbidden by the owner brief) and a PR (publication is forbidden). The prior note [issue-470-live-2026-11-19.md](../../docs/reference/research/issue-470-live-2026-11-19.md) reached the same finding. No Azure, browser or credential use is relevant to a local gate tool.

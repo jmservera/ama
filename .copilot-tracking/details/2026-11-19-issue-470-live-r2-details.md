@@ -1,3 +1,6 @@
-# Details 2026-11-19 issue 470 (r2)
+---
+title: Issue 470 live r2 details (2026-11-19)
+ms.date: 2026-11-19
+---
 
-Phase 1: research note reused. Phase 2: critique. Phase 3: changes record with proven/unproven table. Phase 4: single review.
+Phase 1: confirm unticked criteria with `gh issue view 470`. Phase 2: record the per-criterion table in the changes file. No source edits.

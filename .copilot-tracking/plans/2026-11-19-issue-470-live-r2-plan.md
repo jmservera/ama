@@ -1,3 +1,6 @@
-# Plan 2026-11-19 issue 470 (r2)
+---
+title: Issue 470 live r2 plan (2026-11-19)
+ms.date: 2026-11-19
+---
 
-No source change. FOCUSED tier. Re-run `python3 -m unittest tools.test_rpi_checks -q`, record the per-criterion table, commit the artifacts. Details: details/2026-11-19-issue-470-live-r2-details.md.
+No-source plan: no criterion is buildable for the demo. Criterion 4 (before/after full-run timing in the PR) needs two matched `--all` runs and a PR, both forbidden. Record the stop; change no files under src or tools.

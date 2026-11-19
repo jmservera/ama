@@ -1,3 +1,6 @@
-# Review 2026-11-19 issue 470 (r2)
+---
+title: Issue 470 live r2 review (2026-11-19)
+ms.date: 2026-11-19
+---
 
-Executed once. Outcome: conformant for a no-source-change run. No material findings. Routed: criterion 4 stays open until the owner authorises a full run and the coordinator publishes the PR.
+Review (one pass): the outcome matches the evidence; the table is accurate against the issue body. No findings. Criterion 4 stays open and is routed to the coordinator, who owns the PR and any permitted full run. Nothing was ticked or closed.

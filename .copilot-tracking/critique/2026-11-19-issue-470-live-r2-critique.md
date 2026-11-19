@@ -1,3 +1,6 @@
-# Critique 2026-11-19 issue 470 (r2)
+---
+title: Issue 470 live r2 critique (2026-11-19)
+ms.date: 2026-11-19
+---
 
-Verdict: proceed. The only open criterion cannot be built or proven for the demo: it needs a forbidden full gate run and a PR. No finding conflicts with owner decisions. Executed once.
+Critique (one pass): a no-source outcome is compatible with the brief ('say so in one line and stop'). Running a partial timing instead would not satisfy criterion 4 and would fabricate a before/after. Verdict: proceed, no objections.
