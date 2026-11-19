@@ -13609,3 +13609,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## 2026-11-19 issue 1258 criteria check r5
 
 Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criterion 5 unproven for the demo.
+## [2026-11-19] add | Issue 1258 live run 4 criteria proof (Refs #1258)
+
+* Added [issue-1258-live-r4-2026-11-19.md](research/issue-1258-live-r4-2026-11-19.md): real ext4 ancestor-sync order and 110 passing tests; criterion 5 stays unproven for the demo. No source change.
