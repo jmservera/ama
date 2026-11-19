@@ -13773,3 +13773,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 125 live run 4 re-audit (Refs #125)
 
 * Added [issue-125-live-r4-discovery-assistant-2026-11-19.md](research/issue-125-live-r4-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; all three criteria stay open. No source change.
+## [2026-11-19] update | Issue 142 live demo criteria recheck (Refs #142)
+
+* Added [issue-142-live-20261119T1418Z-2026-11-19.md](research/issue-142-live-20261119T1418Z-2026-11-19.md): read-only probe; two criteria unproven for the demo, no source change.
