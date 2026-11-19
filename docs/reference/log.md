@@ -13996,3 +13996,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 162 criterion 6 stop decision (Refs #162)
 
 * Added [issue-162-live-criterion6-stop-2026-11-19.md](research/issue-162-live-criterion6-stop-2026-11-19.md): 35 isolation tests OK; criterion 6 needs owner policy decisions or an unauthorised live config change
+## [2026-11-19] add | Issue 164 fifth demo re-check (Refs #164)
+
+* Added [issue-164-live-r6-2026-11-19.md](research/issue-164-live-r6-2026-11-19.md): registry still disabled with unapproved thresholds, 89 offline tests OK, read-only digest unchanged; no source change
