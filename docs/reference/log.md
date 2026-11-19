@@ -13343,3 +13343,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Old-image incomplete completion classification (Refs #1840)
 
 * Added [the per-criterion note](./research/old-image-incomplete-completion-1840.md): fixture-level proof that incomplete mismatch completion is INSUFFICIENT; independent review and full tier remain open (Refs #1840).
+
+## [2026-11-19] add | Issue 100 live demo check (Refs #100)
+
+* Added [issue-100-live-2026-11-19.md](research/issue-100-live-2026-11-19.md): live probe shows the deployed demo image lacks the AI economics field, so criterion 2 is proven locally only; #440 stabilization stays unproven. No src change.
