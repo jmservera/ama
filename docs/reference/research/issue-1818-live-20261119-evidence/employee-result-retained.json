@@ -1,0 +1,103 @@
+{
+ "at": "2026-11-19T13:23:48Z",
+ "homes": {
+  "ZF-2025-0029": {
+   "sensor": {
+    "state": "stale",
+    "label": "Reading out of date (older than 15 minutes)",
+    "alert": true,
+    "calibrated": false,
+    "observed_at": "2026-11-19T10:50:00Z",
+    "age_seconds": 9279,
+    "source": "Synthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+    "temperature_c": 10.1,
+    "humidity_pct": 86.9
+   },
+   "card_has_sensor_status": true,
+   "card_text_lines": [
+    ". Reading out of date (older than 15 minutes)",
+    "Latest reading",
+    "10.1 \u00b0C, 86.9% relative humidity",
+    "Last reading time",
+    "19 Nov 2026, 10:50 (UK time), 3 hours ago",
+    "Source",
+    "Synthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+    "Open home"
+   ]
+  },
+  "ZF-2025-0030": {
+   "sensor": {
+    "state": "stale",
+    "label": "Reading out of date (older than 15 minutes)",
+    "alert": true,
+    "calibrated": false,
+    "observed_at": "2026-11-19T10:50:00Z",
+    "age_seconds": 9279,
+    "source": "Synthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+    "temperature_c": 9.5,
+    "humidity_pct": 85.3
+   },
+   "card_has_sensor_status": true,
+   "card_text_lines": [
+    ". Reading out of date (older than 15 minutes)",
+    "Latest reading",
+    "9.5 \u00b0C, 85.3% relative humidity",
+    "Last reading time",
+    "19 Nov 2026, 10:50 (UK time), 3 hours ago",
+    "Source",
+    "Synthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+    "Open home"
+   ]
+  },
+  "ZF-2025-0031": {
+   "sensor": {
+    "state": "stale",
+    "label": "Reading out of date (older than 15 minutes)",
+    "alert": true,
+    "calibrated": false,
+    "observed_at": "2026-11-19T10:50:00Z",
+    "age_seconds": 9279,
+    "source": "Synthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+    "temperature_c": 9.2,
+    "humidity_pct": 82.6
+   },
+   "card_has_sensor_status": true,
+   "card_text_lines": [
+    ". Reading out of date (older than 15 minutes)",
+    "Latest reading",
+    "9.2 \u00b0C, 82.6% relative humidity",
+    "Last reading time",
+    "19 Nov 2026, 10:50 (UK time), 3 hours ago",
+    "Source",
+    "Synthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+    "Open home"
+   ]
+  }
+ },
+ "api_map_status": 200,
+ "item_keys": [
+  "address",
+  "id",
+  "kind",
+  "lat",
+  "lon",
+  "name",
+  "sensor",
+  "stage"
+ ],
+ "sensor_state_counts_all_homes": {
+  "stale": 3,
+  "restricted": 97,
+  "not-loaded": 343
+ },
+ "list_items": 443,
+ "list_sensor_lines_sample": [
+  "Dawn Brown, Normal. Sensor reading out of date, 10.1 \u00b0C, 86.9% relative humidity",
+  "Angela Dixon, Waiting 60+ days. Sensor reading out of date, 9.5 \u00b0C, 85.3% relative humidity",
+  "Kevin Bell, Waiting 60+ days. Sensor reading out of date, 9.2 \u00b0C, 82.6% relative humidity",
+  "Jack Armstrong, Waiting 60+ days. Sensor readings not shown for your role",
+  "Lorraine Henderson, Waiting 60+ days. Sensor readings not shown for your role",
+  "Maureen Hedley, Normal. Sensor readings not shown for your role"
+ ],
+ "filter_note": "3 of 443 homes have a stale or offline sensor."
+}

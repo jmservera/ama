@@ -13471,3 +13471,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 1274 release-download criteria proof (Refs #1274)
 
 * Added [issue-1274-live-release-download-criteria-2026-11-19.md](research/issue-1274-live-release-download-criteria-2026-11-19.md): failing 504 endpoint from the retained #1243 job log, real actionlint 1.7.7 checksum verification, 12 installer tests, per-criterion table; AWF recovery and hosted CI stay unproven.
+## [2026-11-19] add | Issue 1818 live retained-reading re-observation (Refs #1818)
+
+* Added [issue-1818-live-20261119-2026-11-19.md](research/issue-1818-live-20261119-2026-11-19.md) with redacted retained output: read-only map, stale filter and resident sensor view; the Hub to SQL leg was not re-run and the sender and receiver fix stay off main.
