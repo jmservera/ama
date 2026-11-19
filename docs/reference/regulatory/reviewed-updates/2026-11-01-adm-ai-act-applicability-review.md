@@ -1,7 +1,7 @@
 ---
 title: Applicability Review Pack for UK Automated-Decision Rules and the EU AI Act
 description: Dated official-source check, pending Legal and DPO decision record, affected review items and non-inference rules for issue 224 and OQ-019
-ms.date: 2026-11-01
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -33,6 +33,26 @@ compliance position is inferred.
 Unknown does not mean unchanged. The Legal/DPO reviewer must retrieve the
 EUR-Lex consolidated text and any amending acts before recording the EU
 decision.
+
+## Update 2026-11-17: Further Official Source Readings
+
+The 2026-11-01 rows above are kept as recorded. The readings below were made
+on 2026-11-17 by agent-assisted repository check and supersede the `Unknown`
+entries they name. They are source readings, not legal conclusions, and every
+decision in the next section stays `Pending`.
+
+| Regime and provision | Official source | Source date | Retrieval date | Commencement or amendment recorded | Result |
+| --- | --- | --- | --- | --- | --- |
+| S.I. 2026/82 reg. 5 (saving provision for s.80 and Schedule 6) | [legislation.gov.uk](https://www.legislation.gov.uk/uksi/2026/82/regulation/5/made) | Made version | 2026-11-17 | The s.80 and Schedule 6 amendments do not apply to a decision taken before 5 February 2026 to which Article 22(3) UK GDPR or section 14(1) or 50(2) DPA 2018 applied | Read. Supersedes "reg. 5 not read" |
+| EU AI Act, Regulation (EU) 2024/1689, as made | [EUR-Lex, OJ L 2024/1689](https://eur-lex.europa.eu/eli/reg/2024/1689/oj/eng) | OJ 2024-07-12 | 2026-11-17 | Article 113 as made: applies from 2 August 2026; Chapters I and II from 2 February 2025; Article 6(1) obligations from 2 August 2027 | Read. Supersedes "retrieval failed" |
+| Digital Omnibus on AI, Regulation (EU) 2026/1744 | [EUR-Lex](https://eur-lex.europa.eu/eli/reg/2026/1744/oj/eng) | Dated 2026-07-08, OJ 2026-07-24 | 2026-11-17 | In force on the third day after publication. Amends Article 113(3): Chapter III Sections 1 to 3 (except Article 6(5)) apply from 2 December 2027 for Annex III and 2 August 2028 for Article 6(1) and Annex I high-risk systems; Article 5(1) points (ba), (bb) and Article 5(1a), (1b) from 2 December 2026 | Read. The 2026-11-01 note that a delay was "unverified" is superseded as to existence and dates. Whether any date applies to Zava is for Legal/DPO |
+| EU AI Act consolidated text and any other amending act | EUR-Lex | n/a | n/a | Not compared | `Unknown` |
+| ICO guidance on automated decision-making | [ico.org.uk](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making-and-profiling/) | n/a | 2026-11-17 attempt returned HTTP 403 (challenge page) | n/a | `Unknown`; retrieve by browser |
+| Article 22D regulations and local snapshot line comparison | legislation.gov.uk | n/a | n/a | Not checked | `Unknown` |
+
+Reading an application date does not establish that the Act applies to Zava
+Forward or that any system is high-risk. Territorial, role and intended-use
+facts remain `Unknown`.
 
 ## Decision Record (Pending Legal and DPO)
 
