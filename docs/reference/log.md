@@ -13737,3 +13737,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 124 live audit, third pass (Refs #124)
 
 * Added [issue-124-live-r3-phase0-discovery-audit-2026-11-19.md](research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md): 59 contract tests pass, no deployed or in-repo consumer of the discovery modules, live probe against newer demo revisions; the three unticked criteria stay owner-only. No source change.
+## [2026-11-19] add | Issue 157 live criteria check (Refs #157)
+
+* Added [issue-157-live-criteria-2026-11-19.md](research/issue-157-live-criteria-2026-11-19.md): both open criteria stay unproven; the index row naming `prototype/` now cites archive tag `v0.21.0`, clearing the last legacy-reference guard violation. No src change.
