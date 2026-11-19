@@ -13307,3 +13307,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 116 round 4 evidence (Refs #116)
 
 * Added [issue-116-live-r4-evidence-2026-11-19.md](research/issue-116-live-r4-evidence-2026-11-19.md): reason-role set confirmed for the demo, `ZF_REASON_ROLES` can no longer grant the contractor the reason, per-criterion table; criteria 2 to 4 stay unproven and the FULL gate was not run.
+## [2026-11-19] add | Issue 138 federation verifier (Refs #138)
+
+* Added [issue-138-live-r6-2026-11-19.md](research/issue-138-live-r6-2026-11-19.md): `verify-federation` helper with tests and live read-only evidence; all six criteria remain unproven.

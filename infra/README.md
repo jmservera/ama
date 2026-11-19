@@ -390,6 +390,12 @@ role-assignment rights and registry **AcrPull only**, without quarantine bypass.
 Do not grant subscription Owner or move governance/policy into this pipeline.
 Actual RBAC/federation and runner isolation require platform-owner verification.
 
+After creating each identity, check its trust with the read-only helper:
+`GITHUB_REPOSITORY=<owner>/<repo> python3 infra/scripts/pipeline.py verify-federation --identity <name> --identity-kind managed|app --github-environment <environment-name>`.
+It fails unless the identity has at least one federated credential, every credential has the
+GitHub issuer, the `api://AzureADTokenExchange` audience and the exact environment subject, and (for
+`app`) no client secret exists. It prints no identifiers.
+
 Quarantine is never disabled or bypassed. Test/pilot registries retain their
 quarantine policy: an independently approved scan/release process must make
 these digests pullable before target-environment approval. The deploy identity
