@@ -1,17 +1,17 @@
-# Changes: issue 432 (live demo run)
+# Issue 432 changes (2026-11-19)
 
-Source changes: none. Only these dated tracking artifacts and the state file were added. Refs #432.
+No source or documentation change beyond these tracking records. Tier: FOCUSED (documentation-only); no rpi-checks run.
 
-| Criterion (abridged) | Status |
+| Criterion | Status |
 | --- | --- |
-| Model call joined to capability, tokens, outcome | Already ticked; not re-proven in this run |
-| Per-request call and depth bound | Already ticked; not re-proven |
-| Limit, unknown price or liability stops dispatch with alert | Already ticked; not re-proven |
-| Dated versioned price source, else Unknown | Already ticked; not re-proven |
-| Azure billing reconciliation | Not applicable to the demo (owner decision 2026-11-18, deferred to #1908) |
-| Report separates cost components, denominator, quality rates | Already ticked; not re-proven |
-| Time released as capacity, not cash | Already ticked; not re-proven |
-| Finite owner-authorised measured batch | Already ticked; not re-proven |
-| Feeds Tokenomics slide and Q&A card | Already ticked; not re-proven |
+| Model-call join, no raw content | Proven by prior delivery (ticked on issue) |
+| Per-request call and depth bound | Proven by prior delivery (ticked) |
+| Limit, unknown price or liability stops dispatch with alert | Proven by prior delivery (ticked) |
+| Dated versioned price source, else Unknown | Proven by prior delivery (ticked) |
+| Azure billing reconciliation | Unproven for demo: production-only, deferred to #1908, owner decision 2026-11-18 |
+| Cost per accepted proposal beside quality rates | Proven by prior delivery (ticked) |
+| Time released as capacity, not cash | Proven by prior delivery (ticked) |
+| Measured batch with recorded spend authority | Proven by prior delivery (ticked) |
+| Pitch slide and Q&A feed | Proven by prior delivery (ticked) |
 
-Unticked criteria: none, so nothing was required to be proven or unproven here. Validation: tier FOCUSED; no tests, mypy or ruff apply (no src or Python change); `git diff` review only.
+Unticked criteria: 0. No live Azure action taken, no resource created. Not re-verified in code this run; status relies on issue ticks.
