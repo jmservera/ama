@@ -1,0 +1,2 @@
+/api/me 401
+/api/cases 401

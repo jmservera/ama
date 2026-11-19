@@ -1,0 +1,15 @@
+## numbered revisions
+ca-cutover-test-demo-api--0000020	2026-11-04T10:26:18+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000021	2026-11-04T10:27:28+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000022	2026-11-04T10:52:12+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6
+ca-cutover-test-demo-api--0000023	2026-11-04T11:50:39+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api:4d56cf609
+ca-cutover-test-demo-api--0000024	2026-11-04T11:51:38+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api:4d56cf609
+ca-cutover-test-demo-api--0000025	2026-11-04T15:13:26+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api:8b9553d8b
+ca-cutover-test-demo-api--0000026	2026-11-05T01:07:39+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api:1f465bf5e
+ca-cutover-test-demo-api--0000027	2026-11-08T16:20:04+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:1605ca20f06598e62441c2894e4c34b554c31bdd9b1e1e88103d3bc3bcca0f64
+ca-cutover-test-demo-api--0000028	2026-11-17T18:55:10+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:766fa58bc2b841f1a490a5d95f41c7b32374304e07e1256970f041b2b123ef1e
+ca-cutover-test-demo-api--0000029	2026-11-17T19:03:21+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:6026f4314eaee7cb38c203e05800b882f85bbce00053e2eea08e45d9d33329a5
+ca-cutover-test-demo-api--0000030	2026-11-17T19:13:33+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:1dc2dbf57cb1f1e9bf7a6cadda61a998c8dbcc8092213aa74faee599c271d9b2
+ca-cutover-test-demo-api--0000031	2026-11-17T19:42:06+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb
+ca-cutover-test-demo-api--0000032	2026-11-18T16:20:23+00:00	False	0	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb
+ca-cutover-test-demo-api--0000033	2026-11-18T22:39:35+00:00	True	100	Healthy	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5368f4e4009cc32937377862e6d242c124005ed39081e1d9caa3b6b5dc17e5fb
