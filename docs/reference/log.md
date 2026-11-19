@@ -13350,3 +13350,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 113 first unmet demo criterion (Refs #113)
 
 * Added [issue-113-first-unmet-demo-criterion-2026-11-19.md](research/issue-113-first-unmet-demo-criterion-2026-11-19.md): criterion 1 (#440 checkpoint) is first unmet and not code-satisfiable; live GitHub and Azure reads, per-criterion table, no source change.
+## [2026-11-19] add | Discovery assistant demo re-audit, run 3 (Refs #125)
+
+* Added [issue-125-live-r3-discovery-assistant-2026-11-19.md](research/issue-125-live-r3-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; per-criterion table keeps all three criteria open and records why no source change is warranted.
