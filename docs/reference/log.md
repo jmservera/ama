@@ -13413,3 +13413,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 165 scoped checkpoint live demo (Refs #165)
 
 * Added [issue-165-live-20261119T1001Z-2026-11-19.md](research/issue-165-live-20261119T1001Z-2026-11-19.md): local tests pass, IoT Hub is private and keyless with no device, per-criterion table; criteria 2 and 3 unproven. No source change.
+
+## [2026-11-19] add | Issue 360 live recheck (Refs #360)
+
+* Added [issue-360-live-20261119-2026-11-19.md](research/issue-360-live-20261119-2026-11-19.md) with evidence folder: read-only configuration, anonymous and staff sign-in probes; c and e unproven (owner decisions), d partly proven, browser-mode 302 noted as FULL-tier infra follow-up. No source change.
