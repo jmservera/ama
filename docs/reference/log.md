@@ -13878,3 +13878,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 144 live check (Refs #144)
 
 * Added [issue-144-live-20261119T154644Z-2026-11-19.md](research/issue-144-live-20261119T154644Z-2026-11-19.md): live demo revision lacks deployed hardening; image and hardening criteria stay unproven. No source change.
+
+## 2026-11-19 Issue 117 scan check
+
+* Added research/issue-117-scan-before-availability-live-2026-11-19.md: scanning mechanism proven by existing tests; real malware engine unproven for the demo. No source change.
