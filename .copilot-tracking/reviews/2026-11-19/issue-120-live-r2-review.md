@@ -1,3 +1,6 @@
-# Issue 120 live r2 review (2026-11-19)
+---
+title: Issue 120 r2 review
+ms.date: 2026-11-19
+---
 
-Execution: executed once. Outcome: conformant for the stated scope. The artifact-only change makes no claim beyond the issue evidence; no material findings open. Follow-up: C3 production approval stays with #2136.
+Review executed once. Outcome: conformant for a docs-only change. No code gap for criterion 3; unproven-on-deployment status stated precisely. Open: owner ticks criterion 3 for the demo.
