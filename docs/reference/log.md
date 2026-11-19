@@ -13945,3 +13945,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 1844 live re-run (Refs #1844)
 
 * Appended a re-run section to [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): no criterion unmet for the desktop-only demo, no source change.
+## 2026-11-19 issue 1258 criteria check r5
+
+Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criterion 5 unproven for the demo.
