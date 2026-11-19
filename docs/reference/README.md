@@ -521,6 +521,7 @@ records a read-only desktop check of the deployed map, stale filter and resident
 redacted output kept in the repository; the Hub to SQL leg was not re-run.
 The [round r3 re-observation](./research/issue-1818-live-r3-20261119-2026-11-19.md) repeats the read-only check
 at 14:14 UTC with the same result; the Hub to SQL send leg stays unproven from `main`.
+The [2026-11-19 criteria reconciliation](./research/issue-1818-criteria-reconciliation-2026-11-19.md) corrects the stale statement that the receiver register fix is off `main` and tables each criterion.
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
