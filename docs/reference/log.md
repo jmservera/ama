@@ -13896,3 +13896,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 126 criteria review (Refs #126)
 
 * Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 governance tests pass; remaining criteria are human or production-only. No src change.
+## [2026-11-19] add | Issue 138 seventh demo run (Refs #138)
+
+* Added [issue-138-live-r7-2026-11-19.md](research/issue-138-live-r7-2026-11-19.md): read-only recheck with retained output; all six criteria remain unproven and need admin or human setup.

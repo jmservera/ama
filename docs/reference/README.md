@@ -582,6 +582,8 @@ A [fifth run](./research/issue-138-live-r5-2026-11-18.md) adds a regression test
 A [sixth run](./research/issue-138-live-r6-2026-11-19.md) adds a read-only `verify-federation` check for criterion 1
 (exact issuer, audience and environment subject, no client secret); live identities hold 0 credentials, so it fails
 closed and nothing is ticked.
+A [seventh run](./research/issue-138-live-r7-2026-11-19.md) rechecks live state read-only: unchanged, all six criteria
+still need admin or human setup, no source change.
 
 A [seventh run](./research/issue-138-live-r7-2026-11-19.md) rechecks GitHub and Azure read-only: state is unchanged,
 every remaining criterion needs owner settings or a pushed run, and nothing is ticked.
