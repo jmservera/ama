@@ -14051,3 +14051,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 202 live re-observation
 
 * Appended an addendum to [issue 202 mvp workflow retirement](research/2026-11-19-issue-202-mvp-workflow-retirement.md): `mainprotect` required checks list is empty; workflow removal still needs the FULL tier. Evidence only.
+
+## [2026-11-19] add | Issue 220 live r7 stop note
+
+* Added [issue 220 r7](research/issue-220-live-r7-stop-2026-11-19.md): last criterion is offline proven, live unproven and production-only beyond that; no source change.

@@ -462,6 +462,8 @@ Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 The [fourth run](./research/issue-220-live-r4-challenge-route-2026-11-18.md) finds the same image and 403 on revision 0000032; the open criterion stays unproven live.
 The [sixth run](./research/issue-220-live-r6-criterion-5-2026-11-19.md) re-runs the 30 offline tests and finds the live image unchanged; the open criterion stays unproven live.
 
+The [seventh run](./research/issue-220-live-r7-stop-2026-11-19.md) repeats the check: 30 offline tests pass, the live image is unchanged and no buildable gap remains.
+
 The [epic 218 selection note](./research/issue-218-first-unmet-demo-criterion-2026-11-19.md) adds an offline regression test for the signed-in staff principal and a per-criterion table for the epic.
 For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
