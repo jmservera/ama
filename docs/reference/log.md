@@ -13752,3 +13752,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 114 live re-run (Refs #114)
 
 * Added [issue-114-live-r2-2026-11-19.md](research/issue-114-live-r2-2026-11-19.md): 62 per-year ledger tests pass; deployed demo image unchanged, so the deployed-image criterion stays unproven.
+## [2026-11-19] add | Issue 184 live re-verification, run 7 (Refs #184)
+
+* Added [issue-184-live-r7-2026-11-19.md](research/issue-184-live-r7-2026-11-19.md) with retained outputs: read-only live and local checks; the child-closure criterion stays unproven (owner action) and no source change was made.
