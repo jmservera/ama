@@ -13975,3 +13975,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 125 live run 4 re-audit (Refs #125)
 
 * Added [issue-125-live-r4-discovery-assistant-2026-11-19.md](research/issue-125-live-r4-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; all three criteria stay open. No source change.
+## [2026-11-19] add | Issue 138 seventh demo run (Refs #138)
+
+* Added [issue-138-live-r7-2026-11-19.md](research/issue-138-live-r7-2026-11-19.md): read-only recheck with retained output; all six criteria remain unproven and need admin or human setup.
