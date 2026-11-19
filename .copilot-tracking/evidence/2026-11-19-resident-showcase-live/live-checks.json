@@ -1,0 +1,146 @@
+{
+ "checks": {
+  "after_logout_signed_in": false,
+  "after_logout_view": 401,
+  "banner_mentions_synthetic": true,
+  "cold_start_seconds": 0.2,
+  "csrf_cookie": {
+   "httpOnly": false,
+   "path": "/",
+   "sameSite": "Strict",
+   "secure": true
+  },
+  "denial_bodies_identical": true,
+  "denial_sets_cookie": [
+   false,
+   false
+  ],
+  "forged_cookie_session": false,
+  "forged_cookie_view": 401,
+  "hsts_header_present": false,
+  "http_to_https": [
+   301,
+   "https"
+  ],
+  "identity_overrides_ignored": {
+   "?case": [
+    200,
+    false
+   ],
+   "?case_id": [
+    200,
+    false
+   ],
+   "?email": [
+    200,
+    false
+   ],
+   "X-Case-Id": [
+    200,
+    false
+   ],
+   "X-Forwarded-User": [
+    200,
+    false
+   ]
+  },
+  "login_foreign_origin": 403,
+  "login_no_csrf": 403,
+  "password_in_view": false,
+  "projection_canary_context": {
+   "password": "ervice. This sign-in uses a shared demo password and does not prove who you are.\", \"callbacks_availa",
+   "phone": "\"help\": {\"note\": \"This preview shows no phone numbers or addresses and promises no response times.\",",
+   "staff": "eck result is unknown in this view. Ask staff to check it.\", \"scan_status\": \"unknown\", \"status_label"
+  },
+  "projection_canary_term_counts": {
+   "password": 1,
+   "phone": 1,
+   "staff": 5
+  },
+  "projection_email_count_all_own": [
+   1,
+   true
+  ],
+  "rate_limit_sequence": [
+   401,
+   401,
+   401,
+   429,
+   429,
+   429,
+   429,
+   429
+  ],
+  "security_headers": [
+   "cache-control",
+   "content-security-policy",
+   "referrer-policy",
+   "x-content-type-options",
+   "x-frame-options"
+  ],
+  "session_cookie": {
+   "httpOnly": true,
+   "lifetime_seconds": 1795,
+   "path": "/",
+   "sameSite": "Strict",
+   "secure": true
+  },
+  "session_signed_in": true,
+  "session_signed_out": false,
+  "signed_in_sections": {
+   "documents": true,
+   "not available in this showcase": true,
+   "sensor": true,
+   "timeline": true
+  },
+  "signed_in_text_has_password": false,
+  "staff_probes": {
+   "/.env": 404,
+   "/admin": 404,
+   "/api/cases": 404,
+   "/api/staff": 404,
+   "/demo/staff": 404,
+   "/workbench": 404
+  },
+  "title": "Your home improvement progress - synthetic showcase, not live",
+  "ui_login_status": 200,
+  "unknown_email": [
+   401,
+   "{\"error\": \"We could not sign you in with those details.\"}"
+  ],
+  "unsigned_view": 401,
+  "view_no_session_header": 409,
+  "view_status": 200,
+  "view_top_level_keys": [
+   "account",
+   "agenda_available",
+   "banner",
+   "callbacks_available",
+   "documents",
+   "help",
+   "home",
+   "measures",
+   "needed",
+   "next_step",
+   "progress",
+   "read_only",
+   "sensors",
+   "stage",
+   "summary",
+   "timeline",
+   "unavailable",
+   "viewer"
+  ],
+  "view_wrong_session_header": 409,
+  "write_routes_405_on_get": {
+   "/demo/agenda": 405,
+   "/demo/assistant": 405,
+   "/demo/logout": 405
+  },
+  "wrong_password": [
+   401,
+   "{\"error\": \"We could not sign you in with those details.\"}"
+  ]
+ },
+ "url": "https://ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io"
+}

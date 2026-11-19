@@ -13830,3 +13830,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 203 third live run (Refs #203)
 
 * Indexed [issue-203-live-recheck-2026-11-19.md](research/issue-203-live-recheck-2026-11-19.md): the legacy-reference checker now reports 0 violations; the deployed-app and CI criterion stays partly proven. No source change.
+
+## [2026-11-19] research | Resident showcase live check r4 (#462)
+
+* Added [resident-showcase-live-r4-2026-11-19.md](research/resident-showcase-live-r4-2026-11-19.md): 36-check Playwright rerun, fixture-identifier regression proof and per-criterion table; criterion 2 stays unmet.
