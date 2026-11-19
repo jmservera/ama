@@ -13500,3 +13500,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 157 live criteria check (Refs #157)
 
 * Added [issue-157-live-criteria-2026-11-19.md](research/issue-157-live-criteria-2026-11-19.md): both open criteria stay unproven; the index row naming `prototype/` now cites archive tag `v0.21.0`, clearing the last legacy-reference guard violation. No src change.
+
+## [2026-11-19] add | Chat grounding fifth re-check (Refs #164)
+
+* Added [the per-criterion note](./research/issue-164-live-20261119T134556Z-2026-11-19.md): registered and disabled chat task re-confirmed, 76 offline tests OK, thresholds and real-model evidence stay person-gated; no source change.

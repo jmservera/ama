@@ -1,0 +1,3 @@
+{'enabled': False, 'state': 'disabled', 'approval_state': 'unapproved', 'accountable_function': 'Retrofit Programme Manager', 'accountable_individual': 'unknown'}
+thresholds {'status': 'proposed', 'approved_by': None, 'approved_on': None}
+registered True dispatch False
