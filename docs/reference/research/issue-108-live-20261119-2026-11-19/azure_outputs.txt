@@ -1,0 +1,35 @@
+## usages uksouth
+[]
+
+## usages swedencentral
+[]
+
+## deployments
+[
+  {
+    "cap": 1,
+    "m": "gpt-4.1-mini",
+    "n": "resident-mini",
+    "rl": [
+      1.0,
+      1000.0
+    ],
+    "sku": "Standard",
+    "v": "2025-04-14"
+  }
+]
+[
+  {
+    "cap": 10,
+    "m": "gpt-4.1-nano",
+    "n": "standard",
+    "rl": [
+      10.0,
+      10000.0
+    ],
+    "sku": "GlobalStandard",
+    "v": "2025-04-14"
+  }
+]
+## provider
+NotRegistered

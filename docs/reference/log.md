@@ -13587,3 +13587,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 114 first unmet demo criterion (Refs #114)
 
 * Indexed [issue-114-first-unmet-demo-criterion-2026-11-19.md](research/issue-114-first-unmet-demo-criterion-2026-11-19.md): per-year verification proven by 62 repository tests; the deployed-image check stays unproven and the load and backup criteria were not re-run. No source change.
+
+## [2026-11-19] add | Issue 108 first buildable criterion check (Refs #108)
+
+* Indexed [issue-108-live-20261119-2026-11-19.md](research/issue-108-live-20261119-2026-11-19.md): deployments re-read live, quota routes still empty or unregistered, 35 comparison tests pass; no criterion buildable. No source change.
