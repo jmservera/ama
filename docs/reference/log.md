@@ -13788,3 +13788,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 153 named wording review status (Refs #153)
 
 * Added [issue-153-live-named-review-2026-11-19.md](research/ux/issue-153-live-named-review-2026-11-19.md): per-criterion table; the named human wording review remains unproven because it needs the appointed human reviewer.
+## [2026-11-19] add | Issue 162 criterion 6 stop decision (Refs #162)
+
+* Added [issue-162-live-criterion6-stop-2026-11-19.md](research/issue-162-live-criterion6-stop-2026-11-19.md): 35 isolation tests OK; criterion 6 needs owner policy decisions or an unauthorised live config change
