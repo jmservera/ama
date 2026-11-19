@@ -13392,3 +13392,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Epic 73 child disposition audit, second pass (Refs #73)
 
 * Added [issue-73-epic-audit-live-r2-2026-11-19.md](research/issue-73-epic-audit-live-r2-2026-11-19.md) and `tools/test_epic_73_child_disposition.py`: one disposition per child, residual of #76, #79 and #80, read-only live check of revision 33; no criterion ticked.
+
+## [2026-11-19] add | Issue 104 criteria recheck (Refs #104)
+
+* Added [issue-104-criteria-recheck-live-2026-11-19.md](research/issue-104-criteria-recheck-live-2026-11-19.md): per-criterion table; the first unmet criterion needs owner decisions, not code. No source change.
