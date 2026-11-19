@@ -31,15 +31,20 @@
    "evidence": ".copilot-tracking/reviews/2026-11-19/issue-1837-live-review.md"
   },
   {
-   "decision": "Pass 4: no buildable criterion; stop",
+   "decision": "r4 critique executed once; proceed",
    "status": "confirmed",
-   "evidence": ".copilot-tracking/changes/2026-11-19/issue-1837-live-r4-changes.md"
+   "evidence": ".copilot-tracking/challenges/2026-11-19/issue-1837-live-r4-critique.md"
+  },
+  {
+   "decision": "r4 review executed once; conformant for scope",
+   "status": "confirmed",
+   "evidence": ".copilot-tracking/reviews/2026-11-19/issue-1837-live-r4-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "coordinator publishes; redeploy demo for live write proof"
+  "action": "coordinator publishes"
  },
  "prioritized_follow_ups": [
   {

@@ -1,3 +1,6 @@
-# Issue 1837 live details, pass 4
+---
+title: Issue 1837 live demo, fourth pass details (2026-11-19)
+ms.date: 2026-11-19
+---
 
-Single phase: documentation of status only. No file under `src/` or `docs/reference/` is changed, so the focused tier applies to this commit; the FULL tier classification for the underlying fix remains open and unproven.
+Phase 1: no source change; targeted test run `tests.test_nomination_api_routes` from `src/api` as a regression witness; record per-criterion table in the changes file.

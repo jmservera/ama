@@ -1,3 +1,6 @@
-# Issue 1837 live critique, pass 4 (executed once)
+---
+title: Issue 1837 live demo, fourth pass critique (2026-11-19)
+ms.date: 2026-11-19
+---
 
-Verdict: proceed. Risk checked: claiming live proof from a 401. The research note states the 401 is inconclusive. Risk: inventing work. Rejected; no source change is made.
+Executed once. Verdict: proceed. A redeploy for live write proof is a production change the owner excluded; no other buildable criterion exists.

@@ -1,16 +1,15 @@
-# Issue 1837 live changes, pass 4, 2026-11-19
-
-Refs #1837. No source change. Tier: focused (documentation only); the FULL classification of the underlying fix stays open and unproven. Nothing in Azure was created or changed; only an unauthenticated read-only probe ran.
-
-## Per-criterion table
+---
+title: Issue 1837 live demo, fourth pass changes (2026-11-19)
+ms.date: 2026-11-19
+---
 
 | Criterion | Status | Basis |
 | --- | --- | --- |
-| 1 Failing-first coverage, three submissions | Proven on source | 2026-11-18 failing-first record; tests on main |
-| 2 Valid submissions retained, JSON compatible | Proven locally; unproven live | Tests pass locally; live needs redeploy from main (production change, excluded). Unauthenticated live POST returns 401 for form and JSON, inconclusive |
-| 3 Negative boundaries | Proven | Unit tests and 2026-11-18 live probe |
-| 4 Browser journeys with axe | Proven locally | 2026-11-19 axe result, zero violations; one color-contrast incomplete |
-| 5 RPI evidence, independent exact-head review, hosted CI | Partly | Dated artifacts only; review and CI need a human and a push |
-| 6 FULL-tier receipt | Unproven by instruction | `rpi-checks.py --all` forbidden |
+| 1 Failing-first coverage, three forms, valid challenge target | Proven | merged tests; 2026-11-18 failing-first record |
+| 2 Valid submissions retain records; JSON compatible | Proven locally; live unproven | `tests.test_nomination_api_routes` 8 OK (this run); live write needs redeploy (production change, excluded) |
+| 3 Negative tests: authz, isolation, malformed, CSRF | Proven | existing tests and 2026-11-18 live probe |
+| 4 Browser journeys with axe | Proven locally | 2026-11-19 axe result file |
+| 5 Dated RPI evidence; independent exact-head review; hosted CI | Partly | dated artifacts only; reviewer and CI are human or coordinator gates |
+| 6 Full tier receipt | Unproven by instruction | no src change; `rpi-checks.py --all` barred |
 
-Every remaining criterion is production-only or needs a human; stopping.
+Tier: focused (docs and tracking only). No src change, so no mypy or ruff scope. Result: every remaining criterion is production-only or needs a human; stopped.

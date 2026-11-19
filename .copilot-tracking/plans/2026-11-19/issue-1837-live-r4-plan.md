@@ -1,5 +1,6 @@
-# Issue 1837 live plan, pass 4
+---
+title: Issue 1837 live demo, fourth pass plan (2026-11-19)
+ms.date: 2026-11-19
+---
 
-* [x] Re-read issue, prior records and live state.
-* [x] Decide: no source change; every remaining criterion is production-only or needs a human.
-* [x] Record per-criterion table in the changes record; no code, so no tests added.
+Single phase: confirm no buildable criterion remains, record the table, stop. Details: `.copilot-tracking/details/2026-11-19/issue-1837-live-r4-details.md`.
