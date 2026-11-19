@@ -13886,3 +13886,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 202 live refresh
 
 * Added [issue-202-live-20261119T154854Z-2026-11-19.md](research/issue-202-live-20261119T154854Z-2026-11-19.md): the workflow-removal criterion stays unticked pending a full-tier change; no source change.
+
+## [2026-11-19] add | Issue 344 sixth live pass
+
+* Added research/public-browser-access-live-r6-2026-11-19.md: the time-status 500 is a SQL-path ProgrammingError; the remaining criteria need FULL-tier infra or SQL work.

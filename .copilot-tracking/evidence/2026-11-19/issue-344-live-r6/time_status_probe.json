@@ -1,0 +1,35 @@
+{
+ "landing_status": 200,
+ "landing_title": "Welcome to Zava Forward | Zava North Homes",
+ "anon_fetch": {
+  "default": "redirect",
+  "json": "redirect",
+  "html": "redirect",
+  "healthz": 200
+ },
+ "signin_click_reaches_entra": true,
+ "after_signin_path": "/app",
+ "after_signin_title": "Zava Forward | Zava North Homes",
+ "t0": "2026-11-19T15:53:02Z",
+ "time_status": [
+  {
+   "status": 500,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"error\": \"The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to applic"
+  },
+  {
+   "status": 500,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"error\": \"The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to applic"
+  },
+  {
+   "status": 500,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"error\": \"The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to applic"
+  }
+ ],
+ "me_status": 200
+}

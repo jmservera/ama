@@ -1,0 +1,5 @@
+2026-11-19T15:53:01.6062943Z stderr F 2026-11-19 15:53:01,606 zava_forward.api.server WARNING http-error GET /healthz client-disconnect exc=BrokenPipeError phase=response-write
+2026-11-19T15:53:01.6105661Z stderr F 2026-11-19 15:53:01,610 zava_forward.api.server WARNING http-error GET /healthz client-disconnect exc=BrokenPipeError phase=response-write
+2026-11-19T15:53:02.5972179Z stderr F 2026-11-19 15:53:02,596 zava_forward.api.server ERROR http-error GET /api/time/status status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False
+2026-11-19T15:53:02.6998789Z stderr F 2026-11-19 15:53:02,699 zava_forward.api.server ERROR http-error GET /api/time/status status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False
+2026-11-19T15:53:02.8102139Z stderr F 2026-11-19 15:53:02,809 zava_forward.api.server ERROR http-error GET /api/time/status status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False
