@@ -13731,3 +13731,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-19 Issue 80 thresholds check
 
 * Added research/excel-transition-thresholds-live-80-2026-11-19.md: the staged transition thresholds criterion of #80 is unproven and needs owner values.
+## [2026-11-19] add | Chat grounding fifth re-check (Refs #164)
+
+* Added [the per-criterion note](./research/issue-164-live-20261119T134556Z-2026-11-19.md): registered and disabled chat task re-confirmed, 76 offline tests OK, thresholds and real-model evidence stay person-gated; no source change.
