@@ -13776,3 +13776,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Issue 142 live demo criteria recheck (Refs #142)
 
 * Added [issue-142-live-20261119T1418Z-2026-11-19.md](research/issue-142-live-20261119T1418Z-2026-11-19.md): read-only probe; two criteria unproven for the demo, no source change.
+## [2026-11-19] add | Issue 145 live audit 6 (Refs #145)
+
+* Added [issue-145-live-20261119T1419Z-2026-11-19.md](research/issue-145-live-20261119T1419Z-2026-11-19.md): read-only Azure SQL backup re-check; no source change, no drill; every remaining criterion is production-only, human-owned or needs the FULL tier.
