@@ -1,7 +1,9 @@
-# Issue 76 sixth pass research (2026-11-19)
+# Issue 76 r6 research (2026-11-19)
 
 Refs #76. Synthetic desktop demo. Only unticked criterion: "Hazard and safeguarding items show a clock and named owner".
 
-Prior evidence read: r2 to r5 under docs/reference/research/. Safeguarding clock and named owner proven live on revision 33 (r4). Hazard clock and owner shown, but times Unknown because the demo hazard record has no awareness timestamp. Code (`taskqueues.hazard_clock`, `project_safety_clock_and_owner`) fail-closes by design and 33 targeted tests cover it.
+Prior passes: docs/reference/research/issue-76-live-r5-2026-11-19.md (clock and owner logic in `taskqueues.hazard_clock` and `project_safety_clock_and_owner`; hazard time values Unknown because the synthetic hazard record has no awareness timestamp; fail-closed by design).
 
-Planning readiness: Ready (disposition `reused`). Buildable work: none without an owner data decision on the hazard awareness time.
+Disposition: reused (r4/r5 evidence). Planning Readiness: Ready for a verification-only plan.
+Re-run today: `cd src/core && PYTHONPATH=src:tests python3 -m unittest test_taskqueues test_hazard_safeguarding_clock_owner -q` -> Ran 33 tests, OK.
+Remaining gap: demo-data decision (seed an awareness time for hazards, or accept Unknown as showing a clock). Inventing a value in code would contradict the fail-closed tests. Needs the owner.

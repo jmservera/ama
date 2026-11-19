@@ -1,3 +1,2 @@
-# Issue 76 r6 details (2026-11-19)
-
-Phase 1: unittest command from src/core with PYTHONPATH=src:tests. Phase 2: note, README index row, log entry. Phase 3: changes, review, commit with trailers.
+# Details r6
+Phase 1: run tests (done, OK). Phase 2: write changes and review records. No source edit, no Azure action, nothing to delete.

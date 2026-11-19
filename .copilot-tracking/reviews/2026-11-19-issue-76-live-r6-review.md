@@ -1,3 +1,2 @@
-# Issue 76 r6 review (2026-11-19)
-
-Executed once. Outcome: conformant for a docs-only pass. Claims match the 33-test run and r4/r5 evidence; no secret printed; links resolve. Routed follow-up: owner decision to seed a demo hazard awareness time and redeploy.
+# Review r6 (single pass)
+Outcome: conformant for a verification-only change. Boundary: tracking files only. Routed follow-up: owner decides whether to seed a synthetic hazard awareness time or accept Unknown, then redeploy. Issue box stays unticked.
