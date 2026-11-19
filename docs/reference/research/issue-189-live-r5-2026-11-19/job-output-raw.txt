@@ -1,0 +1,8 @@
+2026-11-19T10:51:38.44792  Connecting to the container 'probe'...
+2026-11-19T10:51:38.47617  Successfully Connected to container: 'probe' [Execution: 'job-189r5-probe-w9gmxna', Replica: 'job-189r5-probe-w9gmxna-qhrmv']
+RUN_START owner_set True limit_seconds 150 expires 2026-11-19T10:50:41+00:00
+run control: stopped or expired; nothing sent
+RUN_END slots 3 sent 9 ended 2026-11-19T10:51:00.058764+00:00 decision_now expired seconds_after_expiry 19.1
+DELETE 204
+DELETE 204
+DELETE 204

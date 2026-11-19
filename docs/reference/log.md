@@ -13444,3 +13444,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 185 live device identity proof (Refs #185)
 
 * Added [issue-185-live-20261119-2026-11-19.md](research/issue-185-live-20261119-2026-11-19.md): shipped IoT Hub registry adapter provisioned and tore down three identities on a throwaway F1 hub (deleted); storage of credentials and demo-hub teardown stay unproven. No source change.
+
+## [2026-11-19] add | Issue 189 governed live run (Refs #189)
+
+* Added [issue-189-live-r5-2026-11-19.md](research/issue-189-live-r5-2026-11-19.md) with evidence folder: live run with owner and hard expiry on the demo hub, live verifier output, per-criterion table. Alert delivery stays unproven; nothing ticked.
