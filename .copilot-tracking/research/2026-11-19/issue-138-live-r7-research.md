@@ -1,10 +1,10 @@
----
-title: Issue 138 live r7 research
-ms.date: 2026-11-19
----
+# Research, issue 138 seventh demo run (Refs #138)
 
-Refs #138. Disposition: executed (read-only recheck). Planning Readiness: Ready.
+Disposition: executed (read-only recheck). Planning Readiness: Ready for a no-source-change outcome.
 
-Baseline: r6 note `docs/reference/research/issue-138-live-r6-2026-11-19.md`. All six criteria are
-unticked. Open question: has anything changed in GitHub or Azure since r6, and is any criterion now
-buildable as real code and tests without owner admin action or a push?
+Baseline: docs/reference/research/issue-138-live-r6-2026-11-19.md. The `verify-federation` operation and
+its test are already on main, so criterion 1 has its buildable code. Live state recorded in
+docs/reference/research/issue-138-live-r7-2026-11-19/readonly-recheck.txt is unchanged: 0 federated
+credentials on six identities, no `AZURE_*` variables, only `*-plan` environments with 0 protection rules,
+0 `src-deploy.yml` runs. Every remaining criterion needs GitHub admin, Entra changes, a runner or a push,
+all outside the demo's no-production-change and no-push limits.

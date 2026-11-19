@@ -1,2 +1,3 @@
-# Issue 80 live review (executed once)
-Outcome: conformant for a documentation-only candidate. Links checked, diff limited to tracking files, research note, index row and log entry. Criterion 4 unmet and recorded as such. Follow-up: owner sets N and targets, then a threshold evaluator can be built (FULL tier if src changes).
+# Review: issue 80 live (2026-11-19)
+
+Executed once. Outcome: conformant for scope. The changes record states the single unmet criterion honestly with evidence, makes no threshold claim, and touches no source. Open item routed to owners (follow-up: set thresholds and N in ADR 0001).

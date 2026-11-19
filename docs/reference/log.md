@@ -13719,3 +13719,205 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] update | Demo evidence bundle 9 link fix
 
 * Replaced a link to an unpublished earlier issue 142 note in [issue-142-live-20261119T1418Z-2026-11-19.md](research/issue-142-live-20261119T1418Z-2026-11-19.md) with plain text so every relative link resolves.
+## [2026-11-19] add | Issue 1818 live retained-reading re-observation (Refs #1818)
+
+* Added [issue-1818-live-20261119-2026-11-19.md](research/issue-1818-live-20261119-2026-11-19.md) with redacted retained output: read-only map, stale filter and resident sensor view; the Hub to SQL leg was not re-run and the sender and receiver fix stay off main.
+## [2026-11-19] add | Issue 130 live run 6 nomination route audit (Refs #130)
+
+* Added [issue-130-live-r6-nomination-route-audit-2026-11-19.md](research/issue-130-live-r6-nomination-route-audit-2026-11-19.md): API revision 0000033 and resident revision 0000014 on the same API image digest, 66 offline core tests pass; the representative participation criterion stays unproven for the demo. Docs only.
+## [2026-11-19] add | Issue 521 live check, run 3 (Refs #521)
+
+* Added [resident-demo-authority-live-521-r3-2026-11-19.md](research/resident-demo-authority-live-521-r3-2026-11-19.md): live expiry `2028-01-01T00:00:00Z` re-observed on revision `0000014` with retained output; criterion 4 partly proven, SQL window, image commit and apply time unproven. No source change.
+## 2026-11-19 Issue 80 thresholds check
+
+* Added research/excel-transition-thresholds-live-80-2026-11-19.md: the staged transition thresholds criterion of #80 is unproven and needs owner values.
+## [2026-11-19] add | Chat grounding fifth re-check (Refs #164)
+
+* Added [the per-criterion note](./research/issue-164-live-20261119T134556Z-2026-11-19.md): registered and disabled chat task re-confirmed, 76 offline tests OK, thresholds and real-model evidence stay person-gated; no source change.
+## [2026-11-19] add | Issue 124 live audit, third pass (Refs #124)
+
+* Added [issue-124-live-r3-phase0-discovery-audit-2026-11-19.md](research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md): 59 contract tests pass, no deployed or in-repo consumer of the discovery modules, live probe against newer demo revisions; the three unticked criteria stay owner-only. No source change.
+## [2026-11-19] add | Issue 157 live criteria check (Refs #157)
+
+* Added [issue-157-live-criteria-2026-11-19.md](research/issue-157-live-criteria-2026-11-19.md): both open criteria stay unproven; the index row naming `prototype/` now cites archive tag `v0.21.0`, clearing the last legacy-reference guard violation. No src change.
+## [2026-11-19] add | Issue 111 live demo evidence (Refs #111)
+
+* Added [issue-111-live-demo-evidence-2026-11-19.md](research/issue-111-live-demo-evidence-2026-11-19.md): the two ticked criteria re-verified by the sensor analysis tests; R1 to R3 sign-off stays unproven (human reviewer gate). No source change.
+## [2026-11-19] update | Issue 1844 live re-run (Refs #1844)
+
+* Appended a re-run section to [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): no criterion unmet for the desktop-only demo, no source change.
+## [2026-11-19] add | Issue 1818 criteria reconciliation (Refs #1818)
+
+* Added [issue-1818-criteria-reconciliation-2026-11-19.md](research/issue-1818-criteria-reconciliation-2026-11-19.md): per-criterion table; corrects that the receiver register fix landed on main via #2105. No source change.
+## [2026-11-19] add | Issue 114 live re-run (Refs #114)
+
+* Added [issue-114-live-r2-2026-11-19.md](research/issue-114-live-r2-2026-11-19.md): 62 per-year ledger tests pass; deployed demo image unchanged, so the deployed-image criterion stays unproven.
+## [2026-11-19] add | Issue 184 live re-verification, run 7 (Refs #184)
+
+* Added [issue-184-live-r7-2026-11-19.md](research/issue-184-live-r7-2026-11-19.md) with retained outputs: read-only live and local checks; the child-closure criterion stays unproven (owner action) and no source change was made.
+## [2026-11-19] add | Issue 145 live audit 6 (Refs #145)
+
+* Added [issue-145-live-1409z-2026-11-19.md](research/issue-145-live-1409z-2026-11-19.md): fresh read-only Azure SQL backup settings and a per-criterion table; C4 has no approved #121 retention decision, R3 needs the FULL tier. No source change.
+## [2026-11-19] update | Issue 350 criterion 1 recheck r5 (Refs #350)
+
+* Appended a 14:12 UTC recheck to [issue-350-live-2026-11-19.md](research/issue-350-live-2026-11-19.md): browser-UA anonymous API calls still get 302 from Easy Auth; the fix is a FULL-tier edge change, so no source change was made.
+## [2026-11-19] add | Issue 349 live round 6 resident probe diagnosis (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r6-2026-11-19.md](research/issue-349-tenant-prerequisites-live-r6-2026-11-19.md): the round 5 resident sign-in failure is an unresolved `sts.microsoftonline.com` on the worker host; per-criterion table, no source change.
+## [2026-11-19] add | Issue 1818 live r3 re-observation (Refs #1818)
+
+* Added [issue-1818-live-r3-20261119-2026-11-19.md](research/issue-1818-live-r3-20261119-2026-11-19.md) with redacted retained output: same stale readings, filter and resident view at 14:14 UTC; the only unticked criterion needs the sender and receiver fix, a FULL-tier SQL change, so it was not built. No source change.
+## [2026-11-19] add | Issue 189 live re-observation (Refs #189)
+
+* Added [issue-189-live-20261119-2026-11-19.md](research/issue-189-live-20261119-2026-11-19.md) with redacted verifier output: owner tag, B1, USD 25 budget and both alerts pass; recipients unreachable; no simulator job. No source change; the live owned-run criterion stays unticked.
+## [2026-11-19] add | Issue 125 live run 4 re-audit (Refs #125)
+
+* Added [issue-125-live-r4-discovery-assistant-2026-11-19.md](research/issue-125-live-r4-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; all three criteria stay open. No source change.
+## [2026-11-19] update | Issue 142 live demo criteria recheck (Refs #142)
+
+* Added [issue-142-live-20261119T1418Z-2026-11-19.md](research/issue-142-live-20261119T1418Z-2026-11-19.md): read-only probe; two criteria unproven for the demo, no source change.
+## [2026-11-19] add | Issue 145 live audit 6 (Refs #145)
+
+* Added [issue-145-live-20261119T1419Z-2026-11-19.md](research/issue-145-live-20261119T1419Z-2026-11-19.md): read-only Azure SQL backup re-check; no source change, no drill; every remaining criterion is production-only, human-owned or needs the FULL tier.
+## [2026-11-19] add | Issue 146 live monitoring re-check (Refs #146)
+
+* Added [issue-146-live4-monitoring-2026-11-19.md](research/issue-146-live4-monitoring-2026-11-19.md): read-only alert and workbook inventory and a per-criterion result; no source change.
+## [2026-11-19] update | Issue 151 manual check record status (Refs #151)
+
+* Updated [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md): the manual screen-reader and keyboard rows stay `Not run` because they need named people; person-run assistive-technology testing is out of demo scope. No source change.
+## [2026-11-19] add | Issue 153 named wording review status (Refs #153)
+
+* Added [issue-153-live-named-review-2026-11-19.md](research/ux/issue-153-live-named-review-2026-11-19.md): per-criterion table; the named human wording review remains unproven because it needs the appointed human reviewer.
+## [2026-11-19] add | Issue 162 criterion 6 stop decision (Refs #162)
+
+* Added [issue-162-live-criterion6-stop-2026-11-19.md](research/issue-162-live-criterion6-stop-2026-11-19.md): 35 isolation tests OK; criterion 6 needs owner policy decisions or an unauthorised live config change
+## [2026-11-19] add | Issue 76 hazard and safeguarding clock, fifth pass (Refs #76)
+
+* Added [issue-76-live-r5-2026-11-19.md](research/issue-76-live-r5-2026-11-19.md): 35 targeted tests pass, live revision 33 still active, per-criterion verdict. No source change.
+## [2026-11-19] add | Issue 164 fifth demo re-check (Refs #164)
+
+* Added [issue-164-live-r6-2026-11-19.md](research/issue-164-live-r6-2026-11-19.md): registry still disabled with unapproved thresholds, 89 offline tests OK, read-only digest unchanged; no source change
+## [2026-11-19] add | Issue 157 criteria recheck (Refs #157)
+
+* Added [issue-157-criteria-recheck-live-2026-11-19.md](research/issue-157-criteria-recheck-live-2026-11-19.md): per-criterion table; both open criteria need owner decisions or a pull request, no source change.
+## [2026-11-19] update | Issue 203 README archive-tag fix (Refs #203)
+
+* Added [issue-203-readme-tag-live-2026-11-19.md](research/issue-203-readme-tag-live-2026-11-19.md): the parity-matrix index row names tag v0.21.0, the legacy-reference checker exits 0; the deployed-app and CI criterion stays unproven.
+## [2026-11-19] add | Issue 223 live run 3 (Refs #223)
+
+* Added [issue-223-live-r3-2026-11-19.md](research/issue-223-live-r3-2026-11-19.md): focused tests re-run (37 and 6 OK) and per-criterion table; remaining items need humans or an OQ-017 appointment.
+## [2026-11-19] add | Issue 440 checkpoint triage refresh (Refs #440)
+
+* Added [issue-440-live-checkpoint-refresh-2026-11-19.md](research/issue-440-live-checkpoint-refresh-2026-11-19.md): D2 guard violations 11 to 1, D4 largely delivered, D1 to D3 unchanged; criteria 7 and 8 stay unproven. No source change.
+## [2026-11-19] add | Issue 2061 single external demo environment decision record (Refs #2061)
+
+* Added [ADR 0008](../adrs/0008-single-external-demo-environment.md) (Proposed) and [issue-2061-live-single-environment-2026-11-19.md](research/issue-2061-live-single-environment-2026-11-19.md): read-only live inventory of two environments, identities and roles; Entra registrations unreadable with this login; criteria 2 to 8 stay unproven. No source or infra change.
+## [2026-11-19] add | Issue 184 child stories closed (Refs #184)
+
+* Indexed [issue-184-child-stories-demo-2026-11-19.md](research/issue-184-child-stories-demo-2026-11-19.md): all five sub-issues of #184 are closed as completed (5 of 5); no source change, no live Azure action, other criteria not re-run.
+## [2026-11-19] add | Issue 146 monitoring criteria triage (Refs #146)
+
+* Indexed [issue-146-live-triage-2026-11-19.md](research/issue-146-live-triage-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
+## [2026-11-19] add | Issue 117 live closure, fifth pass (Refs #117)
+
+* Added [issue-117-live-r6-2026-11-19.md](research/issue-117-live-r6-2026-11-19.md): Defender for Storage is confirmed enabled on the demo account, but the demo API still uses the local scanner and a direct probe was blocked by storage network rules; the end-to-end Defender criterion stays unproven pending owner approval.
+## [2026-11-19] add | Issue 202 mvp workflow retirement evidence (Refs #202)
+
+* Indexed [2026-11-19-issue-202-mvp-workflow-retirement.md](research/2026-11-19-issue-202-mvp-workflow-retirement.md): `mvp/` and `prototype/` are absent; no ruleset requires `mvp-ci` or `mvp-validation`; deleting the two workflows needs the FULL tier and is not done.
+## [2026-11-19] add | Issue 344 fifth live pass (Refs #344)
+
+* Added [public-browser-access-live-r5-2026-11-19.md](research/public-browser-access-live-r5-2026-11-19.md): fresh probes reproduce the 302 for browser-style anonymous API calls; the fix is full tier, so no source change was made.
+## [2026-11-19] add | Issue 203 third live run (Refs #203)
+
+* Indexed [issue-203-live-recheck-2026-11-19.md](research/issue-203-live-recheck-2026-11-19.md): the legacy-reference checker now reports 0 violations; the deployed-app and CI criterion stays partly proven. No source change.
+
+## [2026-11-19] research | Resident showcase live check r4 (#462)
+
+* Added [resident-showcase-live-r4-2026-11-19.md](research/resident-showcase-live-r4-2026-11-19.md): 36-check Playwright rerun, fixture-identifier regression proof and per-criterion table; criterion 2 stays unmet.
+
+## [2026-11-19] query | Coordinator tick liveness on a real window (#1204)
+
+* Added research/coordinator-tick-log-real-window-1204-live-2026-11-19.md and its index row: 216 real ticks pass the tick checker; the closure-batch and approval sub-claims stay unproven. Corrects the r2 claim that no tick_log existed locally.
+
+## [2026-11-19] update | Issue 145 live audit 7
+
+* Added [issue-145-live-20261119T152518Z-2026-11-19.md](research/issue-145-live-20261119T152518Z-2026-11-19.md): read-only Azure SQL re-check and per-criterion table; no source change, no drill.
+
+## [2026-11-19] update | Issue 117 sixth pass
+
+* Added research/issue-117-live-r7-2026-11-19.md: scan tests re-run (api 19 OK, core rescan 40 OK, 20 skipped); the live Defender path stays unproven and needs an owner-approved deployment change.
+
+## [2026-11-19] add | Issue 220 criterion 5 stop note, run 6 (Refs #220)
+
+* Added [issue-220-live-r6-criterion-5-2026-11-19.md](research/issue-220-live-r6-criterion-5-2026-11-19.md): 30 offline tests pass, live image digest unchanged, criterion stays unticked.
+
+## [2026-11-19] research | Issue 203 second live run
+
+* Added [issue-203-live-20261119T1527Z-2026-11-19.md](research/issue-203-live-20261119T1527Z-2026-11-19.md): criterion 1 now passes the legacy-reference checker; criterion 5 remains unproven.
+
+## [2026-11-19] add | Issue 223 live run 4 (Refs #223)
+
+* Added [issue-223-live-r4-2026-11-19.md](research/issue-223-live-r4-2026-11-19.md): offline gate re-run and per-criterion table; remaining items need humans.
+
+## [2026-11-19] add | Issue 202 live re-audit (Refs #202)
+
+* Added [issue-202-live-20261119T1540Z-2026-11-19.md](research/issue-202-live-20261119T1540Z-2026-11-19.md): five criteria proven; removal of `mvp-ci` and `mvp-validation` stays unproven because it needs a full-tier change; no required check depends on them.
+
+## [2026-11-19] add | Issue 138 live check, run 8 (Refs #138)
+
+* Added [issue-138-live-r8-2026-11-19.md](research/issue-138-live-r8-2026-11-19.md): read-only recheck; 0 federated credentials, 0 protection rules, 0 runners, 0 deploy runs; all six criteria stay unproven. No source change.
+
+## [2026-11-19] update | Issue 126 live RPI re-run
+
+* Re-ran core governance tests (88 OK, 18 skipped) and confirmed [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): no unmet demo criterion needs new code.
+
+## [2026-11-19] research | Issue 203 literal legacy-reference search
+
+* Added [issue-203-live-20261119-2026-11-19.md](research/issue-203-live-20261119-2026-11-19.md) with retained evidence: classified literal search for `mvp/`, `prototype/` and `PYTHONPATH=mvp` (checker 0 violations), and read-only deployed-app and CI checks. Criterion 1 proven for the demo; criterion 5 partly proven.
+
+## [2026-11-19] add | Issue 144 live check (Refs #144)
+
+* Added [issue-144-live-20261119T154644Z-2026-11-19.md](research/issue-144-live-20261119T154644Z-2026-11-19.md): live demo revision lacks deployed hardening; image and hardening criteria stay unproven. No source change.
+
+## 2026-11-19 Issue 117 scan check
+
+* Added research/issue-117-scan-before-availability-live-2026-11-19.md: scanning mechanism proven by existing tests; real malware engine unproven for the demo. No source change.
+
+## [2026-11-19] update | Issue 202 live refresh
+
+* Added [issue-202-live-20261119T154854Z-2026-11-19.md](research/issue-202-live-20261119T154854Z-2026-11-19.md): the workflow-removal criterion stays unticked pending a full-tier change; no source change.
+
+## [2026-11-19] add | Issue 344 sixth live pass
+
+* Added research/public-browser-access-live-r6-2026-11-19.md: the time-status 500 is a SQL-path ProgrammingError; the remaining criteria need FULL-tier infra or SQL work.
+## [2026-11-19] add | Issue 126 live criteria proof (Refs #126)
+
+* Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 core and 10 API governance tests OK, read-only live probe (capture closed, 22 RAI findings, no claims) and per-criterion table; the approval, assessment and SQL/Azure criteria stay unproven. No source change.
+## [2026-11-19] add | Issue 126 criteria review (Refs #126)
+
+* Added [issue-126-live-2026-11-19.md](research/issue-126-live-2026-11-19.md): 88 governance tests pass; remaining criteria are human or production-only. No src change.
+## [2026-11-19] add | Issue 138 seventh demo run (Refs #138)
+
+* Added [issue-138-live-r7-2026-11-19.md](research/issue-138-live-r7-2026-11-19.md): read-only recheck with retained output; all six criteria remain unproven and need admin or human setup.
+## [2026-11-19] add | Issue 76 hazard clock criterion, fifth pass (Refs #76)
+
+* Added [issue-76-live-r5-2026-11-19.md](research/issue-76-live-r5-2026-11-19.md): 33 targeted tests pass; the only gap is an owner data decision for the hazard awareness time. No source change.
+## [2026-11-19] add | Issue 223 first buildable demo criterion (Refs #223)
+
+* Indexed [issue-223-first-buildable-criterion-2026-11-19.md](research/issue-223-first-buildable-criterion-2026-11-19.md): 6 core and 37 agents tests plus the offline gate pass; remaining criteria need people or a production injection route. No source change.
+
+## [2026-11-19] update | Issue 203 criteria refresh
+
+* Added [issue-203-refresh-live-2026-11-19.md](research/issue-203-refresh-live-2026-11-19.md): the reference checker still exits 0; the deployed-app and CI criterion stays unproven for lack of build provenance.
+
+## [2026-11-19] update | Issue 223 live run 4
+
+* Added [issue-223-live-r4-2026-11-19.md](research/issue-223-live-r4-2026-11-19.md): focused tests re-run (37 and 6 OK); remaining criterion parts need human reviewers or an OQ-017 appointment.
+
+## [2026-11-19] add | Issue 344 fifth pass
+
+* Added [public-browser-access-live-r5-2026-11-19.md](research/public-browser-access-live-r5-2026-11-19.md): remaining criteria are infrastructure, SQL or owner decisions; no source change.
+
+## [2026-11-19] add | Live notes for issues 108, 120, 126, 146 and 440
+
+* Added [issue 108 r2](research/issue-108-live-r2-20261119-2026-11-19.md), [issue 120 r2](research/issue-120-live-2026-11-19-r2.md), [issue 126 r3](research/issue-126-live-r3-2026-11-19.md), [issue 146](research/issue-146-live-20261119T154738Z-2026-11-19.md) and [issue 440](research/issue-440-live-criteria-verdict-2026-11-19.md): evidence only; unproven criteria stay unproven.

@@ -1,5 +1,6 @@
-# Issue 120 live r2 plan (2026-11-19)
+---
+title: Issue 120 r2 plan and critique
+ms.date: 2026-11-19
+---
 
-Critique: executed once; verdict: no code work is justified, because no acceptance criterion is unticked.
-Plan: record the finding, make no source change, commit artifacts only. Tier FOCUSED (documentation and tracking only).
-Details: .copilot-tracking/details/2026-11-19/issue-120-live-r2-details.md
+Plan: no source change; record the per-criterion proof (docs/reference/research/issue-120-live-2026-11-19-r2.md) and artifacts. Critique (one pass): inventing a new code path for criterion 3 would duplicate tested behaviour; the deployed enabling is excluded by the no-production-changes limit. Verdict: accepted, no change. Tier: FOCUSED (no src change).

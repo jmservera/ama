@@ -1,0 +1,7 @@
+/healthz 200
+/ 200
+/api/me 401
+/api/cases 401
+/app 401
+browser-style
+302 https://login.microsoftonline.com/<tenant-id>/oauth2/v2.0/authorize

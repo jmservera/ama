@@ -15,3 +15,7 @@ Planning Readiness: Ready (disposition: executed; evidence below).
 ## Conclusion
 
 Removing the files edits gate tooling (hash pins, job-to-check map, actionlint list), which the repository classifies as the FULL tier (complete local gate and external receipt; `rpi-checks.py --all` is barred for this run). Setting required checks to a new list changes shared GitHub protection, which the owner decision excludes (no production changes). The criterion is therefore unprovable and not buildable for the demo under this brief; it stays unticked.
+
+## Re-verification run r2 (15:30Z)
+
+The unticked criterion is unchanged on a fresh worktree: `.github/workflows/mvp-ci.yml` and `mvp-validation.yml` still exist, `gh api repos/jmservera/ama/branches/main/protection` returns 404 (no classic protection), and the prior conclusion holds. No criterion is provable or buildable for the demo.

@@ -12,3 +12,7 @@ No source, workflow or protection change was made. Tier: FOCUSED (docs/tracking 
 | Rubric registry PR merged first | Proven (ticked) | Already ticked |
 | Old workflows removed/replaced and branch protection updated | Unproven | Workflows disabled, dispatch-only; `mainprotect` requires no checks, so nothing stale is required. File deletion edits pinned gate tooling (FULL tier, `--all` barred); changing protection is a shared-system change outside owner scope |
 | No tracked file under `mvp/` | Proven (ticked) | `git ls-files mvp` empty |
+
+## Run r2
+
+Re-verified 2026-11-19 15:30Z; table above unchanged. No source, workflow or protection edit; no tests apply (FOCUSED, docs/tracking only).

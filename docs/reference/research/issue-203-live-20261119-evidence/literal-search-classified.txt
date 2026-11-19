@@ -1,0 +1,60 @@
+{'live': 58, 'dated-package': 46, 'guard': 62, 'record': 2303} total 2469
+--- live hits (checker applies tag-window rule) ---
+.github/agents/ama-backlog-delivery-coordinator.agent.md:685:   `mvp/` and `prototype/` are retired (archive `v0.21.0`, see `README.md`).
+.github/copilot-instructions.md:59:infra scripts; do not add `PYTHONPATH=mvp` workarounds. Image context is `src/`
+.gitignore:11:/mvp/data/
+README.md:42:The owner signed off cut-over (#201) on 2026-10-27. The remaining `mvp/`
+README.md:43:pointer is retired; `prototype/` was already retired. Current code, tests,
+docs/capstone/pitch/questions-and-answers.md:669:   Supports: Simpler workbench, ownership, evidence and assisted routes; prototype/MVP design learning
+docs/capstone/source/slides.json:3133:      "notes": "B04 | How do Decision Models reduce cost and response time?\r\nQuestion-led appendix answer | Audience: CFO / CTO | Not part of the spoken route; show only when asked
+docs/capstone/source/slides.json:4736:      "notes": "B23 | How will you know this is fair and accessible?\r\nQuestion-led appendix answer | Audience: CEO / resident services / risk | Not part of the spoken route; show o
+docs/case_study_48_addendum.md:367:its [current MVP evidence](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/mvp/README.md)
+docs/ideas/typesafe-system-one-agent-fit.md:32:Its [README, Current continuing MVP](https://github.com/jmservera/ama/blob/5136f192d583a5bf53adeeec4b0f21369b005c9d/mvp/README.md)
+docs/prds/proper-warm-retrofit-programme-demonstrator.md:400:decision and the requirement it creates. The MVP in `mvp/` is the build baseline
+docs/prds/proper-warm-retrofit-programme-demonstrator.md:401:and replaces `prototype/` (both retired; archive `v0.21.0`).
+docs/prds/proper-warm-retrofit-programme-demonstrator.md:1422:Each increment delivered as a prototype/PoC/MVP retains real Azure/SQL/AI;
+docs/prds/zava-forward-retrofit-programme-demonstrator.md:476:decision and the requirement it creates. At that date the MVP in `mvp/`
+docs/prds/zava-forward-retrofit-programme-demonstrator.md:477:replaced `prototype/`. The current build baseline is [src](../../src/README.md);
+docs/prds/zava-forward-retrofit-programme-demonstrator.md:2695:Each increment delivered as a prototype/PoC/MVP retains real Azure/SQL/AI;
+docs/reference/README.md:1296:| Build or review a subsequent AMA prototype/PoC/MVP | [Subsequent Application Exercise Builds](../case_study_48_addendum.md#subsequent-application-exercise-builds-2026-10-11) | BRD CON-007/
+docs/reference/README.md:1380:| [ADR 0005 Regulatory Compliance Assistant](../adrs/0005-regulatory-compliance-assistant.md) | Operational proposal; owner permits synthetic development with labelled fictional roles, simul
+docs/reference/README.md:1381:| [ADR 0006 Source Layout and Cut-Over Policy](../adrs/0006-src-layout-and-cutover.md) | Accepted 2026-10-15: standard `src` layout with one isolated `zava_forward` package per ADR 0001 work
+docs/reference/README.md:1385:| [MVP and prototype to src parity matrix](../architecture/mvp-to-src-parity-matrix.md) | Proposal for #197 on the accepted ADR 0006 mapping: per-file outcome for all 128 tracked `mvp/` and 
+docs/reference/README.md:1386:| [MVP and prototype to src parity matrix](../architecture/mvp-to-src-parity-matrix.md) | Proposal for #197 on the accepted ADR 0006 mapping: per-file outcome for all 128 `mvp/` and `prototy
+docs/reference/README.md:1534:| [Cut-over Gate Demo Proof, Live Run 2026-11-18](./research/cutover-gate-live-2026-11-18.md) | Per-criterion results for the three unticked issue 201 criteria: repointing and healthy revisi
+docs/reference/README.md:1535:| [Cut-over Gate Demo Proof, Second Live Run 2026-11-18](./research/cutover-gate-live-r2-2026-11-18.md) | Second per-criterion table for issue 201: in-container proof that the running image 
+docs/reference/README.md:1686:  that retired `mvp/` and `prototype/` paths name archive `v0.21.0` (Refs #203)
+docs/reference/research/cutover-gate-live-2026-11-18.md:14:| 2 | Private `mvp/data/` relocated and backed up outside git | Not provable by an agent; deferred | Owner-only attestation by design |
+docs/reference/research/cutover-gate-live-2026-11-18.md:26:* The workflow filenames `mvp-ci.yml` and `mvp-validation.yml` keep their names by owner rule (checks keep names until a deliberate branch-protection update); re
+docs/reference/research/cutover-gate-live-2026-11-18.md:37:## 2. Private `mvp/data/`
+docs/reference/research/cutover-gate-live-2026-11-18.md:39:The dataset is git-ignored, real-address data that no agent may read. The worktree has no `mvp/` and the default `ZF_DATA` path `~/.zava-forward/data` does not e
+docs/reference/research/cutover-gate-live-2026-11-18.md:47:`python3 tools/check-legacy-references.py` reports 11 violations (retired path without archive tag `v0.21.0`) in `tools/test_epic_legacy_path_retirement.py`, `to
+docs/reference/research/cutover-gate-live-r2-2026-11-18.md:14:| 2 | Private `mvp/data/` relocated and backed up outside git | Not provable by an agent | Owner-only attestation; the demo uses synthetic data |
+docs/reference/research/cutover-gate-live-r2-2026-11-18.md:42:The dataset is git-ignored, real-address data that no agent may read. This host has no `mvp/` and no `~/.zava-forward/data`, so there is nothing to inspect. [
+docs/reference/research/retrofit-synthetic-data/README.md:34:application. The owner requires future prototype/PoC/MVP iterations to reuse
+docs/reference/research/retrofit-synthetic-data/README.md:121:under accepted ADR 0006. New executable work belongs in `src/`, not the retired `mvp/` (archive `v0.21.0`).
+docs/reference/research/ux/prototype-learnings-and-simplicity-review.md:55:| #19 distinguishes captured AI-run evidence from current case state and makes unavailable/failed inference explicit; [run UI](https://github.com
+docs/reference/research/ux/prototype-learnings-and-simplicity-review.md:59:| #58 adds [stock](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L165-L221), [home/building]
+docs/reference/research/ux/prototype-learnings-and-simplicity-review.md:66:[workflow routing](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/exercise.js#L43-L49),
+docs/reference/research/ux/prototype-learnings-and-simplicity-review.md:67:[case return](https://github.com/jmservera/ama/blob/6cbcb36e63597c6f4b90268207b5f1afbce4bb4a/mvp/web/app.js#L261-L359)
+docs/reference/research/ux/prototype-learnings-and-simplicity-review.md:68:and [main map/list scope](https://github.com/jmservera/ama/blob/71aaf9d9833804f2dc1d8bcc4907aa12a95883dc/mvp/web/app.js#L666-L729).
+docs/reference/resources/tracking-retention-promotion.json:1:{"schema":1,"phase":"P03","status":"Complete","branch":"docs/capstone-cowork-story","archive":{"directory":"~/.local/share/ama/tracking-archives/2026-10-24-pr4
+infra/README.md:864:restored from `mvp/` (archive `v0.21.0`).
+infra/README.md:1676:context so named workload packages can include sibling core; never use the retired `mvp/` (archive `v0.21.0`)
+infra/README.md:3536:No retired `mvp/` code (archive `v0.21.0`) or old tag permission is restored. The preceding
+src/README.md:19:The owner signed off #201 on 2026-10-27. The remaining `mvp/` pointer is now
+src/README.md:20:retired; `prototype/` was already absent. Archive `v0.21.0` and the owner-only
+src/README.md:575:   fixtures, never a `PYTHONPATH=mvp` workaround.
+src/agents/README.md:529:`mvp/README.md` (archive `v0.21.0`; M6 of #199) and keep the dated 2026-10-13 and 2026-10-14 validation record. Commands in
+src/agents/pyproject.toml:37:# Moved unchanged from mvp/ (archive v0.21.0; ADR 0006 move-not-copy); formatting and typing follow after the migration.
+src/agents/tests/test_eval_registry.py:38:        self.assertIn("/mvp/data/", ignore)
+src/api/README.md:3956:This file is the former `mvp/README.md` (archive `v0.21.0`; ADR 0006, issue #199, M6), split by owning project. It keeps
+src/api/pyproject.toml:37:# Moved unchanged from mvp/ (archive v0.21.0) in M2 and M5 of #199; exemptions are a follow-up to #199 (see src/README.md).
+src/core/README.md:1901:workload. The sections below are moved unchanged from the former `mvp/README.md` (archive `v0.21.0`; ADR 0006, issue #199,
+src/core/README.md:4481:`src/core/src/zava_forward/core/rulecards.py` (moved from `mvp/` in M1 of #199; archive `v0.21.0`) holds versioned rule cards in append-only tables
+src/core/pyproject.toml:42:# Modules moved unchanged from mvp/ (archive v0.21.0; ADR 0006 move-not-copy). Formatting and typing follow after
+src/core/tests/dataset.py:1:"""Shared constructed dataset and store behaviour cases (moved from mvp/tests/test_mvp.py, archive v0.21.0, in M2 of #199)."""
+src/importer/README.md:9:The importer (`zava_forward.importer`) is the quarantining import workload described in ADR 0001. The former `mvp/` application (archive `v0.21.0`) had no import service, so the former `mvp/READM
+src/orchestrator/README.md:19:unchanged from the former `mvp/README.md` (archive `v0.21.0`; M6 of #199).
+src/orchestrator/pyproject.toml:37:# Moved unchanged from mvp/ (archive v0.21.0) in M5 of #199; exemptions are a follow-up to #199 (see src/README.md).
+tools/rename-zava.md:74:  branding never recreates `mvp/web/` (archive `v0.21.0`). Historical old-name assertions and

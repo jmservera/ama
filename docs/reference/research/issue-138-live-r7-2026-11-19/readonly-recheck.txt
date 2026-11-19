@@ -1,0 +1,5 @@
+GitHub environments: copilot=0 rules, dev-plan=0, pilot-plan=0, test-plan=0
+Actions variables: GH_AW_DEFAULT_MAX_DAILY_AI_CREDITS (no AZURE_*)
+Actions secrets: COPILOT_GITHUB_TOKEN (name only)
+src-deploy.yml runs: 0
+Federated credentials per identity in ama: id-cutover-test-orchestrator 0, id-cutover-test-api 0, id-cutover-test-agents 0, id-cutover-test-import 0, id-cutover-test-init 0, id-resident-demo 0

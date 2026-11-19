@@ -1,11 +1,9 @@
 # Issue 435 live research (2026-11-19)
 
-Issue 435 has three unticked criteria. Planning Readiness: Ready (disposition: executed, read of issue only).
+Task: issue-435-live. Disposition: reused. Planning Readiness: Ready (documentation-only outcome).
 
-| Criterion | Provable or buildable for the demo? | Reason |
-| --- | --- | --- |
-| Owner decides placement; deck rebuilt if changed | Unproven | Owner decision; no owner decision in the 2026-11-18 list covers it. Rebuilding the deck without it would invent the decision. |
-| Mentor confirms what Tokenomics meant | Unproven | Needs the mentor; cannot be simulated. |
-| Owner decides on a finite measured token batch and spend authority | Unproven | Owner spend decision; the 2026-11-18 Azure authority (cap USD 700) does not name token batches, and recording authority on the owner's behalf is not allowed. |
-
-Ticked criteria (rehearsal, assessment challenge, source labels) are already delivered; no new code, Azure or browser evidence applies.
+* Issue 435 has three unticked criteria: (1) owner decides placement, deck rebuilt if changed; (2) mentor confirms what Tokenomics meant; (4) owner decides on a measured batch with spend authority recorded.
+* Criteria 1 and 4 are already evidenced for the synthetic demo in docs/reference/research/capstone-pitch-435-live-2026-11-18.md (owner decision 2026-11-13 on placement; authorisation.json and the 12-proposal batch under #432). Ticking them is the owner's call; no rebuild is required while the deck is unchanged.
+* Criterion 2 needs the mentor; no repository evidence can answer it.
+* Adding the measured figures to slide 22 and cards B25 and B27 is an owner-directed deck rebuild through the PowerPoint workflow, not a code or test item.
+* No remaining criterion can be proven or built with code and tests. No Azure action was taken.

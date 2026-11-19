@@ -1,0 +1,6 @@
+TypeError: Object of type object is not JSON serializable
+..
+----------------------------------------------------------------------
+Ran 10 tests in 14.932s
+
+OK

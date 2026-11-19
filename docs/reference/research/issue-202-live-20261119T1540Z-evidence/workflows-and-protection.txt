@@ -1,0 +1,17 @@
+## tracked files under mvp/ prototype/
+0
+## tag
+0096b11301236c6eef85fd3cdefc657582109b8a	refs/tags/v0.21.0
+## workflows
+Source CI	.github/workflows/mvp-ci.yml	disabled_manually
+Source validation	.github/workflows/mvp-validation.yml	disabled_manually
+Source projects CI	.github/workflows/src-ci.yml	active
+## rulesets
+24682333	main	disabled
+24504150	mainprotect	active
+## mainprotect required_status_checks
+{"parameters":{"do_not_enforce_on_create":false,"required_status_checks":[],"strict_required_status_checks_policy":true},"type":"required_status_checks"}
+## classic protection
+{"message":"Branch not protected","documentation_url":"https://docs.github.com/rest/branches/branch-protection#get-branch-protection","status":"404"}gh: Branch not protected (HTTP 404)
+## releases
+0

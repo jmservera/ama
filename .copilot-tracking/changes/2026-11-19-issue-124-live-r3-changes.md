@@ -1,34 +1,14 @@
-# Changes: issue #124 live audit, third pass
+# Changes: issue 124 live r3 (2026-11-19)
 
-Status: complete. Tier FOCUSED. No source edit, no Azure resource created or changed (nothing to delete), `rpi-checks.py` not run.
+Refs #124. No source change; tier FOCUSED (no src code touched, no rpi-checks run). No Azure resource created, nothing to delete. Evidence: `.copilot-tracking/evidence/2026-11-19/issue-124-live/`.
 
-## Files
+Validation: `PYTHONPATH=src:tests python3 -m unittest test_discovery_contract test_discovery_flow test_discovery_register` in `src/core`: 59 tests OK. mypy and ruff not applicable (no src change). Live read-only: API revision `--0000033`, digest `sha256:5368f4e4...c17e5fb`; Event Hub holds only `sensor-readings`; no discovery consumer outside `discovery_*` modules and `src/core/README.md`. Prior detail: `docs/reference/research/issue-124-live-r2-phase0-discovery-audit-2026-11-18.md`.
 
-* `docs/reference/research/issue-124-live-r3-phase0-discovery-audit-2026-11-19.md` (new)
-* `docs/reference/README.md`: one index sentence; `docs/reference/log.md`: appended entry.
-* `.copilot-tracking/evidence/2026-11-19/issue-124-live-r3/`: `unittest.txt`, `consumers.txt`, `azure_cli_outputs.txt`, `live_discovery_probe.py` and `.json`. Screenshot deleted (signed-in view).
-* Tracking artifacts `*-issue-124-live-r3-*` and the state file.
-
-## Validation
-
-| Check | Result |
-| --- | --- |
-| unittest discovery contract, flow, register (from `src/core`) | 59 OK |
-| Consumer search | Only contract, flow and README |
-| Live probe | openapi 404, discovery paths 403 (default deny, same as control path) |
-| Link check, `git diff --check`, secret scan | See review |
-| mypy, ruff | Not applicable (no src or infra Python changed) |
-| Hosted CI | Not observed; nothing pushed |
-
-## Per-criterion table
-
-| Criterion (issue state) | Proven for the demo | Unproven | Gap class |
+| Criterion | State | Proven for the demo | Unproven, owner |
 | --- | --- | --- | --- |
-| Discovery owner nominated and endpoint agreed (unticked) | Rule only | Named nomination and endpoint agreement | Owner/person-only |
-| Lifecycle and event dictionary validated (unticked) | Schema, counts, gap gating | Operational-owner validation | Owner/person-only |
-| Constraint register supporting and contradicting evidence (unticked) | Two-sided rule | Real extract evidence and validation | Owner/person-only plus approved data |
-| Findings are not company findings until owners validate (ticked) | Re-confirmed | None | None |
+| Discovery owner nominated, endpoint agreed | unticked | Rule only (default NOT_NOMINATED, AI actor refused, accepted-handover endpoint) | Real nomination: executive sponsor |
+| Lifecycle and event dictionary validated | unticked | Schema and counts; 49 gaps open | Operational-owner validation in workshops |
+| Constraint register, supporting and contradicting evidence | unticked | Two-sided rule; seed has 0/0 evidence | Real twelve-month company extract plus owners |
+| Findings not company findings until validated | ticked | Re-confirmed (owner_validated=false) | none |
 
-## Deviations
-
-* The first live probe run timed out on navigation (cold start); a retry with no timeout succeeded.
+Result: every unticked criterion needs a human or real company data; nothing buildable, so no code written.

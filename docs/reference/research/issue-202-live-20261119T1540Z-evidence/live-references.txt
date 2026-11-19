@@ -1,0 +1,43 @@
+./tools/test_src_cutover_repoint.py:126:        workflow = yaml.safe_load(read(".github/workflows/mvp-ci.yml"))
+./tools/rpi-checks.py:72:    "mvp-ci.yml",
+./tools/rpi-checks.py:73:    "mvp-validation.yml",
+./tools/rpi-checks.py:80:    "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
+./tools/rpi-checks.py:81:    "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
+./tools/rpi-checks.py:2517:            ("mvp-ci.yml", "test"): "project-api; project-orchestrator; static",
+./tools/rpi-checks.py:2518:            ("mvp-ci.yml", "image"): "image-api; logo-0600",
+./tools/rpi-checks.py:2519:            ("mvp-ci.yml", "mssql"): "mssql",
+./tools/rpi-checks.py:2520:            ("mvp-validation.yml", "validate"): "project-api; static; infra; migration",
+./tools/check-legacy-references.py:54:    ".github/workflows/mvp-validation.yml",
+./infra/tests/test_pipeline.py:129:        for name in ("src-ci.yml", "mvp-validation.yml"):
+./infra/tests/test_pipeline.py:135:        for name in ("src-ci.yml", "mvp-validation.yml"):
+./infra/tests/test_pipeline.py:154:        for name in ("src-ci.yml", "mvp-validation.yml"):
+./infra/tests/test_pipeline.py:358:        for name in ("mvp-ci.yml", "mvp-validation.yml"):
+./infra/tests/test_pipeline.py:365:        self.assertEqual(mssql, workflow("mvp-ci.yml")["jobs"]["mssql"])
+./infra/README.md:1231:`.github/workflows/mvp-validation.yml` also runs full infra discovery. Both
+./infra/README.md:4495:Build/lint are wired through the existing `mvp-validation.yml` check;
+./.github/workflows/src-ci.yml:5:    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_aff
+./.github/workflows/src-ci.yml:281:          actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.y
+./.github/workflows/mvp-validation.yml:10:  group: mvp-validation-${{ github.event.pull_request.number || github.ref }}
+./.github/workflows/mvp-ci.yml:10:  group: mvp-ci-${{ github.event.pull_request.number || github.ref }}
+./.github/rubric/README.md:641:`infra-plan`, `mvp-ci`, `mvp-validation`, `src-ci` and `src-deploy`. None
+./src/core/tests/test_cutover_audit.py:69:            return "mvp/ and mvp-ci.yml"
+./src/core/tests/test_cutover_audit.py:90:            return "mvp-ci.yml mvp-validation.yml prototype/ mvp/ mvp/"
+./src/core/src/zava_forward/core/synthetic/cutover_audit.py:15:TOKEN = re.compile(r"mvp-ci\.yml|mvp-validation\.yml|zavaforward_mvp|(?<!\w)(?:mvp|prototype)/")
+./src/api/README.md:5260:The `image` job in `.github/workflows/mvp-ci.yml` builds the image and checks:
+./src/README.md:164:  have no Source CI run at all. `mvp-ci.yml` and `mvp-validation.yml` are
+./docs/adrs/0002-pilot-readiness-architecture.md:980:* CI (extends `.github/workflows/mvp-validation.yml`, which already compiles,
+./docs/architecture/cutover-evidence-pack.md:1873:Tokens: `mvp/`, `prototype/`, `zavaforward_mvp`, `mvp-ci.yml`,
+./docs/architecture/cutover-evidence-pack.md:1874:`mvp-validation.yml`. It intentionally reports locations/tokens, not raw
+./docs/architecture/cutover-evidence-pack.md:1887:| `.github/workflows/mvp-ci.yml`: `MVP CI`, concurrency `mvp-ci-*`, jobs `test`, `image`, `mssql`, legacy imag
+./docs/architecture/cutover-evidence-pack.md:1888:| `.github/workflows/mvp-validation.yml`: `MVP validation`, concurrency `mvp-validation-*`, job `validate` | K
+./docs/architecture/cutover-evidence-pack.md:1968:| CI signal | Proposed set: `src-ci.yml`, `mvp-ci.yml`, `mvp-validation.yml`, `infra-plan.yml` green for the S
+./docs/architecture/mvp-to-src-parity-matrix.md:230:(test_mssqlstore, test_assistants, test_lawstore) that run in the `mvp-ci`
+./docs/architecture/mvp-to-src-parity-matrix.md:307:| `mvp/zavaforward_mvp/mssqlstore.py` | migrate | `core/mssqlstore.py` | M2 | Azure SQL engine (deployed pat
+./docs/architecture/mvp-to-src-parity-matrix.md:458:| `.github/workflows/mvp-ci.yml`, `mvp-validation.yml` | `mvp/` filters, `docker build mvp`, requirements pa
+./docs/architecture/mvp-to-src-parity-matrix.md:498:| 265, 273, 274, 276, 277, 278 | #142, #140, #147, #139, #141, #143 open | Bicep and scripts under `infra/` 
+./docs/architecture/mvp-to-src-parity-matrix.md:559:| M4 | Core features | `chat_privacy`, `chat_isolation`, `recovery` to `core`; `ai_eval` to `agents`; `evals
+./docs/architecture/mvp-to-src-parity-matrix.md:560:| M5 | API and orchestrator workloads and image | `server`, `auth`, `timecapture`, `lawstore` (core), `diges
+./docs/architecture/mvp-to-src-parity-matrix.md:589:| Rename of the old CI check names (#200) | Keep the old check names until after the cut-over, then rename t
+./docs/architecture/zava-forward-technical-architecture.excalidraw:3737:          ".github/workflows/mvp-ci.yml",
+./docs/architecture/zava-forward-technical-architecture.excalidraw:3748:            "path": ".github/workflows/mvp-ci.yml",
+./docs/architecture/README.md:204:| Workloads -> ACR; operator -> deployment | Images pull using workload identities. Operator builds/deploys are distinct from 

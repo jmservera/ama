@@ -1,0 +1,10 @@
+.github/copilot-instructions.md:59:infra scripts; do not add `PYTHONPATH=mvp` workarounds. Image context is `src/`
+docs/architecture/cutover-evidence-pack.md:1332:| Shared fixtures / browser harnesses | `release_support.py` is in `src/core/tests/`, not matrix's proposed API tests. Browser checks are `src/api/checks/`, outside the package | Explicit actual-target correction; API/orchestrator use only external-test fixture PYTHONPATH, never PYTHONPATH=mvp |
+docs/architecture/cutover-evidence-pack.md:2176:failed `ModuleNotFoundError: zava_forward`. No `PYTHONPATH=mvp`, default/private
+docs/architecture/mvp-to-src-parity-matrix.md:461:| `infra/README.md` | `az acr build ... mvp`, `PYTHONPATH=mvp` | `src/api` build context, installed package | #200 |
+docs/architecture/mvp-to-src-parity-matrix.md:462:| `infra/scripts/initialize-workbench-staff.py`, `create-sql-users.py`, `infra/tests/test_initialize_workbench_staff.py`, `infra/tests/test_identity_rbac.py` | `PYTHONPATH=mvp`, `zavaforward_mvp` imports | Import from `zava_forward.core` after M2 | #200 |
+docs/reference/research/issue-200-live-20261118T1618Z-2026-11-18.md:17:| 1. `pyproject.toml` src layout, install not `PYTHONPATH=mvp` | Ticked | Spot-checked, holds | Four `src/*/Dockerfile`; no `mvp/` or `prototype/` directory; remaining `PYTHONPATH=mvp` hits are prohibitions or the cut-over audit table (`live-probe-3.txt`) |
+docs/reference/research/issue-200-live-20261118T1618Z-evidence/live-probe-3.txt:11:.github/copilot-instructions.md:59:infra scripts; do not add `PYTHONPATH=mvp` workarounds. Image context is `src/`
+docs/reference/research/issue-200-live-20261118T1618Z-evidence/live-probe-3.txt:15:src/README.md:566:   fixtures, never a `PYTHONPATH=mvp` workaround.
+src/README.md:575:   fixtures, never a `PYTHONPATH=mvp` workaround.
+tools/test_epic_legacy_path_retirement.py:93:        self.assertTrue(RETIRED_EXECUTION.search("PYTHONPATH=mvp python3 x.py"))
