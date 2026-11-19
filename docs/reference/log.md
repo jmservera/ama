@@ -13654,3 +13654,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 157 live criteria check (Refs #157)
 
 * Added [issue-157-live-criteria-2026-11-19.md](research/issue-157-live-criteria-2026-11-19.md): both open criteria stay unproven; the index row naming `prototype/` now cites archive tag `v0.21.0`, clearing the last legacy-reference guard violation. No src change.
+## [2026-11-19] add | Issue 162 criterion 6 stop decision (Refs #162)
+
+* Added [issue-162-live-criterion6-stop-2026-11-19.md](research/issue-162-live-criterion6-stop-2026-11-19.md): 35 isolation tests OK; criterion 6 needs owner policy decisions or an unauthorised live config change
