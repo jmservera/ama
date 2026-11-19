@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-11-12
+ms.date: 2026-11-17
 ms.topic: reference
 ---
 
@@ -27,6 +27,26 @@ Related decisions: [ADR 0003](../../adrs/0003-journey-derived-capabilities-runti
 (Azure IoT Hub ingestion), [ADR 0002](../../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map)
 (capture and review-signal design), BRD FR-048/AC-090 and RULE-014, and PRD
 FR-050 with AC-066 to AC-068.
+
+## Issue 110 closure audit against main (2026-11-17, Refs #110)
+
+Assessed against `origin/main` `eb51af5c9`, tier FOCUSED, no live Azure action.
+
+| Criterion | State | Evidence on main |
+| --- | --- | --- |
+| C1 distinct IoT Hub identity, schema version, stable reading ID | Unmet | Fixture identity tests pass (`test_iot_stream.py`); no device was issued and no live stream observed. Fixture identity is not a real Hub identity. |
+| C2 append on sensor ID plus reading ID idempotently | Ticked, unchanged | `test_sensor_ingestion.py` and `test_iot_stream.py` replay cases. |
+| C3 duplicate, out-of-order, unmapped, wrong-unit, clock-skewed, uncalibrated input handled and visible | Ticked, unchanged | Owned data-quality cases in `test_iot_stream.py` and the core consumer tests. |
+| C4 no public unauthenticated ingestion endpoint | Ticked, now test-guarded | New `src/api/tests/test_no_public_ingestion_surface.py` fails if an HTTP module imports the consumer or Event Hubs SDK, or defines an ingestion-style path. Mutation check: a consumer import added to `workbench.py` failed the test; reverting it passed. Hub public network access stays `Disabled` in `infra/modules/iothub.bicep` (infra not re-tested here). |
+| C5 no device key or connection string in source or telemetry | Ticked, unchanged | `test_iot_credential_hygiene.py` passes. |
+
+Measured: `test_iot_stream`, `test_iot_credential_hygiene` and the new guard, 51 tests, OK, against the
+worktree sources. `src/core` `test_device_registry_azure` and `test_iot_device_identity_enforcement`
+fail locally with `SDK_MISSING` because the optional Azure IoT SDK is not installed here; that is an
+environment gap, not a code defect, and those results are not counted as evidence. The editable install
+of `zava-forward-api` points at the main checkout, so worktree runs need `PYTHONPATH` set to the worktree
+`src` folders. Tier, sizing, cost, network and device-credential owner decisions remain open; the issue
+stays open and partially delivered.
 
 ## Bounded streaming engineering (2026-10-27, Refs #110, #184)
 
@@ -1570,3 +1590,56 @@ Effects on the leads:
 * The dew point definition of condensation is supported by the BMI guide only
   as a general definition; it does not validate the Magnus constants.
 * Nothing in these documents changes the PAS 2035 finding.
+
+## Epic 109 closure audit against main eb51af5c9 (2026-11-17, Refs #109)
+
+Documentation only. It replaces no source, ticks no criterion, closes no issue and
+grants no approval. It supersedes the 2026-11-04 epic comment, which predates
+PRs 1404, 1412, 1418, 1518 and 1656. Issue states were read live with `gh` on
+2026-11-17. The audit is a mapping of merged evidence to criteria, not an
+acceptance.
+
+### Child state
+
+| Issue | State on 2026-11-17 | Open criteria |
+| --- | --- | --- |
+| 110 Device-to-cloud ingestion | OPEN | Distinct real IoT Hub identity per device |
+| 111 Deterministic versioned analysis | OPEN | R1 to R3 research complete before use beyond an exercise rule |
+| 112 Data protection, access, map reuse | CLOSED COMPLETED 2026-10-17 | None |
+| 440 Stabilization checkpoints | OPEN | Recurring gate, not a child of 109 |
+
+### Epic criteria
+
+| Epic criterion | Merged evidence | Status |
+| --- | --- | --- |
+| Scoped stabilization checkpoint (#440) completed before closure | Local-first checkpoints in the [cutover evidence pack](../../architecture/cutover-evidence-pack.md); PR 1404 integration, PR 1412 actual-main sensor checkpoint, PR 1418 bounded cloud readiness | Unmet. Merged children alone do not satisfy it, and a checkpoint after PRs 1518 and 1656 with an owner pivot or defer decision on the Azure-only residuals is not recorded |
+| All child features closed or deferred | #112 closed; #110 and #111 open with no owner defer decision | Unmet |
+| No sensor signal diagnoses a hazard, starts a clock, releases a hold or changes ranking | Proposed-only, default-off drafts (PR 1404); guarded-context-only aftercare (PR 1149); status text mirror (PR 1075); tests `test_sensor_review_draft.py`, `test_sensor_analysis.py`, `test_sensor_status_text.py` | Already ticked on the issue; local evidence is consistent with it |
+
+### Child criteria and merged evidence
+
+| Child criterion | Evidence | Status |
+| --- | --- | --- |
+| 110: distinct IoT Hub identity, schema version, stable reading ID | PR 1656 enforces a deterministic one-to-one simulated device ID, supported schema version and replay-stable reading ID in code and tests; PRs 1393 and 1418 add a bounded registry backend and readiness record | Unmet. The code enforces identity in the simulator; no real Hub identity is issued, and the 2026-11-10 observation records configuration only |
+| 110: idempotent append, visible rejects, no public endpoint, no key in source | Issue ticks, PRs 411, 508, 910 and 1163 | Ticked on the issue |
+| 111: reproducible outputs, sourced or labelled thresholds | Issue ticks, PRs 871, 1031, 1075, 1087, 1164 and 1278 | Ticked on the issue |
+| 111: R1 to R3 complete before use beyond an exercise rule | None; this plan records R1 to R3 as open | Unmet |
+
+### Unmet criteria and owners
+
+* Epic: an owner-recorded stabilization checkpoint and disposition of the
+  Azure-only residuals (#440, human-blocked).
+* Epic: closure or an owner defer decision for #110 and #111.
+* #110: real distinct IoT Hub identities and approved live Hub to Azure SQL
+  acceptance (OD-43; tier, cost, network and credential-owner decisions).
+* #111: R1 to R3 method approval, approved SENSOR_REVIEW_DUE wiring and UI,
+  assistive-technology and copy acceptance.
+
+### Validation and qualifications
+
+* Local targeted run from `src/core/tests` on 2026-11-17: `test_sensor_review_draft`
+  65 passed with 22 opt-in SQL skips; `test_sensor_analysis`,
+  `test_sensor_status_text` and `test_iot_device_identity_enforcement` 33 passed.
+  The skips are not successes, and no SQL Server run was made here.
+* No live Hub, Azure, provider, resident or professional acceptance is claimed.
+* Recommendation: leave #109 open and reference it with `Refs #109` only.
