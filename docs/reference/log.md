@@ -13431,3 +13431,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 1844 live audit (Refs #1844)
 
 * Added [issue-1844-live-20261119-2026-11-19.md](research/issue-1844-live-20261119-2026-11-19.md): per-criterion table; all criteria are mobile or delivery-gate scope, none unmet for the desktop-only demo. No source change.
+
+## [2026-11-19] add | Issue 1288 live audit 4 (Refs #1288)
+
+* Added [issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md](research/issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md): 304 local tests OK, read-only Azure probe, per-criterion table; criteria 4 and 8 unproven.

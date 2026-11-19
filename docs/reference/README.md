@@ -594,6 +594,9 @@ For #1288, the [third live audit](./research/issue-1288-live-r3-quality-sensor-e
 adds a screenshot of the real sensor panel (stale reading, missing pre-retrofit context), a read-only probe with
 no model call and a local test re-run; criteria 3 to 8 stay unticked.
 
+For #1288, the [fourth audit](./research/issue-1288-live-r4-quality-sensor-evidence-2026-11-19.md)
+re-runs 304 local sensor tests and a read-only Azure probe; no code gap in criterion 3, criteria 3 to 8 stay unticked.
+
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
 runtime, scale-out from 0 to 4 replicas under a 60 s load run, and the Container Apps
