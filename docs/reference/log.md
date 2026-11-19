@@ -13902,3 +13902,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 76 hazard clock criterion, fifth pass (Refs #76)
 
 * Added [issue-76-live-r5-2026-11-19.md](research/issue-76-live-r5-2026-11-19.md): 33 targeted tests pass; the only gap is an owner data decision for the hazard awareness time. No source change.
+## [2026-11-19] add | Issue 223 first buildable demo criterion (Refs #223)
+
+* Indexed [issue-223-first-buildable-criterion-2026-11-19.md](research/issue-223-first-buildable-criterion-2026-11-19.md): 6 core and 37 agents tests plus the offline gate pass; remaining criteria need people or a production injection route. No source change.
