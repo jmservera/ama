@@ -13597,3 +13597,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 114 live re-run (Refs #114)
 
 * Added [issue-114-live-r2-2026-11-19.md](research/issue-114-live-r2-2026-11-19.md): 62 per-year ledger tests pass; deployed demo image unchanged, so the deployed-image criterion stays unproven.
+## [2026-11-19] add | Issue 117 live closure, fifth pass (Refs #117)
+
+* Added [issue-117-live-r6-2026-11-19.md](research/issue-117-live-r6-2026-11-19.md): Defender for Storage is confirmed enabled on the demo account, but the demo API still uses the local scanner and a direct probe was blocked by storage network rules; the end-to-end Defender criterion stays unproven pending owner approval.

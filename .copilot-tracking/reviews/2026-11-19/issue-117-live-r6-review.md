@@ -1,0 +1,1 @@
+# Review (executed once): conformant. Claims match the observed outputs; no secrets; no resources left behind (create was refused). Routed follow-up: owner approval for ZF_SCANNER=defender on the demo API.
