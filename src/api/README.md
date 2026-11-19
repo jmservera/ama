@@ -6084,3 +6084,58 @@ resident scope revision comes from the work order bindings and must still be cur
 independent quality review can accept or replace the evidence. A correction also updates the current quality
 item; the original notes and earlier corrections stay. Evidence recorded before C4 without a scope binding
 shows a blocker and cannot be accepted. A stale check and the save are atomic within one process only.
+
+## Older-image assistant release probe (#107, Refs only)
+
+`checks/old_image_sql_probe.py` is a diagnostic, not part of normal test discovery. It runs a fixed worker inside
+the retained older API image `zava-forward-api:rpi-41446a0c013d3ba3617610b6` (image ID
+`sha256:ad99bbb99df321f8d874b0df52ead4b3e24f4fb02c21a2245b278ea1a1e2cf78`, Git source unknown) against a
+disposable local SQL Server, while this checkout's connection revokes a release and changes a material control
+between restarts. The five steps are a positive-control invoke, a restart after revocation, a restart after a
+material mismatch, a restart that uses the remaining allowance, and a restart with a larger configured allowance.
+Provider calls are counted on a constructed local stub; no real AI provider or Azure resource is used.
+
+```bash
+cd src/api
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.old_image_sql_probe --out /absolute/new/dir
+```
+
+Prerequisites: a local unix-socket Docker engine that holds that exact image ID, the SQL Server image used by
+`tools/sensor_sql_check.py`, this worktree's `src/` distributions installed, and a new `--out` directory outside
+the repository (its parent is resolved through symlinks and `..` and may not be inside the checkout; the folder
+is created exclusively). Exit 0 is ACCEPTED, 2 is VIOLATED, 3 is INSUFFICIENT and 4 is REFUSED (remote engine,
+wrong image, or unsafe output path).
+
+Topology: the run creates a uniquely named, run-labelled internal Docker network. Each worker is created on that
+network only (nonroot, read-only root, all capabilities dropped, memory, CPU and pid limits, a read-only probe
+mount and an environment allowlist) and reaches SQL Server at `sql-<run>:1433`. The SQL container joins the same
+network by alias and also stays on the default bridge, solely to publish 1433 on `127.0.0.1` for this checkout's
+independent host connection. No host networking, Docker socket, host gateway or other network is attached, and
+the network and container attachments are read back before use.
+
+Judging follows a fixed protocol. Every step must report exit 0, the full packaged-module set with a path and
+sha256, distribution versions, the requested task with its before state, an explicit result and its after state,
+and the re-invoke records; the five task identities and capability/case pairs must be distinct and match. A
+violation that trustworthy evidence proves (a dispatch after a read-back revocation or mismatch, a restored
+approval, a replenished allowance ceiling or consumed quantity) is kept even when a later step failed. After the
+supported mismatch execute and re-invoke complete, the release rows of both affected capabilities must be
+non-active in every later snapshot, including those after the remaining and larger allowance restarts, whatever
+their `prompt_version`: the injected mutation proves the trigger and is no exemption. The audit is bound to the
+release IDs recorded after provisioning; lost or malformed release state gives INSUFFICIENT. Anything
+missing or malformed, including a missing positive control, gives INSUFFICIENT, never a pass. Sampled `@@SPID`
+values are reported only: SQL Server may reuse them, so they neither prove nor disprove which session performed
+an operation; fresh-process evidence is the distinct container and its hostname.
+
+Bounds and cleanup: every host SQL login, query and readiness probe has a wall-clock limit inside a whole-run
+deadline, and command output is capped. A host call that blocks in the driver cannot be killed, so it is
+abandoned, the owned containers and network are removed, and the process exits after writing the report.
+Expected resource names are recorded before creation. An ambiguous create is reconciled only by exact name plus
+the owner and run labels and a verified full ID. Removal is retried a bounded number of times and absence is
+verified; the report lists expected, removed and remaining resources and errors, and an unresolved cleanup is
+never exit 0 and never hides a behavioural violation. The worker state directory is tmpfs, so state local to the
+worker is lost on restart.
+
+`python3 -m checks.old_image_sql_probe --self-test --out /absolute/new/dir` runs the same worker over SQLite from the
+current source. It checks the probe and judge only, is labelled `current-source-self-test`, and is not older-image
+evidence. `tests/test_old_image_sql_probe.py` covers the control logic against an in-memory Docker fake and never
+starts Docker or SQL Server.

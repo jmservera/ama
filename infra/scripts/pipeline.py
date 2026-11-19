@@ -542,6 +542,37 @@ def verify_environment(name: str) -> None:
         )
 
 
+def verify_federation(identity: str, kind: str, environment: str) -> None:
+    """Read-only check that an identity trusts only this repository's exact environment subject."""
+    if not re.fullmatch(r"(dev|test|pilot)(-plan|-release)?", environment):
+        raise PipelineError("Invalid GitHub environment")
+    if kind not in ("managed", "app") or not re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", identity):
+        raise PipelineError("Invalid federated identity reference")
+    repository = required("GITHUB_REPOSITORY")
+    if not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", repository):
+        raise PipelineError("Invalid GitHub repository")
+    if kind == "managed":
+        credentials = az(
+            "identity", "federated-credential", "list",
+            "--identity-name", identity, "--resource-group", "ama",
+        )  # fmt: skip
+    else:
+        credentials = az("ad", "app", "federated-credential", "list", "--id", identity)
+        secrets = az("ad", "app", "show", "--id", identity, "--query", "passwordCredentials")
+        if secrets:
+            raise PipelineError("Federated identity must not hold client secrets")
+    expected = {
+        "issuer": "https://token.actions.githubusercontent.com",
+        "audiences": ["api://AzureADTokenExchange"],
+        "subject": f"repo:{repository}:environment:{environment}",
+    }
+    if not isinstance(credentials, list) or not credentials:
+        raise PipelineError("No federated credential is configured")
+    for credential in credentials:
+        if any(credential.get(key) != value for key, value in expected.items()):
+            raise PipelineError("Federated credential is not scoped to the exact environment")
+
+
 def summarize_plan(plan: Any, subscription: str, sha: str) -> dict[str, Any]:
     if not isinstance(plan, dict) or plan.get("status") != "Succeeded":
         raise PipelineError("What-if did not succeed")
@@ -776,7 +807,15 @@ def verify_from_empty_deployment_reproducibility(repo_root: Path = ROOT) -> Any:
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "operation", choices=("plan", "deploy", "publish", "changed-images", "verify-environment")
+        "operation",
+        choices=(
+            "plan",
+            "deploy",
+            "publish",
+            "changed-images",
+            "verify-environment",
+            "verify-federation",
+        ),
     )
     parser.add_argument("--environment", choices=tuple(PARAMETER_FILES), default="dev")
     parser.add_argument("--infra", type=Path, default=ROOT / "infra")
@@ -784,12 +823,18 @@ def main() -> int:
     parser.add_argument("--images", type=Path)
     parser.add_argument("--project", choices=PROJECTS)
     parser.add_argument("--github-environment")
+    parser.add_argument("--identity")
+    parser.add_argument("--identity-kind", choices=("managed", "app"), default="managed")
     args = parser.parse_args()
     try:
         if args.operation == "verify-environment":
             if not args.github_environment:
                 raise PipelineError("A protected GitHub environment is required")
             verify_environment(args.github_environment)
+        elif args.operation == "verify-federation":
+            if not args.github_environment or not args.identity:
+                raise PipelineError("An identity and GitHub environment are required")
+            verify_federation(args.identity, args.identity_kind, args.github_environment)
         elif args.operation == "changed-images":
             base = os.environ.get("BASE_SHA", "")
             head = os.environ.get("HEAD_SHA", "")

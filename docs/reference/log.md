@@ -13300,3 +13300,38 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-18] add | Issue 189 deployed run-control verifier (Refs #189)
 
 * Added `synthetic.run_live_check` with tests and [issue-189-live-state-verifier-evidence-2026-11-18.md](research/issue-189-live-state-verifier-evidence-2026-11-18.md): live read-only check passes owner, tier, budget and alert configuration and fails recipient reachability; criterion 3 stays unproven for the demo.
+## [2026-11-19] add | Issue 144 deployed image audit (Refs #144)
+
+* Added [issue-144-live-deployed-images-2026-11-19.md](research/issue-144-live-deployed-images-2026-11-19.md) and `infra/scripts/deployed_images.py`: 12 live containers are digest-pinned; pipeline provenance and deployed hardening unproven, no criterion ticked
+
+## [2026-11-19] add | Issue 116 round 4 evidence (Refs #116)
+
+* Added [issue-116-live-r4-evidence-2026-11-19.md](research/issue-116-live-r4-evidence-2026-11-19.md): reason-role set confirmed for the demo, `ZF_REASON_ROLES` can no longer grant the contractor the reason, per-criterion table; criteria 2 to 4 stay unproven and the FULL gate was not run.
+## [2026-11-19] add | Issue 138 federation verifier (Refs #138)
+
+* Added [issue-138-live-r6-2026-11-19.md](research/issue-138-live-r6-2026-11-19.md): `verify-federation` helper with tests and live read-only evidence; all six criteria remain unproven.
+## [2026-11-19] add | Issue 109 research gate guard (Refs #109)
+
+* Added [issue-109-research-gate-guard-2026-11-19.md](research/issue-109-research-gate-guard-2026-11-19.md): `SOURCED:` sensor thresholds require R1 to R3 references in code; per-criterion table, #440 and children stay unproven.
+
+## [2026-11-19] add | Issue 123 D4 golden-file error (Refs #123)
+
+* Added [issue-123-live-d4-golden-error-2026-11-19.md](research/issue-123-live-d4-golden-error-2026-11-19.md): re-check of the #440 triage drafts on main, D4 golden-file named error with tests, per-criterion table; no criterion ticked (Refs #123)
+## [2026-11-19] add | Epic 73 criterion audit (Refs #73)
+
+* Added [issue-73-epic-live-2026-11-19.md](research/issue-73-epic-live-2026-11-19.md): per-criterion table and a new HTTP test for hazard and safeguarding clocks on list rows; the live safeguarding half stays unproven.
+## [2026-11-19] add | Issue 208 epic evidence and child-order audit (Refs #208)
+
+* Added [issue-208-live-epic-evidence-2026-11-19.md](research/issue-208-live-epic-evidence-2026-11-19.md): per-criterion table; 245 local regulatory tests pass; children closed out of ADR phase order; `tools/test_epic_208_child_order.py` pins it
+## [2026-11-19] add | Epic 218 first unmet demo criterion (Refs #218, #220)
+
+* Added [issue-218-first-unmet-demo-criterion-2026-11-19.md](research/issue-218-first-unmet-demo-criterion-2026-11-19.md): #220 criterion 5 selected; new core test proves a bound Entra principal records a staff route step with ranking, hazards and protected state unchanged (mutation probe reproduces the live 403); live proof still needs a redeploy. Per-criterion table included.
+## [2026-11-19] add | Issue 195 build provenance (Refs #195)
+
+* Added [issue-195-build-provenance-live-2026-11-19.md](research/issue-195-build-provenance-live-2026-11-19.md): live revision 0000033 read, commit provenance added to the api image, criteria 1 and 2 unproven, criterion 3 partly proven.
+## [2026-11-19] add | Management Overview AI economics (Refs #100)
+
+* Added [management-tokenomics-overview-100-live-2026-11-19.md](research/management-tokenomics-overview-100-live-2026-11-19.md): Overview card with denominators and Unknown-not-zero, per-criterion table; #440 stabilization stays unproven.
+## [2026-11-18] add | Old-image incomplete completion classification (Refs #1840)
+
+* Added [the per-criterion note](./research/old-image-incomplete-completion-1840.md): fixture-level proof that incomplete mismatch completion is INSUFFICIENT; independent review and full tier remain open (Refs #1840).

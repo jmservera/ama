@@ -22,7 +22,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
-from zava_forward.api import auth, plain_language, sensor_badges, simulator_admin
+from zava_forward.api import auth, build_info, plain_language, sensor_badges, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -2364,6 +2364,7 @@ def _serve() -> None:
     app = App(store, password, law=law)
     host, port = os.environ.get("ZF_BIND", "127.0.0.1"), int(os.environ.get("PORT", "8088"))
     print(f"Zava Forward is running at http://{host}:{port}")
+    print(build_info.startup_line(), flush=True)
     if app.provider.name == "password" and not os.environ.get("ZF_PASSWORD"):
         print(f"Sign in with any staff email and the password {password}")
     app.assistants.start()

@@ -3072,6 +3072,53 @@ async function coordinatorView() {
   await mp.draw(true);
 }
 
+// Formats the server's AI consumption economics; costs without a price source or outcome count stay Unknown, never zero.
+const AI_COST_ROWS = [
+  ["Token cost", "token_cost"],
+  ["Total cost of AI", "total_cost_of_ai"],
+  ["Token cost per accepted outcome", "token_cost_per_accepted_outcome"],
+  ["Cost per accepted outcome", "cost_per_accepted_outcome"],
+  ["Quality-qualified cost per accepted outcome", "quality_qualified_cost_per_accepted_outcome"],
+  ["Booked value", "booked_value"],
+];
+const AI_DENOMINATOR_ROWS = [
+  ["AI proposals", "proposal_count"],
+  ["Accepted outcomes", "accepted_outcome_count"],
+  ["Metered calls", "metered_call_count"],
+  ["Unmetered calls", "unmetered_call_count"],
+  ["Unreviewed proposals", "unreviewed_proposal_count"],
+  ["Rejected or withdrawn proposals", "rejected_or_withdrawn_count"],
+];
+function aiEconomicsRows(econ) {
+  const available = econ && typeof econ === "object";
+  const denominators = (available && econ.denominators) || {};
+  const currency = available && typeof econ.currency === "string" && econ.currency !== "Unknown" ? econ.currency : "";
+  const count = (value) => (Number.isFinite(value) ? new Intl.NumberFormat("en-GB").format(value) : "Unknown");
+  const cost = (value) => {
+    if (value === null || value === undefined || value === "" || value === "Unknown" || value === 0) return "Unknown";
+    return currency ? `${currency} ${value}` : String(value);
+  };
+  return {
+    available: Boolean(available),
+    denominators: AI_DENOMINATOR_ROWS.map(([label, key]) => [label, count(denominators[key])]),
+    costs: AI_COST_ROWS.map(([label, key]) => [label, cost(available ? econ[key] : null)]),
+    priceSource: available && econ.price_source ? String(econ.price_source) : "Unknown",
+    notice: (available && econ.non_benefit_notice) || "",
+  };
+}
+
+function aiEconomicsCard(econ) {
+  const rows = aiEconomicsRows(econ);
+  return h("section", { class: "card", "aria-labelledby": "ai-economics-heading" },
+    h("h2", { id: "ai-economics-heading" }, "AI consumption economics"),
+    !rows.available && h("p", { role: "status" }, "AI economics could not be loaded, so every figure below is Unknown. Reload the page or contact application support."),
+    h("p", { class: "muted" }, `Price source: ${rows.priceSource}. Unknown means no price source or no accepted outcome exists to divide by; it is not zero.`),
+    h("dl", {}, rows.denominators.flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)])),
+    h("h3", {}, "Cost figures"),
+    h("dl", {}, rows.costs.flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)])),
+    rows.notice && h("p", { class: "muted" }, rows.notice));
+}
+
 async function overviewView() {
   const st = await api("/api/stats");
   const k = st.kpis;
@@ -3107,6 +3154,7 @@ async function overviewView() {
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Contractors table" },
           h("table", {}, h("caption", { class: "sr-only" }, "Contractors and their open work"), h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
             h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("th", { scope: "row" }, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
+    aiEconomicsCard(st.ai_consumption_economics),
     h("section", { class: "card" }, h("h2", {}, "Team workload"),
       h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Team workload table" },
         h("table", {}, h("caption", { class: "sr-only" }, "Team workload by person"), h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),
