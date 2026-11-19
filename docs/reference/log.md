@@ -13353,3 +13353,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Discovery assistant demo re-audit, run 3 (Refs #125)
 
 * Added [issue-125-live-r3-discovery-assistant-2026-11-19.md](research/issue-125-live-r3-discovery-assistant-2026-11-19.md): 47 of 47 tests, deny-by-default CLI output and unchanged live image; per-criterion table keeps all three criteria open and records why no source change is warranted.
+## [2026-11-19] add | Epic 81 audit round 2 (Refs #81)
+
+* Added [the per-criterion note](./research/issue-81-epic-audit-live-r2-2026-11-19.md): #1837 fix on main passes locally, deployed image not updated; criteria 1 and 2 stay unproven.
