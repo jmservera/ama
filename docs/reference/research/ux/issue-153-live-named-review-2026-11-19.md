@@ -9,6 +9,8 @@ ms.topic: reference
 
 Demo only, desktop only, under the owner decisions of 2026-11-18. No source, Azure or browser action was needed: the remaining criterion is a human act.
 
+Requirement and journey: the resident portal and communication requirement FR-044 and the resident task journeys in [customer-journeys/residents.md](./customer-journeys/residents.md) depend on this review.
+
 ## Per-criterion status
 
 | Criterion | Status | Evidence |
