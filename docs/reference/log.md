@@ -13639,3 +13639,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 146 monitoring criteria triage (Refs #146)
 
 * Indexed [issue-146-live-triage-2026-11-19.md](research/issue-146-live-triage-2026-11-19.md): fresh read-only inventory and per-criterion status; no source change.
+## [2026-11-19] add | Issue 146 live monitoring re-check (Refs #146)
+
+* Added [issue-146-live4-monitoring-2026-11-19.md](research/issue-146-live4-monitoring-2026-11-19.md): read-only alert and workbook inventory and a per-criterion result; no source change.
