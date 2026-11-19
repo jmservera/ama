@@ -13504,3 +13504,6 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Chat grounding fifth re-check (Refs #164)
 
 * Added [the per-criterion note](./research/issue-164-live-20261119T134556Z-2026-11-19.md): registered and disabled chat task re-confirmed, 76 offline tests OK, thresholds and real-model evidence stay person-gated; no source change.
+## [2026-11-19] add | Issue 521 live check, run 3 (Refs #521)
+
+* Added [resident-demo-authority-live-521-r3-2026-11-19.md](research/resident-demo-authority-live-521-r3-2026-11-19.md): live expiry `2028-01-01T00:00:00Z` re-observed on revision `0000014` with retained output; criterion 4 partly proven, SQL window, image commit and apply time unproven. No source change.
