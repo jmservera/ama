@@ -1,17 +1,17 @@
----
-title: Issue 440 live changes 2026-11-19
-ms.date: 2026-11-19
----
+# Issue 440 live changes, 2026-11-19
 
-Documentation only; no `src/` change. Tier: FOCUSED (documentation and evidence).
+No source change. Tier: FOCUSED (documentation and tracking only; no src, SQL, infrastructure or deployment touched). Refs #440.
 
-Files: `docs/reference/research/issue-440-live-checkpoint-refresh-2026-11-19.md` (new), `docs/reference/README.md` (one index row), `docs/reference/log.md` (one entry), and the dated `.copilot-tracking/` artifacts.
+## Per-criterion status (unticked criteria only)
 
-## Per-criterion table (unticked criteria)
-
-| Criterion | Result | Reason |
+| Criterion | Status | Reason |
 | --- | --- | --- |
-| 7 Triage into filed, deduplicated issues with owner approval | Unproven | Drafts exist (2026-11-18 note), none filed; filing and owner approval of deferrals are coordinator or owner actions; D1 touches SQL (FULL tier) |
-| 8 PR artifacts, Major HVE Builder review, independent review | Unproven | Needs a PR and an independent reviewer; publication is not permitted for this worker |
+| 7. Triage findings into RPI issues, owner approval for deferrals | Unproven for the demo | Four deduplicated drafts exist (f27e18b29, #1936); filing issues is an external GitHub write and approval is the owner's. Not codeable. |
+| 8. Research, plan/details, changes, independent review in the PR; HVE Builder host validation | Unproven for the demo | Needs a PR and an independent reviewer; workers do not push. Host validation Deferred. |
 
-Criteria 1 to 6 remain ticked in the issue and are untouched. Refs #440; no closing keyword.
+Criteria 1-6 were already ticked; not re-proven here.
+
+## Validation
+
+* `git diff --stat`: only `.copilot-tracking/` files.
+* No Azure action; no throwaway resources; no credentials read.
