@@ -6,8 +6,10 @@ field stays hidden until it is added. The vulnerability reason (the
 resident's adjustment text) is shown only to roles with a recorded need; a
 contractor sees only "needs notice" and a named contact, never the reason.
 
-The set of roles with a need is a proposal for the control owners (OD-14,
-OD-19). Override it with ZF_REASON_ROLES (comma separated) once decided.
+The set of roles with a need is confirmed for the synthetic demo by the owner
+decision of 2026-11-18 (OD-14, OD-19); DPO and Legal approval stays a
+production gate. Override it with ZF_REASON_ROLES (comma separated). The
+override can never grant the contractor the reason.
 
 Free-text notes (decided for the exercise, issue 116): no pattern-based
 redaction, because a reason can be typed in any words and a filter would give
@@ -136,11 +138,9 @@ DETAIL_FIELDS = ("id", "stage", "status", "measures", "needs_notice", "named_con
 
 def reason_roles() -> tuple[str, ...]:
     raw = os.environ.get("ZF_REASON_ROLES")
-    return (
-        tuple(r.strip() for r in raw.split(",") if r.strip())
-        if raw is not None
-        else DEFAULT_REASON_ROLES
-    )
+    if raw is None:
+        return DEFAULT_REASON_ROLES
+    return tuple(r.strip() for r in raw.split(",") if r.strip() and r.strip() != CONTRACTOR)
 
 
 def is_contractor(user: dict[str, Any]) -> bool:

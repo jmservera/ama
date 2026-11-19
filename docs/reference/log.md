@@ -13303,3 +13303,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-19] add | Issue 144 deployed image audit (Refs #144)
 
 * Added [issue-144-live-deployed-images-2026-11-19.md](research/issue-144-live-deployed-images-2026-11-19.md) and `infra/scripts/deployed_images.py`: 12 live containers are digest-pinned; pipeline provenance and deployed hardening unproven, no criterion ticked
+
+## [2026-11-19] add | Issue 116 round 4 evidence (Refs #116)
+
+* Added [issue-116-live-r4-evidence-2026-11-19.md](research/issue-116-live-r4-evidence-2026-11-19.md): reason-role set confirmed for the demo, `ZF_REASON_ROLES` can no longer grant the contractor the reason, per-criterion table; criteria 2 to 4 stay unproven and the FULL gate was not run.
