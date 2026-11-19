@@ -113,6 +113,36 @@ class CoordinatorHandoffGuardTests(unittest.TestCase):
                 "missing-live-refresh-rule",
             ),
             (
+                "missing-closure-batch-bound",
+                baseline.replace("up to five", "all"),
+                "missing-tick-liveness-rule",
+            ),
+            (
+                "missing-closure-review-record",
+                baseline.replace("`closure_review`", "`notes`"),
+                "missing-tick-liveness-rule",
+            ),
+            (
+                "missing-tick-log-record",
+                baseline.replace("`tick_log`", "`ticks`"),
+                "missing-tick-liveness-rule",
+            ),
+            (
+                "missing-approved-actions-record",
+                baseline.replace("`approved_actions`", "`approvals`"),
+                "missing-tick-liveness-rule",
+            ),
+            (
+                "missing-expired-approval-reconciliation",
+                baseline.replace("expired approval", "old note"),
+                "missing-tick-liveness-rule",
+            ),
+            (
+                "missing-no-global-stop-clause",
+                baseline.replace("never a success claim or a global stop", "a global stop"),
+                "missing-tick-liveness-rule",
+            ),
+            (
                 "inverted-global-idle-polarity",
                 baseline.replace(
                     'never claim "nothing changed"', 'always claim "nothing changed"'
