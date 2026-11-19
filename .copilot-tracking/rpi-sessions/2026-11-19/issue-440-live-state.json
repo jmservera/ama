@@ -1,5 +1,5 @@
 {
- "task_id": "440-live-20261119T161159Z",
+ "task_id": "issue-440-live-20261119",
  "task_slug": "issue-440-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,29 +7,36 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-19-issue-440-live-r2-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-19-issue-440-live-r2-plan.md",
-  "details": ".copilot-tracking/details/2026-11-19-issue-440-live-r2-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-19-issue-440-live-r2-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-19-issue-440-live-r2-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-19-issue-440-live-r2-review.md"
+  "research": ".copilot-tracking/research/2026-11-19-issue-440-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-19-issue-440-live-plan.instructions.md",
+  "details": ".copilot-tracking/details/2026-11-19-issue-440-live-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-19-issue-440-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-19-issue-440-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-19-issue-440-live-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Critique executed once, verdict proceed",
-   "status": "confirmed",
-   "evidence": "critique r2 file"
+   "decision": "critique executed once, verdict acceptable",
+   "status": "applied",
+   "evidence": ".copilot-tracking/critique/2026-11-19-issue-440-live-critique.md"
   },
   {
-   "decision": "Review executed once, conformant (worker, not independent)",
-   "status": "confirmed",
-   "evidence": "review r2 file"
+   "decision": "review executed once, conformant docs-only",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-19-issue-440-live-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Coordinator publishes; criteria 7 and 8 need owner/PR"
+  "action": "coordinator files issues and publishes"
  },
- "prioritized_follow_ups": null
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "File D1 to D3 and fix D2 README line",
+   "rationale": "criterion 7",
+   "evidence": "docs/reference/research/issue-440-live-checkpoint-refresh-2026-11-19.md"
+  }
+ ]
 }

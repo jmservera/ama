@@ -1,18 +1,15 @@
-# Issue 440 live demo research, 2026-11-19
+---
+title: Issue 440 live research 2026-11-19
+description: Opening record for the two unticked criteria of issue 440 at head 1dddac2e0
+ms.date: 2026-11-19
+---
 
-Task: issue-440-live (Refs #440). Base: 3e5371eb0. Mode: automatic, demo scope (synthetic, desktop).
+Scope: synthetic demo, desktop only. Research disposition: executed (refresh of the 2026-11-18 triage note against head).
 
-Disposition: executed (bounded read-only inspection).
+Unticked criteria: 7 (triage confirmed findings into deduplicated issues, owner approval for deferrals and requirement changes) and 8 (PR artifacts, Major HVE Builder behaviour change, independent review).
 
-## Remaining unticked criteria
+Findings appended below.
 
-| Criterion | Buildable or provable for the demo? | Basis |
-| --- | --- | --- |
-| 7. Triage findings into deduplicated RPI bug/refactor issues; owner approval for requirement changes, pivots and deliberate deferrals | No | Four deduplicated drafts already exist from commit f27e18b29 (#1936). Creating issues is an externally visible GitHub write outside this worker's remit, and the approval half needs the owner. No code or test can satisfy it. |
-| 8. Deliver research, plan/details, changes and independent review artifacts in the PR; HVE Builder static review, behaviour test, host validation | No | Requires a PR (workers must not push or open one) and an independent reviewer. Host validation was recorded as Deferred in f27e18b29. |
-
-## Findings
-
-* Both criteria are publication or human-approval gates, not product behaviour.
-* No live Azure action is relevant, so none was run (no resource created, nothing to delete).
-* Planning Readiness: Ready for a no-source-change loop.
+* D2 guard: 11 violations on 2026-11-18, now 1 (`docs/reference/README.md:1359`). D3 still no caller. D4 `ZF_AI_GOLDEN` exists with a test. D1 not re-run. No draft is filed as an issue.
+* Buildable-with-code criterion: none. Criterion 7 needs filed issues plus owner approval; criterion 8 needs a PR and independent review. Stop after evidence note.
+* Primary evidence: `docs/reference/research/issue-440-live-checkpoint-refresh-2026-11-19.md`. Planning Readiness: Ready.
