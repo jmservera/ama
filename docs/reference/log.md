@@ -13715,3 +13715,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-19 Issue 80 thresholds check
 
 * Added research/excel-transition-thresholds-live-80-2026-11-19.md: the staged transition thresholds criterion of #80 is unproven and needs owner values.
+
+## [2026-11-19] update | Demo evidence bundle 9 link fix
+
+* Replaced a link to an unpublished earlier issue 142 note in [issue-142-live-20261119T1418Z-2026-11-19.md](research/issue-142-live-20261119T1418Z-2026-11-19.md) with plain text so every relative link resolves.
