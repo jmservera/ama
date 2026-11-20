@@ -117,7 +117,7 @@ def hub_adapters(
     Needs `azure-identity` and the `iothub` extra installed; neither is declared by this project.
     """
     try:
-        from azure.identity import DefaultAzureCredential
+        from azure.identity import DefaultAzureCredential  # type: ignore[import-untyped]
     except ImportError:
         raise ProvisionError("ADAPTER_UNAVAILABLE") from None
     spec = dra.EnrollmentSpec(
