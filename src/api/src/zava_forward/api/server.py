@@ -22,7 +22,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
-from zava_forward.api import auth, build_info, plain_language, sensor_badges, simulator_admin
+from zava_forward.api import auth, build_info, plain_language, sensor_badges, simulator_admin, welcome
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -54,7 +54,7 @@ from zava_forward.core.synthetic import sensor_scenarios
 
 WEB = Path(__file__).resolve().parent / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
-         ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png"}
+         ".css": "text/css; charset=utf-8", ".svg": "image/svg+xml", ".png": "image/png", ".webp": "image/webp"}
 OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 SECURITY = {"X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
@@ -106,6 +106,7 @@ class App:
         self.store = store
         self.time = timecap or TimeCapture(store)
         self.tiles = tile_config()
+        self.resident_site = welcome.resident_site_url()
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
         # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
@@ -917,6 +918,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         if app.provider.name == "trusted-proxy":
                             print("auth flow: workbench-entered", flush=True)
                         raw = raw.replace(b"__AUTH_PROVIDER__", app.provider.name.encode())
+                    elif name == "welcome.html":
+                        raw = welcome.render(raw, app.resident_site)
                     if asset.not_modified(self.headers.get("If-None-Match")):
                         return self._send(304, b"", asset.content_type, asset.headers(url.query))
                     return self._send(200, raw, asset.content_type, asset.headers(url.query))

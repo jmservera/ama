@@ -11,7 +11,7 @@ APP = (WEB / "app.js").read_text()
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "wcag-conformance-baseline.md").read_text()
 
 
-def token(name):
+def token(name: str) -> str:
     values = dict(re.findall(r"(--[\w-]+):([^;}\n]+)", CSS))
     value = values["--" + name]
     seen = set()
@@ -26,13 +26,13 @@ def token(name):
     return "#" + "".join(c * 2 for c in value[1:]) if len(value) == 4 else value
 
 
-def lum(hex_colour):
+def lum(hex_colour: str) -> float:
     channels = [int(hex_colour[i : i + 2], 16) / 255 for i in (1, 3, 5)]
     r, g, b = [c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4 for c in channels]
     return 0.2126 * r + 0.7152 * g + 0.0722 * b
 
 
-def ratio(a, b):
+def ratio(a: str, b: str) -> float:
     hi, lo = sorted((lum(a), lum(b)), reverse=True)
     return (hi + 0.05) / (lo + 0.05)
 

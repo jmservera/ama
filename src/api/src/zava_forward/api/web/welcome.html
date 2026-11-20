@@ -3,33 +3,299 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#faf9f6">
+<meta name="description" content="Zava Forward is a research demonstrator for retrofit programme delivery. Every home has an owner and a next step, AI prepares evidence and people decide.">
 <title>Welcome to Zava Forward | Zava North Homes</title>
 <link rel="stylesheet" href="/style.css">
 </head>
 <body class="welcome-page">
 <a class="skip-link" href="#welcome-main">Skip to main content</a>
-<header class="welcome-header">
-  <a href="/" aria-label="Zava North Homes home"><img src="/zava-logo.png" alt="Zava North Homes" width="258" height="90"></a>
-  <span class="welcome-badge">Programme workbench</span>
+<svg class="lp-sprite" aria-hidden="true" focusable="false">__WELCOME_ICONS__</svg>
+<header class="lp-top">
+  <a class="lp-logo" href="/" aria-label="Zava North Homes home"><img src="/zava-logo.png" alt="Zava North Homes" width="258" height="90"></a>
+  <nav class="lp-nav" aria-label="On this page">
+    <a href="#how-it-works">How it works</a>
+    <a href="#ai">AI and people</a>
+    <a href="#roles">Who does what</a>
+    <a href="#sign-in">Sign-in options</a>
+  </nav>
+  <a class="btn lp-action" href="/sign-in">Sign in<span class="lp-long"> to the workbench</span> <span aria-hidden="true">&rarr;</span></a>
 </header>
-<main id="welcome-main" class="welcome" tabindex="-1">
-  <section class="welcome-copy" aria-labelledby="welcome-title">
-    <p class="eyebrow">Zava North Homes</p>
-    <h1 id="welcome-title">Zava Forward</h1>
-    <p class="welcome-lead">Ready, steady, retrofit.</p>
-    <p>One place for your programme team to coordinate home improvements,
-      keep residents informed and move each case forward with confidence.</p>
-    <a class="btn welcome-signin" href="/sign-in">Sign in to the workbench <span aria-hidden="true">&rarr;</span></a>
-    <p class="muted welcome-note">Use your authorised work account. Programme information stays protected until you sign in.</p>
-  </section>
-  <section class="welcome-aside" aria-label="Workbench approach">
-    <p class="eyebrow">A clearer path from plan to progress</p>
-    <h2>People first.<br>Progress together.</h2>
-    <div class="welcome-step"><span aria-hidden="true">01</span><div><h3>See what needs attention</h3><p>Cases, visits and programme priorities in one workbench.</p></div></div>
-    <div class="welcome-step"><span aria-hidden="true">02</span><div><h3>Make informed decisions</h3><p>AI-assisted drafts and evidence, with people in control.</p></div></div>
-    <div class="welcome-step"><span aria-hidden="true">03</span><div><h3>Keep residents at the centre</h3><p>Consent, safety and quality remain part of every step.</p></div></div>
-  </section>
+<main id="welcome-main" class="lp-main" tabindex="-1">
+
+<section class="lp-hero" aria-labelledby="welcome-title">
+  <div class="lp-board">
+    <div class="lp-tile lp-intro">
+      <h1 id="welcome-title">Every home has an owner.</h1>
+      <p class="lp-standfirst">One workbench for the retrofit programme, from survey to handover. Damp, mould and hazard referral is built in.</p>
+      <p class="lp-intro-actions"><a class="btn lp-primary" href="/sign-in">Sign in to the workbench <span aria-hidden="true">&rarr;</span></a> <a href="#how-it-works">See how it works <span aria-hidden="true">&darr;</span></a></p>
+    </div>
+    <figure class="lp-tile lp-photo">
+      <img src="__WELCOME_STREET__" alt="Red-brick terraced homes in evening sun. Scaffolding and wall insulation are going up on the nearest house, with new windows and a heat pump by its front wall." width="1280" height="720" fetchpriority="high">
+    </figure>
+    <div class="lp-tile lp-crop lp-queue" role="img" aria-label="Example work queue with five example homes. Each row shows the stage, who the home is waiting on and the next action. A home with an open safety issue is listed first.">
+      <div class="lp-ui" data-ui>
+        <p class="lp-ui-title">My cases today <span>Open safety issues first</span></p>
+        <ul class="lp-ui-list">
+          <li><span class="lp-ui-id">EXAMPLE-HOME-0301</span> <span class="flag danger">Safety issue open</span>
+            <span class="lp-ui-meta">Survey booked. Waiting on Building Safety Liaison.</span>
+            <span class="lp-ui-next">Next action: Confirm the hazard service received the referral.</span></li>
+          <li><span class="lp-ui-id">EXAMPLE-HOME-0412</span> <span class="flag">Cannot move on yet</span>
+            <span class="lp-ui-meta">Survey write-up. Waiting on Retrofit Coordinator.</span>
+            <span class="lp-ui-next">Next action: Check both sources and record which one is right.</span></li>
+          <li><span class="lp-ui-id">EXAMPLE-HOME-0187</span> <span class="flag">Resident has not confirmed</span>
+            <span class="lp-ui-meta">Waiting for resident decision. Waiting on Resident Liaison Officer.</span>
+            <span class="lp-ui-next">Next action: Call to explain the options.</span></li>
+          <li><span class="lp-ui-id">EXAMPLE-HOME-0233</span>
+            <span class="lp-ui-meta">Funding check. Waiting on Grants and Evidence Officer.</span>
+            <span class="lp-ui-next">Next action: Add the missing contractor quote.</span></li>
+          <li><span class="lp-ui-id">EXAMPLE-HOME-0098</span>
+            <span class="lp-ui-meta">Quality check. Waiting on Quality Inspector.</span>
+            <span class="lp-ui-next">Next action: Inspect the loft insulation.</span></li>
+          <li><span class="lp-ui-id">EXAMPLE-HOME-0356</span>
+            <span class="lp-ui-meta">Install booked. Waiting on Retrofit Coordinator.</span>
+            <span class="lp-ui-next">Next action: Confirm access with the resident.</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="lp-tile lp-crop lp-card" role="img" aria-label="Example case card for EXAMPLE-HOME-0412. It cannot move on yet because two sources disagree about the wall type. The owner is the Retrofit Coordinator and the next action is to check both sources and record which one is right.">
+      <div class="lp-ui" data-ui>
+        <p class="lp-ui-title"><span class="lp-ui-id">EXAMPLE-HOME-0412</span> <span>Survey write-up</span></p>
+        <section class="blocked">
+          <p class="blocked-title"><strong>Cannot move on yet</strong></p>
+          <dl>
+            <dt>Why</dt><dd>Two sources disagree about the wall type.</dd>
+            <dt>Owner</dt><dd>Retrofit Coordinator</dd>
+            <dt>Next action</dt><dd>Check both sources and record which one is right.</dd>
+          </dl>
+        </section>
+        <p class="lp-part-title">Final checks</p>
+        <ul class="lp-checklist">
+          <li class="yes">Done: survey recorded</li>
+          <li class="no">Not yet: sources agree</li>
+          <li class="unknown">Unknown: funding check not started</li>
+        </ul>
+        <div class="ai-suggestion lp-hero-ai">
+          <p class="ai-label">AI suggestion, not approved</p>
+          <p>The survey says cavity walls. The stock record says solid brick.</p>
+        </div>
+      </div>
+    </div>
+    <div class="lp-tile lp-say">
+      <p>Rules run the workflow, AI prepares the evidence and people decide.</p>
+      <a href="#ai">How AI is kept in check <span aria-hidden="true">&darr;</span></a>
+    </div>
+  </div>
+  <p class="lp-note">Research demonstrator with synthetic data. Use your authorised work account. Programme information stays protected until you sign in.</p>
+</section>
+
+<section class="lp-sec lp-flow" id="how-it-works" aria-labelledby="flow-title">
+  <h2 id="flow-title">From survey to handover</h2>
+  <p class="lp-lead">Rules move each home from one stage to the next. Every case shows who owns it and what happens next, and it cannot move on until its final checks are in place. The amber markers show where homes can stall between teams.</p>
+  <ol class="lp-stages" role="list">
+    <li class="lp-stage"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-survey"/></svg></span><h3>Survey</h3><p class="lp-clause">First, the survey is booked with the resident and written up. If two sources disagree, the case stops until one is chosen.</p><span class="lp-stall"><span class="sr-only">Can stall at the next handoff: </span>Stale evidence</span></li>
+    <li class="lp-stage"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-assessment"/></svg></span><h3>Assessment</h3><p class="lp-clause">Then the design is prepared and approved. AI can draft evidence from the survey. Technical sign-offs stay with named people.</p><span class="lp-stall"><span class="sr-only">Can stall at the next handoff: </span>Unclear owner</span></li>
+    <li class="lp-stage"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-funding"/></svg></span><h3>Funding</h3><p class="lp-clause">Next, funding evidence is checked and the application prepared. A finance approver signs off. Nothing is submitted or paid automatically.</p><span class="lp-stall"><span class="sr-only">Can stall at the next handoff: </span>Funding mismatch</span></li>
+    <li class="lp-stage"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-resident"/></svg></span><h3>Resident agreement</h3><p class="lp-clause">The resident decides which works go ahead. Their answer is recorded, never assumed, and an offer is not a booking.</p><span class="lp-stall"><span class="sr-only">Can stall at the next handoff: </span>No resident answer</span></li>
+    <li class="lp-stage"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-contractor"/></svg></span><h3>Contractor</h3><p class="lp-clause">Once the final checks pass, works are ordered and booked. Contractors see only their own jobs.</p><span class="lp-stall"><span class="sr-only">Can stall at the next handoff: </span>Rework</span></li>
+    <li class="lp-stage"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-quality"/></svg></span><h3>Quality and handover</h3><p class="lp-clause">Someone who did not do the work inspects it, then accepts it or returns it with a defect and an owner. Handover is arranged with the resident.</p></li>
+  </ol>
+  <ul class="lp-musts" role="list">
+    <li>Evidence, funding, capacity and resident choice must align.</li>
+    <li>More starts are not the same as more accepted homes.</li>
+    <li>A conflicting record should stop one approval, not all useful work.</li>
+  </ul>
+  <p class="lp-alert"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-safety"/></svg></span><span>At any stage, a safety issue goes straight to a person. <span class="lp-alert-sub">Retrofit work on that home stops until an authorised person decides to restart it.</span></span></p>
+</section>
+
+<section class="lp-sec lp-case" id="case" aria-labelledby="case-title">
+  <h2 id="case-title">What one case contains</h2>
+  <div class="lp-plate">
+    <div class="lp-ui lp-panel" role="img" aria-label="Example case card for EXAMPLE-HOME-0412 with six parts: current owner and next action, final checks, the resident's answer, safety, an AI suggestion that is not approved, and sources and history." data-ui>
+      <p class="lp-ui-title"><span class="lp-ui-id">EXAMPLE-HOME-0412</span> <span>Survey write-up</span></p>
+      <div class="lp-part p1">
+        <p>Current owner: Retrofit Coordinator. Reason: two sources disagree about the wall type.</p>
+        <p class="next-action">Next action: Check both sources and record which one is right.</p>
+      </div>
+      <div class="lp-part p2">
+        <p class="lp-part-title">Final checks: cannot move on yet</p>
+        <ul class="lp-checklist">
+          <li class="yes">Done: survey recorded</li>
+          <li class="no">Not yet: sources agree</li>
+          <li class="unknown">Unknown: funding check not started</li>
+        </ul>
+      </div>
+      <div class="lp-part p3">
+        <p>Resident's answer: <span class="flag">Resident has not confirmed</span></p>
+        <p class="muted">Support needs: Extra support noted</p>
+      </div>
+      <div class="lp-part p4">
+        <p class="status-line ok">No safety issue open</p>
+      </div>
+      <div class="lp-part p5 ai-suggestion">
+        <p class="ai-label">AI suggestion, not approved</p>
+        <p>The survey says cavity walls. The stock record says solid brick.</p>
+        <p class="muted">Sources: Survey, 12 January, version 2. Stock record, 3 March, version 5.</p>
+        <p class="lp-fake-actions" aria-hidden="true"><span>Accept</span><span>Edit</span><span>Reject</span></p>
+      </div>
+      <div class="lp-part p6">
+        <p class="lp-part-title">History</p>
+        <p class="muted">14 November, Retrofit Coordinator: asked for an AI suggestion.</p>
+        <p class="muted">14 November, Retrofit Coordinator: opened the case.</p>
+      </div>
+    </div>
+    <ul class="lp-notes" role="list">
+      <li class="n1"><h3>Owner and next action</h3><p>Always filled in, in plain words, so nobody has to ask who acts next.</p></li>
+      <li class="n2"><h3>Final checks</h3><p>Funding, the resident's answer and open safety issues are checked on the server. Unknown never passes.</p></li>
+      <li class="n3"><h3>The resident's answer</h3><p>Recorded for each measure and never assumed. Support needs show only to roles that need them.</p></li>
+      <li class="n4"><h3>Safety</h3><p>An open safety issue is shown on every screen. It goes to a person and stops retrofit work on that home.</p></li>
+      <li class="n5"><h3>AI suggestion, not approved</h3><p>Optional, labelled and sourced. A person accepts, edits or rejects it as a draft.</p></li>
+      <li class="n6"><h3>Sources and history</h3><p>Every statement points to its source and version. Every change records who made it, when and why.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="lp-sec lp-ai" id="ai" aria-labelledby="ai-title">
+  <h2 id="ai-title"><span>AI prepares.</span> <span>A person decides.</span></h2>
+  <div class="lp-split">
+    <div class="lp-in">
+      <p class="lp-small">What the assistant is given</p>
+      <p class="lp-raw">Request from the Retrofit Coordinator: summarise the evidence for <span class="lp-ui-id">EXAMPLE-HOME-0412</span> and list any gaps.</p>
+      <p class="lp-raw">Survey, 12 January, version 2: "External walls: cavity, unfilled."</p>
+      <p class="lp-raw">Stock record, 3 March, version 5: "Wall type: solid brick."</p>
+    </div>
+    <div class="lp-out">
+      <div class="lp-ui lp-demo" data-ui>
+        <label class="lp-switch"><input type="checkbox" name="workflow-only"> Workflow only</label>
+        <p class="lp-switch-help">Tick to switch AI off. No AI model is used, and the case still moves on.</p>
+        <div class="lp-owned">
+          <p>Current owner: Retrofit Coordinator.</p>
+          <p class="next-action">Next action: Check both sources and record which one is right.</p>
+        </div>
+        <div class="lp-with ai-suggestion">
+          <p class="ai-label">AI suggestion, not approved</p>
+          <p>The survey and the stock record disagree about the wall type.</p>
+          <ul>
+            <li>Survey says cavity walls, unfilled. Sources: Survey, 12 January, version 2.</li>
+            <li>Stock record says solid brick. Sources: Stock record, 3 March, version 5.</li>
+          </ul>
+          <p class="muted">Unknown: which source was checked on site. Nothing is sent, booked, paid, signed off or released.</p>
+          <p class="lp-fake-actions" aria-hidden="true"><span>Accept</span><span>Edit</span><span>Reject</span></p>
+        </div>
+        <div class="lp-without">
+          <p class="lp-part-title">Template draft, not approved</p>
+          <p>Two sources disagree about the wall type. Check both and record which one is right.</p>
+          <p class="muted">Same owner, same next action. Work does not wait for AI.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lp-checks">
+    <div class="lp-checks-head">
+      <h3>7 checks between draft and decision</h3>
+      <img class="lp-shield" src="__WELCOME_SHIELD__" alt="" width="440" height="679" loading="lazy">
+    </div>
+    <ol>
+      <li>You are signed in with your work account.</li>
+      <li>Your role and the case decide what you can ask about.</li>
+      <li>Only permitted evidence goes in, with its source and version.</li>
+      <li>One bounded request, with a limit on size and time.</li>
+      <li>The draft is checked for sources and freshness. A stale or failed draft stops.</li>
+      <li>A person reviews it and accepts, edits or rejects it, with a reason.</li>
+      <li>Consent, quality and finance decisions stay separate, and every step is recorded.</li>
+    </ol>
+    <p class="lp-aside">Safety concerns skip AI and go straight to people. If AI is unavailable, work carries on with the ordinary case controls.</p>
+  </div>
+</section>
+
+<section class="lp-sec lp-roles" id="roles" aria-labelledby="roles-title">
+  <h2 id="roles-title">Who does what</h2>
+  <p class="lp-lead">Same home, different view. Each person sees what their role needs, and no more.</p>
+  <div class="lp-group">
+    <div class="lp-tab"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-survey"/></svg></span><h3>Employees</h3><p>Sign in with your work account. Your role decides what you see.</p></div>
+    <ul class="lp-bands" role="list">
+      <li><h4>Retrofit Programme Manager</h4><p>Sees the whole programme: queues, waiting times, capacity, funding and closed cases. Can send a case back to an earlier stage or reopen it, and sees the reason for extra support.</p></li>
+      <li><h4>Retrofit Coordinator</h4><p>Runs each case day to day: who owns it, what happens next, evidence, visits and the final checks before works are ordered.</p></li>
+      <li><h4>Resident Liaison Officer</h4><p>Keeps the resident's voice in the case: contact preferences, support needs, their answers and callbacks. Records what the resident says and never decides for them.</p></li>
+      <li><h4>Building Safety Liaison</h4><p>Takes damp, mould and hazard referrals. Safety concerns go straight to people. Only this role or a manager can restart stopped retrofit work.</p></li>
+      <li><h4>Grants and Evidence Officer</h4><p>Prepares funding evidence and applications and shows what is missing. A different person approves, and the system never submits or pays.</p></li>
+      <li><h4>Quality Inspector</h4><p>Checks finished work against a checklist, then accepts it or returns it with a defect and an owner. Cannot accept work they did or recorded.</p></li>
+      <li><h4>Programme Support Officer</h4><p>Backs up the programme manager with the same case and funding views. Can approve funding and sign-offs, but never something they prepared themselves.</p></li>
+    </ul>
+  </div>
+  <div class="lp-group">
+    <div class="lp-tab"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-contractor"/></svg></span><h3>Contractors</h3><p>Same sign-in as employees for now. You see only your own jobs.</p></div>
+    <ul class="lp-bands" role="list">
+      <li><h4>My jobs</h4><p>The jobs assigned to your company, each with its address, stage and next visit.</p></li>
+      <li><h4>One job</h4><p>The works planned and the stage, a named contact at Zava North Homes, and whether the resident has confirmed that each measure can go ahead.</p></li>
+      <li><h4>Work orders</h4><p>Your own work orders, each marked "Needs notice" when a resident needs extra warning before a visit.</p></li>
+      <li><h4>Never shown</h4><p>The resident's name, contact details and reason for support. Also finance, other companies' jobs and AI suggestions.</p></li>
+    </ul>
+  </div>
+  <div class="lp-group">
+    <div class="lp-tab"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-house"/></svg></span><h3>Residents</h3><p>A separate site with its own sign-in. Read-only today: decisions about works stay with you and the people who speak to you.</p></div>
+    <ul class="lp-bands" role="list">
+      <li><h4>Your progress</h4><p>Where the works have reached at your own home, in plain words.</p></li>
+      <li><h4>What happens next</h4><p>The next step and who to ask. A person can always help, and phone, letters and visits stay available.</p></li>
+      <li><h4>Planned works and documents</h4><p>The works planned for your home and the documents kept about them.</p></li>
+      <li><h4>Help and callbacks</h4><p>How to reach a person. You can try booking a callback; in the demonstration nobody will call.</p></li>
+    </ul>
+  </div>
+</section>
+
+<section class="lp-sec lp-waits" id="waits" aria-labelledby="waits-title">
+  <h2 id="waits-title">Less waiting between teams</h2>
+  <p class="lp-lead">Homes rarely stall on ambition. They stall at the handoff between one team and the next. Each of these waits has a named answer in the workbench.</p>
+  <figure class="lp-tall">
+    <img src="__WELCOME_ESTATE__" alt="Aerial view of a housing estate of brick houses and flats under a cloudy sky, with evening light on the windows." width="560" height="788" loading="lazy">
+  </figure>
+  <dl class="lp-pairs">
+    <div><dt>Evidence goes stale.</dt><dd>Decisions are tied to the version of the evidence they used. When a source changes, only the reviews that relied on it reopen.</dd></div>
+    <div><dt>Nobody knows who acts next.</dt><dd>Every case shows an owner and a next action. A handoff counts only when the receiver accepts it.</dd></div>
+    <div><dt>Funding does not match the works.</dt><dd>Funding evidence is checked before anything is ordered. A gap stops that step, with a named owner, and other useful work carries on.</dd></div>
+    <div><dt>The resident has not answered.</dt><dd>Each answer is recorded for each measure and never assumed. An offer is not a booking, and the case shows who is waiting on whom.</dd></div>
+    <div><dt>Work comes back for rework.</dt><dd>Inspectors check against a checklist. A defect goes back to a named owner and is inspected again.</dd></div>
+  </dl>
+  <p class="lp-big">Work never waits for AI. A problem stops one step, not the whole programme.</p>
+  <p class="lp-caveat">These are design intentions tested on synthetic data. Whether homes move faster, and how much review effort this takes, is what a pilot would measure.</p>
+</section>
+
+<section class="lp-sec lp-doors" id="sign-in" aria-labelledby="doors-title">
+  <h2 id="doors-title">Choose how to sign in</h2>
+  <div class="lp-door-row">
+    <div class="lp-door lp-door-main">
+      <div class="lp-door-head"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-survey"/></svg></span><h3>Employees</h3></div>
+      <p>Use your work account. You confirm who you are, then your role decides what you see.</p>
+      <p>No role on your account? You will see a message saying so. Ask your administrator to assign one.</p>
+      <p class="lp-door-links"><a class="btn" href="/sign-in">Sign in to the workbench <span aria-hidden="true">&rarr;</span></a> <a href="/sign-in?switch=1">Use another account</a></p>
+    </div>
+    <div class="lp-door">
+      <div class="lp-door-head"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-contractor"/></svg></span><h3>Contractors</h3></div>
+      <p>Employees and contractors use the same sign-in for now. You see only the jobs assigned to your company.</p>
+      <p class="lp-door-links"><a class="btn" href="/sign-in">Sign in as a contractor <span aria-hidden="true">&rarr;</span></a></p>
+    </div>
+    <div class="lp-door">
+      <div class="lp-door-head"><span class="lp-node"><svg class="lp-ico" aria-hidden="true" focusable="false"><use href="#ic-house"/></svg></span><h3>Residents</h3></div>
+      <p>The resident site is separate and shows your own home only. Today it is a synthetic demonstration with example homes.</p>
+      <p class="lp-door-links"><!--resident-site--><a class="btn" href="__RESIDENT_SITE_URL__">Open the resident site <span aria-hidden="true">&rarr;</span></a><!--/resident-site--><!--no-resident-site-->Ask your housing officer for the address of the resident site.<!--/no-resident-site--></p>
+    </div>
+  </div>
+</section>
+
+<figure class="lp-band">
+  <img src="__WELCOME_DUSK__" alt="Finished red-brick terrace at dusk, with solar panels on the roof, heat pumps by the front walls and lit windows." width="1280" height="720" loading="lazy">
+</figure>
+
 </main>
-<footer class="welcome-footer">Zava Forward &middot; Zava North Homes <span>Research demonstrator &middot; Not a resident service</span></footer>
+<footer class="lp-foot">
+  <div class="lp-foot-notes">
+    <p>Zava Forward is a research demonstrator. Zava North Homes is a fictional housing association, and every record shown here is synthetic.</p>
+    <p>Not a resident service. If you need help with your home, speak to your housing officer or visit your local office.</p>
+    <a href="#welcome-main">Back to the top</a>
+  </div>
+  <p class="lp-foot-line">Ready, steady, retrofit.</p>
+  <p class="lp-foot-meta"><span translate="no">Zava Forward</span> for <span translate="no">Zava North Homes</span>. The pictures are illustrations from the capstone deck, not photographs of real homes or residents.</p>
+</footer>
 </body>
 </html>
