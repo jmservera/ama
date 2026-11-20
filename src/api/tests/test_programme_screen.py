@@ -27,6 +27,7 @@ const context = vm.createContext({
   routeController: new AbortController(), me: {user: {role}},
   api: async (path) => path.startsWith("/api/coordinator")
     ? (!path.includes("view=all") ? Promise.reject(new Error("scope")) : process.argv[3] === "down" ? Promise.reject(new Error("down"))
+      : process.argv[3] === "empty" ? {as_of: "2026-10-01", audit_integrity: "Intact"}
       : {as_of: "2026-10-01", audit_integrity: "Intact",
         funnel: [{stage: "Funding check", entries: 3, exits: 2, returns: 1, reopens: 0, denominator: 9}]})
     : {total: 3, items: [returned, pending, plain]},
@@ -280,7 +281,9 @@ class ProgrammeScreen(unittest.TestCase):
             self.assertIn("Funding amounts and claim values", before, role)
         down = str(run(coordinator="down")["before"])
         self.assertIn("Not shown for this role", down)
-        self.assertIn("Lifecycle and funnel counts are Unknown", down)
+        self.assertIn("Lifecycle and funnel counts could not be read", down)
+        empty = str(run(coordinator="empty")["before"])
+        self.assertIn("Lifecycle and funnel counts are Unknown", empty)
 
     def test_filter_and_reset_change_view_only(self) -> None:
         out = run()

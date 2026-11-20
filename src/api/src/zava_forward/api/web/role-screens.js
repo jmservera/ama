@@ -533,7 +533,9 @@ function programmeQueue(first, total, loadPage, start = 0) {
         onclick: () => { select.value = "default"; apply("default"); } }, "Reset to default view")),
     status, holder);
 }
+const programmeFunnelFailed = Object.freeze({ failed: true });
 const programmeFunnel = (report) => {
+  if (report === programmeFunnelFailed) return h("p", { class: "empty", "data-state-cue": "unknown" }, "State: Unknown. Lifecycle and funnel counts could not be read. Owner: application support. Next action: refresh to try again, then contact application support if it continues.");
   const rows = report?.funnel;
   if (!Array.isArray(rows)) return h("p", { class: "empty", "data-state-cue": "unknown" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
   return h("div", {},
@@ -721,7 +723,7 @@ registerRoleScreen({
     const at = c && items ? items.findIndex((row) => row.id === c.id) : -1;
     const start = at < 0 ? 0 : Math.floor((page * screenPageSize + at) / programmePageSize) * programmePageSize;
     const first = await loadPage(start);
-    const report = await api("/api/coordinator?view=all", undefined, signal).catch(() => null);
+    const report = await api(`/api/coordinator?view=all&as_of=${encodeURIComponent(new Date().toISOString())}`, undefined, signal).catch(() => programmeFunnelFailed);
     return h("div", {},
       programmeJumpNav("Jump to a section of the programme overview", programmeOverviewSections),
       screenJumpTarget("programme-overview-boundary", screenPanel("Evidence boundary",

@@ -906,7 +906,7 @@ let me = {user: {role: "Retrofit Programme Manager"}};
 const location = {hash: "#/screens"};
 const history = {replaceState() {}};
 const routeController = new AbortController();
-const api = async () => ({});
+let api = async () => ({});
 """
 CASE_STUBS = (
     H
@@ -1063,6 +1063,54 @@ return {items, sentences, refusals: page.textContent.split("Owner: your team man
                 )
                 for item in not_installed
             )
+        )
+
+
+class ProgrammeQueueRequest(unittest.TestCase):
+    OVERVIEW = """
+const paths = [];
+api = async path => {
+  paths.push(path);
+  if (!path.startsWith("/api/coordinator")) return {items: [], total: 0};
+  if (MODE === "fail") throw Object.assign(new Error("Internal error"), {status: 500});
+  if (MODE === "empty") return {};
+  return {as_of: "2026-11-20T10:00:00.000Z", audit_integrity: "Intact",
+    funnel: [{stage: "Funding check", entries: 3, exits: 2, returns: 1, reopens: 0,
+      denominator: 9}]};
+};
+const view = await roleScreens.get("programme-queue").overview(new AbortController().signal);
+const notes = byTag(wrap(view), "p").map(p => p.textContent)
+  .filter(text => /^State: (Unknown\\. Lifecycle|Recorded stage history)/.test(text));
+return {requests: paths.filter(path => path.startsWith("/api/coordinator")), notes};
+"""
+
+    def overview(self, mode: str) -> Any:
+        return run(self.OVERVIEW.replace("MODE", json.dumps(mode)), H, SCREEN_STUBS, ROLE_SCREENS)
+
+    def test_the_request_carries_an_as_of_instant_the_server_accepts(self) -> None:
+        out = self.overview("ok")
+        self.assertEqual(len(out["requests"]), 1)
+        self.assertRegex(
+            out["requests"][0],
+            r"^/api/coordinator\?view=all&as_of=\d{4}-\d\d-\d\dT\d\d%3A\d\d%3A\d\d\.\d{3}Z$",
+        )
+        self.assertEqual(len(out["notes"]), 1)
+        self.assertTrue(out["notes"][0].startswith("State: Recorded stage history (not a pass)."))
+
+    def test_a_failed_read_says_so_with_an_owner_and_next_action(self) -> None:
+        self.assertEqual(
+            self.overview("fail")["notes"],
+            [
+                "State: Unknown. Lifecycle and funnel counts could not be read. "
+                "Owner: application support. Next action: refresh to try again, then contact "
+                "application support if it continues."
+            ],
+        )
+
+    def test_a_report_with_no_funnel_keeps_the_unknown_wording(self) -> None:
+        self.assertEqual(
+            self.overview("empty")["notes"],
+            ["State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied."],
         )
 
 
