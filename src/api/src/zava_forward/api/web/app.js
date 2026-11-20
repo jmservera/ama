@@ -3009,10 +3009,9 @@ function mapPanel(coordinator = null, filters = null) {
   const sensorFilterInput = h("input", { type: "checkbox", id: "map-sensor-alerts",
     onchange: () => { alertsOnly = sensorFilterInput.checked; if (lastView) renderView(lastView, false); } });
   const sensorFilterNote = h("p", { class: "muted", "aria-live": "polite" });
-  const sensorFilter = h("div", { class: "map-sensor-filter", hidden: Boolean(coordinator) }, sensorFilterInput,
-    h("label", { for: "map-sensor-alerts" }, "Show only homes with stale or offline sensors"),
-    h("p", { class: "muted", id: "map-sensor-alerts-hint" }, "Applies to individual homes. Zoom in until homes are shown one by one."), sensorFilterNote);
-  sensorFilterInput.setAttribute("aria-describedby", "map-sensor-alerts-hint");
+  const sensorFilterRow = Fields.checkRow({ id: "map-sensor-alerts", label: "Show only homes with stale or offline sensors",
+    hint: "Applies to individual homes. Zoom in until homes are shown one by one.", control: sensorFilterInput });
+  const sensorFilter = h("div", { class: "map-sensor-filter", hidden: Boolean(coordinator) }, sensorFilterRow.block, sensorFilterNote);
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),

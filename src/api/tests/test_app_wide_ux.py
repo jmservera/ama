@@ -13,6 +13,8 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from test_wcag_workbench_baseline_151 import extract_function, run_node_json
+
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 DOM = r"""
@@ -469,6 +471,7 @@ return {hintClasses: byTag(page, "p").map(p => p.className).filter(name => /hint
   })};
 """,
             H,
+            FIELDS,
             INTAKE_STUBS,
             INTAKE,
         )
@@ -483,6 +486,101 @@ return {hintClasses: byTag(page, "p").map(p => p.className).filter(name => /hint
         for row in out["linked"]:
             self.assertEqual(row[:2], ["LABEL", "P"])
             self.assertTrue(all(row[3:]), row)
+
+
+class CheckRows(unittest.TestCase):
+    def test_intake_checkboxes_keep_their_label_beside_the_box(self) -> None:
+        out = run(
+            """
+const page = render(RECEIPT);
+return byTag(page, "input").filter(el => el.attrs.type === "checkbox").map(box => {
+  const row = box.parentElement;
+  const next = row.children[row.children.indexOf(box) + 1];
+  return [box.id, row.className, next.tagName, next.attrs.for, next.textContent];
+});
+""",
+            H,
+            FIELDS,
+            INTAKE_STUBS,
+            INTAKE,
+        )
+        self.assertEqual(
+            out,
+            [
+                [
+                    "intake-confirmed",
+                    "check",
+                    "LABEL",
+                    "intake-confirmed",
+                    "The worker confirms these notes are their own",
+                ],
+                [
+                    "intake-offline",
+                    "check",
+                    "LABEL",
+                    "intake-offline",
+                    "These were written down offline earlier",
+                ],
+                [
+                    "fix-ok-R1",
+                    "check",
+                    "LABEL",
+                    "fix-ok-R1",
+                    "The worker confirms this correction is their own",
+                ],
+            ],
+        )
+
+    def test_overview_sensor_filter_is_a_check_row_that_keeps_its_hint_link(self) -> None:
+        app_js = (WEB / "app.js").read_text()
+        map_slice = extract_function(app_js, "const OV_TILES =", "async function coordinatorView(")
+        out = run_node_json(
+            r"""
+const h = makeNode, svg = makeNode;
+let disposeMapPanel = null;
+const routeController = new AbortController();
+const listState = {};
+const me = { map: null };
+const qs = (o) => new URLSearchParams(o).toString();
+const document = {
+  body: makeNode("body"), activeElement: null, getElementById: () => makeNode("div") };
+const AsyncAction = { feedback: () => ({ finish() {} }) };
+const api = async () => ({ mode: "clusters", total: 0, mapped: 0, unmapped: 0, items: [] });
+const bounds = { getSouth: () => 53, getWest: () => -2, getNorth: () => 54, getEast: () => -1 };
+const L = {
+  map: () => ({ setView() { return this; }, on() {}, getBounds: () => bounds, getZoom: () => 10,
+    fitBounds() {}, invalidateSize() {}, remove() {} }),
+  tileLayer: () => ({ on() { return this; }, addTo() { return this; } }),
+  layerGroup: () => ({ addTo() { return this; }, clearLayers() {} }),
+  divIcon: (opts) => opts,
+  marker: () => ({ on() { return this; }, addTo() { return this; },
+    getElement: () => makeNode("button") }),
+};
+"""
+            + (WEB / "fields.js").read_text()
+            + map_slice
+            + r"""
+const filter = mapPanel().box.querySelector(".map-sensor-filter");
+const row = filter.querySelector(".check");
+const input = filter.querySelector("#map-sensor-alerts");
+const part = (kid) => kid.tag + (kid.getAttribute("for") ? ":" + kid.getAttribute("for") : "")
+  + (kid.getAttribute("id") ? "#" + kid.getAttribute("id") : "");
+console.log(JSON.stringify({
+  parts: row.children.map(part), label: row.children[1].textContent,
+  hint: row.children[2].textContent, described: input.getAttribute("aria-describedby"),
+  type: input.getAttribute("type"),
+}));
+"""
+        )
+        self.assertEqual(
+            out["parts"],
+            ["input#map-sensor-alerts", "label:map-sensor-alerts", "p#map-sensor-alerts-hint"],
+        )
+        self.assertEqual(out["label"], "Show only homes with stale or offline sensors")
+        self.assertEqual(
+            out["hint"], "Applies to individual homes. Zoom in until homes are shown one by one."
+        )
+        self.assertEqual((out["type"], out["described"]), ("checkbox", "map-sensor-alerts-hint"))
 
 
 if __name__ == "__main__":

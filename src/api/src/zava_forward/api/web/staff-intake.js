@@ -69,8 +69,8 @@ function intakeReceipt(order, receipt, rerender) {
           h("textarea", { id: `fix-note-${receipt.record}`, name: "note", maxlength: 200, rows: 2, required: true })),
         intakeField(`fix-by-${receipt.record}`, "Worker's name",
           h("input", { id: `fix-by-${receipt.record}`, name: "confirmed_by", value: receipt.confirmed_by, maxlength: 80, autocomplete: "off", spellcheck: "false" })),
-        h("div", { class: "field" }, h("input", { type: "checkbox", id: `fix-ok-${receipt.record}`, name: "confirmed" }),
-          h("label", { for: `fix-ok-${receipt.record}` }, "The worker confirms this correction is their own")),
+        Fields.checkRow({ id: `fix-ok-${receipt.record}`, label: "The worker confirms this correction is their own",
+          control: h("input", { type: "checkbox", id: `fix-ok-${receipt.record}`, name: "confirmed" }) }).block,
       ], "Record correction", (data) => api(`/api/workorders/${encodeURIComponent(order)}/field-correct`, {
         record: receipt.record, label: data.get("label"), note: data.get("note"),
         confirmed_by: data.get("confirmed_by"), confirmed: data.get("confirmed") === "on" }), rerender))
@@ -102,9 +102,9 @@ function intakeCapture(order, pack, rerender) {
     notes,
     intakeField("intake-worker", "Worker's name", h("input", { id: "intake-worker", name: "confirmed_by", maxlength: 80, autocomplete: "off", spellcheck: "false" }),
       "The person who did the work, not you."),
-    h("div", { class: "field" }, h("input", { type: "checkbox", id: "intake-confirmed", name: "confirmed" }),
-      h("label", { for: "intake-confirmed" }, "The worker confirms these notes are their own")),
-    h("div", { class: "field" }, offline, h("label", { for: "intake-offline" }, "These were written down offline earlier")),
+    Fields.checkRow({ id: "intake-confirmed", label: "The worker confirms these notes are their own",
+      control: h("input", { type: "checkbox", id: "intake-confirmed", name: "confirmed" }) }).block,
+    Fields.checkRow({ id: "intake-offline", label: "These were written down offline earlier", control: offline }).block,
     intakeField("intake-captured", "Time captured, if offline", h("input", { id: "intake-captured", name: "captured_at", type: "datetime-local" })),
   ], "Record worker evidence", async (data) => {
     const items = {};

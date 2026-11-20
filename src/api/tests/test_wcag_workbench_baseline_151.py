@@ -285,6 +285,7 @@ const L = {
   }),
 };
 """
+            + (WEB / "fields.js").read_text()
             + map_slice
             + r"""
 (async () => {

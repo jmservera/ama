@@ -353,7 +353,7 @@ function makeLeafletStub() {
     console,
   });
 
-  const scripts = payload.scripts || ["app.js", "role-screens.js"];
+  const scripts = payload.scripts || ["fields.js", "app.js", "role-screens.js"];
   for (const name of scripts) {
     const src = fs.readFileSync(`${webDir}/${name}`, "utf8");
     vm.runInContext(src, context, { filename: name });
