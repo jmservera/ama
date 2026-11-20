@@ -431,6 +431,25 @@ class ProxyHttpTests(Base):
                     self.assertIn("text/javascript" if path.endswith(".js") else "text/html",
                                   response.headers["Content-Type"])
 
+    def test_valid_entra_principal_without_staff_role_or_in_wrong_tenant_is_denied(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+
+        opener = urllib.request.build_opener(NoRedirect())
+        wrong = {
+            "no role": principal(roles=()),
+            "unmapped role": principal(roles=("ZavaForward.Unknown",)),
+            "wrong tenant": principal(tid="99999999-2222-3333-4444-555555555555"),
+        }
+        for label, header in wrong.items():
+            with self.subTest(label):
+                self.assertEqual(self.call("/api/me", {"X-MS-CLIENT-PRINCIPAL": header})[0], 401)
+                with self.assertRaises(urllib.error.HTTPError) as error:
+                    opener.open(urllib.request.Request(self.base + "/app", headers={"X-MS-CLIENT-PRINCIPAL": header}))
+                self.assertEqual(error.exception.code, 403)
+                self.assertIn("/.auth/logout", error.exception.read().decode())
+
     def test_principal_gives_role_and_projection(self):
         code, me = self.call("/api/me", {"X-MS-CLIENT-PRINCIPAL": principal()})
         self.assertEqual((code, me["user"]["role"]), (200, "Resident Liaison Officer"))
