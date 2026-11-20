@@ -68,6 +68,7 @@ function mutationKey(path, body) {
 
 const GENERIC_CHANGE_ERROR = "We cannot show whether this change was saved. Owner: application support. Next action: check the recorded history before repeating a change, then contact application support if it continues.";
 const GENERIC_READ_ERROR = "This could not load and the cause is not known. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
+let signedInBefore = false;
 async function api(path, body, signal) {
   const progress = typeof AsyncAction !== "undefined"
     ? AsyncAction.feedback("Loading workspace data") : null;
@@ -90,7 +91,9 @@ async function api(path, body, signal) {
     });
     signal.throwIfAborted();
     if (res.status === 401 && path !== "/api/login") {
-      me = null; login("Your session has ended. Sign in again.");
+      // A first visit has no session to end, so its sign-in card carries no error.
+      const hadSession = me !== null || signedInBefore;
+      me = null; login(hadSession ? "Your session has ended. Sign in again." : "");
       const error = new Error("Your session has ended. Sign in again."); error.status = 401; throw error;
     }
     if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; e.errors = data.errors; throw e; }
@@ -111,6 +114,13 @@ const ago = (s) => {
   const days = Math.floor((Date.now() - new Date(s)) / 864e5);
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
 };
+const SITE_TITLE = "Zava Forward | Zava North Homes";
+const SIGN_IN_TITLE = "Sign in | Zava Forward";
+// The tab title repeats the page heading, so a person with several tabs open can tell the screens apart.
+const pageTitle = () => {
+  const heading = app.querySelector("h1")?.textContent.trim();
+  return heading ? `${heading} | Zava Forward` : SITE_TITLE;
+};
 const show = (...nodes) => {
   const focused = document.activeElement;
   const path = (location.hash || "#/").split("?")[0];
@@ -120,6 +130,7 @@ const show = (...nodes) => {
       && !app.contains(focused));
   app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType));
   renderedContext = { session: me, path };
+  document.title = pageTitle();
   if (!preserveFocus || !focused?.isConnected) app.focus();
 };
 
@@ -145,6 +156,7 @@ function login(msg) {
       h("p", { class: "err", role: "alert" }, msg || "Use your authorised Microsoft work account."),
       h("a", { class: "btn", href: "/sign-in" }, "Sign in with Microsoft"),
       h("p", {}, h("a", { href: "/" }, "Back to welcome"))));
+    document.title = SIGN_IN_TITLE;
     return;
   }
   const email = h("input", { id: "email", type: "email", autocomplete: "username", required: true });
@@ -156,16 +168,20 @@ function login(msg) {
     catch (x) { err.textContent = x.message; }
   } },
     h("h1", {}, "Sign in"),
+    h("p", {}, "Zava Forward is the staff workbench for the retrofit programme. This is a demonstration with synthetic data."),
     h("label", { for: "email" }, "Work email"), email,
     h("label", { for: "pw" }, "Password"), pass, err,
-    h("button", { type: "submit" }, "Sign in"));
+    h("button", { type: "submit" }, "Sign in"),
+    h("p", {}, h("a", { href: "/" }, "Back to the welcome page")));
   show(form);
+  document.title = SIGN_IN_TITLE;
 }
 
 async function start() {
   const session = me;
   const refreshed = await api("/api/me");
   if (me !== session) return;
+  signedInBefore = true;
   if (session && JSON.stringify(session.user) === JSON.stringify(refreshed.user)
       && JSON.stringify(session.account) === JSON.stringify(refreshed.account)) {
     Object.assign(session, refreshed);
@@ -447,7 +463,14 @@ async function route() {
     else link.removeAttribute("aria-current");
   });
   const destination = me.navigation.find((item) => item.href === active);
-  const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : baseHash === "#/exceptions" ? "Data steward and operator exception queue" : "Case workspace")}.`;
+  const routeScope = hash === "#/handoff-waiting" ? "Handoff waiting times"
+    : baseHash === "#/exceptions" ? "Data steward and operator exception queue"
+    : baseHash === "#/import" ? "Spreadsheet check"
+    : baseHash === "#/coordinator" ? "Coordinator flow"
+    : baseHash.startsWith("#/building/") ? "Shared building context"
+    : baseHash.startsWith("#/case-home/") ? "Versioned home case"
+    : "Case workspace";
+  const routeStatus = `${me.user.role}. ${destination?.scope || routeScope}.`;
   workspaceStatus.textContent = routeStatus;
   try {
   await requireWorkspaceScripts(hash, Boolean(m));
@@ -1031,14 +1054,14 @@ async function listView(view) {
       h("dl", {}, FLAGS.flatMap(([, label, definition]) => [
         h("dt", {}, label), h("dd", {}, definition)
       ]))));
-  show(h("div", { class: "layout" }, side, h("div", { class: "main" },
+  show(h("div", { class: "row between" }, title, h("div", { class: "row" },
+    h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
+    h("a", { class: "btn alt", href: "#/handoff-waiting" }, "Handoff waiting times"),
+    h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
+  h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
     view === "mine" && pendingHandoffs(),
     view === "mine" && priorityPanel(),
-    h("div", { class: "row between" }, title, h("div", { class: "row" },
-      h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
-      h("a", { class: "btn alt", href: "#/handoff-waiting" }, "Handoff waiting times"),
-      h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
     results)));
   await load();
 }
