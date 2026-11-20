@@ -542,6 +542,8 @@ const programmeFunnel = (report) => {
       ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
       rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));
 };
+// Server sentences often end in a full stop, and the screens add their own when they join sentences.
+const withoutStop = (text) => String(text).replace(/\.$/, "");
 const programmeGate = (blockers, pattern) => blockers.filter((b) => pattern.test(b.step));
 const programmeJoin = (values) => [...new Set(values.filter(Boolean))].join("; ") || "Unknown";
 const programmeOwner = (b) => {
@@ -551,7 +553,7 @@ const programmeOwner = (b) => {
 };
 const programmeGateRow = (name, blocked, clear, unknown) => {
   if (blocked.length) return [name, "Blocked",
-    blocked.map((b) => b.reason).join(" "), programmeJoin(blocked.map(programmeOwner)),
+    [...new Set(blocked.map((b) => b.reason))].join(" "), programmeJoin(blocked.map(programmeOwner)),
     programmeJoin(blocked.map((b) => b.next_action))];
   if (unknown) return [name, "Blocked: evidence missing", unknown, "Unknown", "Record the missing evidence through the permitted review"];
   return [name, "No recorded blocker", `${clear} This is not a pass; a named person decides readiness.`, "Unknown", "Unknown"];
@@ -655,30 +657,34 @@ function programmeGates(c, orders) {
 }
 // Design-level hypothesis from the customer journey atlas, not observed behaviour (validation in #155).
 const journeyStages = [
-  ["1. Report or nominate", null, "No screen shows a source account yet. Urgent safety intake runs independently."],
-  ["2. Understand home and household", "technical-queue", "Unknown stays unknown; the hazard route runs in parallel."],
-  ["3. Decide scope and feasibility", "resident-choice", "Generic consent is not accepted."],
-  ["4. Coordinate ready work", "procurement-packages", "An offer is not a booking."],
-  ["5. Deliver and capture", "contractor-job-pack", "Submission is not acceptance."],
-  ["6. Inspect and remedy", "quality-queue", "Independent acceptance stays separate."],
-  ["7. Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
-  ["8. Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
+  ["Report or nominate", null, "No screen shows a source account yet. Urgent safety intake runs independently."],
+  ["Understand home and household", "technical-queue", "Unknown stays unknown; the hazard route runs in parallel."],
+  ["Decide scope and feasibility", "resident-choice", "Generic consent is not accepted."],
+  ["Coordinate ready work", "procurement-packages", "An offer is not a booking."],
+  ["Deliver and capture", "contractor-job-pack", "Submission is not acceptance."],
+  ["Inspect and remedy", "quality-queue", "Independent acceptance stays separate."],
+  ["Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
+  ["Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
 ];
+// One sentence for every stage whose screen is not installed for this role, so the list does not repeat it.
+const journeyMissing = (numbers) => `${numbers.length === 1 ? `Stage ${numbers[0]} opens a screen that is`
+  : `Stages ${numbers.slice(0, -1).join(", ")} and ${numbers.at(-1)} open screens that are`} not installed for your role. Owner: your team manager. Next action: ask them to add the screens you need.`;
 // current is the screen showing the map; its stages render as text so the walker sees where they are, and a screen outside the eight stages says so.
 function journeyStageMap(c, current = null) {
   const open = (id) => roleScreens.has(id) && roleScreens.get(id).roles.includes(me.user.role);
+  const missing = journeyStages.flatMap(([, id], index) => id !== null && id !== current && !open(id) ? [index + 1] : []);
   return screenPanel(`Journey stages for ${c.id}`,
     h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Every link carries this one home's case reference. Separate example homes are never shown as stages of this home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
     current && !journeyStages.some(([, id]) => id === current)
       && h("p", {}, `This screen is not one of the eight stages. It shows the same home ${c.id}.`),
+    missing.length > 0 && h("p", {}, journeyMissing(missing)),
     h("ol", { "aria-label": `Eight journey stages for ${c.id}` }, journeyStages.map(([stage, id, boundary], index) => h("li",
       // The text "You are on this screen" stays the cue; aria-current adds the native step announcement once, as resident-choice serves two stages.
       { "aria-current": id !== null && id === current && journeyStages.findIndex(([, other]) => other === current) === index ? "step" : null },
       // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
       id !== null && id === current ? `${stage}: ${roleScreens.get(id).title}. You are on this screen, showing home ${c.id}.`
       : id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
-        : `${stage}: ${id === null ? "no screen yet (recorded deferral)."
-          : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed. Owner: your team manager. Next action: ask them to add it for your role.`}`,
+        : `${stage}: ${id === null ? "no screen yet (recorded deferral)." : "Not installed for your role."}`,
       ` ${boundary}`))));
 }
 // Text prefix for each step state (WCAG 1.4.1). Unrecognised states fall back to Warning, never Pass: no state here is a pass.
@@ -743,7 +749,7 @@ registerRoleScreen({
           h("h3", {}, "State summary in words"),
           h("p", {}, "Each state starts with a word so it does not depend on colour. A step with no recorded blocker is a warning, not a pass."),
           h("ul", {}, rows.map(([name, state, meaning, owner, action]) => h("li", {},
-            `${programmeStateLabel(state)}: ${name} step. ${meaning} Owner: ${owner}. Next action: ${action}.`))))),
+            `${programmeStateLabel(state)}: ${name} step. ${meaning} Owner: ${owner}. Next action: ${withoutStop(action)}.`))))),
         screenJumpTarget("programme-steps", screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows, 50, programmeStepCell, true))),
       screenJumpTarget("programme-journey", journeyStageMap(c)),
       screenTension("disclosure"),
@@ -803,7 +809,7 @@ registerRoleScreen({
     const reasons = [];
     if (!t) reasons.push("No design is recorded.");
     if (missing === null) reasons.push("Missing references are not supplied.");
-    for (const m of missing || []) reasons.push(`${m.item}. Owner: ${m.assigned_to}.`);
+    for (const m of missing || []) reasons.push(`${withoutStop(m.item)}. Owner: ${m.assigned_to}.`);
     for (const q of queries) if (assetStatus(c, q) === "Unresolved") reasons.push(`Source conflict ${q.id} (${screenValue(q.field)}) is unresolved. Owner: ${screenPerson(q.query_owner)}.`);
     for (const x of states) if (t && !x.ok && !(missing || []).some((m) => m.item.startsWith(x.label))) reasons.push(`${x.label}: ${x.text}.`);
     const returned = states.filter((x) => x.s?.status === "Returned" || x.s?.status === "Needs reassessment");
@@ -1645,7 +1651,7 @@ registerRoleScreen({
         screenRecordTable("Recorded stock query events",
           ["Event", "Query", "State", "Recorded", "Recorded by", "Reason", "Evidence"],
           events.map((e) => [e.id, e.query_id, operatorEventState(e.status), screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
-        screenFields([["Recovery context", work ? `State: Action needed. Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "State: Unknown. No recovery context is recorded."],
+        screenFields([["Recovery context", work ? `State: Action needed. Next action: ${withoutStop(screenValue(work.next_action))}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "State: Unknown. No recovery context is recorded."],
           ["Integration run and queue state", "State: Unknown. No interface run record is supplied to this screen."]])));
   }
 });

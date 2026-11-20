@@ -76,6 +76,7 @@ class Element {
   focus() {document.activeElement = this;}
   contains(other) {return other === this || this.all().includes(other);}
   closest() {return null;}
+  after() {}
 }
 const document = {
   activeElement: null, title: "",
@@ -897,6 +898,172 @@ class LinksTargetsAndNumbers(unittest.TestCase):
         self.assertIn("{color:var(--brand-d)}", block)
         self.assertIn(".screen-evidence p>a:only-child:not(.btn){", css)
         self.assertNotIn(".screen-evidence p>a:only-child{", css)
+
+
+ROLE_SCREENS = (WEB / "role-screens.js").read_text()
+SCREEN_STUBS = """
+let me = {user: {role: "Retrofit Programme Manager"}};
+const location = {hash: "#/screens"};
+const history = {replaceState() {}};
+const routeController = new AbortController();
+const api = async () => ({});
+"""
+CASE_STUBS = (
+    H
+    + shipped("workSummary")
+    + """
+const work = {owner: "Sam", next_action: "Check the funding evidence", source: "case:ZF-1/funding",
+  evidence: "Unknown", version: "Unknown", recorded_at: "2026-11-19", as_of: "2026-11-19",
+  handoff: null, hazard_clocks: [], safeguarding_clocks: []};
+"""
+)
+CONTRACTOR_STUBS = (
+    H
+    + shipped("contractorListView")
+    + """
+const fmtDate = value => String(value);
+const contractorVisitNoticeBadge = () => h("span", {}, "No extra notice needed");
+const contractorJumpLinks = () => h("nav", {});
+const contractorOrders = async () => h("section", {}, "Your work orders");
+const routeController = new AbortController();
+const shown = [];
+const show = (...nodes) => shown.push(...nodes.flat());
+const job = {id: "ZF-1", address: "1 Test Road", town: "Testtown", postcode: "TE1 1ST",
+  status: "Active", stage: "Contacting resident", named_contact: "Ann", needs_notice: false};
+const api = async () => ({items: [job], total: 1});
+"""
+)
+APPOINTMENT_STUBS = (
+    H
+    + OPS
+    + """
+const fmtDate = value => String(value);
+const state = {current_binding: {measure: "Loft"}, status: "Not started", missing: [], offer: null,
+  case_id: "ZF-1", case_version: 3, case_closed: true, closure_history: [],
+  eligible_no_access: 0, reporting_threshold: "Unknown", investigation: null,
+  current_update_owner: null,
+  case_reset: "Only an explicitly recorded human underlying home-case closure "
+    + "resets the active count.",
+  counts: {preference_breach: {}, abortive: {"Provider / Ann": 2, "Resident / Bob": 1}}};
+const order = {id: "WO-0001", case_id: "ZF-1", appointment_control: state};
+const paragraphs = () => byTag(appointmentControls(order, async () => {}), "p")
+  .map(p => p.textContent);
+"""
+)
+
+
+class CopyDefects(unittest.TestCase):
+    def test_the_contractor_list_never_prints_null_when_there_is_no_show_more_button(self) -> None:
+        out = run(
+            """
+await contractorListView();
+const text = wrap(shown).textContent;
+return {text, hasNull: /\\bnull\\b/.test(text)};
+""",
+            CONTRACTOR_STUBS,
+        )
+        self.assertFalse(out["hasNull"], out["text"])
+        self.assertIn("1 job", out["text"])
+
+    def test_a_reason_that_already_ends_in_a_full_stop_gets_one_stop(self) -> None:
+        out = run(
+            """
+const reasons = ["Funding has not been confirmed.", "Funding has not been confirmed"];
+return reasons.map(reason => wrap(workSummary({...work, reason})).textContent);
+""",
+            CASE_STUBS,
+        )
+        for text in out:
+            self.assertIn("Reason: Funding has not been confirmed.Next action:", text)
+            self.assertNotIn("..", text)
+
+    def test_appointment_counts_read_as_words_and_the_reset_sentence_has_one_stop(self) -> None:
+        out = run("return paragraphs();", APPOINTMENT_STUBS)
+        self.assertIn(
+            "Eligible resident no-access: 0. Reporting threshold: Unknown. Only an explicitly "
+            "recorded human underlying home-case closure resets the active count.",
+            out,
+        )
+        self.assertIn(
+            "Preference breaches by cause / owner: None recorded. "
+            "Abortive visits by cause / owner: Provider / Ann: 2; Resident / Bob: 1.",
+            out,
+        )
+        for text in out:
+            self.assertNotIn("{}", text)
+            self.assertNotIn("..", text)
+
+    def test_the_same_blocker_reason_is_listed_once_on_a_programme_step(self) -> None:
+        out = run(
+            """
+const held = "Held for roles with a recorded need";
+const blocked = ["Stock query SQ-1 remains unresolved.", held, held, held, held].map(
+  reason => ({step: "Technical review", reason, owner: "Unknown",
+    responsible_role: "Quality Inspector", next_action: "Check stock"}));
+const [, , meaning] = programmeGateRow("Technical", blocked, "", null);
+return meaning;
+""",
+            H,
+            SCREEN_STUBS,
+            ROLE_SCREENS,
+        )
+        self.assertEqual(
+            out, "Stock query SQ-1 remains unresolved. Held for roles with a recorded need"
+        )
+
+    def test_the_programme_step_summary_ends_the_next_action_with_one_full_stop(self) -> None:
+        out = run(
+            """
+const step = {step: "Technical review", reason: "Survey missing.", owner: "Unknown",
+  responsible_role: "Quality Inspector", next_action: "Ask the role to record the evidence."};
+const c = {id: "ZF-1", work: {blockers: [step]}, technical: null, quality: [],
+  measures: "Loft", finance: {budget: {status: "Approved"}}};
+const view = roleScreens.get("programme-queue").render(c, {orders: []});
+return byTag(wrap(view), "li").map(li => li.textContent);
+""",
+            H,
+            SCREEN_STUBS,
+            ROLE_SCREENS,
+        )
+        technical = [item for item in out if "Technical step." in item]
+        self.assertEqual(len(technical), 1)
+        self.assertTrue(technical[0].endswith("Next action: Ask the role to record the evidence."))
+        self.assertTrue(all(".." not in item for item in out), out)
+
+    def test_the_journey_stages_are_numbered_once_and_the_refusal_is_said_once(self) -> None:
+        out = run(
+            """
+me = {user: {role: "Contractor"}};
+const page = wrap(journeyStageMap({id: "ZF-1"}));
+const items = byTag(page, "li").map(li => li.textContent);
+const sentences = byTag(page, "p").map(p => p.textContent).filter(t => /^Stages? \\d/.test(t));
+return {items, sentences, refusals: page.textContent.split("Owner: your team manager.").length - 1};
+""",
+            H,
+            SCREEN_STUBS,
+            ROLE_SCREENS,
+        )
+        self.assertEqual(len(out["items"]), 8)
+        for item in out["items"]:
+            self.assertNotRegex(item, r"^\d+\. ", "the list numbers the stages")
+        self.assertEqual(out["refusals"], 1)
+        self.assertEqual(len(out["sentences"]), 1)
+        self.assertRegex(
+            out["sentences"][0],
+            r"^Stages (\d, )+\d and \d open screens that are not installed for your role\. "
+            r"Owner: your team manager\. Next action: ask them to add the screens you need\.$",
+        )
+        not_installed = [item for item in out["items"] if "Not installed for your role." in item]
+        listed = out["sentences"][0].split(" open screens")[0].replace("Stages ", "")
+        self.assertEqual(len(not_installed), len(listed.replace(" and ", ", ").split(", ")))
+        self.assertTrue(
+            all(
+                item.startswith(
+                    ("Understand", "Decide", "Coordinate", "Inspect", "Handover", "Reconcile")
+                )
+                for item in not_installed
+            )
+        )
 
 
 if __name__ == "__main__":

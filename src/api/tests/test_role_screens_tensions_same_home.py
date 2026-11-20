@@ -105,10 +105,19 @@ class TensionCallouts(unittest.TestCase):
 
 class SameHomeWalk(unittest.TestCase):
     def test_every_stage_link_carries_the_one_selected_home(self) -> None:
+        stage_names = (
+            "Understand home and household",
+            "Decide scope and feasibility",
+            "Coordinate ready work",
+            "Deliver and capture",
+            "Inspect and remedy",
+            "Handover and live with measures",
+            "Reconcile and learn",
+        )
         stages = [
             link
             for link in run()["programme-queue"]["links"]
-            if link["text"].startswith(tuple(f"{n}. " for n in range(1, 9)))
+            if link["text"].startswith(stage_names)
         ]
         # Stage 1 is a deferral and uninstalled screens render as text, so not all eight link.
         self.assertGreaterEqual(len(stages), 5)
