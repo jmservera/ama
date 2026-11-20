@@ -659,15 +659,17 @@ function programmeGates(c, orders) {
 }
 // Design-level hypothesis from the customer journey atlas, not observed behaviour (validation in #155).
 const journeyStages = [
-  ["Report or nominate", null, "No screen shows a source account yet. Urgent safety intake runs independently."],
-  ["Understand home and household", "technical-queue", "Unknown stays unknown; the hazard route runs in parallel."],
-  ["Decide scope and feasibility", "resident-choice", "Generic consent is not accepted."],
-  ["Coordinate ready work", "procurement-packages", "An offer is not a booking."],
-  ["Deliver and capture", "contractor-job-pack", "Submission is not acceptance."],
-  ["Inspect and remedy", "quality-queue", "Independent acceptance stays separate."],
-  ["Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
-  ["Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
+  ["1. Report or nominate", null, "No screen shows a source account yet. Urgent safety intake runs independently."],
+  ["2. Understand home and household", "technical-queue", "Unknown stays unknown; the hazard route runs in parallel."],
+  ["3. Decide scope and feasibility", "resident-choice", "Generic consent is not accepted."],
+  ["4. Coordinate ready work", "procurement-packages", "An offer is not a booking."],
+  ["5. Deliver and capture", "contractor-job-pack", "Submission is not acceptance."],
+  ["6. Inspect and remedy", "quality-queue", "Independent acceptance stays separate."],
+  ["7. Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
+  ["8. Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
 ];
+// The data keeps its typed numbers so the Atlas screen check can compare them with the walkthrough; the screen shows the name only, since the ordered list numbers each stage.
+const journeyStageName = (stage) => stage.replace(/^\d+\.\s+/, "");
 // One sentence for every stage whose screen is not installed for this role, so the list does not repeat it.
 const journeyMissing = (numbers) => `${numbers.length === 1 ? `Stage ${numbers[0]} opens a screen that is`
   : `Stages ${numbers.slice(0, -1).join(", ")} and ${numbers.at(-1)} open screens that are`} not installed for your role. Owner: your team manager. Next action: ask them to add the screens you need.`;
@@ -680,13 +682,13 @@ function journeyStageMap(c, current = null) {
     current && !journeyStages.some(([, id]) => id === current)
       && h("p", {}, `This screen is not one of the eight stages. It shows the same home ${c.id}.`),
     missing.length > 0 && h("p", {}, journeyMissing(missing)),
-    h("ol", { "aria-label": `Eight journey stages for ${c.id}` }, journeyStages.map(([stage, id, boundary], index) => h("li",
+    h("ol", { "aria-label": `Eight journey stages for ${c.id}` }, journeyStages.map(([numbered, id, boundary], index) => h("li",
       // The text "You are on this screen" stays the cue; aria-current adds the native step announcement once, as resident-choice serves two stages.
       { "aria-current": id !== null && id === current && journeyStages.findIndex(([, other]) => other === current) === index ? "step" : null },
       // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
-      id !== null && id === current ? `${stage}: ${roleScreens.get(id).title}. You are on this screen, showing home ${c.id}.`
-      : id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
-        : `${stage}: ${id === null ? "no screen yet (recorded deferral)." : "Not installed for your role."}`,
+      id !== null && id === current ? `${journeyStageName(numbered)}: ${roleScreens.get(id).title}. You are on this screen, showing home ${c.id}.`
+      : id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${journeyStageName(numbered)}: ${roleScreens.get(id).title}`)
+        : `${journeyStageName(numbered)}: ${id === null ? "no screen yet (recorded deferral)." : "Not installed for your role."}`,
       ` ${boundary}`))));
 }
 // Text prefix for each step state (WCAG 1.4.1). Unrecognised states fall back to Warning, never Pass: no state here is a pass.
