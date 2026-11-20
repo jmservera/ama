@@ -56,6 +56,21 @@ class Element {
     kids.flat().forEach(kid => {this.children.push(kid); kid.parentElement = this;});
   }
   replaceChildren(...kids) {this.children = []; this.append(...kids);}
+  cloneNode() {
+    const copy = new Element(this.tagName);
+    copy.attrs = {...this.attrs};
+    copy.append(...this.children.map(
+      kid => kid.nodeType === 1 ? kid.cloneNode() : new Text(kid.data)));
+    return copy;
+  }
+  remove() {
+    const siblings = this.parentElement.children;
+    siblings.splice(siblings.indexOf(this), 1);
+  }
+  querySelectorAll(selector) {
+    const name = selector.replace(/^\./, "");
+    return this.all().filter(el => el.attrs.class && el.attrs.class.split(" ").includes(name));
+  }
   insertBefore(kid, before) {
     const at = this.children.indexOf(before);
     this.children.splice(at < 0 ? this.children.length : at, 0, kid); kid.parentElement = this;
@@ -623,7 +638,13 @@ document.getElementById = id => (elements[id] ||= new Element("div"));
 
 
 def login_stubs() -> str:
-    return title_stubs() + shipped_line("SIGN_IN_TITLE") + shipped("login") + LOGIN_JS
+    return (
+        title_stubs()
+        + shipped_line("SIGN_IN_TITLE")
+        + shipped_line("SIGN_IN_ABOUT")
+        + shipped("login")
+        + LOGIN_JS
+    )
 
 
 API_JS = """
@@ -701,6 +722,29 @@ return titles;
             ],
         )
 
+    def test_a_status_flag_in_the_heading_stays_out_of_the_tab_title(self) -> None:
+        out = run(
+            """
+const heading = flag => h("h1", {}, "Pat Birch",
+  flag && h("span", {class: "flag danger"}, "Safety issue open"));
+const titles = [];
+for (const flag of [true, false]) {
+  show(h("div", {}, heading(flag), h("p", {}, "Body.")));
+  titles.push([document.title, byTag(app, "h1")[0].textContent]);
+}
+return titles;
+""",
+            title_stubs(),
+        )
+        self.assertEqual(
+            out,
+            [
+                ["Pat Birch | Zava Forward", "Pat BirchSafety issue open"],
+                ["Pat Birch | Zava Forward", "Pat Birch"],
+            ],
+            "the page keeps the flag and the title drops it",
+        )
+
     def test_signed_out_title_card_orientation_and_way_back(self) -> None:
         out = run(
             """
@@ -715,8 +759,16 @@ const read = message => {
 const plain = read("");
 const ended = read("Your session has ended. Sign in again.");
 microsoftSignIn = true;
-login("");
-return {plain, ended, microsoft: document.title};
+const readMicrosoft = message => {
+  login(message);
+  const card = app.children[0];
+  return {title: document.title, h1: byTag(app, "h1")[0].textContent,
+    paragraphs: byTag(card, "p").map(p => [p.textContent, p.className, p.attrs.role || null]),
+    links: byTag(card, "a").map(a => [a.attrs.href, a.textContent])};
+};
+const microsoft = {plain: readMicrosoft(""),
+  ended: readMicrosoft("Your session has ended. Sign in again.")};
+return {plain, ended, microsoft};
 """,
             login_stubs(),
         )
@@ -731,7 +783,25 @@ return {plain, ended, microsoft: document.title};
             self.assertEqual(card["orientation"], orientation)
             self.assertEqual(card["links"], [["/", "Back to the welcome page"]])
             self.assertEqual(card["alert"], alert)
-        self.assertEqual(out["microsoft"], "Sign in | Zava Forward")
+        instruction = "Use your authorised Microsoft work account."
+        for state, alert in (("plain", ""), ("ended", "Your session has ended. Sign in again.")):
+            card = out["microsoft"][state]
+            self.assertEqual(card["title"], "Sign in | Zava Forward")
+            self.assertEqual(card["h1"], "Sign in to Zava Forward")
+            self.assertEqual(
+                card["links"],
+                [["/sign-in", "Sign in with Microsoft"], ["/", "Back to the welcome page"]],
+            )
+            self.assertEqual(
+                card["paragraphs"],
+                [
+                    [orientation, "", None],
+                    [instruction, "", None],
+                    [alert, "err", "alert"],
+                    ["Back to the welcome page", "", None],
+                ],
+                "the same orientation as the password card; only the message takes the error style",
+            )
 
     def test_a_first_visit_shows_no_ended_session_but_a_mid_session_401_still_does(self) -> None:
         out = run(
@@ -764,9 +834,13 @@ for (const view of ["mine", "all"]) {
   shown.length = 0;
   await listView(view);
   const page = wrap(shown);
+  const main = page.all().find(el => el.className === "main");
+  const results = main.children.find(el => el.attrs["aria-live"] === "polite");
+  const before = main.children[main.children.indexOf(results) - 1];
   result[view] = {order: page.children.map(el => el.className),
     headings: page.all().filter(el => /^H[1-6]$/.test(el.tagName))
-      .map(el => [el.tagName, el.textContent])};
+      .map(el => [el.tagName, el.textContent]),
+    beforeResults: [before.tagName, before.textContent]};
 }
 return result;
 """,
@@ -777,6 +851,9 @@ return result;
             self.assertEqual(out[view]["headings"][0], ["H1", title])
         self.assertIn(["H2", "Today's briefing"], out["mine"]["headings"])
         self.assertIn(["H2", "Priority suggestions"], out["mine"]["headings"])
+        # The case list follows a heading that names it, not the last panel above it.
+        self.assertEqual(out["mine"]["beforeResults"], ["H2", "My open cases"])
+        self.assertEqual(out["all"]["beforeResults"], ["H2", "All open cases"])
 
     def test_route_status_names_the_screens_that_had_no_scope(self) -> None:
         source = (WEB / "app.js").read_text()
@@ -832,7 +909,7 @@ LINK_MEASURES = """() => {
 class LinksTargetsAndNumbers(unittest.TestCase):
     """The real style.css in Chromium: link colour, target size and tabular figures."""
 
-    def measures(self) -> dict[str, Any]:
+    def measures(self, width: int = 1280) -> dict[str, Any]:
         class Handler(http.server.SimpleHTTPRequestHandler):
             def do_GET(self) -> None:
                 if self.path != "/links.html":
@@ -857,7 +934,7 @@ class LinksTargetsAndNumbers(unittest.TestCase):
                     browser = playwright.chromium.launch()
                 except Exception as error:  # pragma: no cover
                     self.skipTest(f"chromium unavailable: {error}")
-                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                page = browser.new_page(viewport={"width": width, "height": 800})
                 page.goto(f"http://127.0.0.1:{server.server_address[1]}/links.html")
                 measured: dict[str, Any] = page.evaluate(LINK_MEASURES)
                 browser.close()
@@ -880,7 +957,11 @@ class LinksTargetsAndNumbers(unittest.TestCase):
     def test_figures_line_up_and_the_page_ends_clear_of_the_chat_launcher(self) -> None:
         out = self.measures()
         self.assertEqual(out["figure"], "tabular-nums")
-        self.assertEqual(out["mainBottom"], "80px")
+        # Only a narrow screen needs the extra room: the launcher can cover the last card there.
+        self.assertEqual(out["mainBottom"], "0px")
+        self.assertEqual(self.measures(390)["mainBottom"], "80px")
+        self.assertEqual(self.measures(600)["mainBottom"], "80px")
+        self.assertEqual(self.measures(601)["mainBottom"], "0px")
 
     def test_the_new_rules_use_tokens_and_the_old_shrinking_rule_is_scoped(self) -> None:
         css = (WEB / "style.css").read_text()
@@ -1088,6 +1169,8 @@ return {requests: paths.filter(path => path.startsWith("/api/coordinator")), not
         )
         self.assertEqual(len(out["notes"]), 1)
         self.assertTrue(out["notes"][0].startswith("State: Recorded stage history (not a pass)."))
+        self.assertRegex(out["notes"][0], r"Recorded as of \d{1,2} \w{3} \d{4}, \d\d:\d\d\. Audit")
+        self.assertNotRegex(out["notes"][0], r"\d{4}-\d\d-\d\dT", "no raw ISO time on the panel")
 
     def test_a_failed_read_says_so_with_an_owner_and_next_action(self) -> None:
         self.assertEqual(

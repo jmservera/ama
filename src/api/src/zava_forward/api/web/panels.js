@@ -83,7 +83,7 @@ function financePanel(c, id, refresh) {
     h("p", {}, fx.budget ? `Budget ${money(fx.budget.amount)}: ${fx.budget.status.toLowerCase()}${fx.budget.approved_by ? ` by ${fx.budget.approved_by}` : ` (prepared by ${fx.budget.proposed_name})`}.` : "No budget recorded yet."),
     fx.commitments.length ? h("ul", {}, fx.commitments.map((m) => h("li", {}, `${m.id}: ${m.supplier}, ${m.measure}, ${money(m.amount)}, work order ${m.work_order}. ${m.status}${m.approved_by ? ` by ${m.approved_by}` : ` (raised by ${m.raised_name})`}.`))) : h("p", { class: "muted" }, "No commitments yet."),
     fx.invoices.length ? fx.invoices.map((i) => h("div", { class: "card" },
-      h("strong", {}, `${i.id}: ${i.kind.toLowerCase()} ${i.ref} from ${i.supplier}. ${i.status}.`),
+      h("strong", {}, `${i.id}: ${(i.kind || "").toLowerCase()} ${i.ref} from ${i.supplier}. ${i.status}.`),
       h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${financeDecisionLabel(i.disposition)} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` Payment paused: ${i.hold.reason}.` : ""}`),
       i.exceptions.length ? h("ul", {}, i.exceptions.map((e) => h("li", {}, panelOwned(`${e.line == null ? "Whole invoice" : `Line ${e.line + 1}`}: ${e.message}`, "the finance officer", "correct this invoice item or ask the supplier for a corrected invoice")))) : null)) : null,
     actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b, submitted) => go("budget_propose", b, submitted), "Save proposed budget"),

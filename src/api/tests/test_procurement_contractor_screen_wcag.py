@@ -164,6 +164,16 @@ function makeDoc(initialHash) {
     querySelector(selector) {
       return this.querySelectorAll(selector)[0] || null;
     }
+    cloneNode() {
+      const copy = new NodeItem(this.nodeType === 3 ? "#text" : this.tagName, this.text);
+      copy.attrs = { ...this.attrs };
+      copy.children = this.children.map((c) => {
+        const kid = c.cloneNode();
+        kid.parentElement = copy;
+        return kid;
+      });
+      return copy;
+    }
     addEventListener(type, fn) {
       if (!this.listeners.has(type)) this.listeners.set(type, []);
       this.listeners.get(type).push(fn);
