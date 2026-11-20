@@ -634,6 +634,8 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .screen-record[id], .screen-evidence h2[tabindex="-1"] { scroll-margin-top: var(--sp-5); }
 .screen-evidence th, .screen-evidence td { font-variant-numeric: tabular-nums; }
 [tabindex="-1"]:where(:not(#app)):focus { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
+/* main only receives focus from a route change or the skip link; the owner asked for no frame on it (2026-11-20). The outline stays defined, only transparent, so forced colours still draw one. */
+#app:focus-visible { outline-color: transparent; box-shadow: none; }
 .coordinator h2[tabindex="-1"]:focus-visible, .screen-record h2[tabindex="-1"]:focus-visible { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
 /* ux-batch:app-wide */
 .chat-widget-label{margin:0;font-size:var(--fs-sm)}
