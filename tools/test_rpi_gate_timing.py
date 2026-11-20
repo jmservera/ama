@@ -126,6 +126,15 @@ class ReportTests(unittest.TestCase):
         self.assertEqual((row["runs"], row["seconds"], row["groups"]), (2, 40.0, ["a", "b"]))
         self.assertFalse(row["setup"])
 
+    def test_missing_or_empty_log_is_refused_not_a_traceback(self) -> None:
+        path = write_receipt(self.root / "a", [("g", 0, 10)])
+        empty = self.root / "empty.log"
+        empty.write_text("")
+        for log in (self.root / "absent.log", empty):
+            code, _out, err = run("report", str(path), "--log", str(log))
+            self.assertEqual(code, 2)
+            self.assertIn("REFUSED", err)
+
     def test_setup_commands_are_separated_by_exact_tokens(self) -> None:
         self.assertTrue(timing.is_setup(["python", "-m", "pip", "install"]))
         self.assertTrue(timing.is_setup(["docker", "build", "x"]))

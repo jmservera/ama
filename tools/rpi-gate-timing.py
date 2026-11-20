@@ -189,7 +189,13 @@ def analyse(receipt: dict[str, Any], log: Path | None, gap: float) -> dict[str, 
         "chain_seconds": round(sum(item["seconds"] for item in chain), 1),
     }
     if log is not None:
-        first = log.read_text().splitlines()[0]
+        try:
+            lines = log.read_text().splitlines()
+        except (OSError, UnicodeDecodeError) as error:
+            raise TimingError(EXIT_INPUT, f"Cannot read gate log {log}: {error}") from error
+        if not lines:
+            raise TimingError(EXIT_INPUT, f"Gate log is empty: {log}")
+        first = lines[0]
         match = re.match(r"Lock queued (\S+); acquired (\S+);", first)
         if match:
             queued, acquired = (datetime.fromisoformat(v).timestamp() for v in match.groups())

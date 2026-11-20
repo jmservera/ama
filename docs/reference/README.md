@@ -428,6 +428,8 @@ unticked criterion and adds a local HTTP test for the #76 clocks on list rows.
 The [second-pass child disposition audit](./research/issue-73-epic-audit-live-r2-2026-11-19.md)
 records one disposition per child (six closed, three open) and the residual of each open child;
 criteria 1 to 3 stay unticked.
+The [requirement trace](./research/issue-73-requirement-trace-2026-11-20.md) maps each requirement in the
+issue to a repository test or a deferral, with an offline drift test; criterion 3 stays unticked.
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.
@@ -597,7 +599,7 @@ still need admin or human setup, no source change.
 A [seventh run](./research/issue-138-live-r7-2026-11-19.md) rechecks GitHub and Azure read-only: state is unchanged,
 every remaining criterion needs owner settings or a pushed run, and nothing is ticked.
 
-An [eighth run](./research/issue-138-live-r8-2026-11-19.md) repeats the read-only checks with the same result. A [ninth run](./research/issue-138-live-r9-2026-11-19.md) repeats them again with the same result.
+An [eighth run](./research/issue-138-live-r8-2026-11-19.md) repeats the read-only checks with the same result. A [ninth run](./research/issue-138-live-r9-2026-11-19.md) repeats them again with the same result. A [tenth run](./research/issue-138-live-r10-2026-11-19.md) adds a repository secret scanner (`tools/check-repo-secrets.py`) for the repository half of criterion 6.
 
 A [seventh run](./research/issue-138-live-r7-2026-11-19.md) rechecks GitHub and Azure read-only: state is unchanged,
 every remaining criterion needs owner settings or a pushed run, and nothing is ticked.
@@ -1445,6 +1447,7 @@ or infra acceptance claimed.
 | [Issue 1259 archive path regressions (#1259)](./research/issue-1259-live-2026-11-19.md) | Regular-file and dangling-link regressions fail with the old guard (6 failures) and pass on current source; hosted checks and independent assessment unproven | 2026-11-19 |
 | [Coordinator contract criteria (#1204)](./research/coordinator-contract-criteria-1204-live-2026-11-18.md) | Per-sub-claim proven or unproven record for the unticked liveness criterion: instruction text and guard tests proven on main, runtime liveness over all ticks unproven for the demo |
 | [Coordinator tick liveness, real window (#1204)](./research/coordinator-tick-log-real-window-1204-live-2026-11-19.md) | `tools/check-tick-log.py` on 216 real coordinator ticks: 0 violations; closure-batch and approval sub-claims unproven because the schema lacks those fields |
+| [Issue 1204 real tick window](./research/issue-1204-real-tick-window-2026-11-19.md) | Checker run on the real 216-tick coordinator log: 0 violations on action, no-progress and recovery rules; closure, approval and global-stop rules unproven |
 | [Learning-test bundles live audit, second pass (#129)](./research/issue-129-live-r2-2026-11-18.md) | Core and api bundle suites rerun with raw output, signed-in probe of the demo for a bundle route (none discoverable, 403 control), per-criterion table; Atlas-owner mapping unproven |
 | [Learning-test bundles live audit, third pass (#129)](./research/issue-129-live-r3-2026-11-18.md) | Suites rerun (26 and 6), CLI refusal check, signed-in probe of revision 0000032; Atlas-owner mapping unproven |
 | [Learning-test bundles criterion status, fourth pass (#129)](./research/issue-129-live-r4-2026-11-19.md) | Re-check to 2026-11-19; no unmet code criterion; Atlas-owner mapping unproven |
@@ -1467,6 +1470,7 @@ or infra acceptance claimed.
 | [Issue 117 scan before availability (demo)](./research/issue-117-scan-before-availability-live-2026-11-19.md) | Mechanism proven by 69 passing tests; real malware engine unproven for the demo; nothing ticked. |
 | [Epic 113 Azure platform audit with live read (#113)](./research/issue-113-epic-audit-live-2026-11-18.md) | Per-criterion table for the three epic criteria (none tickable for the demo), per-child roll-up of unticked criteria into demo-provable gaps and production-only items, and a GET-only read of the demo; nothing ticked. |
 | [Epic 113 first unmet demo criterion recheck (#113)](./research/issue-113-first-unmet-demo-criterion-2026-11-19.md) | Live recheck of the three epic criteria on 2026-11-19: criterion 1 (#440 checkpoint) is the first unmet and is not a code item, so no source changed; 7 of 8 children open |
+| [Epic 113 child disposition audit (#113)](./research/issue-113-child-disposition-live-2026-11-20.md) | Per-criterion and per-child disposition on 2026-11-20 (four of eight children closed, three with criteria moved to deferral issues); guarded by `tools/test_epic_113_child_disposition.py`; nothing ticked |
 | [Epic 149 first unmet demo criterion recheck (#149)](./research/issue-149-first-unmet-demo-criterion-2026-11-19.md) | Live recheck of the four UX epic criteria on 2026-11-19: criterion 1 (#440 checkpoint) is the first unmet and is not a code item, so no source changed; #153, #154, #155 open |
 | [Epic 136 Bicep infrastructure audit with live read (#136)](./research/issue-136-live-20261118T1638Z-2026-11-18.md) | Four epic criteria and six open children with proven and unproven status, plus a read-only live probe of the demo group; nothing ticked, evidence folder retained. |
 | [Key Vault lifecycle demo criteria recheck (#142)](./research/issue-142-live-20261119T1418Z-2026-11-19.md) | Read-only probe; rotation test and scheduled access review stay unproven, nothing ticked. |
@@ -1475,8 +1479,10 @@ or infra acceptance claimed.
 | [Epic 104 criteria recheck (#104)](./research/issue-104-criteria-recheck-live-2026-11-19.md) | Per-criterion proven/unproven table; first unmet criterion (#440 checkpoint) is not a code deliverable; invariant suite 27 tests OK. |
 | [Epic 93 finance and funding audit with live read (#93)](./research/issue-93-epic-audit-live-2026-11-18.md) | Per-criterion table for epic 93 (criteria 1 and 2 unmet, criterion 3 consistent), the remaining #96 schema-approval gap, production-only items, a read-only probe of the demo and 269 offline tests; nothing ticked |
 | [Epic 93 first unmet criterion re-check (#93)](./research/issue-93-first-unmet-criterion-live-2026-11-19.md) | Fresh 269-test offline run, read-only live finance probe, BRD identifier mismatch in the issue body and a per-criterion proven and unproven table; no source change |
+| [Epic 93 child closure re-check (#93)](./research/issue-93-child-closure-live-2026-11-20.md) | All four children closed (#96 remainder deferred to #2140), so C2 is proven; C1 stays unproven; read-only evidence, test-pinned |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |
 | [Epic 81 audit round 2 (#81)](./research/issue-81-epic-audit-live-r2-2026-11-19.md) | Per-criterion table; the #1837 form fix is on main and passes 8 local tests, the deployed image still predates it; nothing ticked | 2026-11-19 |
+| [Epic 81 audit round 3 (#81)](./research/issue-81-epic-audit-live-r3-2026-11-20.md) | All nine children closed, #130 residual deferred to #2117; criterion 2 proven, criterion 1 unproven; checked by tools/test_epic_81_child_disposition.py; nothing ticked | 2026-11-20 |
 | [Staff time capture criterion 3 (#120)](./research/issue-120-live-2026-11-19.md) | No code gap; notice approval and audited enabling pass 38 local tests; not exercised on the deployed demo | 2026-11-19 |
 | [Issue 1274 release-download audit (#1274)](./research/issue-1274-release-downloads-audit-live-2026-11-18.md) | Per-criterion table: actionlint retrieval delivered and re-verified, criteria 1, 3 and 4 partly proven, AWF 0.28.23 bootstrap open (FULL tier if code needed) | 2026-11-18 |
 | [Issue 1274 axe download hardening (#1274)](./research/issue-1274-axe-download-hardening-2026-11-18.md) | src-ci axe-core download now retries and verifies SHA-256 before use; retained 504 logs for 1243, 1271 and 1273 classified | 2026-11-18 |
@@ -1597,6 +1603,7 @@ or infra acceptance claimed.
 | [Issue 1830 Live r4, No Buildable Criterion](./research/issue-1830-live-r4-2026-11-19.md) | Re-verified 2026-11-19: preflight still refuses execution by design, no retained receipts; per-criterion table, no source change |
 | [Issue 1830 Live r4, Blockers Unchanged](./research/issue-1830-live-r4-2026-11-19.md) | Fourth re-verification of the gate preflight and timing tools; no owner decision yet, so no criterion is buildable |
 | [Issue 1830 Live r4, No Buildable Criterion](./research/issue-1830-live-r4-2026-11-19.md) | Fourth re-check; retained receipts are gone and preflight execution stays refused; no source change |
+| [Issue 1830 Live Criterion 1 Measurement](./research/issue-1830-live-20261119T1346Z-2026-11-19.md) | Timing from eight retained passed full receipts, queue wait from four gate logs, critical chain, parallel-versus-summed time and setup cost; `report --log` refusal fix; criteria 1, 3 and 4 partly proven, 2 unproven (Refs #1830) |
 | [Issue 349 Tenant Prerequisites, Live Demo Re-verification](./research/issue-349-tenant-prerequisites-live-2026-11-18.md) | Issue 349: per-criterion proven/unproven status from read-only Azure checks (auth config, vault path, private endpoint) and Playwright runs with the test sign-in |
 | [Issue 349 Tenant Prerequisites, Live Demo Round 3](./research/issue-349-tenant-prerequisites-live-r3-2026-11-18.md) | Issue 349: third live check adding the Entra authorize redirect URI, fresh curl and browser results and read-only vault and Easy Auth facts; per-criterion status |
 | [Issue 349 Tenant Prerequisites, Live Demo Round 4](./research/issue-349-tenant-prerequisites-live-r4-2026-11-19.md) | Issue 349: fourth live check reproducing round 3 with fresh Playwright and Azure read-only evidence; criteria 1 and 3 partly proven, 4 not applicable |

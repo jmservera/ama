@@ -14124,3 +14124,30 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-17] update | Resident advisor model-dispatch hold (Refs #121)
 
 * Reproduced that `AzureAdvisor` in the resident demo ignored `ZF_DATA_PROCESSING=actual`, then added the `tenant_identity` hold with a regression test and documented it in [src/core/README.md](../../src/core/README.md). Criteria for DPO, Legal and transfer approvals stay unmet; no approval is recorded or implied.
+
+## [2026-11-19] add | Issue 138 tenth live note
+
+* Added [issue-138-live-r10-2026-11-19.md](research/issue-138-live-r10-2026-11-19.md): tracked-file secret scan tool and tests; repository half of criterion 6 proven; other criteria unchanged. Refs #138.
+## [2026-11-20] update | Issue 113 production-claim guard (Refs #113)
+
+* Added `tools/test_production_claim_guard.py`, a static test that README, ADR, BRD, PRD and project READMEs make no unqualified production-readiness claim. Criteria 1 and 2 stay unproven; no approval is recorded or implied.
+## [2026-11-20] add | Epic 73 requirement trace (Refs #73)
+
+* Added [issue-73-requirement-trace-2026-11-20.md](research/issue-73-requirement-trace-2026-11-20.md) and `tools/test_epic_73_requirement_trace.py`: ten requirements traced to cited tests, BG-011 deferred to the pilot; no criterion ticked.
+
+## [2026-11-20] add | Issue 93 child closure re-check
+
+* Added [issue-93-child-closure-live-2026-11-20.md](research/issue-93-child-closure-live-2026-11-20.md): #96 closed, so criterion 2 is proven for the demo; criterion 1 (#440) remains unproven; no source change.
+
+## [2026-11-20] add | Epic 81 audit round 3
+
+* Added [issue-81-epic-audit-live-r3-2026-11-20.md](research/issue-81-epic-audit-live-r3-2026-11-20.md): all children closed or deferred (criterion 2 proven for the demo); #440 criterion unproven; no source change.
+## [2026-11-19] add | Issue 1204 real tick window check (Refs #1204)
+
+* Added [issue-1204-real-tick-window-2026-11-19.md](research/issue-1204-real-tick-window-2026-11-19.md): checker run on the real 216-tick log, 0 violations; closure, approval and global-stop rules stay unproven.
+## [2026-11-19] add | Issue 1830 criterion 1 measurement (Refs #1830)
+
+* Added [issue-1830-live-20261119T1346Z-2026-11-19.md](research/issue-1830-live-20261119T1346Z-2026-11-19.md): timing from eight retained passed full receipts and queue wait from four gate logs (0.001 to 0.002 s). `tools/rpi-gate-timing.py report --log` now refuses a missing or empty log (exit 2) instead of a traceback. No gate file, `src/`, live Azure or full gate involved; no criterion ticked.
+## [2026-11-20] update | Epic 113 child disposition audit (Refs #113)
+
+* Added [issue-113-child-disposition-live-2026-11-20.md](research/issue-113-child-disposition-live-2026-11-20.md) and `tools/test_epic_113_child_disposition.py`. Four of eight children are closed, three with criteria moved to deferral issues; criterion 2 stays unmet, nothing ticked.

@@ -734,6 +734,49 @@ class NominationApiRoutesTests(unittest.TestCase):
         )
         self.assertIn("SYN-STANDALONE-CHALLENGE", json.dumps(detail["affected_challenges"]))
 
+    def _ack_payload(self, nom_id: str, **overrides: Any) -> dict[str, Any]:
+        payload: dict[str, Any] = {
+            "action": "nomination_acknowledge",
+            "case_id": "ZF-1",
+            "id": nom_id,
+            "expected_version": 1,
+            "channel": "digital",
+            "owner": "sam@example.test",
+            "acknowledgement_ref": "SYN-NEG",
+            "non_digital_route": "Phone Sam or visit the local housing office",
+            "next_update": "2099-03-01",
+            "hazard_concern": False,
+        }
+        payload.update(overrides)
+        return payload
+
+    def test_route_writes_refuse_unauthenticated_unpermitted_malformed_and_cross_case(
+        self,
+    ) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        nom_id = before["nomination_records"][0]["id"]
+        path = "/api/cases/ZF-1/resident"
+
+        self.assertEqual(self.request_raw(path, "", self._ack_payload(nom_id))[0], 401)
+        self.assertEqual(
+            self.call_json(path, "kim", self._ack_payload(nom_id, owner="kim@example.test"))[0],
+            403,
+        )
+        self.assertEqual(self.request_raw(path, "sam", ["not", "an", "object"])[0], 400)
+        for bad in (
+            self._ack_payload(nom_id, id="NOM-DOES-NOT-EXIST"),
+            self._ack_payload(nom_id, next_update="not-a-date"),
+            self._ack_payload(nom_id, expected_version=99),
+            self._ack_payload(nom_id, case_id="ZF-2"),
+        ):
+            self.assertGreaterEqual(self.call_json(path, "sam", bad)[0], 400, bad)
+        status, _ = self.call_json("/api/cases/ZF-2/resident", "sam", self._ack_payload(nom_id))
+        self.assertGreaterEqual(status, 400)
+        self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+
     def test_native_form_encoding_is_refused_and_writes_nothing(self) -> None:
         self.assertEqual(
             self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200

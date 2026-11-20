@@ -45,11 +45,13 @@ class ReferenceTests(unittest.TestCase):
             "docs/reference/research/issue-198-rubric-live-r2-2026-11-18.md",
             "docs/reference/research/issue-200-live-20261118T1618Z-evidence/probe.txt",
             "docs/reference/research/src-repoint-live-audit-200-2026-11-18.md",
+            "docs/reference/research/2026-11-19-issue-202-mvp-workflow-retirement.md",
             "tools/test_private_mvp_data_exclusion.py",
         ):
             self.assertEqual(checker.reference_violations(path, line), [], path)
         for path in (
             "docs/reference/research/issue-198-notes.md",
+            "docs/reference/research/2026-11-19-notes.md",
             "docs/reference/research/ux/design-system-2026-11-18.md",
         ):
             self.assertEqual(len(checker.reference_violations(path, line)), 2, path)

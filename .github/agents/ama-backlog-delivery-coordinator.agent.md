@@ -145,7 +145,10 @@ without inventing, duplicating or no-op issues to look busy:
   `ready` (launch the review, counting the session); only a review that needs
   an unfinished `running` predecessor is dependent on it.
 * Record each tick in session SQL (`tick_log`): the classification counts, the
-  action taken and its evidence. A tick with no concrete action is no-progress.
+  action taken and its evidence, plus the fields `tools/check-tick-log.py`
+  reads: `recovery`, `closure_batch` (item ids assessed, at most five),
+  `approvals_granted`, `approvals_expired` (scope and tasks), `reclassified`
+  and `global_stop`. A tick with no concrete action is no-progress.
 
 After two consecutive no-progress ticks while `ready` or `unassessed` work
 remains, diagnose the bottleneck from the log and state (tmux absent, tool

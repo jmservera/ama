@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTE = ROOT / "docs/reference/research/issue-93-epic-audit-live-2026-11-18.md"
+CLOSURE_NOTE = ROOT / "docs/reference/research/issue-93-child-closure-live-2026-11-20.md"
 
 CLOSED = "closed"
 IN_PROGRESS = "in-progress"
@@ -49,6 +50,18 @@ class Epic93ChildDispositionAudit(unittest.TestCase):
         for line in note_lines():
             if re.search(r"#93\b[^|.]{0,40}\b(?:closed|accepted|approved)\b", line, re.IGNORECASE):
                 self.assertRegex(line, r"\bnot\b|\bno\b|\bnothing\b|\bnever\b", line[:120])
+
+    def test_closure_note_records_all_children_closed_and_epic_unmet(self):
+        text = CLOSURE_NOTE.read_text(encoding="utf-8")
+        for number in CHILDREN:
+            self.assertRegex(text, rf"#{number} CLOSED", f"#{number}")
+        self.assertRegex(text, r"#96 remainder deferred to #2140")
+        rows = {
+            ln.split("|")[1].strip(): ln for ln in text.splitlines() if ln.startswith("| #93 C")
+        }
+        self.assertIn("| Proven |", rows["#93 C2"])
+        self.assertIn("| Unproven |", rows["#93 C1"])
+        self.assertRegex(text, r"epic stays open")
 
 
 if __name__ == "__main__":
