@@ -8,10 +8,12 @@ import subprocess
 import unittest
 from pathlib import Path
 
-from zava_forward.core import projection, taskqueues
+from zava_forward.core import insights, projection, taskqueues
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 APP = (WEB / "app.js").read_text()
+FIELDS = (WEB / "fields.js").read_text()
+OPS = (WEB / "ops.js").read_text()
 
 # The words a person reads, written once. Anything the card says about who owns a step is here.
 COPY = {
@@ -544,7 +546,7 @@ viewer("RC-01"); c = base(); accepted();
 caseSession = session();
 mount();
 assert.ok(card.querySelector(".notice").textContent.startsWith(COPY.accepted_by_you));
-assert.deepEqual(buttonTexts(card), ["Complete handoff"]);
+assert.deepEqual(buttonTexts(card), ["Complete the handover"]);
 labelledIn(card, "Completed action (required)");
 await submitForm(card.querySelector("form"));
 assert.equal(requests.length, 0);
@@ -731,18 +733,108 @@ c.handoff_history = [{event_type: "handoff_offered", version: 1,
   source_version: HELD, reason: HELD, from_name: "Helen Marsden"}];
 mount();
 const rows = fieldsOf(card.querySelector("dl"));
-assert.equal(rows["What they are asked to do"], COPY.held);
+assert.equal(rows["What you are asked to do"], COPY.held);
 assert.equal(rows["Note from Helen Marsden"], COPY.held);
 assert.ok(!card.textContent.includes(HELD), "the placeholder never reaches the card");
 assert.ok(card.textContent.includes(COPY.held_detail));
 """
         )
 
+    def test_the_receiver_reads_the_offer_as_written_to_them(self) -> None:
+        run(
+            r"""
+asReceiver();
+c.handoff = offered();
+mount();
+assert.equal(card.querySelector(".status-line").textContent,
+  "Offered to you, waiting for your answer");
+const labels = card.querySelector("dl").querySelectorAll("dt").map(textOf);
+assert.ok(labels.includes("What you are asked to do"));
+assert.ok(!labels.includes("What they are asked to do"));
+assert.equal(fieldsOf(card.querySelector("dl"))["What you are asked to do"],
+  "Agree an access date with the resident");
+// The sender and a manager still read about the person it was offered to.
+for (const who of ["RLO-01", "PM-01"]) {
+  viewer(who); c = base(); c.handoff = offered(); caseSession = session();
+  mount();
+  assert.equal(card.querySelector(".status-line").textContent,
+    "Offered to Miguel Garcia, waiting for an answer", who);
+  const others = card.querySelector("dl").querySelectorAll("dt").map(textOf);
+  assert.ok(others.includes("What they are asked to do"), who);
+  assert.ok(!others.includes("What you are asked to do"), who);
+}
+// A handoff without a receiver code never reads as written to a viewer without a code.
+viewer("PM-01"); me.user.code = undefined; c = base();
+c.handoff = {state: "Offered", note: "Constructed note"}; caseSession = session();
+mount();
+assert.equal(card.querySelector(".status-line").textContent,
+  "Offered to a colleague, waiting for an answer");
+"""
+        )
+
     def test_the_held_back_text_matches_both_server_constants(self) -> None:
-        match = re.search(r'^const SERVER_HELD = "([^"]*)";$', APP, re.M)
+        match = re.search(r'^\s*const SERVER_HELD = "([^"]*)";$', FIELDS, re.M)
         assert match is not None
         self.assertEqual(match.group(1), projection.NOTE_HELD)
         self.assertEqual(match.group(1), taskqueues.HELD)
+        # One builder serves the handover card and the quality record; neither keeps a copy of it.
+        self.assertEqual(FIELDS.count("Held back for your role"), 1)
+        for name, source in (("app.js", APP), ("ops.js", OPS)):
+            self.assertNotIn(match.group(1), source, name)
+            self.assertNotIn("Held back for your role", source, name)
+            self.assertIn("Fields.heldBack(", source, name)
+        self.assertNotIn("SERVER_HELD", APP + OPS)
+        self.assertNotIn("the person who recorded it", APP + OPS)
+
+    def test_the_shared_builder_replaces_each_server_constant_and_leaves_other_text(self) -> None:
+        run(
+            r"""
+const held = value => Fields.heldBack(value, "Helen Marsden", "for this detail");
+for (const placeholder of [HELD, __TASK_HELD__]) {
+  assert.equal(held(placeholder), COPY.held_detail);
+}
+assert.equal(held("Covering while I am on leave"), "Covering while I am on leave");
+assert.equal(held(""), "");
+assert.equal(held(undefined), undefined);
+assert.equal(Fields.heldBack(HELD, "", "for this detail"),
+  "Held back for your role. Owner: the person who recorded it. "
+  + "Next action: ask the person who recorded it for this detail.");
+""".replace("__TASK_HELD__", json.dumps(taskqueues.HELD))
+        )
+
+
+class SuggestionReasons(unittest.TestCase):
+    def test_one_open_case_is_singular_and_zero_and_many_stay_plural(self) -> None:
+        case = {
+            "id": "ZF-5",
+            "stage": "Contacting resident",
+            "owner_code": "OWN",
+            "contacts": [],
+            "hazards": [],
+            "closed": False,
+        }
+        cases = [{"owner_code": code, "closed": False} for code in ("ONE", "TWO", "TWO")]
+        staff = [
+            {"code": code, "email": f"{code}@example.test", "name": code, "role": role}
+            for code, role in (
+                ("OWN", "Retrofit Coordinator"),
+                ("ZERO", "Retrofit Coordinator"),
+                ("ONE", "Retrofit Coordinator"),
+                ("TWO", "Retrofit Coordinator"),
+            )
+        ]
+        reasons = {
+            person["name"]: person["reasons"][-1]
+            for person in insights.recommend_handover(case, cases, staff)
+        }
+        self.assertEqual(
+            reasons,
+            {
+                "ZERO": "0 open cases (team average 1)",
+                "ONE": "1 open case (team average 1)",
+                "TWO": "2 open cases (team average 1)",
+            },
+        )
 
 
 if __name__ == "__main__":

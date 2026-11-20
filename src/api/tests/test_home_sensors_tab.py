@@ -232,6 +232,10 @@ const settle = async () => {
 };
 const observe = (panel) => ({
   status: panel.querySelector(".status-line").textContent,
+  order: panel.children.map(node => node.hasAttribute("data-sensor-badges") ? "status"
+    : node.hasAttribute("data-sensor-advisory") ? "advice" : "details"),
+  firstHoldsStatus: panel.children[0].querySelectorAll(".status-line").length === 1,
+  advice: (panel.querySelector("[data-sensor-advisory]") || {}).textContent,
   text: panel.textContent,
   attrs: panel.all().flatMap(node => Object.values(node.attrs)).join(" "),
   headings: panel.querySelectorAll("h3,h4").map(node => node.textContent),
@@ -432,6 +436,14 @@ class HomeSensorsTab(unittest.TestCase):
     def text(self, name: str) -> str:
         return str(self.matrix[name]["text"])
 
+    def test_the_status_line_comes_first_and_the_advice_sentence_sits_under_it(self) -> None:
+        advice = "Readings are advice for a person to check. They do not change the case."
+        for name, seen in self.matrix.items():
+            with self.subTest(state=name):
+                self.assertEqual(seen["order"], ["status", "advice", "details"])
+                self.assertTrue(seen["firstHoldsStatus"])
+                self.assertEqual(seen["advice"], advice)
+
     def test_ten_tabs_with_home_sensors_between_quality_and_ai(self) -> None:
         tabs = tab_definitions()
         self.assertEqual([tab for tab, _ in tabs], [
@@ -557,7 +569,8 @@ class HomeSensorsTab(unittest.TestCase):
         )
         self.assertIn(", out of date", stale["text"])
         old = self.matrix["offline-24h"]
-        self.assertEqual(old["status"], "Sensor offline (no reading for over 24 hours)")
+        self.assertEqual(old["status"], "Sensor may be offline (no reading for over 24 hours)")
+        self.assertIn("Sensor may be offline", old["headings"], "the alert hedges too")
         self.assertIn("No reading for over 24 hours. Last reading 3 days ago.", old["text"])
         self.assertEqual(old["alertCount"], "1")
         for name, wanted in (("fault", "Sensor fault"), ("out-of-range", "Reading out of range")):
@@ -720,7 +733,12 @@ class CopyTable(unittest.TestCase):
         labels = sensor_map.LABELS
         self.assertEqual(words["fresh"], labels["fresh"])
         self.assertEqual(words["stale"], labels["stale"])
-        self.assertEqual(words["offline-24h"], labels["offline"])
+        # The server's map label states the 24 hour case as fact; this tab hedges it like its alert.
+        self.assertEqual(
+            words["offline-24h"],
+            labels["offline"].replace("Sensor offline", "Sensor may be offline"),
+        )
+        self.assertNotEqual(words["offline-24h"], labels["offline"])
         self.assertEqual(words["offline"], labels["no-readings"])
         self.assertEqual(words["withheld"], labels["consent-withheld"])
         self.assertEqual(words["unavailable"], labels["unavailable"])
