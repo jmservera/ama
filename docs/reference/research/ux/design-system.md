@@ -79,7 +79,7 @@ Legacy aliases keep existing screens connected to the new foundation:
 | Colour | `--ink`, `--muted`, `--line`, `--bg`, `--surface`, `--brand`, `--brand-d`, `--soft`, `--soft-line`, `--warn`, `--warn-bg`, `--caution`, `--caution-bg`, `--caution-line`, `--ok`, `--ok-bg`, `--field-line`, `--disabled-bg`, `--disabled-ink` |
 | Type | `--font`, `--fs-sm`, `--fs-base`, `--fs-lg`, `--fs-xl`, `--lh` |
 | Spacing and shape | `--sp-1` to `--sp-5`, `--radius`, `--radius-lg` |
-| Focus | `--focus`, `--focus-ink`, `--focus-w`, `--focus-off` (3px dark outline with a 2px amber ring on `:focus-visible`, so the indicator shows on light and brand backgrounds; issue #151) |
+| Focus | `--focus`, `--focus-ink`, `--focus-w`, `--focus-off` (3px dark outline with a 2px amber ring on `:focus-visible`, so the indicator shows on light and brand backgrounds; issue #151). The main container is the one exception, by the owner's request of 2026-11-20: see [Focus on the main container](#focus-on-the-main-container) |
 | Motion | `--motion` (0s under `prefers-reduced-motion: reduce`) |
 
 Legacy rules that still use literal lengths or white are migrated as they are
@@ -160,6 +160,8 @@ States: default, focus, disabled, error, loading, empty, blocked.
 | Button | `button`, `.btn`, `.alt` | Default; hover; focus ring; native `disabled` while pending; `aria-busy=true` and adjacent polite progress text, spinner after 200ms. |
 | Form field | `input`, `select`, `textarea`, `label` | Default; focus ring; `aria-invalid=true` gets a thick red border and must be paired with a `.field-error` message. |
 | Field error | `.field-error`, `.err` | Warning glyph plus text; never colour alone. |
+| Labelled field | `.field`, `.field-hint`, `.field-row` | One visible label with "(required)" or "(optional)", an optional hint, the control and a hidden `.field-error`, built by `Fields.fieldBlock` in `fields.js`; `fail()` shows the error, marks the control invalid and moves focus to it. See [Labelled field and check row](#labelled-field-and-check-row). |
+| Check row | `.check` | Checkbox before its label, hint or error on its own line indented under the label text, built by `Fields.checkRow`. The label carries the space beside the box, so the whole row is clickable. |
 | Card and list item | `.card`, `.item` | Default; hover border; one name, one status, one meta. |
 | Data table | `.table-scroll`, native `table` | Named focusable horizontal-scroll region for wide tables; native column headers retain `scope=col`. Empty/error/loading states belong to the enclosing request. |
 | Status flag | `.flag`, `.flag.danger` | Text label always present; danger adds a warning glyph. |
@@ -169,6 +171,10 @@ States: default, focus, disabled, error, loading, empty, blocked.
 | Safety issue card | `.safety-item`, `.safety-facts`, `.safety-next`, `.safety-step`, `.primary-step`, `.safety-optional`, `.safety-details`, `.field-hint` | One card per safety issue: plain heading, `.status-line`, a four-row facts list, a "What humans need to do next" callout, one `<form>` and `<fieldset>` per action with its own labelled evidence field, and a `.field-hint` linked by `aria-describedby`. Audit fields and optional external dates sit in native `<details>`. | Number plus explicit label; `aria-pressed` and visible "Selected"/"Select filter" words distinguish active filters without colour. || Empty state | `.empty` | Dashed border, plain sentence saying what is absent and what to do next. |
 | Loading state | `.loading`, `.async-feedback` or `aria-busy` | Immediate progress text; decorative spinner after 200ms, static with reduced motion. No spinner-only signal. |
 | Blocked step | `.blocked` | See below. |
+| Journey strip and case tab list | `.stepper`, `.step`, `.case-tabs`, `.case-tabs-row` | Cards equal in height within a visual row; a blocked step shows "Why blocked" and opens the native popover; tabs wrap at 900px and wider and scroll in one row at 899px and below. See [Journey strip and case tab row](#journey-strip-and-case-tab-row). |
+| Decision card | `.decision-item`, `.decision-facts`, `.decision-defect`, `.decision-grid`, `.decision-step`, `.decision-actions`, `.decision-feedback` | One quality record with the decision area for its state; client messages, server refusals and the recorded result show inside the record. |
+| Handover card | `.handoff-result`, `.handoff-actions`, `.handoff-record`, `.handoff-candidates`, `.handoff-offer`, `.handoff-more` | Status list, the viewer's actions, one offer button per suggested person with an inline labelled form, and a notice with owner and next action when offering is not possible. |
+| Sensor alert | `.sensor-alerts`, `.sensor-alert` | One item per alert with a warning glyph, a caution or warning tint and a definition list: What we see, Owner, Next action. |
 | Layout and list helpers | `.layout`, `.side`, `.main`, `.list`, `.row` | Layout helpers only; they carry no state. `.layout` is a two-column grid that collapses to one column under 900px; `.side` holds the queue; `.row` groups buttons and links. |
 | Specialist screen | `.screen-record`, `.screen-links`, `.screen-evidence` | Read-only role screens. `.screen-record` is a `.card` panel; `.screen-links` is the screen menu, with the current screen marked by `aria-current="page"` and bold text; `.screen-evidence` holds the selected home. State words stay in text. |
 | AI suggestion | `.ai-suggestion` | See below (SA-004). |
@@ -209,6 +215,210 @@ so the state is readable without colour.
   it is not an approval, consent or safety decision. AI output never changes
   ranking, owners, stages or queues. The server still enforces authority.
 * The label is text, so it is not colour- or border-style-only.
+
+## Staff workbench UX update (2026-11-20)
+
+Design record for the staff workbench UX review of 2026-11-20 (see the
+[review record](./staff-workbench-ux-review-2026-11-20.md)). It adds one labelled-field
+pattern, card classes for the case screen, a journey strip alignment rule and a few
+global rules for links, targets and figures, and it removes the focus frame from the main
+container. It is not user-tested, not a Fluent runtime adoption and not an accessibility
+conformance claim.
+
+### Labelled field and check row
+
+`src/api/src/zava_forward/api/web/fields.js` (the `Fields` global, loaded right after
+`async-action.js`; it calls `h()` from `app.js` at call time) builds one pattern for
+form fields.
+
+* `Fields.fieldBlock({ id, name, label, hint, required, optional, control })` returns
+  `{ block, control, fail(message), clear() }`.
+* `Fields.checkRow({ id, label, hint, control })` returns `{ block, control }`.
+* An id and a visible label are mandatory; the helper throws without them.
+
+```html
+<div class="field">
+  <label for="{id}">{label} (required)</label>
+  <p class="field-hint" id="{id}-hint">{hint}</p>
+  <input id="{id}" name="{name}" aria-describedby="{id}-hint">
+  <p class="field-error" id="{id}-error" hidden></p>
+</div>
+```
+
+Rules:
+
+* The label is visible text. "(required)" or "(optional)" is appended to the label text,
+  so it is read with the label. If both flags are set, required wins; with neither flag
+  the label stays bare. The [content standard](./content-standard.md) carries the
+  proposed marking rule, pending owner confirmation.
+* The hint is optional, sits between the label and the control and is linked to the
+  control through its description. It takes the muted colour and the small size.
+* The error paragraph stays hidden until `fail(message)` runs. `fail` writes the text,
+  shows it, adds its id to the control's description, marks the control invalid and
+  moves focus to the control. `clear()` empties and hides the paragraph, drops its id
+  from the description and removes the invalid mark. The paragraph is not a live
+  message of its own: the person meets it as the description of the focused field. That
+  design has not been checked with a screen reader.
+* A validation error is one short sentence that says the reason and the fix, for
+  example "Enter the case reference, for example ZF-1." or "Say why you are returning
+  it."; the hint under the field stays as the guide. The three-part form (the reason,
+  then "Owner: ..." and "Next action: ...") is for blocked or refused actions, and
+  server refusals keep their own wording. The [content standard](./content-standard.md)
+  already asks for this split. The first build used the three-part form on empty
+  handover and time capture fields, and the final review found the two voices
+  inconsistent.
+* In a check row the checkbox comes first, then its label, then the hint, in one flex
+  row. The label carries the space beside the box, so a click in the gap reaches the
+  box, and the hint or error is indented by the box width plus that space so it lines
+  up under the label text. The "resident told" tick in the quality card builds its own
+  error line and links it by description, without marking the box invalid.
+
+Classes in `style.css`:
+
+* `.field`: block spacing. Inputs, selects and textareas inside it are block level and
+  fill the width up to 36rem; checkboxes and radios are excluded.
+* `.field-hint`: small size, muted colour.
+* `.field-error`: the existing warning glyph and text, hidden through the `hidden`
+  attribute so that the glyph never prints alone.
+* `.field-row`: a wrapping flex row of fields aligned to the bottom, each field taking
+  12rem or more; a button sits last.
+* `.check`: a wrapping flex row for a checkbox and its label, with the hint or error on
+  a line of its own, indented under the label text. The label has inline start padding
+  of `--sp-2` and the row has a row gap of the same size.
+
+### Decision, handover and sensor card classes
+
+Colours come from existing tokens: borders from `--line`, `--warn`, `--caution` and
+`--brand`, backgrounds from `--surface`, `--warn-bg` and `--caution-bg`.
+
+* `.decision-item` is one quality record: bordered, rounded, on `--surface`, with a
+  dashed border when it also has `.superseded`. Inside it sit `.status-line`,
+  `.decision-facts` (a definition list with a 12rem label column, one column at 600px
+  and below), `.decision-checks` (a native disclosure), `.decision-defect` (a left
+  border in `--warn`) and `.decision-area` (hidden when empty).
+* `.decision-grid` places two `.decision-cell` blocks side by side from 1200px and
+  stacks them at 1199px and below. `.decision-step` is the fieldset with its legend,
+  `.decision-actions` the button row (full-width buttons at 600px and below) and
+  `.decision-feedback` the result area under it (hidden when empty). `.evidence-step`
+  and `.evidence-checks` style the evidence form.
+* `.handoff-result`, `.handoff-actions`, `.handoff-record`, `.handoff-candidates`,
+  `.handoff-offer` and `.handoff-more` style the handover card: the result line with its
+  undo button, button rows, the record fieldset, the candidate list with one button per
+  person, the inline offer form and the closed disclosures.
+* `.sensor-alerts` is the alert list. `.sensor-alert` has a caution border with a wide
+  left edge and a tint, `.sensor-alert.danger` takes the `--warn` tokens, and its heading
+  carries a warning glyph. Each alert is a definition list: What we see, Owner, Next
+  action.
+* `.case-links` lays the three case header links out as a wrapping list.
+
+### Journey strip and case tab row
+
+* Alignment rule: `.stepper` is a grid with `align-items:stretch` and `.step` is a flex
+  column. The link takes the free height (`flex:1 1 auto`), so the blocker button sits
+  at the foot of its card and the cards in one visual row have equal height. The strip
+  has six columns at 1200px and wider, three columns by two rows from 900 to 1199px and
+  one column at 899px and below.
+* A blocked step shows the fixed words "Why blocked" on its blocker button. The full
+  reason, owner and next action stay in the native popover, and the accessible name
+  still starts "{Step}: why blocked". A closed case shows no blocker button.
+* Tab list: `.case-tabs` wraps at 900px and wider. `.case-tabs-row`, the wrapper inside
+  it, takes no box there (`display:contents`). At 899px and below the wrapper is a
+  non-wrapping flex row with horizontal overflow and contained overscroll, and the tabs
+  do not shrink. Script scrolls the selected tab into view along the row. The wrapper has
+  no name and no focus stop, and its behaviour with assistive technology is not checked.
+
+### Links, targets and figures
+
+Appended to `style.css` under the `ux-batch:app-wide` comment:
+
+```css
+main a:where(:not(.btn,.item,.linkbtn)){color:var(--brand-d)}
+main a:where(:not(.btn,.item,.linkbtn)):hover{color:var(--ink)}
+:where(table a,.plainlist a,details li>a):where(:not(.leaflet-container a)){display:inline-block;min-height:1.5rem;padding-block:var(--sp-1)}
+th,td{font-variant-numeric:tabular-nums}
+@media(max-width:600px){main{padding-block-end:5rem}}
+```
+
+The coordinator screen has one rule of its own, in the coordinator block of the same file:
+
+```css
+.coordinator table a{display:inline-block;min-width:1.5rem;min-height:1.5rem;padding:var(--sp-1);text-align:center}
+```
+
+* One link colour: links in `main` take `--brand-d` (the hover step of the brand teal),
+  and `--ink` on hover, except buttons, card links (`.item`) and link-styled buttons
+  (`.linkbtn`). The exclusion list sits inside `:where()`, so it adds nothing to the
+  weight of the rule, which is that of `main a` (two element selectors); the hover rule
+  adds one pseudo-class. A component rule that names a class and sets its own link
+  colour still wins, for example the stepper links, the jump links and the map controls.
+* Compact target height: links in tables, map lists (`.plainlist`) and disclosure lists
+  (`details li>a`), outside the Leaflet map container, are inline blocks with a minimum
+  height of 1.5rem (the app's compact minimum, the same value `details>summary` and
+  `.linkbtn` use) and block padding of `--sp-1`. The whole selector sits inside
+  `:where()`, so this rule has zero specificity: a rule that sets its own display, height
+  or padding wins, and buttons, the jump links and the map attribution keep their own
+  sizes.
+* Coordinator count links: the coordinator rule reaches links in tables only. It gives
+  them the same minimum height, a minimum width of the same size and centred text, so a
+  bare single-digit count stays a usable target. Count links inside a sentence stay
+  inline. The specification's rule covered every link on the coordinator screen, and the
+  final review found that it grew the lines of those sentences (application N7).
+* The specification wrote the first and third rules with normal specificity. Measured on
+  24 screens, that shrank the coordinator jump links from 40px to 34px, turned the map
+  zoom controls teal and inline-block, shrank the Reset coordinator filters button and
+  enlarged the map attribution (FB-8 measurement). The `:where()` form leaves those alone.
+* The earlier specialist-screen rule that shrank a lone link now reads
+  `.screen-evidence p>a:only-child:not(.btn)`, so Download for Excel keeps the button
+  height. `test_design_system.py` pins the new selector.
+* Figures: every table cell uses tabular numerals; earlier rules covered three tables
+  only.
+* Narrow screens: at 600px and below the page ends with 5rem of space so that the fixed
+  chat launcher clears the last card. The space first applied at every width, and the
+  final review found about 100px of empty space at the foot of every page, including at
+  1440px, so it now sits in a media query (application N11). At the same width the
+  employee chat panel's height setting is the full viewport height, where it is 70 or 80
+  percent above 600px, and its composer may take up to 70 percent of the panel, where it
+  takes up to 55 percent above 600px, so the Attach and Voice explanation shows at 390 by
+  800. The clearance was measured on All cases at 390px; wider screens were not
+  re-measured after the width change. The title row of a work list keeps a space of
+  `--sp-4` below it.
+* The `:where()` rules and the complex `:not()` need a current browser and were observed
+  in Chromium only. Contrast of the link colour on each background it meets is routed to
+  the accessibility skill; this update adds no contrast measurement.
+
+### Focus on the main container
+
+The two-tone focus frame applies to every focusable target except one. At the owner's
+request of 2026-11-20, after a screenshot of a thick frame around the whole content
+area, the main container (`main#app`) shows no frame however focus arrives there: mouse
+navigation, keyboard navigation or the skip link.
+
+```css
+[tabindex="-1"]:where(:not(#app)):focus { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
+#app:focus-visible { outline-color: transparent; box-shadow: none; }
+```
+
+* The first rule is the frame for elements with tabindex -1. The exclusion of the main
+  container sits inside `:where()`, so the rule keeps its weight and every other target
+  keeps its frame. It stopped the frame after mouse navigation only: Chromium treats the
+  container as keyboard-focused after Enter on a link or the skip link, so the global
+  focus rule still drew it. The override is the second rule.
+* Focus still moves to the main container after a route change and from the skip link;
+  only the frame is gone. Links, buttons, fields and the case tab panel headings keep
+  their frame from the global focus rule and the heading rules.
+* No outline is switched off. The outline stays defined, only transparent, so
+  forced-colours mode can still draw one. That rendering was not checked.
+* The accessibility review of this choice is pending. It settles finding F36 and defer
+  item D12 of the [review record](./staff-workbench-ux-review-2026-11-20.md) in the
+  owner's favour. `test_polish_ux.py` pins the mechanism.
+
+### Palette
+
+The app palette is unchanged. The workbench keeps its Fluent 2 tokens and the teal brand,
+and every rule added in this update uses existing tokens; tests check the field rules and
+the app-wide block for raw colour values. The deck-derived palette stays on the public
+welcome page only, as recorded above. The page declares the brand teal, `#0b5d6b`, as its
+theme colour.
 
 ## Colour as a signal: delivered and evidence limits
 
