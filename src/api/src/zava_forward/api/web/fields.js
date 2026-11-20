@@ -11,7 +11,8 @@
 //     <p class="field-error" id="{id}-error" hidden></p>
 //   </div>
 // fail(message) shows the error, marks the control invalid and moves focus to it; clear() undoes that.
-// Error text: "{What is wrong}. Owner: you. Next action: {fix}, then choose {Button label} again."
+// Error text: one sentence that says the reason and the fix, for example "Enter the minutes as a whole number from 1 to 600."
+// The hint under the field stays. A blocked or refused action is a different message: reason, Owner, Next action.
 //
 // Fields.checkRow({ id, label, hint, control }) returns { block, control } and builds:
 //   <div class="check">

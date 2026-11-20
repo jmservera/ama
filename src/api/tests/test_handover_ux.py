@@ -257,8 +257,8 @@ def shipped() -> str:
         + APP.split("function caseFieldEntries", 1)[1].split("function captureCaseFields", 1)[0]
     )
     handover = (
-        "const recordedMissing"
-        + APP.split("const recordedMissing", 1)[1].split("function hazardState", 1)[0]
+        "const RECORDED_MISSING"
+        + APP.split("const RECORDED_MISSING", 1)[1].split("function hazardState", 1)[0]
     )
     manager = re.search(r"^const isManager = .*;$", APP, re.M)
     assert manager is not None
@@ -329,10 +329,11 @@ const box = card.querySelectorAll(".handoff-offer")[1];
 await submitForm(box.querySelector("form"));
 assert.equal(requests.length, 0);
 const messages = shownErrors(box);
-assert.equal(messages.length, 3);
+assert.deepEqual(messages, ["Say where this change came from.",
+  "Enter the version or date of that source.", "Say why you are making this change."]);
 for (const message of messages) {
-  assert.match(message,
-    /Owner: you\. Next action: .*, then choose Send offer to Aadi Kapoor again\.$/);
+  assert.ok(!/Owner:|Next action:/.test(message), "one sentence, not the three-part form");
+  assert.equal(message.split(". ").length, 1);
 }
 for (const label of ["Source reference (required)", "Source version (required)",
   "Reason (required)"]) {
@@ -341,6 +342,7 @@ for (const label of ["Source reference (required)", "Source version (required)",
   const beside = control.parentElement.querySelectorAll(".field-error");
   assert.ok(beside.some(node => !node.hidden && node.textContent), `${label}: message beside`);
   assert.ok(control.attrs["aria-describedby"].includes(`${control.id}-error`));
+  assert.ok(control.attrs["aria-describedby"].includes(`${control.id}-hint`), "the hint stays");
 }
 const source = labelledIn(box, "Source reference (required)");
 assert.equal(document.activeElement, source);
@@ -403,8 +405,7 @@ assert.ok(!options.some(node => /Carl Contractor|^Helen Marsden/.test(node.textC
 
 await submitForm(more.querySelector("form"));
 assert.equal(requests.length, 0);
-assert.equal(shownErrors(more)[0], "Choose a colleague. Owner: you. Next action: "
-  + "choose who should take the case, then choose Offer the case again.");
+assert.equal(shownErrors(more)[0], "Choose who should take the case.");
 assert.equal(document.activeElement, choice);
 choice.value = "cassandra@example.test";
 if (choice.events.input) choice.events.input();
@@ -509,6 +510,21 @@ for (const who of ["RLO-01", "PM-01"]) {
 """
         )
 
+    def test_escalating_with_nothing_chosen_or_said_gives_one_short_sentence_each(self) -> None:
+        run(
+            r"""
+asManager();
+c.handoff = offered();
+mount();
+const form = card.querySelectorAll("form").find(node =>
+  node.querySelector("legend")?.textContent === "Escalate this offer");
+await submitForm(form);
+assert.equal(requests.length, 0);
+assert.deepEqual(shownErrors(form), ["Choose who should chase or take over the offer.",
+  "Say why you are escalating."]);
+"""
+        )
+
     def test_every_other_situation_explains_itself_and_offers_nothing(self) -> None:
         run(
             r"""
@@ -550,7 +566,7 @@ assert.deepEqual(buttonTexts(card), ["Complete the handover"]);
 labelledIn(card, "Completed action (required)");
 await submitForm(card.querySelector("form"));
 assert.equal(requests.length, 0);
-assert.match(shownErrors(card)[0], /^Enter the completed action\. Owner: you\. Next action: /);
+assert.deepEqual(shownErrors(card), ["Say what you did to complete the handover."]);
 """
         )
 
@@ -700,7 +716,7 @@ assert.equal(document.activeElement, labelledIn(accept, "Source reference (requi
 
 await submitForm(decline);
 assert.equal(requests.length, 0);
-assert.equal(shownErrors(decline).length, 1);
+assert.deepEqual(shownErrors(decline), ["Say why you cannot take the case."]);
 const reason = labelledIn(decline, "Reason if you cannot take it (required)");
 assert.equal(document.activeElement, reason);
 assert.equal(reason.attrs["aria-invalid"], "true");

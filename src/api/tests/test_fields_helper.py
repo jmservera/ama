@@ -193,7 +193,7 @@ class FieldBlock(unittest.TestCase):
     invalid: control.getAttribute("aria-invalid"),
     described: control.getAttribute("aria-describedby"),
     focused: document.activeElement === control});
-  const message = "Enter the minutes. Owner: you. Next action: type them, then choose Save again.";
+  const message = "Enter the minutes as a whole number from 1 to 600.";
   const seen = {start: state()};
   field.fail(message); seen.failed = state();
   field.fail(message); seen.again = state();
@@ -201,7 +201,7 @@ class FieldBlock(unittest.TestCase):
   return seen;
 })()"""
         )
-        message = "Enter the minutes. Owner: you. Next action: type them, then choose Save again."
+        message = "Enter the minutes as a whole number from 1 to 600."
         failed = {
             "hidden": False,
             "text": message,
@@ -239,7 +239,7 @@ class FieldBlock(unittest.TestCase):
   const field = Fields.fieldBlock({id: "minutes", label: "Minutes", control});
   field.clear();
   const untouched = control.hasAttribute("aria-describedby");
-  field.fail("Problem. Owner: you. Next action: fix it, then choose Save again.");
+  field.fail("Enter the minutes as a whole number from 1 to 600.");
   const during = control.getAttribute("aria-describedby");
   field.clear();
   return {untouched, during, after: control.hasAttribute("aria-describedby")};
