@@ -14166,3 +14166,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] update | Issue 1837 standalone nomination forms live re-proof (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-20.md](research/issue-1837-live-demo-evidence-2026-11-20.md): live no-write form proof, three axe re-runs, no source change. Criteria 5 and a live write stay unproven; nothing ticked.
+## [2026-11-20] update | Issue 435 fourth per-criterion pass (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-20.md](research/capstone-pitch-435-live-2026-11-20.md) and corrected the held-out batch status in the [rehearsal notes](../capstone/pitch/tokenomics-rehearsal-notes.md). Criterion 2 stays unproven; the criterion 3 tick is unsupported by the rehearsal notes; nothing ticked.

@@ -82,7 +82,7 @@ Spoken text (about 48 words):
 "Our planning scenario puts inference alone at about 44 US cents per home. That
 is a labelled assumption from a dated secondary-source rate, not a verified
 price. Accepted-outcome cost is unknown: it is total attributable cost divided
-by human-accepted work. A capped measurement is authorised, not yet run."
+by human-accepted work. A capped measurement has run on synthetic cases: usage only, no accepted-outcome cost yet."
 
 Pointer to say or show: "Cost questions: page 53. Hidden calls: page 55."
 
@@ -116,7 +116,7 @@ return to the page you left, then restart the interrupted slot's clock.
 | USD 6,872.9856 across 15,600 modelled homes | Modelled scenario total; not a forecast or saving | B25 workings |
 | USD 0.881152 per home if workload doubles | Sensitivity of the same scenario | B25 workings |
 | Accepted-outcome cost | Unknown: not measurable until the denominator, quality floor and billing basis exist | B25, OD-51 |
-| USD 5.00 held-out batch | Owner authorisation of 2026-11-13; not run live; implemented on main (`zava_forward.agents.heldout_batch`), awaiting owner-authorised live provider execution | [Q&A brief](../tokenomics-qa-brief.md) |
+| USD 5.00 held-out batch | Owner authorisation of 2026-11-13 (up to USD 5); the batch ran live on 2026-11-18 under a USD 0.50, 12-call authorisation: 12 synthetic proposals, 2,522 tokens, USD 0.000744 at list price (measured held-out batch, usage only; see [the #432 record](../../reference/research/ai-heldout-batch-432-live-2026-11-18.md)) | [Q&A brief](../tokenomics-qa-brief.md) |
 | 20 s, 60 s, 840 s and 900 s | Planning allocations for this rehearsal, not observed timings | This file |
 
 Do not say any price, saving or payback as fact, that the batch has run, or that
