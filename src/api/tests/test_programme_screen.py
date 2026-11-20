@@ -527,11 +527,16 @@ class ProgrammeScreen(unittest.TestCase):
         ):
             self.assertIn(f"#/screens?screen={screen}&case=C-9", manager)
         self.assertIn("no screen yet (recorded deferral)", manager)
-        self.assertIn("is not installed for your role. Your access has not changed.", manager)
+        self.assertIn(
+            "Stage 5 opens a screen that is not installed for your role. "
+            "Owner: your team manager. Next action: ask them to add the screens you need.",
+            manager,
+        )
+        self.assertEqual(manager.count("Owner: your team manager."), 1)
         coordinator = json.dumps(run("Retrofit Coordinator")["blocked"])
         self.assertIn("screen=technical-queue&case=C-9", coordinator)
         self.assertNotIn("screen=procurement-packages", coordinator)
-        self.assertIn("is not installed for your role", coordinator)
+        self.assertIn("not installed for your role", coordinator)
         for node in (run()["blocked"],):
             self.assertNotIn("button", tags(node))
 
@@ -542,7 +547,10 @@ class ProgrammeScreen(unittest.TestCase):
             self.assertEqual(len(texts), len(set(texts)), texts)
         shared = [t for h, t in link_texts(run()["blocked"]) if "screen=resident-choice" in h]
         self.assertEqual(len(shared), 2)
-        self.assertTrue(shared[0].startswith("3. ") and shared[1].startswith("7. "))
+        self.assertTrue(
+            shared[0].startswith("Decide scope and feasibility")
+            and shared[1].startswith("Handover and live with measures")
+        )
 
 
 if __name__ == "__main__":

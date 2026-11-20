@@ -1020,6 +1020,10 @@ function appointmentControls(w, submit) {
       source: closureSource[1].value, source_version: closureVersion[1].value,
       reason: closureReason[1].value, confirmed: closureConfirmed[1].checked
     }));
+  const tally = (counts) => {
+    const rows = Object.entries(counts || {});
+    return rows.length ? `${rows.map(([cause, n]) => `${cause}: ${n}`).join("; ")}.` : "None recorded.";
+  };
   return h("section", { "aria-label": `Appointment controls for ${w.id}` },
     h("h3", {}, `Appointment: ${state.status}`),
     appointmentSlot(state),
@@ -1027,8 +1031,8 @@ function appointmentControls(w, submit) {
     h("p", {}, "An offer is not an agreement. Works consent remains separate. Nothing is sent. Urgent safety response does not wait for a bundle or investigation."),
     h("a", { href: `#/case/${encodeURIComponent(w.case_id)}` }, "Record or review the named resident-update commitment and safe contact"),
     offer && h("p", {}, `Options: ${offer.options.join("; ")}. Constraints: ${offer.constraints}. Paused: ${offer.paused ? "Yes" : "No"}. Deferred: ${offer.deferred ? "Yes" : "No"}. Update owner: ${state.current_update_owner ? state.current_update_owner.name : "Unknown"}.`),
-    h("p", {}, `Eligible resident no-access: ${state.eligible_no_access}. Reporting threshold: ${state.reporting_threshold}. ${state.case_reset}.`),
+    h("p", {}, `Eligible resident no-access: ${state.eligible_no_access}. Reporting threshold: ${state.reporting_threshold}. ${String(state.case_reset).replace(/\.$/, "")}.`),
     h("p", {}, `Underlying home case ${state.case_id}: ${state.case_closed === true ? "Closed" : state.case_closed === false ? "Active" : "Unknown"}. Recorded human closures: ${state.closure_history.length}. History is retained.`),
-    h("p", {}, `Preference breaches by cause / owner: ${JSON.stringify(state.counts.preference_breach)}. Abortive visits by cause / owner: ${JSON.stringify(state.counts.abortive)}.`),
+    h("p", {}, `Preference breaches by cause / owner: ${tally(state.counts.preference_breach)} Abortive visits by cause / owner: ${tally(state.counts.abortive)}`),
     proposal, confirmation, authority, outcome, configure, investigation, closure);
 }

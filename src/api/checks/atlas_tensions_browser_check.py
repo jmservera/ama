@@ -50,6 +50,16 @@ PACKAGE_TABLE = "Packages with period, scope, version and capacity"
 DELIVERED_ORDER = ("PKG-002", "PKG-003", "PKG-001")
 VIEWPORTS = (1280, 320)
 STEP_NAMES = ("Technical", "Resident", "Delivery", "Quality", "Finance")
+STAGE_NAMES = (
+    "Report or nominate",
+    "Understand home and household",
+    "Decide scope and feasibility",
+    "Coordinate ready work",
+    "Deliver and capture",
+    "Inspect and remedy",
+    "Handover and live with measures",
+    "Reconcile and learn",
+)
 WITHHELD_ITEMS = {
     PROGRAMME: (
         "Resident contact details and access history "
@@ -250,7 +260,7 @@ def check_programme(
     stage_text = items.all_inner_texts()
     check(
         f"{where}: eight stages rendered in order",
-        [t[:2] for t in stage_text] == [f"{n}." for n in range(1, 9)],
+        [t.split(":")[0] for t in stage_text] == list(STAGE_NAMES),
     )
     check(
         f"{where}: stage 4 states an offer is not a booking",
@@ -623,7 +633,7 @@ def run_browser(base: str) -> None:
             page.set_viewport_size({"width": 1280, "height": 900})
 
             page.get_by_role(
-                "link", name=f"3. Decide scope and feasibility: {RESIDENT}", exact=True
+                "link", name=f"Decide scope and feasibility: {RESIDENT}", exact=True
             ).click()
             page.get_by_role("heading", name=RESIDENT, exact=True).wait_for()
             evidence.wait_for()

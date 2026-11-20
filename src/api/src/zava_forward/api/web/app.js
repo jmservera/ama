@@ -859,7 +859,7 @@ function pendingHandoffs() {
 let briefingBox = null;
 function workSummary(work) {
   return h("div", { class: "work-context" },
-    h("p", {}, `Current owner: ${work.owner}. Reason: ${work.reason}.`),
+    h("p", {}, `Current owner: ${work.owner}. Reason: ${String(work.reason).replace(/\.$/, "")}.`),
     h("p", { class: "next-action" }, `Next action: ${work.next_action}`),
     h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
@@ -2304,7 +2304,7 @@ async function contractorListView() {
   const PAGE = 50;
   let rows = [], total = 0;
   const out = h("div", { "aria-live": "polite" });
-  const render = () => out.replaceChildren(
+  const render = () => out.replaceChildren(...[
     h("p", { class: "muted" }, `${total} ${total === 1 ? "job" : "jobs"}`),
     h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
       h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`),
@@ -2312,7 +2312,7 @@ async function contractorListView() {
         contractorVisitNoticeBadge(r.needs_notice),
         h("div", {}, `Named contact: ${r.named_contact}`)),
       h("div", { class: "meta" }, h("div", {}, r.stage), r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "No jobs assigned to you.")),
-    rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null);
+    rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
   const load = async (more) => {
     const d = await api(`/api/cases?limit=${PAGE}&offset=${more ? rows.length : 0}`);
     rows = more ? rows.concat(d.items) : d.items;
