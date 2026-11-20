@@ -903,7 +903,7 @@ class HousingResidentWcag232Tests(unittest.TestCase):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), path.name)
         self.assertEqual(tables, 15)
-        self.assertEqual(aria_invalid, 9)
+        self.assertEqual(aria_invalid, 10)
 
     def test_contact_centre_housing_and_resident_routes_and_script_isolation(self) -> None:
         router = self.data["router"]

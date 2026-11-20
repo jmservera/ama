@@ -3,6 +3,7 @@
 import hashlib
 import http.client
 import tempfile
+import tomllib
 import unittest
 from html.parser import HTMLParser
 from pathlib import Path
@@ -120,6 +121,23 @@ class EmployeeAssets(Base, CacheContract):
             self.assertIn(status, (401, 404))
             self.assertEqual(headers["Cache-Control"], "no-store")
             self.assertNotIn("ETag", headers)
+
+    def test_fields_helper_is_linked_versioned_served_and_packaged(self) -> None:
+        port = self.httpd.server_port
+        _, _, page = request(port, "/app")
+        links = AssetLinks()
+        links.feed(page.decode())
+        url = next(link for link in links.urls if urlsplit(link).path == "/fields.js")
+        self.assertRegex(urlsplit(url).query, r"^v=[0-9a-f]{64}$")
+        status, headers, body = request(port, url)
+        self.assertEqual(status, 200)
+        self.assertEqual(body, (SHARED_WEB / "fields.js").read_bytes())
+        self.assertEqual(headers["Cache-Control"], IMMUTABLE)
+        self.assertTrue(headers["Content-Type"].startswith("text/javascript"))
+        with (SHARED_WEB.parents[3] / "pyproject.toml").open("rb") as stream:
+            config = tomllib.load(stream)
+        patterns = config["tool"]["setuptools"]["package-data"]["zava_forward.api"]
+        self.assertTrue(any(Path("web/fields.js").match(pattern) for pattern in patterns))
 
 
 class ResidentAssets(DemoTestCase, CacheContract):

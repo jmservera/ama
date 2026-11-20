@@ -123,7 +123,7 @@ class Wcag22Baseline(unittest.TestCase):
                     "aria-describedby" in window or built_with_describedby, f"{path.name}:{number}"
                 )
         invalid_msg = "new aria-invalid site: audit it and update this check and the record"
-        self.assertEqual(sites, 9, invalid_msg)
+        self.assertEqual(sites, 10, invalid_msg)
 
     def test_saved_held_copy_field_is_tied_to_its_visible_message(self):
         # The eighth site (96): the saved Held copy file input must name the same element the

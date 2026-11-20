@@ -299,9 +299,9 @@ Re-measured from `src/api` at base `eb51af5c9` with the existing unit tests, des
 | `unittest discover -s tests -p "*wcag*.py"` (per-role screen guards, matrix and workbench baseline) | 150 tests, all passing |
 | `unittest discover -s tests -p "*a11y*.py"` | 16 tests, all passing |
 | `unittest discover -s tests -p "*accessib*.py"` | 35 tests, all passing |
-| Served web assets | 23 (17 scripts, 3 pages, 3 style sheets) |
+| Served web assets | 24 (18 scripts, 3 pages, 3 style sheets) |
 | Script-built table builders | 15, each with a caption |
-| `aria-invalid` sites | 9 |
+| `aria-invalid` sites | 10 |
 
 The three discovery patterns overlap, so the totals are not additive. The manual screen-reader and keyboard rows in the manual check record stay `Not run`, and the target level stays pending owner confirmation (O-1). The guards were not re-run at 320 px, at 200% text size or with a screen reader, so we do not claim conformance (#155).
 
