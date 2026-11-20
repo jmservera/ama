@@ -28,6 +28,7 @@ from . import (
     challenges,
     continuity,
     controls,
+    identity,
     monitoring_coverage,
     projection,
     rai_metrics,
@@ -1499,10 +1500,15 @@ class Assistants:
             raise PermissionError(
                 "This assistant belongs to a different role. Use the manual owner route."
             )
-        row = db.execute(
-            "SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)
-        ).fetchone()
-        current = json.loads(row[0]) if row else None
+        if identity.is_entra(user):
+            # Entra principals have no roster row under their synthetic email; the verified
+            # tenant/object keys are the current authority, as in the other staff paths.
+            current = identity.verified(user)
+        else:
+            row = db.execute(
+                "SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)
+            ).fetchone()
+            current = json.loads(row[0]) if row else None
         if (
             not current
             or current.get("role") != user.get("role")

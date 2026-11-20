@@ -8,7 +8,7 @@ import time
 import unittest
 from typing import Any, cast
 
-from zava_forward.core import insights, sensor_map
+from zava_forward.core import identity, insights, sensor_map
 
 import test_assistants as ta
 from test_quality_sensors import Seed
@@ -94,6 +94,44 @@ class MapSensors(Seed, ta.ApiTests):
     def test_without_a_provider_points_say_not_connected(self) -> None:
         view = insights.map_view(self.store.cases.values(), {})
         self.assertTrue(all(i["sensor"]["state"] == "not-connected" for i in view["items"]))
+
+    TID = "11111111-1111-4111-8111-111111111111"
+    OID = "22222222-2222-4222-8222-222222222222"
+
+    def entra(self, role: str, **kw: Any) -> dict[str, Any]:
+        return cast(dict[str, Any], identity.principal(self.TID, self.OID, role, **kw))
+
+    def test_entra_principals_read_sensors_without_a_roster_row(self) -> None:
+        self.put(2, offset=120)
+        for role in ("Retrofit Programme Manager", "Quality Inspector"):
+            user = self.entra(role)
+            self.assertNotIn(user["email"], [p["email"] for p in self.people.values()])
+            self.assertEqual(self.service.sensors(user, "ZF-1")["case_id"], "ZF-1")
+            self.assertEqual(self.service.map_sensors(user, ["ZF-1"])["ZF-1"]["state"], "fresh")
+
+    def test_entra_principal_with_another_role_or_admin_only_is_denied(self) -> None:
+        self.put(2, offset=120)
+        for user in (
+            self.entra("Resident Liaison Officer"),
+            self.entra("Application Administrator", app_admin=True),
+            self.entra("Viewer", view_only=True),
+        ):
+            with self.assertRaises(PermissionError):
+                self.service.sensors(user, "ZF-1")
+            self.assertEqual(
+                self.service.map_sensors(user, ["ZF-1"])["ZF-1"]["state"], "restricted"
+            )
+
+    def test_entra_principal_with_revoked_or_forged_keys_is_denied(self) -> None:
+        self.put(2, offset=120)
+        for change in ({"oid": "33333333-3333-4333-8333-333333333333"}, {"code": "E-FORGED"},
+                       {"email": "pm@example.test"}, {"identity_source": "password"}):
+            user = self.entra("Retrofit Programme Manager") | change
+            with self.assertRaises(PermissionError):
+                self.service.sensors(user, "ZF-1")
+            self.assertEqual(
+                self.service.map_sensors(user, ["ZF-1"])["ZF-1"]["state"], "restricted"
+            )
 
 
 if __name__ == "__main__":
