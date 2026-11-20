@@ -1915,6 +1915,18 @@ def check_agent_instructions(agent_path: Path, root: Path | None = None) -> list
         if token not in lowered_body:
             violations.append(f"{display}:1: missing-live-refresh-rule: missing {label}")
 
+    tick_liveness_clauses = (
+        (r"up to five[^\n]{0,80}`?unassessed`?", "bounded closure batch of up to five items"),
+        (r"`closure_review`", "`closure_review` persistence record"),
+        (r"`tick_log`", "`tick_log` per-tick record"),
+        (r"`approved_actions`", "`approved_actions` approval record"),
+        (r"expired approval", "expired-approval reconciliation"),
+        (r"never a success claim or a global stop", "blocked lane is not a global stop"),
+    )
+    for pattern_text, label in tick_liveness_clauses:
+        if not re.search(pattern_text, unfenced_body, re.IGNORECASE):
+            violations.append(f"{display}:1: missing-tick-liveness-rule: missing {label}")
+
     heading_slugs = {
         _heading_slug(m.group(2)) for _ln, line in unfenced if (m := HEADING_RE.match(line))
     }

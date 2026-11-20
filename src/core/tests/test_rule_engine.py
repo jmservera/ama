@@ -702,6 +702,18 @@ class EngineTests(unittest.TestCase):
         self.run_engine()
         self.assertEqual(before, self.facts)
 
+    def test_every_audit_table_refuses_update_and_keeps_rows(self) -> None:
+        self.run_engine()
+        self.engine.disposition(OWNER, self.alerts()[0]["id"], "acknowledge", "SYN", now=NOW)
+        for table in rule_engine.TABLES:
+            before = self.law.sql.all(f"SELECT COUNT(*) AS n FROM {table}")[0]["n"]
+            self.assertGreater(before, 0, table)
+            with self.assertRaises(sqlite3.IntegrityError):
+                self.law.sql.run(f"UPDATE {table} SET id=id")
+            self.law.sql.rollback()
+            after = self.law.sql.all(f"SELECT COUNT(*) AS n FROM {table}")[0]["n"]
+            self.assertEqual(before, after, table)
+
     def test_latest_snapshot_removes_advisories_but_retains_unresolved_breach(self) -> None:
         self.run_engine()
         self.assertEqual(len(self.alerts()), 1)

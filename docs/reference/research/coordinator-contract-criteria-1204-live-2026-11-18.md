@@ -36,3 +36,9 @@ The five ticked criteria are unchanged and were not re-audited here.
 
 * If the owner wants the box ticked, run a contained hve-builder scenario for closure-batch rotation and approval expiry against blob `e745c4a68...` and read a bounded window of real `tick_log` rows. No agent-file change is required by this audit.
 * The retired owner-approval gates (billing, DPO/Legal, assistive-technology testing) are irrelevant to this issue.
+
+## Pass 2 (2026-11-19)
+
+Base `origin/main` ec63bfc7c. The static sub-claims above were re-read against the current agent file and still hold. The guard `tools/check-coordinator-handoff.py` did not assert the liveness clauses, so deleting them would have passed. It now reports `missing-tick-liveness-rule` when the file lacks the bounded closure batch (up to five), `closure_review`, `tick_log`, `approved_actions`, the expired-approval reconciliation or the no-global-stop clause. Six mutation cases in `tools/test_check_coordinator_handoff.py` cover each clause; the live file passes (1 target, 0 violations; 11 tests OK).
+
+Runtime liveness over real ticks stays unproven: the coordinator's session SQL (`tick_log`) is not available to this worker and a finite demo cannot cover future ticks. Live Azure was not used and nothing was created. Criterion 2 remains unticked.

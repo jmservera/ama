@@ -11,9 +11,17 @@ from typing import Any
 from urllib.parse import parse_qs, urlsplit
 
 from checks.design_system_browser_check import check, main
-from checks.map_tile_status_browser_check import count_notice
+from checks.map_tile_status_browser_check import TILE_HOST, TILE_PNG, count_notice
 from checks.regulatory_ux_check import AXE_SHA256
-from playwright.sync_api import Page, Playwright, Request, Route, expect, sync_playwright
+from playwright.sync_api import (
+    Browser,
+    Page,
+    Playwright,
+    Request,
+    Route,
+    expect,
+    sync_playwright,
+)
 
 OBSERVE_AFTER_KEYS_MS = 400
 
@@ -813,6 +821,244 @@ def check_enlarged_font(
         browser.close()
 
 
+WEB_ROOT = Path(__file__).resolve().parents[1] / "src" / "zava_forward" / "api" / "web"
+NARROW_VIEWPORTS = ((320, 568), (320, 900), (390, 568), (390, 900))
+
+# Samples a 3x3 grid inside each map control and reports those the open summary (or anything
+# else) would intercept, after scrolling the control into view.
+UNCOVERED_JS = """() => {
+  const controls = [...document.querySelectorAll(
+    '.leafmap .map-marker, .leafmap .leaflet-control-zoom a')];
+  let covered = 0;
+  for (const control of controls) {
+    control.scrollIntoView({block: 'center', inline: 'center'});
+    const box = control.getBoundingClientRect();
+    let hits = 0;
+    for (const fx of [0.2, 0.5, 0.8]) {
+      for (const fy of [0.2, 0.5, 0.8]) {
+        const top = document.elementFromPoint(box.left + box.width * fx, box.top + box.height * fy);
+        if (top && (top === control || control.contains(top))) hits += 1;
+      }
+    }
+    if (hits !== 9) covered += 1;
+  }
+  return {controls: controls.length, covered};
+}"""
+
+
+def check_served_source_identity(page: Page) -> None:
+    for name, kind in (("app.js", "script"), ("style.css", "link")):
+        attribute = "src" if kind == "script" else "href"
+        url = page.evaluate(
+            f"() => [...document.querySelectorAll('{kind}[{attribute}]')]"
+            f".map(el => el.{attribute}).find(u => u.split('?')[0].endsWith('/{name}'))"
+        )
+        check(f"served {name} URL found", bool(url))
+        served = page.request.get(url).body()
+        check(
+            f"served {name} bytes match the checked-out source",
+            hashlib.sha256(served).hexdigest()
+            == hashlib.sha256((WEB_ROOT / name).read_bytes()).hexdigest(),
+        )
+
+
+FOCUS_STATE_JS = """() => {
+  const el = document.activeElement;
+  const control = el && el.closest('.leafmap .map-marker, .leafmap .leaflet-control-zoom a');
+  if (!control) return null;
+  control.scrollIntoView({block: 'center', inline: 'center'});
+  const box = control.getBoundingClientRect();
+  const top = document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2);
+  const all = [...document.querySelectorAll('.leafmap .map-marker, .leafmap .leaflet-control-zoom a')];
+  return {index: all.indexOf(control), total: all.length,
+          uncovered: top === control || control.contains(top)};
+}"""
+
+
+def check_narrow_keyboard_order(page: Page, label: str) -> None:
+    """Shift+Tab from the open summary heading walks the map controls in DOM order, uncovered."""
+    page.locator("#map-home-title").focus()
+    reached: list[int] = []
+    covered_while_focused = 0
+    for _ in range(14):
+        page.keyboard.press("Shift+Tab")
+        state = page.evaluate(FOCUS_STATE_JS)
+        if state:
+            reached.append(state["index"])
+            covered_while_focused += 0 if state["uncovered"] else 1
+    check(
+        f"{label}: Shift+Tab from the summary reaches all markers and zoom controls ({reached})",
+        sorted(set(reached)) == list(range(5)),
+    )
+    check(
+        f"{label}: reverse tab order follows the DOM order of the controls ({reached})",
+        reached == sorted(reached, reverse=True),
+    )
+    check(
+        f"{label}: no control is covered at the moment it holds keyboard focus",
+        covered_while_focused == 0,
+    )
+    for _ in range(len(reached) + 2):
+        page.keyboard.press("Tab")
+    forward = page.evaluate(
+        "() => document.activeElement && (document.activeElement.id || document.activeElement.className)"
+    )
+    check(f"{label}: Tab order returns forward past the controls ({forward})", bool(forward))
+
+
+def check_narrow_expand_reopen(page: Page, label: str) -> None:
+    """Criterion 3: expand, collapse and reopen keep focus and the selected home."""
+    markers = page.locator(".map-marker")
+    card = page.locator(".map-home-card")
+    title = page.locator("#map-home-title")
+    markers.nth(2).focus()
+    markers.nth(2).press("Enter")
+    selected = card.inner_text()
+    page.get_by_role("button", name="Expand map", exact=True).press("Enter")
+    dialog = page.get_by_role("dialog")
+    expect(dialog).to_be_visible()
+    expect(dialog.locator(".map-marker")).to_have_count(3)
+    dialog.locator(".map-marker").nth(2).focus()
+    dialog.locator(".map-marker").nth(2).press("Enter")
+    expect(card).to_be_visible()
+    expect(title).to_be_focused()
+    check(f"{label}: expanded dialog shows the same home summary", card.inner_text() == selected)
+    intercepted = page.evaluate(
+        """() => {
+          const card = document.querySelector('.map-home-card');
+          let hits = 0;
+          const controls = document.querySelectorAll(
+            '.leafmap .map-marker, .leafmap .leaflet-control-zoom a');
+          for (const control of controls) {
+            control.scrollIntoView({block: 'center', inline: 'center'});
+            const box = control.getBoundingClientRect();
+            for (const fx of [0.2, 0.5, 0.8]) {
+              for (const fy of [0.2, 0.5, 0.8]) {
+                const top = document.elementFromPoint(
+                  box.left + box.width * fx, box.top + box.height * fy);
+                if (top && card.contains(top)) hits += 1;
+              }
+            }
+          }
+          return {controls: controls.length, hits};
+        }"""
+    )
+    check(
+        f"{label}: expanded dialog summary intercepts no marker or zoom control ({intercepted})",
+        intercepted == {"controls": 5, "hits": 0},
+    )
+    page.get_by_role("button", name="Exit expanded map", exact=True).press("Enter")
+    expect(dialog).to_have_count(0)
+    expect(page.get_by_role("button", name="Expand map", exact=True)).to_be_focused()
+    page.get_by_role("button", name="Expand map", exact=True).press("Enter")
+    expect(dialog).to_be_visible()
+    dialog.locator(".map-marker").nth(2).press("Enter")
+    expect(title).to_be_focused()
+    check(f"{label}: reopened dialog selects the same home", card.inner_text() == selected)
+    page.keyboard.press("Escape")
+    expect(card).to_be_hidden()
+    expect(dialog.locator(".map-marker").nth(2)).to_be_focused()
+    page.get_by_role("button", name="Exit expanded map", exact=True).press("Enter")
+    expect(dialog).to_have_count(0)
+
+
+def check_narrow_summary_clearance(browser: Browser, base: str, tiles_available: bool) -> None:
+    """Issue 1844: the open home summary must not cover markers or zoom controls at 320/390px."""
+    state = "tiles available" if tiles_available else "tiles unavailable"
+
+    def route(route: Route) -> None:
+        url = route.request.url
+        if url.startswith(base + "/"):
+            route.continue_()
+        elif tiles_available and url.startswith(TILE_HOST):
+            route.fulfill(content_type="image/png", body=TILE_PNG)
+        else:
+            route.abort()
+
+    for width, height in NARROW_VIEWPORTS:
+        label = f"{state} {width}x{height}"
+        context = browser.new_context(viewport={"width": width, "height": height})
+        try:
+            context.route("**/*", route)
+            page = context.new_page()
+            page.goto(base + "/app")
+            page.locator("#email").fill("sam@example.test")
+            page.locator("#pw").fill("synthetic-check")
+            page.get_by_role("button", name="Sign in", exact=True).click()
+            page.get_by_role("heading", name="My cases today").wait_for()
+            page.get_by_role("link", name="Overview", exact=True).click()
+            page.locator(".map-cluster").first.wait_for()
+            page.locator("#mapArea").select_option(label="Point examples")
+            markers = page.locator(".map-marker")
+            expect(markers).to_have_count(3)
+            if (width, height) == (320, 568):
+                check_served_source_identity(page)
+            card = page.locator(".map-home-card")
+            title = page.locator("#map-home-title")
+            close = page.get_by_role("button", name="Close home summary", exact=True)
+            markers.nth(0).focus()
+            markers.nth(0).press("Enter")
+            expect(card).to_be_visible()
+            expect(title).to_be_focused()
+            result = page.evaluate(UNCOVERED_JS)
+            check(
+                f"{label}: no marker or zoom control is covered ({result})",
+                result == {"controls": 5, "covered": 0},
+            )
+            check(
+                f"{label}: summary does not overlap the map area",
+                page.evaluate(
+                    """() => {
+                      const card = document.querySelector('.map-home-card').getBoundingClientRect();
+                      const map = document.querySelector('.leafmap').getBoundingClientRect();
+                      return card.top >= map.bottom - 0.5 || card.bottom <= map.top + 0.5;
+                    }"""
+                ),
+            )
+            check(
+                f"{label}: no horizontal overflow",
+                page.evaluate("document.documentElement.scrollWidth <= innerWidth"),
+            )
+            attribution = page.locator(".leaflet-control-attribution a").first
+            attribution.scroll_into_view_if_needed()
+            expect(attribution).to_be_in_viewport()
+            check(
+                f"{label}: attribution link is reachable and not covered",
+                page.evaluate(
+                    """() => {
+                      const a = document.querySelector('.leaflet-control-attribution a');
+                      const box = a.getBoundingClientRect();
+                      const top = document.elementFromPoint(
+                        box.left + box.width / 2, box.top + box.height / 2);
+                      return top === a;
+                    }"""
+                ),
+            )
+            title.focus()
+            page.keyboard.press("Escape")
+            expect(card).to_be_hidden()
+            expect(markers.nth(0)).to_be_focused()
+            markers.nth(1).press("Enter")
+            expect(card).to_be_visible()
+            close.click()
+            expect(card).to_be_hidden()
+            expect(markers.nth(1)).to_be_focused()
+            markers.nth(0).press("Enter")
+            first_text = card.inner_text()
+            markers.nth(2).focus()
+            markers.nth(2).press("Enter")
+            expect(card).to_be_visible()
+            check(
+                f"{label}: opening another home replaces the summary",
+                card.inner_text() != first_text,
+            )
+            expect(title).to_be_focused()
+            check_narrow_keyboard_order(page, label)
+            check_narrow_expand_reopen(page, label)
+        finally:
+            context.close()
+
+
 def run_browser(base: str, axe: str, out: Path) -> None:
     reports: list[dict[str, Any]] = []
     with sync_playwright() as playwright:
@@ -844,6 +1090,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.locator(".map-cluster").first.wait_for()
             page.locator("#mapArea").select_option(label="Point examples")
             expect(page.locator(".map-marker")).to_have_count(3)
+            check_narrow_summary_clearance(browser, base, tiles_available=False)
+            check_narrow_summary_clearance(browser, base, tiles_available=True)
             check_expanded_filters(page, base, axe, out, reports)
             check_viewport_change_requests_map(page)
             check_shortcuts_after_pending_resize(page)

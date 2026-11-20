@@ -3,6 +3,7 @@
 import hashlib
 import json
 import logging
+import os
 import re
 import time
 import uuid
@@ -12,6 +13,7 @@ from typing import Any, Protocol
 
 from azure.core.exceptions import AzureError
 from azure.identity import ManagedIdentityCredential
+from zava_forward.core import data_protection
 from zava_forward.core.ai_consumption import usage as valid_usage
 from zava_forward.core.resident_assistant import (
     Advice,
@@ -39,6 +41,7 @@ MAX_COST_USD = MAX_INPUT_TOKENS * 0.000484 / 1000 + MAX_OUTPUT * 0.001936 / 1000
 
 FALLBACK_REASONS = {
     "expired": "the AI exercise has ended",
+    "data_protection_hold": "data protection approvals are not recorded",
     "question_limit": "the question is too long or empty",
     "request_limit": "the question and supporting information exceed the AI request limit",
     "usage_limit": "the AI usage limit was reached",
@@ -171,6 +174,8 @@ class AzureAdvisor:
             return _fallback(base, error)
 
     def _question(self, question: str, case: CaseProgress, resident: str, base: Advice) -> Advice:
+        if data_protection.dispatch_hold("tenant_identity", os.environ):
+            raise AssistantUnavailable("data_protection_hold")
         if self.clock() >= EXPIRES:
             raise AssistantUnavailable("expired")
         if not isinstance(question, str) or not 1 <= len(question.strip()) <= 500:
@@ -269,6 +274,8 @@ class AzureAdvisor:
             return _fallback(base, error)
 
     def _answer(self, topic: Topic, case: CaseProgress, resident: str, base: Advice) -> Advice:
+        if data_protection.dispatch_hold("tenant_identity", os.environ):
+            raise AssistantUnavailable("data_protection_hold")
         if self.clock() >= EXPIRES:
             raise AssistantUnavailable("expired")
         options = guidance(topic, case)

@@ -4002,5 +4002,59 @@ os.fstat(3)
             gate.verify(self.root, path, self.base)
 
 
+class PreflightTests(unittest.TestCase):
+    def test_malformed_selector_is_rejected_before_any_run(self) -> None:
+        with (
+            patch.object(gate.subprocess, "run") as run,
+            self.assertRaisesRegex(gate.GateError, "reviewed PROJECT"),
+        ):
+            gate.preflight(Path("."), ["api:test_ok", "api;rm -rf /"])
+        run.assert_not_called()
+
+    def test_untracked_module_is_rejected(self) -> None:
+        with (
+            patch.object(gate, "git", return_value=""),
+            self.assertRaisesRegex(gate.GateError, "not a tracked test module"),
+        ):
+            gate.preflight_unit(Path("."), "core:test_missing_module")
+
+    def run_with(self, output: str, code: int = 0) -> None:
+        done = subprocess.CompletedProcess([], code, stdout="", stderr=output)
+        with (
+            patch.object(gate, "git", return_value="x"),
+            patch.object(gate.subprocess, "run", return_value=done),
+            redirect_stdout(io.StringIO()),
+        ):
+            gate.preflight_unit(Path("."), "core:test_a")
+
+    def test_zero_tests_skips_and_failures_fail_closed(self) -> None:
+        for output, code, message in (
+            ("Ran 0 tests in 0.0s\n\nNO TESTS RAN\n", 5, "failed"),
+            ("Ran 0 tests in 0.0s\n\nOK\n", 0, "zero tests"),
+            ("Ran 2 tests in 0.0s\n\nOK (skipped=1)\n", 0, "skipped"),
+        ):
+            with self.subTest(output=output), self.assertRaisesRegex(gate.GateError, message):
+                self.run_with(output, code)
+
+    def test_pass_is_labelled_as_non_receipt_feedback(self) -> None:
+        done = subprocess.CompletedProcess([], 0, stdout="", stderr="Ran 1 test in 0.0s\n\nOK\n")
+        out = io.StringIO()
+        with (
+            patch.object(gate, "git", return_value="x"),
+            patch.object(gate.subprocess, "run", return_value=done),
+            redirect_stdout(out),
+        ):
+            gate.preflight(Path("."), ["core:test_a"])
+        self.assertIn("not a receipt", out.getvalue())
+
+    def test_preflight_needs_neither_base_nor_output(self) -> None:
+        with (
+            patch.object(sys, "argv", ["rpi-checks.py", "--preflight", "core:test_a"]),
+            patch.object(gate, "preflight") as run,
+        ):
+            self.assertEqual(gate.main(), 0)
+        run.assert_called_once()
+
+
 if __name__ == "__main__":
     unittest.main()

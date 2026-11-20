@@ -14111,3 +14111,16 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1830 fourth pass
 
 * Added [issue-1830-live-r4-2026-11-19.md](research/issue-1830-live-r4-2026-11-19.md): no buildable criterion; retained receipts gone; preflight execution still refused; no source change.
+## [2026-11-19] add | Issue 120 time capture ledger defect (Refs #120)
+
+* Added [issue-120-live-time-capture-ledger-2026-11-19.md](research/issue-120-live-time-capture-ledger-2026-11-19.md): live status 500 reproduced as a ledger-table ALTER refusal; fix in `timecapture.py` with test; not redeployed; FULL tier required.
+## [2026-11-19] add | Issue 462 fixture marker fix (Refs #462)
+
+* Added [resident-showcase-live-r4-2026-11-19.md](research/resident-showcase-live-r4-2026-11-19.md): `safe_start` rejects missing, null or empty dataset and fixture identifiers with regression tests; per-criterion table, criterion 2 still unmet.
+
+## [2026-11-19] update | Issue 1204 liveness guard (Refs #1204)
+
+* Extended `tools/check-coordinator-handoff.py` with a `missing-tick-liveness-rule` check and six mutation tests; added a pass 2 section to [coordinator-contract-criteria-1204-live-2026-11-18.md](research/coordinator-contract-criteria-1204-live-2026-11-18.md). Runtime liveness stays unproven for the demo.
+## [2026-11-17] update | Resident advisor model-dispatch hold (Refs #121)
+
+* Reproduced that `AzureAdvisor` in the resident demo ignored `ZF_DATA_PROCESSING=actual`, then added the `tenant_identity` hold with a regression test and documented it in [src/core/README.md](../../src/core/README.md). Criteria for DPO, Legal and transfer approvals stay unmet; no approval is recorded or implied.

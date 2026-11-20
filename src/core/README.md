@@ -5356,6 +5356,12 @@ across `Ai.run`, `Ai.look_at` and the `Ai._request` transport backstop). Formal
 DPO and Legal sign-off of lawful basis, retention schedule, processor/transfer
 terms and live rights procedures remains an open human governance gate (`Refs #121`).
 
+2026-11-17 measurement: the resident demo advisor (`api/resident_demo/aoai.py`,
+`AzureAdvisor` topic and question paths) had no hold, so actual mode still sent
+resident case text to the provider. Both paths now check class `tenant_identity`
+before reserving budget and fall back to rules text. `AzureTopicProvider`
+sends only a fixed topic word and is unchanged. No approval is recorded.
+
 ### Offline regulatory consumption (2026-10-27, #208)
 
 `regulatory_usage` records task/schema version, UTC day, outcome and zero model

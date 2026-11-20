@@ -1,19 +1,27 @@
----
-title: Issue 1830 live changes
-ms.date: 2026-11-18
----
+# Issue 1830 live changes (2026-11-18)
 
-Tier FOCUSED (no `src/` change; no gate, workflow or dependency file edited). Basis: docs and evidence only. Disclosure: the research note and index and log rows were drafted during the research phase, before the changes file existed; no source file was edited at any point.
+Tier: FULL. Basis: `tools/rpi-checks.py` is a gate tool and gains a new mode; the coordinator must run the complete gate (not run here). No `src/` product code changed. No live Azure used.
 
-Files: `docs/reference/research/issue-1830-live-20261118T1648Z-2026-11-18.md` (new), `docs/reference/README.md` (index row), `docs/reference/log.md` (entry), and the `.copilot-tracking/` artifacts.
+## Files
 
-Validation: `python3 -m unittest tools.test_rpi_preflight tools.test_rpi_gate_timing -q` on an export of unmerged candidate `a2c27fda6` in a scratch directory: 54 tests, OK. Timing reports from seven retained full receipts. Markdown link and diff review. mypy, ruff and `rpi-checks.py` were not applicable (no executable change). Azure and browser not used (not relevant to the local gate).
+* `tools/rpi-checks.py`: `--preflight PROJECT:SELECTOR` (repeatable, no `--base`/`--out`, no lock, no receipt); `preflight_unit`, `preflight`. `--base` still required for every other mode. Runner, groups, receipts and verification untouched.
+* `tools/test_rpi_checks.py`: `PreflightTests` (malformed selector, untracked module, zero-test/skip/failure rejection, non-receipt label, no base/out needed).
+* `src/README.md`: "Targeted preflight and gate timing" subsection with browser/SQL recipes and benchmark method.
+
+## Validation
+
+* `python3 -m unittest discover -s tools -p test_rpi_checks.py -q`: 114 tests OK.
+* `python3 -m ruff format --isolated --line-length 100 --check` on both tool files: clean.
+* Demo: `python3 tools/rpi-checks.py --preflight api:test_production_config_a11y_check` ran 3 tests OK (includes the 320px reflow overflow test); invalid `core:test_x` and `api:test_nonexistent_zz` rejected with BLOCKED, rc 1.
+* Not run: `rpi-checks.py --all` (coordinator), mypy (no `src/` project modified), browser/SQL checks.
 
 ## Per-criterion table
 
-| # | Criterion | Proven or unproven | Reason |
-| --- | --- | --- | --- |
-| 1 | Measured gate timing from multiple comparable receipts, critical path, cost and redundancy analysis | Unproven (partly evidenced) | Per-receipt wall, group, command, critical chain from seven receipts; no shared head or base, no queue-wait data, the 16 November receipt is gone, no redundancy analysis |
-| 2 | Change-specific preflight; 320px regression caught; #1828 map check rerun | Unproven | Candidate refuses all selected execution; needs an owner-chosen trust boundary and FULL-tier source work |
-| 3 | Focused tests, documentation, before/after benchmark; no control loosened | Unproven (partly evidenced) | 54 tests pass and the branch loosens nothing, but nothing is merged to main and no optimization or before/after pair exists |
-| 4 | Dated RPI artifacts, selected tier, independent review, hosted CI | Unproven | Independent exact-head review and hosted CI belong to a pull request; none exists |
+| Criterion | Status | Evidence or reason |
+| --- | --- | --- |
+| 1 Measure wall time, queue wait, critical path across multiple receipts | Unproven | No retained receipt on this host (`/tmp/rpi-1297-pyc-full-20261116T1530Z` absent); `--all` forbidden for this worker. Method documented in `src/README.md`; issue's single receipt figures not reproduced. |
+| 2 Preflight entry point rejecting zero-test/invalid selectors, non-receipt label | Proven (unit selectors) | Commands above and `PreflightTests`. |
+| 2b Demonstrate #1297 320px regression caught pre-gate | Partly proven | Unit-level reflow test runs via preflight; the full browser regression needs Playwright server prerequisites not run here. |
+| 2c #1828 map check rerun directly | Unproven | Documented as direct script recipe; not executed (no #1828 check in this branch scope). |
+| 3 Focused tests/docs; benchmark with before/after | Tests and docs proven; before/after unproven | No optimization implemented, so no before/after claimed. |
+| 4 RPI artifacts, tier, independent exact-head review, hosted CI | Artifacts and tier proven; review and CI pending | Independent review and hosted CI belong to the coordinator. |

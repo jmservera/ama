@@ -125,6 +125,25 @@ def critical_chain(
     return segments
 
 
+def repeated_commands(commands: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """List identical commands run more than once; candidates for review, not proof of redundancy."""
+    seen: dict[str, list[dict[str, Any]]] = {}
+    for item in commands:
+        seen.setdefault(json.dumps(normalize_argv(item["argv"])), []).append(item)
+    rows = [
+        {
+            "argv": items[0]["argv"][:6],
+            "runs": len(items),
+            "seconds": round(sum(i["end"] - i["start"] for i in items), 1),
+            "groups": sorted({i["group"] for i in items}),
+            "setup": is_setup(items[0]["argv"]),
+        }
+        for items in seen.values()
+        if len(items) > 1
+    ]
+    return sorted(rows, key=lambda row: -row["seconds"])[:10]
+
+
 def analyse(receipt: dict[str, Any], log: Path | None, gap: float) -> dict[str, Any]:
     commands = commands_of(receipt)
     origin = min(c["start"] for c in commands)
@@ -148,6 +167,7 @@ def analyse(receipt: dict[str, Any], log: Path | None, gap: float) -> dict[str, 
     setup = sum(c["end"] - c["start"] for c in commands if is_setup(c["argv"]))
     chain = critical_chain(commands, origin, gap)
     result: dict[str, Any] = {
+        "repeated_commands": repeated_commands(commands),
         "note": NOTE,
         "jobs": receipt["jobs"],
         "image_cache": receipt["image_cache"],

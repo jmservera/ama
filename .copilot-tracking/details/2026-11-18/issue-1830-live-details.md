@@ -1,9 +1,5 @@
----
-title: Issue 1830 live phase details
-ms.date: 2026-11-18
----
+# Issue 1830 live details
 
-* Phase 1: `git archive a2c27fda6` into a scratch directory outside the repository; run the two candidate test modules; record counts. Success: 54 pass.
-* Phase 2: `rpi-gate-timing.py report` per receipt under ~/.local/share/ama/gates; exclude resumed and partial receipts from full wall time.
-* Phase 3: docs/reference/research/issue-1830-live-20261118T1648Z-2026-11-18.md plus README index row and log entry.
-* Phase 4: changes record; review; commit with trailers. No push. Success: clean tree, no cache files staged.
+P1: `--preflight` is a repeatable argument in the mode group. `preflight_unit(root, value)` reuses `extra_selector`, requires a tracked `src/<project>/tests/<module>.py`, runs `python -m unittest -v <selector>` with `test_paths` PYTHONPATH in `src/<project>`; parses `Ran N tests`; N==0, skips, or nonzero exit fail closed. No receipt, lock or output dir; banner states "preflight, not a receipt".
+P2: tests for rejection of malformed selector, untracked module, zero tests, pass path, and parser not requiring --base.
+P3: README subsection under Local RPI gate.
