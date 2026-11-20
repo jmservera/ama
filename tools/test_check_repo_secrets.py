@@ -35,7 +35,7 @@ class SecretScanTests(unittest.TestCase):
         self.assertEqual(checker.scan_text("a.yml", text), [])
 
     def test_allowlist_is_exact_to_path_and_rule(self):
-        path, rule = sorted(checker.ALLOWLIST)[0]
+        path, rule = min(checker.ALLOWLIST)
         self.assertEqual(checker.scan_text(path, POSITIVES[rule]), [])
         self.assertTrue(checker.scan_text("elsewhere.py", POSITIVES[rule]))
 
