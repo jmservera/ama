@@ -14155,3 +14155,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Redesigned the public welcome page with the capstone deck's look and pictures: workflow with stall points, what one case contains, AI checks, what each employee role, contractor and resident can do, sign-in options and where the design intends to cut waiting. Added the optional `ZF_RESIDENT_SITE_URL` link to the separate resident site, documented in [src/api/README.md](../../src/api/README.md#public-welcome-page).
 * Added a deck-derived palette section to [design-system.md](research/ux/design-system.md#public-welcome-page-palette-2026-11-20) and a welcome page status section to [wcag-conformance-baseline.md](research/ux/wcag-conformance-baseline.md#welcome-page-redesign-status-2026-11-20). Screen-reader, keyboard, zoom and other-browser checks were not run; the capstone catalog does not establish external-publication clearance for the four pictures.
+
+## [2026-11-20] update | Issue 2061 single-environment demo profile (Refs #2061)
+
+* Added [issue-2061-demo-single-environment-profile-2026-11-20.md](research/issue-2061-demo-single-environment-profile-2026-11-20.md), the infra runbook and an implementation section in ADR 0008. Criteria 4 and 6 stay unproven; nothing ticked.

@@ -588,6 +588,13 @@ to spend. The coordinator owns all live steps after explicit owner approval.
 Never delete resource group `ama`, enable SQL public access, bypass policy,
 change private endpoints or read a private dataset to perform this migration.
 
+### Single-environment demo profile (Refs #2061)
+
+`demoSingleEnvironment=true` (development, `demoDirectIngress=true`, no edge, no
+public backing) keeps one external environment with public ingress only on the API.
+Ledger and rank jobs use `id-<prefix>-internal`. Default is off and production is
+unchanged. See the [runbook](./demo-single-environment-runbook.md).
+
 ### Configuration and guard boundary
 
 `demoDirectIngress=true` is independent of `allowPublicNetworkAccess`.

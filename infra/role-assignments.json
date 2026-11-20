@@ -40,7 +40,9 @@
     {"identity": "resident-demo", "resource": "keyvault", "scope": "Secret resident-demo-password-verifier only", "roleId": "4633458b-17de-408a-b874-0445c86b69e6", "reason": "Read the synthetic demo password verifier for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
     {"identity": "resident-demo", "resource": "keyvault", "scope": "Secret resident-demo-session-key only", "roleId": "4633458b-17de-408a-b874-0445c86b69e6", "reason": "Read the synthetic demo session key for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
     {"identity": "resident-demo", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Pull its own image (digest-pinned) for the standalone resident showcase (issue 462)", "bicep": "resident-demo.bicep"},
-    {"identity": "resident-demo", "resource": "resident-assistant", "scope": "Resident assistant OpenAI account", "roleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd", "reason": "Bounded resident inference on the dedicated account only, explicit opt-in (issue 469)", "bicep": "resident-assistant.bicep"}
+    {"identity": "resident-demo", "resource": "resident-assistant", "scope": "Resident assistant OpenAI account", "roleId": "5e0bd9bd-7b93-4f28-af87-19fc36ad61bd", "reason": "Bounded resident inference on the dedicated account only, explicit opt-in (issue 469)", "bicep": "resident-assistant.bicep"},
+    {"identity": "internal", "resource": "storage", "scope": "Storage account, blob service", "roleId": "ba92f5b4-2d11-453d-a403-e96b0029c9fe", "reason": "Demo single-environment profile only (demoSingleEnvironment, issue 2061): scheduled ledger digest and ranking archive jobs write blobs; the public API identity no longer runs those jobs", "bicep": "main.bicep"},
+    {"identity": "internal", "resource": "registry", "scope": "Container registry", "roleId": "7f951dda-4ed3-4680-a7ca-43fe172d538d", "reason": "Demo single-environment profile only (issue 2061): pull the orchestrator image for the scheduled jobs", "bicep": "modules/registry.bicep"}
   ],
   "customRoles": [
     {
@@ -72,6 +74,7 @@
   "sqlGrants": [
     {"identity": "api", "roles": ["db_datareader", "db_datawriter", "db_ddladmin"], "reason": "Serve the API; db_ddladmin only so the MVP creates its tables on first start (open item: drop after schema migration)"},
     {"identity": "import", "roles": ["db_datareader", "db_datawriter"], "reason": "Write imported records"},
+    {"identity": "internal", "roles": ["db_datareader", "db_datawriter"], "reason": "Demo single-environment profile only (issue 2061): ledger digest and ranking publish jobs read and write ledger and ranking rows; no db_ddladmin"},
     {"identity": "agents", "roles": [], "reason": "No database access; reaches data through the API"},
     {"identity": "orchestrator", "roles": [], "reason": "No database access; reaches data through the API"}
   ],

@@ -293,7 +293,7 @@ class EnvironmentQuotaParametersTests(unittest.TestCase):
 
     def test_quota_and_budget_bounds_and_module_forwarding(self) -> None:
         self._assert_contract(self.main, self.sql)
-        self.assertEqual(len(self.guard["parameters"]), 32)
+        self.assertEqual(len(self.guard["parameters"]), 33)
         for name, spec in self.guard["parameters"].items():
             self.assertEqual(spec["minLength"], 1, name)
             self.assertIn("Empty means", spec["metadata"]["description"], name)

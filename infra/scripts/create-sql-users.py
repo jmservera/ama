@@ -21,7 +21,9 @@ import mssql_python
 GRANTS = {
     "api": ["db_datareader", "db_datawriter", "db_ddladmin"],  # ddladmin: the app creates its tables on first start
     "import": ["db_datareader", "db_datawriter"],
+    "internal": ["db_datareader", "db_datawriter"],  # demoSingleEnvironment only; skipped when the identity is absent
 }
+OPTIONAL = {"internal"}
 
 
 def az(*args):
@@ -39,7 +41,13 @@ def main(group, server, database, prefix):
     cur = conn.cursor()
     for workload, roles in GRANTS.items():
         name = f"{prefix}-{workload}"
-        client_id = az("identity", "show", "-g", group, "-n", name, "--query", "clientId", "-o", "tsv")
+        try:
+            client_id = az("identity", "show", "-g", group, "-n", name, "--query", "clientId", "-o", "tsv")
+        except subprocess.CalledProcessError:
+            if workload not in OPTIONAL:
+                raise
+            print(json.dumps({"user": name, "skipped": "identity not deployed"}))
+            continue
         sid = "0x" + uuid.UUID(client_id).bytes_le.hex()
         cur.execute(f"IF NOT EXISTS (SELECT 1 FROM sys.database_principals WHERE name = N'{name}') "
                     f"CREATE USER [{name}] WITH SID = {sid}, TYPE = E")

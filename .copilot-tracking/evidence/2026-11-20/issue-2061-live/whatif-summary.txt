@@ -1,0 +1,180 @@
+Ignore	Microsoft.App/containerApps/ca-cutover-test-agents
+Ignore	Microsoft.App/containerApps/ca-cutover-test-api
+Create	Microsoft.App/containerApps/ca-cutover-test-demo-agents
+Deploy	Microsoft.App/containerApps/ca-cutover-test-demo-api
+Deploy	Microsoft.App/containerApps/ca-cutover-test-demo-api/authConfigs/current
+Ignore	Microsoft.App/containerApps/ca-resident-demo
+Create	Microsoft.App/jobs/job-cutover-test-demo-audit
+Create	Microsoft.App/jobs/job-cutover-test-demo-load
+Create	Microsoft.App/jobs/job-cutover-test-demo-orch
+Ignore	Microsoft.App/jobs/job-cutover-test-import
+Ignore	Microsoft.App/jobs/job-cutover-test-init
+Ignore	Microsoft.App/jobs/job-cutover-test-ledger-verify
+Ignore	Microsoft.App/jobs/job-cutover-test-mi-http
+Ignore	Microsoft.App/jobs/job-cutover-test-orchestrator
+Ignore	Microsoft.App/jobs/job-cutover-test-public-audit
+Ignore	Microsoft.App/jobs/job-cutover-test-smoke
+Ignore	Microsoft.App/jobs/job-cutover-test-verify
+Ignore	Microsoft.App/managedEnvironments/cae-cutover-test
+Deploy	Microsoft.App/managedEnvironments/cae-cutover-test-demo
+Deploy	Microsoft.App/managedEnvironments/cae-cutover-test-demo/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Deploy	Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg
+Deploy	Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg/deployments/standard
+Deploy	Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg/projects/zava-forward-agents
+Deploy	Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Ignore	Microsoft.CognitiveServices/accounts/aoai-resident-469
+Deploy	Microsoft.Consumption/budgets/budget-cutover-test
+Deploy	Microsoft.Consumption/budgets/budget-iot-cutover-test-rzsrg
+Deploy	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+Deploy	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Deploy	Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg
+Deploy	Microsoft.Devices/IotHubs/iot-cutover-test-rzsrg/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Ignore	Microsoft.EventGrid/systemTopics/stcutovertestrzsrg-67928835-7b81-410d-bb16-fa99d72ee7c2
+Create	Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg
+Create	Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg/eventhubs/sensor-readings
+Create	Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg/eventhubs/sensor-readings/consumergroups/api-consumer
+Create	Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg/networkRuleSets/default
+Create	Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg/providers/Microsoft.Authorization/roleAssignments/21384e47-b644-527d-97cb-1fb1a7c6f0c6
+Create	Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Ignore	Microsoft.EventHub/namespaces/evhns-cutover-test-demo
+Deploy	Microsoft.Insights/actionGroups/ag-cutover-test-ops
+Ignore	microsoft.insights/actiongroups/Application Insights Smart Detection
+Deploy	Microsoft.Insights/components/appi-cutover-test
+Ignore	Microsoft.Insights/metricalerts/alert-cutover-test-api-5xx
+Ignore	Microsoft.Insights/metricalerts/alert-cutover-test-api-restarts
+Create	Microsoft.Insights/metricAlerts/alert-cutover-test-demo-api-5xx
+Create	Microsoft.Insights/metricAlerts/alert-cutover-test-demo-api-restarts
+Deploy	Microsoft.Insights/metricAlerts/alert-cutover-test-foundry-throttle
+Create	Microsoft.Insights/metricAlerts/alert-cutover-test-iot-ingress-throttle
+Create	Microsoft.Insights/metricAlerts/alert-cutover-test-iot-routing-dropped
+Create	Microsoft.Insights/metricAlerts/alert-cutover-test-iot-routing-invalid
+Create	Microsoft.Insights/metricAlerts/alert-cutover-test-iot-routing-orphaned
+Deploy	Microsoft.Insights/metricAlerts/alert-cutover-test-sql-cpu
+Create	Microsoft.Insights/metricAlerts/alert-job-cutover-test-demo-audit-failed
+Create	Microsoft.Insights/metricAlerts/alert-job-cutover-test-demo-load-failed
+Create	Microsoft.Insights/metricAlerts/alert-job-cutover-test-demo-orch-failed
+Deploy	microsoft.insights/privateLinkScopes/ampls-cutover-test
+Deploy	Microsoft.Insights/privateLinkScopes/ampls-cutover-test/scopedResources/scoped-appi
+Deploy	Microsoft.Insights/privateLinkScopes/ampls-cutover-test/scopedResources/scoped-law
+Create	Microsoft.Insights/scheduledQueryRules/alert-cutover-test-agent-tasks-poison
+Create	Microsoft.Insights/scheduledQueryRules/alert-cutover-test-ai-limits
+Create	Microsoft.Insights/scheduledQueryRules/alert-cutover-test-demo-ledger-digest-mismatch
+Create	Microsoft.Insights/scheduledQueryRules/alert-cutover-test-demo-ledger-verify-missing
+Ignore	Microsoft.Insights/scheduledqueryrules/alert-cutover-test-ledger-digest-mismatch
+Ignore	Microsoft.Insights/scheduledqueryrules/alert-cutover-test-ledger-verify-missing
+Deploy	Microsoft.Insights/scheduledQueryRules/alert-kv-cutovertest-rzsrg-denied-access
+Deploy	Microsoft.Insights/scheduledQueryRules/alert-kv-cutovertest-rzsrg-secret-expiry
+Create	Microsoft.Insights/workbooks/f89ebe88-1443-5f6d-b0e8-858b815f8ff0
+Deploy	Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg
+Deploy	Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Deploy	Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents
+Deploy	Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api
+Deploy	Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-import
+Ignore	Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-init
+Create	Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-internal
+Deploy	Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-orchestrator
+Ignore	Microsoft.ManagedIdentity/userAssignedIdentities/id-resident-demo
+Ignore	Microsoft.Network/networkInterfaces/pe-aif-cutover-test-rzsrg.nic.823cc344-e8b8-4f68-986b-88bc83d678eb
+Ignore	Microsoft.Network/networkInterfaces/pe-ampls-cutover-test.nic.1594de99-1566-4151-9663-fcfdd8fdec66
+Ignore	Microsoft.Network/networkInterfaces/pe-crcutovertestrzsrg.nic.581a4025-6197-43bf-9102-7af7e8083823
+Ignore	Microsoft.Network/networkInterfaces/pe-iot-cutover-test-rzsrg.nic.5dfd506e-d1dc-41bd-9bf5-6354e31d49e7
+Ignore	Microsoft.Network/networkInterfaces/pe-kv-cutovertest-rzsrg.nic.d0e3f239-6c7d-4fd2-a5d7-bd0d6f87c5cb
+Ignore	Microsoft.Network/networkInterfaces/pe-sql-cutover-test-rzsrg.nic.15a1c17e-15c6-461f-851a-0a2ac4d9cde6
+Ignore	Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-blob.nic.2f3de8c1-83d3-4e03-a836-f9d27a4bd6a1
+Ignore	Microsoft.Network/networkInterfaces/pe-stcutovertestrzsrg-queue.nic.1ddfd037-2785-4fae-b574-883244181dd7
+Deploy	Microsoft.Network/networkSecurityGroups/nsg-cutover-test-aca
+Deploy	Microsoft.Network/networkSecurityGroups/nsg-cutover-test-aca-demo
+Deploy	Microsoft.Network/networkSecurityGroups/nsg-cutover-test-pe
+Ignore	Microsoft.Network/privateDnsZones/jollytree-20e6e99e.uksouth.azurecontainerapps.io
+Ignore	Microsoft.Network/privateDnsZones/jollytree-20e6e99e.uksouth.azurecontainerapps.io/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.agentsvc.azure-automation.net
+Deploy	Microsoft.Network/privateDnsZones/privatelink.agentsvc.azure-automation.net/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.azure-devices.net
+Deploy	Microsoft.Network/privateDnsZones/privatelink.azure-devices.net/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.azurecr.io
+Deploy	Microsoft.Network/privateDnsZones/privatelink.azurecr.io/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net
+Deploy	Microsoft.Network/privateDnsZones/privatelink.blob.core.windows.net/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.cognitiveservices.azure.com
+Deploy	Microsoft.Network/privateDnsZones/privatelink.cognitiveservices.azure.com/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.database.windows.net
+Deploy	Microsoft.Network/privateDnsZones/privatelink.database.windows.net/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.monitor.azure.com
+Deploy	Microsoft.Network/privateDnsZones/privatelink.monitor.azure.com/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.ods.opinsights.azure.com
+Deploy	Microsoft.Network/privateDnsZones/privatelink.ods.opinsights.azure.com/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.oms.opinsights.azure.com
+Deploy	Microsoft.Network/privateDnsZones/privatelink.oms.opinsights.azure.com/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.openai.azure.com
+Deploy	Microsoft.Network/privateDnsZones/privatelink.openai.azure.com/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net
+Deploy	Microsoft.Network/privateDnsZones/privatelink.queue.core.windows.net/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.servicebus.windows.net
+Deploy	Microsoft.Network/privateDnsZones/privatelink.servicebus.windows.net/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.services.ai.azure.com
+Deploy	Microsoft.Network/privateDnsZones/privatelink.services.ai.azure.com/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net
+Deploy	Microsoft.Network/privateDnsZones/privatelink.vaultcore.azure.net/virtualNetworkLinks/link-cutover-test
+Deploy	Microsoft.Network/privateEndpoints/pe-aif-cutover-test-rzsrg
+Deploy	Microsoft.Network/privateEndpoints/pe-aif-cutover-test-rzsrg/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/privateEndpoints/pe-ampls-cutover-test
+Deploy	Microsoft.Network/privateEndpoints/pe-ampls-cutover-test/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/privateEndpoints/pe-crcutovertestrzsrg
+Deploy	Microsoft.Network/privateEndpoints/pe-crcutovertestrzsrg/privateDnsZoneGroups/default
+Create	Microsoft.Network/privateEndpoints/pe-eh-iot-cutover-test-rzsrg
+Create	Microsoft.Network/privateEndpoints/pe-eh-iot-cutover-test-rzsrg/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/privateEndpoints/pe-iot-cutover-test-rzsrg
+Deploy	Microsoft.Network/privateEndpoints/pe-iot-cutover-test-rzsrg/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/privateEndpoints/pe-kv-cutovertest-rzsrg
+Deploy	Microsoft.Network/privateEndpoints/pe-kv-cutovertest-rzsrg/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/privateEndpoints/pe-sql-cutover-test-rzsrg
+Deploy	Microsoft.Network/privateEndpoints/pe-sql-cutover-test-rzsrg/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/privateEndpoints/pe-stcutovertestrzsrg-blob
+Deploy	Microsoft.Network/privateEndpoints/pe-stcutovertestrzsrg-blob/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/privateEndpoints/pe-stcutovertestrzsrg-queue
+Deploy	Microsoft.Network/privateEndpoints/pe-stcutovertestrzsrg-queue/privateDnsZoneGroups/default
+Deploy	Microsoft.Network/virtualNetworks/vnet-cutover-test
+Deploy	Microsoft.OperationalInsights/workspaces/log-cutover-test
+Deploy	Microsoft.Sql/servers/sql-cutover-test-rzsrg
+Deploy	Microsoft.Sql/servers/sql-cutover-test-rzsrg/auditingSettings/default
+Ignore	Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/master
+Deploy	Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/master/providers/Microsoft.Insights/diagnosticSettings/sql-audit-to-log-analytics
+Deploy	Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit
+Deploy	Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit/backupShortTermRetentionPolicies/default
+Deploy	Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Deploy	Microsoft.Sql/servers/sql-cutover-test-rzsrg/securityAlertPolicies/Default
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/audit-archive
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/audit-archive/immutabilityPolicies/default
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/evidence
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/exports
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/imports
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/ledger-digests
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/ledger-digests/immutabilityPolicies/default
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/quarantine
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/containers/staff-results
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/blobServices/default/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Create	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/managementPolicies/default
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/queueServices/default
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/queueServices/default/providers/Microsoft.Insights/diagnosticSettings/to-log-analytics
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/queueServices/default/queues/agent-tasks
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/queueServices/default/queues/agent-tasks-poison
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/queueServices/default/queues/import-jobs
+Deploy	Microsoft.Storage/storageAccounts/stcutovertestrzsrg/queueServices/default/queues/import-jobs-poison
+Unsupported	Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents', '2023-01-31').principalId, 'openai-user'))]
+Unsupported	Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents', '2023-01-31').principalId, 'azure-ai-user'))]
+Unsupported	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api', '2023-01-31').principalId, 'acrpull'))]
+Unsupported	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents', '2023-01-31').principalId, 'acrpull'))]
+Unsupported	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-orchestrator', '2023-01-31').principalId, 'acrpull'))]
+Unsupported	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-import', '2023-01-31').principalId, 'acrpull'))]
+Unsupported	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-internal', '2023-01-31').principalId, 'acrpull'))]
+Unsupported	Microsoft.Storage/storageAccounts/stcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api', '2023-01-31').principalId, 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'))]
+Unsupported	Microsoft.Storage/storageAccounts/stcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api', '2023-01-31').principalId, 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'))]
+Unsupported	Microsoft.Storage/storageAccounts/stcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-import', '2023-01-31').principalId, 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'))]
+Unsupported	Microsoft.Storage/storageAccounts/stcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-import', '2023-01-31').principalId, '974c5e8b-45b9-4653-ba55-5f855dd0fb88'))]
+Unsupported	Microsoft.Storage/storageAccounts/stcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-orchestrator', '2023-01-31').principalId, 'c6a89b2d-59bc-44d0-9896-0f6e12d7b80a'))]
+Unsupported	Microsoft.Storage/storageAccounts/stcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-agents', '2023-01-31').principalId, '974c5e8b-45b9-4653-ba55-5f855dd0fb88'))]
+Unsupported	Microsoft.Storage/storageAccounts/stcutovertestrzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-internal', '2023-01-31').principalId, 'ba92f5b4-2d11-453d-a403-e96b0029c9fe'))]
+Unsupported	Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api', '2023-01-31').principalId, 'kv-secrets-user'))]
+Unsupported	Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg/eventhubs/sensor-readings', 'Microsoft.Authorization/roleAssignments', guid('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.EventHub/namespaces/eh-iot-cutover-test-rzsrg/eventhubs/sensor-readings', reference('/subscriptions/<sub>/resourceGroups/ama/providers/Microsoft.ManagedIdentity/userAssignedIdentities/id-cutover-test-api', '2023-01-31').principalId, 'a638d3c7-ab3a-418d-83e6-5f17a39d4fde'))]
