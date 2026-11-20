@@ -1537,12 +1537,11 @@ function returnPanel(c, id, refresh) {
     h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { ...metadata(), to_stage: to.value }), [why, source, next, to]) }, "Send back")), history);
 }
 
-// A person-facing refusal for an empty required field; the same words everywhere a field says what is missing.
-const recordedMissing = (what, fix, button) => `${what} Owner: you. Next action: ${fix}, then choose ${button} again.`;
+// A missing required field gets one short sentence beside it: the reason and the fix together. The hint under the field stays.
 const RECORDED_MISSING = {
-  source: ["Enter the source reference.", "type where this change came from"],
-  source_version: ["Enter the source version.", "type its version or date"],
-  reason: ["Enter the reason.", "type why you are making this change"],
+  source: "Say where this change came from.",
+  source_version: "Enter the version or date of that source.",
+  reason: "Say why you are making this change.",
 };
 
 // Without `labelled` the three record fields keep their plain labels and the browser's own required-field prompt.
@@ -1569,7 +1568,7 @@ function recordedChangeForm(prefix, label, fields, submit, labelled) {
       if (button.disabled) return;
       if (labelled) {
         const missing = [...(labelled.extra || []), ...inputs.map(({ name, input, field }) => ({ field,
-          valid: () => input.value.trim() !== "", message: recordedMissing(...RECORDED_MISSING[name], label) }))]
+          valid: () => input.value.trim() !== "", message: RECORDED_MISSING[name] }))]
           .filter(({ field, valid }) => { field.clear(); return !valid(); });
         // Failing from the last field to the first leaves focus on the first one.
         if (missing.length) { missing.reverse().forEach(({ field, message }) => field.fail(message)); return; }
@@ -1832,7 +1831,7 @@ function handoffElsewhere(ctx) {
       await ctx.attempt("offer-handoff", { ...metadata, handoff_version: ctx.version, to: to.value, ...details.read() },
         { text: `Offer sent to ${name}. The case stays with ${ctx.stays} until they accept.`, undo: true }, submitted);
     }, { legend: "Record of this change", hints: OFFER_HINTS,
-      extra: [{ field: chosen, valid: () => Boolean(to.value), message: recordedMissing("Choose a colleague.", "choose who should take the case", "Offer the case") }] }));
+      extra: [{ field: chosen, valid: () => Boolean(to.value), message: "Choose who should take the case." }] }));
 }
 
 function handoffCandidates(ctx) {
@@ -1860,7 +1859,7 @@ function handoffAnswer({ hd, version, attempt }) {
         { text: `You are now the owner of this case. ${hd.from_name} is no longer the owner.` }, submitted);
     }, { legend: "Accept this case", hints: ACCEPT_HINTS, within: true }),
     handoffActionForm("Decline this case", [{ field: why, valid: () => why.control.value.trim() !== "",
-      message: recordedMissing("Enter why you cannot take the case.", "type your reason", "Decline this case") }], "Decline this case",
+      message: "Say why you cannot take the case." }], "Decline this case",
     () => attempt("decline-handoff", { reason: why.control.value }, { text: `Offer declined. The case stays with ${hd.from_name}.` }, [why.control]))];
 }
 
@@ -1876,8 +1875,8 @@ function handoffChange({ hd, attempt }, withdraw) {
     withdraw && h("div", { class: "handoff-actions" }, withdraw),
     hd.state !== "Escalated" && h("details", { class: "handoff-more" }, h("summary", {}, "Escalate to a manager"),
       handoffActionForm("Escalate this offer", [
-        { field: to, valid: () => Boolean(target.value), message: recordedMissing("Choose a manager.", "choose who should chase or take over the offer", "Record manual escalation") },
-        { field: why, valid: () => why.control.value.trim() !== "", message: recordedMissing("Enter why you are escalating.", "type your reason", "Record manual escalation") },
+        { field: to, valid: () => Boolean(target.value), message: "Choose who should chase or take over the offer." },
+        { field: why, valid: () => why.control.value.trim() !== "", message: "Say why you are escalating." },
       ], "Record manual escalation", () => attempt("escalate-handoff", { to: target.value, reason: why.control.value },
         { text: `Offer escalated to ${managers.find((s) => s.email === target.value)?.name || "a manager"}. The case stays with ${hd.from_name} until it is accepted.` },
         [target, why.control])))];
@@ -1890,7 +1889,7 @@ function handoffComplete({ attempt }) {
   return [h("h3", {}, "Complete the handover"),
     h("p", {}, "You accepted this case. Record the action that completes the handover."),
     handoffActionForm("Record the completed action", [{ field: done, valid: () => done.control.value.trim() !== "",
-      message: recordedMissing("Enter the completed action.", "type what you did to complete the handover", "Complete the handover") }], "Complete the handover",
+      message: "Say what you did to complete the handover." }], "Complete the handover",
     () => attempt("complete-handoff", { note: done.control.value }, { text: "Handover recorded as complete." }, [done.control]), true)];
 }
 

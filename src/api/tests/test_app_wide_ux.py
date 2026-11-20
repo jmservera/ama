@@ -257,20 +257,12 @@ return result;
         no_case, no_minutes = out["noCase"], out["noMinutes"]
         self.assertEqual((no_case["posted"], no_case["focus"]), (0, "time-case"))
         self.assertEqual(no_case["invalid"], "true")
-        self.assertEqual(
-            no_case["error"],
-            "Enter the case reference, for example ZF-1. Owner: you. "
-            "Next action: type it, then choose Save again.",
-        )
+        self.assertEqual(no_case["error"], "Enter the case reference, for example ZF-1.")
         self.assertEqual(no_case["described"], "time-case-hint time-case-error")
         self.assertFalse(no_case["other"]["shown"])
         self.assertIsNone(no_case["other"]["invalid"])
         self.assertEqual((no_minutes["posted"], no_minutes["focus"]), (0, "time-minutes"))
-        self.assertEqual(
-            no_minutes["error"],
-            "Enter the minutes as a whole number from 1 to 600. Owner: you. "
-            "Next action: type it, then choose Save again.",
-        )
+        self.assertEqual(no_minutes["error"], "Enter the minutes as a whole number from 1 to 600.")
         self.assertFalse(no_minutes["other"]["shown"], "the earlier problem is cleared")
         self.assertEqual(out["words"], {"posted": 0, "focus": "time-minutes"})
         self.assertEqual(out["both"]["focus"], "time-case")

@@ -68,12 +68,12 @@ async function timeView() {
 function timeGuidance(reason, owner, next) { return `${reason} Owner: ${owner}. Next action: ${next}`; }
 
 // Catches only what is empty or not a number before the request; the whole-number and range rules stay with the server and its own messages.
+// Each message is one sentence with the reason and the fix, because nothing has been refused yet; the hint stays under the field.
 function timeFieldProblems(caseId, minutes) {
-  const fix = "type it, then choose Save again.";
   const entry = String(minutes ?? "").trim();
   return {
-    caseId: String(caseId ?? "").trim() ? null : timeGuidance("Enter the case reference, for example ZF-1.", "you", fix),
-    minutes: entry && Number.isFinite(Number(entry)) ? null : timeGuidance("Enter the minutes as a whole number from 1 to 600.", "you", fix),
+    caseId: String(caseId ?? "").trim() ? null : "Enter the case reference, for example ZF-1.",
+    minutes: entry && Number.isFinite(Number(entry)) ? null : "Enter the minutes as a whole number from 1 to 600.",
   };
 }
 
