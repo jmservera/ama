@@ -34,6 +34,7 @@
 .chat-widget-tools{display:flex;align-items:center;gap:var(--spacingHorizontalS);flex-wrap:wrap}
 .chat-widget-tools select{flex:1 1 9rem;width:0;min-height:2.5rem}
 #employee-chat .chat-widget-composer .chat-widget-tools{flex:none;background:var(--surface);padding-top:var(--spacingHorizontalS)}
+@media(max-width:600px){#employee-chat{--chat-height:100dvh}#employee-chat .chat-widget-composer{max-height:70%}}
 .chat-widget-tools button{padding:var(--spacingHorizontalS);min-height:2.5rem}
 .chat-widget-status{font-size:.85rem;color:var(--muted);margin:0;flex:none}
 .chat-widget-status:empty{display:none}

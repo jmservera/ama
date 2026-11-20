@@ -539,7 +539,7 @@ const programmeFunnel = (report) => {
   const rows = report?.funnel;
   if (!Array.isArray(rows)) return h("p", { class: "empty", "data-state-cue": "unknown" }, "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.");
   return h("div", {},
-    h("p", { class: "status-line wait", "data-state-cue": "stage-history" }, `State: Recorded stage history (not a pass). Recorded as of ${screenValue(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
+    h("p", { class: "status-line wait", "data-state-cue": "stage-history" }, `State: Recorded stage history (not a pass). Recorded as of ${screenStamp(report.as_of)}. Audit integrity state: ${screenValue(report.audit_integrity)}. Conversion state: Unknown; counts are stage history only.`),
     screenRecordTable("Lifecycle and funnel by stage",
       ["Stage", "Entries", "Exits", "Returns", "Reopens", "Cases in scope"],
       rows.map((r) => [r.stage, r.entries, r.exits, r.returns, r.reopens, r.denominator])));

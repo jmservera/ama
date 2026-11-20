@@ -116,10 +116,14 @@ const ago = (s) => {
 };
 const SITE_TITLE = "Zava Forward | Zava North Homes";
 const SIGN_IN_TITLE = "Sign in | Zava Forward";
+const SIGN_IN_ABOUT = "Zava Forward is the staff workbench for the retrofit programme. This is a demonstration with synthetic data.";
 // The tab title repeats the page heading, so a person with several tabs open can tell the screens apart.
+// A status flag in the heading is not part of the name, so the title leaves it out.
 const pageTitle = () => {
-  const heading = app.querySelector("h1")?.textContent.trim();
-  return heading ? `${heading} | Zava Forward` : SITE_TITLE;
+  const heading = app.querySelector("h1")?.cloneNode(true);
+  heading?.querySelectorAll(".flag").forEach((flag) => flag.remove());
+  const text = heading?.textContent.trim();
+  return text ? `${text} | Zava Forward` : SITE_TITLE;
 };
 const show = (...nodes) => {
   const focused = document.activeElement;
@@ -152,10 +156,13 @@ function login(msg) {
   document.getElementById("account").hidden = true;
   clearPhoto();
   if (microsoftSignIn) {
+    // The way in is neutral guidance; only a message about what went wrong takes the error style.
     show(h("section", { class: "card login" }, h("h1", {}, "Sign in to Zava Forward"),
-      h("p", { class: "err", role: "alert" }, msg || "Use your authorised Microsoft work account."),
+      h("p", {}, SIGN_IN_ABOUT),
+      h("p", {}, "Use your authorised Microsoft work account."),
+      h("p", { class: "err", role: "alert" }, msg || ""),
       h("a", { class: "btn", href: "/sign-in" }, "Sign in with Microsoft"),
-      h("p", {}, h("a", { href: "/" }, "Back to welcome"))));
+      h("p", {}, h("a", { href: "/" }, "Back to the welcome page"))));
     document.title = SIGN_IN_TITLE;
     return;
   }
@@ -168,7 +175,7 @@ function login(msg) {
     catch (x) { err.textContent = x.message; }
   } },
     h("h1", {}, "Sign in"),
-    h("p", {}, "Zava Forward is the staff workbench for the retrofit programme. This is a demonstration with synthetic data."),
+    h("p", {}, SIGN_IN_ABOUT),
     h("label", { for: "email" }, "Work email"), email,
     h("label", { for: "pw" }, "Password"), pass, err,
     h("button", { type: "submit" }, "Sign in"),
@@ -1062,6 +1069,7 @@ async function listView(view) {
     briefingBox,
     view === "mine" && pendingHandoffs(),
     view === "mine" && priorityPanel(),
+    h("h2", {}, view === "mine" ? "My open cases" : "All open cases"),
     results)));
   await load();
 }
@@ -1270,7 +1278,7 @@ async function caseView(id) {
     c.building_id ? h("li", {}, h("a", { href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`)) : null),
     c.building_id ? null : h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
     h("div", { class: "row between" }, h("h1", {}, r.name,
-      openHaz.length && h("span", { class: "flag danger" }, "Safety issue open")),
+      openHaz.length > 0 && h("span", { class: "flag danger" }, "Safety issue open")),
     h("span", { class: "muted" }, `Reference ${c.id}`)), top, workspace);
   restoreChallengeDrafts(challengeDrafts);
   restoreCaseFields([...session.pendingFields.values()]);

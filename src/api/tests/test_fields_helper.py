@@ -54,10 +54,11 @@ FIELD_RULES = (
     "{display:block;width:100%;max-width:36rem}",
     ".field-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--sp-3)}",
     ".field-row>.field{flex:1 1 12rem;min-width:0;margin:0}",
-    ".check{display:flex;flex-wrap:wrap;align-items:flex-start;gap:var(--sp-2);margin-block:var(--sp-2)}",
-    ".check>label{margin:0;font-weight:400;flex:1 1 0;min-width:0}",
+    ".check{display:flex;flex-wrap:wrap;align-items:flex-start;row-gap:var(--sp-2);margin-block:var(--sp-2)}",
+    ".check>label{margin:0;font-weight:400;flex:1 1 0;min-width:0;"
+    "padding-inline-start:var(--sp-2)}",
     ".check>input{flex:0 0 auto;margin:0}",
-    ".check>.field-hint{flex-basis:100%;margin:0}",
+    ".check>.field-hint{flex-basis:100%;margin:0;padding-inline-start:calc(1.5rem + var(--sp-2))}",
 )
 
 

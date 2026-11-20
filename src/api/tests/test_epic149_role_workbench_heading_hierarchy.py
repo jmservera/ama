@@ -11,16 +11,16 @@ import importlib.util
 import unittest
 from typing import Any, ClassVar
 
-from role_matrix_fixture import MatrixServer, build
+from role_matrix_fixture import RESIDENT, MatrixServer, build
 
 HAS_PLAYWRIGHT = importlib.util.find_spec("playwright") is not None
 
 CASE = "ZF-1"
 EXTRA_VIEWS = ("#/screens", "#/handoff-waiting", "#/simulator", "#/import", "#/coordinator")
-# Recorded gaps, shrink-only: the staff case lists render their filter and briefing headings
-# before the page h1 (the contractor list is correct). A fix must remove the view here so the
-# check then enforces it.
-H1_NOT_FIRST = {"#/", "#/all"}
+# Recorded gaps, shrink-only: a view listed here renders headings before its page h1. The staff
+# case lists used to be the only entries; the page title row now comes first, so none remain and
+# the check enforces h1-first on every view. Add a view back only for a recorded, owned gap.
+H1_NOT_FIRST: set[str] = set()
 LISTS = ("#/", "#/all")
 
 COLLECT = """() => {
@@ -150,6 +150,21 @@ class RoleWorkbenchStructure(MatrixServer):
                 first_is_h1 = found["headings"][0]["level"] == 1
                 gap = view in H1_NOT_FIRST and role != "Contractor"
                 self.assertEqual(first_is_h1, not gap, f"{view}: update H1_NOT_FIRST")
+
+    def test_each_work_list_names_its_results_after_the_panels_above_them(self) -> None:
+        wanted = {"#/": "My open cases", "#/all": "All open cases"}
+        for role, view, found in self.each():
+            if view in wanted and role != "Contractor":
+                with self.subTest(role=role, view=view):
+                    names = [h["text"] for h in found["headings"] if h["level"] == 2]
+                    self.assertEqual(names[-1], wanted[view], names)
+                    self.assertLess(names.index("Filter"), len(names) - 1)
+
+    def test_the_case_heading_is_the_name_alone_when_no_safety_issue_is_open(self) -> None:
+        for role, view, found in self.each():
+            if view == f"#/case/{CASE}" and role != "Contractor":
+                with self.subTest(role=role):
+                    self.assertEqual(found["headings"][0], {"level": 1, "text": RESIDENT})
 
     def test_data_tables_are_named_and_every_th_has_a_scope(self) -> None:
         seen = 0

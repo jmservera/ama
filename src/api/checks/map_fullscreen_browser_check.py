@@ -548,7 +548,7 @@ def check_pending_navigation(page: Page, out: Path) -> None:
         check("retained Expand events cannot reopen disposed map", results["retainedClickClean"])
         held[0].continue_()
         released = True
-        page.get_by_role("heading", name="All open cases", exact=True).wait_for()
+        page.get_by_role("heading", name="All open cases", exact=True, level=1).wait_for()
         results["destinationClean"] = page.evaluate(clean_map)
         check(
             "case list renders without disposed map, dialog or scroll lock",
