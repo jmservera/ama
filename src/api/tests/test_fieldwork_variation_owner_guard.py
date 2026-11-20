@@ -177,6 +177,7 @@ const context = vm.createContext({
   screenTable: (t, head, rows) => h("table", {}, t, head, rows),
   registerRoleScreen: (s) => { screen = s; },
 });
+vm.runInContext(fs.readFileSync(process.argv[1] + "/fields.js", "utf8"), context);
 vm.runInContext(src, context);
 (async () => {
   const mk = (e) => screen.render({id: "ZF-3"},

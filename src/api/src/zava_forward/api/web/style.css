@@ -556,7 +556,6 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .map-sensor-box h4{margin:var(--sp-2) 0 var(--sp-1)}
 .map-home-card .map-sensor-list dd:last-child{display:block}
 .map-sensor-filter{margin:var(--sp-2) 0}
-.map-sensor-filter label{margin-left:var(--sp-1)}
 .sensor-flag{position:absolute;right:-6px;bottom:-6px;min-width:14px;height:14px;line-height:14px;border:1px solid var(--warn);border-radius:50%;background:var(--surface);color:var(--warn);font-size:10px;font-weight:700}
 /* ux-batch:sensors */
 #sensors h3{font-size:var(--fs-base);margin:var(--sp-5) 0 var(--sp-2)}
