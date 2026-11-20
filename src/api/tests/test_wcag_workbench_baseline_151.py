@@ -619,7 +619,7 @@ console.log(JSON.stringify({
         )[0]
         assets = [p for p in WEB.glob("*") if p.suffix in {".js", ".html", ".css"}]
         self.assertIn(f"| Served web assets | {len(assets)} ", section)
-        self.assertEqual(len(assets), 23)
+        self.assertEqual(len(assets), 24)
         invalid = sum(
             p.read_text().count('setAttribute("aria-invalid", "true")') for p in WEB.glob("*.js")
         )

@@ -69,6 +69,12 @@ SITES = (
         '"aria-describedby": `${hintId} ${errId}`',
         'h("p", { id: errId, class: "field-error", role: "alert"',
     ),
+    (
+        "fields.js",
+        'control.setAttribute("aria-invalid", "true")',
+        'control.setAttribute("aria-describedby", describedWith(control, errorId))',
+        'h("p", { class: "field-error", id: errorId, hidden: true })',
+    ),
 )
 # Sites that rely on native validation or a later check rather than moving focus when they mark
 # the field. Recorded gaps, shrink-only: a fix must remove the entry so the check then enforces it.
@@ -114,14 +120,14 @@ def window(text: str, needle: str, before: int = 8, after: int = 8) -> str:
 
 class FormErrorAssociations(unittest.TestCase):
     def test_counted_baseline_is_unchanged_and_fully_mapped(self) -> None:
-        # The baseline test pins nine setAttribute sites; this table must map exactly those.
-        self.assertIn("self.assertEqual(sites, 9,", BASELINE_TEST.read_text())
+        # The baseline test pins ten setAttribute sites; this table must map exactly those.
+        self.assertIn("self.assertEqual(sites, 10,", BASELINE_TEST.read_text())
         found = sum(
             line.count('setAttribute("aria-invalid", "true")')
             for path in sorted(WEB.glob("*.js"))
             for line in path.read_text().splitlines()
         )
-        self.assertEqual(found, 9)
+        self.assertEqual(found, 10)
         self.assertEqual(len(SITES), found)
         for name, invalid, _, _ in SITES:
             self.assertIn(invalid, source(name), name)

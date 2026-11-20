@@ -31,6 +31,7 @@ AUDITED_FILES = (
     "case-workspace.js",
     "chat-widget.js",
     "async-action.js",
+    "fields.js",
     "progress.js",
     "workspace-shell.js",
 )
