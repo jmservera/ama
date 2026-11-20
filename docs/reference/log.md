@@ -14134,3 +14134,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] add | Epic 73 requirement trace (Refs #73)
 
 * Added [issue-73-requirement-trace-2026-11-20.md](research/issue-73-requirement-trace-2026-11-20.md) and `tools/test_epic_73_requirement_trace.py`: ten requirements traced to cited tests, BG-011 deferred to the pilot; no criterion ticked.
+
+## [2026-11-20] add | Issue 93 child closure re-check
+
+* Added [issue-93-child-closure-live-2026-11-20.md](research/issue-93-child-closure-live-2026-11-20.md): #96 closed, so criterion 2 is proven for the demo; criterion 1 (#440) remains unproven; no source change.
