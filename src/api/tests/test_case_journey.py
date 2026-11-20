@@ -1499,8 +1499,14 @@ for (const button of root.querySelectorAll("[popovertarget]")) {
   assert.equal(button.closest("a"), null);
 }
 const summaries = root.querySelectorAll(".case-blocker-summary");
-assert.equal(summaries.length, 2);
+assert.equal(summaries.length, 1, "only the case summary shows a clipped sentence");
 assert.equal(summaries[0].textContent, "Short reason.");
+const triggers = root.querySelectorAll(".case-blocker-trigger");
+assert.deepEqual(triggers.map(node => node.getAttribute("aria-label")), [
+  "Case: why blocked. Short reason. Details", "Funding: why blocked. Short reason. Details"]);
+assert.equal(triggers[0].textContent, "Short reason.Details");
+assert.equal(triggers[1].textContent, "Why blocked", "step cards show one fixed line");
+assert.equal(root.querySelectorAll(".case-blocker-hint").length, 1, "step cards omit Details");
 assert.equal(root.querySelectorAll("img").length, 6);
 assert.equal(ui.tabs.getAttribute("role"), "tablist");
 console.log("PASS");
@@ -1532,6 +1538,78 @@ console.log("PASS");
         self.assertIn("Owner: Unknown. Next action: Ask Sam.", summary["blockers"])
         self.assertEqual(summary["overdue"], 1)
 
+    def test_closed_summary_agrees_with_the_closed_journey(self) -> None:
+        blocker = {
+            "step": "Final checks: funding",
+            "reason": "Funding has not been confirmed.",
+            "owner": "Sam",
+            "next_action": "Check the funding.",
+            "current_stop": True,
+        }
+        case: dict[str, Any] = {
+            "closed": True,
+            "stage": "Completed",
+            "owner": "Sam",
+            "work": {
+                "next_action": "Ask Sam to record the next action.",
+                "blockers": [blocker],
+                "source": "case:SYN/handoff",
+            },
+        }
+        summary = evaluate(f"CaseWorkspace.summary({json.dumps(case)})")
+        self.assertEqual(summary["step"], "Closed, all six steps done")
+        self.assertEqual(summary["next"], "None. A manager can reopen this case.")
+        self.assertEqual(summary["blockers"], "No recorded blockers. This case is closed.")
+        self.assertEqual(evaluate(f"CaseWorkspace.nextTab({json.dumps(case)})"), "overview")
+        case.update(closed=False, stage="Final checks before ordering", days_in_stage=4)
+        summary = evaluate(f"CaseWorkspace.summary({json.dumps(case)})")
+        self.assertEqual(summary["step"], "Funding: Final checks before ordering, 4 days")
+        self.assertEqual(summary["next"], "Ask Sam to record the next action.")
+        self.assertIn("Funding has not been confirmed. Owner: Sam.", summary["blockers"])
+
+    def test_closed_case_summary_has_no_blocker_disclosure_and_opens_overview(self) -> None:
+        script = (
+            DOM
+            + shipped_helpers()
+            + r"""
+const app = new Node("main"), aiMode = {workflow: false};
+const location = {hash: "#/case/SYN?tab=funding"}, history = {pushState() {}};
+const MutationObserver = class {observe() {} disconnect() {}};
+const blocker = {step: "Final checks: funding", reason: "Funding has not been confirmed.",
+  owner: "Finance", next_action: "Check the funding.", current_stop: true};
+"""
+            + (WEB / "case-workspace.js").read_text()
+            + r"""
+function build(closed) {
+  const definitions = ["overview", "blockers", "funding", "ai"].map(id => ({
+    id, label: id, panel: h("section", {}, h("h2", {}, id))
+  }));
+  const work = {blockers: [blocker], source: closed ? "case:SYN/handoff" : undefined};
+  const ui = CaseWorkspace.enhance({id: "SYN", hazards: [], closed, work,
+    stage: closed ? "Completed" : "Contacting resident", days_in_stage: 3},
+    definitions, null, h("section", {}), h("div", {}));
+  const root = h("div", {}, ui.top);
+  const jump = root.querySelectorAll("button")
+    .find(node => node.textContent === "Open next action");
+  jump.events.click();
+  return {root, visible: definitions.filter(tab => !tab.panel.hidden).map(tab => tab.id)};
+}
+const closed = build(true), open = build(false);
+const text = closed.root.querySelector(".case-summary").textContent;
+for (const sentence of ["Closed, all six steps done", "None. A manager can reopen this case.",
+  "No recorded blockers. This case is closed."]) assert.ok(text.includes(sentence), sentence);
+assert.doesNotMatch(text, /Step unknown|Funding has not been confirmed/);
+assert.equal(closed.root.querySelectorAll("[popover]").length, 0);
+assert.deepEqual(closed.visible, ["overview"]);
+assert.equal(open.root.querySelectorAll("[popover]").length, 2, "an open case still discloses");
+assert.deepEqual(open.visible, ["blockers"]);
+console.log("PASS");
+"""
+        )
+        result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True)
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertIn("PASS", result.stdout)
+
     def test_reviewable_count_states(self) -> None:
         for state, output, stale, expected in (
             ("ready", {}, False, True),
@@ -1551,6 +1629,8 @@ console.log("PASS");
             ({"stage": "Final checks before ordering", "can_advance": True}, "overview"),
             ({"work": {"source": "case:ZF-1/handoff"}}, "quality"),
             ({"work": {"blockers": [{"current_stop": True}]}}, "blockers"),
+            ({"closed": True, "work": {"source": "case:ZF-1/handoff"}}, "overview"),
+            ({"closed": True, "work": {"blockers": [{"current_stop": True}]}}, "overview"),
         ):
             self.assertEqual(evaluate(f"CaseWorkspace.nextTab({json.dumps(case)})"), expected)
 

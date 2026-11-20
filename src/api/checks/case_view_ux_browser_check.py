@@ -1,4 +1,7 @@
-"""Issue 552: real local case UI density, disclosure and attached-tab checks."""
+"""Issue 552: real local case UI density, disclosure and attached-tab checks.
+
+It also measures journey strip alignment and the case header links (owner report 2026-11-20).
+"""
 
 from __future__ import annotations
 
@@ -7,6 +10,7 @@ import hashlib
 import importlib.metadata
 import json
 import re
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +20,63 @@ from checks.asset_urls import asset_url
 from checks.case_journey_browser_check import journey_data, scan, sign_in
 from checks.design_system_browser_check import check, main
 from checks.regulatory_ux_check import AXE_SHA256
+
+STRIP_WIDTHS = (1920, 1440, 1280, 1200, 1199, 1100, 1024, 900, 899, 768, 600, 390, 320)
+# The server maps these blocker steps to Funding, Resident agreement and the current step.
+STRIP_BLOCKERS = (
+    ("Final checks: funding", "Funding has not been confirmed."),
+    ("Final checks: resident decision", "Resident decision or authority needs confirmation."),
+    ("Safety review", "A safety review is open for this home."),
+)
+# Fixture name: (blocker indexes, journey cards that show as blocked).
+STRIP_FIXTURES: dict[str, tuple[tuple[int, ...], int]] = {
+    "no blockers": ((), 0),
+    "one blocked": ((0,), 1),
+    "two blocked": ((0, 1), 2),
+    "current and blocked": ((2,), 1),
+    "closed": ((0, 1), 0),
+}
+STRESS_NAMES = (
+    "Survey and condition assessment of a property",
+    "Quality inspection and handover to a resident",
+)
+STRIP_MEASURE = """() => {
+  const probe = document.createElement('i');
+  probe.style.color = 'var(--warn)';
+  document.body.append(probe);
+  const warn = getComputedStyle(probe).color;
+  probe.remove();
+  const lines = el => el.getBoundingClientRect().height
+    / parseFloat(getComputedStyle(el).lineHeight);
+  const cards = [...document.querySelectorAll('.stepper > li')].map(card => {
+    const box = card.getBoundingClientRect();
+    const style = getComputedStyle(card);
+    const trigger = card.querySelector('.case-blocker-trigger');
+    const label = card.querySelector('.case-blocker-label');
+    return {
+      name: card.querySelector('.step-name').textContent,
+      state: card.querySelector('.step-state').textContent,
+      nameLines: Math.round(lines(card.querySelector('.step-name'))),
+      top: Math.round(box.top + scrollY), height: box.height, bottom: box.bottom + scrollY,
+      current: card.getAttribute('aria-current') === 'step',
+      outline: style.outlineStyle + ' ' + style.outlineWidth,
+      blocked: card.classList.contains('blocked'),
+      bar: style.borderLeftWidth, red: style.borderLeftColor === warn,
+      clipped: card.scrollWidth > card.clientWidth + 1,
+      ellipsis: [...card.querySelectorAll('*')].some(
+        el => getComputedStyle(el).textOverflow === 'ellipsis'),
+      trigger: trigger && {
+        text: trigger.textContent, hint: Boolean(card.querySelector('.case-blocker-hint')),
+        lines: label ? Math.round(lines(label)) : 0, name: trigger.getAttribute('aria-label'),
+        bottom: trigger.getBoundingClientRect().bottom + scrollY,
+      },
+    };
+  });
+  const rows = new Map();
+  for (const card of cards) rows.set(card.top, [...(rows.get(card.top) || []), card.height]);
+  return {cards, rows: [...rows.values()],
+    overflow: document.documentElement.scrollWidth > innerWidth};
+}"""
 
 
 def fixture(route: Route) -> None:
@@ -38,6 +99,27 @@ def fixture(route: Route) -> None:
     route.fulfill(json=case)
 
 
+def strip_fixture(kind: str, indexes: tuple[int, ...]) -> Callable[[Route], None]:
+    def handle(route: Route) -> None:
+        case = route.fetch().json()
+        case["work"]["blockers"] = [
+            {
+                "step": STRIP_BLOCKERS[index][0],
+                "reason": STRIP_BLOCKERS[index][1],
+                "owner": "Synthetic finance reviewer",
+                "next_action": "Check the record and update it.",
+                "current_stop": kind == "closed",
+            }
+            for index in indexes
+        ]
+        case["closed"] = kind == "closed"
+        if kind == "closed":
+            case["stage"] = "Completed"
+        route.fulfill(json=case)
+
+    return handle
+
+
 def geometry(page: Page) -> dict[str, Any]:
     result: dict[str, Any] = page.evaluate("""() => ({
       width: innerWidth,
@@ -46,6 +128,189 @@ def geometry(page: Page) -> dict[str, Any]:
       labels: [...document.querySelectorAll('.step-name')].map(el => el.textContent)
     })""")
     return result
+
+
+def strip_problems(width: int, record: dict[str, Any], check_ceiling: bool = True) -> list[str]:
+    """Spec B: equal heights per visual row, three columns from 900 to 1199, no clipped text."""
+    rows: list[list[float]] = record["rows"]
+    cards: list[dict[str, Any]] = record["cards"]
+    problems: list[str] = []
+    expected = 1 if width >= 1200 else 2 if width >= 900 else 6
+    if len(rows) != expected:
+        problems.append(f"{len(rows)} visual rows, expected {expected}")
+    if any(max(row) - min(row) > 1 for row in rows):
+        problems.append("heights differ within a row")
+    limit = 140 if width >= 1200 else 116
+    if check_ceiling and max(max(row) for row in rows) > limit:
+        problems.append(f"a card is taller than {limit}px")
+    split = [card["name"] for card in cards if " " not in card["name"] and card["nameLines"] > 1]
+    if split:
+        problems.append(f"names break inside a word: {split}")
+    if record["overflow"] or any(card["clipped"] for card in cards):
+        problems.append("content overflows")
+    if any(card["ellipsis"] for card in cards):
+        problems.append("a step card clips text with an ellipsis")
+    return problems
+
+
+def strip_card_problems(kind: str, blocked_cards: int, record: dict[str, Any]) -> list[str]:
+    """Spec B states: one outlined current step, and each blocked card keeps its cues and button."""
+    cards: list[dict[str, Any]] = record["cards"]
+    problems: list[str] = []
+    current = [card for card in cards if card["current"]]
+    if len(current) != (0 if kind == "closed" else 1):
+        problems.append(f"{len(current)} current steps")
+    if any(card["outline"] != "solid 2px" for card in current):
+        problems.append("the current step lost its outline")
+    blocked = [card for card in cards if card["blocked"]]
+    if len(blocked) != blocked_cards:
+        problems.append(f"{len(blocked)} blocked cards, expected {blocked_cards}")
+    for card in blocked:
+        name, trigger = card["name"], card["trigger"]
+        if not re.search("blocked", card["state"], re.IGNORECASE):
+            problems.append(f"{name} does not say Blocked")
+        if card["bar"] != "8px" or not card["red"]:
+            problems.append(f"{name} lost its red left bar")
+        if trigger is None:
+            problems.append(f"{name} has no button")
+            continue
+        if trigger["text"] != "Why blocked" or trigger["lines"] != 1 or trigger["hint"]:
+            problems.append(f"{name} button does not read one line Why blocked")
+        if not trigger["name"].startswith(f"{name}: why blocked."):
+            problems.append(f"{name} button lost its accessible name")
+        if card["bottom"] - trigger["bottom"] > 8:
+            problems.append(f"{name} button is not at the foot of its card")
+    feet = [card["trigger"]["bottom"] for card in blocked if card["trigger"]]
+    if feet and max(feet) - min(feet) > 1:
+        problems.append("blocked buttons do not share a foot line")
+    return problems
+
+
+def strip_page_checks(page: Page, kind: str) -> None:
+    """Closed summary wording and the two header links, on the page the strip was measured on."""
+    text = page.locator(".case-summary").inner_text()
+    if kind == "closed":
+        check(
+            "closed case summary agrees with its six done steps",
+            all(
+                sentence in text
+                for sentence in (
+                    "Closed, all six steps done",
+                    "None. A manager can reopen this case.",
+                    "No recorded blockers. This case is closed.",
+                )
+            )
+            and "Step unknown" not in text
+            and page.locator(".case-blocker").count() == 0,
+        )
+        page.get_by_role("tab", name="Funding", exact=True).click()
+        page.get_by_role("button", name="Open next action", exact=True).click()
+        expect(page.get_by_role("tab", name="Overview", exact=True)).to_have_attribute(
+            "aria-selected", "true"
+        )
+    if kind == "no blockers":
+        check(
+            "open case without blockers keeps its summary wording",
+            "No recorded blockers." in text and "This case is closed." not in text,
+        )
+        links = page.locator(".case-links > li > a")
+        boxes: list[dict[str, float]] = links.evaluate_all(
+            "els => els.map(el => el.getBoundingClientRect().toJSON())"
+        )
+        apart = boxes[1]["left"] - boxes[0]["right"] >= 8 or boxes[1]["top"] >= boxes[0]["bottom"]
+        check(
+            "case header links are two separate links",
+            links.all_inner_texts()[:2] == ["Back to the list", "Versioned home case"]
+            and page.get_by_role("link", name="Back to the list", exact=True).count() == 1
+            and page.get_by_role("link", name="Versioned home case", exact=True).count() == 1
+            and apart,
+        )
+
+
+def strip_case(
+    browser: Browser, base: str, out: Path, kind: str, indexes: tuple[int, ...], blocked: int
+) -> list[dict[str, Any]]:
+    context = browser.new_context(viewport={"width": 1440, "height": 900})
+    context.route(
+        "**/*",
+        lambda route: (
+            route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+        ),
+    )
+    page = context.new_page()
+    errors: list[str] = []
+    page.on("pageerror", lambda error: errors.append(str(error)))
+    page.route("**/api/cases/ZF-1", strip_fixture(kind, indexes))
+    records: list[dict[str, Any]] = []
+    try:
+        sign_in(page, base)
+        for width in STRIP_WIDTHS:
+            page.set_viewport_size({"width": width, "height": 900})
+            record: dict[str, Any] = page.evaluate(STRIP_MEASURE)
+            problems = strip_problems(width, record)
+            if width == 1280:
+                problems += strip_card_problems(kind, blocked, record)
+            heights = [[round(value, 1) for value in row] for row in record["rows"]]
+            check(
+                f"journey strip aligned/{kind}/{width}: {heights}"
+                + (f" PROBLEMS {problems}" if problems else ""),
+                not problems,
+            )
+            records.append({"fixture": kind, "width": width, "rows": heights})
+            if width in (1440, 1100, 900, 390):
+                shot = out / f"strip-{kind.replace(' ', '-')}-{width}.png"
+                page.locator(".case-journey").screenshot(path=str(shot))
+        page.set_viewport_size({"width": 1280, "height": 900})
+        strip_page_checks(page, kind)
+        check(f"no JavaScript errors: journey strip/{kind}", not errors)
+    finally:
+        context.close()
+    return records
+
+
+def strip_stress(browser: Browser, base: str) -> list[dict[str, Any]]:
+    """Spec B.5: a 45 character name on cards one and six keeps rows equal and nothing overflows."""
+    check("stress names are 45 characters", {len(name) for name in STRESS_NAMES} == {45})
+    context = browser.new_context(viewport={"width": 1440, "height": 900})
+    context.route(
+        "**/*",
+        lambda route: (
+            route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+        ),
+    )
+    page = context.new_page()
+    page.route("**/api/cases/ZF-1", strip_fixture("two blocked", STRIP_FIXTURES["two blocked"][0]))
+    records: list[dict[str, Any]] = []
+    try:
+        sign_in(page, base)
+        page.evaluate(
+            """names => document.querySelectorAll('.step-name').forEach((el, index) => {
+              if (index === 0) el.textContent = names[0];
+              if (index === 5) el.textContent = names[1];
+            })""",
+            list(STRESS_NAMES),
+        )
+        for width in (1440, 1024, 390):
+            page.set_viewport_size({"width": width, "height": 900})
+            record: dict[str, Any] = page.evaluate(STRIP_MEASURE)
+            problems = strip_problems(width, record, check_ceiling=False)
+            heights = [[round(value, 1) for value in row] for row in record["rows"]]
+            check(
+                f"journey strip stress names/{width}: {heights}"
+                + (f" PROBLEMS {problems}" if problems else ""),
+                not problems,
+            )
+            records.append({"fixture": "stress", "width": width, "rows": heights})
+    finally:
+        context.close()
+    return records
+
+
+def strip_alignment(browser: Browser, base: str, out: Path) -> list[dict[str, Any]]:
+    records: list[dict[str, Any]] = []
+    for kind, (indexes, blocked) in STRIP_FIXTURES.items():
+        records += strip_case(browser, base, out, kind, indexes, blocked)
+    return records + strip_stress(browser, base)
 
 
 def touch_disclosure(browser: Browser, base: str, out: Path) -> dict[str, Any]:
@@ -325,14 +590,14 @@ def run_browser(base: str, out: Path, baseline: bool, axe: str | None = None) ->
         page.route("**/api/cases/ZF-1", fixture)
         try:
             sign_in(page, base)
-            for width in (1280, 390, 320):
+            for width in (1280, 1024, 900, 390, 320):
                 page.set_viewport_size({"width": width, "height": 800})
                 record = geometry(page)
                 results["viewports"].append(record)
                 check(f"no page overflow/{width}", not record["overflow"])
                 page.locator(".case-journey").screenshot(path=str(out / f"journey-{width}.png"))
                 if not baseline:
-                    ceiling = 132 if width == 1280 else 116
+                    ceiling = 140 if width >= 1200 else 116
                     check(
                         f"compact step height <= {ceiling}px/{width}",
                         max(record["heights"]) <= ceiling,
@@ -515,6 +780,7 @@ def run_browser(base: str, out: Path, baseline: bool, axe: str | None = None) ->
                     "getComputedStyle(document.documentElement).getPropertyValue('--motion').trim() === '0s'"
                 ),
             )
+            results["strip_alignment"] = strip_alignment(browser, base, out)
             results["touch"] = touch_disclosure(browser, base, out)
             results["fallbacks"] = fallback_cases(browser, base)
             if axe is None:

@@ -41,10 +41,11 @@ const CaseWorkspace = (() => {
     return c.closed ? "overview" : blocker ? "blockers" : "overview";
   }
   function nextTab(c) {
+    if (c.closed) return "overview";
     if (c.work?.source?.endsWith("/handoff")) return "quality";
     const blocker = c.work?.blockers?.find(b => b.current_stop);
     if (blocker) return "blockers";
-    if (c.closed || c.can_advance) return "overview";
+    if (c.can_advance) return "overview";
     if (["Contacting resident", "Contact paused", "Rescheduled", "Survey being booked", "Survey booked"].includes(c.stage)) return "resident";
     return steps[currentIndex(c)]?.tab || "overview";
   }
@@ -54,22 +55,24 @@ const CaseWorkspace = (() => {
     const offered = c.handoff && ["Offered", "Received", "Escalated"].includes(c.handoff.state);
     return {
       status: c.status || "Status not recorded",
-      step: steps[currentIndex(c)] ? `${steps[currentIndex(c)].name}: ${c.stage}, ${c.days_in_stage ?? "Unknown"} days` : "Step unknown",
-      next: work.next_action || `Ask ${c.owner || "Unknown"} to record the next action.`,
+      step: c.closed ? "Closed, all six steps done" : steps[currentIndex(c)] ? `${steps[currentIndex(c)].name}: ${c.stage}, ${c.days_in_stage ?? "Unknown"} days` : "Step unknown",
+      next: c.closed ? "None. A manager can reopen this case." : work.next_action || `Ask ${c.owner || "Unknown"} to record the next action.`,
       owner: `${c.owner || "Unknown"}${c.owner_role ? `, ${c.owner_role}` : ""}${offered ? `. Offered to ${c.handoff.proposed_receiver || c.handoff.to_name || "Unknown"}, not yet confirmed` : ""}`,
-      blockers: first ? `${work.blockers.length} blockers. ${first.reason} Owner: ${first.owner || "Unknown"}. Next action: ${first.next_action || "Ask the case owner to record the next action."}` : "No recorded blockers.",
+      blockers: c.closed ? "No recorded blockers. This case is closed." : first ? `${work.blockers.length} blockers. ${first.reason} Owner: ${first.owner || "Unknown"}. Next action: ${first.next_action || "Ask the case owner to record the next action."}` : "No recorded blockers.",
       overdue: work.overdue?.length || 0,
     };
   }
-  function blockerDisclosure(blockers, id, label) {
+  // Step cards show a fixed one-line label; the summary button shows the first sentence of the reason.
+  function blockerDisclosure(blockers, id, label, compact = false) {
     const reason = blockers[0].reason || "Reason not recorded. Ask the case owner.";
     const short = reason.split(/(?<=[.!?])\s/)[0];
     const popupId = `case-blocker-${id}`;
     return h("div", { class: "case-blocker" },
       h("button", { class: "alt case-blocker-trigger", type: "button", popovertarget: popupId,
         "aria-label": `${label}: why blocked. ${short} Details` },
-        h("span", { class: "case-blocker-summary" }, short),
-        h("span", { class: "case-blocker-hint" }, "Details")),
+        compact ? h("span", { class: "case-blocker-label" }, "Why blocked") : [
+          h("span", { class: "case-blocker-summary" }, short),
+          h("span", { class: "case-blocker-hint" }, "Details")]),
       h("div", { id: popupId, class: "case-blocker-popover", popover: "auto",
         role: "region", "aria-label": `${label} blocker details`, tabindex: 0 },
         h("h2", {}, `${label}: ${blockers.length} ${blockers.length === 1 ? "blocker" : "blockers"}`),
@@ -107,7 +110,7 @@ const CaseWorkspace = (() => {
       item("Next action", values.next, jump(nextTab(c), "Open next action")),
       item("Owner", values.owner),
       item("Blockers", h("div", { class: "case-summary-blockers" },
-        c.work?.blockers?.length ? blockerDisclosure(c.work.blockers, "summary", "Case") : "No recorded blockers.",
+        !c.closed && c.work?.blockers?.length ? blockerDisclosure(c.work.blockers, "summary", "Case") : values.blockers,
         values.overdue ? h("span", {}, `${values.overdue} overdue tasks.`) : null), jump("blockers", "See all blockers")),
       h("div", {}, h("dt", {}, "AI"), aiValue)));
     const aiJump = jump("ai", "Review AI suggestions");
@@ -118,7 +121,7 @@ const CaseWorkspace = (() => {
       }, h("a", { href: `#/case/${encodeURIComponent(c.id)}?tab=${step.tab}`, "data-case-tab": step.tab },
         h("img", { class: "step-icon", src: `/journey-icons/${step.icon}.png`, alt: "", "aria-hidden": "true", width: 24, height: 24 }),
         h("span", { class: "step-name" }, step.name), h("span", { class: "step-state" }, step.text)),
-        step.blockers.length ? blockerDisclosure(step.blockers, `step-${index}`, step.name) : null))));
+        step.blockers.length ? blockerDisclosure(step.blockers, `step-${index}`, step.name, true) : null))));
     const tabs = h("div", { class: "case-tabs", role: "tablist", "aria-label": "Case sections" });
     let active;
     function syncLinks() {
