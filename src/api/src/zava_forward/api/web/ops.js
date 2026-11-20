@@ -92,8 +92,9 @@ function sensorPanel(id) {
   const checked = h("p", { class: "muted" });
   const body = h("div", {});
   const box = h("section", { id: "sensors", "aria-busy": "true" },
+    h("div", { "data-sensor-badges": "" }, status, checked),
     h("p", { class: "muted", "data-sensor-advisory": "" }, "Readings are advice for a person to check. They do not change the case."),
-    h("div", { "data-sensor-badges": "" }, status, checked), body);
+    body);
   const paint = (state, kids) => {
     status.className = `status-line ${state.tone}`.trim();
     status.textContent = state.words;
@@ -131,7 +132,8 @@ const SENSOR_OFFLINE_TEXT = `${SENSOR_OFFLINE_SECONDS / 3600} hours`;
 const SENSOR_SOURCES = { "synthetic-weather-derived": "Outdoor weather", "synthetic-modelled-indoor": "Modelled indoor", "synthetic-unclassified": "Unknown origin" };
 const SENSOR_MEASURES = { dew_point_c: "dew point", mould_risk_index: "mould risk" };
 // Plain wording for every state, keyed by the badge states of sensor_badges.py plus the states only this screen reaches.
-// A stop or an alert is one message: reason, Owner, Next action. Status words match the map labels in sensor_map.py.
+// A stop or an alert is one message: reason, Owner, Next action. Status words match the map labels in sensor_map.py,
+// except that the 24 hour state says "may be offline" as its alert does, because a missing reading is not proof.
 // The badge state "offline" means no reading has arrived; "offline-24h" is an old reading, which the map calls offline.
 const SENSOR_COPY = {
   loading: { words: "Loading home sensors" },
@@ -145,7 +147,7 @@ const SENSOR_COPY = {
   unknown: { words: "Latest reading is dated in the future and is not treated as recent" },
   fresh: { tone: "ok", words: `Recent reading (within ${SENSOR_FRESH_TEXT})` },
   stale: { tone: "wait", words: `Reading out of date (older than ${SENSOR_FRESH_TEXT})`, alert: { heading: "Reading out of date", message: `The latest reading is older than ${SENSOR_FRESH_TEXT}. Last reading {age} ago. Owner: the quality team. Next action: treat the reading as out of date. Use the ordinary quality check for now.` } },
-  "offline-24h": { tone: "danger", words: `Sensor offline (no reading for over ${SENSOR_OFFLINE_TEXT})`, alert: { heading: "Sensor may be offline", message: `No reading for over ${SENSOR_OFFLINE_TEXT}. Last reading {age} ago. Owner: the quality team. Next action: use the ordinary quality check, then ask the quality team to check the sensor.` } },
+  "offline-24h": { tone: "danger", words: `Sensor may be offline (no reading for over ${SENSOR_OFFLINE_TEXT})`, alert: { heading: "Sensor may be offline", message: `No reading for over ${SENSOR_OFFLINE_TEXT}. Last reading {age} ago. Owner: the quality team. Next action: use the ordinary quality check, then ask the quality team to check the sensor.` } },
   conflict: { tone: "danger", words: "Readings disagree", alert: { heading: "Readings disagree", message: "Two retained readings disagree for the same sensor and time. Do not choose between them. Owner: the quality team. Next action: use the ordinary quality check and ask the quality team to check the sensor." } },
   fault: { tone: "danger", words: "Sensor fault", alert: { heading: "Sensor fault", message: "The latest reading is missing a value or cannot be read. Owner: the quality team. Next action: do not use this reading. Use the ordinary quality check and report the sensor fault." } },
   out_of_range: { tone: "danger", words: "Reading out of range", alert: { heading: "Reading out of range", message: "The latest reading is outside the possible range. Owner: the quality team. Next action: do not use this reading. Use the ordinary quality check and ask for a check." } },
@@ -551,7 +553,7 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
         h("dt", {}, "Checklist"), h("dd", {}, r.checklist_version),
         h("dt", {}, "Evidence from"), h("dd", {}, [r.source, r.submitted_by].filter(Boolean).join(", ")),
         r.accepted_by && [h("dt", {}, "Accepted by"), h("dd", {}, r.accepted_by)],
-        r.handover && [h("dt", {}, "Handed over by"), h("dd", {}, r.handover.by), h("dt", {}, "Resident given or told"), h("dd", {}, r.handover.note)]),
+        r.handover && [h("dt", {}, "Handed over by"), h("dd", {}, r.handover.by), h("dt", {}, "Resident given or told"), h("dd", {}, Fields.heldBack(r.handover.note, r.handover.by, "what the resident was given or told"))]),
       h("details", { class: "decision-checks", open: QUALITY_CHECKS_OPEN.includes(r.state) },
         h("summary", {}, `Checks recorded (${checks.length})`),
         h("ul", {}, checks.map((x) => h("li", {}, `${x.label}: ${x.evidence}`)))),
@@ -565,12 +567,12 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
       superseded && h("p", { class: "muted" },
         Number.isInteger(r.superseded_by) ? `Historical record only. Use evidence record ${r.superseded_by + 1} for current decisions.` : "Historical record only. Use the current record for this measure.",
         r.prior_acceptance?.accepted_by ? ` Previously accepted by ${r.prior_acceptance.accepted_by}.` : "",
-        r.prior_acceptance?.handover ? ` Previous handover: ${r.prior_acceptance.handover.note}` : "",
+        r.prior_acceptance?.handover ? ` Previous handover: ${Fields.heldBack(r.prior_acceptance.handover.note, r.prior_acceptance.handover.by, "what the resident was given or told")}` : "",
         Number.isInteger(r.superseded_by) && [" ", h("a", { href: `#quality-record-${r.superseded_by}`, onclick: (event) => {
           event.preventDefault();
           document.getElementById(`quality-record-${r.superseded_by}`)?.focus();
         } }, `Go to evidence record ${r.superseded_by + 1}`)]),
-      aftercare.length > 0 && [h("h4", {}, "Aftercare notes"), h("ul", {}, aftercare.map((a) => h("li", {}, `${fmtDate(a.at)} ${a.by}: ${a.note}`)))],
+      aftercare.length > 0 && [h("h4", {}, "Aftercare notes"), h("ul", {}, aftercare.map((a) => h("li", {}, `${fmtDate(a.at)} ${a.by}: ${Fields.heldBack(a.note, a.by, "what the resident reported or what was done")}`)))],
       h("div", { class: "decision-area" },
         r.state === "Submitted" && checker(submittedArea),
         r.state === "Fixed, awaiting reinspection" && checker(fixedArea),

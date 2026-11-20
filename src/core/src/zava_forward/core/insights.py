@@ -236,7 +236,7 @@ def recommend_handover(c, cases, staff):
             why.append("Has already spoken to this resident")
         n = load[s["code"]]
         score += max(-20, min(30, round((avg - n) * 1.5)))
-        why.append(f"{n} open cases (team average {avg:.0f})")
+        why.append(f"{n} open {'case' if n == 1 else 'cases'} (team average {avg:.0f})")
         if has_hazard(c) and s["role"] == "Building Safety Liaison":
             score += 20
             why.append("Owns open safety issues")

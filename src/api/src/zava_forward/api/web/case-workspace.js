@@ -112,14 +112,16 @@ const CaseWorkspace = (() => {
     };
     const item = (name, value, button) => h("div", {}, h("dt", {}, name), h("dd", {}, value, button));
     const jump = (tab, text) => h("button", { class: "alt", type: "button", onclick: () => select(tab, true, true) }, text);
+    // A closed case has no next action and no blocker to jump to, and an open case without blockers has nothing to list.
+    const hasBlockers = !c.closed && c.work?.blockers?.length > 0;
     section.append(h("dl", {},
       item("Status", h("span", { class: `status-line ${c.hazards.some(x => !x.released) ? "danger" : c.closed ? "ok" : "wait"}` }, values.status)),
       item("Current step", values.step),
-      item("Next action", values.next, jump(nextTab(c), "Open next action")),
+      item("Next action", values.next, !c.closed && jump(nextTab(c), "Open next action")),
       item("Owner", values.owner),
       item("Blockers", h("div", { class: "case-summary-blockers" },
-        !c.closed && c.work?.blockers?.length ? blockerDisclosure(c.work.blockers, "summary", "Case") : values.blockers,
-        values.overdue ? h("span", {}, `${values.overdue} overdue tasks.`) : null), jump("blockers", "See all blockers")),
+        hasBlockers ? blockerDisclosure(c.work.blockers, "summary", "Case") : values.blockers,
+        values.overdue ? h("span", {}, `${values.overdue} overdue tasks.`) : null), hasBlockers && jump("blockers", "See all blockers")),
       h("div", {}, h("dt", {}, "AI"), aiValue)));
     const aiJump = jump("ai", "Review AI suggestions");
     aiValue.append(aiJump);

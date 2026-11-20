@@ -89,7 +89,7 @@ def main() -> None:
                 page.reload()
                 source("ho-accept")
                 page.locator("#ho-accept-reason").press("Enter")
-                page.get_by_role("button", name="Complete handoff", exact=True).wait_for()
+                page.get_by_role("button", name="Complete the handover", exact=True).wait_for()
                 assert store.cases["ZF-1"]["owner_code"] == "PM-01"
                 assert store.cases["ZF-1"]["handoff_history"][-1]["source_version"] == "browser-source-7"
                 page.set_viewport_size({"width": 390, "height": 844})

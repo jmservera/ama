@@ -189,6 +189,9 @@ def strip_card_problems(kind: str, blocked_cards: int, record: dict[str, Any]) -
 def strip_page_checks(page: Page, kind: str) -> None:
     """Closed summary wording and the two header links, on the page the strip was measured on."""
     text = page.locator(".case-summary").inner_text()
+    jumps = page.locator(".case-summary").get_by_role("button")
+    next_jump = jumps.filter(has_text=re.compile(r"^Open next action$"))
+    blockers_jump = jumps.filter(has_text=re.compile(r"^See all blockers$"))
     if kind == "closed":
         check(
             "closed case summary agrees with its six done steps",
@@ -203,9 +206,23 @@ def strip_page_checks(page: Page, kind: str) -> None:
             and "Step unknown" not in text
             and page.locator(".case-blocker").count() == 0,
         )
+        check(
+            "closed case summary offers no next action or blocker jump",
+            next_jump.count() == 0 and blockers_jump.count() == 0,
+        )
+    elif kind == "no blockers":
+        check(
+            "open case without blockers offers the next action but no blocker jump",
+            next_jump.count() == 1 and blockers_jump.count() == 0,
+        )
+    else:
+        check(
+            f"open case with blockers keeps both summary jumps/{kind}",
+            next_jump.count() == 1 and blockers_jump.count() == 1,
+        )
         page.get_by_role("tab", name="Funding", exact=True).click()
-        page.get_by_role("button", name="Open next action", exact=True).click()
-        expect(page.get_by_role("tab", name="Overview", exact=True)).to_have_attribute(
+        blockers_jump.click()
+        expect(page.get_by_role("tab", name="Blockers and safety", exact=False)).to_have_attribute(
             "aria-selected", "true"
         )
     if kind == "no blockers":

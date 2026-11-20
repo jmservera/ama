@@ -6,10 +6,13 @@ and behaviour checks only; the rendered layout is checked by the browser runs.
 
 from __future__ import annotations
 
+import json
 import re
 import subprocess
 import unittest
 from pathlib import Path
+
+from zava_forward.core import projection
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -251,6 +254,41 @@ assert.deepEqual(calls.map(call => call.body), [
 assert.match(all(forms[0], "p").at(-1).textContent,
   /returns to Northern Facade Systems Ltd with the same defect\.$/);
 """)
+
+    def test_held_back_notes_say_who_to_ask_instead_of_printing_the_placeholder(self) -> None:
+        run(
+            r"""
+const HELD = __HELD__;
+const told = "what the resident was given or told";
+const done = "what the resident reported or what was done";
+const said = (who, what) =>
+  `Held back for your role. Owner: ${who}. Next action: ask ${who} ${what}.`;
+const quinn = {by: "Quinn Inspector", note: HELD};
+const handed = record("Handed over", {accepted_by: "Quinn Inspector", handover: quinn,
+  aftercare: [{at: "2026-11-20", by: "Sam Example", note: HELD},
+    {at: "2026-11-21", by: "", note: HELD},
+    {at: "2026-11-22", by: "Sam Example", note: "Shown the display"}]});
+const replaced = record("Superseded", {superseded_by: 1,
+  prior_acceptance: {accepted_by: "Quinn Inspector", handover: quinn}});
+const panel = await render(caseWith([replaced, handed]), "Resident Liaison Officer");
+assert.ok(!panel.textContent.includes(HELD), "the placeholder never reaches the record");
+const [oldCard, newCard] = cards(panel);
+const dd = label => {
+  const terms = all(newCard, "dt"), definitions = all(newCard, "dd");
+  return definitions[terms.findIndex(term => term.textContent === label)].textContent;
+};
+assert.equal(dd("Resident given or told"), said("Quinn Inspector", told));
+const title = all(newCard, "h4").find(node => node.textContent === "Aftercare notes");
+const siblings = title.parentElement.children;
+assert.deepEqual(all(siblings[siblings.indexOf(title) + 1], "li").map(li => li.textContent), [
+  "2026-11-20 Sam Example: " + said("Sam Example", done),
+  "2026-11-21 : " + said("the person who recorded it", done),
+  "2026-11-22 Sam Example: Shown the display"]);
+assert.ok(oldCard.textContent.includes("Previous handover: " + said("Quinn Inspector", told)));
+const open = await render(caseWith(sixStates()));
+assert.ok(open.textContent.includes("Guarantee pack"), "an ordinary note is shown as written");
+""".replace("__HELD__", json.dumps(projection.NOTE_HELD))
+        )
 
     def test_names_ids_and_buttons_that_other_checks_rely_on_stay(self) -> None:
         run(r"""

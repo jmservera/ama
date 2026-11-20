@@ -1568,7 +1568,7 @@ console.log("PASS");
         self.assertEqual(summary["next"], "Ask Sam to record the next action.")
         self.assertIn("Funding has not been confirmed. Owner: Sam.", summary["blockers"])
 
-    def test_closed_case_summary_has_no_blocker_disclosure_and_opens_overview(self) -> None:
+    def test_closed_case_summary_has_no_blocker_disclosure_and_no_jump_buttons(self) -> None:
         script = (
             DOM
             + shipped_helpers()
@@ -1581,29 +1581,40 @@ const blocker = {step: "Final checks: funding", reason: "Funding has not been co
 """
             + (WEB / "case-workspace.js").read_text()
             + r"""
-function build(closed) {
+function build(closed, blockers = [blocker]) {
   const definitions = ["overview", "blockers", "funding", "ai"].map(id => ({
     id, label: id, panel: h("section", {}, h("h2", {}, id))
   }));
-  const work = {blockers: [blocker], source: closed ? "case:SYN/handoff" : undefined};
+  const work = {blockers, source: closed ? "case:SYN/handoff" : undefined};
   const ui = CaseWorkspace.enhance({id: "SYN", hazards: [], closed, work,
     stage: closed ? "Completed" : "Contacting resident", days_in_stage: 3},
     definitions, null, h("section", {}), h("div", {}));
   const root = h("div", {}, ui.top);
-  const jump = root.querySelectorAll("button")
+  const jumps = root.querySelector(".case-summary").querySelectorAll("button")
+    .map(node => node.textContent)
+    .filter(name => /^(Open next action|See all blockers)$/.test(name));
+  const next = root.querySelectorAll("button")
     .find(node => node.textContent === "Open next action");
-  jump.events.click();
-  return {root, visible: definitions.filter(tab => !tab.panel.hidden).map(tab => tab.id)};
+  if (next) next.events.click();
+  return {root, jumps, visible: definitions.filter(tab => !tab.panel.hidden).map(tab => tab.id)};
 }
-const closed = build(true), open = build(false);
+const closed = build(true), open = build(false), clear = build(false, []);
 const text = closed.root.querySelector(".case-summary").textContent;
 for (const sentence of ["Closed, all six steps done", "None. A manager can reopen this case.",
   "No recorded blockers. This case is closed."]) assert.ok(text.includes(sentence), sentence);
 assert.doesNotMatch(text, /Step unknown|Funding has not been confirmed/);
 assert.equal(closed.root.querySelectorAll("[popover]").length, 0);
-assert.deepEqual(closed.visible, ["overview"]);
+assert.deepEqual(closed.jumps, [], "a closed case has nothing to jump to");
+assert.deepEqual(closed.visible, ["funding"], "the tab in the address is kept");
+assert.equal(closed.root.querySelector(".case-summary").querySelectorAll("dt").length, 6);
 assert.equal(open.root.querySelectorAll("[popover]").length, 2, "an open case still discloses");
+assert.deepEqual(open.jumps, ["Open next action", "See all blockers"]);
 assert.deepEqual(open.visible, ["blockers"]);
+assert.deepEqual(clear.jumps, ["Open next action"], "no blockers, so nothing to list");
+assert.ok(clear.root.querySelector(".case-summary").textContent.includes("No recorded blockers."));
+for (const view of [closed, open, clear]) {
+  assert.ok(!view.root.querySelector(".case-summary").textContent.includes("0"), "no stray zero");
+}
 console.log("PASS");
 """
         )

@@ -19,12 +19,17 @@
 //     <label for="{id}">{label}</label>
 //     <p class="field-hint" id="{id}-hint">{hint}</p> only when hint is given; linked by aria-describedby
 //   </div>
+//
+// Fields.heldBack(text, owner, ask) is the one sentence for text the server held back from this viewer's role.
+// It returns `text` unchanged for any other text, so callers can pass every note through it.
 const Fields = (() => {
   const tokens = value => String(value || "").split(/\s+/).filter(Boolean);
   const describedWith = (control, id) => {
     const current = tokens(control.getAttribute("aria-describedby"));
     return (current.includes(id) ? current : [...current, id]).join(" ");
   };
+  // projection.NOTE_HELD and taskqueues.HELD carry this same text; test_handover_ux pins all three.
+  const SERVER_HELD = "Held for roles with a recorded need";
   // The id ties label, hint and error to the control. It comes from the caller or the control itself.
   function identify(id, label, control) {
     const own = id || control.getAttribute("id");
@@ -73,5 +78,11 @@ const Fields = (() => {
       hint ? h("p", { class: "field-hint", id: hintId }, hint) : null);
     return { block, control };
   }
-  return { fieldBlock, checkRow };
+  // A person without a recorded need to read a note sees a placeholder from the server. This says who to ask instead.
+  function heldBack(text, owner, ask) {
+    if (text !== SERVER_HELD) return text;
+    const who = owner || "the person who recorded it";
+    return `Held back for your role. Owner: ${who}. Next action: ask ${who} ${ask}.`;
+  }
+  return { fieldBlock, checkRow, heldBack };
 })();

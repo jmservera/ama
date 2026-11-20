@@ -1619,8 +1619,6 @@ window.addEventListener("beforeunload", (event) => {
 });
 
 // ---- Hand this case to a colleague: status, the viewer's actions, who could take the case, and its history.
-// projection.NOTE_HELD and taskqueues.HELD carry this same text; test_handover_ux pins all three.
-const SERVER_HELD = "Held for roles with a recorded need";
 const HANDOFF_OPEN_STATES = ["Offered", "Received", "Escalated"];
 const HANDOFF_NO_ONE = "No one named yet. Next action: ask the case lead to name one.";
 const OFFER_HINTS = {
@@ -1646,14 +1644,13 @@ function handoffWaiting(since, now = Date.now()) {
   if (hours < 1) return "waiting less than an hour";
   return hours < 48 ? `waiting ${hours} ${hours === 1 ? "hour" : "hours"}` : `waiting ${Math.round(hours / 24)} days`;
 }
-// The server swaps staff-written text for a placeholder when the viewer's role has no recorded need to read it.
-const handoffHeld = (text, owner, ask) => text === SERVER_HELD
-  ? `Held back for your role. Owner: ${owner}. Next action: ask ${owner} ${ask}.` : text;
+// The person an offer is made to reads it as written to them, not about a third person.
+const handoffToYou = (hd, viewer) => Boolean(viewer) && hd.to_code === viewer;
 
-function handoffStatus(hd) {
+function handoffStatus(hd, viewer) {
   const to = hd.to_name;
   return {
-    Offered: `Offered to ${to}, waiting for an answer`,
+    Offered: handoffToYou(hd, viewer) ? "Offered to you, waiting for your answer" : `Offered to ${to}, waiting for an answer`,
     Received: `${to} has seen the offer, not accepted yet`,
     Escalated: `Escalated to ${hd.escalation_owner || "a manager"}`,
     Accepted: `Accepted by ${to}. The handover is not complete yet.`,
@@ -1663,18 +1660,18 @@ function handoffStatus(hd) {
   }[hd.state] || hd.status || hd.state;
 }
 
-function handoffRows(hd, c) {
+function handoffRows(hd, c, viewer) {
   const from = hd.from_name, to = hd.to_name;
   const waiting = HANDOFF_OPEN_STATES.includes(hd.state);
-  const held = (text) => handoffHeld(text, from, "what they want you to do");
-  const detail = (text) => handoffHeld(text, from, "for this detail") || "Not recorded";
+  const held = (text) => Fields.heldBack(text, from, "what they want you to do");
+  const detail = (text) => Fields.heldBack(text, from, "for this detail") || "Not recorded";
   const offeredBy = `${hd.offered_by}, ${handoffStamp(hd.offered_at)}`;
   const due = hd.due_at ? `${handoffStamp(hd.due_at)}${waiting && Date.parse(hd.due_at) < Date.now() ? " (overdue)" : ""}` : "Not set";
   const update = `${hd.resident_update_owner ? `${hd.resident_update_owner}.` : HANDOFF_NO_ONE}${hd.resident_update_due_at ? ` Update due ${handoffStamp(hd.resident_update_due_at)}.` : ""} No message is sent automatically.`;
   const next = hd.state === "Escalated"
     ? `${hd.escalation_owner || "A manager"}: chase ${to}, or withdraw the offer and offer the case to someone else`
     : hd.state === "Accepted" ? `${to}: record that the handover is complete` : `${to}: accept or decline`;
-  const asked = ["What they are asked to do", hd.next_action ? held(hd.next_action) : `Not recorded. Owner: ${from}. Next action: add it in a note.`];
+  const asked = [handoffToYou(hd, viewer) ? "What you are asked to do" : "What they are asked to do", hd.next_action ? held(hd.next_action) : `Not recorded. Owner: ${from}. Next action: add it in a note.`];
   const request = [asked, ["How urgent", hd.urgency || "Not set"], ["Due", due], [`Note from ${from}`, held(hd.note) || "None"]];
   const chase = [["Chase owner", hd.chase_owner || HANDOFF_NO_ONE], ["Resident update owner", update]];
   if (waiting) return [["Case stays with", `${from} until the offer is accepted`], ["Who must act next", next],
@@ -1706,8 +1703,8 @@ function handoffHistory(c) {
   const events = c.handoff_history || c.handoff_log;
   if (!events || !events.length) return [];
   return [h("h3", {}, "History of this handover"), h("ul", { class: "tl" }, events.slice(-8).reverse().map((x) => {
-    const owner = x.actor?.name || x.from_name || "the person who recorded it";
-    const held = (value) => handoffHeld(value, owner, "for this detail");
+    const owner = x.actor?.name || x.from_name;
+    const held = (value) => Fields.heldBack(value, owner, "for this detail");
     // Offers and acceptances carry a source, a version and a reason typed by a person; the other answers carry a note.
     const typed = x.reason !== undefined || !x.event_type;
     const note = { handoff_declined: ["Reason for declining", x.answer_note], handoff_escalated: ["Reason for escalating", x.answer_note],
@@ -1893,7 +1890,7 @@ function handoffComplete({ attempt }) {
   return [h("h3", {}, "Complete the handover"),
     h("p", {}, "You accepted this case. Record the action that completes the handover."),
     handoffActionForm("Record the completed action", [{ field: done, valid: () => done.control.value.trim() !== "",
-      message: recordedMissing("Enter the completed action.", "type what you did to complete the handover", "Complete handoff") }], "Complete handoff",
+      message: recordedMissing("Enter the completed action.", "type what you did to complete the handover", "Complete the handover") }], "Complete the handover",
     () => attempt("complete-handoff", { note: done.control.value }, { text: "Handover recorded as complete." }, [done.control]), true)];
 }
 
@@ -1947,7 +1944,7 @@ function handoffPanel(c, id, refresh) {
     onclick: () => ctx.attempt("withdraw-handoff", {}, { text: `Offer withdrawn. The case stays with ${hd.from_name}.` }) },
   `Withdraw the offer to ${hd.to_name}`);
   const undo = Boolean(withdraw && shown?.undo);
-  const status = hd && h("p", { class: `status-line${open || accepted ? " wait" : hd.state === "Completed" ? " ok" : ""}`, tabindex: "-1" }, handoffStatus(hd));
+  const status = hd && h("p", { class: `status-line${open || accepted ? " wait" : hd.state === "Completed" ? " ok" : ""}`, tabindex: "-1" }, handoffStatus(hd, mine));
   const confirmation = shown && h("div", { class: "handoff-result" }, h("p", { class: "status-line ok" }, shown.text), undo && withdraw);
   if (confirmation && status) queueMicrotask(() => {
     if (!status.isConnected) return;
@@ -1955,7 +1952,7 @@ function handoffPanel(c, id, refresh) {
     handoffKeepInView(status, confirmation);
   });
   return h("section", { class: "card" }, h("h2", {}, "Hand this case to a colleague"),
-    hd ? [status, confirmation, h("dl", {}, handoffRows(hd, c).flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)]))]
+    hd ? [status, confirmation, h("dl", {}, handoffRows(hd, c, mine).flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)]))]
       : h("p", { class: "muted" }, c.closed ? `No offer is open. The case stays with ${c.owner}.`
         : `No one has been offered this case yet. It stays with ${c.owner} until another person accepts an offer.`),
     open && hd.to_code === mine && handoffAnswer(ctx),
