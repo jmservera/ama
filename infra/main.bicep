@@ -684,7 +684,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
     scopes: [monitoring.outputs.workspaceId]
     evaluationFrequency: 'PT1H'
     windowSize: 'P1D'
-    overrideQueryTimeRange: 'PT26H'
+    overrideQueryTimeRange: 'PT48H'
     criteria: {
       allOf: [
         {

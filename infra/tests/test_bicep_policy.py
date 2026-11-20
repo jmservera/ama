@@ -1324,7 +1324,7 @@ class BicepPolicyTests(unittest.TestCase):
 
         missing_props = by_kind["verify-missing"]["properties"]
         self.assertEqual(missing_props.get("windowSize"), "P1D")
-        self.assertEqual(missing_props.get("overrideQueryTimeRange"), "PT26H")
+        self.assertEqual(missing_props.get("overrideQueryTimeRange"), "PT48H")
         missing_crit = missing_props["criteria"]["allOf"][0]
         self.assertEqual(missing_crit.get("operator"), "LessThan")
         self.assertEqual(missing_crit.get("threshold"), 1)
