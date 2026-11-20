@@ -129,7 +129,7 @@ class DesignSystem(unittest.TestCase):
         self.assertTrue(any("#nav a{padding-inline:var(--sp-1)}" in block for block in narrow))
         self.assertIn("#nav a{min-height:2.5rem;", CSS)
         self.assertIn(
-            ".screen-evidence p>a:only-child{display:inline-block;min-height:1.5rem;", CSS
+            ".screen-evidence p>a:only-child:not(.btn){display:inline-block;min-height:1.5rem;", CSS
         )
 
 

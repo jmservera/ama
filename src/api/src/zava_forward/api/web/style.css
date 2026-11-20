@@ -270,7 +270,7 @@ h2{font-size:var(--fs-lg);line-height:var(--lineHeightBase500);margin:var(--sp-5
 .coordinator .heat-count{font-weight:600}
 .coordinator .heat-present{background:var(--soft);color:var(--ink);box-shadow:inset 3px 0 0 var(--brand)}
 .coordinator table a{display:inline-block;min-height:1.5rem;padding:var(--sp-1)}
-.screen-evidence p>a:only-child{display:inline-block;min-height:1.5rem;padding-block:var(--sp-1)}
+.screen-evidence p>a:only-child:not(.btn){display:inline-block;min-height:1.5rem;padding-block:var(--sp-1)}
 .coordinator-summary a{padding-block:var(--sp-1)}
 .coordinator dt{text-transform:none}
 input,select,textarea{font:inherit;padding:var(--sp-2) var(--sp-3);border:1px solid var(--field-line);border-radius:var(--radius);max-width:100%}
@@ -638,3 +638,8 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 .chat-widget-label{margin:0;font-size:var(--fs-sm)}
 .chat-widget-tools>.chat-widget-label{flex:0 0 100%}
 @media(max-height:400px){.chat-widget-tools>.chat-widget-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+main a:where(:not(.btn,.item,.linkbtn)){color:var(--brand-d)}
+main a:where(:not(.btn,.item,.linkbtn)):hover{color:var(--ink)}
+:where(table a,.plainlist a,details li>a,.coordinator a):where(:not(.leaflet-container a)){display:inline-block;min-height:1.5rem;padding-block:var(--sp-1)}
+th,td{font-variant-numeric:tabular-nums}
+main{padding-block-end:5rem}

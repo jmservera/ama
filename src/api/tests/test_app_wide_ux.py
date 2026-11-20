@@ -7,13 +7,21 @@ not browser, assistive-technology or participant evidence.
 
 from __future__ import annotations
 
+import functools
+import http.server
 import json
 import subprocess
+import threading
 import unittest
 from pathlib import Path
 from typing import Any
 
 from test_wcag_workbench_baseline_151 import extract_function, run_node_json
+
+try:
+    from playwright.sync_api import sync_playwright
+except ImportError:  # pragma: no cover
+    sync_playwright = None  # type: ignore[assignment]
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -792,6 +800,103 @@ return result;
         html = (WEB / "index.html").read_text()
         self.assertIn('<meta name="theme-color" content="#0b5d6b">', html)
         self.assertIn('<img class="zava-logo" src="/zava-logo.png" alt="">', html)
+
+
+LINKS_PAGE = """<!doctype html><html lang="en-GB"><head><meta charset="utf-8">
+<link rel="stylesheet" href="/style.css"></head><body><main id="app">
+<p><a id="plain" href="#x">Plain link</a></p>
+<p><a id="button" class="btn" href="#x">Button link</a></p>
+<table><tbody><tr><th scope="row"><a id="rowhead" href="#x">Row</a></th>
+<td id="figure">1,200</td></tr></tbody></table>
+<ul class="plainlist"><li><a id="maplist" href="#x">Map</a></li></ul>
+<details open><summary>Sources</summary>
+<ul><li><a id="source" href="#x">Source</a></li></ul></details>
+<section class="screen-evidence">
+<p><a id="download" class="btn alt" href="#x">Download</a></p></section>
+<nav class="screen-links"><a id="jump" href="#x">Jump to a section</a></nav>
+<div class="coordinator leaflet-container"><a id="attribution" href="#x">Leaflet</a></div>
+</main></body></html>"""
+LINK_MEASURES = """() => {
+  const probe = document.createElement('i');
+  probe.style.color = 'var(--brand-d)';
+  document.body.append(probe);
+  const brand = getComputedStyle(probe).color;
+  const summary = document.querySelector('details > summary');
+  const tall = id => document.getElementById(id).getBoundingClientRect().height;
+  const style = id => getComputedStyle(document.getElementById(id));
+  const buttonMin = (() => {
+    const b = document.createElement('button'); document.body.append(b);
+    return parseFloat(getComputedStyle(b).minHeight);
+  })();
+  return {brand, plain: style('plain').color, button: style('button').color,
+    compact: parseFloat(getComputedStyle(summary).minHeight), buttonMin,
+    rowhead: tall('rowhead'), maplist: tall('maplist'), source: tall('source'),
+    download: tall('download'), jump: tall('jump'), attribution: style('attribution').display,
+    figure: style('figure').fontVariantNumeric, mainBottom: style('app').paddingBottom};
+}"""
+
+
+class LinksTargetsAndNumbers(unittest.TestCase):
+    """The real style.css in Chromium: link colour, target size and tabular figures."""
+
+    def measures(self) -> dict[str, Any]:
+        class Handler(http.server.SimpleHTTPRequestHandler):
+            def do_GET(self) -> None:
+                if self.path != "/links.html":
+                    return super().do_GET()
+                body = LINKS_PAGE.encode()
+                self.send_response(200)
+                self.send_header("Content-Type", "text/html")
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
+
+            def log_message(self, *args: object) -> None:
+                return
+
+        server = http.server.ThreadingHTTPServer(
+            ("127.0.0.1", 0), functools.partial(Handler, directory=str(WEB))
+        )
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        try:
+            with sync_playwright() as playwright:
+                try:
+                    browser = playwright.chromium.launch()
+                except Exception as error:  # pragma: no cover
+                    self.skipTest(f"chromium unavailable: {error}")
+                page = browser.new_page(viewport={"width": 1280, "height": 800})
+                page.goto(f"http://127.0.0.1:{server.server_address[1]}/links.html")
+                measured: dict[str, Any] = page.evaluate(LINK_MEASURES)
+                browser.close()
+                return measured
+        finally:
+            server.shutdown()
+
+    @unittest.skipIf(sync_playwright is None, "playwright is not installed")
+    def test_links_use_the_brand_token_and_small_targets_reach_the_compact_minimum(self) -> None:
+        out = self.measures()
+        self.assertEqual(out["plain"], out["brand"])
+        self.assertNotEqual(out["button"], out["brand"], "a button link keeps its own colours")
+        for name in ("rowhead", "maplist", "source"):
+            self.assertGreaterEqual(out[name], out["compact"], name)
+        self.assertGreaterEqual(out["download"], out["buttonMin"], "a button link keeps its height")
+        self.assertGreaterEqual(out["jump"], out["buttonMin"], "the jump links keep their height")
+        self.assertEqual(out["attribution"], "inline", "map attribution is left alone")
+
+    @unittest.skipIf(sync_playwright is None, "playwright is not installed")
+    def test_figures_line_up_and_the_page_ends_clear_of_the_chat_launcher(self) -> None:
+        out = self.measures()
+        self.assertEqual(out["figure"], "tabular-nums")
+        self.assertEqual(out["mainBottom"], "80px")
+
+    def test_the_new_rules_use_tokens_and_the_old_shrinking_rule_is_scoped(self) -> None:
+        css = (WEB / "style.css").read_text()
+        block = css[css.rindex("/* ux-batch:app-wide */") :]
+        for raw in ("#", "rgb(", "rgba(", "transition"):
+            self.assertNotIn(raw, block)
+        self.assertIn("{color:var(--brand-d)}", block)
+        self.assertIn(".screen-evidence p>a:only-child:not(.btn){", css)
+        self.assertNotIn(".screen-evidence p>a:only-child{", css)
 
 
 if __name__ == "__main__":
