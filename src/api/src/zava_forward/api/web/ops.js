@@ -813,8 +813,8 @@ async function capacityView() {
     }
     return go(() => api("/api/packages", { name: name[1].value, period_from: from[1].value, period_to: to[1].value, scope: scope[1].value, contract_ref: ref[1].value, contract_version: contractVersion[1].value }));
   };
-  const create = h("section", { class: "card" }, h("h2", {}, "New package"), ...[name, from, to, scope, ref].flat(),
-    ...contractVersion, versionError,
+  const create = h("section", { class: "card" }, h("h2", {}, "New package"), ...[name, from, to, scope, ref].map((pair) => h("div", { class: "field" }, ...pair)),
+    h("div", { class: "field" }, ...contractVersion, versionError),
     h("p", {}, "A package is a draft, not an instruction. Creating it grants no contract authority."),
     h("p", {}, h("button", { onclick: createPackage }, "Create package")));
   const cards = pkgs.map((p) => {
@@ -847,20 +847,27 @@ async function capacityView() {
       h("p", {}, h("button", { onclick: () => go(() => api("/api/workorders", { package: p.id, case_id: cid[1].value, scope: wsc[1].value, resident_bindings: residentBindings(bindings[1].value) })) }, "Issue work order")));
   });
   const actions = orders.map((w) => {
-    const note = h("input", { type: "text", name: `order-note-${w.id}`, autocomplete: "off", maxlength: 300, "data-capacity-draft": "true", "aria-label": `Note or date for ${w.id}` });
-    const out = h("select", { name: `legacy-outcome-${w.id}`, "aria-label": `Appointment outcome for ${w.id}` }, WO_OUTCOMES.map((x) => h("option", {}, x)));
+    const note = h("input", { type: "text", name: `order-note-${w.id}`, autocomplete: "off", maxlength: 300, "data-capacity-draft": "true" });
+    const out = h("select", { name: `legacy-outcome-${w.id}` }, WO_OUTCOMES.map((x) => h("option", {}, x)));
     const call = (a, body, savedForm) => go(() => api(`/api/workorders/${w.id}/${a}`, body), savedForm);
     const open = w.state === "Issued" || w.state === "Appointed";
-    const bindings = h("input", { type: "text", maxlength: 1000, "aria-label": `Affected Measure|revision bindings for new version of ${w.id}` });
+    const bindings = h("input", { type: "text", name: `order-bindings-${w.id}`, autocomplete: "off", spellcheck: "false", maxlength: 1000 });
+    const noteField = Fields.fieldBlock({ id: `order-note-${w.id}`, label: `Note, date or reason for ${w.id}`, control: note,
+      hint: "The buttons use it like this: Record appointment takes the date when the outcome is Booked; Record completion takes a note; New version takes the new scope; Withdraw takes the reason." });
+    const outField = Fields.fieldBlock({ id: `order-outcome-${w.id}`, label: `Appointment outcome for ${w.id}`, control: out });
+    const bindingsField = Fields.fieldBlock({ id: `order-bindings-${w.id}`, label: `Affected measures and scope revisions for ${w.id}`, control: bindings,
+      hint: "Only for New version. Write Measure|revision pairs separated by semicolons, for example Loft insulation|2; Cavity wall insulation|1." });
     return h("li", {}, h("strong", {}, `${w.id}, version ${w.version}`), ` ${w.state}. ${w.contractor}. ${w.address}. Issued by ${w.issued_by}.`,
       h("div", { class: "muted" }, w.scope),
       appointmentControls(w, (body, form) => call("appointment-control", body, form)),
-      w.state !== "Withdrawn" && h("div", { class: "row" }, note, bindings,
-        open && [out, h("button", { class: "alt", onclick: () => call("appointment", { outcome: out.value, date: note.value }) }, "Record appointment (date for Booked)"),
-          h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/reissue`, { scope: note.value, reason: "Changed", resident_bindings: residentBindings(bindings.value) })) }, "New version"),
-          h("button", { class: "alt", onclick: () => call("complete", { note: note.value }) }, "Record completion"),
-          h("button", { class: "alt", onclick: () => call("withdraw", { reason: note.value }) }, "Withdraw (add the reason)")],
-        w.state === "Completed" && h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/correct`, { reason: note.value, resident_bindings: residentBindings(bindings.value) })) }, "Record a correction (add the reason)")));
+      w.state !== "Withdrawn" && h("div", { class: "work-order-actions" },
+        h("div", { class: "field-row" }, noteField.block, bindingsField.block, open && outField.block),
+        h("div", { class: "row" },
+          open && [h("button", { onclick: () => call("appointment", { outcome: out.value, date: note.value }) }, "Record appointment (date for Booked)"),
+            h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/reissue`, { scope: note.value, reason: "Changed", resident_bindings: residentBindings(bindings.value) })) }, "New version"),
+            h("button", { class: "alt", onclick: () => call("complete", { note: note.value }) }, "Record completion"),
+            h("button", { class: "alt", onclick: () => call("withdraw", { reason: note.value }) }, "Withdraw (add the reason)")],
+          w.state === "Completed" && h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/correct`, { reason: note.value, resident_bindings: residentBindings(bindings.value) })) }, "Record a correction (add the reason)"))));
   });
   const drafts = appointmentDrafts();
   const exportLink = (path, file, label, what) => h("p", {}, h("a", { class: "btn alt", href: path, download: file }, label),

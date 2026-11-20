@@ -14,7 +14,8 @@ const intakeOwned = (message, owner, next, status) => {
 };
 
 function intakeField(id, label, control, hint) {
-  return h("div", { class: "field" }, h("label", { for: id }, label), control, hint && h("p", { id: `${id}-hint`, class: "hint" }, hint));
+  if (hint) control.setAttribute("aria-describedby", `${id}-hint`);
+  return h("div", { class: "field" }, h("label", { for: id }, label), hint && h("p", { id: `${id}-hint`, class: "field-hint" }, hint), control);
 }
 
 const intakeNotices = new Map();
