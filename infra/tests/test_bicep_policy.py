@@ -254,7 +254,7 @@ def render_ledger_verify_job(main: dict, **overrides) -> dict:
     values.update(
         storageAccountName="stfixture",
         orchestratorImage="registry.example/orchestrator:fixture",
-        identityClientIds=Attr(api="api-client-id"),
+        identityClientIds=Attr(api="api-client-id", internal="internal-client-id"),
         identityIds=Attr(api="/subscriptions/sub/resourceGroups/ama/providers/id/api"),
         **overrides,
     )
@@ -1242,7 +1242,7 @@ class BicepPolicyTests(unittest.TestCase):
             env[core_digest.ACCOUNT_URL_VAR], "https://stfixture.blob.core.windows.net"
         )
         self.assertEqual(env[core_digest.CONTAINER_VAR], core_digest.DEFAULT_CONTAINER)
-        self.assertEqual(env[core_digest.CLIENT_ID_VAR], "api-client-id")
+        self.assertEqual(env[core_digest.CLIENT_ID_VAR], "internal-client-id")
         self.assertEqual(env[core_digest.DIGEST_DIR_VAR], "/tmp/digests")
         self.assertEqual(env[core_digest.REQUIRE_LOCK_VAR], "true")
         self.assertEqual(env[core_digest.MIN_RETENTION_DAYS_VAR], "365")
@@ -1642,6 +1642,7 @@ class BicepPolicyTests(unittest.TestCase):
                     agents="existing-agents",
                     orchestrator="existing-orchestrator",
                     import_="existing-import",
+                    internal="existing-internal",
                 ),
                 "tokenMaintenanceIdentityId": "existing-token-maintenance",
             }
@@ -1659,8 +1660,8 @@ class BicepPolicyTests(unittest.TestCase):
                 role = item["properties"]["template"]["containers"][0]["name"]
                 expected_role = {
                     "auth-renewal": "token-maintenance",
-                    "ledger-verify": "api",
-                    "ranking-publish": "api",
+                    "ledger-verify": "internal",
+                    "ranking-publish": "internal",
                 }.get(role, role)
                 self.assertEqual(keys, ["existing-" + expected_role])
 

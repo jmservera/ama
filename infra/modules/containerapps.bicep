@@ -475,7 +475,7 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
   tags: union(tags, { workload: 'ledger-verify' })
   identity: {
     type: 'UserAssigned'
-    userAssignedIdentities: { '${identityIds.api}': {} }
+    userAssignedIdentities: { '${identityIds.internal}': {} }
   }
   properties: {
     environmentId: environmentResource.id
@@ -489,7 +489,7 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
         parallelism: 1
         replicaCompletionCount: 1
       }
-      registries: [{ server: registryServer, identity: identityIds.api }]
+      registries: [{ server: registryServer, identity: identityIds.internal }]
     }
     template: {
       containers: [
@@ -499,15 +499,15 @@ resource ledgerVerify 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads && d
           command: ['python', '-m', 'zava_forward.orchestrator.digest_blob', '--publish']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
-            { name: 'AZURE_CLIENT_ID', value: identityClientIds.api }
+            { name: 'AZURE_CLIENT_ID', value: identityClientIds.internal }
             { name: 'ZF_STORE', value: 'mssql' }
             { name: 'ZF_SQL_SERVER', value: sqlServerFqdn }
             { name: 'ZF_SQL_DATABASE', value: sqlDatabaseName }
             { name: 'ZF_SQL_AUTH', value: 'msi' }
-            { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.internal }
             { name: 'ZF_DIGEST_ACCOUNT_URL', value: blobEndpoint }
             { name: 'ZF_DIGEST_CONTAINER', value: ledgerDigestContainer }
-            { name: 'ZF_DIGEST_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_DIGEST_CLIENT_ID', value: identityClientIds.internal }
             { name: 'ZF_DIGEST_DIR', value: '/tmp/digests' }
             { name: 'ZF_DIGEST_REQUIRE_RETENTION_LOCK', value: ledgerDigestRequireRetentionLock ? 'true' : 'false' }
             { name: 'ZF_DIGEST_MIN_RETENTION_DAYS', value: string(ledgerDigestMinRetentionDays) }
@@ -526,7 +526,7 @@ resource rankingPublish 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads &&
   tags: union(tags, { workload: 'ranking-publish' })
   identity: {
     type: 'UserAssigned'
-    userAssignedIdentities: { '${identityIds.api}': {} }
+    userAssignedIdentities: { '${identityIds.internal}': {} }
   }
   properties: {
     environmentId: environmentResource.id
@@ -540,7 +540,7 @@ resource rankingPublish 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads &&
         parallelism: 1
         replicaCompletionCount: 1
       }
-      registries: [{ server: registryServer, identity: identityIds.api }]
+      registries: [{ server: registryServer, identity: identityIds.internal }]
     }
     template: {
       containers: [
@@ -550,14 +550,14 @@ resource rankingPublish 'Microsoft.App/jobs@2025-07-01' = if (deployWorkloads &&
           command: ['python', '-m', 'zava_forward.orchestrator.ranking_publish']
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
-            { name: 'AZURE_CLIENT_ID', value: identityClientIds.api }
+            { name: 'AZURE_CLIENT_ID', value: identityClientIds.internal }
             { name: 'ZF_STORE', value: 'mssql' }
             { name: 'ZF_SQL_SERVER', value: sqlServerFqdn }
             { name: 'ZF_SQL_DATABASE', value: sqlDatabaseName }
             { name: 'ZF_SQL_AUTH', value: 'msi' }
-            { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_SQL_CLIENT_ID', value: identityClientIds.internal }
             { name: 'ZF_BLOB_ACCOUNT_URL', value: blobEndpoint }
-            { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.api }
+            { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.internal }
             { name: 'ZF_RANKING_ARCHIVE', value: 'azure-blob' }
             { name: 'ZF_RANKING_BLOB_CONTAINER', value: rankingArchiveContainer }
           ])
@@ -638,4 +638,6 @@ output environmentName string = environmentResource.name
 output apiFqdn string = deployWorkloads ? api!.properties.configuration.ingress.fqdn : ''
 output apiName string = deployWorkloads ? api!.name : ''
 output apiId string = deployWorkloads ? api!.id : ''
+@description('Apps with public ingress. Only the API (web app and employee API) is public; agents, orchestrator, jobs and the import job declare no ingress.')
+output publicIngressApps array = deployWorkloads ? [api!.name] : []
 output ledgerVerifyJobName string = deployWorkloads && deployBackgroundWorkloads ? ledgerVerify!.name : ''

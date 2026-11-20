@@ -2,7 +2,7 @@
 title: ADR 0008 Single external Container Apps environment for the synthetic demo
 description: Proposed demo-only design that hosts public and non-public apps in one external Container Apps environment, with the Entra option, the managed-identity split and the untouched production profile
 author: AMA programme
-ms.date: 2026-11-19
+ms.date: 2026-11-20
 ms.topic: reference
 ---
 
@@ -61,6 +61,18 @@ re-pointing of the helper templates.
 * Production profile: unchanged. The internal environment with Front Door
   Premium and Private Link (ADR 0002 decision 6) remains deployable and covered
   by its existing infra tests.
+
+## Implementation 2026-11-20 (owner option A, Refs #2061)
+
+The Bicep profile is built: `demoSingleEnvironment` in `infra/main.bicep` (guarded,
+default off) and a conditional `id-<prefix>-internal` identity for the ledger-verify
+and rank-publish jobs. The public API keeps its identity because it legitimately
+needs SQL, storage, queue, Key Vault and registry access; the split only moves the
+internal jobs off it. Delete list and rollback are in the
+[runbook](../../infra/demo-single-environment-runbook.md); evidence and unproven
+criteria are in the
+[research note](../reference/research/issue-2061-demo-single-environment-profile-2026-11-20.md).
+Nothing is deployed and the owner approvals above remain open.
 
 ## Rollback outline
 

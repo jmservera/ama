@@ -90,6 +90,8 @@ param importImage string = 'mcr.microsoft.com/k8se/quickstart:latest'
 param enablePublicEdge bool = false
 @description('Development-only direct HTTPS demo in a separately named environment and subnet. Requires private backing services and browser Entra authentication when applications deploy; incompatible with Front Door.')
 param demoDirectIngress bool = false
+@description('Demo-only (owner decision 2026-11-20, option A, Refs #2061): host every demo app and job in the single external environment created by demoDirectIngress, with public ingress only on the API, and give the internal scheduled jobs their own managed identity. Requires demoDirectIngress and the development profile. Production is unchanged.')
+param demoSingleEnvironment bool = false
 @description('Optional edge custom domain (managed TLS certificate). Empty uses the default azurefd.net host.')
 param edgeCustomDomain string = ''
 @allowed(['Detection', 'Prevention'])
@@ -261,6 +263,7 @@ module guard 'modules/guard.bicep' = {
     publicSimulationRequiresBrowserAuthentication: !enablePublicSimulationLane || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
     publicSimulationRequiresApplications: !enablePublicSimulationLane || deployApplications ? 'ok' : ''
     publicSimulationRequiresRealApiImage: !enablePublicSimulationLane || !contains(apiImage, 'k8se/quickstart') ? 'ok' : ''
+    singleEnvironmentRequiresDirectDemo: !demoSingleEnvironment || (demoDirectIngress && isDev && !enablePublicEdge && !allowPublicNetworkAccess) ? 'ok' : ''
     publicSimulationRequiresSingleReplica: !enablePublicSimulationLane || apiMinReplicas <= 1 ? 'ok' : ''
     pilotRankingArchiveRequiresConfiguredRetention: environmentName != 'pilot' || !enableRankingArchiveBlob || rankingArchiveImmutabilityDays > 0 ? 'ok' : ''
     serverlessAutoPauseDelayMustBeSupported: sqlTier != 'serverless' || sqlAutoPauseDelayMinutes == -1 || (sqlAutoPauseDelayMinutes >= 15 && sqlAutoPauseDelayMinutes <= 10080) ? 'ok' : ''
@@ -270,7 +273,7 @@ module guard 'modules/guard.bicep' = {
 module identity 'modules/identity.bicep' = {
   name: 'identity'
   dependsOn: [guard]
-  params: { prefix: prefix, location: location, tags: allTags }
+  params: { prefix: prefix, location: location, tags: allTags, separateInternalIdentity: demoSingleEnvironment }
 }
 
 module network 'modules/network.bicep' = {
@@ -329,14 +332,16 @@ module storage 'modules/storage.bicep' = {
     ledgerDigestImmutableStorage: ledgerDigestImmutableStorage
     enableRankingArchive: enableRankingArchiveBlob
     rankingArchiveImmutabilityDays: rankingArchiveImmutabilityDays
-    roleAssignments: [
+    roleAssignments: concat([
       { principalId: identity.outputs.principalIds.api, roleDefinitionId: storageBlobDataContributor, scope: 'blob' }
       { principalId: identity.outputs.principalIds.api, roleDefinitionId: storageQueueDataSender, scope: 'queue' }
       { principalId: identity.outputs.principalIds.import, roleDefinitionId: storageBlobDataContributor, scope: 'blob' }
       { principalId: identity.outputs.principalIds.import, roleDefinitionId: storageQueueDataContributor, scope: 'queue' }
       { principalId: identity.outputs.principalIds.orchestrator, roleDefinitionId: storageQueueDataSender, scope: 'queue' }
       { principalId: identity.outputs.principalIds.agents, roleDefinitionId: storageQueueDataContributor, scope: 'queue' }
-    ]
+    ], demoSingleEnvironment ? [
+      { principalId: identity.outputs.principalIds.internal, roleDefinitionId: storageBlobDataContributor, scope: 'blob' }
+    ] : [])
   }
 }
 
@@ -353,12 +358,12 @@ module registry 'modules/registry.bicep' = {
     peSubnetId: network.outputs.peSubnetId
     zoneId: network.outputs.zoneIds.acr
     zoneRedundant: zoneRedundant
-    pullPrincipalIds: [
+    pullPrincipalIds: concat([
       identity.outputs.principalIds.api
       identity.outputs.principalIds.agents
       identity.outputs.principalIds.orchestrator
       identity.outputs.principalIds.import
-    ]
+    ], demoSingleEnvironment ? [identity.outputs.principalIds.internal] : [])
   }
 }
 

@@ -150,7 +150,8 @@ class RoleMatrixTests(unittest.TestCase):
 
     def test_identities_match_bicep_and_sql_grants(self) -> None:
         workloads = re.search(r"var workloads = \[(.*?)\]", BICEP["modules/identity.bicep"]).group(1)
-        names = set(re.findall(r"'(\w+)'", workloads))
+        names = set(re.findall(r"'(\w+)'", workloads)) | {"internal"}
+        self.assertIn("resource internalIdentity", BICEP["modules/identity.bicep"])
         self.assertEqual({g["identity"] for g in MATRIX["sqlGrants"]}, names)
         sql = (ROOT / "scripts" / "create-sql-users.py").read_text(encoding="utf-8")
         for grant in MATRIX["sqlGrants"]:

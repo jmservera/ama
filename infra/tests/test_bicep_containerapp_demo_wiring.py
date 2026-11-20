@@ -34,16 +34,16 @@ WORKLOAD_IDENTITY = {
     "api": "identityIds.api",
     "agents": "identityIds.agents",
     "orchestrator": "identityIds.orchestrator",
-    "ledgerVerify": "identityIds.api",
-    "rankingPublish": "identityIds.api",
+    "ledgerVerify": "identityIds.internal",
+    "rankingPublish": "identityIds.internal",
     "importJob": "identityIds.import",
 }
 WORKLOAD_CLIENT_ID = {
     "api": "identityClientIds.api",
     "agents": "identityClientIds.agents",
     "orchestrator": "identityClientIds.orchestrator",
-    "ledgerVerify": "identityClientIds.api",
-    "rankingPublish": "identityClientIds.api",
+    "ledgerVerify": "identityClientIds.internal",
+    "rankingPublish": "identityClientIds.internal",
     "importJob": "identityClientIds.import",
 }
 
@@ -295,6 +295,32 @@ class OrchestratorAndIotWiring(unittest.TestCase):
                         SECRET_NAME.search(env_name) and env_name != "ZF_SIM_KEY_FILE",
                         env_name,
                     )
+
+
+class SingleEnvironmentDemoProfile(unittest.TestCase):
+    """Option A for issue 2061: one external environment, public ingress on the API only."""
+
+    def test_only_the_api_declares_ingress(self) -> None:
+        for name, text in blocks(APPS).items():
+            has_ingress = "ingress: {" in text
+            self.assertEqual(has_ingress, name == "api", name)
+        api = blocks(APPS)["api"]
+        self.assertIn("external: true", api)
+        self.assertIn("output publicIngressApps array", APPS)
+
+    def test_internal_identity_is_demo_only_and_falls_back_to_the_api_identity(self) -> None:
+        identity = (INFRA / "modules" / "identity.bicep").read_text()
+        self.assertIn("= if (separateInternalIdentity)", identity)
+        self.assertIn("internal: separateInternalIdentity ? internalIdentity!.id : identities[0].id", identity)
+        self.assertIn("separateInternalIdentity: demoSingleEnvironment", MAIN)
+        self.assertEqual(MAIN.count("demoSingleEnvironment ? ["), 2)
+
+    def test_guard_requires_the_direct_demo_without_front_door(self) -> None:
+        self.assertIn(
+            "singleEnvironmentRequiresDirectDemo: !demoSingleEnvironment || (demoDirectIngress && isDev "
+            "&& !enablePublicEdge && !allowPublicNetworkAccess)",
+            MAIN,
+        )
 
 
 if __name__ == "__main__":

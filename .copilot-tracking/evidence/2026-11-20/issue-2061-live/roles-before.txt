@@ -1,0 +1,28 @@
+== id-cutover-test-api
+Storage Blob Data Contributor	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg
+Key Vault Secrets User	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg
+Storage Queue Data Message Sender	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg
+AcrPull	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+Cognitive Services OpenAI User	Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg
+== id-cutover-test-agents
+Storage Queue Data Contributor	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg
+AcrPull	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+Foundry User	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg
+Cognitive Services OpenAI User	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.CognitiveServices/accounts/aif-cutover-test-rzsrg
+== id-cutover-test-orchestrator
+Storage Queue Data Message Sender	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg
+AcrPull	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+== id-cutover-test-import
+Storage Blob Data Contributor	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg
+Storage Queue Data Contributor	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.Storage/storageAccounts/stcutovertestrzsrg
+AcrPull	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+== id-cutover-test-init
+AcrPull	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+Staff initializer API restart (ama)	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.App/containerApps/ca-cutover-test-demo-api
+Staff initializer result tags (ama)	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.App/jobs/job-cutover-test-init
+AcrPush	Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+== id-resident-demo
+AcrPull	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.ContainerRegistry/registries/crcutovertestrzsrg
+Key Vault Secrets User	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/resident-demo-password-verifier
+Key Vault Secrets User	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.KeyVault/vaults/kv-cutovertest-rzsrg/secrets/resident-demo-session-key
+Cognitive Services OpenAI User	/subscriptions/<sub>/resourcegroups/ama/providers/Microsoft.CognitiveServices/accounts/aoai-resident-469

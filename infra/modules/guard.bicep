@@ -120,6 +120,10 @@ param publicSimulationRequiresRealApiImage string
 @description('Must not be empty. Empty means enablePublicSimulationLane=true with apiMinReplicas above 1; the volatile replica-local lane allows at most one replica.')
 param publicSimulationRequiresSingleReplica string
 
+@minLength(1)
+@description('Must not be empty. Empty means demoSingleEnvironment=true without demoDirectIngress and the development profile, or with Front Door or public backing-service access enabled; the single external environment is a demo-only profile.')
+param singleEnvironmentRequiresDirectDemo string
+
 output checked array = [
   resourceGroupMustBeAma
   primaryLocationMustBeUKSouth
@@ -153,6 +157,7 @@ output checked array = [
   publicSimulationRequiresApplications
   publicSimulationRequiresRealApiImage
   publicSimulationRequiresSingleReplica
+  singleEnvironmentRequiresDirectDemo
 ]
 
 @minLength(1)
