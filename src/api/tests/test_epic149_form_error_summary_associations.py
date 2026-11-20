@@ -23,12 +23,6 @@ SITES = (
     ),
     (
         "ops.js",
-        'note.setAttribute("aria-invalid", "true")',
-        'note.setAttribute("aria-describedby", message.id)',
-        "id: `quality-feedback-${i}`",
-    ),
-    (
-        "ops.js",
         'contractVersion[1].setAttribute("aria-invalid", "true")',
         'setAttribute("aria-describedby", "capacity-version-error")',
         'id: "capacity-version-error"',
@@ -93,7 +87,7 @@ FOCUSABLE_MESSAGE = {
 RECOVERY_COPY = (
     ("assistants.js", "Enter a reason to edit or reject this proposal."),
     ("assistants.js", "Enter valid JSON for the edited evidence proposal."),
-    ("ops.js", "Enter the remediation evidence before recording the fix."),
+    ("ops.js", "Record what was corrected and the photo, document or inspection reference."),
     ("ops.js", "Enter the contract or call-off version before creating the package."),
     ("app.js", "Enter a reason to edit or reject this draft."),
     ("app.js", "Enter the audit reason before recording a recovery decision."),
@@ -120,14 +114,14 @@ def window(text: str, needle: str, before: int = 8, after: int = 8) -> str:
 
 class FormErrorAssociations(unittest.TestCase):
     def test_counted_baseline_is_unchanged_and_fully_mapped(self) -> None:
-        # The baseline test pins ten setAttribute sites; this table must map exactly those.
-        self.assertIn("self.assertEqual(sites, 10,", BASELINE_TEST.read_text())
+        # The baseline test pins nine setAttribute sites; this table must map exactly those.
+        self.assertIn("self.assertEqual(sites, 9,", BASELINE_TEST.read_text())
         found = sum(
             line.count('setAttribute("aria-invalid", "true")')
             for path in sorted(WEB.glob("*.js"))
             for line in path.read_text().splitlines()
         )
-        self.assertEqual(found, 10)
+        self.assertEqual(found, 9)
         self.assertEqual(len(SITES), found)
         for name, invalid, _, _ in SITES:
             self.assertIn(invalid, source(name), name)

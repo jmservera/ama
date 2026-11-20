@@ -275,6 +275,8 @@ class CopyAudit(unittest.TestCase):
         "These are synthetic exercise rules.",
         "A challenge never means consent, refusal or a sanction.",
         "The existing limits apply:",
+        "If you leave it empty we record: Reinspection failed.",
+        "Without it the work cannot be accepted.",
     )
 
     def literals(self, name):

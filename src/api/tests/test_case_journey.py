@@ -1001,6 +1001,7 @@ const refresh = async fn => {
   try {await fn(); return true;} catch (error) {errors.push(error); return false;}
 };
 """
+            + (WEB / "fields.js").read_text()
             + (WEB / "ops.js").read_text()
             + (WEB / "panels.js").read_text()
             + r"""
@@ -1010,19 +1011,19 @@ const refresh = async fn => {
     submitted_by: "Synthetic installer", items: [], aftercare: [], checklist_version: "v1"
   }]};
   const panel = qualityPanel(c, "SYN", refresh); app.append(panel);
-  const note = panel.querySelectorAll("input")
-    .find(field => field.name === "quality-note-0");
+  const field = name => panel.querySelectorAll("input").find(input => input.name === name);
+  const note = field("quality-note-0"), fixer = field("quality-fixer-0");
   const button = panel.querySelector("button");
-  button.focus();
-  await button.events.click();
+  const submit = () => button.closest("form").events.submit({preventDefault() {}});
+  fixer.value = "Synthetic installer";
+  await submit();
   assert.equal(document.activeElement, note);
   assert.equal(note.attrs["aria-invalid"], "true");
-  assert.equal(note.attrs["aria-describedby"], "quality-feedback-0");
+  assert.ok(note.attrs["aria-describedby"].split(" ").includes("quality-fix-note-0-error"));
   assert.equal(requests, 0);
   note.value = "Submitted remediation evidence"; note.events.input();
   assert.equal(note.attrs["aria-invalid"], undefined);
-  button.focus();
-  const pending = button.events.click();
+  const pending = submit();
   assert.equal(button.disabled, true);
   note.value = "";  // A later edit must not redirect a server refusal to this field.
   refuse(Object.assign(new Error("Synthetic server refusal"), {status: 409}));
