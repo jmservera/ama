@@ -14145,3 +14145,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1204 real tick window check (Refs #1204)
 
 * Added [issue-1204-real-tick-window-2026-11-19.md](research/issue-1204-real-tick-window-2026-11-19.md): checker run on the real 216-tick log, 0 violations; closure, approval and global-stop rules stay unproven.
+## [2026-11-19] add | Issue 1830 criterion 1 measurement (Refs #1830)
+
+* Added [issue-1830-live-20261119T1346Z-2026-11-19.md](research/issue-1830-live-20261119T1346Z-2026-11-19.md): timing from eight retained passed full receipts and queue wait from four gate logs (0.001 to 0.002 s). `tools/rpi-gate-timing.py report --log` now refuses a missing or empty log (exit 2) instead of a traceback. No gate file, `src/`, live Azure or full gate involved; no criterion ticked.
