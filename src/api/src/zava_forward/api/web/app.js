@@ -1250,9 +1250,11 @@ async function caseView(id) {
       top.push(h("p", { class: "err", role: "alert" }, `Tab navigation unavailable: ${error.message}. Case sections are listed below; ordinary work continues.`));
     }
   } else top.push(h("p", { role: "status" }, "Tab navigation unavailable. Case sections are listed below; ordinary work continues."));
-  show(h("a", { class: "back", href: queueHref() }, "Back to the list"),
-    h("a", { class: "back", href: `#/case-home/${encodeURIComponent(c.id)}` }, "Versioned home case: links, shared building items and retained versions"),
-    c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) : h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
+  show(h("ul", { class: "case-links" },
+    h("li", {}, h("a", { href: queueHref() }, "Back to the list")),
+    h("li", {}, h("a", { href: `#/case-home/${encodeURIComponent(c.id)}` }, "Versioned home case")),
+    c.building_id ? h("li", {}, h("a", { href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`)) : null),
+    c.building_id ? null : h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
     h("div", { class: "row between" }, h("h1", {}, r.name,
       openHaz.length && h("span", { class: "flag danger" }, "Safety issue open")),
     h("span", { class: "muted" }, `Reference ${c.id}`)), top, workspace);

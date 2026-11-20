@@ -1492,6 +1492,16 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                         page.locator(".step.done").count() == 6
                         and page.locator(".step[aria-current]").count() == 0,
                     )
+                    closed_summary = page.locator(".case-summary").inner_text()
+                    check(
+                        "closed summary agrees with the six done steps: "
+                        + closed_summary.replace("\n", " | "),
+                        "Closed, all six steps done" in closed_summary
+                        and "None. A manager can reopen this case." in closed_summary
+                        and "No recorded blockers. This case is closed." in closed_summary
+                        and "Step unknown" not in closed_summary
+                        and page.locator(".case-blocker").count() == 0,
+                    )
                 if state == "empty":
                     check(
                         "empty blocker wording: " + page.locator(".case-summary").inner_text(),
