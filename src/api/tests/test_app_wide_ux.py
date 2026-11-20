@@ -59,6 +59,7 @@ class Element {
   all() {
     return this.children.filter(kid => kid.nodeType === 1).flatMap(kid => [kid, ...kid.all()]);
   }
+  querySelector(tag) {return this.all().find(el => el.tagName === tag.toUpperCase()) || null;}
   addEventListener(type, fn) {(this.listeners[type] ||= []).push(fn);}
   async fire(type) {
     const event = {type, currentTarget: this, target: this, preventDefault() {}};
@@ -66,6 +67,7 @@ class Element {
   }
   focus() {document.activeElement = this;}
   contains(other) {return other === this || this.all().includes(other);}
+  closest() {return null;}
 }
 const document = {
   activeElement: null, title: "",
@@ -94,21 +96,29 @@ ENABLED_STATUS = """{enabled: true, flag_on: true, dpia_recorded: true, consulta
 
 
 def shipped(name: str) -> str:
-    """The top-level function `name` from app.js, cut by matching braces."""
+    """The top-level function or arrow function `name` from app.js, cut by matching braces."""
     source = (WEB / "app.js").read_text()
-    for prefix in (f"async function {name}(", f"function {name}("):
+    for prefix in (f"async function {name}(", f"function {name}(", f"const {name} = "):
         start = source.find(prefix)
         if start >= 0:
             break
     else:
-        raise AssertionError(f"app.js no longer defines {name}()")
+        raise AssertionError(f"app.js no longer defines {name}")
     depth, index = 0, source.index("{", start)
     for end in range(index, len(source)):
         depth += source[end] == "{"
         depth -= source[end] == "}"
         if depth == 0:
-            return source[start : end + 1] + "\n"
-    raise AssertionError(f"unbalanced braces in {name}()")
+            return source[start : end + 1] + (";\n" if prefix.startswith("const") else "\n")
+    raise AssertionError(f"unbalanced braces in {name}")
+
+
+def shipped_line(name: str) -> str:
+    """The one-line top-level declaration `const name = ...;` from app.js."""
+    for line in (WEB / "app.js").read_text().splitlines():
+        if line.startswith(f"const {name} = "):
+            return line + "\n"
+    raise AssertionError(f"app.js no longer declares {name}")
 
 
 def run(body: str, *sources: str) -> Any:
@@ -581,6 +591,207 @@ console.log(JSON.stringify({
             out["hint"], "Applies to individual homes. Zoom in until homes are shown one by one."
         )
         self.assertEqual((out["type"], out["described"]), ("checkbox", "map-sensor-alerts-hint"))
+
+
+SHELL_STUBS = """
+const app = new Element("main");
+let me = null;
+let renderedContext = null;
+const location = {hash: "#/"};
+"""
+
+
+def title_stubs() -> str:
+    return H + shipped_line("SITE_TITLE") + shipped("pageTitle") + shipped("show") + SHELL_STUBS
+
+
+LOGIN_JS = """
+let disposeMapPanel = null;
+const workspaceReady = () => {};
+const aiMode = {workflow: true};
+let caseSession = null;
+const fundingAi = {};
+const workspaceStatus = new Element("p");
+const clearPhoto = () => {};
+let microsoftSignIn = false;
+const api = async () => ({});
+const start = async () => {};
+const elements = {};
+document.getElementById = id => (elements[id] ||= new Element("div"));
+"""
+
+
+def login_stubs() -> str:
+    return title_stubs() + shipped_line("SIGN_IN_TITLE") + shipped("login") + LOGIN_JS
+
+
+API_JS = """
+let me = null;
+let signedInBefore = false;
+const routeController = new AbortController();
+const pendingMutations = new Set();
+const mutationKey = () => "key";
+const GENERIC_READ_ERROR = "read", GENERIC_CHANGE_ERROR = "change";
+const messages = [];
+const login = message => messages.push(message);
+const fetchReadRetrying = async () => ({status: 401, ok: false, json: async () => ({})});
+const attempt = async () => {
+  try { await api("/api/cases"); } catch (error) { return [error.status, error.message]; }
+};
+"""
+
+
+def api_stubs() -> str:
+    return H + shipped("api") + API_JS
+
+
+LIST_JS = """
+me = {user: {role: "Resident Liaison Officer", code: "RLO"}, staff: [],
+  work_queues: {version: "work-queues-1", default: {view: "mine", sort: "urgent"},
+    definitions: [], status: "Status.", clock: "Clock."}};
+let coordinatorOrigin = null, queueOrigin = "mine", briefingBox = null, resetFocus = false;
+let searchTimer = 0;
+const routeController = new AbortController();
+const listState = {q: "", sort: "urgent", stage: "", area: "", wave: "", owner: "",
+  queue: "", flag: ""};
+const facets = {sorts: {urgent: "Most urgent first"}, stages: [], areas: [], waves: []};
+const api = async path => path === "/api/facets"
+  ? facets : {items: [], total: 0, next_cursor: null, policy_version: "p"};
+const section = title => h("section", {}, h("h2", {}, title));
+const aiBox = () => section("Today's briefing");
+const pendingHandoffs = () => section("Handoffs waiting for you");
+const priorityPanel = () => section("Priority suggestions");
+const FLAGS = [];
+const AsyncAction = {handler: fn => fn};
+const workspaceStatus = new Element("p");
+const queueEmptyExplanation = () => ({text: "No cases."});
+const qs = () => "";
+const shown = [];
+const show = (...nodes) => shown.push(...nodes.flat());
+"""
+
+
+def list_stubs() -> str:
+    return H + shipped("listView") + SHELL_STUBS + LIST_JS
+
+
+class PageIdentity(unittest.TestCase):
+    def test_the_tab_title_follows_the_page_heading(self) -> None:
+        out = run(
+            """
+const titles = [];
+for (const heading of ["My cases today", "Overview", "Capacity and work orders"]) {
+  show(h("h1", {}, heading), h("p", {}, "Body."));
+  titles.push(document.title);
+}
+show(h("p", {}, "Loading."));
+titles.push(document.title);
+return titles;
+""",
+            title_stubs(),
+        )
+        self.assertEqual(
+            out,
+            [
+                "My cases today | Zava Forward",
+                "Overview | Zava Forward",
+                "Capacity and work orders | Zava Forward",
+                "Zava Forward | Zava North Homes",
+            ],
+        )
+
+    def test_signed_out_title_card_orientation_and_way_back(self) -> None:
+        out = run(
+            """
+const read = message => {
+  login(message);
+  const card = app.children[0];
+  return {title: document.title, h1: byTag(app, "h1")[0].textContent,
+    orientation: card.children[1].textContent,
+    links: byTag(card, "a").map(a => [a.attrs.href, a.textContent]),
+    alert: byTag(card, "p").find(p => p.attrs.role === "alert").textContent};
+};
+const plain = read("");
+const ended = read("Your session has ended. Sign in again.");
+microsoftSignIn = true;
+login("");
+return {plain, ended, microsoft: document.title};
+""",
+            login_stubs(),
+        )
+        orientation = (
+            "Zava Forward is the staff workbench for the retrofit programme. "
+            "This is a demonstration with synthetic data."
+        )
+        for state, alert in (("plain", ""), ("ended", "Your session has ended. Sign in again.")):
+            card = out[state]
+            self.assertEqual(card["title"], "Sign in | Zava Forward")
+            self.assertEqual(card["h1"], "Sign in")
+            self.assertEqual(card["orientation"], orientation)
+            self.assertEqual(card["links"], [["/", "Back to the welcome page"]])
+            self.assertEqual(card["alert"], alert)
+        self.assertEqual(out["microsoft"], "Sign in | Zava Forward")
+
+    def test_a_first_visit_shows_no_ended_session_but_a_mid_session_401_still_does(self) -> None:
+        out = run(
+            """
+const first = await attempt();
+me = {user: {}};
+const mid = await attempt();
+me = null;
+signedInBefore = true;
+const second = await attempt();
+return {messages, first, mid, second};
+""",
+            api_stubs(),
+        )
+        ended = "Your session has ended. Sign in again."
+        self.assertEqual(out["messages"], ["", ended, ended])
+        for outcome in ("first", "mid", "second"):
+            self.assertEqual(out[outcome], [401, ended], "the thrown error is unchanged")
+
+    def test_signing_in_marks_that_a_session_existed(self) -> None:
+        start = shipped("start")
+        self.assertIn("signedInBefore = true;", start)
+        self.assertLess(start.index('api("/api/me")'), start.index("signedInBefore = true;"))
+
+    def test_list_views_put_the_page_heading_before_the_filters_and_panels(self) -> None:
+        out = run(
+            """
+const result = {};
+for (const view of ["mine", "all"]) {
+  shown.length = 0;
+  await listView(view);
+  const page = wrap(shown);
+  result[view] = {order: page.children.map(el => el.className),
+    headings: page.all().filter(el => /^H[1-6]$/.test(el.tagName))
+      .map(el => [el.tagName, el.textContent])};
+}
+return result;
+""",
+            list_stubs(),
+        )
+        for view, title in (("mine", "My cases today"), ("all", "All open cases")):
+            self.assertEqual(out[view]["order"], ["row between", "layout"])
+            self.assertEqual(out[view]["headings"][0], ["H1", title])
+        self.assertIn(["H2", "Today's briefing"], out["mine"]["headings"])
+        self.assertIn(["H2", "Priority suggestions"], out["mine"]["headings"])
+
+    def test_route_status_names_the_screens_that_had_no_scope(self) -> None:
+        source = (WEB / "app.js").read_text()
+        for text in (
+            '"Spreadsheet check"',
+            '"Coordinator flow"',
+            '"Shared building context"',
+            '"Versioned home case"',
+        ):
+            self.assertIn(text, source)
+        self.assertEqual(source.count('"Case workspace"'), 1)
+
+    def test_the_page_declares_a_theme_colour_and_the_logo_is_decorative(self) -> None:
+        html = (WEB / "index.html").read_text()
+        self.assertIn('<meta name="theme-color" content="#0b5d6b">', html)
+        self.assertIn('<img class="zava-logo" src="/zava-logo.png" alt="">', html)
 
 
 if __name__ == "__main__":
