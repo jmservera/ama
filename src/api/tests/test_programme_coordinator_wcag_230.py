@@ -900,7 +900,9 @@ class ProgrammeCoordinatorWcag230Tests(unittest.TestCase):
                 "unknown",
                 "empty",
                 None,
-                "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.",
+                "State: Unknown. Lifecycle and funnel counts could not be read. Owner: "
+                "application support. Next action: refresh to try again, then contact "
+                "application support if it continues.",
             ),
             down_cues,
         )
