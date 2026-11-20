@@ -124,8 +124,12 @@ class MapSensors(Seed, ta.ApiTests):
 
     def test_entra_principal_with_revoked_or_forged_keys_is_denied(self) -> None:
         self.put(2, offset=120)
-        for change in ({"oid": "33333333-3333-4333-8333-333333333333"}, {"code": "E-FORGED"},
-                       {"email": "pm@example.test"}, {"identity_source": "password"}):
+        for change in (
+            {"oid": "33333333-3333-4333-8333-333333333333"},
+            {"code": "E-FORGED"},
+            {"email": "pm@example.test"},
+            {"identity_source": "password"},
+        ):
             user = self.entra("Retrofit Programme Manager") | change
             with self.assertRaises(PermissionError):
                 self.service.sensors(user, "ZF-1")
