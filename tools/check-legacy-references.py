@@ -36,7 +36,7 @@ RECORD_PREFIXES = (
 
 # Dated live-evidence research notes and their evidence folders quote old paths verbatim.
 RECORD_PATTERN = re.compile(
-    r"^docs/reference/research/(?:issue-\d+-|src-repoint-)[^/]*\d{4}-?\d{2}-?\d{2}[^/]*(?:/|\.md$)"
+    r"^docs/reference/research/(?:\d{4}-\d{2}-\d{2}-issue-\d+-[^/]*|(?:issue-\d+-|src-repoint-)[^/]*\d{4}-?\d{2}-?\d{2}[^/]*)(?:/|\.md$)"
 )
 
 # Regression guards and migration tools that must name the old strings.
