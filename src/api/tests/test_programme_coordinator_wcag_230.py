@@ -174,6 +174,16 @@ function makeDoc(initialHash) {
     querySelector(selector) {
       return this.querySelectorAll(selector)[0] || null;
     }
+    cloneNode() {
+      const copy = new NodeItem(this.nodeType === 3 ? "#text" : this.tagName, this.text);
+      copy.attrs = { ...this.attrs };
+      copy.children = this.children.map((c) => {
+        const kid = c.cloneNode();
+        kid.parentElement = copy;
+        return kid;
+      });
+      return copy;
+    }
     addEventListener(type, fn) {
       if (!this.listeners.has(type)) this.listeners.set(type, []);
       this.listeners.get(type).push(fn);
@@ -353,7 +363,7 @@ function makeLeafletStub() {
     console,
   });
 
-  const scripts = payload.scripts || ["app.js", "role-screens.js"];
+  const scripts = payload.scripts || ["fields.js", "app.js", "role-screens.js"];
   for (const name of scripts) {
     const src = fs.readFileSync(`${webDir}/${name}`, "utf8");
     vm.runInContext(src, context, { filename: name });
@@ -900,7 +910,9 @@ class ProgrammeCoordinatorWcag230Tests(unittest.TestCase):
                 "unknown",
                 "empty",
                 None,
-                "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.",
+                "State: Unknown. Lifecycle and funnel counts could not be read. Owner: "
+                "application support. Next action: refresh to try again, then contact "
+                "application support if it continues.",
             ),
             down_cues,
         )

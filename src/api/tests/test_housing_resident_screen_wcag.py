@@ -673,7 +673,7 @@ class HousingResidentScreenWcagTests(unittest.TestCase):
             self.assertEqual(scrolled, [(tid, "start") for tid in real_targets], key)
 
         css = (WEB / "style.css").read_text(encoding="utf-8")
-        self.assertRegex(css, r'\[tabindex="-1"\]:focus\s*\{\s*outline:')
+        self.assertRegex(css, r'\[tabindex="-1"\]:where\(:not\(#app\)\):focus\s*\{\s*outline:')
         self.assertIn("scroll-margin-top: var(--sp-4)", css)
 
     def test_textual_state_cues_cover_badges_choices_pauses_commitments_and_safe_routes(

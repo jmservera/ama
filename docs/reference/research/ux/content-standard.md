@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-11-18
+ms.date: 2026-11-20
 ms.topic: reference
 ---
 
@@ -273,6 +273,51 @@ queue "Source" lines, a requirement code in an aftercare AI line, reason-only AP
 owner or next action, a bare unknown-page response and two unexplained abbreviations on the resident page.
 The named human wording review is still not run.
 
+### Staff workbench wording and the required and optional rule (2026-11-20)
+
+A UX review of the staff workbench on 2026-11-20 (see the
+[review record](./staff-workbench-ux-review-2026-11-20.md)) added visible labels and new copy to
+the quality decision card, the handover card, the Home sensors tab, time capture and a few other
+screens. The lexical guard in `test_content_standard.py` now also names `fields.js`. This is source
+inspection and that guard only: no staff member or resident has read the wording and no named
+human has reviewed it.
+
+Proposed rule, pending owner confirmation: mark every form field in its visible label. Write
+"(required)" at the end of the label of a field the request cannot go without, and "(optional)" at
+the end of the label of a field it can. The words are part of the label text, so they are read with
+it. If a field is flagged both ways, required wins. The code applies the rule through
+`Fields.fieldBlock` and leaves a field bare when no flag is set. Some fields are bare today, for
+example Activity in time capture, the work-order row and the chat composer. The owner decides
+whether the rule covers them and whether a control that always holds a value needs a mark.
+
+Field errors follow the split this standard already had. A missing or invalid field gets one
+short sentence that says the reason and the fix, for example "Enter the minutes as a whole
+number from 1 to 600." or "Say where this change came from."; the hint under the field stays.
+A blocked or refused action keeps the three-part message of the section above, for example
+the account-not-linked wording in the table below, and server refusals keep their own wording.
+The first build of the update used the three-part form on empty time capture and handover
+fields ("... Owner: you. Next action: type it, then choose Save again."), which added nothing
+to a field that was only empty. The final review found the two voices inconsistent, and the
+code now uses the short sentence throughout. The owner confirms the split together with the
+marking rule.
+
+New wording and the owners it names. Every owner below is a working assumption until the roster
+owner confirms it.
+
+| Surface | Wording | Owner named |
+| --- | --- | --- |
+| Home sensors: role may not read | Your role does not include indoor readings. Owner: a Quality Inspector or a Retrofit Programme Manager. Next action: ask one of them for the readings you need. | a Quality Inspector or a Retrofit Programme Manager |
+| Home sensors: account not linked | Your staff account is not linked to your role, so home readings are hidden. Owner: your team manager. Next action: ask them to check that your account is on the staff list with your role, then refresh this page. Until then, use the ordinary quality check. | your team manager |
+| Home sensors: service down (not connected and could not be read use the same owner) | Home sensors are unavailable right now. Owner: application support. Next action: refresh this page. If it keeps happening, tell application support. Use the ordinary quality check meanwhile. | application support |
+| Home sensors: readings withheld | Owner: the resident's consent owner. Next action: use the ordinary quality check. Do not ask for the readings without consent. If you think consent has been given, ask the resident liaison officer to record it. | the resident's consent owner |
+| Home sensors: five alerts (out of date, sensor may be offline, readings disagree, sensor fault, reading out of range) | For example: The latest reading is older than 15 minutes. Last reading {age} ago. Owner: the quality team. Next action: treat the reading as out of date. Use the ordinary quality check for now. | the quality team |
+| Handover card: offering is not possible | This case is closed, so it cannot be offered. Owner: a manager. Next action: ask a manager to reopen it. The open-offer, accepted and not-the-owner notices name a person from the record instead. | a manager, or the person named in the record |
+| Handover card: the person an offer is made to | Offered to you, waiting for your answer. What you are asked to do. The button that completes an accepted handover reads Complete the handover | no new owner named |
+| Handover card and quality record: text held back for the viewer's role | Held back for your role. Owner: {name}. Next action: ask {name} what they want you to do. The last words change with the field, for example "for this detail" or "what the resident was given or told". Without a name the sentence names the person who recorded it | the person who offered the case, or who recorded the note |
+| Quality card: a viewer who cannot check | A Quality Inspector or a manager checks this work. Owner: a Quality Inspector or a manager. Next action: ask one of them to check this work. | a Quality Inspector or a manager |
+
+The standard asks for one name for one thing, and one state still has two names. For a sensor with no reading for over 24 hours, the Home sensors tab says "Sensor may be offline (no reading for over 24 hours)", as its alert does, while the server's map label says "Sensor offline". The server wording is not changed here.
+
 ## Human review
 
 Resident-facing wording defaults to named per-message review. The owner
@@ -321,3 +366,12 @@ received/reviewed/accepted/published/confirmed states must stay distinct.
 * Reading-age targets, translation and accessible-format wording are not set.
 * No user testing of the wording has been done; results must be recorded as
   test results under epic #149, not asserted.
+* The owner confirms the required and optional marking rule proposed on
+  2026-11-20, and the split the code now follows for field errors: one short
+  sentence for a validation error, the three-part message for a blocked or
+  refused action.
+* The roster owner confirms the owners named in the new Home sensors and
+  handover wording (see the 2026-11-20 subsection above). The named human
+  review has not run on that wording.
+* The owner decides whether the map label "Sensor offline" should follow the
+  Home sensors wording "Sensor may be offline" (server wording, not changed).

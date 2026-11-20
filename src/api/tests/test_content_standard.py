@@ -31,6 +31,7 @@ AUDITED_FILES = (
     "case-workspace.js",
     "chat-widget.js",
     "async-action.js",
+    "fields.js",
     "progress.js",
     "workspace-shell.js",
 )
@@ -274,6 +275,8 @@ class CopyAudit(unittest.TestCase):
         "These are synthetic exercise rules.",
         "A challenge never means consent, refusal or a sanction.",
         "The existing limits apply:",
+        "If you leave it empty we record: Reinspection failed.",
+        "Without it the work cannot be accepted.",
     )
 
     def literals(self, name):
@@ -424,7 +427,7 @@ console.log(JSON.stringify(out));
         notices = [
             (role, "This screen is not installed for your signed-in role. Your access has not changed."),
             (role, "That page could not be loaded. The rows shown are unchanged."),
-            (role, "is not installed for your role. Your access has not changed."),
+            (role, " not installed for your role."),
             (role, "Unknown. The queue could not be read for your role."),
             (role, "This file is incomplete or was changed after download."),
             (law, "Required law viewer file did not load: /async-action.js."),

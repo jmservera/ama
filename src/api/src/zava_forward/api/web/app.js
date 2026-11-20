@@ -68,6 +68,7 @@ function mutationKey(path, body) {
 
 const GENERIC_CHANGE_ERROR = "We cannot show whether this change was saved. Owner: application support. Next action: check the recorded history before repeating a change, then contact application support if it continues.";
 const GENERIC_READ_ERROR = "This could not load and the cause is not known. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
+let signedInBefore = false;
 async function api(path, body, signal) {
   const progress = typeof AsyncAction !== "undefined"
     ? AsyncAction.feedback("Loading workspace data") : null;
@@ -90,7 +91,9 @@ async function api(path, body, signal) {
     });
     signal.throwIfAborted();
     if (res.status === 401 && path !== "/api/login") {
-      me = null; login("Your session has ended. Sign in again.");
+      // A first visit has no session to end, so its sign-in card carries no error.
+      const hadSession = me !== null || signedInBefore;
+      me = null; login(hadSession ? "Your session has ended. Sign in again." : "");
       const error = new Error("Your session has ended. Sign in again."); error.status = 401; throw error;
     }
     if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; e.errors = data.errors; throw e; }
@@ -111,6 +114,17 @@ const ago = (s) => {
   const days = Math.floor((Date.now() - new Date(s)) / 864e5);
   return days <= 0 ? "Today" : days === 1 ? "Yesterday" : `${days} days ago`;
 };
+const SITE_TITLE = "Zava Forward | Zava North Homes";
+const SIGN_IN_TITLE = "Sign in | Zava Forward";
+const SIGN_IN_ABOUT = "Zava Forward is the staff workbench for the retrofit programme. This is a demonstration with synthetic data.";
+// The tab title repeats the page heading, so a person with several tabs open can tell the screens apart.
+// A status flag in the heading is not part of the name, so the title leaves it out.
+const pageTitle = () => {
+  const heading = app.querySelector("h1")?.cloneNode(true);
+  heading?.querySelectorAll(".flag").forEach((flag) => flag.remove());
+  const text = heading?.textContent.trim();
+  return text ? `${text} | Zava Forward` : SITE_TITLE;
+};
 const show = (...nodes) => {
   const focused = document.activeElement;
   const path = (location.hash || "#/").split("?")[0];
@@ -120,6 +134,7 @@ const show = (...nodes) => {
       && !app.contains(focused));
   app.replaceChildren(...nodes.flat().filter((n) => n && n.nodeType));
   renderedContext = { session: me, path };
+  document.title = pageTitle();
   if (!preserveFocus || !focused?.isConnected) app.focus();
 };
 
@@ -141,10 +156,14 @@ function login(msg) {
   document.getElementById("account").hidden = true;
   clearPhoto();
   if (microsoftSignIn) {
+    // The way in is neutral guidance; only a message about what went wrong takes the error style.
     show(h("section", { class: "card login" }, h("h1", {}, "Sign in to Zava Forward"),
-      h("p", { class: "err", role: "alert" }, msg || "Use your authorised Microsoft work account."),
+      h("p", {}, SIGN_IN_ABOUT),
+      h("p", {}, "Use your authorised Microsoft work account."),
+      h("p", { class: "err", role: "alert" }, msg || ""),
       h("a", { class: "btn", href: "/sign-in" }, "Sign in with Microsoft"),
-      h("p", {}, h("a", { href: "/" }, "Back to welcome"))));
+      h("p", {}, h("a", { href: "/" }, "Back to the welcome page"))));
+    document.title = SIGN_IN_TITLE;
     return;
   }
   const email = h("input", { id: "email", type: "email", autocomplete: "username", required: true });
@@ -156,16 +175,20 @@ function login(msg) {
     catch (x) { err.textContent = x.message; }
   } },
     h("h1", {}, "Sign in"),
+    h("p", {}, SIGN_IN_ABOUT),
     h("label", { for: "email" }, "Work email"), email,
     h("label", { for: "pw" }, "Password"), pass, err,
-    h("button", { type: "submit" }, "Sign in"));
+    h("button", { type: "submit" }, "Sign in"),
+    h("p", {}, h("a", { href: "/" }, "Back to the welcome page")));
   show(form);
+  document.title = SIGN_IN_TITLE;
 }
 
 async function start() {
   const session = me;
   const refreshed = await api("/api/me");
   if (me !== session) return;
+  signedInBefore = true;
   if (session && JSON.stringify(session.user) === JSON.stringify(refreshed.user)
       && JSON.stringify(session.account) === JSON.stringify(refreshed.account)) {
     Object.assign(session, refreshed);
@@ -447,7 +470,14 @@ async function route() {
     else link.removeAttribute("aria-current");
   });
   const destination = me.navigation.find((item) => item.href === active);
-  const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : baseHash === "#/exceptions" ? "Data steward and operator exception queue" : "Case workspace")}.`;
+  const routeScope = hash === "#/handoff-waiting" ? "Handoff waiting times"
+    : baseHash === "#/exceptions" ? "Data steward and operator exception queue"
+    : baseHash === "#/import" ? "Spreadsheet check"
+    : baseHash === "#/coordinator" ? "Coordinator flow"
+    : baseHash.startsWith("#/building/") ? "Shared building context"
+    : baseHash.startsWith("#/case-home/") ? "Versioned home case"
+    : "Case workspace";
+  const routeStatus = `${me.user.role}. ${destination?.scope || routeScope}.`;
   workspaceStatus.textContent = routeStatus;
   try {
   await requireWorkspaceScripts(hash, Boolean(m));
@@ -836,7 +866,7 @@ function pendingHandoffs() {
 let briefingBox = null;
 function workSummary(work) {
   return h("div", { class: "work-context" },
-    h("p", {}, `Current owner: ${work.owner}. Reason: ${work.reason}.`),
+    h("p", {}, `Current owner: ${work.owner}. Reason: ${String(work.reason).replace(/\.$/, "")}.`),
     h("p", { class: "next-action" }, `Next action: ${work.next_action}`),
     h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
@@ -1031,14 +1061,15 @@ async function listView(view) {
       h("dl", {}, FLAGS.flatMap(([, label, definition]) => [
         h("dt", {}, label), h("dd", {}, definition)
       ]))));
-  show(h("div", { class: "layout" }, side, h("div", { class: "main" },
+  show(h("div", { class: "row between" }, title, h("div", { class: "row" },
+    h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
+    h("a", { class: "btn alt", href: "#/handoff-waiting" }, "Handoff waiting times"),
+    h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
+  h("div", { class: "layout" }, side, h("div", { class: "main" },
     briefingBox,
     view === "mine" && pendingHandoffs(),
     view === "mine" && priorityPanel(),
-    h("div", { class: "row between" }, title, h("div", { class: "row" },
-      h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
-      h("a", { class: "btn alt", href: "#/handoff-waiting" }, "Handoff waiting times"),
-      h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
+    h("h2", {}, view === "mine" ? "My open cases" : "All open cases"),
     results)));
   await load();
 }
@@ -1141,16 +1172,6 @@ async function caseView(id) {
       else draftBox.replaceChildren(error);
     }
   };
-  const canOffer = !c.closed && (c.owner_code === me.user.code || isManager()) &&
-    (!c.handoff || !["Offered", "Received", "Escalated", "Accepted"].includes(c.handoff.state));
-  const sugg = h("section", { class: "card" }, h("h2", {}, "Who could take this on"),
-    h("p", { class: "muted" }, "Suggested by role and workload rules. You decide."),
-    workSummary(c.work),
-    h("p", {}, "These are proposed reviewers, not confirmed receiving owners. Review the recorded blocked steps and prerequisites above."),
-    !c.suggestions.length && h("p", {}, "Proposed owner: Unknown. No reviewer is supplied for this case. The current owner keeps responsibility."),
-    h("ul", { class: "list" }, c.suggestions.map((x) => h("li", {},
-      h("strong", {}, `${x.name}, ${x.role}`), h("div", { class: "muted" }, x.reasons.join(". ")),
-      canOffer && h("button", { class: "alt", onclick: () => refresh(() => api(`/api/cases/${encodeURIComponent(id)}/handover`, { to: x.email })) }, `Offer to ${x.name.split(" ")[0]}`)))));
   const challengeDrafts = captureChallengeDrafts(id);
   const cost = c.cost_allocation && h("section", { class: "card" }, h("h2", {}, "This home's cost allocation"),
       h("p", {}, "Recorded allocations only, not additional building costs or payment approval."),
@@ -1222,7 +1243,8 @@ async function caseView(id) {
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
       c.appointments.length ? h("ul", {}, c.appointments.map(a => h("li", {}, `${fmtDate(a.date)}: ${a.type}, ${a.slot}, ${a.who}. ${a.outcome}`))) : h("p", {}, "No appointments recorded. Ask the case owner to record the next visit."))]],
-    ["quality", "Quality and handover", [sensorPanel(id), qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh), sugg]],
+    ["quality", "Quality and handover", [sensorPointer(session), qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh)]],
+    ["sensors", "Home sensors", [sensorPanel(id)]],
     ["ai", "AI assistance", [assistantPanel, simulationPanel(), chatPanel,
       h("p", {}, "Resident message and summary drafts stay with the resident record.",
         h("button", { class: "alt", onclick: () => session.controller ? session.controller.select("resident", true, true) : document.getElementById("case-panel-resident").scrollIntoView() }, "Review resident drafts")),
@@ -1250,11 +1272,13 @@ async function caseView(id) {
       top.push(h("p", { class: "err", role: "alert" }, `Tab navigation unavailable: ${error.message}. Case sections are listed below; ordinary work continues.`));
     }
   } else top.push(h("p", { role: "status" }, "Tab navigation unavailable. Case sections are listed below; ordinary work continues."));
-  show(h("a", { class: "back", href: queueHref() }, "Back to the list"),
-    h("a", { class: "back", href: `#/case-home/${encodeURIComponent(c.id)}` }, "Versioned home case: links, shared building items and retained versions"),
-    c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) : h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
+  show(h("ul", { class: "case-links" },
+    h("li", {}, h("a", { href: queueHref() }, "Back to the list")),
+    h("li", {}, h("a", { href: `#/case-home/${encodeURIComponent(c.id)}` }, "Versioned home case")),
+    c.building_id ? h("li", {}, h("a", { href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`)) : null),
+    c.building_id ? null : h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
     h("div", { class: "row between" }, h("h1", {}, r.name,
-      openHaz.length && h("span", { class: "flag danger" }, "Safety issue open")),
+      openHaz.length > 0 && h("span", { class: "flag danger" }, "Safety issue open")),
     h("span", { class: "muted" }, `Reference ${c.id}`)), top, workspace);
   restoreChallengeDrafts(challengeDrafts);
   restoreCaseFields([...session.pendingFields.values()]);
@@ -1521,25 +1545,46 @@ function returnPanel(c, id, refresh) {
     h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "return", { ...metadata(), to_stage: to.value }), [why, source, next, to]) }, "Send back")), history);
 }
 
-function recordedChangeForm(prefix, label, fields, submit) {
+// A missing required field gets one short sentence beside it: the reason and the fix together. The hint under the field stays.
+const RECORDED_MISSING = {
+  source: "Say where this change came from.",
+  source_version: "Enter the version or date of that source.",
+  reason: "Say why you are making this change.",
+};
+
+// Without `labelled` the three record fields keep their plain labels and the browser's own required-field prompt.
+// With it ({ legend, hints, extra, cancel, within }) they become labelled fields in a fieldset, each with its own message;
+// `within` puts the buttons inside that fieldset instead of after it.
+function recordedChangeForm(prefix, label, fields, submit, labelled) {
   const status = h("div", { role: "status", "aria-live": "polite", id: `${prefix}-status` });
   const inputs = [
     ["source", "Source reference", 200],
     ["source_version", "Source version", 100],
-    ["reason", "Reason for this change", 300]
-  ].map(([name, title, limit]) => {
+    ["reason", "Reason for this change", 300, "Reason"]
+  ].map(([name, title, limit, short = title]) => {
     const input = h("input", { id: `${prefix}-${name}`, name, type: "text", required: true,
       maxlength: limit, autocomplete: "off", "aria-describedby": `${prefix}-help ${prefix}-status` });
-    return { name, input, node: h("div", {}, h("label", { for: input.id }, title), input) };
+    if (!labelled) return { name, input, node: h("div", {}, h("label", { for: input.id }, title), input) };
+    const field = Fields.fieldBlock({ id: input.id, label: short, hint: labelled.hints[name], required: true, control: input });
+    return { name, input, field, node: field.block };
   });
   const button = h("button", { type: "submit" }, label);
-  const form = h("form", { oninput: () => { form.dataset.unsaved = "true"; },
+  const actions = labelled && h("div", { class: "handoff-actions" }, button, labelled.cancel);
+  const form = h("form", { novalidate: Boolean(labelled), oninput: () => { form.dataset.unsaved = "true"; },
     onsubmit: async (e) => {
       e.preventDefault();
       if (button.disabled) return;
-      for (const { input } of inputs) {
-        input.setCustomValidity(input.value.trim() ? "" : "Enter this change detail.");
-        if (!input.reportValidity()) { input.focus(); return; }
+      if (labelled) {
+        const missing = [...(labelled.extra || []), ...inputs.map(({ name, input, field }) => ({ field,
+          valid: () => input.value.trim() !== "", message: RECORDED_MISSING[name] }))]
+          .filter(({ field, valid }) => { field.clear(); return !valid(); });
+        // Failing from the last field to the first leaves focus on the first one.
+        if (missing.length) { missing.reverse().forEach(({ field, message }) => field.fail(message)); return; }
+      } else {
+        for (const { input } of inputs) {
+          input.setCustomValidity(input.value.trim() ? "" : "Enter this change detail.");
+          if (!input.reportValidity()) { input.focus(); return; }
+        }
       }
       button.disabled = true;
       button.textContent = "Saving...";
@@ -1560,9 +1605,19 @@ function recordedChangeForm(prefix, label, fields, submit) {
       }
     } },
   ...fields,
-  h("p", { id: `${prefix}-help`, class: "muted" }, "Enter the source you checked, its version and why you are making this change. These details are kept with your name and the change. They do not approve any work."),
-  ...inputs.map(({ node }) => node), button, status);
-  inputs.forEach(({ input }) => input.addEventListener("input", () => input.setCustomValidity("")));
+  ...(labelled ? [
+    h("fieldset", { class: "handoff-record" }, h("legend", {}, labelled.legend),
+      h("p", { id: `${prefix}-help`, class: "muted" }, "These details are kept with your name and the change. They do not approve any work."),
+      ...inputs.map(({ node }) => node), labelled.within && actions),
+    !labelled.within && actions
+  ] : [
+    h("p", { id: `${prefix}-help`, class: "muted" }, "Enter the source you checked, its version and why you are making this change. These details are kept with your name and the change. They do not approve any work."),
+    ...inputs.map(({ node }) => node), button
+  ]), status);
+  inputs.forEach(({ input, field }) => input.addEventListener("input", () => {
+    if (field) field.clear();
+    else input.setCustomValidity("");
+  }));
   return form;
 }
 
@@ -1570,73 +1625,347 @@ window.addEventListener("beforeunload", (event) => {
   if (hasUnsavedChanges()) { event.preventDefault(); event.returnValue = ""; }
 });
 
+// ---- Hand this case to a colleague: status, the viewer's actions, who could take the case, and its history.
+const HANDOFF_OPEN_STATES = ["Offered", "Received", "Escalated"];
+const HANDOFF_NO_ONE = "No one named yet. Next action: ask the case lead to name one.";
+const OFFER_HINTS = {
+  source: "What you checked or agreed. For example: Capacity check on 14 Oct.",
+  source_version: "Its version or date. For example: 1.",
+  reason: "Why you are offering the case. For example: I am on leave from Monday.",
+};
+const ACCEPT_HINTS = {
+  source: "Where the handover was agreed. For example: Programme meeting 14 Oct.",
+  source_version: "The version or date of that source. For example: 1.",
+  reason: "Why you are taking the case. For example: I have capacity this week.",
+};
+
+const handoffStamp = (value) => {
+  const date = value ? new Date(value) : null;
+  return date && !Number.isNaN(date.getTime())
+    ? new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short" }).format(date) : "Unknown";
+};
+function handoffWaiting(since, now = Date.now()) {
+  const start = Date.parse(since);
+  if (!Number.isFinite(start)) return "waiting time unknown";
+  const hours = Math.max(0, Math.round((now - start) / 36e5));
+  if (hours < 1) return "waiting less than an hour";
+  return hours < 48 ? `waiting ${hours} ${hours === 1 ? "hour" : "hours"}` : `waiting ${Math.round(hours / 24)} days`;
+}
+// The person an offer is made to reads it as written to them, not about a third person.
+const handoffToYou = (hd, viewer) => Boolean(viewer) && hd.to_code === viewer;
+
+function handoffStatus(hd, viewer) {
+  const to = hd.to_name;
+  return {
+    Offered: handoffToYou(hd, viewer) ? "Offered to you, waiting for your answer" : `Offered to ${to}, waiting for an answer`,
+    Received: `${to} has seen the offer, not accepted yet`,
+    Escalated: `Escalated to ${hd.escalation_owner || "a manager"}`,
+    Accepted: `Accepted by ${to}. The handover is not complete yet.`,
+    Declined: `Last offer: declined by ${to}`,
+    Withdrawn: `Last offer to ${to}: withdrawn`,
+    Completed: `Handover to ${to} is complete`,
+  }[hd.state] || hd.status || hd.state;
+}
+
+function handoffRows(hd, c, viewer) {
+  const from = hd.from_name, to = hd.to_name;
+  const waiting = HANDOFF_OPEN_STATES.includes(hd.state);
+  const held = (text) => Fields.heldBack(text, from, "what they want you to do");
+  const detail = (text) => Fields.heldBack(text, from, "for this detail") || "Not recorded";
+  const offeredBy = `${hd.offered_by}, ${handoffStamp(hd.offered_at)}`;
+  const due = hd.due_at ? `${handoffStamp(hd.due_at)}${waiting && Date.parse(hd.due_at) < Date.now() ? " (overdue)" : ""}` : "Not set";
+  const update = `${hd.resident_update_owner ? `${hd.resident_update_owner}.` : HANDOFF_NO_ONE}${hd.resident_update_due_at ? ` Update due ${handoffStamp(hd.resident_update_due_at)}.` : ""} No message is sent automatically.`;
+  const next = hd.state === "Escalated"
+    ? `${hd.escalation_owner || "A manager"}: chase ${to}, or withdraw the offer and offer the case to someone else`
+    : hd.state === "Accepted" ? `${to}: record that the handover is complete` : `${to}: accept or decline`;
+  const asked = [handoffToYou(hd, viewer) ? "What you are asked to do" : "What they are asked to do", hd.next_action ? held(hd.next_action) : `Not recorded. Owner: ${from}. Next action: add it in a note.`];
+  const request = [asked, ["How urgent", hd.urgency || "Not set"], ["Due", due], [`Note from ${from}`, held(hd.note) || "None"]];
+  const chase = [["Chase owner", hd.chase_owner || HANDOFF_NO_ONE], ["Resident update owner", update]];
+  if (waiting) return [["Case stays with", `${from} until the offer is accepted`], ["Who must act next", next],
+    ["Offered by", `${offeredBy} (${handoffWaiting(hd.offered_at)})`], ...request,
+    ...(hd.state === "Escalated" ? [["Why it was escalated", detail(hd.answer_note)]] : []), ...chase];
+  if (hd.state === "Accepted") return [["Who must act next", next], ["Offered by", offeredBy], ...request, ...chase];
+  return [["Case stays with", c.owner], ["Offered by", offeredBy],
+    ...(hd.state === "Declined" ? [["Reason for declining", detail(hd.answer_note)]] : []),
+    ...(hd.state === "Completed" ? [["Completed action", detail(hd.completion_note)]] : [])];
+}
+
+function handoffEventText(x) {
+  const kind = x.event_type || `handoff_${String(x.state || "").toLowerCase()}`;
+  const answered = ["handoff_accepted", "handoff_declined", "handoff_received"].includes(kind);
+  const actor = x.actor?.name || (answered ? x.to_name : x.offered_by) || "Someone";
+  const to = x.to_name || "a colleague";
+  return {
+    handoff_offered: `${actor} offered the case to ${to}.`,
+    handoff_received: `${actor} recorded receipt of the offer. The case did not move.`,
+    handoff_accepted: `${actor} accepted the case from ${x.from_name}.`,
+    handoff_declined: `${actor} declined the case.`,
+    handoff_withdrawn: `${actor} withdrew the offer to ${to}.`,
+    handoff_escalated: `${actor} escalated the offer to ${x.escalation_owner || "a manager"}.`,
+    handoff_completed: `${actor} recorded that the handover is complete.`,
+  }[kind] || `${actor} changed the handover: ${x.status || x.state || "unknown"}.`;
+}
+
+function handoffHistory(c) {
+  const events = c.handoff_history || c.handoff_log;
+  if (!events || !events.length) return [];
+  return [h("h3", {}, "History of this handover"), h("ul", { class: "tl" }, events.slice(-8).reverse().map((x) => {
+    const owner = x.actor?.name || x.from_name;
+    const held = (value) => Fields.heldBack(value, owner, "for this detail");
+    // Offers and acceptances carry a source, a version and a reason typed by a person; the other answers carry a note.
+    const typed = x.reason !== undefined || !x.event_type;
+    const note = { handoff_declined: ["Reason for declining", x.answer_note], handoff_escalated: ["Reason for escalating", x.answer_note],
+      handoff_completed: ["Completed action", x.completion_note] }[x.event_type];
+    const rows = [...(typed ? [["Source", held(x.source) || "Unknown (legacy)"], ["Source version", held(x.source_version) || "Unknown (legacy)"],
+      ["Reason", held(x.reason) || "Unknown (legacy)"]] : []),
+    ...(note ? [[note[0], held(note[1]) || "Not recorded"]] : []),
+    ["Change number", String(x.version || "Unknown")], ["Recorded by", x.actor?.name || x.by || "Unknown"]];
+    return h("li", {}, `${handoffStamp(x.at || x.answered_at)}: ${handoffEventText(x)}`,
+      h("details", {}, h("summary", {}, "Record of this change"),
+        h("dl", {}, rows.flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)]))));
+  }))];
+}
+
+// A link that opens another tab of this case without reloading it, and falls back to the address when tabs are off.
+const handoffTabLink = ({ id, session }, tab, text) => h("a", { href: `#/case/${encodeURIComponent(id)}?tab=${tab}`,
+  onclick: (event) => {
+    if (!session?.controller) return;
+    event.preventDefault();
+    session.controller.select(tab, true, true);
+  } }, text);
+
+// The one reason offering is not possible for this viewer, with who owns the next step. Null when offering is allowed.
+function handoffNotice({ c, hd, open, accepted, canWithdraw, completes, mayOffer }) {
+  if (c.closed) return { text: "This case is closed, so it cannot be offered. Owner: a manager. Next action: ask a manager to reopen it.",
+    tab: "overview", link: "Go to the Overview tab" };
+  if (open) return { text: canWithdraw
+    ? `You cannot offer this case yet. An offer to ${hd.to_name} is waiting for an answer. Owner: ${hd.to_name} to answer, or you to withdraw it. Next action: withdraw the offer first, then offer the case to someone else.`
+    : `You cannot offer this case. Only ${hd.from_name} or a manager can offer or withdraw it. Owner: ${hd.from_name}. Next action: ask ${hd.from_name} or a manager.` };
+  if (accepted) return { text: completes
+    ? "You cannot offer this case yet. You accepted it and the handover is not marked complete. Owner: you. Next action: record that the handover is complete."
+    : `You cannot offer this case yet. ${hd.to_name} accepted it and the handover is not marked complete. Owner: ${hd.to_name}. Next action: ask ${hd.to_name} to record that the handover is complete.` };
+  if (!mayOffer) return { text: `Only the case owner, ${c.owner}, or a manager can offer this case. Owner: ${c.owner}. Next action: ask ${c.owner} or a manager to offer it.` };
+  return null;
+}
+
+// A small form of required fields with a native fieldset, for the answers that need only a reason or a name.
+function handoffActionForm(legend, checks, label, run, primary = false) {
+  checks.forEach(({ field }) => field.control.addEventListener("input", () => field.clear()));
+  return h("form", { novalidate: true, onsubmit: (event) => {
+    event.preventDefault();
+    const missing = checks.filter(({ field, valid }) => { field.clear(); return !valid(); });
+    // Failing from the last field to the first leaves focus on the first one.
+    if (missing.length) { missing.reverse().forEach(({ field, message }) => field.fail(message)); return; }
+    return run();
+  } }, h("fieldset", { class: "handoff-record" }, h("legend", {}, legend), ...checks.map(({ field }) => field.block),
+  h("div", { class: "handoff-actions" }, h("button", { type: "submit", class: primary ? "" : "alt" }, label))));
+}
+
+// The optional parts of an offer, shared by the form under each person and the form for someone not listed.
+function handoffOfferDetails(ids, first, c) {
+  const next = Fields.fieldBlock({ id: ids.next, name: "next_action", label: `What do you want ${first} to do?`,
+    hint: "For example: agree an access date with the resident.", optional: true,
+    control: h("input", { type: "text", maxlength: 300, autocomplete: "off" }) });
+  const urgency = Fields.fieldBlock({ id: ids.urgency, name: "urgency", label: "How urgent", hint: "Leave it as Not set to record no urgency.",
+    optional: true, control: h("select", { autocomplete: "off" }, [["", "Not set"], ["Routine", "Routine"], ["Urgent", "Urgent"]]
+      .map(([value, text]) => h("option", { value }, text))) });
+  const due = Fields.fieldBlock({ id: ids.due, name: "due_at", label: "Due date", hint: "A date you choose. It is not an agreed deadline.",
+    optional: true, control: h("input", { type: "datetime-local", autocomplete: "off" }) });
+  const note = Fields.fieldBlock({ id: ids.note, name: "note", label: `Note for ${first}`, optional: true,
+    control: h("input", { type: "text", maxlength: 300, autocomplete: "off" }) });
+  return {
+    nodes: [next.block, h("div", { class: "field-row" }, urgency.block, due.block), note.block,
+      h("p", {}, c.resident_update ? "The existing resident-update commitment is preserved." : "Record a complete resident-update commitment in the resident panel. A handoff never creates or clears it.")],
+    read: () => ({ note: note.control.value, next_action: next.control.value, urgency: urgency.control.value,
+      due_at: due.control.value ? new Date(due.control.value).toISOString() : null }),
+  };
+}
+
+// One suggested person: their reasons and, when this viewer may offer, a button that opens that person's offer form.
+function handoffOfferRow(person, index, ctx) {
+  const first = person.name.split(" ")[0];
+  const box = h("div", { class: "handoff-offer", hidden: true });
+  const button = h("button", { type: "button", class: "alt", onclick: () => reveal() }, `Offer this case to ${person.name}`);
+  const self = {
+    dirty: () => [...box.querySelectorAll("input, select, textarea")].some((field) => field.dataset.caseDirty),
+    close: (refocus = true) => {
+      caseFieldEntries(box).forEach(({ key }) => ctx.session?.pendingFields.delete(key));
+      box.replaceChildren();
+      box.hidden = true;
+      if (refocus) button.focus();
+    },
+  };
+  ctx.offers.push(self);
+  const prefix = `ho-offer-${index}`;
+  const build = () => {
+    const details = handoffOfferDetails({ next: `${prefix}-next`, urgency: `${prefix}-urgency`, due: `${prefix}-due`, note: `${prefix}-note` }, first, ctx.c);
+    const cancel = h("button", { type: "button", class: "alt", onclick: () => self.close() }, "Cancel");
+    box.replaceChildren(h("h4", { tabindex: "-1" }, `Offer this case to ${person.name}`),
+      h("p", {}, `The case stays with ${ctx.stays} until ${first} accepts. You can withdraw the offer before then.`),
+      recordedChangeForm(prefix, `Send offer to ${person.name}`, details.nodes, async (metadata, submitted) => {
+        await ctx.attempt("offer-handoff", { ...metadata, handoff_version: ctx.version, to: person.email, ...details.read() },
+          { text: `Offer sent to ${person.name}. The case stays with ${ctx.stays} until ${first} accepts.`, undo: true }, submitted);
+      }, { legend: "Record of this change", hints: OFFER_HINTS, cancel }));
+    box.hidden = false;
+  };
+  const reveal = () => {
+    if (box.hidden) {
+      ctx.offers.filter((other) => other !== self && !other.dirty()).forEach((other) => other.close(false));
+      build();
+    }
+    box.querySelector("h4").focus();
+  };
+  // Typing kept across a reload of the case goes back into this person's form instead of a recovery list.
+  if (ctx.canOffer && [...(ctx.session?.pendingFields.keys() || [])].some((key) => key.startsWith(`${prefix}-`))) build();
+  box.addEventListener("keydown", (event) => { if (event.key === "Escape") self.close(); });
+  return h("li", { class: "handoff-candidate" },
+    h("div", {}, h("strong", {}, `${person.name}, ${person.role}`), h("div", { class: "muted" }, person.reasons.join(". ")),
+      ctx.open && ctx.hd.to_name === person.name && h("span", { class: "flag" }, "Offer waiting for an answer")),
+    ctx.canOffer && [button, box]);
+}
+
+// The offer form for someone the suggestions do not list. Nobody is preselected.
+function handoffElsewhere(ctx) {
+  const people = me.staff.filter((s) => s.code !== ctx.c.owner_code && s.role !== "Contractor");
+  const to = h("select", { autocomplete: "off" }, [h("option", { value: "", disabled: true, selected: true }, "Choose a colleague"),
+    ...people.map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`))]);
+  const chosen = Fields.fieldBlock({ id: "ho-to", name: "to", label: "Offer to", required: true, control: to });
+  to.addEventListener("input", () => chosen.clear());
+  const details = handoffOfferDetails({ next: "ho-next", urgency: "ho-urgency", due: "ho-due", note: "ho-note" }, "them", ctx.c);
+  return h("details", { class: "handoff-more" }, h("summary", {}, "Offer to someone who is not listed"),
+    recordedChangeForm("ho-offer", "Offer the case", [h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
+      chosen.block, ...details.nodes], async (metadata, submitted) => {
+      const name = people.find((s) => s.email === to.value)?.name || "your colleague";
+      await ctx.attempt("offer-handoff", { ...metadata, handoff_version: ctx.version, to: to.value, ...details.read() },
+        { text: `Offer sent to ${name}. The case stays with ${ctx.stays} until they accept.`, undo: true }, submitted);
+    }, { legend: "Record of this change", hints: OFFER_HINTS,
+      extra: [{ field: chosen, valid: () => Boolean(to.value), message: "Choose who should take the case." }] }));
+}
+
+function handoffCandidates(ctx) {
+  const people = ctx.c.suggestions || [];
+  const notice = handoffNotice(ctx);
+  return [h("h3", {}, "Who could take this on"),
+    h("p", { class: "muted" }, "Suggested by role and workload rules. You decide."),
+    notice && h("p", { class: "notice" }, notice.text, notice.tab && [" ", handoffTabLink(ctx, notice.tab, notice.link)]),
+    h("p", {}, "These are proposed reviewers, not confirmed receiving owners. The recorded blocked steps and prerequisites are on the ", handoffTabLink(ctx, "blockers", "Blockers and safety tab"), "."),
+    !people.length && h("p", {}, "Proposed owner: Unknown. No reviewer is supplied for this case. The current owner keeps responsibility."),
+    people.length > 0 && h("ul", { class: "list handoff-candidates" }, people.map((person, index) => handoffOfferRow(person, index, ctx))),
+    ctx.canOffer && handoffElsewhere(ctx)];
+}
+
+// What the person the case was offered to can do.
+function handoffAnswer({ hd, version, attempt }) {
+  const why = Fields.fieldBlock({ id: "ho-why", label: "Reason if you cannot take it", required: true,
+    control: h("input", { type: "text", maxlength: 300, autocomplete: "off" }) });
+  return [h("h3", {}, "Your answer"),
+    h("p", {}, `If you accept, you become the owner of this case and ${hd.from_name} stops being the owner.`),
+    hd.state === "Offered" && h("div", { class: "handoff-actions" }, h("button", { type: "button", class: "alt",
+      onclick: () => attempt("receive-handoff", {}, { text: "Receipt recorded. The case has not moved. Next action: accept or decline it." }) }, "Record receipt (not acceptance)")),
+    recordedChangeForm("ho-accept", "Accept this case", [], async (metadata, submitted) => {
+      await attempt("accept-handoff", { ...metadata, handoff_version: version },
+        { text: `You are now the owner of this case. ${hd.from_name} is no longer the owner.` }, submitted);
+    }, { legend: "Accept this case", hints: ACCEPT_HINTS, within: true }),
+    handoffActionForm("Decline this case", [{ field: why, valid: () => why.control.value.trim() !== "",
+      message: "Say why you cannot take the case." }], "Decline this case",
+    () => attempt("decline-handoff", { reason: why.control.value }, { text: `Offer declined. The case stays with ${hd.from_name}.` }, [why.control]))];
+}
+
+// What the sender, or a manager, can do while the offer waits.
+function handoffChange({ hd, attempt }, withdraw) {
+  const managers = me.staff.filter((s) => ["Retrofit Programme Manager", "Programme Support Officer"].includes(s.role));
+  const target = h("select", { autocomplete: "off" }, [h("option", { value: "", disabled: true, selected: true }, "Choose a manager"),
+    ...managers.map((s) => h("option", { value: s.email }, s.name))]);
+  const to = Fields.fieldBlock({ id: "ho-escalate-to", label: "Escalate to", required: true, control: target });
+  const why = Fields.fieldBlock({ id: "ho-escalate-why", label: "Why you are escalating", required: true,
+    control: h("input", { type: "text", maxlength: 300, autocomplete: "off" }) });
+  return [h("h3", {}, "Change this offer"),
+    withdraw && h("div", { class: "handoff-actions" }, withdraw),
+    hd.state !== "Escalated" && h("details", { class: "handoff-more" }, h("summary", {}, "Escalate to a manager"),
+      handoffActionForm("Escalate this offer", [
+        { field: to, valid: () => Boolean(target.value), message: "Choose who should chase or take over the offer." },
+        { field: why, valid: () => why.control.value.trim() !== "", message: "Say why you are escalating." },
+      ], "Record manual escalation", () => attempt("escalate-handoff", { to: target.value, reason: why.control.value },
+        { text: `Offer escalated to ${managers.find((s) => s.email === target.value)?.name || "a manager"}. The case stays with ${hd.from_name} until it is accepted.` },
+        [target, why.control])))];
+}
+
+// What the new owner does after accepting.
+function handoffComplete({ attempt }) {
+  const done = Fields.fieldBlock({ id: "ho-done", label: "Completed action", required: true,
+    control: h("input", { type: "text", maxlength: 300, autocomplete: "off" }) });
+  return [h("h3", {}, "Complete the handover"),
+    h("p", {}, "You accepted this case. Record the action that completes the handover."),
+    handoffActionForm("Record the completed action", [{ field: done, valid: () => done.control.value.trim() !== "",
+      message: "Say what you did to complete the handover." }], "Complete the handover",
+    () => attempt("complete-handoff", { note: done.control.value }, { text: "Handover recorded as complete." }, [done.control]), true)];
+}
+
+// Content above the card (readings, checklists) can finish loading after the case reloads and push the status line
+// and its confirmation out of view. Keep both on screen while the status line still has focus, for a few seconds.
+function handoffKeepInView(status, confirmation) {
+  const panel = status.closest(".case-tab-panel");
+  if (!panel || typeof ResizeObserver !== "function") return;
+  const reveal = () => { status.scrollIntoView({ block: "nearest" }); confirmation.scrollIntoView({ block: "nearest" }); };
+  let card = status;
+  while (card.parentElement !== panel) card = card.parentElement;
+  const observer = new ResizeObserver(reveal);
+  [...panel.children].slice(0, [...panel.children].indexOf(card)).forEach((above) => observer.observe(above));
+  const stop = () => { observer.disconnect(); clearTimeout(timer); };
+  const timer = setTimeout(stop, 3000);
+  status.addEventListener("blur", stop);
+  reveal();
+}
+
 function handoffPanel(c, id, refresh) {
-  const hd = c.handoff;
-  const open = hd && ["Offered", "Received", "Escalated"].includes(hd.state);
-  const kids = [h("h2", {}, "Handoff to a colleague")];
-  if (hd) kids.push(
-    ["Offered", "Received", "Escalated"].includes(hd.state) && h("p", { role: "status" }, handoffAttention(hd)),
-    h("p", { role: "status" }, `${hd.status}. Current accountable owner: ${hd.accountable_owner}. Destination: ${hd.destination || "Unknown"}. Proposed receiver: ${hd.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"}. Confirmed receiver: ${hd.confirmed_receiver || "Unconfirmed"}. Chase owner: ${hd.chase_owner || "No one named yet. Next action: ask the case lead to name one"}.`),
-    h("p", {}, `Urgency: ${hd.urgency || "Unknown"}. Due: ${hd.due_at || "Unknown"}. Next action: ${hd.next_action || "Unknown"}.`),
-    h("p", {}, `Resident update owner: ${hd.resident_update_owner || "No one named yet. Next action: ask the case lead to name one"}; commitment: ${hd.resident_update_due_at || "Unknown"}. No message is sent automatically.`),
-    hd.state === "Escalated" && h("p", {}, `Escalated to ${hd.escalation_owner}. ${hd.answer_note}`));
-  if (open) {
-    kids.push(h("p", { role: "status" }, `Offered to ${hd.to_name} by ${hd.offered_by} on ${fmtDate(hd.offered_at)}. Waiting for an answer. The case stays with ${hd.from_name} until it is accepted.`),
-      hd.note && h("p", { class: "muted" }, hd.note));
-    const why = h("input", { id: "ho-why", type: "text", maxlength: 300 });
-    if (hd.to_code === me.user.code) {
-      if (hd.state === "Offered") kids.push(h("button", { class: "alt", onclick: () => refresh(() => post(id, "receive-handoff", {})) }, "Record receipt (not acceptance)"));
-      kids.push(recordedChangeForm("ho-accept", "Accept this case", [], async (metadata, submitted) => {
-        await refresh(() => post(id, "accept-handoff", { ...metadata, handoff_version: (c.handoff_history || []).length }), submitted);
-      }),
-        h("div", { class: "row" }, h("label", { for: "ho-why" }, "Reason if you cannot take it"), why,
-          h("button", { class: "alt", onclick: () => refresh(() => post(id, "decline-handoff", { reason: why.value }), [why]) }, "Decline")));
-    }
-    if (hd.from_code === me.user.code || isManager()) {
-      kids.push(h("p", {}, h("button", { class: "alt", onclick: () => refresh(() => post(id, "withdraw-handoff", {})) }, "Withdraw the offer")));
-      if (hd.state !== "Escalated") {
-        const manager = h("select", { id: "ho-escalate-to" }, me.staff.filter((s) => ["Retrofit Programme Manager", "Programme Support Officer"].includes(s.role)).map((s) => h("option", { value: s.email }, s.name)));
-        const reason = h("input", { id: "ho-escalate-why", maxlength: 300 });
-        kids.push(h("label", { for: "ho-escalate-to" }, "Escalate to manager"), manager,
-          h("label", { for: "ho-escalate-why" }, "Escalation reason"), reason,
-          h("button", { class: "alt", onclick: () => refresh(() => post(id, "escalate-handoff", { to: manager.value, reason: reason.value }), [manager, reason]) }, "Record manual escalation"));
-      }
-    }
-  } else {
-    if (hd) kids.push(h("p", { class: "muted" }, `Last handoff to ${hd.to_name}: ${hd.state}${hd.answer_note ? `. ${hd.answer_note}` : ""}.`));
-    if (hd && hd.state === "Accepted" && hd.to_code === me.user.code && c.owner_code === me.user.code) {
-      const done = h("input", { id: "ho-done", maxlength: 300 });
-      kids.push(h("label", { for: "ho-done" }, "Completed action"), done,
-        h("button", { onclick: () => refresh(() => post(id, "complete-handoff", { note: done.value }), [done]) }, "Complete handoff"));
-    }
-    if (!c.closed && (!hd || hd.state !== "Accepted") && (c.owner_code === me.user.code || isManager())) {
-      const to = h("select", { id: "ho-to", name: "to", autocomplete: "off" }, me.staff.filter((s) => s.code !== c.owner_code && s.role !== "Contractor").map((s) => h("option", { value: s.email }, `${s.name} (${s.role})`)));
-      const note = h("input", { id: "ho-note", name: "note", autocomplete: "off", type: "text", maxlength: 300 });
-      const next = h("input", { id: "ho-next", name: "next_action", autocomplete: "off", maxlength: 300 });
-      const urgency = h("select", { id: "ho-urgency", name: "urgency", autocomplete: "off" }, ["", "Routine", "Urgent"].map((x) => h("option", { value: x }, x || "Unknown")));
-      const due = h("input", { id: "ho-due", name: "due_at", autocomplete: "off", type: "datetime-local" });
-      const iso = (value) => value ? new Date(value).toISOString() : null;
-      kids.push(recordedChangeForm("ho-offer", "Offer the case", [
-        h("p", { class: "muted" }, "Offer the case. It only moves when the other person accepts."),
-        h("label", { for: "ho-to" }, "Offer to"), to, h("label", { for: "ho-note" }, "Note for them (optional)"), note,
-        h("label", { for: "ho-next" }, "Next action"), next, h("label", { for: "ho-urgency" }, "Urgency"), urgency,
-        h("label", { for: "ho-due" }, "Human-selected due date (not an approved SLA)"), due,
-        h("p", {}, c.resident_update ? "The existing resident-update commitment is preserved." : "Record a complete resident-update commitment in the resident panel. A handoff never creates or clears it.")
-        ], async (metadata, submitted) => {
-          await refresh(() => post(id, "offer-handoff", {
-          ...metadata, handoff_version: (c.handoff_history || []).length,
-          to: to.value, note: note.value, next_action: next.value, urgency: urgency.value, due_at: iso(due.value)
-          }), submitted);
-        }));
-    }
-  }
-  const history = c.handoff_history || c.handoff_log;
-  if (history && history.length) {
-    kids.push(h("ul", { class: "tl" }, history.slice(-8).reverse().map((x) => h("li", {},
-      `${fmtDate(x.at || x.answered_at)}: ${x.from_name} to ${x.to_name}, ${x.status || x.state}; current owner at event: ${x.accountable_owner || "Unknown"}; chase: ${x.chase_owner || "Unknown"}`,
-      h("p", { class: "muted" }, `Source: ${x.source || "Unknown (legacy)"}; source version: ${x.source_version || "Unknown (legacy)"}; reason: ${x.reason || "Unknown (legacy)"}. Change version: ${x.version || "Unknown"}; recorded by: ${x.actor?.name || x.by || "Unknown"}.`)))));
-  }
-  return h("section", { class: "card" }, ...kids);
+  const session = caseSession;
+  // A handoff recorded without names still reads as words, never as "undefined".
+  const hd = c.handoff && { ...c.handoff, offered_by: c.handoff.offered_by || "Unknown",
+    to_name: c.handoff.to_name || c.handoff.proposed_receiver || c.handoff.to_role || "a colleague",
+    from_name: c.handoff.from_name || c.handoff.accountable_owner || c.owner };
+  const mine = me.user.code;
+  const open = Boolean(hd) && HANDOFF_OPEN_STATES.includes(hd.state);
+  const accepted = Boolean(hd) && hd.state === "Accepted";
+  const canWithdraw = open && (hd.from_code === mine || isManager());
+  const mayOffer = c.owner_code === mine || isManager();
+  const ctx = { c, hd, id, session, open, accepted, canWithdraw, mayOffer, offers: [],
+    canOffer: !c.closed && mayOffer && !open && !accepted,
+    completes: accepted && hd.to_code === mine && c.owner_code === mine,
+    version: (c.handoff_history || []).length,
+    stays: c.owner_code === mine ? "you" : c.owner };
+  // The message for the action that just reloaded this case; it is shown once, inside this card.
+  const shown = session?.handoffResult;
+  if (session) delete session.handoffResult;
+  // Every action goes through here: the shared reload, then a message in this card. A refusal is thrown back to the
+  // form or button that asked, which shows it beside itself; the shared reload also writes it below the tabs.
+  ctx.attempt = async (action, body, message, submitted = []) => {
+    let failure = null;
+    const outcome = await refresh(async () => {
+      try { await post(id, action, body); } catch (error) { failure = error; throw error; }
+      if (session) session.handoffResult = message;
+    }, submitted);
+    if (failure && outcome === false) throw failure;
+    return outcome;
+  };
+  const withdraw = canWithdraw && h("button", { type: "button", class: "alt",
+    onclick: () => ctx.attempt("withdraw-handoff", {}, { text: `Offer withdrawn. The case stays with ${hd.from_name}.` }) },
+  `Withdraw the offer to ${hd.to_name}`);
+  const undo = Boolean(withdraw && shown?.undo);
+  const status = hd && h("p", { class: `status-line${open || accepted ? " wait" : hd.state === "Completed" ? " ok" : ""}`, tabindex: "-1" }, handoffStatus(hd, mine));
+  const confirmation = shown && h("div", { class: "handoff-result" }, h("p", { class: "status-line ok" }, shown.text), undo && withdraw);
+  if (confirmation && status) queueMicrotask(() => {
+    if (!status.isConnected) return;
+    status.focus();
+    handoffKeepInView(status, confirmation);
+  });
+  return h("section", { class: "card" }, h("h2", {}, "Hand this case to a colleague"),
+    hd ? [status, confirmation, h("dl", {}, handoffRows(hd, c, mine).flatMap(([label, value]) => [h("dt", {}, label), h("dd", {}, value)]))]
+      : h("p", { class: "muted" }, c.closed ? `No offer is open. The case stays with ${c.owner}.`
+        : `No one has been offered this case yet. It stays with ${c.owner} until another person accepts an offer.`),
+    open && hd.to_code === mine && handoffAnswer(ctx),
+    canWithdraw && handoffChange(ctx, undo ? null : withdraw),
+    ctx.completes && handoffComplete(ctx),
+    handoffCandidates(ctx), handoffHistory(c));
 }
 
 function hazardState(x) {
@@ -1979,7 +2308,7 @@ async function contractorListView() {
   const PAGE = 50;
   let rows = [], total = 0;
   const out = h("div", { "aria-live": "polite" });
-  const render = () => out.replaceChildren(
+  const render = () => out.replaceChildren(...[
     h("p", { class: "muted" }, `${total} ${total === 1 ? "job" : "jobs"}`),
     h("ul", { class: "list" }, rows.length ? rows.map((r) => h("li", {}, h("a", { class: "item", href: `#/case/${encodeURIComponent(r.id)}` },
       h("div", {}, h("span", { class: "name" }, `${r.address}, ${r.town} ${r.postcode}`),
@@ -1987,7 +2316,7 @@ async function contractorListView() {
         contractorVisitNoticeBadge(r.needs_notice),
         h("div", {}, `Named contact: ${r.named_contact}`)),
       h("div", { class: "meta" }, h("div", {}, r.stage), r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "card" }, "No jobs assigned to you.")),
-    rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null);
+    rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
   const load = async (more) => {
     const d = await api(`/api/cases?limit=${PAGE}&offset=${more ? rows.length : 0}`);
     rows = more ? rows.concat(d.items) : d.items;
@@ -2707,10 +3036,9 @@ function mapPanel(coordinator = null, filters = null) {
   const sensorFilterInput = h("input", { type: "checkbox", id: "map-sensor-alerts",
     onchange: () => { alertsOnly = sensorFilterInput.checked; if (lastView) renderView(lastView, false); } });
   const sensorFilterNote = h("p", { class: "muted", "aria-live": "polite" });
-  const sensorFilter = h("div", { class: "map-sensor-filter", hidden: Boolean(coordinator) }, sensorFilterInput,
-    h("label", { for: "map-sensor-alerts" }, "Show only homes with stale or offline sensors"),
-    h("p", { class: "muted", id: "map-sensor-alerts-hint" }, "Applies to individual homes. Zoom in until homes are shown one by one."), sensorFilterNote);
-  sensorFilterInput.setAttribute("aria-describedby", "map-sensor-alerts-hint");
+  const sensorFilterRow = Fields.checkRow({ id: "map-sensor-alerts", label: "Show only homes with stale or offline sensors",
+    hint: "Applies to individual homes. Zoom in until homes are shown one by one.", control: sensorFilterInput });
+  const sensorFilter = h("div", { class: "map-sensor-filter", hidden: Boolean(coordinator) }, sensorFilterRow.block, sensorFilterNote);
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
@@ -2937,14 +3265,14 @@ async function coordinatorView() {
       h("option", { value: "" }, "Any"), options.map(([value, text]) => h("option", { value }, text)));
     input.value = state[key] || "";
     values[key] = input;
-    return h("div", {}, h("label", { for: `co-${key}` }, label), input);
+    return h("div", { class: "field" }, h("label", { for: `co-${key}` }, label), input);
   };
   const textField = (label, key, required = false) => {
     const input = h("input", { id: `co-${key}`, name: key, autocomplete: "off",
       type: key === "q" ? "search" : "text", required, spellcheck: "false" });
     input.value = state[key] || "";
     values[key] = input;
-    return h("div", {}, h("label", { for: `co-${key}` }, label), input);
+    return h("div", { class: "field" }, h("label", { for: `co-${key}` }, label), input);
   };
   const error = h("p", { id: "co-filter-error", class: "err", role: "alert" });
   const form = h("form", { class: "card coordinator-filters", "aria-labelledby": "coordinator-filters-heading", onsubmit: (event) => {

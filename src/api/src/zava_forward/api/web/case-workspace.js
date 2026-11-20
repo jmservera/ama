@@ -41,10 +41,11 @@ const CaseWorkspace = (() => {
     return c.closed ? "overview" : blocker ? "blockers" : "overview";
   }
   function nextTab(c) {
+    if (c.closed) return "overview";
     if (c.work?.source?.endsWith("/handoff")) return "quality";
     const blocker = c.work?.blockers?.find(b => b.current_stop);
     if (blocker) return "blockers";
-    if (c.closed || c.can_advance) return "overview";
+    if (c.can_advance) return "overview";
     if (["Contacting resident", "Contact paused", "Rescheduled", "Survey being booked", "Survey booked"].includes(c.stage)) return "resident";
     return steps[currentIndex(c)]?.tab || "overview";
   }
@@ -54,22 +55,24 @@ const CaseWorkspace = (() => {
     const offered = c.handoff && ["Offered", "Received", "Escalated"].includes(c.handoff.state);
     return {
       status: c.status || "Status not recorded",
-      step: steps[currentIndex(c)] ? `${steps[currentIndex(c)].name}: ${c.stage}, ${c.days_in_stage ?? "Unknown"} days` : "Step unknown",
-      next: work.next_action || `Ask ${c.owner || "Unknown"} to record the next action.`,
+      step: c.closed ? "Closed, all six steps done" : steps[currentIndex(c)] ? `${steps[currentIndex(c)].name}: ${c.stage}, ${c.days_in_stage ?? "Unknown"} days` : "Step unknown",
+      next: c.closed ? "None. A manager can reopen this case." : work.next_action || `Ask ${c.owner || "Unknown"} to record the next action.`,
       owner: `${c.owner || "Unknown"}${c.owner_role ? `, ${c.owner_role}` : ""}${offered ? `. Offered to ${c.handoff.proposed_receiver || c.handoff.to_name || "Unknown"}, not yet confirmed` : ""}`,
-      blockers: first ? `${work.blockers.length} blockers. ${first.reason} Owner: ${first.owner || "Unknown"}. Next action: ${first.next_action || "Ask the case owner to record the next action."}` : "No recorded blockers.",
+      blockers: c.closed ? "No recorded blockers. This case is closed." : first ? `${work.blockers.length} blockers. ${first.reason} Owner: ${first.owner || "Unknown"}. Next action: ${first.next_action || "Ask the case owner to record the next action."}` : "No recorded blockers.",
       overdue: work.overdue?.length || 0,
     };
   }
-  function blockerDisclosure(blockers, id, label) {
+  // Step cards show a fixed one-line label; the summary button shows the first sentence of the reason.
+  function blockerDisclosure(blockers, id, label, compact = false) {
     const reason = blockers[0].reason || "Reason not recorded. Ask the case owner.";
     const short = reason.split(/(?<=[.!?])\s/)[0];
     const popupId = `case-blocker-${id}`;
     return h("div", { class: "case-blocker" },
       h("button", { class: "alt case-blocker-trigger", type: "button", popovertarget: popupId,
         "aria-label": `${label}: why blocked. ${short} Details` },
-        h("span", { class: "case-blocker-summary" }, short),
-        h("span", { class: "case-blocker-hint" }, "Details")),
+        compact ? h("span", { class: "case-blocker-label" }, "Why blocked") : [
+          h("span", { class: "case-blocker-summary" }, short),
+          h("span", { class: "case-blocker-hint" }, "Details")]),
       h("div", { id: popupId, class: "case-blocker-popover", popover: "auto",
         role: "region", "aria-label": `${label} blocker details`, tabindex: 0 },
         h("h2", {}, `${label}: ${blockers.length} ${blockers.length === 1 ? "blocker" : "blockers"}`),
@@ -96,19 +99,29 @@ const CaseWorkspace = (() => {
       const text = unknown ? `AI review count unavailable.${draftCount ? ` ${draftCount} local drafts to review.` : ""}` : loading ? "AI review count loading." : count ? `${count} AI suggestions waiting for review.` : "No AI suggestions waiting.";
       if (aiCount.textContent !== text) aiCount.textContent = text;
       if (aiState.textContent !== state) aiState.textContent = state;
-      const label = `AI assistance (${unknown ? `review count unavailable${draftCount ? `; ${draftCount} local drafts to review` : ""}` : loading ? "loading" : `${count} to review`})`;
-      if (aiTab.button && aiTab.button.textContent !== label) aiTab.button.textContent = label;
+      const label = `AI assistance (${unknown ? `count unavailable${draftCount ? `; ${draftCount} local drafts to review` : ""}` : loading ? "loading" : `${count} to review`})`;
+      if (aiTab.button && aiTab.button.textContent !== label) { aiTab.button.textContent = label; keepSelectedVisible(); }
+    };
+    // The Home sensors label gains a count once, when the readings arrive and only if something needs attention.
+    const sensorTab = definitions.find(tab => tab.id === "sensors");
+    const sensorRoot = sensorTab?.panel.querySelector("#sensors");
+    const sensorLabel = () => {
+      const alerts = Number(sensorRoot.dataset.sensorAlerts || 0);
+      const label = alerts ? `${sensorTab.label} (${alerts} ${alerts === 1 ? "alert" : "alerts"})` : sensorTab.label;
+      if (sensorTab.button && sensorTab.button.textContent !== label) { sensorTab.button.textContent = label; keepSelectedVisible(); }
     };
     const item = (name, value, button) => h("div", {}, h("dt", {}, name), h("dd", {}, value, button));
     const jump = (tab, text) => h("button", { class: "alt", type: "button", onclick: () => select(tab, true, true) }, text);
+    // A closed case has no next action and no blocker to jump to, and an open case without blockers has nothing to list.
+    const hasBlockers = !c.closed && c.work?.blockers?.length > 0;
     section.append(h("dl", {},
       item("Status", h("span", { class: `status-line ${c.hazards.some(x => !x.released) ? "danger" : c.closed ? "ok" : "wait"}` }, values.status)),
       item("Current step", values.step),
-      item("Next action", values.next, jump(nextTab(c), "Open next action")),
+      item("Next action", values.next, !c.closed && jump(nextTab(c), "Open next action")),
       item("Owner", values.owner),
       item("Blockers", h("div", { class: "case-summary-blockers" },
-        c.work?.blockers?.length ? blockerDisclosure(c.work.blockers, "summary", "Case") : "No recorded blockers.",
-        values.overdue ? h("span", {}, `${values.overdue} overdue tasks.`) : null), jump("blockers", "See all blockers")),
+        hasBlockers ? blockerDisclosure(c.work.blockers, "summary", "Case") : values.blockers,
+        values.overdue ? h("span", {}, `${values.overdue} overdue tasks.`) : null), hasBlockers && jump("blockers", "See all blockers")),
       h("div", {}, h("dt", {}, "AI"), aiValue)));
     const aiJump = jump("ai", "Review AI suggestions");
     aiValue.append(aiJump);
@@ -118,8 +131,11 @@ const CaseWorkspace = (() => {
       }, h("a", { href: `#/case/${encodeURIComponent(c.id)}?tab=${step.tab}`, "data-case-tab": step.tab },
         h("img", { class: "step-icon", src: `/journey-icons/${step.icon}.png`, alt: "", "aria-hidden": "true", width: 24, height: 24 }),
         h("span", { class: "step-name" }, step.name), h("span", { class: "step-state" }, step.text)),
-        step.blockers.length ? blockerDisclosure(step.blockers, `step-${index}`, step.name) : null))));
+        step.blockers.length ? blockerDisclosure(step.blockers, `step-${index}`, step.name, true) : null))));
     const tabs = h("div", { class: "case-tabs", role: "tablist", "aria-label": "Case sections" });
+    // The scrolling row sits inside the tab list, so the list itself never scrolls and stays fixed above the panel.
+    const row = h("div", { class: "case-tabs-row" });
+    tabs.append(row);
     let active;
     function syncLinks() {
       nav.querySelectorAll("a[data-case-tab]").forEach(link => {
@@ -144,7 +160,20 @@ const CaseWorkspace = (() => {
         displayedHash = location.hash;
       }
       syncLinks();
+      queueMicrotask(() => reveal(selected.button));
       if (focusHeading) selected.panel.querySelector("h2").focus();
+    }
+    // At 899px and below the tab row scrolls sideways; bring the selected tab into view along the row only, never the page.
+    function reveal(button) {
+      if (!button.isConnected || row.scrollWidth <= row.clientWidth) return;
+      const box = row.getBoundingClientRect(), item = button.getBoundingClientRect();
+      const edge = parseFloat(getComputedStyle(row).paddingLeft) || 0;
+      if (item.left < box.left + edge) row.scrollLeft -= box.left + edge - item.left;
+      else if (item.right > box.right - edge) row.scrollLeft += item.right - box.right + edge;
+    }
+    // A tab label that grows after the first paint pushes the later tabs sideways.
+    function keepSelectedVisible() {
+      reveal(definitions.find(tab => tab.id === active).button);
     }
     definitions.forEach((tab, index) => {
       const heading = tab.panel.querySelector("h2");
@@ -162,16 +191,19 @@ const CaseWorkspace = (() => {
             definitions[positions[event.key]].button.focus();
           }
         } }, tab.label);
-      tabs.append(tab.button);
+      row.append(tab.button);
     });
     const observer = new MutationObserver(counts);
     observer.observe(assistant, { attributes: true, attributeFilter: ["data-waiting", "data-assistance"] });
     observer.observe(drafts, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-review-state"] });
+    const sensorObserver = sensorRoot && new MutationObserver(sensorLabel);
+    sensorObserver?.observe(sensorRoot, { attributes: true, attributeFilter: ["data-sensor-alerts"] });
     app.addEventListener("ai-review-change", counts);
     select(new URLSearchParams(location.hash.split("?")[1] || "").get("tab"));
     counts();
+    if (sensorRoot) sensorLabel();
     return { top: [section, safety, nav].filter(Boolean), tabs, select, counts, syncLinks,
-      dispose: () => { observer.disconnect(); app.removeEventListener("ai-review-change", counts); } };
+      dispose: () => { observer.disconnect(); sensorObserver?.disconnect(); app.removeEventListener("ai-review-change", counts); } };
   }
   return { steps, stageStep, journey, summary, defaultTab, nextTab, waiting, enhance };
 })();

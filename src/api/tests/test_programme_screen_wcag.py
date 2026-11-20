@@ -367,7 +367,9 @@ class ProgrammeScreenWcag(unittest.TestCase):
         )
         down_paragraphs = [text(p) for p in walk(self.out["overviewDown"]) if p["tag"] == "p"]
         self.assertIn(
-            "State: Unknown. Lifecycle and funnel counts are Unknown. No record was supplied.",
+            "State: Unknown. Lifecycle and funnel counts could not be read. Owner: application "
+            "support. Next action: refresh to try again, then contact application support if it "
+            "continues.",
             down_paragraphs,
         )
 

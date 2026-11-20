@@ -139,8 +139,9 @@ class UiSource(unittest.TestCase):
         panel = src[start : src.index("function simulationPanel")]
         self.assertIn("data-sensor-badges", panel)
         self.assertIn("data-sensor-advisory", panel)
-        self.assertIn("${b.label}:", panel)
-        self.assertIn(ADVISORY.replace("\u2014", "\\u2014"), panel)
+        self.assertIn("b.state", panel)
+        self.assertNotIn("\u2014", panel)
+        self.assertNotIn("\\u2014", panel)
         self.assertNotIn("aria-invalid", panel)
 
 

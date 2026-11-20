@@ -148,9 +148,12 @@ class ConnectedJourneyAcrossRoles(unittest.TestCase):
         self.assertTrue(contractor)
         for row in contractor:
             self.assertIn(
-                "is not installed for your role. Your access has not changed. Owner:",
+                "not installed for your role. Owner: your team manager. "
+                "Next action: ask them to add the screens you need.",
                 row["panelText"],
             )
+            self.assertEqual(row["panelText"].count("Owner: your team manager."), 1)
+            self.assertIn("Not installed for your role.", row["panelText"])
 
     def test_programme_queue_keeps_its_own_single_map(self) -> None:
         self.assertEqual(

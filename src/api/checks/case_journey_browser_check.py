@@ -639,8 +639,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             chat_cleanup(page, base)
             mutation_reconstruction(page, base, axe, reports)
             check(
-                "nine tabs, one selected and one tab stop",
-                page.get_by_role("tab").count() == 9
+                "ten tabs, one selected and one tab stop",
+                page.get_by_role("tab").count() == 10
                 and page.locator("[role=tab][aria-selected=true]").count() == 1
                 and page.locator('[role=tab][tabindex="0"]').count() == 1,
             )
@@ -849,6 +849,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             check("resident mutation preserves later dirty edits", True)
 
             tab(finance, "Quality and handover")
+            finance.get_by_text("Offer to someone who is not listed", exact=True).click()
             finance.locator("#ho-to").select_option("coordinator@example.test")
             finance.locator("#ho-note").fill("Dispatched handoff")
             finance.locator("#ho-next").fill("Review synthetic evidence")
@@ -1491,6 +1492,16 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                         "closed all done, no current",
                         page.locator(".step.done").count() == 6
                         and page.locator(".step[aria-current]").count() == 0,
+                    )
+                    closed_summary = page.locator(".case-summary").inner_text()
+                    check(
+                        "closed summary agrees with the six done steps: "
+                        + closed_summary.replace("\n", " | "),
+                        "Closed, all six steps done" in closed_summary
+                        and "None. A manager can reopen this case." in closed_summary
+                        and "No recorded blockers. This case is closed." in closed_summary
+                        and "Step unknown" not in closed_summary
+                        and page.locator(".case-blocker").count() == 0,
                     )
                 if state == "empty":
                     check(

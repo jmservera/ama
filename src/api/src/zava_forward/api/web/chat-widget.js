@@ -26,7 +26,7 @@ window.ChatWidget = (() => {
     icon.append(path);
     launcher.append(icon);
   }
-  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000, resizable = false, stayOpen = false, size = {} }) {
+  function create({ id, title, launcher, questionLabel, skillLabel, maxLength = 1000, resizable = false, stayOpen = false, size = {}, visibleLabels = false }) {
     let active = true, timer = null;
     launcher ||= node("button", "", { type: "button" });
     decorateLauncher(launcher);
@@ -59,6 +59,11 @@ window.ChatWidget = (() => {
     const entry = node("div", "", { class: "chat-widget-entry" });
     entry.append(beforeInput, input, keys, reason);
     form.append(entry, tools);
+    if (visibleLabels) {
+      // The visible text is the same as each aria-label, so what a person reads is what assistive technology announces.
+      entry.insertBefore(node("label", questionLabel, { for: input.id, class: "chat-widget-label" }), input);
+      tools.insertBefore(node("label", skillLabel, { for: select.id, class: "chat-widget-label" }), select);
+    }
     root.append(header, intro, log, status, loading, error, form);
     document.body.append(launcher, root);
     let docked = false;

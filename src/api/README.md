@@ -291,16 +291,19 @@ quality image15. A regression checks those bytes against the tracked deck.
 The API package data explicitly includes `web/journey-icons/*.png` so these
 assets also ship in the wheel installed by the container.
 
-Blocked steps and the case summary show a single-line reason with a native
-Details button. Click, tap, Enter or Space opens the complete reasons, owners
+The case summary shows a single-line reason with a native Details button. Since
+2026-11-20 a blocked step card shows the same kind of button with the fixed words
+Why blocked instead of a clipped reason (see the staff case screen update below).
+Click, tap, Enter or Space opens the complete reasons, owners
 and next actions; Escape, Close details or tapping outside dismisses them.
 Long content wraps and scrolls inside a viewport-bounded, keyboard-focusable
 popover. Status words and existing approval, safety and manual paths remain.
 Native popovers require a current browser; the local check covers Chromium,
 not full cross-browser or assistive-technology acceptance.
 
-Tabs wrap on the same bordered surface as their panel, outside its vertical
-scrolling area. Arrow keys, Home and End move tab focus; Enter or Space selects.
+At 900px and wider, tabs wrap on the same bordered surface as their panel, outside its vertical
+scrolling area; at 899px and below they sit in one row that scrolls sideways (updated
+2026-11-20, see below). Arrow keys, Home and End move tab focus; Enter or Space selects.
 The selected tab stays in the URL. Sections remain mounted so tab changes
 retain inputs. If enhancement is unavailable or fails, all sections are listed
 without inner scrolling bounds.
@@ -336,6 +339,155 @@ violation or horizontal overflow (issue 1530).
 verification. The UI was already delivered by PR #554; a later verification
 run is not a new before/after redesign.
 These are focused local engineering checks, not publication or WCAG acceptance.
+
+## Staff case screen UX update (2026-11-20)
+
+A UX review of the staff workbench changed the case screen and a few app-wide
+rules. The findings, dispositions, decisions taken on the owner's behalf and the
+open owner decisions are in the
+[review record](../../docs/reference/research/ux/staff-workbench-ux-review-2026-11-20.md);
+the design is in the
+[case workspace update](../../docs/reference/research/ux/employee-case-workspace-redesign.md#staff-workbench-ux-update-2026-11-20).
+The change is in the `web/` assets, plus one server sentence: the handover suggestions built in
+`src/core/src/zava_forward/core/insights.py` say "1 open case", not "1 open cases". No endpoint,
+response field or authorisation rule changed.
+
+Case screen (`web/app.js`, `web/ops.js`, `web/case-workspace.js`, `web/style.css`):
+
+* The case has ten tabs. Home sensors sits after Quality and handover and History stays last.
+* Journey strip cards stretch to the tallest card in their visual row, with the blocker
+  button at the foot of the card. The strip has six columns at 1200px and wider, three
+  columns by two rows from 900 to 1199px and one column at 899px and below. A blocked
+  step shows the words Why blocked; its accessible name and popover are unchanged.
+* The summary of a closed case reads "Closed, all six steps done", "None. A manager can
+  reopen this case." and "No recorded blockers. This case is closed.". It shows no blocker
+  disclosure and no jump button: a closed case renders no Open next action button, and
+  See all blockers shows only for an open case that has blockers.
+* The case header links are separate list items: Back to the list, Versioned home case and
+  the building link.
+* At 899px and below the tab buttons sit in a plain wrapper, `.case-tabs-row`, that scrolls
+  sideways. Script keeps the selected tab in view along the row only.
+
+Home sensors tab (`?tab=sensors`, panel `#case-panel-sensors`, content `#sensors`):
+
+* Reads: `GET /api/cases/{id}/sensors` when the case screen is built, then
+  `GET /api/cases/{id}/sensor-drafts` unless the first read failed or reported the readings
+  unavailable. The tab label gains a count once, after the reply, and only when something
+  needs attention ("Home sensors (1 alert)").
+* Who may read: the Quality Inspector and the Retrofit Programme Manager. `SENSOR_ROLES` in
+  `ops.js` mirrors the server's quality evidence roles, and the server still enforces role
+  and case scope. Every other role sees "Sensor readings are not shown for your role" and
+  makes no request. The tab shows for every staff role.
+* States: loading; role may not read; not connected (the server says durable SQL is
+  required); account not linked (a 403 with the revoked-role message, which a signed-in
+  Entra person with no staff-list entry produces); service down (503 or any other failure);
+  no readings; recent; out of date (older than 15 minutes); sensor may be offline (no
+  reading for over 24 hours); readings disagree; sensor fault; reading out of range; consent
+  withheld; unavailable. Each stop or alert gives a reason, an owner and a next action.
+  `test_home_sensors_tab.py` fails when a badge state has no copy entry. The 15-minute and
+  24-hour rules copy `sensor_view.FRESH_SECONDS` and `sensor_map.OFFLINE_SECONDS`, and a
+  test pins them. The 24-hour state says "may be" because a missing reading is not proof, as
+  its alert does; the server's map label still says Sensor offline.
+* Order on the tab: the status line with "Checked {time} (UK time)", then one muted sentence
+  ("Readings are advice for a person to check. They do not change the case."), then the
+  alerts, the latest reading, the tables, the review draft and a closed About these readings
+  note.
+
+Quality decisions (`ops.js`, `qualityPanel`): each measure is a record card with a heading,
+status line, fact list, the checks recorded, a defect block and a decision area for its state.
+Accept this work and Return with a defect are separate fieldsets. Return with an empty box
+posts nothing, shows one sentence beside each empty box and focuses the first. A refused
+action shows the server's reasons, with their owner and next action, inside the record. A
+success shows a "Recorded:" line and moves focus to the record heading. The names and ids
+that other checks use (`quality-note-{i}`, `quality-feedback-{i}`, `#q-measure`, `#q-by`,
+`#q-revision`, `#q-src`, `[data-quality-save]` and the button Save evidence) are kept.
+
+Handover (`app.js`, `handoffPanel`): one card, Hand this case to a colleague, replaces the
+handoff card and the suggestions card. Each suggested person has a button, Offer this case
+to {full name}, that opens a labelled form. Sending posts the `offer-handoff` action with
+`to`, `source`, `source_version`, `reason` and `handoff_version`, plus the optional `note`,
+`next_action`, `urgency` and `due_at`. The earlier one-click buttons posted only `to` to the
+`handover` action, which the server refused for lacking a source, version and reason. They
+are gone: no case screen control calls `handover` any more, and the server action is
+unchanged. Offer to someone who is not listed holds the full colleague list with nobody
+preselected. When the viewer cannot offer, the card says why and who owns the next step.
+The case still moves only when the other person accepts. The person an offer is made to
+reads "Offered to you, waiting for your answer" and "What you are asked to do", and the
+button that completes an accepted handover is "Complete the handover". Text the server holds
+back for the viewer's role shows as "Held back for your role. Owner: {name}. Next action: ask
+{name} ...", or names the person who recorded it when no name is known. `Fields.heldBack` in
+`fields.js` builds that sentence once; the handover card, a handed-over quality record, its
+previous handover note and its aftercare notes all use it. `test_handover_ux.py` pins the
+match to `projection.NOTE_HELD`, `taskqueues.HELD` and the copy in `fields.js`. The handover
+suggestions read "1 open case" for one case.
+
+Labelled fields: `web/fields.js`, served right after `async-action.js`, builds a visible
+label, an optional hint, the control and a hidden error as one block (`Fields.fieldBlock`),
+and a checkbox row with its label beside the box (`Fields.checkRow`). `fail(message)` shows
+the error, marks the control invalid and focuses it; `clear()` undoes that. A validation error
+is one short sentence that says the reason and the fix, for example "Enter the case
+reference, for example ZF-1." or "Say where this change came from."; the three-part reason,
+owner and next action form is for blocked or refused actions, and server refusals keep their
+own wording. In a check row the label carries the space beside the box, so the whole row is
+clickable, and the hint or error lines up under the label text. The helper builds the quality
+decision and evidence forms, the handover forms, time capture, the capacity work-order row,
+the overview sensor filter and the staff intake checkboxes. The employee chat composer shows
+its two labels when the widget is created with `visibleLabels`; the resident chat does not.
+The helper replaced the quality remediation note as a site that sets `aria-invalid`, so the
+counted sites stay at nine. It is served, versioned and packaged like the other scripts
+(`test_static_assets.py`).
+
+Page identity and app-wide rules: the tab title is the page heading, a vertical bar and Zava
+Forward, set each time a screen is shown (Sign in with the product name when signed out; the
+static title while a screen has no heading). The title leaves out the Safety issue open flag
+text of the case heading, and the case heading no longer prints a stray 0 when no safety issue
+is open. List screens build the heading row first, and the work lists name their results with
+a second-level heading, My open cases or All open cases. A first visit that gets a 401 no
+longer says the session ended; a session that existed still does. The password card and the
+Microsoft card carry the same orienting sentence and a Back to the welcome page link, and the
+Microsoft card's neutral instruction no longer takes the error style. The context line names
+the spreadsheet check, the coordinator flow, the shared building and the versioned home case.
+The logo image has empty alternative text because the visible name sits beside it, and the
+page declares the brand teal as its theme colour. The programme queue now asks
+`/api/coordinator` with an `as_of` time, formats the as-of time of its funnel like the
+neighbouring panels and says when it cannot read the counts. Links in the page body take one
+colour; links in tables, map lists and disclosure lists get a compact minimum height; in the
+coordinator flow, count links in tables keep a compact minimum size and count links inside
+sentences stay inline; and table cells use tabular figures (see the
+[design system update](../../docs/reference/research/ux/design-system.md#staff-workbench-ux-update-2026-11-20)).
+At 600px and below the page ends with extra room for the fixed chat launcher, and the
+employee chat composer can take more of the panel, so the whole Attach and Voice explanation
+shows at 390 by 800. A manager can open the case of a home whose invoice has no kind
+(`panels.js` reads a missing kind as empty).
+
+Focus frame on the main container: at the owner's request of 2026-11-20 the two-tone frame
+around `main#app` is removed for mouse navigation, keyboard navigation and the skip link. The
+global rule for elements with `tabindex="-1"` leaves out the main container, and one
+override, `#app:focus-visible`, makes its outline colour transparent and removes its box
+shadow. Focus still moves to the main container after a route change and from the skip link,
+and links, buttons, fields and the case tab panel headings keep their frame. The outline
+stays defined, only transparent, so forced-colours mode can still draw one; that rendering
+was not checked. The accessibility review of this choice is pending, and `test_polish_ux.py`
+pins the mechanism.
+
+From `src/api`, with the installed project dev distributions:
+
+```bash
+PYTHONPATH=src:../core/src:../agents/src:tests:../core/tests:../agents/tests \
+  python3 -m unittest test_fields_helper test_quality_decisions_ui test_handover_ux \
+  test_home_sensors_tab test_app_wide_ux test_polish_ux test_case_journey \
+  test_static_assets test_epic149_role_workbench_heading_hierarchy -q
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.case_view_ux_browser_check \
+  --out /new/external/case-results --axe /path/to/axe-4.10.3.min.js
+PYTHONPATH=tests:../core/tests:../agents/tests python3 -m checks.case_journey_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/journey-results
+```
+
+These are constructed-data engineering checks in Chromium. The Home sensors tab was not run
+against real SQL-backed readings in the review, and no screen reader, person-run keyboard
+pass or other browser was used. The designers' final reviews read the build before the last
+polish commits and did not run again afterwards. They are not user validation or WCAG
+acceptance.
 
 ## Shared resident and employee chat widget (#550)
 
@@ -962,7 +1114,7 @@ provider, screen-reader or voice-control acceptance is claimed.
 ## Employee case journey workspace (#526)
 
 Employee case routes show a six-step evidence-based journey, six-value summary
-and nine native ARIA tabs. Tab selection lives in `?tab=` inside the hash;
+and ten native ARIA tabs (nine until the Home sensors tab of 2026-11-20). Tab selection lives in `?tab=` inside the hash;
 manual arrow-key focus and Enter/Space activation retain panel DOM and drafts.
 Open safety controls stay above all tabs. Funding and Resident agreement
 completion require recorded confirmation, not position alone.

@@ -149,7 +149,11 @@ const vm = require("node:vm");
 const src = fs.readFileSync(process.argv[1] + "/staff-intake.js", "utf8");
 const data = JSON.parse(fs.readFileSync(0, "utf8"));
 const flat = (kids) => kids.flat(Infinity).filter((k) => k !== false && k != null);
-const h = (tag, attrs, ...kids) => ({tag, attrs: attrs || {}, kids: flat(kids)});
+const h = (tag, attrs, ...kids) => {
+  const node = {tag, attrs: attrs || {}, kids: flat(kids)};
+  node.setAttribute = (key, value) => { node.attrs[key] = value; };
+  return node;
+};
 const text = (n) => typeof n === "object"
   ? [JSON.stringify(n.attrs), ...n.kids.map(text)].join(" ") : String(n);
 const find = (n, tag, out = []) => {
@@ -173,6 +177,7 @@ const context = vm.createContext({
   screenTable: (t, head, rows) => h("table", {}, t, head, rows),
   registerRoleScreen: (s) => { screen = s; },
 });
+vm.runInContext(fs.readFileSync(process.argv[1] + "/fields.js", "utf8"), context);
 vm.runInContext(src, context);
 (async () => {
   const mk = (e) => screen.render({id: "ZF-3"},

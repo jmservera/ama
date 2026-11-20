@@ -23,12 +23,6 @@ SITES = (
     ),
     (
         "ops.js",
-        'note.setAttribute("aria-invalid", "true")',
-        'note.setAttribute("aria-describedby", message.id)',
-        "id: `quality-feedback-${i}`",
-    ),
-    (
-        "ops.js",
         'contractVersion[1].setAttribute("aria-invalid", "true")',
         'setAttribute("aria-describedby", "capacity-version-error")',
         'id: "capacity-version-error"',
@@ -69,6 +63,12 @@ SITES = (
         '"aria-describedby": `${hintId} ${errId}`',
         'h("p", { id: errId, class: "field-error", role: "alert"',
     ),
+    (
+        "fields.js",
+        'control.setAttribute("aria-invalid", "true")',
+        'control.setAttribute("aria-describedby", describedWith(control, errorId))',
+        'h("p", { class: "field-error", id: errorId, hidden: true })',
+    ),
 )
 # Sites that rely on native validation or a later check rather than moving focus when they mark
 # the field. Recorded gaps, shrink-only: a fix must remove the entry so the check then enforces it.
@@ -87,7 +87,7 @@ FOCUSABLE_MESSAGE = {
 RECOVERY_COPY = (
     ("assistants.js", "Enter a reason to edit or reject this proposal."),
     ("assistants.js", "Enter valid JSON for the edited evidence proposal."),
-    ("ops.js", "Enter the remediation evidence before recording the fix."),
+    ("ops.js", "Record what was corrected and the photo, document or inspection reference."),
     ("ops.js", "Enter the contract or call-off version before creating the package."),
     ("app.js", "Enter a reason to edit or reject this draft."),
     ("app.js", "Enter the audit reason before recording a recovery decision."),
