@@ -2896,6 +2896,13 @@ class BicepPolicyTests(unittest.TestCase):
                 set() if valid else {guard},
                 f"{tier} {delay}",
             )
+        dtu_guard = "dtuTierRequiresDevelopmentProfile"
+        self.assertEqual(failures(sqlTier="dtu"), {dtu_guard})
+        self.assertEqual(failures(sqlTier="dtu", deploymentProfile="development"), set())
+        self.assertEqual(
+            failures(sqlTier="dtu", deploymentProfile="development", sqlAutoPauseDelayMinutes=0),
+            set(),
+        )
 
     def assert_mutation_rejected(self, assertion, mutated: dict) -> None:
         with self.assertRaises(AssertionError):

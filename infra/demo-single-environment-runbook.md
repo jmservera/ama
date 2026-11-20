@@ -12,10 +12,16 @@ backing stores. See [ADR 0008](../docs/adrs/0008-single-external-demo-environmen
 ## Profile
 
 Deploy `main.bicep` with `deploymentProfile=development`, `demoDirectIngress=true`,
-`demoSingleEnvironment=true`, `enablePublicEdge=false` and
-`allowPublicNetworkAccess=false`. The guard `singleEnvironmentRequiresDirectDemo`
+`demoSingleEnvironment=true`, `enablePublicEdge=false`,
+`allowPublicNetworkAccess=false` and `sqlTier=dtu`. The guard `singleEnvironmentRequiresDirectDemo`
 rejects any other combination.
 
+* `sqlTier=dtu` keeps the demo database on Standard S0 (10 DTU) with no
+  serverless settings; the default tier is unchanged and the guard
+  `dtuTierRequiresDevelopmentProfile` rejects it outside `development`.
+* The template creates its own Event Hubs namespace `eh-<iot hub name>` and, with
+  `iotHubRoutingReady=true`, the IoT Hub route points at it. Deploy first with
+  `false` so the sender role can propagate, then with `true`.
 * One external environment `cae-<prefix>-demo` on `snet-aca-demo`.
 * Public ingress (`external: true`) only on the API app, which serves the web
   app and the employee and resident API. `ca-resident-demo` keeps its own
@@ -59,6 +65,7 @@ with owner decision #1818.
 | Container Apps environment | `cae-cutover-test` | the internal second environment |
 | Managed group, internal load balancer and its frontend IP | `ME_cae-cutover-test_ama_uksouth` | ids not readable with the current login; delete with the environment and confirm the group is gone |
 | Private DNS zone | `jollytree-20e6e99e.uksouth.azurecontainerapps.io` | plus link `link-cutover-test` |
+| Event Hubs namespace | `evhns-cutover-test-demo` (`/subscriptions/<subscription-id>/resourceGroups/ama/providers/Microsoft.EventHub/namespaces/evhns-cutover-test-demo`) | Basic tier, public. Delete only after the IoT Hub route targets `eh-<iot hub name>` and telemetry reaches it |
 | Subnet (optional) | `snet-aca` | only after the environment is gone |
 | NSG (optional) | `nsg-cutover-test-aca` | only after the subnet is gone |
 

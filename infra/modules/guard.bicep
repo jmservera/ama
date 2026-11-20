@@ -93,6 +93,10 @@ param appCredentialRequiresDirectDemo string
 param appCredentialBlocksApplicationDeployment string
 
 @minLength(1)
+@description('Must not be empty. Empty means sqlTier=dtu outside the development profile; the Standard S0 tier is a cost-capped demo choice, not a production or pilot tier.')
+param dtuTierRequiresDevelopmentProfile string
+
+@minLength(1)
 @description('Must not be empty. Empty means sqlTier=serverless with an auto-pause delay other than -1 or 15 to 10080 minutes, which Azure SQL General Purpose serverless rejects at database deployment.')
 param serverlessAutoPauseDelayMustBeSupported string
 
@@ -150,6 +154,7 @@ output checked array = [
   demoRequiresBrowserAuthentication
   appCredentialRequiresDirectDemo
   appCredentialBlocksApplicationDeployment
+  dtuTierRequiresDevelopmentProfile
   serverlessAutoPauseDelayMustBeSupported
   pilotRankingArchiveRequiresConfiguredRetention
   publicSimulationRequiresDirectDemo
