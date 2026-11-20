@@ -428,6 +428,8 @@ unticked criterion and adds a local HTTP test for the #76 clocks on list rows.
 The [second-pass child disposition audit](./research/issue-73-epic-audit-live-r2-2026-11-19.md)
 records one disposition per child (six closed, three open) and the residual of each open child;
 criteria 1 to 3 stay unticked.
+The [requirement trace](./research/issue-73-requirement-trace-2026-11-20.md) maps each requirement in the
+issue to a repository test or a deferral, with an offline drift test; criterion 3 stays unticked.
 For #96, the [live form schema approval evidence](./research/issue-96-live-form-schema-approval-evidence-2026-11-18.md)
 records that the demo holds no registered schema and no shipped path records
 an approval, so the approved-schema criterion stays unproven.

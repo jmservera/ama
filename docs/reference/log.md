@@ -14131,3 +14131,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] update | Issue 113 production-claim guard (Refs #113)
 
 * Added `tools/test_production_claim_guard.py`, a static test that README, ADR, BRD, PRD and project READMEs make no unqualified production-readiness claim. Criteria 1 and 2 stay unproven; no approval is recorded or implied.
+## [2026-11-20] add | Epic 73 requirement trace (Refs #73)
+
+* Added [issue-73-requirement-trace-2026-11-20.md](research/issue-73-requirement-trace-2026-11-20.md) and `tools/test_epic_73_requirement_trace.py`: ten requirements traced to cited tests, BG-011 deferred to the pilot; no criterion ticked.
