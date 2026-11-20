@@ -14142,3 +14142,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] add | Epic 81 audit round 3
 
 * Added [issue-81-epic-audit-live-r3-2026-11-20.md](research/issue-81-epic-audit-live-r3-2026-11-20.md): all children closed or deferred (criterion 2 proven for the demo); #440 criterion unproven; no source change.
+## [2026-11-19] add | Issue 1204 real tick window check (Refs #1204)
+
+* Added [issue-1204-real-tick-window-2026-11-19.md](research/issue-1204-real-tick-window-2026-11-19.md): checker run on the real 216-tick log, 0 violations; closure, approval and global-stop rules stay unproven.

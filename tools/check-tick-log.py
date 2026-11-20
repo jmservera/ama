@@ -20,7 +20,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import sqlite3
 import sys
+from contextlib import closing
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -156,12 +158,46 @@ def _check_approvals(row: dict[str, Any], tick: object) -> list[Violation]:
     return found
 
 
+def load_sqlite(path: Path) -> list[dict[str, Any]]:
+    """Read the coordinator session `tick_log` table (read-only) into checker rows."""
+    if not path.is_file():
+        raise ValueError(f"no such file: {path}")
+    try:
+        with closing(sqlite3.connect(f"file:{path}?mode=ro", uri=True)) as db:
+            records = db.execute(
+                "SELECT id, ready_count, running_count, dep_blocked_count, human_blocked_count,"
+                " unknown_count, action_taken, evidence FROM tick_log ORDER BY id"
+            ).fetchall()
+    except sqlite3.Error as error:
+        raise ValueError(f"cannot read tick_log: {error}") from error
+    return [
+        {
+            "tick": tick,
+            "counts": {
+                "ready": ready,
+                "running": running,
+                "dependency_blocked": dep,
+                "human_blocked": human,
+                "unassessed": unknown,
+            },
+            "action": action,
+            "evidence": evidence,
+        }
+        for tick, ready, running, dep, human, unknown, action, evidence in records
+    ]
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("path", type=Path, help="tick_log export (JSON array or JSON lines)")
+    parser.add_argument(
+        "path", type=Path, help="tick_log export (JSON array, JSON lines) or a session .db file"
+    )
     args = parser.parse_args(argv)
     try:
-        rows = load_rows(args.path.read_text(encoding="utf-8"))
+        if args.path.suffix == ".db":
+            rows = load_sqlite(args.path)
+        else:
+            rows = load_rows(args.path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2

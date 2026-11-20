@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sqlite3
 import sys
 import tempfile
 import unittest
+from contextlib import closing
 from pathlib import Path
 
 SCRIPT_PATH = Path(__file__).resolve().parent / "check-tick-log.py"
@@ -95,6 +97,28 @@ class TickLogTests(unittest.TestCase):
             self.assertEqual(checker.main([str(good)]), 0)
             self.assertEqual(checker.main([str(bad)]), 1)
             self.assertEqual(checker.main([str(Path(tmp) / "missing.json")]), 2)
+
+    def test_session_sqlite_tick_log(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "session.db"
+            with closing(sqlite3.connect(db_path)) as db:
+                db.execute(
+                    "CREATE TABLE tick_log (id INTEGER PRIMARY KEY, tick_time TEXT,"
+                    " ready_count INT, running_count INT, dep_blocked_count INT,"
+                    " human_blocked_count INT, unknown_count INT, action_taken TEXT,"
+                    " evidence TEXT)"
+                )
+                db.executemany(
+                    "INSERT INTO tick_log VALUES (?, 't', 1, 1, 0, 0, 0, ?, ?)",
+                    [(1, "launched session", "tmux ls"), (2, "", "")],
+                )
+                db.commit()
+            rows = checker.load_sqlite(db_path)
+            self.assertEqual([r["tick"] for r in rows], [1, 2])
+            self.assertEqual(rows[0]["counts"]["ready"], 1)
+            self.assertEqual(rules(rows), ["no-progress"])
+            self.assertEqual(checker.main([str(db_path)]), 1)
+            self.assertEqual(checker.main([str(Path(tmp) / "none.db")]), 2)
 
 
 if __name__ == "__main__":
