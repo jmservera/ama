@@ -29,7 +29,7 @@ ROUTES = ("/", "/app", "/law.html")
 WORKBENCH = "/app"
 # Recorded gaps, shrink-only: a fix must remove the route here so the check then enforces it.
 NO_SKIP_LINK = {"/law.html"}
-NO_NAV = {"/", "/law.html"}
+NO_NAV = {"/law.html"}
 LANG = re.compile(r"^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$")
 
 
