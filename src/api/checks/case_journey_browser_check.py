@@ -639,8 +639,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             chat_cleanup(page, base)
             mutation_reconstruction(page, base, axe, reports)
             check(
-                "nine tabs, one selected and one tab stop",
-                page.get_by_role("tab").count() == 9
+                "ten tabs, one selected and one tab stop",
+                page.get_by_role("tab").count() == 10
                 and page.locator("[role=tab][aria-selected=true]").count() == 1
                 and page.locator('[role=tab][tabindex="0"]').count() == 1,
             )

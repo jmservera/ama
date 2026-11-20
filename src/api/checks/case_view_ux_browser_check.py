@@ -427,7 +427,7 @@ def fallback_cases(browser: Browser, base: str) -> list[dict[str, Any]]:
             page.get_by_role("button", name="Sign in", exact=True).click()
             page.get_by_text("Tab navigation unavailable", exact=False).wait_for()
             panels = page.locator(".case-tab-panel")
-            check(f"fallback lists all nine panels/{mode}", panels.count() == 9)
+            check(f"fallback lists all ten panels/{mode}", panels.count() == 10)
             check(
                 f"fallback unbounded visible panels/{mode}",
                 panels.evaluate_all(
