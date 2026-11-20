@@ -1141,7 +1141,6 @@ async function caseView(id) {
       else draftBox.replaceChildren(error);
     }
   };
-  const sugg = null; // The suggestions now sit inside handoffPanel; the tab list below still names this slot.
   const challengeDrafts = captureChallengeDrafts(id);
   const cost = c.cost_allocation && h("section", { class: "card" }, h("h2", {}, "This home's cost allocation"),
       h("p", {}, "Recorded allocations only, not additional building costs or payment approval."),
@@ -1213,7 +1212,7 @@ async function caseView(id) {
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
       c.appointments.length ? h("ul", {}, c.appointments.map(a => h("li", {}, `${fmtDate(a.date)}: ${a.type}, ${a.slot}, ${a.who}. ${a.outcome}`))) : h("p", {}, "No appointments recorded. Ask the case owner to record the next visit."))]],
-    ["quality", "Quality and handover", [sensorPointer(session), qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh), sugg]],
+    ["quality", "Quality and handover", [sensorPointer(session), qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh)]],
     ["sensors", "Home sensors", [sensorPanel(id)]],
     ["ai", "AI assistance", [assistantPanel, simulationPanel(), chatPanel,
       h("p", {}, "Resident message and summary drafts stay with the resident record.",
