@@ -849,6 +849,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             check("resident mutation preserves later dirty edits", True)
 
             tab(finance, "Quality and handover")
+            finance.get_by_text("Offer to someone who is not listed", exact=True).click()
             finance.locator("#ho-to").select_option("coordinator@example.test")
             finance.locator("#ho-note").fill("Dispatched handoff")
             finance.locator("#ho-next").fill("Review synthetic evidence")
