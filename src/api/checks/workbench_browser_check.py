@@ -644,8 +644,8 @@ def run_browser(base: str) -> None:
                 page.get_by_role("tab", name="Blockers and safety", exact=False).click()
                 page.get_by_role("heading", name="Recorded task context", exact=True).wait_for()
                 check(
-                    "queue case history and suggestion current context agree",
-                    page.locator(".work-context").count() == 4
+                    "queue case overview, blockers and history context agree",
+                    page.locator(".work-context").count() == 3
                     and all(
                         text == queue_context
                         for text in page.locator(".work-context").all_text_contents()

@@ -66,6 +66,8 @@ def main() -> None:
                 assert store.cases["ZF-1"]["document_history"][-1]["source_version"] == "browser-source-7"
 
                 page.get_by_role("tab", name="Quality and handover", exact=True).click()
+                page.get_by_text("Offer to someone who is not listed", exact=True).click()
+                page.locator("#ho-to").select_option("pam@example.test")
                 source("ho-offer")
                 page.locator("#ho-offer-reason").press("Enter")
                 page.get_by_text("Waiting for an answer.", exact=False).wait_for()
