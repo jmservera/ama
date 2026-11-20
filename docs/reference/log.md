@@ -14148,3 +14148,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-19] add | Issue 1830 criterion 1 measurement (Refs #1830)
 
 * Added [issue-1830-live-20261119T1346Z-2026-11-19.md](research/issue-1830-live-20261119T1346Z-2026-11-19.md): timing from eight retained passed full receipts and queue wait from four gate logs (0.001 to 0.002 s). `tools/rpi-gate-timing.py report --log` now refuses a missing or empty log (exit 2) instead of a traceback. No gate file, `src/`, live Azure or full gate involved; no criterion ticked.
+## [2026-11-20] update | Epic 113 child disposition audit (Refs #113)
+
+* Added [issue-113-child-disposition-live-2026-11-20.md](research/issue-113-child-disposition-live-2026-11-20.md) and `tools/test_epic_113_child_disposition.py`. Four of eight children are closed, three with criteria moved to deferral issues; criterion 2 stays unmet, nothing ticked.
