@@ -486,6 +486,21 @@ class AssistantSerializer(Offline):
             PRIVATE.findall(self.transport.requests[0].data.decode()), ["PRIVATE-OUTCOME-TEXT"]
         )
 
+    def test_proactive_task_sends_the_same_closed_payload(self) -> None:
+        for capability in assistants.REGISTRY:
+            with self.subTest(capability=capability):
+                requested, snapshot = self.wire(capability, constructed_case())
+                task = dict(
+                    capability=capability,
+                    snapshot=snapshot,
+                    dispatch={"trigger": "proactive", "note": "PRIVATE-DISPATCH-CANARY"},
+                )
+                system, prompt = assistants.build_request(task)
+                self.transport.requests.clear()
+                self.assertEqual(self.client.evidence(system, prompt)["outcome"], "returned")
+                self.assertEqual(self.transport.body(), requested)
+                self.assertNotIn(b"PRIVATE-DISPATCH-CANARY", self.transport.requests[0].data)
+
     def test_unknown_capability_is_refused_before_any_provider_request(self) -> None:
         with self.assertRaises(KeyError):
             assistants.capture("SYN-UNKNOWN", constructed_case())

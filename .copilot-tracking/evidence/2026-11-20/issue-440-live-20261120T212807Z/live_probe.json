@@ -1,0 +1,37 @@
+{
+ "anon_fetch": {
+  "default": "redirect",
+  "json": "redirect",
+  "healthz": 200
+ },
+ "after_signin_title": "Zava Forward | Zava North Homes",
+ "api": {
+  "/api/me": 200,
+  "/api/time/status": 200,
+  "/api/law": 503,
+  "/api/continuity": 200
+ },
+ "time_status": {
+  "enabled": false,
+  "flag_on": false,
+  "dpia_recorded": false,
+  "reason": "Time capture is switched off.",
+  "storage": "the shared SQL store"
+ },
+ "law_body": "{\"error\": \"The law store is not loaded.\"}",
+ "me_role": "Retrofit Programme Manager",
+ "time_screen_text": [
+  "Skip to main content",
+  "How it works",
+  "AI and people",
+  "Who does what",
+  "Sign-in options",
+  "Sign in",
+  "to the workbench",
+  "\u2192",
+  "Every home has an owner.",
+  "One workbench for the retrofit programme, from survey to handover. Damp, mould and hazard referral is built in.",
+  "Sign in to the workbench",
+  "\u2192"
+ ]
+}
