@@ -149,7 +149,11 @@ const vm = require("node:vm");
 const src = fs.readFileSync(process.argv[1] + "/staff-intake.js", "utf8");
 const data = JSON.parse(fs.readFileSync(0, "utf8"));
 const flat = (kids) => kids.flat(Infinity).filter((k) => k !== false && k != null);
-const h = (tag, attrs, ...kids) => ({tag, attrs: attrs || {}, kids: flat(kids)});
+const h = (tag, attrs, ...kids) => {
+  const node = {tag, attrs: attrs || {}, kids: flat(kids)};
+  node.setAttribute = (key, value) => { node.attrs[key] = value; };
+  return node;
+};
 const text = (n) => typeof n === "object"
   ? [JSON.stringify(n.attrs), ...n.kids.map(text)].join(" ") : String(n);
 const find = (n, tag, out = []) => {

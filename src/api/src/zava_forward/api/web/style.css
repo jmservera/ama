@@ -636,3 +636,6 @@ input[aria-invalid=true],select[aria-invalid=true],textarea[aria-invalid=true]{b
 [tabindex="-1"]:focus { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
 .coordinator h2[tabindex="-1"]:focus-visible, .screen-record h2[tabindex="-1"]:focus-visible { outline: var(--focus-w) solid var(--focus-ink); outline-offset: var(--focus-off); box-shadow: 0 0 0 var(--focus-off) var(--focus); }
 /* ux-batch:app-wide */
+.chat-widget-label{margin:0;font-size:var(--fs-sm)}
+.chat-widget-tools>.chat-widget-label{flex:0 0 100%}
+@media(max-height:400px){.chat-widget-tools>.chat-widget-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}

@@ -215,7 +215,7 @@ def main() -> None:
             provider_page.get_by_text("Necessary instructions: Knock and wait", exact=True).wait_for()
             assert fixture.store._work_order("WO-0001")["appointments"] == []
             provider_context.close()
-            page.get_by_label("Note or date for WO-0001", exact=True).fill("2099-01-01")
+            page.get_by_label("Note, date or reason for WO-0001", exact=True).fill("2099-01-01")
             page.get_by_role(
                 "button", name="Record appointment (date for Booked)", exact=True
             ).click()

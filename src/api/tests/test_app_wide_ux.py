@@ -1,0 +1,489 @@
+"""App-wide staff workbench fixes from the UX review: labelled fields, check rows, page identity,
+links and numbers, copy defects and the programme queue request.
+
+The shipped scripts run in Node against a small DOM, with constructed synthetic values only. This is
+not browser, assistive-technology or participant evidence.
+"""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import unittest
+from pathlib import Path
+from typing import Any
+
+WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
+
+DOM = r"""
+class Text {
+  constructor(data) {this.nodeType = 3; this.data = data;}
+  get textContent() {return this.data;}
+}
+class Element {
+  constructor(tag) {
+    this.nodeType = 1; this.tagName = tag.toUpperCase(); this.attrs = {}; this.children = [];
+    this.listeners = {}; this.checked = false; this.parentElement = null; this.dataset = {};
+    const classes = name => [this.attrs.class, name].filter(Boolean).join(" ");
+    this.classList = {add: name => this.setAttribute("class", classes(name)),
+      toggle() {}, remove() {}};
+    this.style = {setProperty() {}};
+  }
+  get id() {return this.attrs.id || "";}
+  get value() {
+    if (this.chosen !== undefined) return this.chosen;
+    const first = this.tagName === "SELECT" && this.all().find(el => el.tagName === "OPTION");
+    return first ? (first.attrs.value ?? first.textContent) : "";
+  }
+  set value(next) {this.chosen = next;}
+  get hidden() {return "hidden" in this.attrs;}
+  set hidden(on) {if (on) this.setAttribute("hidden", ""); else this.removeAttribute("hidden");}
+  set className(value) {this.setAttribute("class", value);}
+  get className() {return this.attrs.class || "";}
+  get textContent() {return this.children.map(kid => kid.textContent).join("");}
+  set textContent(value) {this.children = value === "" ? [] : [new Text(String(value))];}
+  append(...kids) {
+    kids.flat().forEach(kid => {this.children.push(kid); kid.parentElement = this;});
+  }
+  replaceChildren(...kids) {this.children = []; this.append(...kids);}
+  insertBefore(kid, before) {
+    const at = this.children.indexOf(before);
+    this.children.splice(at < 0 ? this.children.length : at, 0, kid); kid.parentElement = this;
+  }
+  setAttribute(name, value) {this.attrs[name] = String(value);}
+  getAttribute(name) {return name in this.attrs ? this.attrs[name] : null;}
+  hasAttribute(name) {return name in this.attrs;}
+  removeAttribute(name) {delete this.attrs[name];}
+  all() {
+    return this.children.filter(kid => kid.nodeType === 1).flatMap(kid => [kid, ...kid.all()]);
+  }
+  addEventListener(type, fn) {(this.listeners[type] ||= []).push(fn);}
+  async fire(type) {
+    const event = {type, currentTarget: this, target: this, preventDefault() {}};
+    for (const fn of this.listeners[type] || []) await fn(event);
+  }
+  focus() {document.activeElement = this;}
+  contains(other) {return other === this || this.all().includes(other);}
+}
+const document = {
+  activeElement: null, title: "",
+  createElement: tag => new Element(tag), createElementNS: (ns, tag) => new Element(tag),
+  createTextNode: text => new Text(text), addEventListener() {}, removeEventListener() {},
+  querySelectorAll: () => [], getElementById: () => null,
+};
+document.body = new Element("body");
+const byTag = (root, tag) => root.all().filter(el => el.tagName === tag.toUpperCase());
+const byId = (root, id) => root.all().find(el => el.attrs.id === id);
+const button = (root, name) => byTag(root, "button").find(el => el.textContent === name);
+const labelFor = (root, control) =>
+  byTag(root, "label").find(el => el.attrs.for === control.attrs.id);
+const wrap = nodes => {
+  const holder = new Element("main");
+  holder.append(...[nodes].flat().filter(Boolean));
+  return holder;
+};
+"""
+
+ENABLED_STATUS = """{enabled: true, flag_on: true, dpia_recorded: true, consultation_recorded: true,
+  notice_approved: true, requested: true, requested_by: "Pam",
+  requested_role: "Retrofit Programme Manager", activated: true, activated_by: "Sam",
+  activated_role: "Programme Support Officer", activated_at: "2026-11-19T09:00:00Z",
+  acknowledged: true, activities: ["Case work", "Site visit"], notice: "Synthetic staff notice."}"""
+
+
+def shipped(name: str) -> str:
+    """The top-level function `name` from app.js, cut by matching braces."""
+    source = (WEB / "app.js").read_text()
+    for prefix in (f"async function {name}(", f"function {name}("):
+        start = source.find(prefix)
+        if start >= 0:
+            break
+    else:
+        raise AssertionError(f"app.js no longer defines {name}()")
+    depth, index = 0, source.index("{", start)
+    for end in range(index, len(source)):
+        depth += source[end] == "{"
+        depth -= source[end] == "}"
+        if depth == 0:
+            return source[start : end + 1] + "\n"
+    raise AssertionError(f"unbalanced braces in {name}()")
+
+
+def run(body: str, *sources: str) -> Any:
+    """Run `body` (an async function body that returns JSON) after the DOM and the given sources."""
+    script = (
+        DOM
+        + "\n".join(sources)
+        + f"\n(async () => {{ const out = await (async () => {{ {body} }})();\n"
+        + "console.log(JSON.stringify(out)); })()\n"
+        + ".catch(error => { console.error(error); process.exit(1); });"
+    )
+    result = subprocess.run(["node", "-"], input=script, text=True, capture_output=True, timeout=60)
+    if result.returncode != 0:
+        raise AssertionError(result.stderr)
+    return json.loads(result.stdout)
+
+
+H = shipped("h")
+FIELDS = (WEB / "fields.js").read_text()
+TIME = (WEB / "timecapture.js").read_text()
+OPS = (WEB / "ops.js").read_text()
+WIDGET = (WEB / "chat-widget.js").read_text()
+INTAKE = (WEB / "staff-intake.js").read_text()
+
+TIME_STUBS = (
+    H
+    + FIELDS
+    + TIME
+    + """
+const calls = [];
+let shown = [];
+const me = {user: {role: "Resident Liaison Officer"}};
+const isManager = () => false;
+const show = (...nodes) => {shown = nodes.flat();};
+const api = async (path, body) => {
+  calls.push([path, body === undefined ? "GET" : "POST", body]);
+  if (path === "/api/time/status") return STATUS;
+  if (path === "/api/time/mine") return [];
+  return {};
+};
+"""
+).replace("STATUS", ENABLED_STATUS)
+
+
+class TimeCaptureFields(unittest.TestCase):
+    def test_case_reference_minutes_and_activity_each_have_a_visible_label_and_hint(self) -> None:
+        out = run(
+            """
+await timeView();
+const page = wrap(shown);
+return ["time-case", "time-minutes", "time-activity"].map(id => {
+  const control = byId(page, id);
+  const label = labelFor(page, control);
+  const hint = byId(page, `${id}-hint`);
+  return {tag: control.tagName, label: label ? label.textContent : null,
+    ariaLabel: control.getAttribute("aria-label"), hint: hint ? hint.textContent : null,
+    describedBy: control.getAttribute("aria-describedby"),
+    row: control.parentElement.parentElement.className};
+});
+""",
+            TIME_STUBS,
+        )
+        self.assertEqual(
+            [(row["tag"], row["label"]) for row in out],
+            [
+                ("INPUT", "Case reference (required)"),
+                ("INPUT", "Minutes (required)"),
+                ("SELECT", "Activity"),
+            ],
+        )
+        self.assertEqual(
+            [row["hint"] for row in out],
+            [
+                "Copy it from the case page, for example ZF-1.",
+                "A whole number from 1 to 600.",
+                None,
+            ],
+        )
+        for row in out:
+            self.assertIsNone(row["ariaLabel"], "the visible label now names the control")
+            self.assertEqual(row["row"], "field-row")
+        self.assertEqual(
+            [row["describedBy"] for row in out][:2], ["time-case-hint", "time-minutes-hint"]
+        )
+
+    def test_empty_case_reference_or_minutes_fail_in_place_and_send_nothing(self) -> None:
+        out = run(
+            """
+await timeView();
+const page = wrap(shown);
+const save = button(page, "Save");
+const caseRef = byId(page, "time-case"), minutes = byId(page, "time-minutes");
+const posted = () => calls.filter(call => call[1] === "POST").length;
+const state = control => {
+  const error = byId(page, control.id + "-error");
+  return {invalid: control.getAttribute("aria-invalid"), error: error.textContent,
+    described: control.getAttribute("aria-describedby"), shown: !error.hidden};
+};
+const result = {};
+
+caseRef.value = ""; minutes.value = "15";
+await save.fire("click");
+result.noCase = {posted: posted(), focus: document.activeElement.id, ...state(caseRef),
+  other: state(minutes)};
+
+caseRef.value = "ZF-1"; minutes.value = "";
+await save.fire("click");
+result.noMinutes = {posted: posted(), focus: document.activeElement.id, ...state(minutes),
+  other: state(caseRef)};
+
+minutes.value = "abc";
+await save.fire("click");
+result.words = {posted: posted(), focus: document.activeElement.id};
+
+caseRef.value = ""; minutes.value = "";
+await save.fire("click");
+result.both = {posted: posted(), focus: document.activeElement.id,
+  caseShown: state(caseRef).shown, minutesShown: state(minutes).shown};
+
+caseRef.value = "ZF-1"; minutes.value = "15";
+await caseRef.fire("input");
+result.typing = state(caseRef);
+return result;
+""",
+            TIME_STUBS,
+        )
+        no_case, no_minutes = out["noCase"], out["noMinutes"]
+        self.assertEqual((no_case["posted"], no_case["focus"]), (0, "time-case"))
+        self.assertEqual(no_case["invalid"], "true")
+        self.assertEqual(
+            no_case["error"],
+            "Enter the case reference, for example ZF-1. Owner: you. "
+            "Next action: type it, then choose Save again.",
+        )
+        self.assertEqual(no_case["described"], "time-case-hint time-case-error")
+        self.assertFalse(no_case["other"]["shown"])
+        self.assertIsNone(no_case["other"]["invalid"])
+        self.assertEqual((no_minutes["posted"], no_minutes["focus"]), (0, "time-minutes"))
+        self.assertEqual(
+            no_minutes["error"],
+            "Enter the minutes as a whole number from 1 to 600. Owner: you. "
+            "Next action: type it, then choose Save again.",
+        )
+        self.assertFalse(no_minutes["other"]["shown"], "the earlier problem is cleared")
+        self.assertEqual(out["words"], {"posted": 0, "focus": "time-minutes"})
+        self.assertEqual(out["both"]["focus"], "time-case")
+        self.assertTrue(out["both"]["caseShown"] and out["both"]["minutesShown"])
+        self.assertFalse(out["typing"]["shown"], "typing clears the message")
+        self.assertIsNone(out["typing"]["invalid"])
+
+    def test_a_complete_entry_goes_to_the_server_which_keeps_its_own_range_rules(self) -> None:
+        out = run(
+            """
+await timeView();
+const page = wrap(shown);
+byId(page, "time-case").value = "ZF-1";
+byId(page, "time-minutes").value = "0";
+byId(page, "time-activity").value = "Site visit";
+await button(page, "Save").fire("click");
+return calls.filter(call => call[1] === "POST");
+""",
+            TIME_STUBS,
+        )
+        self.assertEqual(
+            out,
+            [["/api/time", "POST", {"case_id": "ZF-1", "minutes": "0", "activity": "Site visit"}]],
+        )
+
+
+class CapacityWorkOrderRow(unittest.TestCase):
+    STUBS = (
+        H
+        + FIELDS
+        + OPS
+        + """
+let shown = [];
+const me = {user: {role: "Retrofit Programme Manager"}};
+const isManager = () => true;
+const show = (...nodes) => {shown = nodes.flat();};
+const routeController = new AbortController();
+const fmtDate = value => String(value);
+const mutationNeedsHistory = () => false;
+const order = {id: "WO-0001", version: 1, state: "Issued", contractor: "Test Ltd",
+  address: "1 Test Street", issued_by: "Pam", scope: "Loft", appointments: [],
+  appointment_control: {current_binding: null, status: "Not started", missing: [], date: null}};
+const api = async path =>
+  path.startsWith("/api/packages") ? {items: [], total: 0} : {items: [order], total: 1};
+const actionsOf = page => byTag(page, "li")
+  .find(li => li.textContent.startsWith("WO-0001, version 1"))
+  .all().find(el => el.className === "work-order-actions");
+"""
+    )
+
+    def test_note_outcome_and_bindings_have_visible_labels_with_hints(self) -> None:
+        out = run(
+            """
+await capacityView();
+const actions = actionsOf(wrap(shown));
+return byTag(actions, "label").map(label => {
+  const control = byId(actions, label.attrs.for);
+  const hint = byId(actions, `${label.attrs.for}-hint`);
+  return {text: label.textContent, tag: control.tagName,
+    ariaLabel: control.getAttribute("aria-label"), hint: hint ? hint.textContent : null,
+    described: control.getAttribute("aria-describedby")};
+});
+""",
+            self.STUBS,
+        )
+        self.assertEqual(
+            [(row["text"], row["tag"]) for row in out],
+            [
+                ("Note, date or reason for WO-0001", "INPUT"),
+                ("Affected measures and scope revisions for WO-0001", "INPUT"),
+                ("Appointment outcome for WO-0001", "SELECT"),
+            ],
+        )
+        self.assertEqual(
+            [row["hint"] for row in out],
+            [
+                "The buttons use it like this: Record appointment takes the date when the "
+                "outcome is Booked; Record completion takes a note; New version takes the "
+                "new scope; Withdraw takes the reason.",
+                "Only for New version. Write Measure|revision pairs separated by semicolons, "
+                "for example Loft insulation|2; Cavity wall insulation|1.",
+                None,
+            ],
+        )
+        for row in out:
+            self.assertIsNone(row["ariaLabel"], row["text"])
+        self.assertEqual(
+            [row["described"] for row in out],
+            ["order-note-WO-0001-hint", "order-bindings-WO-0001-hint", None],
+        )
+
+    def test_the_row_has_one_primary_button_and_keeps_every_button_name(self) -> None:
+        out = run(
+            """
+await capacityView();
+return byTag(actionsOf(wrap(shown)), "button").map(b => [b.textContent, b.className]);
+""",
+            self.STUBS,
+        )
+        self.assertEqual(
+            out,
+            [
+                ["Record appointment (date for Booked)", ""],
+                ["New version", "alt"],
+                ["Record completion", "alt"],
+                ["Withdraw (add the reason)", "alt"],
+            ],
+        )
+
+    def test_new_package_fields_sit_in_field_blocks_for_the_width_rule(self) -> None:
+        out = run(
+            """
+await capacityView();
+const card = byTag(wrap(shown), "section").find(s => s.children[0].textContent === "New package");
+const labels = byTag(card, "label");
+return {count: labels.length, inField: labels.every(l => l.parentElement.className === "field"),
+  perControl: labels.map(l => byId(card, l.attrs.for).parentElement === l.parentElement)};
+""",
+            self.STUBS,
+        )
+        self.assertEqual(out["count"], 6)
+        self.assertTrue(out["inField"])
+        self.assertTrue(all(out["perControl"]))
+
+
+class ChatComposerLabels(unittest.TestCase):
+    STUBS = "const window = {};\n" + WIDGET
+
+    def composer(self, options: str) -> Any:
+        return run(
+            f"""
+const ui = window.ChatWidget.create({{id: "employee-chat", title: "Employee assistant",
+  questionLabel: "Your work question", skillLabel: "Agent skill", {options} resizable: true}});
+const [entry, tools] = ui.form.children;
+const names = el => el.children.map(
+  kid => kid.tagName.toLowerCase() + (kid.attrs.for ? ":" + kid.attrs.for : ""));
+const labels = byTag(ui.form, "label");
+return {{entry: names(entry), tools: names(tools), labels: labels.map(
+  l => [l.textContent, l.attrs.for, byId(ui.form, l.attrs.for).getAttribute("aria-label")])}};
+""",
+            self.STUBS,
+        )
+
+    def test_employee_composer_has_both_labels_above_the_controls_and_equal_aria_labels(
+        self,
+    ) -> None:
+        out = self.composer("visibleLabels: true,")
+        self.assertEqual(
+            out["entry"][:4], ["div", "label:employee-chat-question", "textarea", "small"]
+        )
+        self.assertEqual(out["tools"][:2], ["label:employee-chat-skill", "select"])
+        self.assertEqual(
+            out["labels"],
+            [
+                ["Your work question", "employee-chat-question", "Your work question"],
+                ["Agent skill", "employee-chat-skill", "Agent skill"],
+            ],
+        )
+
+    def test_other_chat_surfaces_stay_as_they_are_until_they_ask_for_labels(self) -> None:
+        out = self.composer("")
+        self.assertEqual(out["labels"], [])
+        self.assertEqual(out["entry"][:3], ["div", "textarea", "small"])
+
+    def test_the_employee_chat_asks_for_the_labels(self) -> None:
+        chat = (WEB / "chat.js").read_text()
+        self.assertIn(
+            'questionLabel: "Your work question", skillLabel: "Agent skill", visibleLabels: true,',
+            chat,
+        )
+
+
+INTAKE_STUBS = """
+let screen;
+const registerRoleScreen = s => { screen = s; };
+const screenStamp = String;
+const screenPanel = (title, ...kids) => h("section", {}, title, ...kids);
+const screenFields = rows => h("dl", {}, rows);
+const screenTable = (title, head, rows) => h("table", {}, title, head, rows);
+const FormData = class {};
+const routeController = {};
+const roleScreensView = async () => {};
+const api = async () => ({});
+const checklist = {version: "C1", items: ["Depth checked"]};
+const ORDER = {
+  pack: {scope: "Loft", scope_version: 1, design_version: "D1", access: "Key safe",
+    named_contact: "Ann", state: "Committed", ready: true, measures: ["Loft insulation"],
+    checklists: {"Loft insulation": checklist}, pack_digest: "digest"},
+  receipts: [], recovery: [], escalations: [], escalation_options: {},
+  escalation: {owner: "Pam", role: "Retrofit Programme Manager", contact: "pam@example.test",
+    contract_instruction: false, note: "Advice only."},
+  boundaries: {acceptance: "Not acceptance.", consent: "Not consent."},
+};
+const RECEIPT = {record: "R1", capture_ref: "SYN-1", measure: "Loft insulation",
+  checklist_version: "C1", confirmed_by: "Wren", recorded_by: "Sam", mode: "online",
+  captured_at: "2026-11-19T09:00:00Z", status: "Submitted", quality_state: "Submitted",
+  acknowledgement: null, accepted: false, corrections: [],
+  review: {state: "Waiting", you_may_review: false, blocker: "Not yet."},
+  original_notes: {"Depth checked": "Ok"}};
+const render = (...receipts) => wrap(screen.render({id: "ZF-3"},
+  {details: [{id: "WO-0001", data: {...ORDER, receipts}}]}));
+"""
+
+
+class StaffIntakeFields(unittest.TestCase):
+    def test_each_hint_is_linked_to_its_control_and_uses_the_field_hint_style(self) -> None:
+        out = run(
+            """
+const page = render();
+const fields = byTag(page, "div").filter(el => el.className === "field");
+const withHint = fields.filter(f => f.children.some(kid => kid.className === "field-hint"));
+return {hintClasses: byTag(page, "p").map(p => p.className).filter(name => /hint/.test(name)),
+  linked: withHint.map(f => {
+    const [label, hint, control] = f.children;
+    return [label.tagName, hint.tagName, hint.textContent,
+      control.attrs["aria-describedby"] === hint.attrs.id, label.attrs.for === control.attrs.id];
+  })};
+""",
+            H,
+            INTAKE_STUBS,
+            INTAKE,
+        )
+        self.assertEqual(out["hintClasses"], ["field-hint", "field-hint"])
+        self.assertEqual(
+            sorted(row[2] for row in out["linked"]),
+            [
+                "A named staff member who will decide this, not a role.",
+                "The person who did the work, not you.",
+            ],
+        )
+        for row in out["linked"]:
+            self.assertEqual(row[:2], ["LABEL", "P"])
+            self.assertTrue(all(row[3:]), row)
+
+
+if __name__ == "__main__":
+    unittest.main()

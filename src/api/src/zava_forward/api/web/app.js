@@ -3239,14 +3239,14 @@ async function coordinatorView() {
       h("option", { value: "" }, "Any"), options.map(([value, text]) => h("option", { value }, text)));
     input.value = state[key] || "";
     values[key] = input;
-    return h("div", {}, h("label", { for: `co-${key}` }, label), input);
+    return h("div", { class: "field" }, h("label", { for: `co-${key}` }, label), input);
   };
   const textField = (label, key, required = false) => {
     const input = h("input", { id: `co-${key}`, name: key, autocomplete: "off",
       type: key === "q" ? "search" : "text", required, spellcheck: "false" });
     input.value = state[key] || "";
     values[key] = input;
-    return h("div", {}, h("label", { for: `co-${key}` }, label), input);
+    return h("div", { class: "field" }, h("label", { for: `co-${key}` }, label), input);
   };
   const error = h("p", { id: "co-filter-error", class: "err", role: "alert" });
   const form = h("form", { class: "card coordinator-filters", "aria-labelledby": "coordinator-filters-heading", onsubmit: (event) => {

@@ -27,11 +27,24 @@ async function timeView() {
       body.push(h("h2", {}, "Staff notice"), h("p", {}, st.notice));
       if (!st.acknowledged) body.push(h("button", { onclick: () => save("/api/time/acknowledge", {}) }, "I have read the notice"));
       else {
-        const cs = h("input", { type: "text", maxlength: 40, "aria-label": "Case reference" });
-        const mins = h("input", { type: "number", min: 1, max: 600, "aria-label": "Minutes" });
-        const act = h("select", { "aria-label": "Activity" }, st.activities.map((a) => h("option", { value: a }, a)));
-        body.push(h("h2", {}, "Record time"), h("div", { class: "row" }, cs, mins, act,
-          h("button", { onclick: () => save("/api/time", { case_id: cs.value, minutes: mins.value, activity: act.value }) }, "Save")));
+        const cs = h("input", { type: "text", maxlength: 40, autocomplete: "off", spellcheck: "false", oninput: () => caseField.clear() });
+        const mins = h("input", { type: "number", min: 1, max: 600, inputmode: "numeric", autocomplete: "off", oninput: () => minutesField.clear() });
+        const act = h("select", { autocomplete: "off" }, st.activities.map((a) => h("option", { value: a }, a)));
+        const caseField = Fields.fieldBlock({ id: "time-case", name: "case_id", label: "Case reference", hint: "Copy it from the case page, for example ZF-1.", required: true, control: cs });
+        const minutesField = Fields.fieldBlock({ id: "time-minutes", name: "minutes", label: "Minutes", hint: "A whole number from 1 to 600.", required: true, control: mins });
+        const activityField = Fields.fieldBlock({ id: "time-activity", name: "activity", label: "Activity", control: act });
+        const record = () => {
+          caseField.clear();
+          minutesField.clear();
+          const problems = timeFieldProblems(cs.value, mins.value);
+          // The later field is marked first so focus ends on the first one that needs fixing.
+          if (problems.minutes) minutesField.fail(problems.minutes);
+          if (problems.caseId) caseField.fail(problems.caseId);
+          if (problems.minutes || problems.caseId) return;
+          return save("/api/time", { case_id: cs.value, minutes: mins.value, activity: act.value });
+        };
+        body.push(h("h2", {}, "Record time"), h("div", { class: "field-row" }, caseField.block, minutesField.block, activityField.block,
+          h("button", { onclick: record }, "Save")));
         const mine = await api("/api/time/mine");
         body.push(h("h2", {}, "My entries"), h("ul", {}, mine.map((e) => h("li", {}, `${e.at} ${e.case_id} ${e.minutes} min ${e.activity}`))),
           h("p", {}, h("a", { class: "btn alt", href: "/api/time/mine.csv", download: "my-time-entries.csv" }, "Download my entries for Excel"), " The file is a read-only copy; changes in it are not imported back."));
@@ -53,6 +66,16 @@ async function timeView() {
 
 // Reason, owner and next action are written here from status flags and HTTP outcomes; server text is never shown, because it can carry internal detail.
 function timeGuidance(reason, owner, next) { return `${reason} Owner: ${owner}. Next action: ${next}`; }
+
+// Catches only what is empty or not a number before the request; the whole-number and range rules stay with the server and its own messages.
+function timeFieldProblems(caseId, minutes) {
+  const fix = "type it, then choose Save again.";
+  const entry = String(minutes ?? "").trim();
+  return {
+    caseId: String(caseId ?? "").trim() ? null : timeGuidance("Enter the case reference, for example ZF-1.", "you", fix),
+    minutes: entry && Number.isFinite(Number(entry)) ? null : timeGuidance("Enter the minutes as a whole number from 1 to 600.", "you", fix),
+  };
+}
 
 function timeManagers() { return "a manager (Retrofit Programme Manager or Programme Support Officer)"; }
 
