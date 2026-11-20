@@ -31,16 +31,25 @@ function residentBindings(text) {
   });
 }
 
-function sensorTable(title, rows, absent, labels = {}) {
-  const box = h("div", {}, h("h3", {}, title));
+// The simulation panel keeps the full layout. The Home sensors tab passes `home` for the plain layout: local time first, no IDs.
+function sensorTable(title, rows, absent, labels = {}, home = null) {
+  const box = h("div", {}, h(home ? home.heading : "h3", {}, title));
   if (!rows || !rows.length) return box.append(h("p", {}, absent || "No retained readings.")), box;
-  const head = ["Reading ID", "Sensor ID", "Observed (UTC)", "Temperature (degC)", "Relative humidity (%RH)", "Source"];
-  box.append(h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": `${title} table` },
-    h("table", {}, h("caption", { class: "sr-only" }, title),
+  const name = (home && home.name) || title;
+  const varies = (key) => new Set(rows.map((r) => r[key])).size > 1;
+  const head = home
+    ? ["Observed (UK time)", "Temperature (degC)", "Relative humidity (%RH)", ...(varies("sensor_id") ? ["Sensor"] : []), ...(varies("provenance_class") ? ["Source"] : [])]
+    : ["Reading ID", "Sensor ID", "Observed (UTC)", "Temperature (degC)", "Relative humidity (%RH)", "Source"];
+  const cells = (r) => home
+    ? [h("th", { scope: "row" }, sensorTimeNode(r.observed_at, home.generated)), h("td", {}, sensorValue(r.temperature_c)), h("td", {}, sensorValue(r.humidity_pct)),
+      ...(varies("sensor_id") ? [h("td", {}, sensorCode(r.sensor_id))] : []), ...(varies("provenance_class") ? [h("td", {}, SENSOR_SOURCES[r.provenance_class] || "Synthetic")] : [])]
+    : [h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
+      h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
+      h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated")];
+  box.append(h("div", { class: "table-scroll", role: "region", tabindex: 0, "aria-label": `${name} table` },
+    h("table", {}, h("caption", { class: "sr-only" }, name),
       h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
-      h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
-        h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
-        h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated")))))));
+      h("tbody", {}, rows.map((r) => h("tr", {}, cells(r)))))));
   return box;
 }
 
@@ -50,63 +59,240 @@ function sensorDraftSection(id) {
   api(`/api/cases/${encodeURIComponent(id)}/sensor-drafts`).then((v) => {
     if (v.state === "disabled") return;
     box.setAttribute("aria-labelledby", "sensor-drafts-h");
-    const kids = [h("h3", { id: "sensor-drafts-h" }, "Sensor review draft (proposed, not approved)")];
+    const kids = [h("h3", { id: "sensor-drafts-h" }, "Sensor review draft")];
     if (v.state === "consent-withheld") {
-      kids.push(h("p", { role: "status" }, opsOwned(`${v.note} Use the manual route: manual-sensor-review.`, "the resident's consent owner", "ask the resident liaison whether consent can be recorded, and use the manual route: manual-sensor-review")));
+      kids.push(h("p", { role: "status" }, opsOwned("Saved drafts are withheld because monitoring consent is not granted now.", "the resident's consent owner", "use the ordinary quality check, and ask the resident liaison officer whether consent can be recorded.")));
     } else if (!v.drafts.length) {
-      kids.push(h("p", { class: "muted" }, "No review draft exists for this home. Use the manual route: manual-sensor-review."));
+      kids.push(h("p", {}, "No review draft exists for this home yet. Owner: a Quality Inspector. Next action: use the ordinary quality check."));
     } else {
       kids.push(h("ul", {}, v.drafts.map((d) => {
-        if (d.state !== "PROPOSED_UNAPPROVED") return h("li", {}, "A saved draft failed its integrity check and is withheld. Use the manual route: manual-sensor-review. Owner: application support. Next action: tell application support, and use the manual route: manual-sensor-review.");
+        if (d.state !== "PROPOSED_UNAPPROVED") return h("li", {}, "A saved draft failed its integrity check and is withheld. Owner: application support. Next action: tell application support, and use the ordinary quality check.");
         const c = d.candidate, l = d.lineage;
+        const row = (name, value) => [h("dt", {}, name), h("dd", {}, value)];
         return h("li", {},
           h("p", {}, d.label),
+          h("p", {}, "Not reviewed by a person yet."),
           h("p", {}, c.summary),
-          h("p", { class: "muted" }, `Rule ${c.rule_id}, policy ${c.policy_version}, analysis ${c.analysis_version}. Readings from `, h("time", { datetime: l.window_start }, l.window_start), " to ", h("time", { datetime: l.window_end }, l.window_end), `. ${d.approval_note} Draft ${d.digest_prefix}. Created by ${d.created_by.name} (${d.created_by.role}) at `, h("time", { datetime: d.created_at }, d.created_at), "."));
+          h("details", {}, h("summary", {}, "Rule and version details"), h("dl", {},
+            row("Rule", sensorCode(c.rule_id)), row("Policy version", c.policy_version), row("Analysis version", c.analysis_version),
+            row("Readings used", [sensorTimeNode(l.window_start), " to ", sensorTimeNode(l.window_end), " (UK time)"]),
+            row("Created by", `${d.created_by.name} (${d.created_by.role})`), row("Created", [sensorTimeNode(d.created_at), " (UK time)"]),
+            row("Draft reference", sensorCode(d.digest_prefix)), row("Note", d.approval_note))));
       })));
     }
     body.replaceChildren(...kids);
   }).catch(() => {
-    body.replaceChildren(h("p", { class: "err", role: "alert" }, "Sensor review drafts are unavailable. Use the manual route: manual-sensor-review. Owner: application support. Next action: refresh this home to try again, then tell application support if it continues."));
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, "Sensor review drafts are unavailable right now. Owner: application support. Next action: refresh this page. If it keeps happening, tell application support. Use the ordinary quality check meanwhile."));
   });
   return box;
 }
 
 function sensorPanel(id) {
-  const body = h("div", {}, h("p", { role: "status" }, "Loading retained readings..."));
-  const box = h("section", { class: "card", id: "sensors" }, h("h2", {}, "Retained sensor readings (synthetic demonstration)"), body);
-  if (!SENSOR_ROLES.includes(me.user.role)) {
-    body.replaceChildren(h("p", {}, "Your role does not include indoor readings. Ask the quality team. Owner: your team manager. Next action: ask the quality team for the readings you need."));
-    return box;
-  }
+  const status = h("p", { class: "status-line", role: "status" }, SENSOR_COPY.loading.words);
+  const checked = h("p", { class: "muted" });
+  const body = h("div", {});
+  const box = h("section", { id: "sensors", "aria-busy": "true" },
+    h("p", { class: "muted", "data-sensor-advisory": "" }, "Readings are advice for a person to check. They do not change the case."),
+    h("div", { "data-sensor-badges": "" }, status, checked), body);
+  const paint = (state, kids) => {
+    status.className = `status-line ${state.tone}`.trim();
+    status.textContent = state.words;
+    body.replaceChildren(...kids.filter(Boolean));
+    box.removeAttribute("aria-busy");
+  };
+  const stop = (key) => {
+    const state = sensorState(key);
+    paint(state, state.notice ? [h("p", {}, state.notice)] : []);
+  };
+  if (!SENSOR_ROLES.includes(me.user.role)) return stop("restricted"), box;
   api(`/api/cases/${encodeURIComponent(id)}/sensors`).then((v) => {
-    const kids = [
-      h("p", { role: "status" }, `${v.freshness_text} Generated ${v.generated_at}.`),
-      h("ul", { class: "muted", "data-sensor-badges": "" }, (v.badges || []).map((b) => h("li", {}, h("strong", {}, `${b.label}:`), ` ${b.text}`))),
-      ...(v.next_action ? [h("p", { "data-sensor-next-action": "" }, h("strong", {}, "Next action:"), ` ${v.next_action}`)] : []),
-      h("p", { "data-sensor-advisory": "" }, v.advisory || "Advisory telemetry \u2014 officer review required"),
-      h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. This is the current authorised capture. A suggestion shows the readings it cited when it ran, which may be older."),
-    ];
-    if (v.conflict_notice) kids.push(h("p", { role: "status", "data-sensor-conflict": "" }, `${v.conflict_notice} Manual route: ${v.manual_route}`));
-    if (v.latest && !(v.conflicting_readings || []).length && !v.conflict_notice) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (sensor ${v.latest.sensor_id}, reading ${v.latest.reading_id}). Freshness: ${v.freshness}. Source: ${(v.provenance || {})[v.latest.provenance_class] || "synthetic, not calibrated"}`));
-    if (v.grounding) kids.push(h("p", { "data-sensor-grounding": "" }, `Origin: ${v.grounding.origin}. ${v.grounding.text} ${v.grounding.not_retained_text}`));
-    if (v.as_of_rule) kids.push(h("p", { class: "muted" }, `${v.as_of_rule}${v.future_dated_excluded ? " Readings dated after this time exist and are not shown or used." : ""}`));
-    if (v.retrofit_context) kids.push(h("p", { class: "muted" }, v.retrofit_context.text));
-    if (v.state !== "ok") {
-      kids.push(h("p", {}, `${v.detail || v.freshness_text} Use the manual route: ${v.manual_route}`));
-    } else {
-      const labels = v.provenance || {};
-      kids.push(sensorTable(`Newest readings, up to ${v.max_readings.window}, in the current authorised capture`, v.readings, v.window_absent, labels));
-      kids.push(h("p", { class: "muted" }, `Comparison anchor "${v.anchor.name}"${v.anchor.at ? ` (${v.anchor.at})` : ""}: ${v.anchor.meaning}`));
-      kids.push(sensorTable("Before the first quality evidence record", v.before, v.before_absent, labels));
-      kids.push(sensorTable("From the first quality evidence record", v.after, v.after_absent, labels));
-    }
-    kids.push(sensorDraftSection(id));
-    body.replaceChildren(...kids);
-  }).catch((error) => {
-    body.replaceChildren(h("p", { class: "err", role: "alert" }, opsOwned(`${error.message || "Readings are unavailable."} Use the manual route: manual-sensor-review.`, OPS_SUPPORT, "refresh to try again, and use the manual route: manual-sensor-review if it continues", error.status)));
-  });
+    const model = sensorModel(v);
+    const state = sensorState(model.status);
+    const kids = v.state === "ok" ? sensorBody(v, model) : [h("p", {}, state.notice)];
+    if (v.state !== "unavailable") kids.push(sensorDraftSection(id));
+    if (v.state === "ok") kids.push(sensorAbout(v));
+    checked.append("Checked ", sensorTimeNode(v.generated_at), " (UK time)");
+    paint(state, kids);
+    if (model.alerts.length) box.setAttribute("data-sensor-alerts", String(model.alerts.length));
+  }).catch(({ status: code, message } = {}) => stop(sensorFailure(code, message)));
   return box;
+}
+
+function sensorPointer(session) {
+  return h("p", {}, "Home sensor readings and alerts are on the Home sensors tab. ",
+    h("button", { class: "alt", type: "button", onclick: () => session.controller ? session.controller.select("sensors", true, true) : document.getElementById("case-panel-sensors").scrollIntoView() }, "Open Home sensors"));
+}
+
+// Both rules are copies of server rules (sensor_view.FRESH_SECONDS and sensor_map.OFFLINE_SECONDS); a test pins them.
+const SENSOR_FRESH_SECONDS = 900;
+const SENSOR_OFFLINE_SECONDS = 86400;
+const SENSOR_FRESH_TEXT = `${SENSOR_FRESH_SECONDS / 60} minutes`;
+const SENSOR_OFFLINE_TEXT = `${SENSOR_OFFLINE_SECONDS / 3600} hours`;
+const SENSOR_SOURCES = { "synthetic-weather-derived": "Outdoor weather", "synthetic-modelled-indoor": "Modelled indoor", "synthetic-unclassified": "Unknown origin" };
+const SENSOR_MEASURES = { dew_point_c: "dew point", mould_risk_index: "mould risk" };
+// Plain wording for every state, keyed by the badge states of sensor_badges.py plus the states only this screen reaches.
+// A stop or an alert is one message: reason, Owner, Next action. Status words match the map labels in sensor_map.py.
+// The badge state "offline" means no reading has arrived; "offline-24h" is an old reading, which the map calls offline.
+const SENSOR_COPY = {
+  loading: { words: "Loading home sensors" },
+  restricted: { words: "Sensor readings are not shown for your role", message: "Your role does not include indoor readings. Owner: a Quality Inspector or a Retrofit Programme Manager. Next action: ask one of them for the readings you need." },
+  "not-connected": { words: "Sensor readings are not connected in this setup", message: "Owner: application support. Next action: use the ordinary quality check. Tell application support if you expected readings here." },
+  "not-linked": { tone: "danger", words: "Your staff account is not linked to your role", message: "Your staff account is not linked to your role, so home readings are hidden. Owner: your team manager. Next action: ask them to check that your account is on the staff list with your role, then refresh this page. Until then, use the ordinary quality check." },
+  "service-down": { tone: "danger", message: "Home sensors are unavailable right now. Owner: application support. Next action: refresh this page. If it keeps happening, tell application support. Use the ordinary quality check meanwhile." },
+  offline: { words: "No sensor readings recorded", message: "Use the ordinary quality check." },
+  withheld: { words: "Readings withheld: monitoring consent is not granted", message: "Owner: the resident's consent owner. Next action: use the ordinary quality check. Do not ask for the readings without consent. If you think consent has been given, ask the resident liaison officer to record it." },
+  unavailable: { tone: "danger", message: "Sensor readings could not be read. Owner: application support. Next action: refresh this home. If it keeps happening, tell application support. Use the ordinary quality check meanwhile." },
+  unknown: { words: "Latest reading is dated in the future and is not treated as recent" },
+  fresh: { tone: "ok", words: `Recent reading (within ${SENSOR_FRESH_TEXT})` },
+  stale: { tone: "wait", words: `Reading out of date (older than ${SENSOR_FRESH_TEXT})`, alert: { heading: "Reading out of date", message: `The latest reading is older than ${SENSOR_FRESH_TEXT}. Last reading {age} ago. Owner: the quality team. Next action: treat the reading as out of date. Use the ordinary quality check for now.` } },
+  "offline-24h": { tone: "danger", words: `Sensor offline (no reading for over ${SENSOR_OFFLINE_TEXT})`, alert: { heading: "Sensor may be offline", message: `No reading for over ${SENSOR_OFFLINE_TEXT}. Last reading {age} ago. Owner: the quality team. Next action: use the ordinary quality check, then ask the quality team to check the sensor.` } },
+  conflict: { tone: "danger", words: "Readings disagree", alert: { heading: "Readings disagree", message: "Two retained readings disagree for the same sensor and time. Do not choose between them. Owner: the quality team. Next action: use the ordinary quality check and ask the quality team to check the sensor." } },
+  fault: { tone: "danger", words: "Sensor fault", alert: { heading: "Sensor fault", message: "The latest reading is missing a value or cannot be read. Owner: the quality team. Next action: do not use this reading. Use the ordinary quality check and report the sensor fault." } },
+  out_of_range: { tone: "danger", words: "Reading out of range", alert: { heading: "Reading out of range", message: "The latest reading is outside the possible range. Owner: the quality team. Next action: do not use this reading. Use the ordinary quality check and ask for a check." } },
+  uncalibrated: { words: "Not calibrated" },
+};
+
+function sensorSplit(message) {
+  const m = /^(.*?)\s*Owner: (.*?)\. Next action: (.*)$/s.exec(message);
+  return m ? { what: m[1], owner: m[2], next: m[3] } : { what: message, owner: "", next: "" };
+}
+
+// Status words, tone and the notice under them for one state. A state whose message starts with its own words shows the rest as the notice.
+function sensorState(key) {
+  const entry = SENSOR_COPY[key] || SENSOR_COPY.unavailable;
+  const parts = sensorSplit(entry.message || "");
+  return { tone: entry.tone || "", words: entry.words || parts.what.replace(/\.$/, ""),
+    notice: entry.words || !parts.owner ? entry.message || "" : `Owner: ${parts.owner}. Next action: ${parts.next}` };
+}
+
+const sensorFailure = (status, message) => status === 403 && /staff role has changed or been revoked/i.test(message) ? "not-linked"
+  : status === 400 && /durable sql/i.test(message) ? "not-connected" : "service-down";
+
+// Alerts are a reading older than 15 minutes (older than 24 hours reads as offline) and the health problems in the payload.
+function sensorModel(v) {
+  const kinds = {};
+  for (const b of v.badges || []) kinds[b.kind] = b.state;
+  const byState = { "consent-withheld": "withheld", unavailable: "unavailable", "no-readings": "offline" };
+  const fresh = kinds.freshness || byState[v.state] || v.freshness || "unknown";
+  const alerts = [];
+  if (SENSOR_COPY[kinds.health] && SENSOR_COPY[kinds.health].alert) alerts.push(kinds.health);
+  if (fresh === "stale") alerts.push(Number(v.age_seconds) > SENSOR_OFFLINE_SECONDS ? "offline-24h" : "stale");
+  return { fresh, alerts, status: alerts[0] || fresh };
+}
+
+function sensorTime(iso, generated) {
+  const at = new Date(iso);
+  if (Number.isNaN(at.getTime())) return "Time not recorded";
+  const year = (date) => new Intl.DateTimeFormat("en-GB", { year: "numeric", timeZone: "Europe/London" }).format(date);
+  const same = generated && !Number.isNaN(new Date(generated).getTime()) && year(new Date(generated)) === year(at);
+  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", ...(same ? {} : { year: "numeric" }), hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: "Europe/London" }).format(at);
+}
+const sensorTimeNode = (iso, generated) => h("time", { datetime: iso }, sensorTime(iso, generated));
+const sensorCode = (text) => h("span", { translate: "no" }, text);
+const sensorValue = (value, unit = "") => value === null || value === undefined || value === "" ? "Missing" : `${value}${unit ? ` ${unit}` : ""}`;
+
+function sensorAge(seconds) {
+  const minutes = Math.floor(Math.max(0, Number(seconds) || 0) / 60);
+  const count = (n, unit) => `${n} ${unit}${n === 1 ? "" : "s"}`;
+  if (minutes < 1) return "less than a minute";
+  return minutes < 120 ? count(minutes, "minute") : minutes < 2880 ? count(Math.round(minutes / 60), "hour") : count(Math.round(minutes / 1440), "day");
+}
+
+function sensorAlertList(model, v) {
+  if (!model.alerts.length) return h("p", {}, "No sensor alerts for this home.");
+  const age = v.age_seconds === null || v.age_seconds === undefined ? "" : sensorAge(v.age_seconds);
+  const upper = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+  return h("ul", { class: "sensor-alerts" }, model.alerts.map((key, index) => {
+    const { alert } = SENSOR_COPY[key];
+    const parts = sensorSplit(age ? alert.message.replace("{age}", age) : alert.message.replace(" Last reading {age} ago.", ""));
+    // The server words the next action for its most serious state, which is the first alert unless the age rule made it offline.
+    const next = index === 0 && v.next_action && key !== "offline-24h" ? v.next_action : upper(parts.next);
+    return h("li", { class: `sensor-alert ${SENSOR_COPY[key].tone}`.trim(), ...(key === "conflict" ? { "data-sensor-conflict": "" } : {}) },
+      h("h4", {}, alert.heading),
+      h("dl", {}, h("dt", {}, "What we see"), h("dd", {}, parts.what),
+        h("dt", {}, "Owner"), h("dd", {}, upper(parts.owner)),
+        h("dt", {}, "Next action"), h("dd", index === 0 ? { "data-sensor-next-action": "" } : {}, next)));
+  }));
+}
+
+function sensorLatest(v, model) {
+  const r = v.latest;
+  const aged = ["fresh", "stale"].includes(model.fresh) && v.age_seconds !== null && v.age_seconds !== undefined;
+  const old = model.alerts.includes("stale") || model.alerts.includes("offline-24h");
+  const unusable = model.alerts.includes("fault") || model.alerts.includes("out_of_range");
+  const rows = [["Temperature", sensorValue(r.temperature_c, "degC")], ["Relative humidity", sensorValue(r.humidity_pct, "%RH")],
+    ["Observed", [sensorTimeNode(r.observed_at), ` (UK time)${aged ? `, ${sensorAge(v.age_seconds)} ago` : ""}${old ? ", out of date" : ""}`]],
+    ["Sensor", sensorCode(r.sensor_id)], ["Source", `${SENSOR_SOURCES[r.provenance_class] || "Synthetic"}. ${SENSOR_COPY.uncalibrated.words}.`]];
+  return h("div", {}, h("h3", {}, "Latest reading"), unusable && h("p", {}, "Do not use this reading. See the alert above."),
+    h("dl", {}, rows.flatMap(([name, value]) => [h("dt", {}, name), h("dd", {}, value)])));
+}
+
+// The retained rows that disagree: matched by the citation keys the server names, or by sensor and time.
+function sensorClashes(v) {
+  const keys = new Set(), places = new Set();
+  for (const c of v.conflicting_readings || []) {
+    (c.citation_keys || []).forEach((key) => keys.add(key));
+    places.add(`${c.sensor_id}|${c.observed_at}`);
+  }
+  const rows = [...(v.readings || []), ...(v.before || []), ...(v.after || [])];
+  const named = rows.filter((r) => keys.has(`sensor:${r.sensor_id}:${r.reading_id}`));
+  const found = named.length ? named : rows.filter((r) => places.has(`${r.sensor_id}|${r.observed_at}`));
+  return found.filter((r, i) => found.findIndex((o) => o.sensor_id === r.sensor_id && o.reading_id === r.reading_id) === i);
+}
+
+function sensorSourceNote(rows, labels) {
+  const classes = [...new Set(rows.map((r) => r.provenance_class))];
+  return classes.length === 1 ? `Source of every row: ${labels[classes[0]] || "Synthetic reading, not calibrated."}`
+    : "Rows come from more than one source, shown in the Source column. None of them is calibrated.";
+}
+
+function sensorReferences(v) {
+  const rows = [...(v.readings || []).slice().reverse(), ...(v.before || []), ...(v.after || [])]
+    .filter((r, i, all) => all.findIndex((o) => o.sensor_id === r.sensor_id && o.reading_id === r.reading_id) === i);
+  if (!rows.length) return null;
+  return h("details", {}, h("summary", {}, "Reference numbers"),
+    h("p", { class: "muted" }, "Quote a reference number when you ask the quality team about a reading."),
+    h("ul", {}, rows.map((r) => h("li", {}, sensorCode(r.reading_id), `: ${sensorValue(r.temperature_c, "degC")}, ${sensorValue(r.humidity_pct, "%RH")}, observed `,
+      sensorTimeNode(r.observed_at), " (sensor ", sensorCode(r.sensor_id), ")"))));
+}
+
+function sensorAnchor(v, table) {
+  const at = v.anchor && v.anchor.at;
+  const box = h("div", {}, h("h3", {}, "Around the first quality evidence record"));
+  if (!at) return box.append(h("p", {}, "There is no quality evidence record yet, so there is nothing to compare around.")), box;
+  box.append(h("p", { class: "muted" }, `Compared around ${fmtDate(at)}, the time of the first quality evidence record. This is not an installation date, and a change around it is not proof that the work caused it.`),
+    table("Before", v.before, "No readings before that record.", { heading: "h4", name: "Readings before the first quality evidence record" }),
+    table("From then on", v.after, "No readings from that record onward.", { heading: "h4", name: "Readings from the first quality evidence record onward" }));
+  return box;
+}
+
+// Everything under the status for a payload that contains readings.
+function sensorBody(v, model) {
+  const labels = v.provenance || {};
+  const table = (title, rows, absent, extra = {}) => sensorTable(title, rows, absent, labels, { generated: v.generated_at, heading: "h3", ...extra });
+  const kids = [h("h3", {}, "Alerts for this home"), sensorAlertList(model, v)];
+  if (!v.latest) kids.push(h("p", {}, SENSOR_COPY.offline.message));
+  if (v.latest && !(v.conflicting_readings || []).length && !v.conflict_notice) kids.push(sensorLatest(v, model));
+  const clashes = sensorClashes(v);
+  if (clashes.length) kids.push(table("Readings that disagree", clashes, null, { name: "Readings that disagree for the same sensor and time" }));
+  const recent = (v.readings || []).slice().reverse();
+  if (recent.length) kids.push(table(`Recent readings (up to ${(v.max_readings || {}).window || recent.length})`, recent, null, { name: "Recent readings, newest first" }),
+    h("p", { class: "muted" }, sensorSourceNote(recent, labels)), sensorReferences(v));
+  kids.push(sensorAnchor(v, table));
+  return kids;
+}
+
+function sensorAbout(v) {
+  const kept = ((v.grounding && v.grounding.not_retained) || []).map((name) => SENSOR_MEASURES[name]).filter(Boolean).join(" and ");
+  const are = kept.includes(" and ") ? "are" : "is";
+  return h("details", {}, h("summary", {}, "About these readings"), h("ul", {},
+    h("li", {}, "These readings are synthetic and not calibrated. They are not a measure of comfort or hazard."),
+    h("li", {}, "Live demonstration readings come from the weather outside, not from a sensor inside the home."),
+    kept ? h("li", { "data-sensor-grounding": "" }, `${kept.charAt(0).toUpperCase()}${kept.slice(1)} ${are} not kept for this home and ${are} not estimated.`) : null,
+    h("li", {}, `A reading counts as recent for ${SENSOR_FRESH_TEXT}. After that it is out of date, and after ${SENSOR_OFFLINE_TEXT} the sensor may be offline.`),
+    h("li", {}, `The recent readings are the newest ones observed up to the time you opened this page. The comparison readings are the ones closest to the first quality evidence record, so they can be older. Readings dated after this page are left out and never treated as recent.${v.future_dated_excluded ? " Some readings dated later than this page exist and are not shown or used." : ""}`),
+    h("li", {}, "These readings are the current authorised capture for this home. A suggestion in the AI tab shows the readings it cited when it ran, which may be older."),
+    v.retrofit_context ? h("li", {}, v.retrofit_context.text) : null));
 }
 
 function simulationPanel() {

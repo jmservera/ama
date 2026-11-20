@@ -123,8 +123,8 @@ def main(axe_path: Path | None = None, out: Path | None = None):
         page.click("button[type=submit]")
         page.wait_for_selector("nav:not([hidden])")
 
-    def open_quality(page, tag):
-        page.goto(base + f"/app?{tag}#/case/ZF-1?tab=quality")
+    def open_sensors(page, tag):
+        page.goto(base + f"/app?{tag}#/case/ZF-1?tab=sensors")
         expect(page.locator("#sensors")).to_be_visible()
         expect(page.locator("#sensors [role=status]").first).not_to_contain_text("Loading")
         return page.locator("#sensors")
@@ -170,24 +170,30 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             check("captured model snapshot holds retained readings", len(captured) >= 4)
 
             login(page, inspector)
-            panel = open_quality(page, "ok")
+            panel = open_sensors(page, "ok")
             newest = panel.locator("table").first
+            # Reading numbers sit in the closed "Reference numbers" list, newest first like the table rows.
+            numbers = (
+                panel.locator("details", has_text="Reference numbers")
+                .locator("li")
+                .all_text_contents()
+            )
             shown = {
                 (
-                    row.locator("th").inner_text(),
-                    row.locator("td").nth(2).inner_text(),
-                    row.locator("td").nth(3).inner_text(),
+                    re.match(r"(\S+): ", numbers[i]).group(1),
+                    row.locator("td").nth(0).inner_text(),
+                    row.locator("td").nth(1).inner_text(),
                 )
-                for row in newest.locator("tbody tr").all()
+                for i, row in enumerate(newest.locator("tbody tr").all())
             }
             check(
-                "displayed reading IDs and values equal the captured model snapshot",
+                "displayed reading numbers and values equal the captured model snapshot",
                 shown == captured,
             )
             scan(page, "retained readings")
 
             def drafts_of(tag):
-                open_quality(page, tag)
+                open_sensors(page, tag)
                 page.wait_for_load_state("networkidle")
                 return page.locator("#sensors #sensor-drafts")
 
@@ -199,9 +205,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             )
             os.environ[sensor_review_draft.FLAG] = "1"
             empty = drafts_of("draft-empty")
-            expect(
-                empty.get_by_role("heading", name="Sensor review draft (proposed, not approved)")
-            ).to_be_visible()
+            expect(empty.get_by_role("heading", name="Sensor review draft")).to_be_visible()
             expect(empty).to_contain_text("No review draft exists for this home")
             check(
                 "empty draft state has no write control", empty.get_by_role("button").count() == 0
@@ -257,14 +261,17 @@ def main(axe_path: Path | None = None, out: Path | None = None):
 
             fx.set_consent("declined")
             held = drafts_of("draft-withheld")
-            expect(held).to_contain_text("manual-sensor-review")
-            check("withheld consent hides the saved draft content", "bold" not in held.inner_text())
+            expect(held).to_contain_text("Saved drafts are withheld")
+            check(
+                "withheld consent hides the saved draft content",
+                "bold" not in held.inner_text() and "manual-sensor-review" not in held.inner_text(),
+            )
             fx.set_consent("granted")
 
             other = browser.new_page()
             other.on("pageerror", lambda e: errors.append(str(e)))
             login(other, liaison)
-            other.goto(base + "/app?draft-liaison#/case/ZF-1?tab=quality")
+            other.goto(base + "/app?draft-liaison#/case/ZF-1?tab=sensors")
             other.wait_for_load_state("networkidle")
             check(
                 "unauthorised role sees no draft section",
@@ -298,8 +305,8 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             scan(page, "unapproved flag")
 
             fx.set_consent("declined")
-            panel = open_quality(page, "withheld")
-            expect(panel).to_contain_text("Use the manual route")
+            panel = open_sensors(page, "withheld")
+            expect(panel).to_contain_text("use the ordinary quality check")
             check("withheld consent shows no readings table", panel.locator("table").count() == 0)
             proposal = open_flag(page, "withheld-flag")
             expect(proposal.get_by_role("group", name="Review flag status")).to_contain_text(
@@ -314,21 +321,27 @@ def main(axe_path: Path | None = None, out: Path | None = None):
 
             fx.set_consent("granted")
             with fx.clock(7 * 3600):
-                panel = open_quality(page, "stale")
-                expect(panel).to_contain_text("stale")
+                panel = open_sensors(page, "stale")
+                expect(panel).to_contain_text("out of date")
                 check(
-                    "stale readings are labelled stale, not live",
-                    "Freshness: stale" in panel.inner_text(),
+                    "stale readings are labelled out of date, not live",
+                    "Reading out of date" in panel.inner_text(),
+                )
+                check(
+                    "the Home sensors tab label counts the one alert",
+                    page.get_by_role("tab", name="Home sensors").inner_text()
+                    == "Home sensors (1 alert)",
                 )
                 scan(page, "stale")
 
             with fx.service.transaction() as db:
                 db.execute("DROP TABLE sensor_reading")
-            panel = open_quality(page, "unavailable")
-            expect(panel).to_contain_text("Use the manual route")
+            panel = open_sensors(page, "unavailable")
+            expect(panel).to_contain_text("Use the ordinary quality check")
             check(
                 "unavailable readings are explicit, not an empty normal state",
-                panel.locator("table").count() == 0 and "manual" in panel.inner_text().lower(),
+                panel.locator("table").count() == 0
+                and "ordinary quality check" in panel.inner_text(),
             )
             proposal = open_flag(page, "unavailable-flag")
             expect(proposal.get_by_role("group", name="Review flag status")).to_contain_text(
@@ -471,7 +484,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
                 ),
             )
             login(page, liaison)
-            page.goto(base + "/app?denied#/case/ZF-1?tab=quality")
+            page.goto(base + "/app?denied#/case/ZF-1?tab=sensors")
             denied = page.locator("#sensors")
             expect(denied).to_contain_text("Your role does not include indoor readings")
             check("denied role sees no readings", denied.locator("table").count() == 0)

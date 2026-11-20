@@ -99,8 +99,16 @@ const CaseWorkspace = (() => {
       const text = unknown ? `AI review count unavailable.${draftCount ? ` ${draftCount} local drafts to review.` : ""}` : loading ? "AI review count loading." : count ? `${count} AI suggestions waiting for review.` : "No AI suggestions waiting.";
       if (aiCount.textContent !== text) aiCount.textContent = text;
       if (aiState.textContent !== state) aiState.textContent = state;
-      const label = `AI assistance (${unknown ? `review count unavailable${draftCount ? `; ${draftCount} local drafts to review` : ""}` : loading ? "loading" : `${count} to review`})`;
-      if (aiTab.button && aiTab.button.textContent !== label) aiTab.button.textContent = label;
+      const label = `AI assistance (${unknown ? `count unavailable${draftCount ? `; ${draftCount} local drafts to review` : ""}` : loading ? "loading" : `${count} to review`})`;
+      if (aiTab.button && aiTab.button.textContent !== label) { aiTab.button.textContent = label; keepSelectedVisible(); }
+    };
+    // The Home sensors label gains a count once, when the readings arrive and only if something needs attention.
+    const sensorTab = definitions.find(tab => tab.id === "sensors");
+    const sensorRoot = sensorTab?.panel.querySelector("#sensors");
+    const sensorLabel = () => {
+      const alerts = Number(sensorRoot.dataset.sensorAlerts || 0);
+      const label = alerts ? `${sensorTab.label} (${alerts} ${alerts === 1 ? "alert" : "alerts"})` : sensorTab.label;
+      if (sensorTab.button && sensorTab.button.textContent !== label) { sensorTab.button.textContent = label; keepSelectedVisible(); }
     };
     const item = (name, value, button) => h("div", {}, h("dt", {}, name), h("dd", {}, value, button));
     const jump = (tab, text) => h("button", { class: "alt", type: "button", onclick: () => select(tab, true, true) }, text);
@@ -123,6 +131,9 @@ const CaseWorkspace = (() => {
         h("span", { class: "step-name" }, step.name), h("span", { class: "step-state" }, step.text)),
         step.blockers.length ? blockerDisclosure(step.blockers, `step-${index}`, step.name, true) : null))));
     const tabs = h("div", { class: "case-tabs", role: "tablist", "aria-label": "Case sections" });
+    // The scrolling row sits inside the tab list, so the list itself never scrolls and stays fixed above the panel.
+    const row = h("div", { class: "case-tabs-row" });
+    tabs.append(row);
     let active;
     function syncLinks() {
       nav.querySelectorAll("a[data-case-tab]").forEach(link => {
@@ -147,7 +158,20 @@ const CaseWorkspace = (() => {
         displayedHash = location.hash;
       }
       syncLinks();
+      queueMicrotask(() => reveal(selected.button));
       if (focusHeading) selected.panel.querySelector("h2").focus();
+    }
+    // At 899px and below the tab row scrolls sideways; bring the selected tab into view along the row only, never the page.
+    function reveal(button) {
+      if (!button.isConnected || row.scrollWidth <= row.clientWidth) return;
+      const box = row.getBoundingClientRect(), item = button.getBoundingClientRect();
+      const edge = parseFloat(getComputedStyle(row).paddingLeft) || 0;
+      if (item.left < box.left + edge) row.scrollLeft -= box.left + edge - item.left;
+      else if (item.right > box.right - edge) row.scrollLeft += item.right - box.right + edge;
+    }
+    // A tab label that grows after the first paint pushes the later tabs sideways.
+    function keepSelectedVisible() {
+      reveal(definitions.find(tab => tab.id === active).button);
     }
     definitions.forEach((tab, index) => {
       const heading = tab.panel.querySelector("h2");
@@ -165,16 +189,19 @@ const CaseWorkspace = (() => {
             definitions[positions[event.key]].button.focus();
           }
         } }, tab.label);
-      tabs.append(tab.button);
+      row.append(tab.button);
     });
     const observer = new MutationObserver(counts);
     observer.observe(assistant, { attributes: true, attributeFilter: ["data-waiting", "data-assistance"] });
     observer.observe(drafts, { subtree: true, childList: true, attributes: true, attributeFilter: ["data-review-state"] });
+    const sensorObserver = sensorRoot && new MutationObserver(sensorLabel);
+    sensorObserver?.observe(sensorRoot, { attributes: true, attributeFilter: ["data-sensor-alerts"] });
     app.addEventListener("ai-review-change", counts);
     select(new URLSearchParams(location.hash.split("?")[1] || "").get("tab"));
     counts();
+    if (sensorRoot) sensorLabel();
     return { top: [section, safety, nav].filter(Boolean), tabs, select, counts, syncLinks,
-      dispose: () => { observer.disconnect(); app.removeEventListener("ai-review-change", counts); } };
+      dispose: () => { observer.disconnect(); sensorObserver?.disconnect(); app.removeEventListener("ai-review-change", counts); } };
   }
   return { steps, stageStep, journey, summary, defaultTab, nextTab, waiting, enhance };
 })();
