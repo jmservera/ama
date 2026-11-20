@@ -1,7 +1,7 @@
 ---
 title: Employee Case Workspace Redesign (Journey Stepper, Tabs, AI Visibility)
-description: Implementable UX design for the single-home case view at #/case/<id> - journey stepper, summary strip, tabbed sections, AI review pattern, states, acceptance criteria and test plan
-ms.date: 2026-10-28
+description: Implementable UX design for the single-home case view at #/case/<id> - journey stepper, summary strip, tabbed sections, AI review pattern, states, acceptance criteria and test plan, with the 2026-11-20 update for ten tabs, the equal-height strip, the quality decision and handover cards and the Home sensors tab
+ms.date: 2026-11-20
 ms.topic: reference
 ---
 
@@ -24,6 +24,13 @@ approval, not all useful work".
 Job (assumed): when I open a home, I want to see where it is, who owns the next
 move and what is stopping it, so I can act or hand it on without scrolling.
 
+Update (2026-11-20): the case screen changed after a staff workbench UX review.
+[Staff workbench UX update (2026-11-20)](#staff-workbench-ux-update-2026-11-20)
+records ten tabs, an equal-height journey strip, the closed-case summary, the
+quality decision and handover cards, the Home sensors tab and the scrolling tab
+row. Where it differs from earlier text on this page, it governs, and the
+earlier text carries a short pointer.
+
 ## Current page (observed)
 
 `caseView` renders about 25 cards in one column: cost allocation, header,
@@ -38,7 +45,7 @@ different density.
 
 Order inside `main` (one `h1`, then landmarks):
 
-1. Back link and building link (unchanged).
+1. Header links: Back to the list, Versioned home case and the building link, as separate list items (changed 2026-11-20; it read "Back link and building link (unchanged)").
 2. `h1` resident name, "Safety issue open" flag if any hazard is unreleased, reference.
 3. Summary strip (`section`, `aria-label="Case summary"`, always visible, not sticky).
 4. Journey stepper (`nav`, `aria-label="Retrofit journey"`).
@@ -63,7 +70,8 @@ Each value is text; glyph plus words for status.
 | AI | Count of proposals with approval "Not reviewed" and assistance state (see AI pattern) | "No AI suggestions waiting" or "AI assistance unavailable. Work continues manually." |
 
 Blocker text keeps the content-standard trio: reason, owner, next action.
-`work.overdue` count is appended to the Blockers item as "N overdue tasks".
+`work.overdue` count is appended to the Blockers item as "N overdue tasks". A
+closed case reads differently (changed 2026-11-20, see the update below).
 
 ## Journey stepper
 
@@ -94,7 +102,7 @@ agreement, Contractor, Quality and handover.
 * Each step links to the tab that holds its work (table below). Links are real anchors, so Tab, Enter and middle-click work. No roving tabindex, no custom keys.
 * A step can be both current and blocked: keep `aria-current="step"` and show "Current, blocked: reason".
 * Fluent mapping: `--colorBrandBackground` fill for current, `--ok` for done with tick, `--warn` for blocked with no-entry glyph, `--line` outline for upcoming (dashed outline so upcoming differs from done without colour). Use existing tokens only; no new colours.
-* Layout: horizontal at 900px and wider. Below 900px it becomes a vertical list (same `ol`). Connector lines are decorative CSS. Under `prefers-reduced-motion` no transitions (`--motion` is already 0s).
+* Layout: six columns at 1200px and wider, three columns by two rows from 900 to 1199px (changed 2026-11-20; it was one row of six at 900px and wider) and a vertical list below 900px (same `ol`). Connector lines are decorative CSS. Under `prefers-reduced-motion` no transitions (`--motion` is already 0s).
 
 ### State derivation (client, from existing `caseView` data)
 
@@ -162,13 +170,17 @@ with `h2` headings (current behaviour) as the fallback.
 | Funding | `fundingPanel`, `financePanel`, `grantPanel` |
 | Resident | `residentPanel` (decision per measure, commitment, requests and complaints), "Log a call", "Write to the resident" (drafts), `affectedChallengePanel` |
 | Contractor and works | Contractor block of "Where it is up to", appointments and next visit (from the Contact card), work-order links |
-| Quality and handover | `qualityPanel`, `handoffPanel` ("Who could take this on" suggestions `sugg` sits with it) |
+| Quality and handover | `qualityPanel`, `handoffPanel` (since 2026-11-20 the merged "Hand this case to a colleague" card, which includes "Who could take this on"; the separate `sugg` card is gone) |
+| Home sensors | `sensorPanel` (added 2026-11-20; it moved out of Quality and handover, which keeps a pointer) |
 | AI assistance | `assistantCasePanel`, `chatCasePanel`, AI drafts launched from "Write to the resident" (see below) |
 | History | "History" card (`c.contacts`, `workSummary`) |
 
-Eight to nine tabs exceed a comfortable row; at 900px and below the tab list
-scrolls horizontally inside a named focusable region (same pattern as
-`.table-scroll`), and the stepper links remain a second route to each tab.
+Eight to nine tabs exceed a comfortable row (ten from 2026-11-20). This text
+asked for the tab list to scroll horizontally at 900px and below inside a named
+focusable area (same pattern as `.table-scroll`). The implementation differs:
+since 2026-11-20 the tab list wraps at 900px and wider and scrolls in one row at
+899px and below inside a plain wrapper with no name and no focus stop (see the
+update below). The stepper links remain a second route to each tab.
 Open question for the owner: merge Contractor and works into Overview if staff
 rarely use it.
 
@@ -217,9 +229,9 @@ workflow-only mode).
 
 ## Responsive behaviour and zoom
 
-* 1200px and wider: strip 3 columns, stepper horizontal, tabs one row.
-* 900px to 1199px: strip 2 columns, tabs scroll in a named region.
-* Under 900px (and 320 CSS px at 200% zoom): strip 1 column, stepper vertical, tab list scrolls horizontally or becomes a `select`-free stacked list of buttons (prefer wrapping buttons over a select to keep native tab roles).
+* 1200px and wider: strip 3 columns, stepper horizontal, tabs wrap (this text said one row; see the update below).
+* 900px to 1199px: strip 2 columns, stepper 3 columns by two rows (2026-11-20), tabs wrap (this text said scroll in a named focusable area).
+* Under 900px (and 320 CSS px at 200% zoom): strip 1 column, stepper vertical, tab list scrolls horizontally in one row inside a plain wrapper (2026-11-20). This text preferred wrapping buttons over a select to keep native tab behaviour; the owner has not chosen between the two rules (CD3 in the [review record](./staff-workbench-ux-review-2026-11-20.md)).
 * No fixed heights; no text truncation without a full-text route; `rem` units; touch targets at least 24 by 24 CSS px (existing 40px buttons).
 * No sticky strip, so it cannot cover content at 200% zoom or 320px (WCAG 2.4.11 focus not obscured).
 * Reduced motion: no tab or stepper animation.
@@ -237,7 +249,7 @@ workflow-only mode).
 | AI unavailable or timed out | Status text from `assistantCasePanel`; strip says "AI assistance unavailable. Work continues manually."; every non-AI action works |
 | AI output stale or unverified | Status word "Stale" or "Unverified", Accept disabled with native `disabled` and a visible reason |
 | Panel data missing (for example no funding record) | Panel heading plus a sentence stating what is absent and what to do; distinct from "failed to load" |
-| Closed case | Stepper all Done, no current; existing "Closed case" and reopen panel (manager) first in Overview |
+| Closed case | Stepper all Done, no current; existing "Closed case" and reopen panel (manager) first in Overview; the summary reads "Closed, all six steps done" (2026-11-20) |
 | Unknown `tab` value | Fall back to default tab, no error |
 
 ## Acceptance criteria
@@ -293,7 +305,7 @@ API.
 
 Owner decision in #526 resolves step order: retain the slide's Funding before
 Resident agreement order, using the evidence exceptions above. The initial
-implementation keeps all nine tabs. Existing native Fluent tokens, role checks,
+implementation kept all nine tabs (ten since 2026-11-20; see the update below). Existing native Fluent tokens, role checks,
 manual paths and human/resident approval boundaries remain unchanged.
 
 The client derives journey from the existing payload; no `journey` or
@@ -336,3 +348,170 @@ retain copyable edits when evidence changes, update document review counts and
 correct local runner import parity. New regression checks pass, including
 27 assistant scenarios. The clean committed-candidate publication gate and
 exact-head assessment remain separate pending steps.
+
+## Staff workbench UX update (2026-11-20)
+
+On 2026-11-20 the owner asked for a UX review of the staff workbench. Two designer
+agents reviewed the product on synthetic data. The
+[review record](./staff-workbench-ux-review-2026-11-20.md) holds the evidence, the
+findings and their dispositions, the decisions taken on the owner's behalf and the
+open owner decisions; CD1 to CD12 below refer to it. The case screen changed as
+described here. The evidence is engineering checks in Chromium on constructed data.
+No user, screen reader or other browser was involved. Nothing here is an
+accessibility conformance claim or an owner approval.
+
+### Tabs
+
+The case has ten tabs, in this order: Overview, Blockers and safety, Survey and
+assessment, Funding, Resident, Contractor and works, Quality and handover, Home
+sensors, AI assistance and History. History stays last. The sensor panel moved out of
+Quality and handover into Home sensors (`?tab=sensors`). Quality and handover keeps
+one line, "Home sensor readings and alerts are on the Home sensors tab.", and an Open
+Home sensors button that selects the tab and moves focus to its title. The AI tab
+label is shorter when the count cannot be read ("AI assistance (count unavailable)").
+
+The tab list wraps at 900px and wider. At 899px and below the tab buttons sit in one
+row, inside a plain wrapper (`.case-tabs-row`) that scrolls sideways, and script
+scrolls the selected tab into view along the row only. The wrapper has no name and no
+focus stop; the buttons are the focus stops. The earlier design asked for a named
+focusable area. Whether assistive technology still announces one tab list with the
+right count is not checked, and the owner has not chosen between this and wrapping
+(CD3). The final review measured three costs that are not fixed. At 1024px the tab
+list wraps to three rows (it was two) and, with the two-row strip, the work panel
+starts about 133px lower; starting the scrolling row at 1199px or shortening the tab
+names would recover it (CD3). A selected tab can sit out of view after a resize or a
+turn of the device, because script reveals it only on selection and on a label
+change. The long AI label does not fit the row at 320px.
+
+### Summary and header
+
+* A closed case reads "Closed, all six steps done" for the current step, "None. A
+  manager can reopen this case." for the next action and "No recorded blockers. This
+  case is closed." for blockers. It shows no blocker disclosure and no jump button:
+  Open next action is left out, and See all blockers shows only for an open case that
+  has blockers. Before the update the same summary said "Step unknown", asked for a
+  next action and showed a blocker while the strip above it showed six done steps. The
+  first build of the update still offered both buttons beside text that said there was
+  nothing to do.
+* The header holds three separate links in a list: "Back to the list", "Versioned
+  home case" and "Shared building context: {id}".
+
+### Journey strip
+
+Cards stretch to the tallest card in their visual row. The link takes the free height
+and the blocker button sits at the foot of the card, so the cards in one row have
+equal height. The strip is six columns at 1200px and wider, three columns by two rows
+from 900 to 1199px and one column at 899px and below. A blocked step shows the fixed
+words "Why blocked" on its button; its accessible name still starts "{Step}: why
+blocked", and the popover with the reason, owner and next action is unchanged. The
+summary button keeps the first sentence of the reason and the word Details. The
+three-column layout and the fixed label are decisions taken on the owner's behalf
+(CD2).
+
+The summary strip above the journey strip has three columns at 1200px and wider, two
+at 1199px and below and one at 899px and below. The earlier text on this page says two
+at 900px and one at 600px. Flagged, not changed: the stylesheet governs.
+
+### Quality decisions card
+
+Each measure is one record card: the measure as a heading, a status line, a fact list
+(Evidence version, Checklist, Evidence from, and Accepted by or Handed over by when
+they apply), the recorded checks in a disclosure that is open while the work is
+submitted, returned or fixed, the defect when one exists (What is wrong, Why it was
+returned, Who will put it right, Remediation evidence) and a decision area for the
+state.
+
+| State | Status words | Decision area |
+| --- | --- | --- |
+| Submitted | Waiting for an independent check | Accept this work (Note, optional) beside Return with a defect (Why you are returning it, What the defect is, Who will put it right; all required); stacked below 1200px |
+| Returned | Returned: defect to put right | Record that the defect has been put right (Who fixed it; What was corrected, with the photo, document or inspection reference; both required) |
+| Fixed, awaiting reinspection | Fixed, waiting to be checked again | Check the fix again: one optional note and the buttons Accept this work and Still not right; Enter in the note does nothing |
+| Accepted | Accepted, ready to hand over to the resident | Hand over to the resident (What the resident was given or told; the tick The resident has been told; both required) |
+| Handed over | Handed over to the resident | Add an aftercare note (required) |
+| Superseded | Replaced evidence: previous acceptance and handover no longer apply | No controls and a link to the current record |
+
+In the Submitted and Fixed states a viewer who may not check sees "A Quality Inspector or a manager checks this work."
+with the owner and next action. Every field has a visible label, its hint and a
+"(required)" or "(optional)" mark. Empty required boxes post nothing: one sentence
+appears beside each and focus moves to the first. A refusal from the server shows its
+own reasons, with owner and next action, inside the record. A success shows a
+"Recorded: ..." line at the top of the card and moves focus to the record heading.
+The decision buttons carry the measure in their accessible names, for example
+"Accept this work: {measure}". The evidence form below the records is one labelled
+fieldset with Save evidence as the primary button.
+
+### Handover card
+
+One card, "Hand this case to a colleague", replaces the handoff card and the "Who
+could take this on" card. It stays in the Quality and handover tab by a decision taken
+on the owner's behalf (CD1).
+
+* Status: a status line and a definition list (Case stays with, Who must act next,
+  Offered by, What they are asked to do, How urgent, Due, Note from {name}, Chase
+  owner, Resident update owner), in local dates and with no record paths. The person
+  an offer is made to reads "Offered to you, waiting for your answer" and "What you are
+  asked to do"; everyone else reads "Offered to {name}, waiting for an answer" and
+  "What they are asked to do".
+* The receiver sees "Your answer": Record receipt (not acceptance), Accept this case
+  (source reference, source version and reason, all required) and Decline this case
+  (reason, required).
+* The sender or a manager, with an open offer, sees "Change this offer": Withdraw the
+  offer to {name}, and a closed disclosure to escalate to a manager. The new owner
+  sees "Complete the handover" after accepting, as the card heading and as the name
+  of its button.
+* Anyone who may offer sees "Who could take this on": one button per suggested
+  person, "Offer this case to {full name}", which opens a labelled form (source
+  reference, source version and reason required; next action, urgency, due date and
+  note optional) and sends the `offer-handoff` action. "Offer to someone who is not
+  listed" holds the full colleague list with nobody preselected.
+* When offering is not possible (the case is closed, an offer is open, an acceptance
+  is not complete, or the viewer is not the owner or a manager) a notice gives the
+  reason, the owner and the next action.
+* Text the server holds back shows as "Held back for your role. Owner: {name}. Next
+  action: ask {name} ..." (CD6). The sentence is built once, and the quality record
+  uses it too in a handed-over record, its previous handover note and its aftercare
+  notes. Results show in the card, and the history reads one sentence per event.
+* A missing required field gets one short sentence, for example "Say where this change
+  came from."; blocked or refused actions keep the reason, owner and next action. The
+  suggestions read "1 open case" for one case.
+* The server rule is unchanged: the case moves only when the other person accepts.
+
+### Home sensors tab
+
+Panel `#case-panel-sensors`, content `#sensors`. The readings come from
+`GET /api/cases/{id}/sensors` and `/sensor-drafts`. Only the Quality Inspector and the
+Retrofit Programme Manager may read; every other staff role sees a plain explanation
+and the page makes no request. The tab label gains a count once, after the reply, and
+only when something needs attention, for example "Home sensors (1 alert)". Contents, in
+order: the title; a status line with "Checked {time} (UK time)"; one muted line
+("Readings are advice for a person to check. They do not change the case."); "Alerts for this
+home", where each alert gives What we see, Owner and Next action; "Latest reading";
+"Recent readings" with local times, tabular figures and no reading ids; "Around the
+first quality evidence record" (Before and From then on); "Sensor review draft"; and a
+closed "About these readings" disclosure.
+
+| State | Status words | What shows |
+| --- | --- | --- |
+| Loading | Loading home sensors | The status line only |
+| Role may not read | Sensor readings are not shown for your role | An explanation that names a Quality Inspector or a Retrofit Programme Manager as the owner |
+| Not connected | Sensor readings are not connected in this setup | Owner application support; use the ordinary quality check |
+| Account not linked | Your staff account is not linked to your role | Readings hidden; owner your team manager; no drafts request |
+| Service down | Home sensors are unavailable right now | Owner application support; refresh the page |
+| Unavailable | Sensor readings could not be read | Owner application support; refresh this home |
+| No readings | No sensor readings recorded | "Use the ordinary quality check." |
+| Recent | Recent reading (within 15 minutes) | Full content |
+| Out of date | Reading out of date (older than 15 minutes) | One alert; the label gains a count |
+| Sensor may be offline | Sensor may be offline (no reading for over 24 hours) | One alert; the label gains a count. The server's map label still says "Sensor offline" |
+| Readings disagree | Readings disagree | An alert and a table of the rows that disagree; no single latest value |
+| Sensor fault, reading out of range | Sensor fault; Reading out of range | An alert; the latest reading is marked "Do not use this reading" |
+| Consent withheld | Readings withheld: monitoring consent is not granted | No values and no table; owner the resident's consent owner |
+| Dated in the future | Latest reading is dated in the future and is not treated as recent | The reading is not treated as recent |
+
+The alerts name "the quality team" as the owner. The owners in this copy are phrases
+that the roster owner still has to confirm (CD4).
+
+### Left open
+
+The decisions CD1 to CD12 and D1 to D14 in the review record stay with the owner. The
+panel's own scroll, the compact summary at 390px and the safety panel placement are
+unchanged, and so is the handover card's place at the foot of the Quality tab (CD1).
