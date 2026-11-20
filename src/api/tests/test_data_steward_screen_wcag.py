@@ -739,7 +739,7 @@ class DataOperatorHomeAndOverviewWcag(unittest.TestCase):
         for rule in (
             ".screen-record h2",
             '[tabindex="-1"] { scroll-margin-top: var(--sp-4); }',
-            '[tabindex="-1"]:focus',
+            '[tabindex="-1"]:where(:not(#app)):focus',
         ):
             self.assertIn(rule, style_source)
 

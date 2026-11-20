@@ -273,5 +273,50 @@ return {withKind: lines({kind: "Invoice"}), without: lines({})};
         self.assertRegex(out["without"][0], r"^INV-1:\s+SYN-INV-7 from Test Ltd\. Received\.$")
 
 
+class MainFocusFrame(unittest.TestCase):
+    """The owner asked for the frame around the main container to go. Focus still moves there."""
+
+    CSS = (WEB / "style.css").read_text()
+    EXCLUDING_MAIN = '[tabindex="-1"]:where(:not(#app)):focus'
+
+    def test_the_tabindex_frame_leaves_out_the_main_container_and_nothing_else(self) -> None:
+        self.assertEqual(self.CSS.count(self.EXCLUDING_MAIN), 1)
+        # The old selector would draw the frame on main again; the heading frames below stay.
+        self.assertNotIn('[tabindex="-1"]:focus {', self.CSS)
+        self.assertIn(
+            '.coordinator h2[tabindex="-1"]:focus-visible, '
+            '.screen-record h2[tabindex="-1"]:focus-visible',
+            self.CSS,
+        )
+        self.assertRegex(self.CSS, r"(?m)^:focus-visible\{outline:var\(--focus-w\) solid")
+
+    def test_focus_still_moves_to_main_and_no_outline_is_switched_off(self) -> None:
+        self.assertIn('<main id="app" tabindex="-1">', (WEB / "index.html").read_text())
+        self.assertIn("app.focus()", (WEB / "app.js").read_text())
+        self.assertNotRegex(self.CSS, r"outline\s*:\s*(none|0)\b")
+        self.assertNotRegex(self.CSS, r"outline-style\s*:\s*none")
+
+    @needs_browser
+    def test_main_has_no_frame_after_a_click_but_a_focused_heading_keeps_its_frame(self) -> None:
+        body = (
+            '<button id="go" type="button">Go</button><main id="app" tabindex="-1">'
+            '<h2 id="heading" tabindex="-1">Panel heading</h2><p>Body</p></main>'
+        )
+        frame = """(id) => {
+          const el = document.getElementById(id); el.focus();
+          const style = getComputedStyle(el);
+          return {focused: document.activeElement === el, outline: style.outlineStyle,
+            shadow: style.boxShadow};
+        }"""
+        with constructed_page(body, 1440, 900) as page:
+            page.click("#go")
+            main = page.evaluate(frame, "app")
+            heading = page.evaluate(frame, "heading")
+        self.assertEqual(main, {"focused": True, "outline": "none", "shadow": "none"})
+        self.assertTrue(heading["focused"])
+        self.assertEqual(heading["outline"], "solid")
+        self.assertNotEqual(heading["shadow"], "none")
+
+
 if __name__ == "__main__":
     unittest.main()
