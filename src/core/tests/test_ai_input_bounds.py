@@ -68,6 +68,40 @@ class InputBounds(unittest.TestCase):
         self.ai.look_at("a.png", b"\x89PNG", "image/png")
         self.assertEqual(self.meter.reserved, 1)
 
+    def refused(self, user: Any, system: Any = "sys") -> None:
+        out = self.ai.evidence(system, user)
+        self.assertEqual(out["outcome"], "input-refused")
+        self.assertIsNone(out["text"])
+        self.assertEqual(self.meter.reserved, 0)
+        self.urlopen.assert_not_called()
+
+    def test_shared_boundary_refuses_unapproved_payload_types(self) -> None:
+        png = "data:image/png;base64,AAAA"
+        text = {"type": "text", "text": "hi"}
+        for user in (
+            ["raw string part"],
+            [],
+            {"type": "text", "text": "hi"},
+            [{"type": "text", "text": "hi", "extra": 1}],
+            [text, {"type": "image_url", "image_url": {"url": "data:image/svg+xml;base64,AAAA"}}],
+            [text, {"type": "image_url", "image_url": {"url": png, "detail": "high"}}],
+            [text, {"type": "image_url", "image_url": {"url": "https://host.invalid/a.png"}}],
+        ):
+            with self.subTest(user=user):
+                self.refused(user)
+        self.refused("user", system=["not", "text"])
+
+    def test_shared_boundary_bounds_image_and_text_for_list_payloads(self) -> None:
+        big = "A" * ((MAX_IMAGE_BYTES // 3 + 2) * 4)
+        image = {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{big}"}}
+        self.refused([{"type": "text", "text": "hi"}, image])
+        self.refused([{"type": "text", "text": "x" * (MAX_TEXT_BYTES + 1)}])
+
+    def test_approved_list_payload_reaches_the_meter(self) -> None:
+        part = {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,AAAA"}}
+        self.ai.evidence("sys", [{"type": "text", "text": "hi"}, part])
+        self.assertEqual(self.meter.reserved, 1)
+
 
 if __name__ == "__main__":
     unittest.main()

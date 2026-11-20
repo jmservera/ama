@@ -50,7 +50,7 @@ resource jobFailures 'Microsoft.Insights/metricAlerts@2018-03-01' = [for jobName
           dimensions: [{ name: 'state', operator: 'Include', values: ['Failed'] }]
           operator: 'GreaterThan'
           threshold: 0
-          timeAggregation: 'Maximum'
+          timeAggregation: 'Total'
           criterionType: 'StaticThresholdCriterion'
         }
       ]

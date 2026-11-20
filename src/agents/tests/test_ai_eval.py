@@ -220,6 +220,31 @@ class AiEvalTests(unittest.TestCase):
         self.assertTrue(any("quota" in o for o in ev["open_items"]))
         self.assertTrue(rep["prompt_version"] and "latency_ms" in rep["summary"] and rep["summary"]["reviewer"])
 
+    def test_region_confirmation_never_infers_quota_headroom(self):
+        dep = dict(name="d", model="gpt-4.1-nano", version="2025-04-14", sku="Standard", capacity=10,
+                   rate_limits=dict(requests_per_minute=10, tokens_per_minute=10000), state="Succeeded")
+        record = dict(region="uksouth", account="a", retrieved_on="2026-11-19", source="az", deployments=[dep],
+                      quota_headroom=dict(status="unavailable"))
+        self.assertEqual(ai_eval.region_confirmation(None)["status"], "none")
+        part = ai_eval.region_confirmation(record)
+        self.assertEqual((part["status"], part["missing"]), ("partial", ["quota headroom"]))
+        record["quota_headroom"] = dict(status="confirmed")
+        self.assertEqual(ai_eval.region_confirmation(record)["status"], "confirmed")
+        record["deployments"] = [dict(dep, version=None, state="Creating")]
+        bad = ai_eval.region_confirmation(record)
+        self.assertEqual(bad["status"], "incomplete")
+        self.assertIn("version", bad["missing"][0])
+
+    def test_gate_keeps_region_open_item_until_headroom_is_confirmed(self):
+        record = json.loads((Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-r4-2026-11-19/serving_region_record.json").read_text())
+        ev = ai_eval.run_eval(serving_region=record)["evidence"]
+        self.assertEqual(ev["serving_region"]["status"], "partial")
+        self.assertIn("missing: quota headroom", ev["open_items"][0])
+        record["quota_headroom"] = dict(status="confirmed")
+        ev = ai_eval.run_eval(serving_region=record)["evidence"]
+        self.assertFalse(any("names, versions and quotas" in o for o in ev["open_items"]))
+        self.assertEqual(ai_eval.run_eval()["evidence"]["serving_region"]["status"], "none")
+
     def test_report_carries_per_cohort_record_that_stays_blocked_and_synthetic(self):
         co = ai_eval.run_eval()["cohorts"]
         self.assertEqual((co["status"], co["activation_allowed"]), ("blocked", False))

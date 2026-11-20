@@ -600,10 +600,47 @@ OPEN_ITEMS = (
 )
 
 
-def evidence_gate(raw, summary, scripted=True, coverage=None):
+_DEPLOYMENT_FIELDS = ("name", "model", "version", "sku", "capacity", "rate_limits", "state")
+
+
+def region_confirmation(record):
+    """Whether a supplied Azure serving-region record confirms model names, versions and quotas.
+
+    The record is a retrieved attestation, not a live call. Quota headroom is never inferred:
+    it counts only when the record marks it confirmed, so deployed capacity and rate limits
+    alone give "partial".
+    """
+    if not record:
+        return dict(status="none", missing=["serving-region record"])
+    deployments = record.get("deployments") or []
+    missing = [] if deployments else ["deployments"]
+    for d in deployments:
+        absent = [f for f in _DEPLOYMENT_FIELDS if d.get(f) in (None, "", {})]
+        if absent:
+            missing.append(f"{d.get('name') or 'unnamed deployment'}: {', '.join(absent)}")
+        elif d["state"] != "Succeeded":
+            missing.append(f"{d['name']}: state {d['state']}")
+    status = "incomplete" if missing else "partial"
+    if (record.get("quota_headroom") or {}).get("status") != "confirmed":
+        missing.append("quota headroom")
+    elif not missing:
+        status = "confirmed"
+    return dict(status=status, region=record.get("region"), account=record.get("account"),
+                retrieved_on=record.get("retrieved_on"), source=record.get("source"),
+                deployments=[{f: d.get(f) for f in _DEPLOYMENT_FIELDS} for d in deployments], missing=missing)
+
+
+def evidence_gate(raw, summary, scripted=True, coverage=None, serving_region=None):
     """Frozen-input hashes, per-task coverage and the claims this run may and may not support."""
     ms = summary["models"]
     live = bool(ms) and not scripted
+    region = region_confirmation(serving_region)
+    open_items = list(OPEN_ITEMS)
+    if region["status"] == "confirmed":
+        open_items = open_items[1:]
+    elif region["status"] != "none":
+        open_items[0] = ("Foundry model names, versions and quotas are only partly confirmed in the supplied region record; missing: "
+                         + "; ".join(region["missing"]))
     return dict(
         golden_sha256=hashlib.sha256(raw).hexdigest(), prompt_version=ai_tasks.PROMPT_VERSION,
         provider="scripted" if scripted else "live", serving_models=ms,
@@ -612,7 +649,7 @@ def evidence_gate(raw, summary, scripted=True, coverage=None):
         calibration="not applicable (no meaningful scored predictions)",
         benefit_claim="not permitted (no calibrated actual-model or human results)",
         task_coverage=coverage if coverage is not None else task_coverage([]),
-        critical_misses=summary["critical_misses"], open_items=list(OPEN_ITEMS))
+        critical_misses=summary["critical_misses"], serving_region=region, open_items=open_items)
 
 
 def cohort_evaluation_export():
@@ -656,7 +693,7 @@ def cohort_report():
                 note="synthetic, unapproved developer fixture (OQ-018); not fairness evidence and never averaged across cohorts")
 
 
-def run_eval(golden=GOLDEN):
+def run_eval(golden=GOLDEN, serving_region=None):
     raw = load_golden(golden)
     spec = json.loads(raw.decode("utf-8"))
     results = []
@@ -674,12 +711,16 @@ def run_eval(golden=GOLDEN):
     return dict(version=spec["version"], prompt_version=ai_tasks.PROMPT_VERSION, scenarios=len(results),
                 passed=all(r["passed"] for r in results) and summary["critical_misses"] == 0
                 and not coverage["failures"] and not coverage["namespace_errors"],
-                results=results, summary=summary, evidence=evidence_gate(raw, summary, coverage=coverage), cohorts=cohort_report())
+                results=results, summary=summary, evidence=evidence_gate(raw, summary, coverage=coverage, serving_region=serving_region), cohorts=cohort_report())
 
 
 def main(argv=None):
-    rep = run_eval()
-    if "--json" in (sys.argv[1:] if argv is None else argv):
+    args = sys.argv[1:] if argv is None else list(argv)
+    region = None
+    if "--deployments" in args:
+        region = json.loads(Path(args[args.index("--deployments") + 1]).read_text(encoding="utf-8"))
+    rep = run_eval(serving_region=region)
+    if "--json" in args:
         print(json.dumps(rep, indent=2))
         return 0 if rep["passed"] else 1
     for r in rep["results"]:
@@ -708,6 +749,8 @@ def main(argv=None):
     print("task coverage note: " + tc["note"])
     co = rep["cohorts"]
     print(f"cohorts (ranking, synthetic): status {co['status']}, activation allowed {co['activation_allowed']}, fairness evidence {co['fairness_evidence']}; AI-task cohorts {co['ai_task_cohorts']}")
+    sr = ev["serving_region"]
+    print(f"serving region record: {sr['status']}" + (f" ({sr['region']}, {sr['account']}, retrieved {sr['retrieved_on']})" if sr["status"] != "none" else ""))
     for o in ev["open_items"]:
         print("open: " + o)
     return 0 if rep["passed"] else 1

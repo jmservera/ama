@@ -29,7 +29,7 @@ from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core import sensor_review_draft, simulation_lane, telemetry
 from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
-from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
+from zava_forward.core.chat_isolation import DEMO_DISCLAIMER, ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
 from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
@@ -1747,6 +1747,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if parts[2] == "delete":
                         s.chat_delete(u, tid)
                         return self._json(200, {"ok": True})
+                if not post and parts == ["breakglass", "notices"]:
+                    return self._json(200, {"notices": c.access_notices(user), "disclaimer": DEMO_DISCLAIMER})
                 if post and parts == ["memory"]:
                     return self._json(200, {"id": c.privacy.add_memory(c.current_user(user), body.get("content", ""), task=str(body.get("task") or ""))})
                 if post and parts == ["memory", "opt-in"]:
@@ -1797,6 +1799,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if body is None:
                         return self._json(200, {"schemas": forms.list_schemas(app.store, user)})
                     return self._json(201, forms.register_schema(app.store, user, body))
+                if len(parts) == 5 and parts[:2] == ["api", "form-schemas"] and parts[4] == "approval":
+                    if not isinstance(body, dict) or set(body) != {"evidence"} or not parts[3].isdigit():
+                        return self._json(400, {"error": "Send only the approval evidence text."})
+                    return self._json(200, forms.approve_schema(app.store, user, parts[2], int(parts[3]), body["evidence"]))
                 if len(parts) == 7:
                     if not held_download_enabled(app.provider.name):
                         return self._json(404, {"error": "Not found."})
@@ -1920,6 +1926,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._chat(u, url.path, body)
             parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
+                    len(parts) == 5 and parts[:2] == ["api", "form-schemas"] and parts[4] == "approval") or (
                     len(parts) == 4 and parts[:2] == ["api", "cases"]
                     and parts[3] in ("form-candidates", "form-review")) or (
                     len(parts) == 7 and parts[:2] == ["api", "cases"]

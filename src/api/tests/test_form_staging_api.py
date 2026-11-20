@@ -108,6 +108,18 @@ class FormApiFixture(unittest.TestCase):
 
 
 class FormApi(FormApiFixture):
+    def test_schema_approval_route_records_reviewer_and_rejects_bad_requests(self) -> None:
+        self.assertEqual(self.call("pam", "/api/form-schemas", schema())[0], 201)
+        path = "/api/form-schemas/SYN-TECH/1/approval"
+        self.assertEqual(self.call("pam", path, {"evidence": "x", "approved": True})[0], 400)
+        self.assertEqual(self.call("pam", path, {"evidence": " "})[0], 400)
+        self.assertEqual(self.call("sam", path, {"evidence": "Synthetic sign-off."})[0], 403)
+        code, row = self.call("pam", path, {"evidence": "Synthetic sign-off."})
+        self.assertEqual((code, row["approval"]), (200, "Approved"))
+        self.assertEqual(self.call("pam", path, {"evidence": "Again."})[0], 400)
+        listed = self.call("pam", "/api/form-schemas")[1]["schemas"]
+        self.assertEqual(listed[0]["approval"], "Approved")
+
     def test_registry_stage_read_and_no_source_or_controlled_writes(self) -> None:
         with urllib.request.urlopen(self.base + "/healthz") as response:
             self.assertEqual(response.status, 200)
