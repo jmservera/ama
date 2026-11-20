@@ -317,7 +317,7 @@ class MainFocusFrame(unittest.TestCase):
         self.assertEqual(heading["outline"], "solid")
         self.assertNotEqual(heading["shadow"], "none")
 
-    def test_the_keyboard_override_hides_the_main_frame_without_switching_an_outline_off(self) -> None:
+    def test_the_keyboard_override_hides_the_main_frame_only(self) -> None:
         match = re.search(r"(?m)^#app:focus-visible\s*\{([^}]*)\}", self.CSS)
         self.assertIsNotNone(match)
         assert match is not None
