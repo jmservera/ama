@@ -14159,3 +14159,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] update | Issue 2061 single-environment demo profile (Refs #2061)
 
 * Added [issue-2061-demo-single-environment-profile-2026-11-20.md](research/issue-2061-demo-single-environment-profile-2026-11-20.md), the infra runbook and an implementation section in ADR 0008. Criteria 4 and 6 stay unproven; nothing ticked.
+
+## [2026-11-20] update | Issue 116 provider-boundary evidence (Refs #116)
+
+* Added [issue-116-live-r5-evidence-2026-11-20.md](research/issue-116-live-r5-evidence-2026-11-20.md): boundary matrix, proactive provider-spy test, unproven live payloads; nothing ticked.
