@@ -14169,3 +14169,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] update | Issue 435 fourth per-criterion pass (Refs #435)
 
 * Added [capstone-pitch-435-live-2026-11-20.md](research/capstone-pitch-435-live-2026-11-20.md) and corrected the held-out batch status in the [rehearsal notes](../capstone/pitch/tokenomics-rehearsal-notes.md). Criterion 2 stays unproven; the criterion 3 tick is unsupported by the rehearsal notes; nothing ticked.
+## [2026-11-20] update | Issue 440 live criteria verdict (Refs #440)
+
+* Added [issue-440-live-criteria-verdict-2026-11-20.md](research/issue-440-live-criteria-verdict-2026-11-20.md): D1 to D3 observed delivered, criterion 7 evidenced for the demo, criterion 8 unproven. Nothing ticked.
