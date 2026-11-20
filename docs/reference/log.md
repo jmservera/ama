@@ -14138,3 +14138,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] add | Issue 93 child closure re-check
 
 * Added [issue-93-child-closure-live-2026-11-20.md](research/issue-93-child-closure-live-2026-11-20.md): #96 closed, so criterion 2 is proven for the demo; criterion 1 (#440) remains unproven; no source change.
+
+## [2026-11-20] add | Epic 81 audit round 3
+
+* Added [issue-81-epic-audit-live-r3-2026-11-20.md](research/issue-81-epic-audit-live-r3-2026-11-20.md): all children closed or deferred (criterion 2 proven for the demo); #440 criterion unproven; no source change.
