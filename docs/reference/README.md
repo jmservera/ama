@@ -597,7 +597,7 @@ still need admin or human setup, no source change.
 A [seventh run](./research/issue-138-live-r7-2026-11-19.md) rechecks GitHub and Azure read-only: state is unchanged,
 every remaining criterion needs owner settings or a pushed run, and nothing is ticked.
 
-An [eighth run](./research/issue-138-live-r8-2026-11-19.md) repeats the read-only checks with the same result. A [ninth run](./research/issue-138-live-r9-2026-11-19.md) repeats them again with the same result.
+An [eighth run](./research/issue-138-live-r8-2026-11-19.md) repeats the read-only checks with the same result. A [ninth run](./research/issue-138-live-r9-2026-11-19.md) repeats them again with the same result. A [tenth run](./research/issue-138-live-r10-2026-11-19.md) adds a repository secret scanner (`tools/check-repo-secrets.py`) for the repository half of criterion 6.
 
 A [seventh run](./research/issue-138-live-r7-2026-11-19.md) rechecks GitHub and Azure read-only: state is unchanged,
 every remaining criterion needs owner settings or a pushed run, and nothing is ticked.

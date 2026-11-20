@@ -14124,3 +14124,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-17] update | Resident advisor model-dispatch hold (Refs #121)
 
 * Reproduced that `AzureAdvisor` in the resident demo ignored `ZF_DATA_PROCESSING=actual`, then added the `tenant_identity` hold with a regression test and documented it in [src/core/README.md](../../src/core/README.md). Criteria for DPO, Legal and transfer approvals stay unmet; no approval is recorded or implied.
+
+## [2026-11-19] add | Issue 138 tenth live note
+
+* Added [issue-138-live-r10-2026-11-19.md](research/issue-138-live-r10-2026-11-19.md): tracked-file secret scan tool and tests; repository half of criterion 6 proven; other criteria unchanged. Refs #138.
