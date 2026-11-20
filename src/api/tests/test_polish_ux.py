@@ -317,6 +317,46 @@ class MainFocusFrame(unittest.TestCase):
         self.assertEqual(heading["outline"], "solid")
         self.assertNotEqual(heading["shadow"], "none")
 
+    def test_the_keyboard_override_hides_the_main_frame_without_switching_an_outline_off(self) -> None:
+        match = re.search(r"(?m)^#app:focus-visible\s*\{([^}]*)\}", self.CSS)
+        self.assertIsNotNone(match)
+        assert match is not None
+        self.assertIn("outline-color: transparent", match.group(1))
+        self.assertIn("box-shadow: none", match.group(1))
+        # Only the main container is covered, so every control keeps the global frame.
+        self.assertEqual(len(re.findall(r"#app:focus-visible", self.CSS)), 1)
+
+    @needs_browser
+    def test_main_has_no_frame_after_keyboard_navigation_or_the_skip_link(self) -> None:
+        move = "document.getElementById('app').focus()"
+        body = (
+            f'<a class="skip-link" href="#app" onclick="event.preventDefault();{move}">Skip</a>'
+            f'<button id="go" type="button" onclick="{move}">Go</button>'
+            '<main id="app" tabindex="-1"><p>Body</p><a id="inside" href="#x">Inside</a></main>'
+        )
+        frame = """() => {
+          const style = getComputedStyle(document.getElementById('app'));
+          return {focused: document.activeElement.id === 'app', color: style.outlineColor,
+            shadow: style.boxShadow};
+        }"""
+        with constructed_page(body, 1440, 900) as page:
+            page.focus("#go")
+            page.keyboard.press("Enter")
+            by_enter = page.evaluate(frame)
+            page.keyboard.press("Shift+Tab")
+            page.keyboard.press("Shift+Tab")
+            page.keyboard.press("Enter")
+            by_skip_link = page.evaluate(frame)
+            page.focus("#inside")
+            inside = page.evaluate(
+                "() => getComputedStyle(document.getElementById('inside')).outlineStyle"
+            )
+        for state in (by_enter, by_skip_link):
+            self.assertTrue(state["focused"])
+            self.assertEqual(state["color"], "rgba(0, 0, 0, 0)")
+            self.assertEqual(state["shadow"], "none")
+        self.assertEqual(inside, "solid")
+
 
 if __name__ == "__main__":
     unittest.main()
