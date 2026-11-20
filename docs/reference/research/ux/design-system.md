@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Design System Foundations
 description: Design tokens, component inventory with states, non-colour signal rules and the extend-versus-adopt decision for the workbench UI (issue #150)
-ms.date: 2026-11-13
+ms.date: 2026-11-20
 ms.topic: reference
 ---
 
@@ -84,6 +84,39 @@ Legacy aliases keep existing screens connected to the new foundation:
 
 Legacy rules that still use literal lengths or white are migrated as they are
 touched; new rules must use tokens.
+
+## Public welcome page palette (2026-11-20)
+
+The public welcome page is the one surface that does not use the workbench
+teal. At the owner's request it takes its look from the capstone deck: the
+paper, forest, sage and amber values below, the deck's pictograms and four of
+its pictures. The workbench, the resident sites and every signed-in screen keep
+the teal and status palette above. The page still uses the workbench's focus
+indicator, spacing and radius tokens, and its example case card reuses the
+blocked-step, status and AI-suggestion patterns so a visitor sees what staff see.
+
+| Token | Value | Use |
+| --- | --- | --- |
+| `--lp-paper` | `#faf9f6` | page ground |
+| `--lp-ink` | `#1b2a24` | running text |
+| `--lp-forest` | `#173f35` | main dark fields, buttons |
+| `--lp-moss` | `#1f4b3f` | button hover |
+| `--lp-green` | `#2e6b5e` | secondary dark fields |
+| `--lp-sage` | `#e8f1ed` | light fields, pictogram discs |
+| `--lp-amber` | `#e9b14c` | the one accent: sign-in action, stall markers, labels on forest |
+| `--lp-amber-tint`, `--lp-amber-ink` | `#fff1d6`, `#7a4b00` | stall labels and the pilot caveat |
+
+Paper, forest, green, sage, amber and the amber tint were sampled from the
+rendered deck. Ink and moss are not deck values: ink is a near-black tinted
+toward the forest for body text, and moss is a hover step between forest and
+green. Amber marks where a case can stall, as it does in the deck's journey
+line, and the same cue is repeated in words, so colour is never the only signal.
+
+`src/api/tests/test_welcome.py` measures every text pair the page uses with the
+same helper as the workbench token checks. The pictures are derived by
+`tools/build-welcome-media.py` and carry the provenance gap recorded in the
+[capstone asset catalog](../../../capstone/source/assets/catalog.json): original
+address, prompt and licence are not established.
 
 ## Layout rules
 

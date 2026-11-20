@@ -2,7 +2,7 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-11-18
+ms.date: 2026-11-20
 ms.topic: reference
 ---
 
@@ -4957,6 +4957,51 @@ independent held-out/serving-model/human evaluation, approved thresholds and
 finite role budgets remain blockers. All five issues remain Refs, including
 parent stabilization #440.
 
+## Public welcome page
+
+The page at `/` and `/welcome.html` is the only employee-site page shown before
+sign-in. It explains the workflow from survey to handover and where homes stall
+between teams, what one case contains, how AI drafts are checked before a person
+decides, what each employee role, contractor and resident can do, how each of
+them signs in, and where the design intends to cut waiting. It shows synthetic
+example homes only. It claims no measured speed-up and says a pilot would
+measure that.
+
+* Sign-in options: employees and contractors both use `/sign-in`. Contractors
+  share the employee sign-in for now and then see only their own jobs.
+  `/sign-in?switch=1` asks Entra for another account. Residents use the separate
+  resident site.
+* Resident link: set `ZF_RESIDENT_SITE_URL` to the resident site address. Only
+  an `https` address is accepted (`http` for `127.0.0.1` or `localhost` only),
+  with no credentials, query or fragment; any other value stops start-up. When
+  it is unset the page asks residents to contact their housing officer and
+  guesses no address. On Azure, run `az containerapp update --set-env-vars
+  ZF_RESIDENT_SITE_URL=<address>` on the API app. The Bicep does not set it,
+  because the resident site is a separate stack.
+* Public paths: Easy Auth lets anonymous visitors fetch only `/`,
+  `/welcome.html`, `/style.css`, `/zava-logo.png` and `/sign-in`. The page has
+  no script and no inline style, and `welcome.py` inlines its four pictures and
+  the pictogram sprite as data URIs, so it needs no other path.
+  `tests/test_welcome.py` checks the page's links against the `excludedPaths`
+  list in `infra/modules/containerapps.bicep`.
+* Look: the colours, pictograms and four pictures come from the capstone deck
+  and apply to this page only. The workbench keeps its teal palette (see the
+  [design system](../../docs/reference/research/ux/design-system.md#public-welcome-page-palette-2026-11-20)).
+* Pictures: `python3 tools/build-welcome-media.py` derives the packaged
+  `welcome-*.webp` files and `welcome-icons.svg` from
+  `docs/capstone/source/assets/media`, and refuses any source whose hash no
+  longer matches `catalog.json`. `--check` compares the files on disk. The
+  catalog records that the original address, prompt and licence of those images
+  are not established and that repository clearance is not clearance for new
+  external publication, so the owner must confirm it before the page is shown
+  outside review. The footer says the pictures are illustrations, not photographs
+  of real homes or residents.
+* Evidence limits: unit tests, a lint and measurement pass and screenshots at
+  1440, 1024 and 390 px on constructed data. No screen-reader, keyboard-only,
+  400% zoom or other-browser pass was run, so this is not an accessibility
+  acceptance (see the
+  [WCAG baseline](../../docs/reference/research/ux/wcag-conformance-baseline.md#welcome-page-redesign-status-2026-11-20)).
+
 ## Configuration
 
 | Variable | Purpose |
@@ -4969,6 +5014,7 @@ parent stabilization #440.
 | `ZF_SESSION_KEY` | signs dev session cookies; set the same value on every replica |
 | `ZF_ENTRA_TENANT_ID`, `ZF_TRUSTED_PROXY`, `ZF_ROLE_MAP`, `ZF_AUTH_EMAIL_FALLBACK` | Entra provider |
 | `ZF_REASON_ROLES` | roles that may see a vulnerability reason |
+| `ZF_RESIDENT_SITE_URL` | optional `https` address of the separate resident site, linked from the [public welcome page](#public-welcome-page); unset shows plain words instead of a link |
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
 | `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_NOTICE_VERSION`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
