@@ -113,7 +113,7 @@ def verified(user: dict[str, Any]) -> dict[str, Any] | None:
 def _rows(store: Any) -> list[dict[str, Any]]:
     if hasattr(store, "db"):
         with store.dblock:
-            return [json.loads(r[0]) for r in store.db.execute("SELECT body FROM staff")]
+            return [json.loads(r[0]) for r in store.db.execute("SELECT body FROM staff").fetchall()]
     return list(store.staff.values())
 
 

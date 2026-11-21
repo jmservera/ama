@@ -142,6 +142,9 @@ class _Cursor:
     def fetchall(self):
         return [tuple(r) for r in self.cur.fetchall()]
 
+    def __iter__(self):
+        return iter(self.fetchall())
+
 
 class _Conn:
     """The few sqlite3 calls SqlStore makes, over one mssql-python connection. Reconnects when the link was dropped between requests."""
