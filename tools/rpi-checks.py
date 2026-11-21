@@ -3443,6 +3443,13 @@ def verify(
         )
 
 
+def needs_heavy_lock(groups: list[str]) -> bool:
+    """Docker, SQL and browser groups share one host resource; other groups run lock-free."""
+    return any(
+        group in ("browser", "mssql", "logo-0600") or group.startswith("image-") for group in groups
+    )
+
+
 @contextlib.contextmanager
 def heavy_lock(timeout: int, inherited_fd: int | None = None) -> Iterator[None]:
     if inherited_fd is not None:
@@ -3636,7 +3643,11 @@ def main() -> int:
             signal.signal(signal.SIGTERM, interrupted)
             signal.signal(signal.SIGINT, interrupted)
             queued = datetime.now(UTC).isoformat()
-            with heavy_lock(args.lock_timeout, args.heavy_lock_fd):
+            with (
+                heavy_lock(args.lock_timeout, args.heavy_lock_fd)
+                if needs_heavy_lock(selected["groups"])
+                else contextlib.nullcontext()
+            ):
                 jobs = worker_limit(args.jobs or len(os.sched_getaffinity(0)))
                 full = selected["groups"] == required_groups(extras)
                 print(
