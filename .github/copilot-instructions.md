@@ -83,6 +83,11 @@ workbench browser-check script under `src/api/checks/` changes, and running
 `src/api/src/zava_forward/api/web/` change. Use the
 component guides and existing workflows rather than infer that no tests exist.
 
+Gate economy (owner decision D6, 2026-11-21): hosted CI is the per-PR gate
+for the focused tier. Run the full local gate only at integration points
+(wave end, release, infrastructure, SQL or security stack tip), once per tip,
+and do not pause merges, publication or parallel work while it runs.
+
 Validation follows two tiers (owner decision D4, 2026-11-01, refined by issue
 #1294). During development run the relevant targeted local tests. Small
 issues, non-gate tooling and documentation-only candidates take the focused tier: run
