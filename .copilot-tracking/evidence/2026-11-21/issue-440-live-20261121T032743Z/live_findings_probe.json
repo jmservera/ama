@@ -1,0 +1,44 @@
+{
+ "anon_fetch": {
+  "default": "redirect",
+  "json": "redirect",
+  "healthz": 200
+ },
+ "after_signin_title": "My cases today | Zava Forward",
+ "api": {
+  "/api/me": 200,
+  "/api/time/status": 200,
+  "/api/law": 503,
+  "/api/continuity": 200
+ },
+ "time_status": {
+  "enabled": false,
+  "flag_on": false,
+  "dpia_recorded": false,
+  "reason": "Time capture is switched off.",
+  "storage": "the shared SQL store"
+ },
+ "law_body": "{\"error\": \"The law store is not loaded.\"}",
+ "me_role": "Retrofit Programme Manager",
+ "nav_links": [
+  "#/time|Time capture",
+  "#/handoff-waiting|Handoff waiting times",
+  "/api/handoffs/unaccepted.csv|Download handoff waiting times for Excel"
+ ],
+ "signed_in_path": "/app",
+ "time_url_path": "/app#/time",
+ "time_screen_text": [
+  "Skip to main content",
+  "Zava Forward",
+  "Zava North Homes",
+  "My cases",
+  "All cases",
+  "Overview",
+  "Progress dashboard",
+  "Visits",
+  "Funding",
+  "Finance",
+  "Capacity and work orders",
+  "Closed cases"
+ ]
+}
