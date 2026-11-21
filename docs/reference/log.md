@@ -14354,3 +14354,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2204-role-signin-wrong-role-denial-live-2026-11-21.md](research/issue-2204-role-signin-wrong-role-denial-live-2026-11-21.md): live Programme Manager sign-in, permitted views and wrong-role denials on the demo, a local matrix for every other role and the administrator, and a per-criterion table. Other live roles stay unproven (no accounts, no directory privileges). No source change.
 * Index row added to `docs/reference/README.md`.
+## [2026-11-21] update | Issue 2191 live coverage check (Refs #2191)
+
+* Added [issue-2191-live-coverage-2026-11-21.md](research/issue-2191-live-coverage-2026-11-21.md): live store holds 443 homes, the cohort is 20 (4.5%), the deployed image skips 128 of 443 at rate 0.3 in a deleted dry-run probe. The 50% criterion stays unproven because per-device secrets do not scale; no source change.

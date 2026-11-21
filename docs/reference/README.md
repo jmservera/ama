@@ -529,7 +529,7 @@ the child-closure criterion stays unproven and nothing is ticked.
 
 A [live demo run](./research/issue-184-live-demo-sim-consent-mix-2026-11-20.md) starts the simulator and receiver jobs on the demo hub, applies a 10 granted and 10 declined consent mix through repository code, and shows a Recent reading and Readings withheld in the staff app.
 
-A [demo coverage note](./research/issue-2191-demo-sim-coverage-2026-11-21.md) records the code change for the simulator to cover at least half of all homes with a configurable skip rate, with local test evidence and the live items not proven.
+A [demo coverage note](./research/issue-2191-demo-sim-coverage-2026-11-21.md) records the code change for the simulator to cover at least half of all homes with a configurable skip rate, with local test evidence and the live items not proven. A [live coverage note](./research/issue-2191-live-coverage-2026-11-21.md) adds the live readbacks: 443 homes, a 20 home cohort and the skip rate proven in the deployed image.
 
 A [sixth run](./research/issue-184-live-r6-2026-11-19.md) repeats the read-only checks with 91 targeted tests; the
 criterion is still an owner action and nothing is ticked.
