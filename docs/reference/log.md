@@ -14234,3 +14234,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-21 issue 165 criteria recheck
 
 * Added [issue-165-live-20261121-2026-11-21.md](research/issue-165-live-20261121-2026-11-21.md): 102 local tests pass, the live simulator has streamed 240 messages an hour for four hours, consent-gated sensor readbacks match, per-criterion table. Criterion 1 proven for the demo; criteria 2 (owner approval) and 3 (#184 still open) unproven. No source change.
+## 2026-11-21 issue 198 rubric re-verification
+
+* Added [issue-198-rubric-live-20261121-2026-11-21.md](research/issue-198-rubric-live-20261121-2026-11-21.md) with raw outputs: fresh re-check of the open criteria (no `mvp/` or `prototype/` glob, 84 rubric script tests pass, 5 of 7 proven). Criteria 3 and 4 stay unproven and need an owner waiver. Evidence level: local commands and GitHub PR metadata; no source change.
