@@ -28,12 +28,11 @@ Publication is separate residual work; no deployment is authorized.
 
 ### Current Disposition
 
-* Based on events: RD-001 through RD-006.
+* Based on events: RD-001 through RD-008.
 * Review execution: Complete.
 * Final outcome: Residual work.
 * Finding decisions: none.
-* Next action: commit, obtain independent exact-head review and publish the PR;
-  deployment excluded.
+* Next action: await PR #2194 hosted checks and owner review; deployment excluded.
 
 ### Decision History
 
@@ -45,6 +44,8 @@ Publication is separate residual work; no deployment is authorized.
 | RD-004 | outcome | agent | Residual work | RPI Agent | Implementation met; publication evidence outstanding |
 | RD-005 | continuation | agent | Await publication authorization | owner | No automatic push or deployment |
 | RD-006 | publication authorization | user | approved | RPI Agent | Owner selected commit, independent review, push and PR; no deployment |
+| RD-007 | independent source review | independent code-review agent | Pass | RPI Agent | ccdeed8dae0d5fb920d8ccc0689142a6d599518e; no significant issues; tests not rerun |
+| RD-008 | publication | agent | PR opened | owner | https://github.com/jmservera/ama/pull/2194 targets main; source CI running/queued at inspected head; owner merge pending |
 
 ## Validation Evidence
 
