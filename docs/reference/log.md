@@ -14181,3 +14181,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-20] update | Issue 2061 live single-environment move (Refs #2061)
 
 * Added [issue-2061-live-single-environment-2026-11-20.md](research/issue-2061-live-single-environment-2026-11-20.md): optional `sqlTier=dtu` deployed, own `eh-` namespace with IoT Hub route moved, old environment deleted by id, Key Vault 403/200 and employee sign-in proven. Criteria 4 and 6 stay unproven and the old `evhns-cutover-test-demo` is kept; nothing ticked.
+
+## [2026-11-21] update | Issue 107 seventh criteria pass (Refs #107)
+
+* Added [issue-107-live-r7-criteria-2026-11-21.md](research/issue-107-live-r7-criteria-2026-11-21.md): actual-SQL re-run at current head; one criterion proven for the demo, one unproven (human approval). Nothing ticked.
