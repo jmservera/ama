@@ -14237,3 +14237,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-21 issue 198 rubric re-verification
 
 * Added [issue-198-rubric-live-20261121-2026-11-21.md](research/issue-198-rubric-live-20261121-2026-11-21.md) with raw outputs: fresh re-check of the open criteria (no `mvp/` or `prototype/` glob, 84 rubric script tests pass, 5 of 7 proven). Criteria 3 and 4 stay unproven and need an owner waiver. Evidence level: local commands and GitHub PR metadata; no source change.
+
+## [2026-11-21] update | Issue 208 live epic proof refresh (Refs #208)
+
+* Added [issue-208-live-epic-evidence-2026-11-21.md](research/issue-208-live-epic-evidence-2026-11-21.md): refreshed child states, 246 regulatory tests passing, live demo smoke check, and the unproven remainder (owner decisions on #440 and delivery order).
