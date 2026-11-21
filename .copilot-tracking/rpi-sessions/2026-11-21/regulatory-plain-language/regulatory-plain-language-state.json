@@ -1,0 +1,33 @@
+{
+  "task_id": "regulatory-plain-language",
+  "task_slug": "regulatory-plain-language",
+  "session_name": "Regulatory plain-language checkbox",
+  "parent_task": null,
+  "child_tasks": [],
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {"research": ".copilot-tracking/research/2026-11-21/regulatory-plain-language-research.md", "plan": ".copilot-tracking/plans/2026-11-21/regulatory-plain-language-plan.md", "critique": ".copilot-tracking/reviews/plans/2026-11-21/regulatory-plain-language-plan-critique.md", "changes": ".copilot-tracking/changes/2026-11-21/regulatory-plain-language-changes.md", "review": ".copilot-tracking/reviews/logs/2026-11-21/regulatory-plain-language-review.md"},
+  "documents": {"research": [".copilot-tracking/research/2026-11-21/regulatory-plain-language-research.md"], "plan": [".copilot-tracking/plans/2026-11-21/regulatory-plain-language-plan.md"], "critique": [".copilot-tracking/reviews/plans/2026-11-21/regulatory-plain-language-plan-critique.md"], "changes": [".copilot-tracking/changes/2026-11-21/regulatory-plain-language-changes.md"], "review": [".copilot-tracking/reviews/logs/2026-11-21/regulatory-plain-language-review.md"]},
+  "confirmed_decisions": [
+    {"decision": "Automatic session scope", "status": "current", "evidence": "User reports ineffective regulatory plain-language checkbox. Fix visible explanation behavior in alert states, preserve mandatory safety and evidence text; no deployment or remote writes authorized."},
+    {"decision": "Automatic progression boundary", "status": "through-review", "evidence": "User selected end-to-end."},
+    {"decision": "Research decision participation", "status": "agent-owned", "evidence": "User selected end-to-end."},
+    {"decision": "Planning decision participation", "status": "agent-owned", "evidence": "User selected end-to-end."},
+    {"decision": "Review decision participation", "status": "agent-owned", "evidence": "User selected end-to-end."},
+    {"decision": "Follow-up decision participation", "status": "agent-owned", "evidence": "User selected end-to-end."},
+    {"decision": "Planning critique", "status": "standard", "evidence": "First-task default."},
+    {"decision": "Review step", "status": "run", "evidence": "First-task default."},
+    {"decision": "Validation tier", "status": "focused", "evidence": "Presentation-only explanation fix; no permissions, safety control semantics, dependencies, infrastructure or deployment changes."},
+    {"decision": "Canvas", "status": "current", "evidence": "instanceId rpi-regulatory-plain-language; handle 98XG; extensionId plugin:hve-core:rpi-workflow"},
+    {"decision": "Publication authorization", "status": "approved", "evidence": "Owner selected publish: commit, independent review, push and PR. Deployment not authorized."},
+    {"decision": "Independent source review", "status": "passed", "evidence": "Read-only code-review agent assessed ccdeed8dae0d5fb920d8ccc0689142a6d599518e against origin/main: no significant issues. Tests not rerun."},
+    {"decision": "Pull request", "status": "open", "evidence": "https://github.com/jmservera/ama/pull/2194 targets main; owner-authorized push. No merge or deployment."}
+  ],
+  "blockers": [
+    {"id": "hosted-human-approval", "summary": "Hosted CI running/queued; owner review and merge pending.", "resolution": "Read applicable checks at final head and obtain required owner approval; do not merge automatically."}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Await PR #2194 hosted checks and owner review; fix not deployed."},
+  "prioritized_follow_ups": []
+}

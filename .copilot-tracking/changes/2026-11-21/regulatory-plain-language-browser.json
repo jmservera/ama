@@ -1,0 +1,1054 @@
+{
+  "outcome": "passed",
+  "scope": "Synthetic changed surfaces only; not a WCAG conformance certification",
+  "axe_version": "4.10.3",
+  "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+  "axe_status": "skipped: not supplied",
+  "scans": [
+    {
+      "state": "alert-collapsed-chat",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "cited-answer",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 465.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1172,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "cited-answer-fade-35pct",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 465.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1172,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "cited-answer-fade-50pct",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 465.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1172,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "no-source-refused",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 485.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 465.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1172,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "320px-reflow",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 236,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 236,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 236,
+          "height": 64,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 194.40625,
+          "height": 80,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 215.203125,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 215.203125,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 236,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 236,
+          "height": 90,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "390px-reflow",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 306,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 306,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 306,
+          "height": 64,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 264.40625,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 285.203125,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 285.203125,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 306,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 306,
+          "height": 66,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "1280px-reflow",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 485.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 465.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1172,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "200-percent-text-320px",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 236,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 236,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 236,
+          "height": 256,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 194.40625,
+          "height": 296,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 194.40625,
+          "height": 104,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 215.203125,
+          "height": 306,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 215.203125,
+          "height": 306,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 236,
+          "height": 162,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 236,
+          "height": 162,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 236,
+          "height": 354,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "source-changed-retained-risk",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "conflict-auto-referral",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 485.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 465.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v3%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v3#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 485.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1172,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "conflict-referral-restored",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/cards/synthetic-hazard\" target=\"_blank\" rel=\"noopener\">synthetic-hazard@v2</a>",
+          "width": 169.75,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 485.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">In doubt: send this turn to Juan Manuel Servera</button>",
+          "width": 465.078125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v3%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v3#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt regulatory-state state-sent\" aria-disabled=\"true\">Sent to exercise owner; awaiting human review</button>",
+          "width": 485.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "regulatory-question",
+          "width": 1172,
+          "height": 90,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Look up cited sources</button>",
+          "width": 230.953125,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "disabled-chat",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "<summary>Ask the assistant about this case (optional)</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\">Open chat</button>",
+          "width": 126.1875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Request proposal: Works and resident coordination</button>",
+          "width": 499.734375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Cited regulatory lookup (synthetic-demo)</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 44
+        },
+        {
+          "control": "chat-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Open my exercise doubt inbox (named owner only)</button>",
+          "width": 495.21875,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "Resident Liaison Officer",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "Building Safety Liaison",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "Retrofit Coordinator",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "Quality Inspector",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "Retrofit Programme Manager",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<a href=\"/api/law/provisions/synthetic%40v2%230001\" target=\"_blank\" rel=\"noopener\">synthetic@v2#0001 (source record, opens new tab)</a>",
+          "width": 418.3125,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "Programme Support Officer",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "Grants and Evidence Officer",
+      "axe": "skipped: not supplied",
+      "target_sizes": [
+        {
+          "control": "alerts-plain-mode",
+          "width": 24,
+          "height": 24,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"button\" class=\"alt\">Refresh alerts</button>",
+          "width": 161.5625,
+          "height": 42,
+          "min_height": 24
+        }
+      ]
+    },
+    {
+      "state": "supplier-human-route",
+      "axe": "skipped: not supplied",
+      "target_sizes": []
+    }
+  ],
+  "staff_comprehension": "Not run; unmet",
+  "copy_audit": {
+    "application_owned_labels": "chat/alerts and coupled recorded-time labels",
+    "source_canary": "Synthetic hazard reports go to a human reviewer; this fixture is not law. Exact source terms: gate, hold, provenance, trace, snapshot, envelope.",
+    "source_preserved": "exact before and after history restoration",
+    "human_restart_authority": "retained",
+    "resident_wording_review": "Not supplied; unmet"
+  }
+}

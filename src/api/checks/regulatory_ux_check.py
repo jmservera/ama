@@ -277,6 +277,85 @@ def assert_state_cue(target: Any, border_style: str) -> None:
     assert style["border"] == border_style, f"Unexpected border shape: {style}"
 
 
+def check_plain_empty_states(page: Page) -> None:
+    """Extra notes toggle in empty states without hiding safety or status."""
+    from playwright.sync_api import expect
+
+    alerts = page.locator("#regulatory-alerts")
+    explanation = alerts.locator(":scope > .regulatory-coverage-explanation")
+    status = alerts.locator(":scope > p[role=status]")
+    toggle = page.locator("#alerts-plain-mode")
+    refresh = page.get_by_role("button", name="Refresh alerts", exact=True)
+    pattern = "**/api/law/alerts*"
+    held: list[Any] = []
+    shown = page.evaluate("me.services.law_alerts")
+
+    def assert_toggle(text: str) -> None:
+        expect(explanation).to_contain_text(text)
+        expect(explanation).to_be_visible()
+        original_status = status.inner_text()
+        keyboard_activate(page, "#alerts-plain-mode", "Space")
+        expect(explanation).not_to_be_visible()
+        expect(alerts.locator(".regulatory-mode-state")).to_have_text(
+            "Plain-language explanations are hidden."
+        )
+        expect(status).to_be_visible()
+        expect(status).to_have_text(original_status)
+        expect(alerts.locator(".notice")).to_be_visible()
+        expect(alerts.locator(".regulatory-guidance")).to_be_visible()
+        expect(toggle).to_be_focused()
+        keyboard_activate(page, "#alerts-plain-mode", "Space")
+        expect(explanation).to_be_visible()
+
+    try:
+        page.evaluate("me.services.law_alerts = false")
+        refresh.press("Enter")
+        expect(status).to_contain_text("the law store is not loaded")
+        expect(alerts.locator("article")).to_have_count(0)
+        assert_toggle("no rules available")
+        # Refresh must not reset the person's chosen mode.
+        keyboard_activate(page, "#alerts-plain-mode", "Space")
+        refresh.press("Enter")
+        expect(explanation).not_to_be_visible()
+        expect(toggle).not_to_be_checked()
+        keyboard_activate(page, "#alerts-plain-mode", "Space")
+        page.evaluate("me.services.law_alerts = true")
+
+        page.route(pattern, lambda route: held.append(route))
+        refresh.press("Enter")
+        expect(status).to_contain_text("Loading role-scoped alerts")
+        assert_toggle("Until it responds")
+        assert len(held) == 1, "Expected one pending alert request"
+        held.pop().fulfill(
+            status=200,
+            content_type="application/json",
+            body=json.dumps({"homes": [], "coverage_status": "unknown"}),
+        )
+        expect(status).to_contain_text("0 visible alerts")
+        expect(alerts.locator("article")).to_have_count(0)
+        assert_toggle("there are no alerts you can see")
+
+        refresh.press("Enter")
+        expect(status).to_contain_text("Loading role-scoped alerts")
+        assert len(held) == 1, "Expected one failed alert request"
+        held.pop().fulfill(
+            status=503,
+            content_type="application/json",
+            body=json.dumps({"error": "Synthetic unavailable service"}),
+        )
+        expect(status).to_contain_text("Alert coverage unknown")
+        expect(refresh).to_be_enabled()
+        assert_toggle("service could not return")
+    finally:
+        page.unroute(pattern)
+        for route in held:
+            route.abort()
+        page.evaluate("flag => { me.services.law_alerts = flag; }", shown)
+    refresh.press("Enter")
+    expect(status).to_contain_text("visible alerts")
+    assert_toggle("alerts below show recorded checks")
+
+
 def keyboard_walk(page: Page, selector: str) -> None:
     from playwright.sync_api import expect
 
@@ -396,9 +475,13 @@ def run(axe_path: Path | None) -> dict[str, Any]:
             scan(page, axe, reports, "alert-collapsed-chat", strict_contrast=True)
 
             keyboard_activate(page, "#alerts-plain-mode", "Space")
-            expect(alerts.locator(".plain-explanation")).not_to_be_visible()
+            expect(alerts.locator(".plain-explanation").first).not_to_be_visible()
+            expect(alerts.locator(".regulatory-alert .plain-explanation")).not_to_be_visible()
+            expect(alerts.locator(".regulatory-plain-summary")).to_be_visible()
             keyboard_activate(page, "#alerts-plain-mode", "Space")
-            expect(alerts.locator(".plain-explanation")).to_be_visible()
+            expect(alerts.locator(".plain-explanation").first).to_be_visible()
+            expect(alerts.locator(".regulatory-alert .plain-explanation")).to_be_visible()
+            check_plain_empty_states(page)
             # Real sequential Tab and reverse traversal, not only programmatic focus.
             page.keyboard.press("Tab")
             expect(alerts.locator("a").first).to_be_focused()
