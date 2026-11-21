@@ -14285,6 +14285,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-144-live-registry-import-probe-2026-11-21.md](research/issue-144-live-registry-import-probe-2026-11-21.md): built the current agents image, staged it on a throwaway registry (deleted) and tried a control-plane import into the shared registry, which its network restriction denied; both unticked criteria stay unproven or partly proven. No source change, nothing ticked.
 
+## [2026-11-21] update | Issue 2195 chat routing (Refs #2195)
+
+* Added [issue-2195-chat-routing-2026-11-21.md](research/issue-2195-chat-routing-2026-11-21.md): chat routing line for employee and resident chat, local Playwright evidence, tests and a per-criterion table; live deployment not done
 ## [2026-11-21] update | Issue 2191 demo simulator coverage (Refs #2191)
 
 * Added [issue-2191-demo-sim-coverage-2026-11-21.md](research/issue-2191-demo-sim-coverage-2026-11-21.md): cohort selection of at least half of all homes, 500 home ceiling, seeded skip rate, local test evidence; live coverage not proven.
@@ -14316,6 +14319,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2206-demo-preflight-2026-11-21.md](research/issue-2206-demo-preflight-2026-11-21.md): read-only preflight script with a live run; revisions, jobs, health and record format proven, live counts unproven (SQL private). Nothing ticked.
 
+## [2026-11-21] update | Issue 2205 AI quality scope (Refs #2205)
+
+* Added [issue-2205-live-2026-11-21.md](research/issue-2205-live-2026-11-21.md): `quality_scope` registry block, tests and runbook preflight. Live app has no scope variable; nothing ticked.
 ## [2026-11-21] update | Demo runbook live status rewrite (Refs #2203)
 
 * Added a dated "Live demo status" section to the [demo runbook](../capstone/demo/runbook.md#live-demo-status-2026-11-21) with Observed and Not verified columns for the 20-home cohort, 5 minute cadence, consent mix, resident checkbox, chat routing, charts, operator-triggered AI scope, offline-sensor alert, role proof and hardening. Relabelled the five-home section as the superseded 2026-11-12 target and kept its table for the cohort regression test.

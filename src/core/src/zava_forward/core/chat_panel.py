@@ -49,6 +49,7 @@ from zava_forward.core.chat_isolation import (
     neutralise,
 )
 from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
+from zava_forward.core.chat_routing import route_question
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 from zava_forward.core.regulatory_output_guard import GuardTelemetry, inspect_regulatory_output
 
@@ -753,6 +754,9 @@ class ChatPanel:
             raise
         sources = {f"{case_id}/{path}": value for path, value in facts.items()}
         refusal = out_of_scope(question[:MAX_CONTENT])
+        routing = route_question(question, skill, user.get("role"), refused=bool(refusal))
+        if skill == GENERAL:
+            skill = routing["agent"]
         cites: list[str]
         blocked = consent_guidance(self.iso.ai_consent_state(case_id)) if case_id else None
         if refusal:
@@ -779,6 +783,7 @@ class ChatPanel:
             self._reply(kind, text, cites, "workflow-only", guidance),
             skill=skill,
             context=case_id or "general",
+            routing=routing,
         )
 
     def _ask(
@@ -798,6 +803,17 @@ class ChatPanel:
         ctx = iso.case_context(user, case_id) if case_id else None
         if case_id and ctx is None:
             raise ChatNotFound(case_id)
+        routing = None
+        if isinstance(skill, str):
+            routing = route_question(
+                question,
+                skill,
+                user.get("role"),
+                refused=bool(
+                    out_of_scope(str(question if question is not None else "")[:MAX_CONTENT])
+                ),
+            )
+            skill = routing["agent"]
         sources = permitted_sources(case_id, ctx) if ctx else {}
         if isinstance(skill, str):
             sources = skill_sources(skill, sources)
@@ -867,11 +883,14 @@ class ChatPanel:
                         sort_keys=True,
                     ),
                 )
-            return dict(
+            reply = dict(
                 self._reply(kind, text, cites, model_name, sources, source),
                 skill=skill,
                 context=case_id or "general",
             )
+            if routing:
+                reply["routing"] = routing
+            return reply
 
         model_name = "workflow-only"
         refusal = out_of_scope(str(question if question is not None else "")[:MAX_CONTENT])

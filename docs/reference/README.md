@@ -664,6 +664,9 @@ The [fifth audit](./research/issue-1288-live-r5-quality-sensor-evidence-2026-11-
 The [sixth audit](./research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md) sees the live simulator feeding two homes and the Quality model blocked at release admission; criteria 4 and 8 stay unproven.
 
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
+For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
+records how employee and resident chat now show which agent handled each question and why,
+with local browser evidence; the deployed demo apps are not yet updated.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
@@ -1516,6 +1519,7 @@ or infra acceptance claimed.
 | [Epic 104 criteria re-check at head 981aa6aaf (#104)](./research/issue-104-criteria-recheck-live-2026-11-21.md) | #164 and #216 now closed; #108 quota headroom still empty; 59 offline tests, read-only Azure deployment check and per-criterion table; C1 and C2 unproven; no source change |
 | [Epic 100 criteria re-check at head c703a24a1 (#100)](./research/issue-100-live-criteria-recheck-2026-11-21.md) | Signed-in read-only probe of the live AI consumption economics card (denominators, Unknown costs) plus 301 focused tests; C2 proven, #440 criterion unproven; no source change |
 | [Issue 2192 sensor consent checkbox (#2192)](./research/issue-2192-live-2026-11-21.md) | Resident grant and withdraw checkbox, audit row, employee withheld state; proven locally with Playwright, live deploy unproven |
+| [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |
 | [Epic 81 audit round 2 (#81)](./research/issue-81-epic-audit-live-r2-2026-11-19.md) | Per-criterion table; the #1837 form fix is on main and passes 8 local tests, the deployed image still predates it; nothing ticked | 2026-11-19 |
 | [Epic 81 audit round 3 (#81)](./research/issue-81-epic-audit-live-r3-2026-11-20.md) | All nine children closed, #130 residual deferred to #2117; criterion 2 proven, criterion 1 unproven; checked by tools/test_epic_81_child_disposition.py; nothing ticked | 2026-11-20 |
