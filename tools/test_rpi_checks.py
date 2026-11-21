@@ -2279,7 +2279,7 @@ os.fstat(3)
                     "axe_version": "4.10.3",
                     "page_errors": [],
                     "zoom": "chrome.tabs.setZoom=2; innerWidth<=640",
-                    "scans": [{"violations": []} for _ in range(87)],
+                    "scans": [{"violations": []} for _ in range(91)],
                 }
             elif name == "employee-chat-results.json":
                 content = CHAT_SCANS
@@ -2379,12 +2379,12 @@ os.fstat(3)
                 ("regulatory-ux-results.json", "outcome", "failed"),
                 ("case-journey-results.json", "zoom", "device scale only"),
                 ("case-journey-results.json", "scans", []),
-                ("case-journey-results.json", "scans", [{"violations": []}] * 86),
-                ("case-journey-results.json", "scans", [{"violations": []}] * 88),
+                ("case-journey-results.json", "scans", [{"violations": []}] * 90),
+                ("case-journey-results.json", "scans", [{"violations": []}] * 92),
                 (
                     "case-journey-results.json",
                     "scans",
-                    [{"violations": [{"impact": "serious"}]}] * 87,
+                    [{"violations": [{"impact": "serious"}]}] * 91,
                 ),
                 ("case-journey-results.json", "page_errors", ["Uncaught failure"]),
                 (
