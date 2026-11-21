@@ -14192,3 +14192,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 440 live criteria verdict, second pass (Refs #440)
 
 * Added [issue-440-live-criteria-verdict-2026-11-21.md](research/issue-440-live-criteria-verdict-2026-11-21.md): signed-in Playwright screenshot of the time capture screen on the demo, D1 to D3 re-observed, the 2026-11-20 screenshot gap traced to a probe path error (`/#/time` is the signed-out route; the workbench is `/app`), and criterion 8 sub-claims recorded. Nothing ticked.
+
+## [2026-11-21] update | Issue 116 round 6 recheck (Refs #116)
+
+* Added [issue-116-live-r6-evidence-2026-11-21.md](research/issue-116-live-r6-evidence-2026-11-21.md): provider-boundary suites rerun at head, the previously unrun assistants dispatch test now run, a read-only live 401 probe, no defect and no source change. Nothing ticked.
