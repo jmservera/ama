@@ -14188,3 +14188,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Epic 113 live recheck (Refs #113)
 
 * Added [issue-113-epic-recheck-live-2026-11-21.md](research/issue-113-epic-recheck-live-2026-11-21.md): the three epic criteria rechecked, a read-only Azure posture probe, no defect found and no source change. Criteria 1 and 2 stay unproven (owner-gated; four children open), criterion 3 holds only as an absence of production claims. Nothing ticked; no Azure resource created.
+## [2026-11-21] update | Issue 440 live criteria verdict, second pass (Refs #440)
+
+* Added [issue-440-live-criteria-verdict-2026-11-21.md](research/issue-440-live-criteria-verdict-2026-11-21.md): signed-in Playwright screenshot of the time capture screen on the demo, D1 to D3 re-observed, the 2026-11-20 screenshot gap traced to a probe path error (`/#/time` is the signed-out route; the workbench is `/app`), and criterion 8 sub-claims recorded. Nothing ticked.
