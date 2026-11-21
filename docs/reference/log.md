@@ -14288,3 +14288,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Employee sensor charts demo evidence (Refs #2193)
 
 * Added [employee-sensor-charts-2193.md](research/demo-employee-charts/employee-sensor-charts-2193.md): dual-axis Home sensors chart and map card gauges with screenshots, axe run and unit tests. Live deployment unproven.
+## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
+
+* Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.
