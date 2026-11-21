@@ -330,11 +330,27 @@ class SqlStore(Store):
                     self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", r[1:] + (cid,))
                 self._meta_set("rank_policy", want)
                 self._meta_set("support_encoding", stock.SUPPORT_ENCODING)
+            elif have >= set(CASE_COLS):
+                self._repair_identity_columns()
             continuity.sync_sql_gate(self.db, read_meta=True, mssql=hasattr(self, "_env"))
             self.db.execute("COMMIT")
         except BaseException:
             self.db.execute("ROLLBACK")
             raise
+
+    def _repair_identity_columns(self):
+        """Rebuild the derived row of any case whose filter columns disagree with its body, the source of truth.
+
+        A writer that edits a body without its derived columns would otherwise leave the SQL list paths
+        (own queue, counts, filters) disagreeing with the in-memory paths (exports) indefinitely.
+        """
+        cols = ("stage", "area", "wave", "owner_code", "closed", "contractor")
+        norm = lambda v: int(v) if isinstance(v, bool | int) else str(v)  # noqa: E731 - Azure SQL returns bits as bool
+        for cid, body, *have in self.db.execute("SELECT id, body, " + ", ".join(cols) + " FROM cases").fetchall():
+            row = self._row(json.loads(body))
+            want = [row[CASE_COLS.index(c) + 1] for c in cols]
+            if [norm(v) for v in have] != [norm(v) for v in want]:
+                self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", row[1:] + (cid,))
 
     # ---- load and sync
     def _migrate_queues(self):

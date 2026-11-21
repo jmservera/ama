@@ -204,6 +204,27 @@ class Migration(unittest.TestCase):
             s = SqlStore(str(p), db)
             self.assertNotEqual(s.db.execute("SELECT rkey FROM cases LIMIT 1").fetchone()[0], "zzz")
 
+    def test_identity_columns_that_disagree_with_the_case_body_are_repaired(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "zavaforward.json"
+            p.write_text(json.dumps(dataset(make_cases(40))))
+            db = os.path.join(tmp, "pw.sqlite")
+            SqlStore(str(p), db)
+            raw = sqlite3.connect(db)
+            raw.execute("UPDATE cases SET owner_code='OLD-CODE', stage='Stale stage'")
+            raw.commit()
+            raw.close()
+            s = SqlStore(str(p), db)
+            pam = STAFF[1]
+            by_body = [c for c in s.cases.values() if not c["closed"] and c["owner_code"] == pam["code"]]
+            self.assertTrue(by_body)
+            self.assertEqual(s.page_cases(pam, "mine", limit=100)["total"], len(by_body))
+            self.assertEqual(s.page_cases(pam, "mine")["total"], len(by_body))
+            self.assertEqual(s.counts(pam)["mine"], len(by_body))
+            stage = by_body[0]["stage"]
+            self.assertEqual(s.page_cases(pam, "all", filters=dict(stage=stage), limit=100)["total"],
+                             sum(1 for c in s.cases.values() if not c["closed"] and c["stage"] == stage))
+
 
 class Plans(unittest.TestCase):
     def test_list_queries_use_indexes_not_table_scans(self):

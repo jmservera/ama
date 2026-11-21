@@ -1,0 +1,18 @@
+Anonymous matrix, 2026-11-20 23:21 UTC, ca-cutover-test-demo-api (host read at runtime), native curl vs Chrome UA + Accept: application/json
+/healthz curl=200 browser=200
+/api/me curl=401 browser=302
+/api/cases curl=401 browser=302
+/api/staff curl=401 browser=302
+/app curl=401 browser=302
+/cases.html curl=401 browser=302
+Easy Auth: unauthenticatedClientAction=RedirectToLoginPage; excluded: /healthz /readyz / /welcome.html /style.css /zava-logo.png /sign-in
+Revision ca-cutover-test-demo-api--0000037 (created 2026-11-20 22:15 UTC); resident ca-resident-demo--0000015
+
+Owner-column drift (signed-in staff, GET only, scripts/csvdiag*.py, ownerdiag*.py, coldiag.py)
+list view=mine total              16   (SQL path, filters on cases.owner_code column)
+/api/me counts.mine               16   (SQL column)
+cases.csv (default and view=mine) 133  (in-memory path, filters on case body); 133 distinct ids, all Owner = the signed-in user's name
+list view=mine&flag=nodecision    133  (in-memory path)
+stats.team open for the user      133  (in-memory)
+body-derived owner_code counts across all 443 open cases (paged through the SQL path, payload comes from the body): 133,124,53,48,31,21,15,15,3
+SQL-column filter count differs from body count for 8 of 9 owners; stage (20 values), area (11) and wave (5) all agree
