@@ -22,7 +22,11 @@ from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
 from zava_forward.core import ranking_archive_blob, ranking_publication_runner
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+from zava_forward.core.container_hardening import (
+    ContainerHardeningError,
+    enforce_from_env,
+    prepare_private_scratch,
+)
 
 OK_MARKER = "RANKING_PUBLISH_OK"
 BLOCKED_MARKER = "RANKING_PUBLISH_BLOCKED"
@@ -95,6 +99,7 @@ def main(
 ) -> int:
     """python -m zava_forward.orchestrator.ranking_publish [--today YYYY-MM-DD]"""
     try:
+        prepare_private_scratch(env)
         enforce_from_env(env)
     except ContainerHardeningError as error:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)

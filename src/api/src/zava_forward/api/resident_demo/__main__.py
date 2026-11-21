@@ -14,7 +14,11 @@ from pathlib import Path
 
 from zava_forward.core import resident_showcase as rs
 from zava_forward.core import resident_showcase_sql as rsql
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+from zava_forward.core.container_hardening import (
+    ContainerHardeningError,
+    enforce_from_env,
+    prepare_private_scratch,
+)
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from .agenda import Agenda
@@ -26,6 +30,7 @@ from .rep_grants import load_grants
 
 def main() -> int:
     try:
+        prepare_private_scratch()
         enforce_from_env()
     except ContainerHardeningError as error:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)

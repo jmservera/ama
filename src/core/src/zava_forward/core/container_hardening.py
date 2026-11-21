@@ -5,11 +5,17 @@ hypervisor guest neither sets `ST_RDONLY` on `/` nor clears `CapBnd`. When `ZF_C
 is `"enforced"` in deployed workloads, this pure-stdlib guard enforces:
 1. Non-root execution (`UID == EUID == 10001` and `GID == EGID == 10001`, never `0`).
 2. Restrictive process file creation mask (`umask 0o077`) and Python bytecode write suppression.
-3. Linux `prctl(PR_SET_NO_NEW_PRIVS, 1)` plus `/proc/self/status` verification that
-   `NoNewPrivs == 1` and `CapInh == CapPrm == CapEff == CapAmb == 0`.
+3. Linux `prctl(PR_SET_NO_NEW_PRIVS, 1)`, a `capset` that clears the inheritable set (Container Apps
+   starts the process with `CapInh == CapBnd`), then `/proc/self/status` verification that
+   `NoNewPrivs == 1` and `CapInh == CapPrm == CapEff == CapAmb == 0`. `CapBnd` stays non-zero: it
+   cannot be lowered without `CAP_SETPCAP`, and with `NoNewPrivs` and empty permitted and ambient
+   sets `execve` cannot raise any capability, so the bounding set is inert.
 4. Read-only / DAC-immutable root (`/`) and application (`/app`) paths rejecting file creation.
 5. Bounded ephemeral scratch directories (`TMPDIR`/`/tmp` and `ZF_STATE` when configured) accepting
-   file creation and deletion with safe directory permissions.
+   file creation and deletion with safe directory permissions. Container Apps `EmptyDir` mounts
+   are `root:root` mode `0777` without the sticky bit, so `prepare_private_scratch` first creates
+   private `zf` subdirectories (mode `0700`, owned by the current user) and points `TMPDIR` and
+   `ZF_STATE` at them before the guard runs.
 """
 
 from __future__ import annotations
@@ -20,7 +26,7 @@ import os
 import secrets
 import stat
 import sys
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Mapping, MutableMapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -31,6 +37,8 @@ EXPECTED_UID = 10001
 EXPECTED_GID = 10001
 PR_SET_NO_NEW_PRIVS = 38
 DEFAULT_IMMUTABLE_PATHS: tuple[Path, ...] = (Path("/"), Path("/app"))
+LINUX_CAPABILITY_VERSION_3 = 0x20080522
+PRIVATE_SCRATCH_DIRNAME = "zf"
 _ZERO_CAPABILITY_KEYS: tuple[str, ...] = ("CapInh", "CapPrm", "CapEff", "CapAmb")
 
 
@@ -82,6 +90,41 @@ def _set_linux_no_new_privs() -> int:
         result: int = prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)
         return result
     raise ContainerHardeningError("Unable to locate libc prctl for PR_SET_NO_NEW_PRIVS.")
+
+
+class _CapHeader(ctypes.Structure):
+    _fields_ = [("version", ctypes.c_uint32), ("pid", ctypes.c_int)]
+
+
+class _CapData(ctypes.Structure):
+    _fields_ = [
+        ("effective", ctypes.c_uint32),
+        ("permitted", ctypes.c_uint32),
+        ("inheritable", ctypes.c_uint32),
+    ]
+
+
+def _drop_inheritable_capabilities() -> int:
+    """Clear the inheritable capability set, keeping effective and permitted; 0 on success."""
+    for soname in ("libc.so.6", None):
+        try:
+            libc = ctypes.CDLL(soname, use_errno=True)
+        except OSError:
+            continue
+        capget = getattr(libc, "capget", None)
+        capset = getattr(libc, "capset", None)
+        if capget is None or capset is None:
+            continue
+        header = _CapHeader(LINUX_CAPABILITY_VERSION_3, 0)
+        data = (_CapData * 2)()
+        if capget(ctypes.byref(header), data) != 0:
+            return -1
+        header = _CapHeader(LINUX_CAPABILITY_VERSION_3, 0)
+        for entry in data:
+            entry.inheritable = 0
+        result: int = capset(ctypes.byref(header), data)
+        return result
+    return -1
 
 
 def _probe_immutable_directory(path: Path) -> None:
@@ -159,6 +202,7 @@ def enforce_container_hardening(
     bytecode_env: str | None = None,
     platform: str | None = None,
     prctl_fn: Callable[[], int] | None = None,
+    drop_inheritable_fn: Callable[[], int] | None = None,
     proc_status_text: str | None = None,
     proc_status_path: Path = Path("/proc/self/status"),
     immutable_paths: Sequence[Path] = DEFAULT_IMMUTABLE_PATHS,
@@ -192,6 +236,8 @@ def enforce_container_hardening(
         apply_prctl = _set_linux_no_new_privs if prctl_fn is None else prctl_fn
         if apply_prctl() != 0:
             raise ContainerHardeningError("Failed to set Linux PR_SET_NO_NEW_PRIVS.")
+        # A failed drop is not fatal here: the zero-mask verification below fails closed.
+        (_drop_inheritable_capabilities if drop_inheritable_fn is None else drop_inheritable_fn)()
         if proc_status_text is None:
             try:
                 raw_status = proc_status_path.read_text(encoding="utf-8")
@@ -246,6 +292,48 @@ def enforce_container_hardening(
         immutable_paths=tuple(str(p) for p in immutable_paths),
         writable_paths=tuple(str(p) for p in writable_paths),
     )
+
+
+def prepare_private_scratch(
+    env: Mapping[str, str] | None = None,
+    *,
+    tmp_base: Path = Path("/tmp"),
+    state_base: Path = Path("/state"),
+) -> None:
+    """Point TMPDIR and a configured ZF_STATE at private subdirectories before the guard runs.
+
+    Container Apps `EmptyDir` mounts are root-owned mode 0777 without the sticky bit, which the
+    guard rightly refuses. Private `zf` subdirectories (0700, current user) are accepted. A no-op
+    unless `ZF_CONTAINER_HARDENING=enforced`; ZF_STATE is repointed only when already configured.
+    """
+    target = os.environ if env is None else env
+    if target.get(HARDENING_ENV, "").strip().lower() != HARDENING_ENFORCED:
+        return
+    if not isinstance(target, MutableMapping):
+        return
+    wanted = {"TMPDIR": tmp_base}
+    if target.get("ZF_STATE", "").strip():
+        wanted["ZF_STATE"] = state_base
+    uid = os.getuid()
+    for name, base in wanted.items():
+        private = base / PRIVATE_SCRATCH_DIRNAME
+        try:
+            os.makedirs(private, mode=0o700, exist_ok=True)
+            os.chmod(private, 0o700)
+            st = private.stat()
+        except OSError as exc:
+            raise ContainerHardeningError(
+                f"Unable to prepare private scratch directory {private} (errno={exc.errno})."
+            ) from None
+        if not stat.S_ISDIR(st.st_mode) or st.st_uid != uid:
+            raise ContainerHardeningError(
+                f"Private scratch path {private} is not a directory owned by the current user."
+            )
+        target[name] = str(private)
+    if target is os.environ:
+        import tempfile
+
+        tempfile.tempdir = None
 
 
 def enforce_from_env(env: Mapping[str, str] | None = None) -> HardeningReport:

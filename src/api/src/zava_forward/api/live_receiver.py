@@ -15,7 +15,11 @@ from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+from zava_forward.core.container_hardening import (
+    ContainerHardeningError,
+    enforce_from_env,
+    prepare_private_scratch,
+)
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.synthetic import sensor_identity
 from zava_forward.core.synthetic.sensor_stream import StreamError
@@ -126,6 +130,7 @@ async def run_window(
 def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     env = os.environ if env is None else env
     try:
+        prepare_private_scratch(env)
         enforce_from_env(env)
     except ContainerHardeningError as error:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)
