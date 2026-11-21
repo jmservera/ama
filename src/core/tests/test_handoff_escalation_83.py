@@ -289,6 +289,18 @@ class JsonHandoffEscalation83Tests(unittest.TestCase):
         self.assertIn("Pam Lead", rex_detail["work"]["handoff"]["escalation_next_action"])
         self.assertNotIn("PRIVATE-NEXT", json.dumps(rex_detail))
 
+    def test_unaccepted_handoffs_skips_a_handoff_with_an_offered_time_that_cannot_be_aged(
+        self,
+    ) -> None:
+        sam = self.actors["sam"]
+        rex = self.actors["rex"]
+        as_of = "2026-10-16T18:00:00+00:00"
+        self._offer_aged("ZF-1", sam, "rex@example.test", "2026-10-15T10:00:00+00:00")
+        self._offer_aged("ZF-2", sam, "rex@example.test", "2026-10-13T09:00")
+
+        rows = self.store.unaccepted_handoffs(rex, as_of=as_of)
+        self.assertEqual([row["case_id"] for row in rows], ["ZF-1"])
+
     def test_role_queues_surface_unowned_and_escalated_handoffs_without_leaking_canaries(
         self,
     ) -> None:

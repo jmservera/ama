@@ -1,0 +1,75 @@
+{
+ "landing_status": 200,
+ "landing_title": "Welcome to Zava Forward | Zava North Homes",
+ "anon_fetch": {
+  "default": "redirect",
+  "json": "redirect",
+  "html": "redirect",
+  "healthz": 200
+ },
+ "signin_click_reaches_entra": true,
+ "after_signin_path": "/app",
+ "after_signin_title": "My cases today | Zava Forward",
+ "t0": "2026-11-21T15:26:33Z",
+ "time_status": [
+  {
+   "status": 200,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"enabled\": false, \"flag_on\": false, \"dpia_recorded\": false, \"consultation_recorded\": false, \"notice_approved\": false, \"requested\": false, \"requested_by\": null,"
+  },
+  {
+   "status": 200,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"enabled\": false, \"flag_on\": false, \"dpia_recorded\": false, \"consultation_recorded\": false, \"notice_approved\": false, \"requested\": false, \"requested_by\": null,"
+  },
+  {
+   "status": 200,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"enabled\": false, \"flag_on\": false, \"dpia_recorded\": false, \"consultation_recorded\": false, \"notice_approved\": false, \"requested\": false, \"requested_by\": null,"
+  }
+ ],
+ "me_status": 200,
+ "h": {
+  "/api/handoffs": [
+   200,
+   "[{\"case_id\": \"ZF-2025-0029\", \"resident\": \"Dawn Brown\", \"address\": \"Flat 1, 157,159,161,163,165,167 Tebay Drive\", \"state\": \"Offered\", \"from_code\": \"E-632225179217\", \"from_name\": \"Daisy Phillips\", \"to_c"
+  ],
+  "/api/handoffs/unaccepted": [
+   500,
+   "{\"error\": \"The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to application support.\"}"
+  ],
+  "/api/handoffs/unowned": [
+   200,
+   "[{\"case_id\": \"ZF-2025-0029\", \"stage\": \"Contact paused\", \"as_of\": \"2026-11-21T15:26+00:00\", \"state\": \"Offered\", \"status\": \"Sent\", \"from_code\": \"E-632225179217\", \"from_name\": \"Daisy Phillips\", \"to_code\""
+  ],
+  "/api/handoffs/escalated": [
+   200,
+   "[]"
+  ],
+  "/api/handoffs/unaccepted.csv": [
+   500,
+   "{\"error\": \"The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to application support.\"}"
+  ]
+ },
+ "handoff_offered_at_samples": [
+  [
+   "2026-10-13T09:00",
+   "ZF-2025-0029"
+  ],
+  [
+   "2026-10-13T09:00",
+   "ZF-2025-0030"
+  ],
+  [
+   "2026-10-13T09:00",
+   "ZF-2025-0031"
+  ],
+  [
+   "2026-10-13T09:00",
+   "ZF-2025-0032"
+  ]
+ ]
+}

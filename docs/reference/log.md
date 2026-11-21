@@ -14336,3 +14336,8 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 * Demo API revision `--0000039` to `--0000040`, 100 percent, Healthy, `/healthz` 200. `job-live-simulator` and `job-live-receiver` moved to the same image. The change carries the staff roster read fix (#2211), which stopped every contractor sign-in on the SQL store, and the receiver window fix (#2210).
 * One contractor roster row was added to the demo SQL `staff` table for a demo contractor account; sign-ins then reached the workbench without an auth denial.
 * Not done: `ZF_CONTAINER_HARDENING` stays `off` on the API, simulator and receiver, so the `enforced` live rollout in the infrastructure guide remains pending. The agents and resident apps were not rebuilt. No live receipt has been captured.
+
+## [2026-11-21] update | Issue 344 eighth live pass (Refs #344)
+
+* Added [public-browser-access-live-r8-2026-11-21.md](research/public-browser-access-live-r8-2026-11-21.md): browser sign-in and a 36-path signed-in sweep on the demo; `/api/time/status` is now 200; the `/api/handoffs/unaccepted` 500 (naive `offered_at`) is fixed in a local commit and not deployed. Criteria 3 and 4 proven; 1 partly proven (browser redirect needs an owner infra decision); 5 unproven.
+* Index row added to `docs/reference/README.md`.

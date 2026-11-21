@@ -962,7 +962,12 @@ class WorkflowMixin:
             for c in self.cases.values():
                 if c.get("closed"):
                     continue
-                row = handoff_ageing(c, as_of, max_age_hours, policy=policy)
+                try:
+                    row = handoff_ageing(c, as_of, max_age_hours, policy=policy)
+                except (KeyError, ValueError):
+                    # A handoff whose offered time is missing or has no timezone cannot be aged;
+                    # it stays visible in the pending and unowned queues.
+                    continue
                 h = c.get("handoff") or {}
                 if row and self._direct_handoff_visible(user, h):
                     rows.append(row)
