@@ -1,0 +1,1 @@
+{"employee_state": "no-readings", "detail": "No retained readings for this home in the bounded time window.", "audit": [{"changed_at": "2026-11-21T09:28:18Z", "previous": "granted", "consent": "declined", "actor": "resident-showcase"}, {"changed_at": "2026-11-21T09:28:26Z", "previous": "declined", "consent": "granted", "actor": "resident-showcase"}]}

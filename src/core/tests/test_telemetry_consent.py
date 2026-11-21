@@ -72,6 +72,38 @@ class WithdrawalTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             telemetry_consent.withdraw(self.consumer, POLICY, [CONTROL], "ZF-9")
 
+    def test_grant_after_withdrawal_restores_admission_view_and_audits(self) -> None:
+        other = replace(CONTROL, sensor_id="SENS-SYN-2", home_id="ZF-2")
+        self.consumer.configure(POLICY, [CONTROL, other])
+        self.assertEqual(self.consumer.set_home_consent("ZF-1", "declined", "resident"), "granted")
+        self.assertEqual(self.consumer.home_consent("ZF-1"), "declined")
+        self.assertEqual(self.consumer.home_consent("ZF-2"), "granted")
+        self.assertEqual(self.consumer.set_home_consent("ZF-1", "granted", "resident"), "declined")
+        self.assertEqual(self.consumer.home_consent("ZF-1"), "granted")
+        self.assertEqual(self.process(self.rows[0]).status, "accepted")
+        trail = self.consumer.consent_audit("ZF-1")
+        self.assertEqual(
+            [(a["previous"], a["consent"]) for a in trail],
+            [
+                ("granted", "declined"),
+                ("declined", "granted"),
+            ],
+        )
+        self.assertEqual(self.consumer.consent_audit("ZF-2"), [])
+
+    def test_unchanged_consent_writes_no_audit_and_bad_input_is_refused(self) -> None:
+        self.assertEqual(self.consumer.set_home_consent("ZF-1", "granted", "resident"), "granted")
+        self.assertEqual(self.consumer.consent_audit("ZF-1"), [])
+        with self.assertRaises(ValueError):
+            self.consumer.set_home_consent("ZF-9", "declined", "resident")
+        with self.assertRaises(ValueError):
+            self.consumer.set_home_consent("ZF-1", "unknown", "resident")
+
+    def test_withdrawal_through_the_seam_withholds_the_employee_view(self) -> None:
+        self.consumer.set_home_consent("ZF-1", "declined", "resident")
+        out = sensor_view.view(self.store.db, CONTROL.home_id, None, 1727740800.0)
+        self.assertEqual(out["state"], "consent-withheld")
+
 
 if __name__ == "__main__":
     unittest.main()

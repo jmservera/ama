@@ -7,7 +7,7 @@ import re
 import time
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Protocol, cast
@@ -593,6 +593,14 @@ class SensorConsumer:
             ),
             "sensor_consumer_control_home": _control_home_ddl(self.mssql),
             "sensor_consumer_index_state": _state_ddl(self.mssql),
+            "sensor_consent_audit": (
+                "(id INT IDENTITY(1,1) NOT NULL PRIMARY KEY,"
+                if self.mssql
+                else "(id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            )
+            + " changed_at VARCHAR(20) NOT NULL, home_id NVARCHAR(128) NOT NULL,"
+            " previous VARCHAR(12) NOT NULL, consent VARCHAR(12) NOT NULL,"
+            " actor VARCHAR(40) NOT NULL)",
             "sensor_delivery": (
                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
                 " reason VARCHAR(40) NOT NULL, received_at VARCHAR(20) NOT NULL,"
@@ -1192,6 +1200,78 @@ class SensorConsumer:
         if "declined" in states:
             return "declined"
         return "granted" if states == {"granted"} else "unknown"
+
+    def set_home_consent(self, home_id: str, consent: str, actor: str) -> str:
+        """Grant or withdraw monitoring consent for every control of one home, with an audit row.
+
+        Other homes keep their state. The change, the index marker and the audit row commit
+        together, after any live dispatch for the home has ended. Returns the previous state.
+        """
+        if not home_key(home_id):
+            raise ConsumerError("INVALID_HOME_SELECTION")
+        if consent not in ("granted", "declined") or not _text(actor, 40):
+            raise ValueError("INVALID_CONTROL_CONSENT")
+        deadline = time.monotonic() + DISPATCH_WAIT_SECONDS
+        while True:
+            with self._write() as db:
+                self._schema(db)
+                policy = self._policy(db)
+                try:
+                    controls = [
+                        SensorControl(**json.loads(str(r[0])))
+                        for r in db.execute("SELECT body FROM sensor_consumer_control").fetchall()
+                    ]
+                except (TypeError, ValueError):
+                    raise ConsumerError("SENSOR_CONTROLS_MALFORMED") from None
+                owned = [c for c in controls if c.home_id == home_id]
+                if not owned:
+                    raise ValueError("UNKNOWN_HOME")
+                states = {c.consent for c in owned}
+                previous = (
+                    "declined"
+                    if "declined" in states
+                    else ("granted" if states == {"granted"} else "unknown")
+                )
+                if states == {consent}:
+                    return previous
+                updated = [
+                    replace(c, consent=consent) if c.home_id == home_id else c for c in controls
+                ]
+                if not self._dispatch_in_flight(db, {home_id}):
+                    self._replace_controls(db, policy, updated)
+                    db.execute(
+                        "INSERT INTO sensor_consent_audit"
+                        " (changed_at, home_id, previous, consent, actor) VALUES (?, ?, ?, ?, ?)",
+                        (
+                            datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                            home_id,
+                            previous,
+                            consent,
+                            actor,
+                        ),
+                    )
+                    return previous
+            if time.monotonic() >= deadline:
+                raise ConsumerError("SENSOR_DISPATCH_IN_FLIGHT")
+            time.sleep(0.05)
+
+    def consent_audit(self, home_id: str) -> list[dict[str, str]]:
+        """Consent changes for one home, oldest first."""
+        if not home_key(home_id):
+            raise ConsumerError("INVALID_HOME_SELECTION")
+        db = self._connect()
+        try:
+            rows = db.execute(
+                "SELECT changed_at, previous, consent, actor FROM sensor_consent_audit"
+                " WHERE home_id=? ORDER BY id",
+                (home_id,),
+            ).fetchall()
+        except self.store.dberror:
+            raise ConsumerError("SENSOR_SQL_UNAVAILABLE") from None
+        finally:
+            db.close()
+        keys = ("changed_at", "previous", "consent", "actor")
+        return [dict(zip(keys, map(str, r), strict=True)) for r in rows]
 
     def acknowledge(self, receipt: Receipt) -> None:
         """Post-COMMIT seam: a caller must reconcile any lost acknowledgement."""

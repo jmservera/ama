@@ -285,9 +285,56 @@
     return figure;
   }
 
-  function renderSensors(sensors) {
+  function renderConsent(consent) {
+    var box = el("div", null, "sensor-consent");
+    var notice = consent.notice || {};
+    box.appendChild(el("h3", "Sharing your sensor readings"));
+    box.appendChild(el("p", notice.collected));
+    box.appendChild(el("p", notice.who_sees));
+    if (!consent.available) {
+      box.appendChild(el("p", "You cannot change this choice on this page right now. Ask your housing officer to record it."));
+      return box;
+    }
+    var label = el("label", null, "check");
+    var input = el("input");
+    input.type = "checkbox";
+    input.id = "sensor-consent";
+    input.name = "sensor-consent";
+    input.checked = consent.state === "granted";
+    input.setAttribute("aria-describedby", "sensor-consent-status sensor-consent-stop");
+    label.appendChild(input);
+    label.appendChild(el("span", consent.label));
+    box.appendChild(label);
+    var status = el("p", consent.status, "sensor-consent-status");
+    status.id = "sensor-consent-status";
+    status.setAttribute("role", "status");
+    var stop = el("p", notice.not_affected);
+    stop.id = "sensor-consent-stop";
+    box.appendChild(status);
+    box.appendChild(stop);
+    input.addEventListener("change", function () {
+      var wanted = input.checked;
+      input.disabled = true;
+      status.textContent = "Saving your choice...";
+      api("/demo/sensor-consent", { method: "POST", body: JSON.stringify({ granted: wanted }) }).then(function (res) {
+        input.disabled = false;
+        if (res.ok && res.body.sensor_consent) {
+          input.checked = res.body.sensor_consent.state === "granted";
+          status.textContent = res.body.sensor_consent.status;
+        } else {
+          input.checked = !wanted;
+          status.textContent = res.body.error || "We could not save your choice. Try again, or ask your housing officer to record it.";
+        }
+        input.focus();
+      });
+    });
+    return box;
+  }
+
+  function renderSensors(sensors, consent) {
     var section = sectionCard("sec-sensors", "Your home sensors and forecast", "", "sensors");
     section.appendChild(el("p", sensors.note));
+    if (consent) section.appendChild(renderConsent(consent));
     var history = sensors.history;
     if (!history.length) {
       section.appendChild(el("p", "No synthetic sensor readings are available for your home. You can still use the help options below."));
@@ -692,7 +739,7 @@
       help.appendChild(el("p", "Synthetic callback booking is not connected in this showcase. Use the contact routes above."));
     }
     if (view.sensors) {
-      content.appendChild(renderSensors(view.sensors));
+      content.appendChild(renderSensors(view.sensors, view.sensor_consent));
     }
 
     var unavailable = sectionCard("sec-unavailable", "Not available in this showcase", "", "ban");
@@ -780,7 +827,7 @@
     var headers = { Accept: "application/json" };
     if (options.body) headers["Content-Type"] = "application/json";
     if (options.method === "POST") headers["X-CSRF-Token"] = csrf;
-    if (["/demo/view", "/demo/assistant", "/demo/agenda"].includes(path)) {
+    if (["/demo/view", "/demo/assistant", "/demo/agenda", "/demo/sensor-consent"].includes(path)) {
       headers["X-Resident-Session"] = sessionId;
     }
     return fetch(path, { method: options.method || "GET", headers: headers, body: options.body, cache: "no-store", credentials: "same-origin" })
