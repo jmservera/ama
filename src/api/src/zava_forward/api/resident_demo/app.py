@@ -829,7 +829,12 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 return
             try:
                 sc.apply(app.sensor_consent, row.sensor_home_id, row.case_id, body["granted"])
-            except Exception:
+            except Exception as error:
+                code = error.args[0] if error.args and isinstance(error.args[0], str) else ""
+                print(
+                    f"sensor consent write failed: {type(error).__name__} {code[:40]}",
+                    file=sys.stderr,
+                )
                 self._json(503, dict(error=sc.ERROR_TEXT))
                 return
             self._json(200, dict(sensor_consent=sc.card(app.sensor_consent, row.sensor_home_id)))

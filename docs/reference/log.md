@@ -14386,3 +14386,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2201-live-receiver-proof-2026-11-21.md](research/issue-2201-live-receiver-proof-2026-11-21.md): corrects the earlier run count (50 executions, 8 Succeeded), records the captured stderr `SENSOR_SQL_UNAVAILABLE`, proves fresh readings in the store and the employee map, and lists what stays unproven (three consecutive successes, deployment of the retry, database fault cause).
 * Source: `HubReceiver` retries an unavailable SQL store in a bounded window; tests added.
+## [2026-11-21] update | Issue 2202 live receipt (Refs #2202)
+
+* Added [issue-2202-live-receipt-2026-11-21.md](research/issue-2202-live-receipt-2026-11-21.md): images, revisions and replica hardening receipts (api and agents enforced, resident unset), resident consent checkbox live after configuring a writer identity, chart, gauge and chat routing checks, and a per-criterion table. Half of homes with readings and resident hardening stay unproven.
+* Resident app moved to revision `0000019` (rollback `0000018`); the consent write failure code is now logged in a local, undeployed commit.
