@@ -255,11 +255,42 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_bounded_window_keeps_sql_failure_fatal(self) -> None:
         self.events = [("0", event(observations()[0]))]
+        self.receiver.sql_backoff = (0.0, 0.0)
         with patch.object(
             self.receiver.ingestion, "consume", side_effect=ConsumerError("SENSOR_SQL_UNAVAILABLE")
-        ):
+        ) as consume:
             with self.assertRaisesRegex(StreamError, "^SENSOR_SQL_UNAVAILABLE$"):
                 await self.run_receiver(2, bounded=True)
+        self.assertEqual(consume.call_count, 3)
+        self.assertEqual(self.receiver.sql_retries, 2)
+
+    async def test_bounded_window_retries_a_transient_sql_failure(self) -> None:
+        self.events = [("0", event(observations()[0]))]
+        self.receiver.sql_backoff = (0.0, 0.0)
+        consume = self.receiver.ingestion.consume
+        calls = {"n": 0}
+
+        def flaky(*args: object, **kwargs: object) -> tuple[Receipt, ...]:
+            calls["n"] += 1
+            if calls["n"] == 1:
+                raise ConsumerError("SENSOR_SQL_UNAVAILABLE")
+            return consume(*args, **kwargs)
+
+        with patch.object(self.receiver.ingestion, "consume", side_effect=flaky):
+            receipts = await self.run_receiver(5, bounded=True)
+        self.assertEqual(len(receipts), 1)
+        self.assertEqual(self.receiver.sql_retries, 1)
+        self.assertEqual(self.count("sensor_reading"), 1)
+
+    async def test_bounded_window_never_retries_an_uncertain_commit(self) -> None:
+        self.events = [("0", event(observations()[0]))]
+        self.receiver.sql_backoff = (0.0, 0.0)
+        with patch.object(
+            self.receiver.ingestion, "consume", side_effect=ConsumerError("SENSOR_COMMIT_UNCERTAIN")
+        ) as consume:
+            with self.assertRaisesRegex(StreamError, "^SENSOR_COMMIT_UNCERTAIN$"):
+                await self.run_receiver(2, bounded=True)
+        self.assertEqual(consume.call_count, 1)
 
     async def test_sql_failure_stops_admission_without_checkpoint_then_recovers(self) -> None:
         first, second = observations()

@@ -232,6 +232,8 @@ class HubReceiver:
         self.ingestion = ingestion
         self.activation = activation
         self.rejected: dict[str, int] = {}
+        self.sql_retries = 0
+        self.sql_backoff: tuple[float, ...] = (2.0, 5.0, 15.0, 30.0)
 
     async def run(
         self,
@@ -245,7 +247,8 @@ class HubReceiver:
 
         With `bounded_window` the deadline is the normal end of the window and an event that
         `decode` refuses is skipped (never stored, counted by reason code in `self.rejected`)
-        instead of stopping the run; SQL, link and cleanup failures stay fatal.
+        instead of stopping the run; an unavailable SQL store is retried with `sql_backoff` (counted
+        in `sql_retries`) before it stops the run; other SQL, link and cleanup failures stay fatal.
         """
         if (
             type(max_seconds) not in (int, float)
@@ -265,6 +268,7 @@ class HubReceiver:
         locks: dict[str, asyncio.Lock] = {}
         admitted = 0
         self.rejected = {}
+        self.sql_retries = 0
 
         async def on_event(context: PartitionContext, event: EventData | None) -> None:
             nonlocal failure, admitted
@@ -287,15 +291,27 @@ class HubReceiver:
                     received = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
                     # A cancelled wait cannot cancel a SQL commit. Keep its
                     # stable identity, observe completion, and never checkpoint it.
-                    sql = asyncio.create_task(
-                        asyncio.to_thread(
-                            self.ingestion.consume,
-                            [row],
-                            received_at=received,
+                    delays = iter(self.sql_backoff if bounded_window else ())
+                    while True:
+                        sql = asyncio.create_task(
+                            asyncio.to_thread(
+                                self.ingestion.consume,
+                                [row],
+                                received_at=received,
+                            )
                         )
-                    )
-                    sql.add_done_callback(_observe)
-                    receipt = (await _bounded(asyncio.shield(sql), deadline))[0]
+                        sql.add_done_callback(_observe)
+                        try:
+                            receipt = (await _bounded(asyncio.shield(sql), deadline))[0]
+                            break
+                        except ConsumerError as unavailable:
+                            # A refused connection or rolled-back write is safe to repeat;
+                            # an uncertain commit and every other code stay fatal.
+                            delay = next(delays, None)
+                            if str(unavailable) != "SENSOR_SQL_UNAVAILABLE" or delay is None:
+                                raise
+                            self.sql_retries += 1
+                            await asyncio.sleep(min(delay, max(0.0, deadline - time.monotonic())))
                     receipts.append(receipt)
                     if finished.is_set() or (stop and stop.is_set()):
                         return

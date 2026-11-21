@@ -14382,3 +14382,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2193 employee sensor charts live re-check (Refs #2193)
 
 * Updated [employee-sensor-charts-2193.md](research/demo-employee-charts/employee-sensor-charts-2193.md): live Playwright observation of the dual-axis chart and map card gauges on the demo API, probe script and screenshots. The gauge reorder is local only; stale, offline and withheld states are test-only.
+## [2026-11-21] update | Issue 2201 receiver proof and SQL retry (Refs #2201)
+
+* Added [issue-2201-live-receiver-proof-2026-11-21.md](research/issue-2201-live-receiver-proof-2026-11-21.md): corrects the earlier run count (50 executions, 8 Succeeded), records the captured stderr `SENSOR_SQL_UNAVAILABLE`, proves fresh readings in the store and the employee map, and lists what stays unproven (three consecutive successes, deployment of the retry, database fault cause).
+* Source: `HubReceiver` retries an unavailable SQL store in a bounded window; tests added.

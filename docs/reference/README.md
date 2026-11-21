@@ -667,6 +667,9 @@ The [fifth audit](./research/issue-1288-live-r5-quality-sensor-evidence-2026-11-
 The [sixth audit](./research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md) sees the live simulator feeding two homes and the Quality model blocked at release admission; criteria 4 and 8 stay unproven.
 
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
+
+The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.

@@ -122,6 +122,9 @@ async def run_window(
         receipts = await receiver.run(
             max_seconds=window, max_events=events, stop=stop, bounded_window=True
         )
+        retries = getattr(receiver, "sql_retries", 0)
+        if retries:
+            print(f"sql_retries={retries}", file=sys.stderr, flush=True)
         rejected = getattr(receiver, "rejected", None)
         if rejected:
             summary = ",".join(f"{code}={n}" for code, n in sorted(rejected.items()))
