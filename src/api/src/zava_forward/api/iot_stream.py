@@ -231,6 +231,7 @@ class HubReceiver:
         self.bindings = _bindings(bindings)
         self.ingestion = ingestion
         self.activation = activation
+        self.rejected: dict[str, int] = {}
 
     async def run(
         self,
@@ -238,7 +239,14 @@ class HubReceiver:
         max_seconds: float,
         max_events: int,
         stop: asyncio.Event | None = None,
+        bounded_window: bool = False,
     ) -> tuple[Receipt, ...]:
+        """Receive one finite window.
+
+        With `bounded_window` the deadline is the normal end of the window and an event that
+        `decode` refuses is skipped (never stored, counted by reason code in `self.rejected`)
+        instead of stopping the run; SQL, link and cleanup failures stay fatal.
+        """
         if (
             type(max_seconds) not in (int, float)
             or not 1 <= max_seconds <= 3600
@@ -256,6 +264,7 @@ class HubReceiver:
         receipts: list[Receipt] = []
         locks: dict[str, asyncio.Lock] = {}
         admitted = 0
+        self.rejected = {}
 
         async def on_event(context: PartitionContext, event: EventData | None) -> None:
             nonlocal failure, admitted
@@ -267,7 +276,13 @@ class HubReceiver:
                 try:
                     if time.monotonic() >= deadline or (stop and stop.is_set()):
                         raise StreamError("RUN_STOPPED")
-                    row = decode(event, self.bindings)
+                    try:
+                        row = decode(event, self.bindings)
+                    except StreamError as refused:
+                        if not bounded_window:
+                            raise
+                        self.rejected[str(refused)] = self.rejected.get(str(refused), 0) + 1
+                        return
                     admitted += 1
                     received = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
                     # A cancelled wait cannot cancel a SQL commit. Keep its
@@ -343,6 +358,8 @@ class HubReceiver:
             if stopping in done:
                 raise StreamError("RUN_STOPPED")
             if waiting not in done:
+                if bounded_window and receive not in done:
+                    return tuple(receipts)
                 raise StreamError("IOT_RECEIVE_STOPPED" if receive in done else "RUN_DEADLINE")
             return tuple(receipts)
         except (StreamError, asyncio.CancelledError):

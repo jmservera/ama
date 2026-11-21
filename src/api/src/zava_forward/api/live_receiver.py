@@ -119,7 +119,15 @@ async def run_window(
     stop = asyncio.Event()
     watcher = asyncio.create_task(_watch(control, reload, clock, stop, poll)) if reload else None
     try:
-        receipts = await receiver.run(max_seconds=window, max_events=events, stop=stop)
+        receipts = await receiver.run(
+            max_seconds=window, max_events=events, stop=stop, bounded_window=True
+        )
+        rejected = getattr(receiver, "rejected", None)
+        if rejected:
+            summary = ",".join(f"{code}={n}" for code, n in sorted(rejected.items()))
+            print(
+                f"rejected={sum(rejected.values())} reasons={summary}", file=sys.stderr, flush=True
+            )
     finally:
         if watcher is not None:
             watcher.cancel()
