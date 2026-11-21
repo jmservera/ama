@@ -49,6 +49,20 @@ class AssistantApiTests(DemoTestCase):
             all(call.args == (Topic.STATUS,) for call in provider.select.call_args_list)
         )
 
+    def test_reply_names_the_helper_and_unmatched_questions_stay_general(self) -> None:
+        client = self.client()
+        self.assertEqual(client.login("one@example.com"), 200)
+        for question, agent, routed in (
+            ("How is my case going?", "Case progress helper", True),
+            ("What is the weather like?", "General assistant", False),
+        ):
+            status, body, _ = client.call(
+                "POST", "/demo/assistant", {"question": question, "use_record": True}
+            )
+            self.assertEqual(status, 200)
+            self.assertEqual((body["routing"]["agent"], body["routing"]["routed"]), (agent, routed))
+            self.assertIn(agent, body["routing"]["text"])
+
     def test_requires_fresh_authentication_and_csrf(self) -> None:
         client = self.client()
         client.prime()

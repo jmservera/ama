@@ -173,6 +173,7 @@ const employeeChat = (() => {
         ui.message("assistant", answer.plain_summary ? `Plain-language summary: ${answer.plain_summary}\n\n${answer.reply}` : answer.reply, {
           label: view.label,
           outcome: outcomeNames[answer.kind] || "unknown",
+          routing: answer.routing && answer.routing.text ? answer.routing.text : "",
           detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${view.detail}`,
           sources: (answer.citations || []).map(sourceLine),
         });
