@@ -1,0 +1,39 @@
+{
+ "healthz": 200,
+ "after_signin_title": "My cases today | Zava Forward",
+ "api": {
+  "/api/me": 200,
+  "/api/continuity": 200,
+  "/api/assistants/releases": 404,
+  "/api/handoffs/unaccepted.csv": 500
+ },
+ "releases_body": [
+  "error"
+ ],
+ "me_role": "Retrofit Programme Manager",
+ "screen_text": [
+  "Skip to main content",
+  "Zava Forward",
+  "Zava North Homes",
+  "My cases",
+  "All cases",
+  "Overview",
+  "Progress dashboard",
+  "Visits",
+  "Funding",
+  "Finance",
+  "Capacity and work orders",
+  "Closed cases",
+  "Assistant proposals",
+  "Time capture",
+  "Aftercare concerns",
+  "Specialist screens",
+  "AK",
+  "Aadi",
+  "Retrofit Programme Manager. Handoff waiting times.",
+  "Back to the list",
+  "Handoff waiting times",
+  "Handoff waiting times could not load, so we cannot tell which handoffs are waiting. Owner: application support. Next action: check again, th",
+  "Check again"
+ ]
+}

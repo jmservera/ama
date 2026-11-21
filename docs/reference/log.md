@@ -14224,3 +14224,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 1830 fifth pass (Refs #1830)
 
 * Added [issue-1830-live-r5-2026-11-21.md](research/issue-1830-live-r5-2026-11-21.md): executed `rpi-checks.py --preflight` selectors and edge cases, direct 320px and map browser reruns with a negative control, timing from ten retained full receipts including the first jobs 4 run; criterion 2 proven for the demo, others still partial; no source change.
+
+## [2026-11-21] update | Issue 123 live criteria verdict (Refs #123)
+
+* Added [issue-123-live-criteria-verdict-2026-11-21.md](research/issue-123-live-criteria-verdict-2026-11-21.md): child states (#126 and #440 open), 175 governance tests passing, and a live finding that the unaccepted-handoff queue returns 500 on the demo because four seeded handoffs have a timezone-less `offered_at`. No source change, nothing ticked. Options recorded for the owner.
