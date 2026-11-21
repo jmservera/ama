@@ -248,7 +248,12 @@ class ReceiverTests(unittest.TestCase):
                 seen["bound"] = len(bound)
 
             async def run(
-                self, *, max_seconds: float, max_events: int, stop: asyncio.Event
+                self,
+                *,
+                max_seconds: float,
+                max_events: int,
+                stop: asyncio.Event,
+                bounded_window: bool,
             ) -> tuple[int, ...]:
                 seen["seconds"] = max_seconds
                 return (1, 2)
@@ -649,7 +654,12 @@ class ReceiverStopTests(unittest.TestCase):
                     pass
 
                 async def run(
-                    self, *, max_seconds: float, max_events: int, stop: asyncio.Event
+                    self,
+                    *,
+                    max_seconds: float,
+                    max_events: int,
+                    stop: asyncio.Event,
+                    bounded_window: bool,
                 ) -> tuple[int, ...]:
                     seen["seconds"] = max_seconds
                     change(path, control)
