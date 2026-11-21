@@ -776,6 +776,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     answer=advice.answer,
                     sources=advice.sources,
                     label=advice.label,
+                    routing=chat.routing(topic),
                     notice=advice.notice,
                     help=advice.help,
                     action="appointments" if callbacks else None,

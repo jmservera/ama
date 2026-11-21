@@ -14284,3 +14284,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 144 registry import probe (Refs #144)
 
 * Added [issue-144-live-registry-import-probe-2026-11-21.md](research/issue-144-live-registry-import-probe-2026-11-21.md): built the current agents image, staged it on a throwaway registry (deleted) and tried a control-plane import into the shared registry, which its network restriction denied; both unticked criteria stay unproven or partly proven. No source change, nothing ticked.
+
+## [2026-11-21] update | Issue 2195 chat routing (Refs #2195)
+
+* Added [issue-2195-chat-routing-2026-11-21.md](research/issue-2195-chat-routing-2026-11-21.md): chat routing line for employee and resident chat, local Playwright evidence, tests and a per-criterion table; live deployment not done
