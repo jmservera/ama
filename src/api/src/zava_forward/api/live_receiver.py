@@ -1,7 +1,7 @@
 """Bounded host entry for the live synthetic receiver (issue 110 hosting glue for stage 2).
 
 `python -m zava_forward.api.live_receiver --control-file F` reads the same control document as the
-simulator, binds exactly that cohort (at most 100 homes, the `HubReceiver` limit) and runs one
+simulator, binds exactly that cohort (at most 500 homes, the `HubReceiver` limit) and runs one
 finite receive window into the retained store, then exits. It starts nothing by itself: a manual
 job trigger, an owner-verified routed Event Hub (`ZF_SIM_ROUTING_READY=1`) and an unexpired,
 enabled control document are all required. It makes no model call and has no resident action.

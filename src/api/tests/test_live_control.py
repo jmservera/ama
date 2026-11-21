@@ -47,7 +47,7 @@ class ControlTests(unittest.TestCase):
             document(homes=[]),
             document(homes=[HOMES[0], HOMES[0]]),
             document(homes=[" HOME-001"]),
-            document(homes=[f"HOME-{i:03d}" for i in range(101)]),
+            document(homes=[f"HOME-{i:03d}" for i in range(501)]),
             document(expires_at="2026-11-10"),
             document(expires_at="2026-13-10T10:00:00Z"),
             document(homes=[["a"]]),
@@ -77,9 +77,11 @@ class ControlTests(unittest.TestCase):
                 self.assertEqual(lc.main(args, now=NOW), 2)
             self.assertFalse(path.exists())
 
-    def test_one_hundred_homes_is_the_largest_cohort(self) -> None:
-        homes = [f"HOME-{i:03d}" for i in range(100)]
-        self.assertEqual(len(lc.parse(document(homes=homes)).homes), 100)
+    def test_five_hundred_homes_is_the_largest_cohort(self) -> None:
+        homes = [f"HOME-{i:03d}" for i in range(500)]
+        self.assertEqual(len(lc.parse(document(homes=homes)).homes), 500)
+        with self.assertRaises(StreamError):
+            lc.parse(document(homes=[*homes, "HOME-500"]))
 
     def test_stop_and_expiry_are_final_decisions(self) -> None:
         control = lc.parse(document())

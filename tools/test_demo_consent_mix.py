@@ -24,6 +24,23 @@ class ConsentMixPlan(unittest.TestCase):
         self.assertEqual({policy.window_start}, {c.mapping_start for c in controls})
         self.assertLessEqual(len({c.sensor_id for c in controls}), 20)
 
+    def test_select_cohort_covers_at_least_half_of_all_homes_with_a_consent_mix(self) -> None:
+        everything = [f"ZF-2025-{n:04d}" for n in range(1, 342)]
+        cohort = mix.select_cohort(everything)
+        self.assertGreaterEqual(len(cohort) * 2, len(everything))
+        self.assertEqual(len(set(cohort)), len(cohort))
+        self.assertEqual(cohort, mix.select_cohort(list(reversed(everything))))
+        _, controls, _ = mix.plan(cohort, NOW)
+        granted = [c.consent for c in controls].count("granted")
+        self.assertLessEqual(abs(granted - (len(cohort) - granted)), 1)
+        self.assertEqual(len({c.consent for c in controls[:4]}), 2)
+
+    def test_select_cohort_refuses_an_empty_or_oversized_fleet(self) -> None:
+        with self.assertRaises(ValueError):
+            mix.select_cohort([])
+        with self.assertRaises(ValueError):
+            mix.select_cohort([f"ZF-2025-{n:04d}" for n in range(1, 1100)])
+
     def test_refuses_duplicate_or_empty_cohort(self) -> None:
         with self.assertRaises(ValueError):
             mix.plan([], NOW)
