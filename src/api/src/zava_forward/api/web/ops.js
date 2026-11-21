@@ -268,6 +268,78 @@ function sensorAnchor(v, table) {
   return box;
 }
 
+// Two vertical axes with their own scales: temperature on the left, relative humidity on the right.
+const SENSOR_SVG = "http://www.w3.org/2000/svg";
+const sensorSvg = (tag, attrs, ...kids) => {
+  const el = document.createElementNS(SENSOR_SVG, tag);
+  for (const [k, v] of Object.entries(attrs || {})) el.setAttribute(k, String(v));
+  kids.flat().forEach((k) => k && el.append(k.nodeType ? k : document.createTextNode(k)));
+  return el;
+};
+
+function sensorScale(values) {
+  const lo = Math.min(...values), hi = Math.max(...values);
+  const span = hi - lo || 1;
+  const rough = span / 4;
+  const mag = 10 ** Math.floor(Math.log10(rough));
+  const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((n) => n >= rough);
+  const min = Math.floor(lo / step) * step;
+  let max = Math.ceil(hi / step) * step;
+  if (max === min) max = min + step;
+  const ticks = [];
+  for (let t = min; t <= max + step / 2; t += step) ticks.push(Math.round(t * 100) / 100);
+  return { min: ticks[0], max: ticks[ticks.length - 1], ticks };
+}
+
+function sensorChart(v, model) {
+  const rows = (v.readings || []).filter((r) => Number.isFinite(Number(r.temperature_c)) && Number.isFinite(Number(r.humidity_pct)) && r.temperature_c !== null && r.humidity_pct !== null)
+    .map((r) => ({ at: new Date(r.observed_at), t: Number(r.temperature_c), rh: Number(r.humidity_pct), iso: r.observed_at }))
+    .filter((r) => !Number.isNaN(r.at.getTime())).sort((a, b) => a.at - b.at);
+  if (rows.length < 2) return null;
+  const old = model.alerts.includes("stale") || model.alerts.includes("offline-24h");
+  const W = 640, H = 300, L = 56, R = 56, T = 40, B = 44;
+  const tScale = sensorScale(rows.map((r) => r.t)), hScale = sensorScale(rows.map((r) => r.rh));
+  const x0 = rows[0].at.getTime(), x1 = rows[rows.length - 1].at.getTime();
+  const x = (r) => L + (x1 === x0 ? 0 : (r.at.getTime() - x0) / (x1 - x0)) * (W - L - R);
+  const y = (scale, value) => T + (1 - (value - scale.min) / (scale.max - scale.min)) * (H - T - B);
+  const pts = (key, scale) => rows.map((r) => `${x(r).toFixed(1)},${y(scale, r[key]).toFixed(1)}`).join(" ");
+  const first = rows[0], last = rows[rows.length - 1];
+  const range = (key, unit) => {
+    const values = rows.map((r) => r[key]);
+    return `${Math.min(...values)} to ${Math.max(...values)} ${unit}`;
+  };
+  const summary = `${rows.length} readings from ${sensorTime(first.iso, v.generated_at)} to ${sensorTime(last.iso, v.generated_at)} (UK time). `
+    + `Temperature ranged ${range("t", "degC")}, from ${first.t} to ${last.t} degC. `
+    + `Relative humidity ranged ${range("rh", "%RH")}, from ${first.rh} to ${last.rh} %RH. `
+    + "The two vertical axes have different scales, so the lines show how the values move together, not how large they are. The same readings are in the Recent readings table below.";
+  const id = "sensor-chart-summary";
+  const grid = tScale.ticks.map((tick) => sensorSvg("line", { x1: L, x2: W - R, y1: y(tScale, tick), y2: y(tScale, tick), class: "sensor-chart-grid" }));
+  const leftTicks = tScale.ticks.map((tick) => sensorSvg("text", { x: L - 6, y: y(tScale, tick) + 4, class: "sensor-chart-tick", "text-anchor": "end" }, String(tick)));
+  const rightTicks = hScale.ticks.map((tick) => sensorSvg("text", { x: W - R + 6, y: y(hScale, tick) + 4, class: "sensor-chart-tick", "text-anchor": "start" }, String(tick)));
+  const figure = h("figure", { class: `sensor-chart${old ? " out-of-date" : ""}`, "data-sensor-chart": "" },
+    h("h3", {}, "Temperature and humidity over time"),
+    old && h("p", { class: "sensor-chart-old", role: "status" }, "Out of date: these are the last readings received, not current conditions."),
+    sensorSvg("svg", { viewBox: `0 0 ${W} ${H}`, class: "sensor-chart-svg", role: "img", "aria-label": "Temperature and relative humidity line chart with two vertical axes", "aria-describedby": id, focusable: "false" },
+      grid, leftTicks, rightTicks,
+      sensorSvg("text", { x: 4, y: 18, class: "sensor-chart-axis" }, "Temperature (degC)"),
+      sensorSvg("text", { x: W - 4, y: 18, class: "sensor-chart-axis", "text-anchor": "end" }, "Relative humidity (%RH)"),
+      sensorSvg("line", { x1: L, x2: L, y1: T, y2: H - B, class: "sensor-chart-axis-line" }),
+      sensorSvg("line", { x1: W - R, x2: W - R, y1: T, y2: H - B, class: "sensor-chart-axis-line" }),
+      sensorSvg("line", { x1: L, x2: W - R, y1: H - B, y2: H - B, class: "sensor-chart-axis-line" }),
+      sensorSvg("polyline", { points: pts("t", tScale), class: "sensor-chart-line temp", fill: "none" }),
+      sensorSvg("polyline", { points: pts("rh", hScale), class: "sensor-chart-line humid", fill: "none" }),
+      rows.map((r) => sensorSvg("circle", { cx: x(r).toFixed(1), cy: y(tScale, r.t).toFixed(1), r: 4, class: "sensor-chart-mark temp" })),
+      rows.map((r) => sensorSvg("rect", { x: (x(r) - 4).toFixed(1), y: (y(hScale, r.rh) - 4).toFixed(1), width: 8, height: 8, class: "sensor-chart-mark humid" })),
+      sensorSvg("text", { x: L, y: H - 24, class: "sensor-chart-tick", "text-anchor": "start" }, sensorTime(first.iso, v.generated_at)),
+      sensorSvg("text", { x: W - R, y: H - 24, class: "sensor-chart-tick", "text-anchor": "end" }, sensorTime(last.iso, v.generated_at)),
+      sensorSvg("text", { x: (L + W - R) / 2, y: H - 6, class: "sensor-chart-axis", "text-anchor": "middle" }, "Time (UK time)")),
+    h("ul", { class: "sensor-chart-key" },
+      h("li", {}, h("span", { class: "key-line temp", "aria-hidden": "true" }), " Temperature: solid line, circles, left axis"),
+      h("li", {}, h("span", { class: "key-line humid", "aria-hidden": "true" }), " Relative humidity: dashed line, squares, right axis")),
+    h("p", { id, class: "muted" }, summary));
+  return figure;
+}
+
 // Everything under the status for a payload that contains readings.
 function sensorBody(v, model) {
   const labels = v.provenance || {};
@@ -277,6 +349,7 @@ function sensorBody(v, model) {
   if (v.latest && !(v.conflicting_readings || []).length && !v.conflict_notice) kids.push(sensorLatest(v, model));
   const clashes = sensorClashes(v);
   if (clashes.length) kids.push(table("Readings that disagree", clashes, null, { name: "Readings that disagree for the same sensor and time" }));
+  if (!clashes.length) kids.push(sensorChart(v, model));
   const recent = (v.readings || []).slice().reverse();
   if (recent.length) kids.push(table(`Recent readings (up to ${(v.max_readings || {}).window || recent.length})`, recent, null, { name: "Recent readings, newest first" }),
     h("p", { class: "muted" }, sensorSourceNote(recent, labels)), sensorReferences(v));
