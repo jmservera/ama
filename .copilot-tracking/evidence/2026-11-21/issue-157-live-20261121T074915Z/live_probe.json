@@ -1,0 +1,38 @@
+{
+ "me_role": 200,
+ "/api/chat/status": [
+  200,
+  "{\"warning\": \"Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, financial hardship or other special-category details, and do not paste resident contact details. Use the case record instead. Matching text is masked before it is saved, but masking can miss things.\", \"retention\": \"30 days\", \"storage_approved\": true, \"provider_position\": {\"valid\": true, \"provider\": \"Azure OpenAI through the existing Foundry deployments (ADR 0001 to ADR 0003)"
+ ],
+ "/api/chat/threads": [
+  200,
+  "[{\"id\": \"CT-10df6488bf8545cb\", \"owner\": \"[pseudonym]\", \"owner_role\": \"Retrofit Programme Manager\", \"case_id\": \"ZF-2025-0122\", \"title\": \"New chat\", \"task\": \"\", \"task_version\": \"\", \"model\": \"\", \"status\": \"active\", \"rowversion\": 9, \"message_count\": 8, \"created_at\": \"2026-11-18T16:27:27.693+00:00\", \"updated_at\": \"2026-11-18T16:28:13.346+00:00\"}]"
+ ],
+ "/api/chat/threads/not-my-thread-0000": [
+  404,
+  "{\"error\": \"Not found.\"}"
+ ],
+ "/api/audit-check": [
+  200,
+  "{\"intact\": true, \"entries\": 2687, \"head\": \"07cb3d5b01b8ac8e9f6320e23624601c85058f6b52471a8598ddec1ce3383b8f\", \"problem\": null, \"digests_checked\": 0, \"digest_mismatches\": []}"
+ ],
+ "/api/chat/regulatory/usage": [
+  403,
+  "{\"error\": \"A separately assigned RegulatoryChat capability is required.\"}"
+ ],
+ "breakglass": [
+  403,
+  "{\"error\": \"Break-glass access is refused: policy not decided or role not named.\"}"
+ ],
+ "audit_after": [
+  200,
+  "{\"intact\": true, \"entries\": 2688, \"head\": \"83178a12c3d00e8fe163b677a55b5d7384f4cd81b71809a630d93e331d6894aa\", \"problem\": null, \"digests_checked\": 0, \"digest_mismatches\": []}"
+ ],
+ "memory_off": [
+  200,
+  "[]"
+ ],
+ "chat_nav": [
+  "#/assistants|Assistant proposals"
+ ]
+}

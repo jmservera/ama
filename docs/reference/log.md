@@ -14228,3 +14228,17 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 123 live criteria verdict (Refs #123)
 
 * Added [issue-123-live-criteria-verdict-2026-11-21.md](research/issue-123-live-criteria-verdict-2026-11-21.md): child states (#126 and #440 open), 175 governance tests passing, and a live finding that the unaccepted-handoff queue returns 500 on the demo because four seeded handoffs have a timezone-less `offered_at`. No source change, nothing ticked. Options recorded for the owner.
+## 2026-11-21 issue 157 live criteria proof
+
+* Added [issue-157-live-criteria-2026-11-21.md](research/issue-157-live-criteria-2026-11-21.md): live chat probe on the synthetic demo, focused core and api chat tests and a per-criterion verdict. All four child issues are closed; the two open epic criteria stay unproven (open #440 criteria and production-only remainders). No source change; evidence level synthetic demo, no independent review.
+## 2026-11-21 issue 165 criteria recheck
+
+* Added [issue-165-live-20261121-2026-11-21.md](research/issue-165-live-20261121-2026-11-21.md): 102 local tests pass, the live simulator has streamed 240 messages an hour for four hours, consent-gated sensor readbacks match, per-criterion table. Criterion 1 proven for the demo; criteria 2 (owner approval) and 3 (#184 still open) unproven. No source change.
+
+## 2026-11-21 issue 198 rubric re-verification
+
+* Added [issue-198-rubric-live-20261121-2026-11-21.md](research/issue-198-rubric-live-20261121-2026-11-21.md) with raw outputs: fresh re-check of the open criteria (no `mvp/` or `prototype/` glob, 84 rubric script tests pass, 5 of 7 proven). Criteria 3 and 4 stay unproven and need an owner waiver. Evidence level: local commands and GitHub PR metadata; no source change.
+
+## [2026-11-21] update | Issue 208 live epic proof refresh (Refs #208)
+
+* Added [issue-208-live-epic-evidence-2026-11-21.md](research/issue-208-live-epic-evidence-2026-11-21.md): refreshed child states, 246 regulatory tests passing, live demo smoke check, and the unproven remainder (owner decisions on #440 and delivery order).
