@@ -1,0 +1,6 @@
+time {'enabled': False, 'flag_on': False, 'dpia_recorded': False, 'consultation_recorded': False} reason: Time capture is switched off.
+assistants 5 tasks 9 proactive False gate {'section': 'real_ai_delivery_gate', 'separated_from_rai_exercise_acceptance': True, 'passed': False, 'status': 'blocked', 'checks': {'provider_configured_and_e
+governance releases [] release_gaps 3
+continuity epoch 1 suspended [{'id': 'SUS-1', 'scope': 'all'}] valid True suspensions 1
+services {'photo': False, 'law_alerts': False, 'assistants': True, 'cases': True} map {'tiles': 'https://tile.openstreetmap.org/{z}/{x}/{y}.png', 'attribution': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}
+title My cases today | Zava Forward
