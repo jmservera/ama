@@ -4372,6 +4372,10 @@ extra opt-in parameters; every default keeps the earlier behaviour.
   zero"); the demo app already runs with `off`. Record it as a demo-only deviation.
 * `useWebSockets=true`: sets `ZF_SIM_WEBSOCKETS=1` (MQTT over WebSocket for the simulator, AMQP
   over WebSocket for the receiver, and a 3 s client close allowance).
+* Simulator only: `failureRate` (default `'0'`, 0 to 0.9) sets `ZF_SIM_FAILURE_RATE`, the seeded
+  chance that a device sends nothing in a slot, so the demo shows missing readings (issue 2191).
+  Container Apps accepted a job with 450 secrets on 2026-11-21, so a cohort of up to 224 homes
+  (two files per device plus `control.json`) fits the per-device `secretFiles` design.
 * Receiver only: `systemOrigin=true` (`ZF_SIM_SYSTEM_ORIGIN=1`) reads the device origin from the
   annotations the hub stamps, still refusing any origin copy in device-set application
   properties; `cronExpression` (for example `*/30 * * * *`) with `windowSeconds=1500` gives

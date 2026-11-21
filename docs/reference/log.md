@@ -14367,3 +14367,8 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2206 preflight round 2 (Refs #2206)
 
 * Extended [issue-2206-demo-preflight-2026-11-21.md](research/issue-2206-demo-preflight-2026-11-21.md): in-network read-only count proven live (20 homes, 10 granted, 10 declined); cold-start health false failure fixed in `tools/demo_preflight.py`; receiver failure cause unproven because log access is blocked.
+
+## [2026-11-21] update | Issue 2191 live cohort of half of all homes (Refs #2191)
+
+* Added [issue-2191-live-cohort-222-2026-11-21.md](research/issue-2191-live-cohort-222-2026-11-21.md): the live simulator now covers 222 of 443 homes (111 granted, 111 declined) with a 0.1 skip rate; the earlier secret-limit reason was refuted (a 450 secret job was accepted). Fixed the 100 control cap in `SensorConsumer.configure` and added the `failureRate` Bicep parameter.
+* Index row updated in `docs/reference/README.md`.
