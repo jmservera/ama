@@ -37,10 +37,12 @@ from zava_forward.core.resident_assistant import (
 from zava_forward.api.static_assets import StaticAssets
 
 from . import chat
+from . import sensor_consent as sc
 from .agenda import MANUAL, ZONE, Agenda, AgendaConflict
 from .agenda import NOTICE as AGENDA_NOTICE
 from .aoai import resident_key
 from .chat_log import ChatLog
+from .sensor_consent import ConsentPort
 
 WEB = Path(__file__).parent / "web"
 ASSETS = {
@@ -135,6 +137,7 @@ class ResidentDemo:
         assistant_advisor: Advisor | None = None,
         agenda: Agenda | None = None,
         chat_log: ChatLog | None = None,
+        sensor_consent: ConsentPort | None = None,
         retry_after_seconds: int = RETRY_AFTER_SECONDS,
         representative_grants: tuple[rs.RepresentativeShowcaseGrant, ...] = (),
     ):
@@ -157,6 +160,7 @@ class ResidentDemo:
         self.assistant_advisor = assistant_advisor
         self.agenda = agenda
         self.chat_log = chat_log
+        self.sensor_consent = sensor_consent
 
     def register_representative_grant(self, grant: rs.RepresentativeShowcaseGrant) -> None:
         """Admit or update a task-limited representative grant under its disjoint session handle."""
@@ -331,6 +335,7 @@ class ResidentDemo:
         view["account"] = {"email": self.identity.email_for(row.case_id)}
         view["agenda_available"] = self.agenda is not None
         view["callbacks_available"] = view["agenda_available"]
+        view["sensor_consent"] = sc.card(self.sensor_consent, row.sensor_home_id)
         return view
 
     def row_for(self, token: str | None) -> rs.ShowcaseRow | None:
@@ -561,9 +566,16 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 self._assistant()
             elif self.command == "POST" and path == "/demo/agenda":
                 self._agenda()
+            elif self.command == "POST" and path == "/demo/sensor-consent":
+                self._sensor_consent()
             elif path in ASSETS or path in ("/demo/session", "/demo/view", "/demo/login"):
                 self._json(405, dict(error="That is not allowed here."))
-            elif path in ("/demo/logout", "/demo/assistant", "/demo/agenda"):
+            elif path in (
+                "/demo/logout",
+                "/demo/assistant",
+                "/demo/agenda",
+                "/demo/sensor-consent",
+            ):
                 self._json(405, dict(error="That is not allowed here."))
             else:
                 self._json(404, dict(error="Not found."))
@@ -796,6 +808,31 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     ),
                 ),
             )
+
+        def _sensor_consent(self) -> None:
+            if not (self._same_origin() and self._csrf_ok()):
+                self._json(403, dict(error="Please reload the page and try again."))
+                return
+            body = self._body()
+            if body is None or set(body) != {"granted"} or type(body["granted"]) is not bool:
+                self._json(400, dict(error="Tick or untick the sensor consent box."))
+                return
+            if not self._session_bound():
+                return
+            session = _cookies(self.headers.get("Cookie")).get(SESSION_COOKIE)
+            row = None if app.representative_state_for(session) else app.row_for(session)
+            if row is None or not row.sensor_home_id:
+                self._json(403, dict(error="Only the resident can change this choice."))
+                return
+            if app.sensor_consent is None:
+                self._json(503, dict(error=sc.ERROR_TEXT))
+                return
+            try:
+                app.sensor_consent.set(row.sensor_home_id, body["granted"])
+            except Exception:
+                self._json(503, dict(error=sc.ERROR_TEXT))
+                return
+            self._json(200, dict(sensor_consent=sc.card(app.sensor_consent, row.sensor_home_id)))
 
         def _agenda(self) -> None:
             if not (self._same_origin() and self._csrf_ok()):
