@@ -14281,3 +14281,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Epic 100 criteria re-check (Refs #100)
 
 * Added [issue-100-live-criteria-recheck-2026-11-21.md](research/issue-100-live-criteria-recheck-2026-11-21.md): signed-in read-only probe at revision 0000038 shows the AI consumption economics card and payloads with denominators and Unknown costs; 301 focused management tests pass. Criterion 2 proven, the #440 criterion unproven. No source change, nothing ticked.
+## [2026-11-21] update | Issue 144 registry import probe (Refs #144)
+
+* Added [issue-144-live-registry-import-probe-2026-11-21.md](research/issue-144-live-registry-import-probe-2026-11-21.md): built the current agents image, staged it on a throwaway registry (deleted) and tried a control-plane import into the shared registry, which its network restriction denied; both unticked criteria stay unproven or partly proven. No source change, nothing ticked.
