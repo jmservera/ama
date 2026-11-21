@@ -14208,3 +14208,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 107 eighth criteria pass (Refs #107)
 
 * Added [issue-107-live-r8-criteria-2026-11-21.md](research/issue-107-live-r8-criteria-2026-11-21.md): actual-SQL re-run at head 0c497160e (95 and 139 tests OK, SQLite 95 OK); criterion 1 proven for the demo, criterion 2 unproven (needs approved release from unappointed OQ-017 holders). No source change; nothing ticked.
+
+## [2026-11-21] query | Issue 144 live hardening receipt (Refs #144)
+
+* Added [issue-144-live-hardening-receipt-2026-11-21.md](research/issue-144-live-hardening-receipt-2026-11-21.md): a throwaway Container Apps replica of the current-tree agents image ran Healthy under enforced hardening with zero capability sets; throwaway resources deleted. No source change. Pipeline deployment and the three demo apps stay unproven.
