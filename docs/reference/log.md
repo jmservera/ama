@@ -14285,6 +14285,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-144-live-registry-import-probe-2026-11-21.md](research/issue-144-live-registry-import-probe-2026-11-21.md): built the current agents image, staged it on a throwaway registry (deleted) and tried a control-plane import into the shared registry, which its network restriction denied; both unticked criteria stay unproven or partly proven. No source change, nothing ticked.
 
+## [2026-11-21] update | Issue 2191 demo simulator coverage (Refs #2191)
+
+* Added [issue-2191-demo-sim-coverage-2026-11-21.md](research/issue-2191-demo-sim-coverage-2026-11-21.md): cohort selection of at least half of all homes, 500 home ceiling, seeded skip rate, local test evidence; live coverage not proven.
 ## [2026-11-21] query | Timed capstone demo script
 
 * Updated [the demo runbook](../capstone/demo/runbook.md), the

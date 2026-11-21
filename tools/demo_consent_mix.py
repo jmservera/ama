@@ -6,6 +6,7 @@ no resident consent is claimed. A pure planner is kept separate from the SQL app
 be tested without a database; `apply` needs ZF_SQL_* settings and the sensor ddl rights.
 
 Usage (from an environment with the src projects installed):
+    python tools/demo_consent_mix.py select HOME_ID...      # at least half of all homes, one per line
     python tools/demo_consent_mix.py plan HOME_ID...        # print the plan, no writes
     python tools/demo_consent_mix.py apply HOME_ID...       # SensorConsumer.configure
     python tools/demo_consent_mix.py control OWNER REF HOME_ID...   # control.json to stdout
@@ -14,6 +15,7 @@ Usage (from an environment with the src projects installed):
 from __future__ import annotations
 
 import json
+import math
 import os
 import sys
 from datetime import UTC, datetime, timedelta
@@ -23,17 +25,34 @@ from zava_forward.core.synthetic.sensor_identity import sensor_key
 
 WINDOW_DAYS = 13
 GRANTED_SHARE = 0.5
+MAX_COHORT = 500
+COVERAGE = 0.5
+
+
+def select_cohort(all_homes: list[str], coverage: float = COVERAGE) -> list[str]:
+    """Pick at least `coverage` of ALL demo homes, evenly spread and repeatable.
+
+    The result is capped by the control limit; a fleet too large for that refuses rather than
+    silently covering less than the share asked for.
+    """
+    homes = sorted(set(all_homes))
+    if not homes or not 0 < coverage <= 1:
+        raise ValueError("COHORT_INVALID")
+    wanted = math.ceil(len(homes) * coverage)
+    if wanted > MAX_COHORT:
+        raise ValueError("COHORT_TOO_LARGE")
+    return [homes[i * len(homes) // wanted] for i in range(wanted)]
 
 
 def plan(
     home_ids: list[str], now: datetime
 ) -> tuple[ExercisePolicy, list[SensorControl], list[str]]:
-    """Split the cohort: the first half granted, the rest declined.
+    """Split the cohort by alternating granted and declined, so any spread keeps the mix.
 
     Homes outside the cohort get no control, so the Home sensors page shows Readings withheld
     for them. Returns the policy, the controls and the cohort homes that carry a device.
     """
-    if not 1 <= len(home_ids) <= 100 or len(set(home_ids)) != len(home_ids):
+    if not 1 <= len(home_ids) <= MAX_COHORT or len(set(home_ids)) != len(home_ids):
         raise ValueError("COHORT_INVALID")
     slot = now.replace(minute=now.minute - now.minute % 5, second=0, microsecond=0)
     start = (slot - timedelta(hours=2)).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -52,13 +71,17 @@ def plan(
         reviewer="Demo walkthrough owner",
     )
     granted = round(len(home_ids) * GRANTED_SHARE)
+    flags = [
+        (i * granted) // len(home_ids) != ((i + 1) * granted) // len(home_ids)
+        for i in range(len(home_ids))
+    ]
     controls = [
         SensorControl(
             sensor_id=sensor_key(home),
             home_id=home,
             mapping_start=start,
             mapping_end=end,
-            consent="granted" if i < granted else "declined",
+            consent="granted" if flags[i] else "declined",
             calibration_start=start,
             calibration_end=end,
             calibration_confirmed=True,
@@ -94,6 +117,13 @@ def apply(home_ids: list[str]) -> None:
 def main(argv: list[str]) -> int:
     mode, rest = (argv[0], argv[1:]) if argv else ("", [])
     now = datetime.now(UTC)
+    if mode == "select" and rest:
+        try:
+            print("\n".join(select_cohort(rest)))
+        except ValueError as error:
+            print(error, file=sys.stderr)
+            return 2
+        return 0
     if mode == "control" and len(rest) >= 3:
         print(json.dumps(control_document(rest[0], rest[1], rest[2:], now)))
         return 0
