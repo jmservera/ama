@@ -14262,3 +14262,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 1258 live r6 (Refs #1258)
 
 * Added [issue-1258-live-r6-2026-11-21.md](research/issue-1258-live-r6-2026-11-21.md): 146 ranking tests pass, a mutation check shows ten ancestor tests failing without the parent sync, criterion 5 unproven. Nothing ticked.
+
+## [2026-11-21] update | Issue 89 stabilization checkpoint (Refs #89)
+
+* Added [issue-89-live-stabilization-checkpoint-2026-11-21.md](research/issue-89-live-stabilization-checkpoint-2026-11-21.md): reconciled the issue BRD ID references against the PRD, ran 432 local tests, probed the live capacity and work-order APIs read-only, and recorded the per-criterion verdict; no source change
