@@ -1873,6 +1873,36 @@ class GateTests(unittest.TestCase):
                 pass
         self.assertEqual(lock_paths, [Path("/tmp/ama-rpi-heavy.lock")] * 2)
 
+    def test_heavy_lock_only_for_docker_sql_or_browser_groups(self) -> None:
+        for groups in (["static"], ["project-api", "project-core"], ["tooling", "infra"]):
+            self.assertFalse(gate.needs_heavy_lock(groups), groups)
+        for groups in (["mssql"], ["image-api"], ["logo-0600"], ["browser"], ["static", "mssql"]):
+            self.assertTrue(gate.needs_heavy_lock(groups), groups)
+
+    def test_main_skips_lock_without_heavy_group_and_takes_it_with_one(self) -> None:
+        for groups, expected in ((["project-core"], 0), (["static", "image-api"], 1)):
+            output = self.out / f"focused-{expected}"
+            with (
+                patch.object(gate.Path, "cwd", return_value=self.root),
+                patch.object(
+                    sys,
+                    "argv",
+                    ["rpi-checks.py", "--changed", "--base", self.base, "--out", str(output)],
+                ),
+                patch.object(gate, "clean_identity"),
+                patch.object(gate, "selection", return_value={"groups": groups}),
+                patch.object(gate, "admit_browser_output"),
+                patch.object(gate, "tool_identity"),
+                patch.object(gate, "required_groups", return_value=["all"]),
+                patch.object(gate, "Runner") as runner,
+                patch.object(gate, "verify"),
+                patch.object(gate, "heavy_lock") as lock,
+                redirect_stdout(io.StringIO()),
+            ):
+                runner.return_value.run.return_value = output / "receipt.json"
+                self.assertEqual(gate.main(), 0)
+                self.assertEqual(lock.call_count, expected, groups)
+
     def test_outer_flock_composes_and_descendants_do_not_inherit_lock(self) -> None:
         lock = self.out / "outer-lock"
         script = """

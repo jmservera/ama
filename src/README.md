@@ -391,7 +391,9 @@ Compare the existing serial baseline (`--all --jobs 1`) with parallel scheduling
 (`--all --jobs 3`) at the same clean committed HEAD and reviewed main base.
 Use a new external output directory for each run, with no `--changed`, resume
 or differing extra selectors. The runner already owns
-`/tmp/ama-rpi-heavy.lock`; normally use its `--lock-timeout 600`, not an outer
+`/tmp/ama-rpi-heavy.lock` whenever a browser, SQL or image group is selected
+(focused runs with only project, static, infra or migration groups skip it);
+normally use its `--lock-timeout 600`, not an outer
 `flock` around this self-locking command. Other heavy validation must use the
 same lock. When the owner explicitly authorises outer queued admission, pass
 the inherited util-linux lock descriptor so the runner does not reopen and
