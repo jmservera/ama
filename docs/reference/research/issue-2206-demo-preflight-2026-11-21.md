@@ -48,3 +48,30 @@ never printed. Plain `--strict` exits 1 here because counts are unavailable and 
 * job-live-receiver: the last four executions (09:00 to 10:30Z) are Failed. The preflight surfaces this; cause not investigated here.
 * job-cutover-test-demo-load has no executions (expected for an on-demand job; shown as unavailable).
 * Counts need a runner inside the private network (for example a job with SQL access); this host cannot reach SQL.
+
+## Round 2 evidence, 2026-11-21T22:5xZ
+
+Live rerun of the script (revision 0000042 of the API, 0000018 of the resident app):
+
+* Revisions and health PASS for the API. The resident app was ScaledToZero and the first /healthz timed out at 15 s, so the check reported FAIL. A manual curl minutes later returned 200 in 0.1 s, so this was a cold-start false failure and a real script defect. Fixed in `tools/demo_preflight.py`: a timeout is retried once with a 90 s limit and the detail says "cold start, retried"; a second timeout still fails. Covered by `test_health_cold_start_timeout_retries_once`.
+* job-live-receiver: the executions list is now Running (22:30Z), Failed (22:00, 21:30, 20:30) and Succeeded (21:00, 20:00). The job runs `zava_forward.api.live_receiver --seconds 1500` every 30 minutes with a 1620 s replica timeout. The failure cause stays unproven: Log Analytics refuses queries from this host (NspValidationFailedError, workspace network perimeter).
+
+### Counts proven live from inside the private network
+
+SQL is unreachable from this host, so a read-only count was run in the API replica with `az containerapp exec` (a pty and a Python REPL fed through stdin; only one SELECT of `sensor_consumer_control.body`, nothing written, no connection string or token printed). The replica uses the app's own managed-identity connection (`zava_forward.core.mssqlstore.connection_string`, driver `mssql_python`). Output:
+
+```text
+controls 20 homes 20 {'declined': 10, 'granted': 10}
+```
+
+That matches the 20-home cohort with 10 granted and 10 declined consents (the mix set by `tools/demo_consent_mix.py`). The preflight script's own live count row still reports UNAVAILABLE from this host, because the script cannot reach SQL itself; the count logic and the in-network figure are both evidenced, but one unattended script run producing the figure is not.
+
+## Criteria after round 2
+
+| Criterion | Verdict | Basis |
+| --- | --- | --- |
+| Checks revisions, job statuses and health without printing secrets | Proven | Two live runs; cold-start false failure fixed and tested |
+| Checks cohort and consent counts | Partly proven | Counts verified live in-network (20 homes, 10 granted, 10 declined) and logic tested; the script run from outside the network still reports UNAVAILABLE |
+| Output usable as the runbook preflight record | Proven | Timestamped Markdown table with summary; not yet pasted into the runbook |
+
+Still open: receiver failure cause (logs blocked) and running the script from a runner inside the network.
