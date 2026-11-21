@@ -1,7 +1,7 @@
 ---
 title: Capstone Working Set
 description: Current presentation, reproducible sources, pitch, demo and rubric inputs
-ms.date: 2026-11-08
+ms.date: 2026-11-21
 ms.topic: how-to
 ---
 
@@ -16,7 +16,7 @@ choice between the older executive and Cowork routes.
 | Edit and rebuild | [Source guide](./source/README.md), [55-slide manifest](./source/slides.json) and [immutable 54-slide native baseline](./source/baseline.pptx) |
 | Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json), [retained media](./source/assets/media/) and [official Fabric/Power BI sources](./source/assets/official/README.md) |
 | Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md), [Tokenomics Q&A brief](./tokenomics-qa-brief.md) and [pitch folder](./pitch/) |
-| Prepare the demo | [Ten-minute runbook](./demo/runbook.md), including the under-two-minute executive hook and recovery route |
+| Prepare the demo | [Timed demo script](./demo/runbook.md): complete 1:50 panel route, optional eight-minute walkthrough and two-minute question/recovery reserve |
 | Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 14 |
 | Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 24-25 |
 | Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 17 and deeper appendix comparisons |
@@ -112,8 +112,14 @@ is integrated. No recorded score is manually changed.
 ## Next Work
 
 Rehearse the revised 24:30 narration plan within the 30-minute presentation
-slot, leaving 5:30 for questions and contingency, with a separate ten-minute
-demo. The added full deployment slide on page 13 has a 45-second slot.
+slot, leaving 5:30 for questions and contingency. The repository plan reserves
+a separate ten-minute demo, but the
+[assessment guide](../reference/method/ama-capstone-assessment-guide.md)
+asks for an under-two-minute demo as well as an under-two-minute outcome hook.
+Use the runbook's complete 1:50 route by default; add its extension only when
+the panel confirms the separate slot, stopping navigation at eight minutes
+with two minutes for questions or recovery. The added full deployment slide
+on page 13 has a 45-second slot.
 Original `TIMING` lines retain the 23:45 source clock for provenance;
 `CURRENT ROUTE TIMING` gives the operative shifted windows. Build variants share their timing;
 appendix answers are optional depth. Confirm the actual panel slot before
