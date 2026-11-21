@@ -14185,3 +14185,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 107 seventh criteria pass (Refs #107)
 
 * Added [issue-107-live-r7-criteria-2026-11-21.md](research/issue-107-live-r7-criteria-2026-11-21.md): actual-SQL re-run at current head; one criterion proven for the demo, one unproven (human approval). Nothing ticked.
+## [2026-11-21] update | Epic 113 live recheck (Refs #113)
+
+* Added [issue-113-epic-recheck-live-2026-11-21.md](research/issue-113-epic-recheck-live-2026-11-21.md): the three epic criteria rechecked, a read-only Azure posture probe, no defect found and no source change. Criteria 1 and 2 stay unproven (owner-gated; four children open), criterion 3 holds only as an absence of production claims. Nothing ticked; no Azure resource created.
