@@ -2600,7 +2600,9 @@ simulator sends for exactly that set and refuses a different control cohort or s
 (`DEMO_COHORT_MISMATCH`, `DEMO_HOMES_INVALID`); the same variable limits Quality to those cases,
 operator-requested only (the background scan skips Quality, proactive Quality work is neither
 enqueued, claimed nor permitted, and an invalid value, including an empty one, refuses Quality
-for every case, never all open cases). The control cohort must itself be exactly the five, and all
+for every case, never all open cases). `GET /api/assistants` (staff) lists this as `quality_scope`:
+`mode`, `homes`, `trigger`, `background_scan`, `per_reading_calls` and whether model-call authority is
+present (a boolean, never its value). The control cohort must itself be exactly the five, and all
 five must be in the store. The per-attempt stop, expiry and cohort fence still
 applies at the one-minute cadence. The weather-continuity check stays a v1 five-minute check.
 This does not lift the stop on real-model captured-sensor analysis; a mock provider output is

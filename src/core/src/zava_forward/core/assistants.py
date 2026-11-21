@@ -1826,6 +1826,7 @@ class Assistants:
                 ],
                 disabled=self.disabled(),
                 proactive=False,
+                quality_scope=self.quality_scope(),
                 manual="Use the ordinary case controls.",
                 **readiness,
             )
@@ -1915,6 +1916,7 @@ class Assistants:
                 registered_tasks=registered,
                 disabled=self.disabled(db),
                 proactive=self.limits.proactive,
+                quality_scope=self.quality_scope(),
                 principal=PURPOSE,
                 rule=RULE_VERSION,
                 limits=Limits.DEFAULTS
@@ -1949,6 +1951,25 @@ class Assistants:
         ):
             return "Quality analysis is limited to the configured five-home demo set and a person's request; use the manual route."
         return None
+
+    def quality_scope(self):
+        """The effective Quality scope for operator evidence; reads configuration only and never calls a model."""
+        l = self.limits
+        if l.quality_scope_error:
+            mode, homes = "invalid-refused", []
+        elif l.quality_homes is None:
+            mode, homes = "unrestricted", []
+        else:
+            mode, homes = "demo-homes", list(l.quality_homes)
+        scoped = mode != "unrestricted"
+        return dict(
+            mode=mode,
+            homes=homes,
+            trigger="operator-requested-only" if scoped else "any",
+            background_scan="skips-quality" if scoped else "includes-quality",
+            per_reading_calls="none",
+            model_call_authority_present=bool(l.authority) and l.valid,
+        )
 
     def _enqueue(self, db, capability, c, mode, actor, replaced=None):
         with telemetry.operation("messaging.publish", backend="other_sql"):

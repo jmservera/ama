@@ -14305,3 +14305,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
 
 * Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.
+
+## [2026-11-21] update | Issue 2205 AI quality scope (Refs #2205)
+
+* Added [issue-2205-live-2026-11-21.md](research/issue-2205-live-2026-11-21.md): `quality_scope` registry block, tests and runbook preflight. Live app has no scope variable; nothing ticked.
