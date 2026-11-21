@@ -1,6 +1,6 @@
 ---
 title: Capstone Demo and Recovery Runbook
-description: Timed panel demo and optional ten-minute walkthrough covering AI evidence, observability, sensors, staff work and resident self-service with explicit readiness limits
+description: Timed panel demo and optional ten-minute walkthrough covering AI evidence, observability, sensors, staff work and resident self-service, with the 2026-11-21 live demo status and explicit readiness limits
 ms.date: 2026-11-21
 ms.topic: how-to
 ---
@@ -31,6 +31,9 @@ it does not change the generated deck speaker notes or their source manifest.
 
 This is preparation, not an executed demo or rehearsal. No cloud, identity,
 model, resident-data or workflow mutation is authorized by this runbook.
+The [live demo status](#live-demo-status-2026-11-21) below records what was
+observed on the synthetic demo on 2026-11-21 and what was not verified. It
+replaces the five-home target as the description of the live cohort.
 
 ## Explain the Requested and Built Autonomy
 
@@ -67,10 +70,53 @@ observed readings for two homes but blocked the Quality model at release admissi
 Source capability, dated observations and live-ready authority remain distinct.
 Refresh the progress and activation snapshot before the final demo.
 
+## Live Demo Status (2026-11-21)
+
+Refs #2203. This section describes the synthetic desktop demo in the Azure
+resource group `ama`, under the owner decisions of 2026-11-18 (synthetic data,
+desktop only, live Azure authorised, cap USD 700, no drills, no Key Vault
+rotation, no production change). Billing reconciliation, DPO and Legal approval
+and person-run assistive-technology testing are not needed for the demo. All
+homes, readings and residents are fictional.
+
+Observed means seen on the dated run in the
+[live evidence note](../../reference/research/issue-2203-runbook-live-2026-11-21.md).
+Not verified means the item was not shown in that run. Re-check each Observed
+row in the preflight before use: an observation does not stay true by itself.
+
+| Element | Observed (2026-11-21) | Not verified |
+| --- | --- | --- |
+| Cohort | 20 synthetic homes feed readings. The employee map lists 10 of them with a fresh reading and 10 with none. The ids are in the [184 note](../../reference/research/issue-184-live-demo-sim-consent-mix-2026-11-20.md) | That the 20 ids are the right homes for the story; a run with the 20-home list read back today |
+| Cadence | `job-live-simulator` publishes one reading per home every 5 minutes. Executions at 10:15, 10:20 and 10:25 UTC read `Succeeded`. The newest reading was at most 611 seconds old against the 900 second fresh rule | That the cadence holds for the whole demo window; the receiver reads in 30 minute windows and each window ends with the designed `RUN_DEADLINE` exit, so its executions read `Failed` |
+| Consent mix | 10 homes granted and 10 declined, applied on 2026-11-20 through repository code. Granted `ZF-2025-0031` shows "Recent reading (within 15 minutes)" with 12 readings. Declined `ZF-2025-0148` and a home with no control, `ZF-2025-0331`, read "Readings withheld: monitoring consent is not granted" | The mix as a count today (it was not re-read); real resident consent, which none of this claims. Controls expire on 2026-12-04 |
+| Resident checkbox | The deployed resident page (revision `0000015`) has no sensor monitoring checkbox. The checkbox of #2192 is proven only against a local store, see the [2192 note](../../reference/research/issue-2192-live-2026-11-21.md) | The checkbox on the live resident app; it needs an image, a sensor-writing SQL principal and a configuration change that nobody has made |
+| Chat routing | The resident "Help with your case" panel offers an own-record permission checkbox, a question box and a skill selector, says each answer states whether AI or rules were used, and says chat does not message staff. `ZF_DEMO_ASSISTANT_ENABLED` is `true` on the resident app | A fresh resident answer in this run, its origin label and the employee chat route; use the earlier dated notes only as history |
+| Charts | Staff `#/progress` shows six case-flow charts (opened and closed per day and week, backlog trend, journey step, team workload, AI briefing review outcomes). The resident page shows temperature and humidity history charts over 48 readings with a dashed 24 hour forecast labelled an estimate, plus a table alternative | A sensor history chart in the staff Home sensors tab, which shows the latest reading and a 12 row table; any chart accuracy claim |
+| Operator-triggered AI scope | Source and the 21 November audit: Quality analysis is not run per reading. The [1288 audit](../../reference/research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md) read `proactive: false`, `call_allowance: 0` and a refused Quality model at release admission | The scope today: the forecast request timed out at 90 seconds and `rai-metrics` returned 503 once, so no live trigger is claimed and none was made |
+| Offline-sensor alert | The overview map has the filter "Show only homes with stale or offline sensors". No live home was stale or offline. A local test run of 21 tests covers "Sensor may be offline" and the switch at 24 hours | A live offline alert; making one would mean stopping the shared simulator for over 24 hours. Use the labelled fixture or the source contract |
+| Role proof | The test staff account reads as Retrofit Programme Manager (app role `ZavaForward.ProgrammeManager`, trusted-proxy sign-in), one of the two roles allowed to see indoor readings | Wrong-role denial from a second staff account (only one exists); the Quality Inspector view |
+| Hardening | `ZF_CONTAINER_HARDENING` is `off` on the staff app and both live jobs, unset on the resident app and `enforced` on the agents app, which still runs the image from before the 2026-11-20 fix. A throwaway replica of the current image ran healthy under enforcement on 2026-11-21 ([144 receipt](../../reference/research/issue-144-live-hardening-receipt-2026-11-21.md)) | Enforced hardening on the staff or resident app; the fixed images are not on the shared registry. Do not describe the demo apps as hardened |
+
+Two cautions for the room:
+
+* One run at about 10:34 UTC showed "Home sensors are unavailable right now"
+  on both tabs while the same data returned normally a few minutes later.
+  Open the tab before the audience arrives and keep the withheld and
+  unavailable wording ready as a true state, not an error to hide.
+* The readings are synthetic and uncalibrated. The staff view says so; say it
+  aloud too.
+
 ## Demo Operating Mode And Five Homes (Owner-Selected Target, 2026-11-12)
 
+Superseded for the live demo by the
+[live demo status](#live-demo-status-2026-11-21) above: the live cohort is 20
+homes at one reading every 5 minutes, not five homes at one a minute. The rest
+of this section and the table of five homes are kept as the historical
+2026-11-12 target and for the cohort regression test; do not read them as the
+current live cohort.
+
 Refs #134 and #184. On 2026-11-12 the owner accepted a simplified demo
-operating mode. It is a target. Nothing below is implemented, activated or
+operating mode. It was a target. Nothing below is implemented, activated or
 observed unless the Status column says otherwise, and it grants no model,
 deployment or spend authority.
 
@@ -78,8 +124,8 @@ deployment or spend authority.
 | --- | --- | --- |
 | Single-instance simulator start and stop, no SQL tickets | OWNER-SELECTED TARGET | Not verified; the earlier ticket-based design is a proposal only |
 | Five synthetic demo homes | OWNER-SELECTED TARGET | The simulator reads every open case id and refreshes the list hourly; a control cohort of listed homes exists |
-| One new reading every minute | OWNER-SELECTED TARGET | Not verified against the current simulator cadence |
-| Quality AI restricted to the same five homes | OWNER-SELECTED TARGET | Supersedes the earlier every-open-case scan scope as the selected target; the current source scope is unchanged and unverified |
+| One new reading every minute | SUPERSEDED | The live simulator publishes every 5 minutes (see the live demo status) |
+| Quality AI restricted to the same five homes | HISTORICAL TARGET | Supersedes the earlier every-open-case scan scope as the selected target; the current source scope is unchanged and unverified |
 | Deterministic eligibility is separate from paid analysis | OWNER-SELECTED TARGET | Eligibility does not by itself start a model call |
 | Analysis is operator-triggered during the presentation, not per reading | OWNER-SELECTED TARGET | Not verified |
 | Eight-hour background limit | LATER RECOMMENDATION | Not implemented and not a timer or authority |
@@ -90,7 +136,7 @@ remain historical. The observed and blocked histories in the
 
 ### The five homes
 
-Open each case from the Workbench after authorised staff sign-in. The route is
+Historical 2026-11-12 target list, not the live cohort. Open each case from the Workbench after authorised staff sign-in. The route is
 `/app#/case/<id>?tab=sensors`; the dedicated Home sensors tab holds the sensor
 panel on the current source. Quality and handover remains the human review
 surface. Case ids are fictional constructed records. Open these only on the
@@ -140,11 +186,12 @@ Provenance and limits:
 
 Preflight before any live use (record Pass, Fail, Blocked or Not run as above):
 
-* Each of the five ids exists in the chosen build and is open.
-* The simulator control cohort lists exactly these five homes, and readings
-  for each exist in the chosen build's sensor store.
-* The effective AI scan scope is evidenced as these five homes only before
-  any analysis is triggered; otherwise use route E (see the route table below), not a live trigger.
+* Each historical id you will show exists in the chosen build and is open.
+* For the live cohort, the simulator control lists the 20 homes in the live
+  demo status and readings for the granted homes are fresh in the chosen
+  build's sensor store. Check these five historical ids only if you will show them.
+* The effective AI scan scope is evidenced for the homes you will analyse
+  before any analysis is triggered; otherwise use route E (see the route table below), not a live trigger.
 * Each direct link opens the right case and tab for the signed-in role.
 * Current task-specific authority covers any model call; this section grants none.
 
@@ -306,9 +353,9 @@ status. A rule-derived sensor review draft is not a model-generated L4 flag.
 
 Fallback: show missing, stale, withheld or blocked state honestly. If no alert
 exists, use a labelled synthetic alert fixture or the source contract, not
-a claim that one fired. The retained 21 November audit found two reading-bearing
-homes, not the selected five-home cohort, and blocked the Quality model.
-It cannot establish today's cohort or authorize a live trigger.
+a claim that one fired. The live demo status records that no home was offline
+on 2026-11-21. The retained 21 November audit blocked the Quality model; it
+cannot establish today's cohort or authorize a live trigger.
 
 ### 06:10-07:00 | Trace the full retrofit lifecycle
 
@@ -391,8 +438,9 @@ The planned timings have not been validated by a rehearsal.
   Home sensors, journey and authorized resident view. Keep portal access in a
   separate clean sharing tab, without exposing tenant identities or raw logs.
 * Select one current authorized home with appropriate readings and linked
-  resident fixture if available. Preserve the five-home target above; a different
-  fixture needs explicit demo scope and must not silently redefine the cohort.
+  resident fixture if available. Prefer a granted home from the 20-home live
+  cohort in the live demo status; a different fixture needs explicit demo scope
+  and must not silently redefine the cohort.
 * Prepare the short text fixture, one expected evidence gap and a manual route.
   A model can miss the gap; retain that failure instead of replacing its answer.
 * Verify separate admission and finite call/token/time/spend authority for
