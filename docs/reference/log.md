@@ -14346,3 +14346,8 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-220-live-r8-oid-less-roster-2026-11-21.md](research/issue-220-live-r8-oid-less-roster-2026-11-21.md): the staff-recorded route write is still 403 on revision 0000040; root cause is an oid-less roster row; local fix and regression test, not deployed. Criterion 5 stays unticked.
 * Index row added to `docs/reference/README.md`.
+
+## [2026-11-21] update | Issue 2188 live gate speed-up check (Refs #2188)
+
+* Added [issue-2188-live-gate-speed-2026-11-21.md](research/issue-2188-live-gate-speed-2026-11-21.md): tamper rejection proven, image cache measured (80.7 s to 1.3 s), whole-gate before and after and test-class retry unproven. No source change.
+* Index row added to `docs/reference/README.md`.
