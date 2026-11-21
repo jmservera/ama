@@ -14204,3 +14204,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-184-live-demo-sim-consent-mix-2026-11-20.md](research/issue-184-live-demo-sim-consent-mix-2026-11-20.md) and two screenshots: the simulator and receiver jobs run on the synthetic demo hub, 20 homes carry a 10 granted and 10 declined consent mix applied through `SensorConsumer.configure`, and the staff Home sensors tab shows a Recent reading for a granted home and Readings withheld for a non-granted home.
 * Updated [infra/README.md](../../infra/README.md) with the single-environment demo profile parameters. Source fixes: ledger column filter in `SensorConsumer`, opt-in WebSocket transport and system-origin decode for the receiver. Evidence level: synthetic fixtures, no resident consent, no independent review yet.
+
+## [2026-11-21] update | Issue 107 eighth criteria pass (Refs #107)
+
+* Added [issue-107-live-r8-criteria-2026-11-21.md](research/issue-107-live-r8-criteria-2026-11-21.md): actual-SQL re-run at head 0c497160e (95 and 139 tests OK, SQLite 95 OK); criterion 1 proven for the demo, criterion 2 unproven (needs approved release from unappointed OQ-017 holders). No source change; nothing ticked.
