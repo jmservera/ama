@@ -152,11 +152,12 @@ window.ChatWidget = (() => {
         if (active) preserveBottom(() => { loading.hidden = false; });
       }, 200);
     }
-    function message(role, text, { label = "", sources = [], detail = "", outcome = "" } = {}) {
+    function message(role, text, { label = "", sources = [], detail = "", outcome = "", routing = "" } = {}) {
       const follow = following();
       const item = node("article", "", { class: `chat-widget-message chat-widget-${role}` });
       item.append(node("strong", role === "user" ? "You" : "Assistant"));
       if (outcome) item.append(node("small", `Outcome: ${outcome}`, { class: "chat-widget-meta chat-widget-outcome" }));
+      if (routing) item.append(node("small", routing, { class: "chat-widget-meta chat-widget-routing" }));
       if (label) item.append(node("small", label, { class: "chat-widget-meta" }));
       item.append(node("p", text));
       if (detail) item.append(node("small", detail, { class: "chat-widget-meta" }));

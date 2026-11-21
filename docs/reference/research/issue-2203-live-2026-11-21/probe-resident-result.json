@@ -1,0 +1,27 @@
+{
+ "login_status": 200,
+ "sensors_section": "Your home sensors and forecast\n\nSynthetic sensor history for your home. These are stored demo readings, not live measurements or safety advice.\n\nReading status: The newest stored reading is older than 15 minutes. These are stored readings, not live.\n\nSource: Synthetic demo data from the simulator. Not calibrated, so not a verified measurement of your home.\n\nLatest stored reading: 21 Nov 2026, 10:30 (UK time)\n\nTemperature (\u00b0C)\n\n9.88 \u00b0C\n\nHumidity (%)\n\n85.79 %\n\nDemo display ranges are not safe or unsafe limits. Readings that are missing or look wrong appear as gaps, not zero.\n\nSimple 24-hour synthetic forecast (estimate)\n\nSimple 24-hour synthetic forecast (estimate): calculated from your home's recent synthetic readings and typical daily pattern. It is not a weather forecast or a live sensor feed. Demo display ranges (-10 to 45\u00a0\u00b0C and 0 to 100\u00a0%) are chart limits, not safe or unsafe household limits.\n\nTemperature history and 24-hour forecast (\u00b0C)\n-10\n17.5\n45\nLatest stored\n\nAcross 48 readings: lowest 7.16\u00a0\u00b0C, highest 9.88\u00a0\u00b0C. The latest value is higher than the first. Simple 24-hour forecast (estimate): 8.3\u00a0\u00b0C to 10.6\u00a0\u00b0C.\n\nTime (UK time): 21 Nov 2026, 06:35 to 21 Nov 2026, 10:30\n\nSolid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).\n\nHumidity history and 24-hour forecast (%)\n0\n50\n100\nLatest stored\n\nAcross 48 readings: lowest 85.79\u00a0%, highest 93.97\u00a0%. The latest value is lower than the first. Simple 24-hour forecast (estimate): 84.5\u00a0% to 87.5\u00a0%.\n\nTime (UK time): 21 Nov 2026, 06:35 to 21 Nov 2026, 10:30\n\nSolid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).\n\nShow sensor history and forecast as a table",
+ "sensor_consent_checkbox_count": 0,
+ "chat_copy": "Help with your caseClose chatAbout this chatAdvisory only. Chat cannot submit forms, give consent or make decisions.AI may help explain your case. Each answer says whether AI or rules were used. AI cannot decide eligibility or give legal, safety or financial advice. This chat does not send messages to staff.Ask about your case, documents, forms, planned improvements or a repair concern. Do not enter sensitive or contact details. With your permission, your question and limited own-case details may be sent to AI. Chat is not kept as model conversation memory.For documents, try: Which documents are missing? How do I upload my documents? What does my document warning or error mean? Chat explains the recorded instructions, but cannot receive files or approve documents.Use the manual callback formSynthetic callback booking is not connected in this showcase. Use the contact routes on this page.A person can help instead. Phone your housing officer using your usual number, or write to or visit your local office.For immediate danger, call 999. Report safety concerns directly to a person or eme",
+ "chat_control_ids": [
+  "resident-chat-width",
+  "resident-chat-height",
+  "assistant-consent",
+  "assistant-question",
+  "resident-chat-skill"
+ ],
+ "headings": [
+  "Sign in to the showcase",
+  "We cannot show this page",
+  "Case summary",
+  "Current status and next step",
+  "What is needed from you",
+  "Case timeline and planned improvements",
+  "Documents and checks",
+  "Funding and household costs",
+  "Help and other ways to reach us",
+  "Your home sensors and forecast",
+  "Not available in this showcase",
+  "Help with your case"
+ ]
+}

@@ -1,0 +1,44 @@
+[
+  {
+    "question": "Which stock should we prioritise by EPC ranking?",
+    "routing": "Routed to the Stock prioritisation agent. The question is about stock facts and which homes to look at first.",
+    "outcome": "Outcome: workflow-only help",
+    "origin": ""
+  },
+  {
+    "question": "Is the quality inspection evidence complete?",
+    "routing": "Routed to the Quality evidence agent. The question is about quality checks and inspection evidence.",
+    "outcome": "Outcome: workflow-only help",
+    "origin": ""
+  },
+  {
+    "question": "Can you check the grant claim and invoice?",
+    "routing": "Routed to the Funding evidence agent. The question is about grant, claim and funding evidence.",
+    "outcome": "Outcome: workflow-only help",
+    "origin": ""
+  },
+  {
+    "question": "Plan the next resident appointment and handoff",
+    "routing": "Routed to the Works and resident coordination agent. The question is about appointments and updates for residents.",
+    "outcome": "Outcome: workflow-only help",
+    "origin": ""
+  },
+  {
+    "question": "Is the grant claim quality checked and which defect?",
+    "routing": "Handled by the General agent. The question fits more than one agent (Funding evidence agent and Quality evidence agent), so the general agent answers it. Choose an agent in the list to focus the answer.",
+    "outcome": "Outcome: workflow-only help",
+    "origin": ""
+  },
+  {
+    "question": "Tell me what you can help with",
+    "routing": "Handled by the General agent. No specialist agent matches this question, so the general agent answers it.",
+    "outcome": "Outcome: workflow-only help",
+    "origin": ""
+  },
+  {
+    "question": "Approve the funding claim for this home",
+    "routing": "Handled by the General agent. No agent can do this. A person takes that action in the workflow.",
+    "outcome": "Outcome: refused",
+    "origin": ""
+  }
+]

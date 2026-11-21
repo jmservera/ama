@@ -291,6 +291,7 @@
           }
           var entry = ui.message("assistant", response.body.answer, {
             label: response.body.label, sources: response.body.sources,
+            routing: response.body.routing ? response.body.routing.text : "",
             detail: [
               response.body.label.startsWith("AI") ? "Not approved. AI-generated content may be incorrect. Check the sources." : "",
               response.body.notice, response.body.help

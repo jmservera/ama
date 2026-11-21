@@ -14288,6 +14288,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Employee sensor charts demo evidence (Refs #2193)
 
 * Added [employee-sensor-charts-2193.md](research/demo-employee-charts/employee-sensor-charts-2193.md): dual-axis Home sensors chart and map card gauges with screenshots, axe run and unit tests. Live deployment unproven.
+## [2026-11-21] update | Issue 2195 chat routing (Refs #2195)
+
+* Added [issue-2195-chat-routing-2026-11-21.md](research/issue-2195-chat-routing-2026-11-21.md): chat routing line for employee and resident chat, local Playwright evidence, tests and a per-criterion table; live deployment not done
 ## [2026-11-21] update | Issue 2191 demo simulator coverage (Refs #2191)
 
 * Added [issue-2191-demo-sim-coverage-2026-11-21.md](research/issue-2191-demo-sim-coverage-2026-11-21.md): cohort selection of at least half of all homes, 500 home ceiling, seeded skip rate, local test evidence; live coverage not proven.
@@ -14311,3 +14314,11 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
 
 * Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.
+## [2026-11-21] update | Issue 2206 demo preflight (Refs #2206)
+
+* Added [issue-2206-demo-preflight-2026-11-21.md](research/issue-2206-demo-preflight-2026-11-21.md): read-only preflight script with a live run; revisions, jobs, health and record format proven, live counts unproven (SQL private). Nothing ticked.
+
+## [2026-11-21] update | Demo runbook live status rewrite (Refs #2203)
+
+* Added a dated "Live demo status" section to the [demo runbook](../capstone/demo/runbook.md#live-demo-status-2026-11-21) with Observed and Not verified columns for the 20-home cohort, 5 minute cadence, consent mix, resident checkbox, chat routing, charts, operator-triggered AI scope, offline-sensor alert, role proof and hardening. Relabelled the five-home section as the superseded 2026-11-12 target and kept its table for the cohort regression test.
+* Added [issue-2203-runbook-live-2026-11-21.md](research/issue-2203-runbook-live-2026-11-21.md) with the probes, results, screenshots and a per-criterion table. Unproven for the demo: a live offline alert, the deployed resident checkbox, a fresh operator-triggered AI scope read and wrong-role denial.

@@ -643,6 +643,34 @@ def outcome(question: str, topic: Topic | str) -> str:
     return str(topic.value if isinstance(topic, Topic) else topic)
 
 
+HELPERS = {
+    "status": ("Case progress helper", "your question is about how your case is going"),
+    "documents": ("Documents helper", "your question is about documents for your case"),
+    "forms": ("Forms helper", "your question is about forms you need"),
+    "home": ("Home record helper", "your question is about your recorded home"),
+    "repair": ("Repairs guidance helper", "your question is about a repair problem"),
+    "consents": ("Consent helper", "your question is about consent"),
+    "appointments": ("Callback helper", "your question is about callback times"),
+    "pause": ("Paused contact helper", "your question is about a pause on your case"),
+    "contact": ("Contact helper", "your question is about how to reach your housing officer"),
+    "regulations": ("Rules helper", "your question is about the rules that apply"),
+    "safety": ("Safety route helper", "your question mentions a possible danger"),
+}
+
+
+def routing(topic: Topic | str) -> dict[str, Any]:
+    """Visible routing decision: the helper and why, or the general assistant."""
+    key = str(topic.value if isinstance(topic, Topic) else topic)
+    if key in HELPERS:
+        name, reason = HELPERS[key]
+        return dict(agent=name, routed=True, text=f"Routed to the {name}: {reason}.")
+    return dict(
+        agent="General assistant",
+        routed=False,
+        text="Handled by the General assistant: no helper matches this question, so it stays here.",
+    )
+
+
 def with_pause_note(advice: Advice, topic: Topic | str, view: dict[str, Any]) -> Advice:
     """A paused case also says who can lift the pause; only the host adds this fixed text."""
     if topic is Topic.STATUS and _is_paused(view):

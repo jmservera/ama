@@ -1,0 +1,14 @@
+[
+  {
+    "question": "How is my case going?",
+    "text": "Routed to the Case progress helper: your question is about how your case is going."
+  },
+  {
+    "question": "What regulations apply?",
+    "text": "Routed to the Rules helper: your question is about the rules that apply."
+  },
+  {
+    "question": "What is the weather like?",
+    "text": "Handled by the General assistant: no helper matches this question, so it stays here."
+  }
+]

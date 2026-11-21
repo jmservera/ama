@@ -295,8 +295,9 @@ the longer slot remains a repository plan to confirm with the panel.
 Conversation-to-Azure correlation, a monitoring button, live model releases
 and measured savings are not established by the script. It retains the
 [owner-selected five-home demo target](../capstone/demo/runbook.md#demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12)
-(Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, labelled a target, not
-implemented or deployed evidence. The
+(Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, now labelled a superseded
+historical target, with the [live demo status](../capstone/demo/runbook.md#live-demo-status-2026-11-21) (20 homes, 5 minute cadence)
+beside it. See the [issue 2203 live evidence note](./research/issue-2203-runbook-live-2026-11-21.md). The
 [8 November autonomy and product-story review](../capstone/source/review-2026-11-08.md)
 corrects the original-versus-built framing, maps exact L2-L4 requests to
 current preparation, distinguishes historical Decision 1 from current
@@ -661,6 +662,10 @@ For #1288, the [fourth audit](./research/issue-1288-live-r4-quality-sensor-evide
 re-runs 304 local sensor tests and a read-only Azure probe; no code gap in criterion 3, criteria 3 to 8 stay unticked.
 The [fifth audit](./research/issue-1288-live-r5-quality-sensor-evidence-2026-11-19.md) repeats this with 272 tests; the result is unchanged.
 The [sixth audit](./research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md) sees the live simulator feeding two homes and the Quality model blocked at release admission; criteria 4 and 8 stay unproven.
+
+For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
+records how employee and resident chat now show which agent handled each question and why,
+with local browser evidence; the deployed demo apps are not yet updated.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root
@@ -2118,3 +2123,4 @@ Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./rese
 Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./research/issue-108-live-r2-20261119-2026-11-19.md), [issue 108 re-check 20261119T1621](./research/issue-108-live-20261119T1621-2026-11-19.md), [issue 120 time capture r2](./research/issue-120-live-2026-11-19-r2.md), [issue 126 protocol and benefits gates r3](./research/issue-126-live-r3-2026-11-19.md), [issue 146 monitoring status](./research/issue-146-live-20261119T154738Z-2026-11-19.md) and [issue 440 criteria verdict](./research/issue-440-live-criteria-verdict-2026-11-19.md).
 
 * [Employee sensor charts demo evidence (issue 2193)](./research/demo-employee-charts/employee-sensor-charts-2193.md): dual-axis chart and map card gauges, local proof.
+Further 2026-11-21 evidence: [issue 2206 demo preflight proof](./research/issue-2206-demo-preflight-2026-11-21.md), the read-only preflight script with a live run, evidence only.
