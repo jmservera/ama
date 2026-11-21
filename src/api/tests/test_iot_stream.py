@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import os
 import tempfile
 import threading
 import time
@@ -13,7 +14,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
 
 import test_sensor_handover as handover_fixture
-from azure.eventhub import EventData
+from azure.eventhub import EventData, TransportType
 from azure.eventhub.aio import PartitionContext
 from azure.iot.device import X509
 from sensor_consumer_fixture import CONTROL, POLICY, observations, store_at
@@ -40,6 +41,7 @@ from zava_forward.api.iot_stream import (
     DeviceActivation,
     HubPublisher,
     HubReceiver,
+    _cleanup,
     _observe,
     decode,
 )
@@ -197,6 +199,28 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(factory.call_args.kwargs["eventhub_name"], "sensor-readings")
                 self.client.close.assert_awaited_once()
                 self.credentials.close.assert_awaited_once()
+
+    async def test_websocket_transport_is_opt_in_for_the_event_hub_client(self) -> None:
+        self.events = []
+        self.client.receive = self.receive
+        for value, expected in (("1", TransportType.AmqpOverWebsocket), (None, TransportType.Amqp)):
+            env = {"ZF_SIM_WEBSOCKETS": value} if value else {}
+            with (
+                patch.dict("os.environ", env, clear=False),
+                patch(
+                    "zava_forward.api.iot_stream.ManagedIdentityCredential",
+                    return_value=self.credentials,
+                ),
+                patch(
+                    "zava_forward.api.iot_stream.EventHubConsumerClient", return_value=self.client
+                ) as factory,
+                patch("zava_forward.api.iot_stream.datetime", FixtureClock),
+            ):
+                if value is None:
+                    os.environ.pop("ZF_SIM_WEBSOCKETS", None)
+                with self.assertRaises(StreamError):
+                    await self.receiver.run(max_seconds=1, max_events=1, stop=asyncio.Event())
+                self.assertIs(factory.call_args.kwargs["transport_type"], expected)
 
     async def test_two_partitions_and_new_receiver_replay_without_checkpoint_store(self) -> None:
         first, second = observations()
@@ -388,6 +412,33 @@ class MetadataTests(unittest.TestCase):
             invalid.properties = valid.properties
             with self.assertRaises(StreamError):
                 decode(invalid, {BINDING.device_id: BINDING})
+
+    def test_hub_stamped_origin_is_read_only_when_opted_in(self) -> None:
+        row = observations()[0]
+        bindings = {BINDING.device_id: BINDING}
+
+        def stamped(auth: bytes) -> EventData:
+            result = event(row)
+            result.properties = {}
+            annotations = result.raw_amqp_message.annotations
+            assert annotations is not None
+            annotations[DEVICE] = BINDING.device_id.encode()
+            annotations[AUTH] = auth
+            return result
+
+        x509 = b'{"scope":"device","type":"x509"}'
+        with self.assertRaisesRegex(StreamError, "IOT_AMBIGUOUS_ORIGIN"):
+            decode(stamped(x509), bindings)
+        with patch.dict("os.environ", {"ZF_SIM_SYSTEM_ORIGIN": "1"}):
+            self.assertEqual(decode(stamped(x509), bindings), row)
+            spoofed = stamped(x509)
+            spoofed.properties = {DEVICE.decode(): b"SPOOF"}
+            with self.assertRaisesRegex(StreamError, "IOT_AMBIGUOUS_ORIGIN"):
+                decode(spoofed, bindings)
+            hub = b'{"scope":"device","type":"x509Certificate","issuer":"selfSigned"}'
+            self.assertEqual(decode(stamped(hub), bindings), row)
+            with self.assertRaises(StreamError):
+                decode(stamped(b'{"scope":"device","type":"sas"}'), bindings)
 
     def test_activation_and_binding_are_fail_closed(self) -> None:
         for config in (
@@ -1143,3 +1194,14 @@ class PublisherTests(unittest.IsolatedAsyncioTestCase):
         ):
             with self.assertRaisesRegex(StreamError, "^IOT_CLEANUP_FAILED$"):
                 await self.publisher.run(self.frames, self.budget, truth=self.truth.append)
+
+
+class WebsocketCleanupTests(unittest.IsolatedAsyncioTestCase):
+    async def test_slow_websocket_close_is_allowed_only_when_opted_in(self) -> None:
+        async def slow() -> None:
+            await asyncio.sleep(0.8)
+
+        with self.assertRaisesRegex(StreamError, "^IOT_CLEANUP_FAILED$"):
+            await _cleanup([slow()])
+        with patch.dict("os.environ", {"ZF_SIM_WEBSOCKETS": "1"}):
+            await _cleanup([slow()])

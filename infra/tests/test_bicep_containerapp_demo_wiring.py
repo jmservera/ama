@@ -287,8 +287,10 @@ class OrchestratorAndIotWiring(unittest.TestCase):
                     "{ name: 'ZF_SQL_CLIENT_ID', value: identity.properties.clientId }",
                     text,
                 )
-                self.assertNotIn("secretRef", text)
-                self.assertNotIn("secrets:", text)
+                self.assertIn("@secure()\n", text)
+                self.assertIn("param secretFiles object = {}", text)
+                self.assertIn("value: secretFiles[n] }", text)
+                self.assertEqual(1, text.count("secrets: [for"))
                 for env_name, kind, _ in env_entries(text):
                     self.assertEqual("value", kind)
                     self.assertFalse(

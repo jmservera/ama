@@ -516,6 +516,8 @@ alert (USD 25, 80 and 100 percent) and a per-criterion table; #185 and #189 stay
 A [fifth run](./research/issue-184-live-r5-2026-11-18.md) re-reads child states, hub budgets and the 135 simulator tests;
 the child-closure criterion stays unproven and nothing is ticked.
 
+A [live demo run](./research/issue-184-live-demo-sim-consent-mix-2026-11-20.md) starts the simulator and receiver jobs on the demo hub, applies a 10 granted and 10 declined consent mix through repository code, and shows a Recent reading and Readings withheld in the staff app.
+
 A [sixth run](./research/issue-184-live-r6-2026-11-19.md) repeats the read-only checks with 91 targeted tests; the
 criterion is still an owner action and nothing is ticked.
 

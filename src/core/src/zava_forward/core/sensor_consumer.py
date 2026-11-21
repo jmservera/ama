@@ -667,7 +667,8 @@ class SensorConsumer:
                 "SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION,"
                 " NUMERIC_SCALE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='sensor_reading'"
             ).fetchall()
-            columns = {str(r[0]): r for r in rows}
+            # Updatable ledger tables add hidden ledger_* columns; they are not reading data.
+            columns = {str(r[0]): r for r in rows if not str(r[0]).startswith("ledger_")}
             if set(columns) != set(READING_COLUMNS):
                 raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
             for name, minimum in (

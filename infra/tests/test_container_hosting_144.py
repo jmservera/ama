@@ -19,6 +19,7 @@ import importlib
 import importlib.util
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -119,6 +120,14 @@ def _child_env(**overrides: str) -> dict[str, str]:
 @lru_cache(maxsize=8)
 def _compiled(template_rel: str) -> dict[str, Any]:
     return compile_bicep(template_rel)
+
+
+def _resolve_param_default(template: dict[str, Any], value: Any) -> Any:
+    """Resolve a compiled `[parameters('name')]` value to that parameter's default."""
+    match = re.fullmatch(r"\[parameters\('([^']+)'\)\]", value) if isinstance(value, str) else None
+    if match is None:
+        return value
+    return template["parameters"][match.group(1)]["defaultValue"]
 
 
 def _requires_az_bicep() -> Any:
@@ -674,7 +683,10 @@ class DeployedContainerHardeningTests(unittest.TestCase):
             j_container = j_template["containers"][0]
             j_env = {item["name"]: item.get("value", "") for item in j_container["env"]}
             with self.subTest(template=job_template_name):
-                self.assertEqual(j_env.get("ZF_CONTAINER_HARDENING"), "enforced")
+                self.assertEqual(
+                    _resolve_param_default(compiled_job, j_env.get("ZF_CONTAINER_HARDENING")),
+                    "enforced",
+                )
                 self.assertEqual(j_env.get("PYTHONDONTWRITEBYTECODE"), "1")
                 self.assertEqual(j_env.get("TMPDIR"), "/tmp")
                 self.assertEqual(j_env.get("ZF_STATE"), "/state")
@@ -682,8 +694,11 @@ class DeployedContainerHardeningTests(unittest.TestCase):
                 self.assertEqual(
                     mount_map, {"device-certs": "/certs", "tmp": "/tmp", "state": "/state"}
                 )
-                vol_map = {v["name"]: v for v in j_template["volumes"]}
-                self.assertEqual(vol_map["device-certs"].get("mountOptions"), "ro")
+                self.assertIn("[variables('certVolume')]", j_template["volumes"])
+                cert_volume = str(compiled_job["variables"]["certVolume"])
+                self.assertIn("'AzureFile'", cert_volume)
+                self.assertIn("'mountOptions', 'ro'", cert_volume)
+                vol_map = {v["name"]: v for v in j_template["volumes"] if isinstance(v, dict)}
                 self.assertEqual(vol_map["tmp"].get("storageType"), "EmptyDir")
                 self.assertEqual(vol_map["state"].get("storageType"), "EmptyDir")
 

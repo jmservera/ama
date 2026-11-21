@@ -19,7 +19,12 @@ param hubHostname string = 'iot-cutover-test-rzsrg.azure-devices.net'
 @minLength(1)
 param approvalReference string
 @description('Existing Container Apps environment storage (Azure Files share) holding <device>.pem, <device>.key and the admin-written control.json (cohort, owner, expiry, stop), mounted read-only.')
-param certStorageName string
+param certStorageName string = ''
+@secure()
+@description('Demo single-environment profile: files for /certs (object of file name to content) held as job secrets instead of Azure Files, for estates where storage shared-key access is disabled. Empty uses certStorageName. Never commit values.')
+param secretFiles object = {}
+@description('File names (keys of secretFiles) to mount under /certs; not secret.')
+param secretFileNames array = []
 @description('Existing SQL logical server FQDN and database; the identity needs read access to the case ids only.')
 param sqlServerFqdn string
 param sqlDatabaseName string
@@ -28,12 +33,29 @@ param cronExpression string = '*/5 * * * *'
 @minValue(1)
 @maxValue(100)
 param maxPerSecond int = 10
+@allowed(['enforced', 'off'])
+@description('The image refuses to start with enforced hardening where the platform keeps inherited capabilities (Container Apps); the demo profile sets off, as the app does.')
+param containerHardening string = 'enforced'
+@description('Use MQTT/AMQP over WebSockets on 443. The demo private endpoints are reachable on 443 only (8883 and 5671 time out).')
+param useWebSockets bool = false
 param location string = resourceGroup().location
 
 var jobName = 'job-live-simulator'
 var digestOk = contains(image, '@sha256:') && !contains(image, ' ') && startsWith(image, '${registryServer}/')
 var hubOk = contains(hubHostname, '.azure-devices.net') && !contains(hubHostname, ' ')
-var scopeOk = resourceGroup().name == 'ama' && environmentName == 'cae-cutover-test-demo' && digestOk && hubOk && !empty(trim(approvalReference))
+var useSecret = !empty(secretFileNames)
+var secretRefs = [for (n, i) in secretFileNames: { secretRef: 'file-${i}', path: n }]
+var certVolume = useSecret ? {
+  name: 'device-certs'
+  storageType: 'Secret'
+  secrets: secretRefs
+} : {
+  name: 'device-certs'
+  storageType: 'AzureFile'
+  storageName: certStorageName
+  mountOptions: 'ro'
+}
+var scopeOk = (useSecret || !empty(certStorageName)) && resourceGroup().name == 'ama' && environmentName == 'cae-cutover-test-demo' && digestOk && hubOk && !empty(trim(approvalReference))
 
 module guard './modules/staff-initializer-guard.bicep' = {
   name: 'live-simulator-scope'
@@ -66,6 +88,9 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
       replicaRetryLimit: 0
       scheduleTriggerConfig: { cronExpression: cronExpression, parallelism: 1, replicaCompletionCount: 1 }
       registries: [{ server: registryServer, identity: identity.id }]
+      // Values come from the @secure secretFiles parameter; the linter cannot see through the index.
+      #disable-next-line use-secure-value-for-secure-inputs
+      secrets: [for (n, i) in secretFileNames: { name: 'file-${i}', value: secretFiles[n] }]
     }
     template: {
       containers: [{
@@ -75,12 +100,13 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
         args: ['--sink', 'iothub', '--once', '--max-per-second', string(maxPerSecond)]
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         env: [
-          { name: 'ZF_CONTAINER_HARDENING', value: 'enforced' }
+          { name: 'ZF_CONTAINER_HARDENING', value: containerHardening }
           { name: 'PYTHONDONTWRITEBYTECODE', value: '1' }
           { name: 'TMPDIR', value: '/tmp' }
           { name: 'ZF_STATE', value: '/state' }
           { name: 'ZF_SIM_HUB_HOSTNAME', value: hubHostname }
           { name: 'ZF_SIM_APPROVAL', value: approvalReference }
+          { name: 'ZF_SIM_WEBSOCKETS', value: useWebSockets ? '1' : '0' }
           { name: 'ZF_SIM_CERT_DIR', value: '/certs' }
           { name: 'ZF_SIM_CONTROL_FILE', value: '/certs/control.json' }
           { name: 'ZF_STORE', value: 'mssql' }
@@ -96,7 +122,7 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
         ]
       }]
       volumes: [
-        { name: 'device-certs', storageType: 'AzureFile', storageName: certStorageName, mountOptions: 'ro' }
+        certVolume
         { name: 'tmp', storageType: 'EmptyDir' }
         { name: 'state', storageType: 'EmptyDir' }
       ]

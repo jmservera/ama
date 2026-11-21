@@ -4358,6 +4358,33 @@ The executor, under separate admission, runs these in order and stops at the fir
 Not delivered or proven: any of these steps, the real throttle, current prices, the in-app admin
 screen and the budget alert.
 
+#### Single-environment demo profile (2026-11-20, Refs #184)
+
+The demo environment has no Azure Files access (storage shared-key access is disabled) and
+reaches the hub and Event Hub private endpoints on port 443 only. Both templates therefore take
+extra opt-in parameters; every default keeps the earlier behaviour.
+
+* `secretFiles` (`@secure()` object) and `secretFileNames`: mount the device certificates, keys
+  and `control.json` from a Container Apps `Secret` volume at `/certs` instead of an Azure Files
+  share (`certStorageName` stays empty). Pass the values from a secure parameter file kept
+  outside the repository, and delete it afterwards.
+* `containerHardening=off`: the image refuses `enforced` on Container Apps ("CapInh must be
+  zero"); the demo app already runs with `off`. Record it as a demo-only deviation.
+* `useWebSockets=true`: sets `ZF_SIM_WEBSOCKETS=1` (MQTT over WebSocket for the simulator, AMQP
+  over WebSocket for the receiver, and a 3 s client close allowance).
+* Receiver only: `systemOrigin=true` (`ZF_SIM_SYSTEM_ORIGIN=1`) reads the device origin from the
+  annotations the hub stamps, still refusing any origin copy in device-set application
+  properties; `cronExpression` (for example `*/30 * * * *`) with `windowSeconds=1500` gives
+  non-overlapping scheduled windows; `maxEvents` caps one window.
+* The simulator job runs `*/5 * * * *`; the policy accepts readings up to 7200 s old, so a
+  5-minute slot keeps the newest reading well under 15 minutes.
+* Register the device identities (self-signed X.509, one per cohort home) with the hub registry
+  and apply the consent mix with `tools/demo_consent_mix.py` (it calls
+  `SensorConsumer.configure`, which writes the index marker; never use ad-hoc SQL).
+* Stop: `python -m zava_forward.api.live_control stop` against the control file, then
+  `az containerapp job delete` for both jobs, remove the temporary registry role and revoke the
+  device certificates. The control expires on its own.
+
 ### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)
 
 The owner approved paid B1/one unit after the UK South USD10/month cost check,

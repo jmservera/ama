@@ -3,14 +3,16 @@
 import asyncio
 import json
 import math
+import os
 import re
 import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
-from azure.eventhub import EventData
+from azure.eventhub import EventData, TransportType
 from azure.eventhub.aio import EventHubConsumerClient, PartitionContext
 from azure.identity.aio import ManagedIdentityCredential
 from azure.iot.device import X509, Message
@@ -116,13 +118,22 @@ def decode(event: EventData, bindings: Mapping[str, Binding]) -> Observation:
     # Custom-endpoint IoT properties are AMQP application properties. Their
     # authority is the dedicated Hub-only sender path, not their Python name.
     props = event.properties or {}
-    if any(key in event.system_properties for key in (DEVICE, MODULE, AUTH)):
-        raise StreamError("IOT_AMBIGUOUS_ORIGIN")
     if any(key.decode() in props for key in (DEVICE, MODULE, AUTH)):
         raise StreamError("IOT_AMBIGUOUS_ORIGIN")
-    if MODULE in props:
-        raise StreamError("IOT_MODULE_NOT_ALLOWED")
-    device, auth = props.get(DEVICE), props.get(AUTH)
+    if os.environ.get("ZF_SIM_SYSTEM_ORIGIN") == "1":
+        # The demo hub stamps the origin as message annotations, which a device cannot set; a
+        # device-supplied copy would land in the application properties and is refused above.
+        if MODULE in event.system_properties:
+            raise StreamError("IOT_MODULE_NOT_ALLOWED")
+        origin: Mapping[Any, Any] = event.system_properties
+    else:
+        if any(key in event.system_properties for key in (DEVICE, MODULE, AUTH)):
+            raise StreamError("IOT_AMBIGUOUS_ORIGIN")
+        if MODULE in props:
+            raise StreamError("IOT_MODULE_NOT_ALLOWED")
+        origin = props
+    x509_types = ("x509", "x509Certificate") if origin is not props else ("x509",)
+    device, auth = origin.get(DEVICE), origin.get(AUTH)
     if not isinstance(device, bytes) or not isinstance(auth, bytes) or len(auth) > 1024:
         raise StreamError("IOT_ORIGIN_REQUIRED")
     try:
@@ -133,7 +144,7 @@ def decode(event: EventData, bindings: Mapping[str, Binding]) -> Observation:
     if (
         not isinstance(method, dict)
         or method.get("scope") != "device"
-        or method.get("type") != "x509"
+        or method.get("type") not in x509_types
     ):
         raise StreamError("IOT_X509_DEVICE_REQUIRED")
     binding = bindings.get(device_id)
@@ -194,7 +205,8 @@ async def _cleanup(operations: list[Awaitable[object]]) -> None:
     if not tasks:
         return
     try:
-        done, pending = await asyncio.wait(tasks, timeout=0.5)
+        allowance = 3.0 if os.environ.get("ZF_SIM_WEBSOCKETS") == "1" else 0.5
+        done, pending = await asyncio.wait(tasks, timeout=allowance)
         results = await asyncio.gather(*done, return_exceptions=True)
         if pending or any(isinstance(result, BaseException) for result in results):
             raise StreamError("IOT_CLEANUP_FAILED")
@@ -299,6 +311,11 @@ class HubReceiver:
                 retry_total=0,
                 auth_timeout=1,
                 prefetch=1,
+                transport_type=(
+                    TransportType.AmqpOverWebsocket
+                    if os.environ.get("ZF_SIM_WEBSOCKETS") == "1"
+                    else TransportType.Amqp
+                ),
             )
             receive = asyncio.create_task(
                 client.receive(
