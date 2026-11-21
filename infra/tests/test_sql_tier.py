@@ -99,6 +99,11 @@ class SqlTierTests(unittest.TestCase):
         self.assertEqual(provisioned["sku"]["name"], "GP_Gen5")
         self.assertIsNone(provisioned["properties"]["autoPauseDelay"])
         self.assertIsNone(provisioned["properties"]["minCapacity"])
+        dtu = database_for(sqlTier="dtu", autoPauseDelayMinutes=120, maxVCores=4)
+        self.assertEqual(dtu["sku"], {"name": "Standard", "tier": "Standard", "capacity": 10})
+        self.assertIsNone(dtu["properties"]["autoPauseDelay"])
+        self.assertIsNone(dtu["properties"]["minCapacity"])
+        self.assertTrue(dtu["properties"]["isLedgerOn"])
 
 
 if __name__ == "__main__":

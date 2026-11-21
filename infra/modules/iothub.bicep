@@ -58,7 +58,6 @@ resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {
     minimumTlsVersion: '1.2'
     publicNetworkAccess: 'Disabled'
     isAutoInflateEnabled: false
-    maximumThroughputUnits: 1
   }
 }
 

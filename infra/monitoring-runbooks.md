@@ -251,7 +251,7 @@ verification and competent human disposition; not a new successful job alone.
 
 Anchor: `ledger-verify-missing`. `alert-${applicationPrefix}-ledger-verify-missing`:
 fewer than one `LEDGER_DIGEST_OK` console match in 26 hours, hourly evaluation,
-severity 1. `overrideQueryTimeRange=PT26H` extends the outer query range beyond
+severity 1. `overrideQueryTimeRange=PT48H` extends the outer query range beyond
 the one-day evaluation window. Triage: distinguish missed schedule, failed
 execution, absent logs and table/job-name mismatch from an actual integrity
 failure. Proposed owner: Digital service owner. Response: record verification

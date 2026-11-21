@@ -46,7 +46,7 @@ Optional parameters: `teamsWebhookUrl`, `evidenceStore`, `sharePointSiteId`, `mo
 
 ## SQL tier and recovery (Refs #145)
 
-SQL tier, auto-pause, vCores, backup redundancy and retention are `sql*` parameters; the pilot example records the provisioned tier. The restore and ledger verification procedure, undecided objectives and unperformed evidence are in [sql-recovery-runbook.md](sql-recovery-runbook.md).
+SQL tier, auto-pause, vCores, backup redundancy and retention are `sql*` parameters; the pilot example records the provisioned tier. `sqlTier = 'dtu'` selects Standard S0 (10 DTU, no serverless settings) for the cost-capped demo and is rejected outside the development profile; the default is unchanged. The restore and ledger verification procedure, undecided objectives and unperformed evidence are in [sql-recovery-runbook.md](sql-recovery-runbook.md).
 
 ## Monitoring Authoring Candidate (Refs #146)
 

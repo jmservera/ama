@@ -99,8 +99,8 @@ param edgeWafMode string = 'Prevention'
 @description('Enable zone redundancy where the region supports it.')
 param zoneRedundant bool = false
 
-@description('SQL tier: serverless for dev, provisioned general purpose for pilot (ADR 0002 decision 1).')
-@allowed(['serverless', 'provisioned'])
+@description('SQL tier: serverless for dev, provisioned general purpose for pilot (ADR 0002 decision 1), or dtu (Standard S0, 10 DTU) for the cost-capped demo in the development profile only.')
+@allowed(['serverless', 'provisioned', 'dtu'])
 param sqlTier string = 'serverless'
 @description('SQL vCores: serverless maximum or provisioned count.')
 @minValue(1)
@@ -266,6 +266,7 @@ module guard 'modules/guard.bicep' = {
     singleEnvironmentRequiresDirectDemo: !demoSingleEnvironment || (demoDirectIngress && isDev && !enablePublicEdge && !allowPublicNetworkAccess) ? 'ok' : ''
     publicSimulationRequiresSingleReplica: !enablePublicSimulationLane || apiMinReplicas <= 1 ? 'ok' : ''
     pilotRankingArchiveRequiresConfiguredRetention: environmentName != 'pilot' || !enableRankingArchiveBlob || rankingArchiveImmutabilityDays > 0 ? 'ok' : ''
+    dtuTierRequiresDevelopmentProfile: sqlTier != 'dtu' || isDev ? 'ok' : ''
     serverlessAutoPauseDelayMustBeSupported: sqlTier != 'serverless' || sqlAutoPauseDelayMinutes == -1 || (sqlAutoPauseDelayMinutes >= 15 && sqlAutoPauseDelayMinutes <= 10080) ? 'ok' : ''
   }
 }
@@ -683,7 +684,7 @@ resource ledgerVerifyMissing 'Microsoft.Insights/scheduledQueryRules@2023-03-15-
     scopes: [monitoring.outputs.workspaceId]
     evaluationFrequency: 'PT1H'
     windowSize: 'P1D'
-    overrideQueryTimeRange: 'PT26H'
+    overrideQueryTimeRange: 'PT48H'
     criteria: {
       allOf: [
         {

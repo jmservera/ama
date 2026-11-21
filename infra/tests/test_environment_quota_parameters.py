@@ -211,7 +211,7 @@ class EnvironmentQuotaParametersTests(unittest.TestCase):
 
     def _assert_contract(self, template: dict[str, Any], sql_template: dict[str, Any]) -> None:
         params = template["parameters"]
-        self.assertEqual(params["sqlTier"]["allowedValues"], ["serverless", "provisioned"])
+        self.assertEqual(params["sqlTier"]["allowedValues"], ["serverless", "provisioned", "dtu"])
         self.assertEqual(params["sqlVCores"]["minValue"], 1)
         self.assertEqual(params["sqlVCores"]["maxValue"], 80)
         self.assertEqual(params["sqlVCores"]["defaultValue"], 2)
@@ -293,7 +293,7 @@ class EnvironmentQuotaParametersTests(unittest.TestCase):
 
     def test_quota_and_budget_bounds_and_module_forwarding(self) -> None:
         self._assert_contract(self.main, self.sql)
-        self.assertEqual(len(self.guard["parameters"]), 33)
+        self.assertEqual(len(self.guard["parameters"]), 34)
         for name, spec in self.guard["parameters"].items():
             self.assertEqual(spec["minLength"], 1, name)
             self.assertIn("Empty means", spec["metadata"]["description"], name)

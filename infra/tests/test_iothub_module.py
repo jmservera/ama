@@ -669,7 +669,7 @@ class IotHubModuleTests(unittest.TestCase):
         namespace = resource(self.template, NAMESPACE)
         self.assertEqual(namespace["sku"], {"name": "Standard", "tier": "Standard", "capacity": 1})
         self.assertFalse(namespace["properties"]["isAutoInflateEnabled"])
-        self.assertEqual(namespace["properties"]["maximumThroughputUnits"], 1)
+        self.assertNotIn("maximumThroughputUnits", namespace["properties"])
         hub = resource(self.template, HUB)
         self.assertEqual(
             hub["sku"], {"name": "[parameters('skuName')]", "capacity": "[parameters('unitCount')]"}

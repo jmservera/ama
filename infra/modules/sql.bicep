@@ -13,8 +13,8 @@ param entraAdminGroupObjectId string
 param entraAdminPrincipalType string = 'Group'
 param enableLock bool
 param zoneRedundant bool = false
-@description('serverless (GP_S_Gen5, dev) or provisioned (GP_Gen5, pilot; ADR 0002 decision 1).')
-@allowed(['serverless', 'provisioned'])
+@description('serverless (GP_S_Gen5, dev), provisioned (GP_Gen5, pilot; ADR 0002 decision 1) or dtu (Standard S0, 10 DTU, demo only; ignores vCores and auto-pause).')
+@allowed(['serverless', 'provisioned', 'dtu'])
 param sqlTier string = 'serverless'
 @description('vCores: the serverless maximum, or the provisioned count.')
 @minValue(1)
@@ -32,6 +32,13 @@ param backupStorageRedundancy string = ''
 param backupRetentionDays int = 14
 
 var serverless = sqlTier == 'serverless'
+var dtuSku = { name: 'Standard', tier: 'Standard', capacity: 10 }
+var vCoreSku = {
+  name: serverless ? 'GP_S_Gen5' : 'GP_Gen5'
+  tier: 'GeneralPurpose'
+  family: 'Gen5'
+  capacity: maxVCores
+}
 
 resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {
   name: name
@@ -57,12 +64,7 @@ resource database 'Microsoft.Sql/servers/databases@2024-05-01-preview' = {
   name: databaseName
   location: location
   tags: tags
-  sku: {
-    name: serverless ? 'GP_S_Gen5' : 'GP_Gen5'
-    tier: 'GeneralPurpose'
-    family: 'Gen5'
-    capacity: maxVCores
-  }
+  sku: sqlTier == 'dtu' ? dtuSku : vCoreSku
   properties: {
     collation: 'SQL_Latin1_General_CP1_CI_AS'
     zoneRedundant: zoneRedundant

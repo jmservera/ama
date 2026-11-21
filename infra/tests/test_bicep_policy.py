@@ -1324,7 +1324,7 @@ class BicepPolicyTests(unittest.TestCase):
 
         missing_props = by_kind["verify-missing"]["properties"]
         self.assertEqual(missing_props.get("windowSize"), "P1D")
-        self.assertEqual(missing_props.get("overrideQueryTimeRange"), "PT26H")
+        self.assertEqual(missing_props.get("overrideQueryTimeRange"), "PT48H")
         missing_crit = missing_props["criteria"]["allOf"][0]
         self.assertEqual(missing_crit.get("operator"), "LessThan")
         self.assertEqual(missing_crit.get("threshold"), 1)
@@ -2896,6 +2896,13 @@ class BicepPolicyTests(unittest.TestCase):
                 set() if valid else {guard},
                 f"{tier} {delay}",
             )
+        dtu_guard = "dtuTierRequiresDevelopmentProfile"
+        self.assertEqual(failures(sqlTier="dtu"), {dtu_guard})
+        self.assertEqual(failures(sqlTier="dtu", deploymentProfile="development"), set())
+        self.assertEqual(
+            failures(sqlTier="dtu", deploymentProfile="development", sqlAutoPauseDelayMinutes=0),
+            set(),
+        )
 
     def assert_mutation_rejected(self, assertion, mutated: dict) -> None:
         with self.assertRaises(AssertionError):
