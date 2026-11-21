@@ -14350,4 +14350,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2188 live gate speed-up check (Refs #2188)
 
 * Added [issue-2188-live-gate-speed-2026-11-21.md](research/issue-2188-live-gate-speed-2026-11-21.md): tamper rejection proven, image cache measured (80.7 s to 1.3 s), whole-gate before and after and test-class retry unproven. No source change.
+## [2026-11-21] update | Issue 2204 role sign-in and wrong-role denial (Refs #2204)
+
+* Added [issue-2204-role-signin-wrong-role-denial-live-2026-11-21.md](research/issue-2204-role-signin-wrong-role-denial-live-2026-11-21.md): live Programme Manager sign-in, permitted views and wrong-role denials on the demo, a local matrix for every other role and the administrator, and a per-criterion table. Other live roles stay unproven (no accounts, no directory privileges). No source change.
 * Index row added to `docs/reference/README.md`.

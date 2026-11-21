@@ -1,0 +1,5 @@
+auth denied: a contractor cannot hold the application administrator role: None
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.Contractor', 'ZavaForward.Coordinator']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.Nope']
+auth denied: need one mapped staff role or the application admin role: []
+auth denied: no aad principal: None
