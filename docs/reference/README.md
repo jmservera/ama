@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-17
+ms.date: 2026-11-21
 ms.topic: overview
 ---
 
@@ -285,7 +285,15 @@ and three-test, zero-skip evidence in both execution and receipt verification.
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),
 [pitch preparation](../capstone/pitch/README.md) and
-[demo runbook](../capstone/demo/runbook.md), which now carries the
+[demo runbook](../capstone/demo/runbook.md), whose
+[21 November timed script](../capstone/demo/runbook.md#complete-the-prepared-flow)
+covers AI evidence, Azure observability, sensors, employee work, the lifecycle
+and resident self-service. Its complete panel route is 1:50; the optional
+ten-minute allocation includes eight minutes of prepared navigation and two
+for questions or recovery. The rubric asks for an under-two-minute demo;
+the longer slot remains a repository plan to confirm with the panel.
+Conversation-to-Azure correlation, a monitoring button, live model releases
+and measured savings are not established by the script. It retains the
 [owner-selected five-home demo target](../capstone/demo/runbook.md#demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12)
 (Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, labelled a target, not
 implemented or deployed evidence. The
