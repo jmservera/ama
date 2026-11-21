@@ -2,9 +2,21 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-11-20
+ms.date: 2026-11-21
 ms.topic: reference
 ---
+
+## Regulatory plain-language explanations
+
+The checkbox shows or hides extra explanatory notes, including when alerts are
+loading, unavailable or empty. It does not run checks or change their results.
+Safety warnings, role guidance, summaries and recorded details stay visible in
+both modes. A missing law store still means no rule checks have run.
+
+The synthetic keyboard regression is
+`python3 src/api/checks/regulatory_ux_check.py` from the repository root.
+It checks the notes in populated and empty states, including failed requests,
+and verifies that refresh preserves the chosen mode.
 
 ## Opt-in operational tracing
 

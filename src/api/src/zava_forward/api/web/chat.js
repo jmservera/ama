@@ -298,7 +298,8 @@ function regulatoryPlainMode(root, id) {
     state.textContent = input.checked ? "Plain-language explanations are shown." : "Plain-language explanations are hidden.";
   });
   return h("div", { class: "regulatory-mode" },
-    h("label", { for: id }, input, " Plain-language explanations"), state);
+    h("label", { for: id }, input, " Plain-language explanations"), state,
+    h("span", { class: "muted" }, "Show or hide extra notes that explain this panel. Safety warnings, summaries and recorded details stay visible. This does not run or change any checks."));
 }
 
 const regulatoryStates = new Set(["breach risk", "attention", "unknown", "clear", "not applicable", "answer", "refused", "conflict"]);
@@ -327,6 +328,7 @@ function regulatorySources(citations) {
 function regulatoryAlertsPanel(caseId) {
   const root = h("section", { class: "card", id: "regulatory-alerts", "aria-labelledby": "regulatory-alerts-title" });
   const status = h("p", { role: "status", "aria-atomic": "true" }, "Loading role-scoped alerts. Coverage is unknown.");
+  const explanation = h("p", { class: "plain-explanation regulatory-coverage-explanation" });
   const list = h("div", { class: "regulatory-alert-list" });
   const meanings = {
     "breach risk": "A recorded check needs urgent human review. This is not a legal finding.",
@@ -353,10 +355,12 @@ function regulatoryAlertsPanel(caseId) {
   }
   async function showAlerts() {
     status.textContent = "Loading role-scoped alerts. Coverage is unknown.";
+    explanation.textContent = "In plain words: the service is looking for checks you are allowed to see for this home. Until it responds, we do not know which checks are available.";
     status.className = "regulatory-state state-unknown";
     if (me.services?.law_alerts === false) {
       list.replaceChildren();
       status.textContent = "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.";
+      explanation.textContent = "In plain words: this service has no rules available to check this home. It cannot tell you whether a requirement has been met. Ask the named human owner what needs checking.";
       return;
     }
     try {
@@ -381,15 +385,19 @@ function regulatoryAlertsPanel(caseId) {
         h("p", {}, `Owner acknowledgement: ${alert.requires_acknowledgement ? "required" : "not outstanding"}. Owner outcome: ${alert.requires_outcome ? "required" : "not outstanding"}. This panel cannot acknowledge, decide compliance or restart stopped retrofit work.`))));
       status.className = data.coverage_status && data.coverage_status !== "unknown" ? "" : "regulatory-state state-unknown";
       status.textContent = `${alerts.length} visible alerts. Coverage: ${data.coverage_status || "unknown"}. ${alerts.length ? "Only alerts permitted for your role are shown." : "No visible alerts does not mean no risk, complete coverage or compliance."}`;
+      explanation.textContent = alerts.length
+        ? "In plain words: the alerts below show recorded checks you are allowed to see, not a complete safety or legal assessment. Each alert explains what a person needs to review."
+        : "In plain words: there are no alerts you can see for this home. Checks may be missing or outside your role. This does not mean the home is safe or that every requirement has been met.";
     } catch (e) {
       list.replaceChildren();
       status.textContent = `Alert coverage unknown: ${e.message} Use the existing human emergency or hazard service; do not wait for checks. Owner: application support. Next action: reload to check again.`;
+      explanation.textContent = "In plain words: the service could not return the checks for this home. You cannot use this failed request as evidence that there is no risk. Ask application support for help and use the human owner route.";
     }
   }
   root.append(h("h2", { id: "regulatory-alerts-title" }, "Regulatory alerts for this home"),
     h("p", { class: "notice" }, "Possible emergency or hazard? Use the existing human emergency or hazard service now. Do not wait for alerts, chat or this application. No resident message is sent."),
     regulatoryPlainMode(root, "alerts-plain-mode"),
-    regulatoryGuidance(me.user.role), status, list, refresh);
+    regulatoryGuidance(me.user.role), status, explanation, list, refresh);
   load();
   return root;
 }
