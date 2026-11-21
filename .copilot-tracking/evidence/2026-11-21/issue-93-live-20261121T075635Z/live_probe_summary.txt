@@ -1,0 +1,6 @@
+finance rows 13 {'Received': 7, 'Exceptions': 6} on_hold 6
+funding cases 167 {'Draft ready': 1, 'To prepare': 25, 'Not started': 141}
+grants {'Not recorded': 4, 'No grant record': 163}
+exposure Held {'paused': True, 'decision_required': True, 'decision_owner': None, 'automatic_cut': False, 'reason': 'No person-approved investment limit or tolerances are recorded.'}
+schemas {'schemas': []}
+any @: False
