@@ -14231,3 +14231,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-21 issue 157 live criteria proof
 
 * Added [issue-157-live-criteria-2026-11-21.md](research/issue-157-live-criteria-2026-11-21.md): live chat probe on the synthetic demo, focused core and api chat tests and a per-criterion verdict. All four child issues are closed; the two open epic criteria stay unproven (open #440 criteria and production-only remainders). No source change; evidence level synthetic demo, no independent review.
+## 2026-11-21 issue 165 criteria recheck
+
+* Added [issue-165-live-20261121-2026-11-21.md](research/issue-165-live-20261121-2026-11-21.md): 102 local tests pass, the live simulator has streamed 240 messages an hour for four hours, consent-gated sensor readbacks match, per-criterion table. Criterion 1 proven for the demo; criteria 2 (owner approval) and 3 (#184 still open) unproven. No source change.
