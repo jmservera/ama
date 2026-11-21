@@ -14246,3 +14246,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 1259 fourth live recheck (Refs #1259)
 
 * Added [2026-11-21-ranking-archive-unusable-1259-live-r4.md](research/2026-11-21-ranking-archive-unusable-1259-live-r4.md): red-before (seven failures) and green-after (110 tests) re-observed on main `d2585a4c9`, no defect and no source change. The final criterion (FULL receipt, independent exact-head assessment, hosted checks) stays unticked.
+
+## [2026-11-21] update | Issue 1274 live evidence (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-21.md](research/issue-1274-live-evidence-2026-11-21.md): failing actionlint and AWF 0.28.23 release endpoints identified from retained job logs for #1243 and #1271, real actionlint 1.7.7 checksum verification and a hosted observation recorded. AWF resilience and the #1273 causes stay unproven. No source change.
