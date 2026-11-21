@@ -607,6 +607,20 @@ full-local-gate requirement for this coordinator's work.
   An absent, path-filtered, skipped or unobserved hosted workflow is not a
   successful check; record what ran and what did not.
 
+Gate economy (owner decision D6, 2026-11-21, from the 4-day analysis: 22 full
+local runs, 17 failed, about 12 hours of exclusive lock time):
+
+* Hosted CI is the per-PR gate. A focused-tier PR is published after its
+  targeted local tests and its hosted checks decide merge.
+* The full local gate runs only at integration points (wave end, release,
+  infrastructure, SQL or security stack tip), once per tip, never per branch.
+* Do not pause merges, publication or worker admission while a gate runs.
+  Keep the full session cap filled; only the heavy-resource checks are
+  serialised. A docs-only change to main does not by itself force a new
+  full receipt once the tool supports it (issue tracked in the backlog).
+* Fix or ledger a known gate flake before starting the next full gate; a
+  full run is not a retry loop.
+
 Classify by change category, not by diff size or by what `--changed` selects.
 Workflow, gate-tool, dependency-manifest and Dockerfile edits are classified by
 their actual impact and recorded with the basis: the full tier when they change
