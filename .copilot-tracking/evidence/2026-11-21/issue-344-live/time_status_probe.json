@@ -1,0 +1,76 @@
+{
+ "landing_status": 200,
+ "landing_title": "Welcome to Zava Forward | Zava North Homes",
+ "anon_fetch": {
+  "default": "redirect",
+  "json": "redirect",
+  "html": "redirect",
+  "healthz": 200
+ },
+ "signin_click_reaches_entra": true,
+ "after_signin_path": "/app",
+ "after_signin_title": "My cases today | Zava Forward",
+ "t0": "2026-11-21T15:25:36Z",
+ "time_status": [
+  {
+   "status": 200,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"enabled\": false, \"flag_on\": false, \"dpia_recorded\": false, \"consultation_recorded\": false, \"notice_approved\": false, \"requested\": false, \"requested_by\": null,"
+  },
+  {
+   "status": 200,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"enabled\": false, \"flag_on\": false, \"dpia_recorded\": false, \"consultation_recorded\": false, \"notice_approved\": false, \"requested\": false, \"requested_by\": null,"
+  },
+  {
+   "status": 200,
+   "ctype": "application/json",
+   "server": "ZavaForward,Python/3.12.15",
+   "body": "{\"enabled\": false, \"flag_on\": false, \"dpia_recorded\": false, \"consultation_recorded\": false, \"notice_approved\": false, \"requested\": false, \"requested_by\": null,"
+  }
+ ],
+ "me_status": 200,
+ "assets": {
+  "/app.js": 200,
+  "/assistants.js": 200,
+  "/index.html": 200,
+  "/law.html": 200,
+  "/law.js": 200,
+  "/ops.js": 200,
+  "/panels.js": 200,
+  "/timecapture.js": 200,
+  "/chat.js": 200,
+  "/vendor/leaflet.css": 200,
+  "/vendor/leaflet.js": 200
+ },
+ "api": {
+  "/api/me": 200,
+  "/api/cases": 200,
+  "/api/cases.csv": 200,
+  "/api/facets": 200,
+  "/api/ranking/policy": 200,
+  "/api/ranking/snapshot": 200,
+  "/api/stats": 200,
+  "/api/map": 200,
+  "/api/visits": 200,
+  "/api/handoffs": 200,
+  "/api/packages": 200,
+  "/api/workorders": 200,
+  "/api/checklists": 200,
+  "/api/finance": 200,
+  "/api/funding": 200,
+  "/api/retention": 200,
+  "/api/briefing": 200,
+  "/api/assistants": 200,
+  "/api/governance": 200,
+  "/api/ai/report": 500,
+  "/api/law": 503,
+  "/api/time/status": 200,
+  "/api/audit-check": 200,
+  "/api/continuity": 200,
+  "/api/account/photo": 503
+ },
+ "app_title": "My cases today | Zava Forward"
+}
