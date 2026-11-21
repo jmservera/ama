@@ -1,0 +1,20 @@
+{
+ "healthz": 200,
+ "after_signin_title": "My cases today | Zava Forward",
+ "handoff_probe": {
+  "/api/handoffs": 200,
+  "count": 4,
+  "offered_at_shapes": [
+   "9999-99-99T99:99"
+  ],
+  "naive_case_ids": [
+   "ZF-2025-0029",
+   "ZF-2025-0030",
+   "ZF-2025-0031",
+   "ZF-2025-0032"
+  ],
+  "/api/handoffs/unowned": 200,
+  "/api/handoffs/escalated": 200,
+  "/api/handoffs/unaccepted": 500
+ }
+}

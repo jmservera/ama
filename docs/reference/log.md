@@ -14204,3 +14204,27 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-184-live-demo-sim-consent-mix-2026-11-20.md](research/issue-184-live-demo-sim-consent-mix-2026-11-20.md) and two screenshots: the simulator and receiver jobs run on the synthetic demo hub, 20 homes carry a 10 granted and 10 declined consent mix applied through `SensorConsumer.configure`, and the staff Home sensors tab shows a Recent reading for a granted home and Readings withheld for a non-granted home.
 * Updated [infra/README.md](../../infra/README.md) with the single-environment demo profile parameters. Source fixes: ledger column filter in `SensorConsumer`, opt-in WebSocket transport and system-origin decode for the receiver. Evidence level: synthetic fixtures, no resident consent, no independent review yet.
+
+## [2026-11-21] update | Issue 107 eighth criteria pass (Refs #107)
+
+* Added [issue-107-live-r8-criteria-2026-11-21.md](research/issue-107-live-r8-criteria-2026-11-21.md): actual-SQL re-run at head 0c497160e (95 and 139 tests OK, SQLite 95 OK); criterion 1 proven for the demo, criterion 2 unproven (needs approved release from unappointed OQ-017 holders). No source change; nothing ticked.
+
+## [2026-11-21] query | Issue 144 live hardening receipt (Refs #144)
+
+* Added [issue-144-live-hardening-receipt-2026-11-21.md](research/issue-144-live-hardening-receipt-2026-11-21.md): a throwaway Container Apps replica of the current-tree agents image ran Healthy under enforced hardening with zero capability sets; throwaway resources deleted. No source change. Pipeline deployment and the three demo apps stay unproven.
+
+## [2026-11-21] update | Issue 350 live pass 2 (Refs #350)
+
+* Added [issue-350-live-r2-criteria-2026-11-21.md](research/issue-350-live-r2-criteria-2026-11-21.md): signed-in staff and read-only Azure evidence for all ten unticked criteria. The 980-case baseline and AI deployment are present, time capture gating is proven for the demo, and the edge 302, law store, photo, licensed map provider, digest blobs and second-role results stay unproven. No source change; nothing ticked.
+
+## [2026-11-21] update | Issue 440 live criteria verdict, third pass (Refs #440)
+
+* Added [issue-440-live-criteria-verdict-2026-11-21-r3.md](research/issue-440-live-criteria-verdict-2026-11-21-r3.md): D1 to D3 re-observed at head 0c497160e with a signed-in demo probe and screenshot, coordinator section statically re-read, criterion 7 evidenced for the demo and 8 unproven. No source change.
+
+## [2026-11-21] update | Issue 1830 fifth pass (Refs #1830)
+
+* Added [issue-1830-live-r5-2026-11-21.md](research/issue-1830-live-r5-2026-11-21.md): executed `rpi-checks.py --preflight` selectors and edge cases, direct 320px and map browser reruns with a negative control, timing from ten retained full receipts including the first jobs 4 run; criterion 2 proven for the demo, others still partial; no source change.
+
+## [2026-11-21] update | Issue 123 live criteria verdict (Refs #123)
+
+* Added [issue-123-live-criteria-verdict-2026-11-21.md](research/issue-123-live-criteria-verdict-2026-11-21.md): child states (#126 and #440 open), 175 governance tests passing, and a live finding that the unaccepted-handoff queue returns 500 on the demo because four seeded handoffs have a timezone-less `offered_at`. No source change, nothing ticked. Options recorded for the owner.

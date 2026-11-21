@@ -1,0 +1,563 @@
+{
+ "me.counts": {
+  "mine": 16,
+  "hazards": 1,
+  "open": 443
+ },
+ "me.staff": {
+  "count": 4,
+  "roles": [
+   "Building Safety Liaison",
+   "Retrofit Programme Manager"
+  ]
+ },
+ "me.account": {
+  "name": "Aadi Kapoor",
+  "email": "",
+  "provider": "trusted-proxy"
+ },
+ "me.services": {
+  "photo": false,
+  "law_alerts": false,
+  "assistants": true,
+  "cases": true
+ },
+ "me.map": {
+  "tiles": "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  "attribution": "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors"
+ },
+ "me.user": {
+  "code": "..",
+  "name": "..",
+  "email": "..",
+  "role": "Retrofit Programme Manager",
+  "oid": "..",
+  "tid": "..",
+  "identity_source": "entra",
+  "display_email": "..",
+  "app_admin": "..",
+  "view_only": false,
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "auth_provider": "..",
+  "rule_roles": ".."
+ },
+ "me.nav": [
+  "My cases",
+  "All cases",
+  "Overview",
+  "Progress dashboard",
+  "Visits",
+  "Funding",
+  "Finance",
+  "Capacity and work orders",
+  "Closed cases",
+  "Assistant proposals",
+  "Time capture",
+  "Aftercare concerns",
+  "Specialist screens"
+ ],
+ "assistants": [
+  {
+   "id": "stock-prioritisation",
+   "binding": {
+    "registry_version": "1.0.0",
+    "schema_version": "evidence-proposal-v1",
+    "provider": "azure-openai",
+    "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+    "deployment": "standard",
+    "prompt_version": "3768ed36e3242c28",
+    "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+    "data_version": "bd66b741abf300ac",
+    "provenance_version": "constructed-synthetic-demo-labelled",
+    "permission_version": "0fb3bef9c37875ca",
+    "model_version": "gpt-4.1-nano-2025-04-14",
+    "task_contract_version": "b591a7fb7d211c1bb8ac4d398cea1e2ee52b6a7dbfeccc2f97de1408d420ec91",
+    "evaluation_version": "task-release-evaluation-v1"
+   },
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "stock-prioritisation",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   },
+   "roles": [
+    "Retrofit Coordinator",
+    "Retrofit Programme Manager"
+   ]
+  },
+  {
+   "id": "assessment-preparation",
+   "binding": {
+    "registry_version": "1.0.0",
+    "schema_version": "evidence-proposal-v1",
+    "provider": "azure-openai",
+    "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+    "deployment": "standard",
+    "prompt_version": "227fbd67300191c2",
+    "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+    "data_version": "85e08cf5af33f7cd",
+    "provenance_version": "constructed-synthetic-demo-labelled",
+    "permission_version": "0fb3bef9c37875ca",
+    "model_version": "gpt-4.1-nano-2025-04-14",
+    "task_contract_version": "00242be1162f711a64faa3667e421eb558309aee0980ca4845910244df49262e",
+    "evaluation_version": "task-release-evaluation-v1"
+   },
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "assessment-preparation",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   },
+   "roles": [
+    "Retrofit Coordinator",
+    "Retrofit Programme Manager"
+   ]
+  },
+  {
+   "id": "funding-evidence",
+   "binding": {
+    "registry_version": "1.0.0",
+    "schema_version": "evidence-proposal-v1",
+    "provider": "azure-openai",
+    "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+    "deployment": "standard",
+    "prompt_version": "a3a511de0e461d78",
+    "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+    "data_version": "5dabe1a2162e5f62",
+    "provenance_version": "constructed-synthetic-demo-labelled",
+    "permission_version": "72ba62e46f523209",
+    "model_version": "gpt-4.1-nano-2025-04-14",
+    "task_contract_version": "fb77a9101568de8edf55c7ccf3d3ac664121f4830ea18c12e7733d1989a2cdb2",
+    "evaluation_version": "task-release-evaluation-v1"
+   },
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "funding-evidence",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   },
+   "roles": [
+    "Grants and Evidence Officer",
+    "Retrofit Programme Manager"
+   ]
+  },
+  {
+   "id": "works-resident-coordination",
+   "binding": {
+    "registry_version": "1.0.0",
+    "schema_version": "evidence-proposal-v1",
+    "provider": "azure-openai",
+    "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+    "deployment": "standard",
+    "prompt_version": "46d998c3de7ac61e",
+    "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+    "data_version": "3f0a66365555e8d1",
+    "provenance_version": "constructed-synthetic-demo-labelled",
+    "permission_version": "2123c2c05cef7a89",
+    "model_version": "gpt-4.1-nano-2025-04-14",
+    "task_contract_version": "866dcbfd439d9395e599b1c4ac53d250596e369cfd5252374d5f63bb27940e67",
+    "evaluation_version": "task-release-evaluation-v1"
+   },
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "works-resident-coordination",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   },
+   "roles": [
+    "Retrofit Coordinator",
+    "Resident Liaison Officer",
+    "Retrofit Programme Manager"
+   ]
+  },
+  {
+   "id": "quality-evidence",
+   "binding": {
+    "registry_version": "1.0.0",
+    "schema_version": "evidence-proposal-v1",
+    "provider": "azure-openai",
+    "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+    "deployment": "standard",
+    "prompt_version": "9582b9a76f52d5ef",
+    "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+    "data_version": "b979970eefcae01d",
+    "provenance_version": "constructed-synthetic-demo-labelled",
+    "permission_version": "03579f28ea6debec",
+    "model_version": "gpt-4.1-nano-2025-04-14",
+    "task_contract_version": "6cfe405476cc2f0888cc73b765c1fda54471ded52e187a32525c45ade9bfe863",
+    "evaluation_version": "task-release-evaluation-v1"
+   },
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "quality-evidence",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   },
+   "roles": [
+    "Quality Inspector",
+    "Retrofit Programme Manager"
+   ]
+  }
+ ],
+ "assistants.disabled": "Operator authority, finite allowance and expiry are required.",
+ "assistants.manual": "Use the ordinary case controls; proposals never approve or change the case.",
+ "registered_tasks": [
+  {
+   "id": "stock-prioritisation",
+   "approval_state": "unapproved",
+   "activation": "denied for live use; constructed offline scaffolding permitted",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "assessment-preparation",
+   "approval_state": "unapproved",
+   "activation": "denied for live use; constructed offline scaffolding permitted",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "funding-evidence",
+   "approval_state": "unapproved",
+   "activation": "denied for live use; constructed offline scaffolding permitted",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "works-resident-coordination",
+   "approval_state": "unapproved",
+   "activation": "denied for live use; constructed offline scaffolding permitted",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "quality-evidence",
+   "approval_state": "unapproved",
+   "activation": "denied for live use; constructed offline scaffolding permitted",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "priority",
+   "approval_state": "unapproved",
+   "activation": "denied for live use; constructed offline scaffolding permitted",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "funding_draft",
+   "approval_state": "unapproved",
+   "activation": "denied for live use; constructed offline scaffolding permitted",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "chat-case-conversation",
+   "approval_state": "unapproved",
+   "activation": "disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  },
+  {
+   "id": "aftercare-concern-pack",
+   "approval_state": "unapproved",
+   "activation": "disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced."
+  }
+ ],
+ "gate": {
+  "passed": false,
+  "status": "blocked",
+  "blocking_reasons": [
+   "oq017_named_live_releases_recorded: Enabled AI tasks lack unexpired named-human actual release records (OQ-017).",
+   "oq017_authority_holders_appointed: Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017).",
+   "oq018_live_fairness_and_thresholds_cleared: Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018).",
+   "oq019_legal_dpo_automated_decision_cleared: Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+  ]
+ },
+ "rai_exercise": {
+  "passed": false,
+  "status": "failed",
+  "note": "Verifies deterministic Responsible AI release, challenge, suspension, monitoring, and audit controls in exercise mode independently of live model cut-over."
+ },
+ "proposals": [
+  {
+   "capability": "quality-evidence",
+   "display_state": "suspended",
+   "attempts": 0,
+   "actionable": false
+  },
+  {
+   "capability": "works-resident-coordination",
+   "display_state": "suspended",
+   "attempts": 0,
+   "actionable": false
+  },
+  {
+   "capability": "stock-prioritisation",
+   "display_state": "suspended",
+   "attempts": 0,
+   "actionable": false
+  },
+  {
+   "capability": "quality-evidence",
+   "display_state": "suspended",
+   "attempts": 0,
+   "actionable": false
+  },
+  {
+   "capability": "assessment-preparation",
+   "display_state": "suspended",
+   "attempts": 0,
+   "actionable": false
+  },
+  {
+   "capability": "funding-evidence",
+   "display_state": "suspended",
+   "attempts": 0,
+   "actionable": false
+  }
+ ],
+ "proposals.disabled": "Operator authority, finite allowance and expiry are required.",
+ "briefing": {
+  "source": "template",
+  "model": null,
+  "mode": "ai",
+  "validated": true,
+  "reason": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+  "task": "briefing",
+  "verified": true
+ },
+ "audit": {
+  "intact": true,
+  "entries": 2654,
+  "digests_checked": 0
+ },
+ "photo": [
+  503,
+  {
+   "error": "Microsoft photo access is not available. Sign in again after token-store setup."
+  }
+ ],
+ "time": {
+  "enabled": false,
+  "flag_on": false,
+  "dpia_recorded": false,
+  "consultation_recorded": false,
+  "notice_approved": false,
+  "reason": "Time capture is switched off."
+ },
+ "gov": {
+  "capture_open": false,
+  "releases": [],
+  "release_gaps": [
+   "Phase 0 capture",
+   "Shadow testing",
+   "Live pilot"
+  ]
+ },
+ "map": {
+  "mode": "points",
+  "total": 443,
+  "shown": 443,
+  "cap": 500
+ },
+ "exceptions_state": "roles_not_named",
+ "kpis": {
+  "open": 443,
+  "completed": 537,
+  "hazards": 23,
+  "long": 71,
+  "nodecision": 443,
+  "funding": 26,
+  "support": 140,
+  "support_unknown": 0
+ },
+ "wo_status_counts": {
+  "None": 601
+ },
+ "probe /api/export": [
+  403,
+  "application/json",
+  45
+ ],
+ "probe /api/continuity/export": [
+  200,
+  "application/json",
+  2907571
+ ],
+ "probe /api/ledger/digest": [
+  403,
+  "application/json",
+  45
+ ],
+ "probe /api/law": [
+  503,
+  "application/json",
+  41
+ ],
+ "probe /api/docs/": [
+  404,
+  "application/json",
+  28
+ ],
+ "page_map": {
+  "title": "",
+  "path": "/map.html",
+  "text": "Not found"
+ },
+ "page_time": {
+  "title": "",
+  "path": "/time.html",
+  "text": "Not found"
+ },
+ "page_law": {
+  "title": "Law store viewer - Zava Forward",
+  "path": "/law.html",
+  "text": "Zava Forward\nZava North Homes\nLaw store viewer\n\nRead-only reference copies of the regulatory sources held locally. No AI is used. This is not legal advice and no owner has reviewed these copies yet.\n\nSearch the provisions\n Search All sources\n\nThe law store is not loaded.. Owner: application support."
+ }
+}

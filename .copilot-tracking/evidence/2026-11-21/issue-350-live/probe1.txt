@@ -1,0 +1,21 @@
+date 2026-11-21T06:30:12Z
+/healthz native=200 browserJSON=200 browserHTML=200
+/api/me native=401 browserJSON=302 browserHTML=302
+/api/cases native=401 browserJSON=302 browserHTML=302
+/api/staff native=401 browserJSON=302 browserHTML=302
+/app native=401 browserJSON=302 browserHTML=302
+/cases.html native=401 browserJSON=302 browserHTML=302
+---auth
+{
+  "action": "RedirectToLoginPage",
+  "enabled": true,
+  "excl": [
+    "/healthz",
+    "/readyz",
+    "/",
+    "/welcome.html",
+    "/style.css",
+    "/zava-logo.png",
+    "/sign-in"
+  ]
+}
