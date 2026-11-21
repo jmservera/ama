@@ -19,7 +19,11 @@ import xml.etree.ElementTree as ET
 from datetime import UTC, datetime
 
 from zava_forward.core import ledger
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+from zava_forward.core.container_hardening import (
+    ContainerHardeningError,
+    enforce_from_env,
+    prepare_private_scratch,
+)
 from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
 from zava_forward.core.ledger_digest_blob import (
     DEFAULT_MIN_RETENTION_DAYS,
@@ -426,6 +430,7 @@ def main(argv=None, env=None, store=None, blob=None, out=print):
 Publish then verify, or (read-only) reconcile remote anchors with a second person's independent
 record. Exit 1 and alert on mismatch."""
     try:
+        prepare_private_scratch(env)
         enforce_from_env(env)
     except ContainerHardeningError as error:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)

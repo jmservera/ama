@@ -8,7 +8,11 @@ import sys
 from collections.abc import Mapping, Sequence
 from urllib.parse import urlparse
 
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+from zava_forward.core.container_hardening import (
+    ContainerHardeningError,
+    enforce_from_env,
+    prepare_private_scratch,
+)
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 
 from zava_forward.orchestrator.version import __version__
@@ -25,6 +29,7 @@ def main(
 ) -> int:
     active_env = os.environ if env is None else env
     try:
+        prepare_private_scratch(active_env)
         enforce_from_env(active_env)
     except ContainerHardeningError as error:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)

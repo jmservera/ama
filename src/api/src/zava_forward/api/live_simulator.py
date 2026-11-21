@@ -23,7 +23,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Protocol
 
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+from zava_forward.core.container_hardening import (
+    ContainerHardeningError,
+    enforce_from_env,
+    prepare_private_scratch,
+)
 from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.synthetic import live_readings as lr
 from zava_forward.core.synthetic.run_plan import (
@@ -513,6 +517,7 @@ def _sink(args: argparse.Namespace, env: Mapping[str, str]) -> Sink:
 def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     env = os.environ if env is None else env
     try:
+        prepare_private_scratch(env)
         enforce_from_env(env)
     except ContainerHardeningError as error:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)

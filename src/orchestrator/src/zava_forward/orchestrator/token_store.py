@@ -7,7 +7,11 @@ from urllib.error import URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
-from zava_forward.core.container_hardening import ContainerHardeningError, enforce_from_env
+from zava_forward.core.container_hardening import (
+    ContainerHardeningError,
+    enforce_from_env,
+    prepare_private_scratch,
+)
 
 CONTAINER = "auth-tokens"
 SECRET = "entra-token-store-sas"
@@ -44,6 +48,7 @@ def renew(account_name, client, credential, generate_sas, permission, writer=put
 
 def main():
     try:
+        prepare_private_scratch()
         enforce_from_env()
     except ContainerHardeningError as error:
         print(f"Refusing to start: {error}", file=sys.stderr, flush=True)

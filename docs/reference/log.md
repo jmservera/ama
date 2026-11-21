@@ -14196,3 +14196,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 116 round 6 recheck (Refs #116)
 
 * Added [issue-116-live-r6-evidence-2026-11-21.md](research/issue-116-live-r6-evidence-2026-11-21.md): provider-boundary suites rerun at head, the previously unrun assistants dispatch test now run, a read-only live 401 probe, no defect and no source change. Nothing ticked.
+## [2026-11-20] update | Issue 144 container hardening guard fix for Container Apps (Refs #144)
+
+* Corrected the container hardening guard after a live replica refused to start: the guard now clears `CapInh` with `capset` and every entrypoint prepares private `zf` scratch directories before it runs. No check was relaxed. Corrected the [infra README](../../infra/README.md) hardening wording; the live receipt (replica Running and Healthy under `enforced`) is not captured and needs an owner-authorised Azure write. Nothing ticked. Evidence: [issue-144-live-hardening-fix-2026-11-20.md](research/issue-144-live-hardening-fix-2026-11-20.md).
