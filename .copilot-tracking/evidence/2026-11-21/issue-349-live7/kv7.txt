@@ -1,0 +1,11 @@
+{
+  "acl": "Deny",
+  "pe": 1,
+  "public": "Disabled"
+}
+[
+  {
+    "kv": true,
+    "name": "entra-0dbb6bafc8af414fad0b5daa7695cbc9-7a8a02692e5a"
+  }
+]
