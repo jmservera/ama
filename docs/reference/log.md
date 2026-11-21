@@ -14288,6 +14288,23 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2195 chat routing (Refs #2195)
 
 * Added [issue-2195-chat-routing-2026-11-21.md](research/issue-2195-chat-routing-2026-11-21.md): chat routing line for employee and resident chat, local Playwright evidence, tests and a per-criterion table; live deployment not done
+## [2026-11-21] query | Timed capstone demo script
+
+* Updated [the demo runbook](../capstone/demo/runbook.md), the
+  [capstone guide](../capstone/README.md) and [this index](./README.md)
+  with a complete 1:50 panel demo and an optional extended route: eight minutes
+  prepared navigation plus two for questions or recovery.
+* Reconciled the timing conflict: the assessment guide asks for an
+  under-two-minute demo; a separate ten-minute slot is the repository plan,
+  not a confirmed panel allocation.
+* Added spoken lines, actions, fallbacks and rehearsal evidence requirements
+  for document reading, staff assistance, Azure tracing, sensors/alerts, the
+  full lifecycle and resident self-service. Current Home sensors navigation
+  replaces the older Quality-tab links without changing the five-home target.
+* Preserved the 8 November autonomy review as dated evidence and identified the
+  later Quality flag contract and 21 November release-admission block.
+  No rehearsal, conversation-to-Azure receipt, monitoring button, live release,
+  deployment, new inference authority or measured savings is established.
 ## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
 
 * Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.
