@@ -87,8 +87,12 @@ class SignedInPrincipalStaffRouteTests(unittest.TestCase):
 
     def test_roster_row_without_oid_still_admits_the_matching_principal(self) -> None:
         raw = identity.principal(
-            tid=TID, oid=OID, name="Directory Display Name", email="sam@example.test",
-            role=self.sam["role"], roles=(),
+            tid=TID,
+            oid=OID,
+            name="Directory Display Name",
+            email="sam@example.test",
+            role=self.sam["role"],
+            roles=(),
         )
         row = self.store.staff.pop("sam@example.test")
         row.pop("oid", None)
