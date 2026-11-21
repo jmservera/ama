@@ -225,6 +225,25 @@ class Migration(unittest.TestCase):
             self.assertEqual(s.page_cases(pam, "all", filters=dict(stage=stage), limit=100)["total"],
                              sum(1 for c in s.cases.values() if not c["closed"] and c["stage"] == stage))
 
+    def test_repair_skips_legacy_bodies_that_lack_row_fields(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "zavaforward.json"
+            p.write_text(json.dumps(dataset(make_cases(5))))
+            db = os.path.join(tmp, "pw.sqlite")
+            SqlStore(str(p), db)
+            legacy = json.dumps({"id": "LEGACY-1", "stage": "Old stage"})
+            raw = sqlite3.connect(db)
+            raw.execute("UPDATE cases SET body=? WHERE id=(SELECT MIN(id) FROM cases)", (legacy,))
+            raw.commit()
+            before = raw.execute("SELECT id, stage, owner_code FROM cases WHERE body=?", (legacy,)).fetchone()
+            raw.close()
+            store = object.__new__(SqlStore)
+            store.db = sqlite3.connect(db)
+            store._repair_identity_columns()
+            after = store.db.execute("SELECT id, stage, owner_code FROM cases WHERE body=?", (legacy,)).fetchone()
+            store.db.close()
+            self.assertEqual(before, after)
+
 
 class Plans(unittest.TestCase):
     def test_list_queries_use_indexes_not_table_scans(self):

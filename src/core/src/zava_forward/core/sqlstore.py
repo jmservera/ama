@@ -347,7 +347,10 @@ class SqlStore(Store):
         cols = ("stage", "area", "wave", "owner_code", "closed", "contractor")
         norm = lambda v: int(v) if isinstance(v, bool | int) else str(v)  # noqa: E731 - Azure SQL returns bits as bool
         for cid, body, *have in self.db.execute("SELECT id, body, " + ", ".join(cols) + " FROM cases").fetchall():
-            row = self._row(json.loads(body))
+            try:
+                row = self._row(json.loads(body))
+            except (KeyError, TypeError, ValueError, IndexError):
+                continue  # a legacy-schema body lacks fields _row needs; leave it untouched
             want = [row[CASE_COLS.index(c) + 1] for c in cols]
             if [norm(v) for v in have] != [norm(v) for v in want]:
                 self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", row[1:] + (cid,))
