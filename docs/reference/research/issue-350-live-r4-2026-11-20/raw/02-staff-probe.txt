@@ -1,0 +1,26 @@
+/api/me 200 keys=['account', 'counts', 'map', 'navigation', 'regulatory_output_guard', 'services', 'staff', 'user', 'work_queues']
+/api/stats 200 keys=['ages', 'ai_consumption_economics', 'areas', 'contractors', 'funding', 'kpis', 'stages', 'team', 'waves']
+/api/map 200 keys=['bounds', 'cap', 'items', 'mode', 'shown', 'total']
+/api/assistants 200 keys=['assistants', 'disabled', 'limits', 'manual', 'principal', 'proactive', 'rai_exercise_acceptance', 'real_ai_delivery_gate', 'registered_tasks', 'rule']
+/api/governance 200 keys=['benefits', 'breaches', 'capture_blockers', 'capture_open', 'note', 'paused', 'prd_owner_acceptance', 'prd_quality_review', 'protocol', 'rai_evidence']
+/api/continuity 200 keys=['changes', 'effective', 'epoch', 'history_valid', 'note', 'suspended', 'suspensions']
+/api/time/status 200 keys=['activated', 'activated_at', 'activated_by', 'activated_role', 'activities', 'consultation_recorded', 'dpia_recorded', 'enabled', 'flag_on', 'min_group']
+/api/law 503 keys=['error'] error=The law store is not loaded.
+/api/law/sources 503 keys=['error'] error=The law store is not loaded.
+/api/law/alerts 503 keys=['error', 'safe_route', 'status'] error=The law store is not loaded; rule checks are unknown.
+/api/account/photo 503 keys=['error'] error=Microsoft photo access is not available. Sign in again after token-store setup.
+/api/ledger/verify 403 keys=['error'] error=Your role does not include this.
+/api/ledger/digest 403 keys=['error'] error=Your role does not include this.
+/api/retention 200 keys=['as_of', 'label', 'records']
+/api/sensors 403 keys=['error'] error=Your role does not include this.
+/api/staff 403 keys=['error'] error=Your role does not include this.
+/api/visits 200 list=30
+/api/funding 200 list=167
+/api/finance 200 list=13
+/api/handoffs 200 list=4
+role None kpis {'open': 443, 'completed': 537, 'hazards': 23, 'long': 71, 'nodecision': 443, 'funding': 26, 'support': 140, 'support_unknown': 0}
+list all 443 csv all 443 | list mine 16 csv default 133 csv mine 133 | closed csv 537
+map total 443 shown 443 mode points
+/app 200
+/cases.html 404
+/healthz 200

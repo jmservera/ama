@@ -154,6 +154,7 @@ def _sdk_client(hostname: str, device_id: str, cert: Path, key: Path) -> Any:
         auto_connect=False,
         connection_retry=False,
         ensure_desired_properties=False,
+        websockets=os.environ.get("ZF_SIM_WEBSOCKETS") == "1",
     )
 
 

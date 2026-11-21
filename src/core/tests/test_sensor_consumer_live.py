@@ -204,3 +204,34 @@ class LiveReadingTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LedgerSchemaTests(unittest.TestCase):
+    def test_hidden_ledger_columns_do_not_fail_the_mssql_schema_check(self) -> None:
+        from zava_forward.core.sensor_consumer import READING_COLUMNS, SensorConsumer
+
+        kinds = {
+            "temperature_c": ("decimal", None, 5, 2),
+            "humidity_pct": ("decimal", None, 5, 2),
+            "observed_at": ("datetime2", None, None, None),
+            "seed": ("bigint", None, None, None),
+        }
+        rows = [(c, *kinds.get(c, ("varchar", 64, None, None))) for c in READING_COLUMNS]
+        rows += [(f"ledger_{n}", "bigint", None, None, None) for n in ("start", "end")]
+
+        class Cursor:
+            def __init__(self, result: list[tuple[object, ...]]) -> None:
+                self.result = result
+
+            def fetchall(self) -> list[tuple[object, ...]]:
+                return self.result
+
+        class Db:
+            def execute(self, sql: str, *args: object) -> Cursor:
+                if "INFORMATION_SCHEMA" in sql:
+                    return Cursor(rows)
+                return Cursor([("sensor_id",), ("reading_id",)])
+
+        consumer = object.__new__(SensorConsumer)
+        consumer.mssql = True
+        consumer._check_reading_schema(Db())  # type: ignore[arg-type]

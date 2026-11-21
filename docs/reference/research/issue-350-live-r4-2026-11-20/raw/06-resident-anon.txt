@@ -1,0 +1,3 @@
+/ anon 200
+/healthz anon 200
+/api/cases anon 404
