@@ -27,7 +27,7 @@ The coordinator (`.github/agents/ama-backlog-delivery-coordinator.agent.md`, 109
 | Criterion | Verdict | Reason |
 | --- | --- | --- |
 | 1 to 6 | Ticked on the issue | Not reassessed beyond the static re-read. |
-| 7 Triage, gating, owner approval | Proven for the demo as bounded; tick left to the owner | Every confirmed finding is delivered or already filed (#1837); gating stays on that blocking finding only; no owner decision is proposed. |
+| 7 Triage, gating, owner approval | Evidenced for the demo as bounded; owner approval is human evidence and absent, tick left to the owner | Every confirmed finding is delivered or already filed (#1837); gating stays on that blocking finding only; no owner decision is proposed. |
 | 8 Artifacts, independent review, Major HVE behavior | Unproven | Needs a published PR, a non-worker reviewer and behavior tests of the current coordinator; none is possible under the no-push rule and a worker-only loop. |
 
 ## Limits
