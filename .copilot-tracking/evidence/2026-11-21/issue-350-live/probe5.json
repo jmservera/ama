@@ -1,0 +1,83 @@
+{
+ "loaded": [
+  "My cases",
+  "All cases",
+  "Overview",
+  "Progress dashboard",
+  "Visits",
+  "Funding",
+  "Finance",
+  "Capacity and work orders",
+  "Closed cases",
+  "Assistant proposals",
+  "Time capture",
+  "Aftercare concerns",
+  "Specialist screens"
+ ],
+ "My cases": {
+  "ok": true,
+  "h": "My cases today | Filter | Today's briefing",
+  "body_chars": 20216
+ },
+ "All cases": {
+  "ok": true,
+  "h": "All open cases | Filter | Today's briefing",
+  "body_chars": 47570
+ },
+ "Overview": {
+  "ok": true,
+  "h": "Overview | Map of open cases | Cases by stage",
+  "body_chars": 4352
+ },
+ "Progress dashboard": {
+  "ok": true,
+  "h": "Progress dashboard | Progress summary | What these figures mean",
+  "body_chars": 2451
+ },
+ "Visits": {
+  "ok": true,
+  "h": "Visits coming up | 13 Oct 2026 | 14 Oct 2026",
+  "body_chars": 6090
+ },
+ "Funding": {
+  "ok": true,
+  "h": "Funding applications",
+  "body_chars": 11862
+ },
+ "Finance": {
+  "ok": true,
+  "h": "Finance queue | Investment limits",
+  "body_chars": 2383
+ },
+ "Capacity and work orders": {
+  "ok": true,
+  "h": "Capacity and work orders | New package | Packages",
+  "body_chars": 34914
+ },
+ "Closed cases": {
+  "ok": true,
+  "h": "Closed cases",
+  "body_chars": 3829
+ },
+ "Assistant proposals": {
+  "ok": true,
+  "h": "Closed cases",
+  "body_chars": 3865
+ },
+ "Time capture": {
+  "ok": true,
+  "h": "Staff time capture",
+  "body_chars": 739
+ },
+ "Aftercare concerns": {
+  "ok": true,
+  "h": "Aftercare concerns | Recorded concerns (0) | Aftercare view for a synthetic cohort",
+  "body_chars": 2681
+ },
+ "Specialist screens": {
+  "ok": true,
+  "h": "Specialist screens",
+  "body_chars": 727
+ },
+ "console_errors": []
+}

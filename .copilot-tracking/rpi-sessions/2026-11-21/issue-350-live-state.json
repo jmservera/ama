@@ -1,1 +1,59 @@
-{"task_id": "issue-350-live", "task_slug": "issue-350-live", "parent_task": null, "mode": "automatic", "active_phase": "Review", "status": "completed", "session_status": "running", "artifact_paths": {"research": ".copilot-tracking/research/2026-11-21-issue-350-live-research.md", "plan": ".copilot-tracking/plans/2026-11-21-issue-350-live-plan.md", "details": ".copilot-tracking/details/2026-11-21-issue-350-live-details.md", "critique": ".copilot-tracking/plans/2026-11-21-issue-350-live-critique.md", "changes": ".copilot-tracking/changes/2026-11-21-issue-350-live-changes.md", "review": ".copilot-tracking/reviews/2026-11-21-issue-350-live-review.md"}, "confirmed_decisions": [{"decision": "critique executed once, verdict proceed", "status": "applied", "evidence": ".copilot-tracking/plans/2026-11-21-issue-350-live-critique.md"}, {"decision": "review executed once, conformant for assessed boundary", "status": "applied", "evidence": ".copilot-tracking/reviews/2026-11-21-issue-350-live-review.md"}], "blockers": [], "next_action": {"phase": "Follow-up", "action": "run MSSQL selector where SQL is available"}, "prioritized_follow_ups": [{"rank": 1, "task": "Run MssqlLedgerMigration selector with SQL", "rationale": "original failure path", "evidence": "changes record"}]}
+{
+  "task_id": "issue-350-live-20261121T062924Z",
+  "task_slug": "issue-350-live",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-21/issue-350-live-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-21/issue-350-live-plan.md",
+    "details": ".copilot-tracking/details/2026-11-21/issue-350-live-details.md",
+    "critique": ".copilot-tracking/critique/2026-11-21/issue-350-live-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-21/issue-350-live-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-21/issue-350-live-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-21/issue-350-live-research.md"
+    },
+    {
+      "decision": "Critique executed once, verdict proceed",
+      "status": "done",
+      "evidence": ".copilot-tracking/critique/2026-11-21/issue-350-live-critique.md"
+    },
+    {
+      "decision": "Review executed once, conformant for scope",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-21/issue-350-live-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Local commit; owner reviews and ticks"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner decisions: law store seeding, map licence, release holders",
+      "rationale": "Block criteria 4,5,7",
+      "evidence": "issue-350-live-r2 note"
+    },
+    {
+      "rank": 2,
+      "task": "Second-role sign-in from host resolving sts.microsoftonline.com",
+      "rationale": "Unblocks criteria 2 and 10",
+      "evidence": "r6 349 note"
+    },
+    {
+      "rank": 3,
+      "task": "Diagnose job-live-receiver failures",
+      "rationale": "Criterion 8",
+      "evidence": "jobs.txt"
+    }
+  ]
+}

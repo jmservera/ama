@@ -1,0 +1,1076 @@
+{
+ "/api/me": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "user": {
+    "code": "E-431883ca6856",
+    "name": "str",
+    "email": "str",
+    "role": "Retrofit Programme Manager",
+    "oid": "str",
+    "tid": "str",
+    "identity_source": "str",
+    "display_email": "str",
+    "app_admin": false,
+    "view_only": false,
+    "app_roles": "list",
+    "auth_provider": "str",
+    "rule_roles": "list"
+   },
+   "counts": {
+    "mine": 16,
+    "hazards": 1,
+    "open": 443
+   },
+   "staff": {
+    "list": 4,
+    "first_keys": [
+     "case_ids",
+     "code",
+     "email",
+     "name",
+     "role"
+    ]
+   },
+   "account": {
+    "name": "str",
+    "email": "str",
+    "provider": "trusted-proxy"
+   },
+   "services": {
+    "photo": false,
+    "law_alerts": false,
+    "assistants": true,
+    "cases": true
+   },
+   "map": {
+    "tiles": "str",
+    "attribution": "str"
+   },
+   "navigation": {
+    "list": 13,
+    "first_keys": [
+     "href",
+     "label",
+     "scope"
+    ]
+   },
+   "work_queues": {
+    "version": "str",
+    "default": "dict",
+    "selection": "NoneType",
+    "clock": "str",
+    "status": "str",
+    "definitions": "list"
+   },
+   "regulatory_output_guard": {
+    "guard_version": "str",
+    "deterministic": true,
+    "model_calls": 0,
+    "checked_total": 0,
+    "passed_total": 0,
+    "flagged_total": 0,
+    "rewritten_total": 0,
+    "rejected_total": 0,
+    "by_category": "dict",
+    "last_decision": "NoneType"
+   }
+  }
+ },
+ "/api/cases": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "items": {
+    "list": 16,
+    "first_keys": [
+     "address",
+     "area",
+     "closed",
+     "days",
+     "focus",
+     "funding",
+     "hazard",
+     "id",
+     "last_contact",
+     "next_visit",
+     "owner",
+     "owner_code"
+    ]
+   },
+   "total": 16,
+   "limit": 50,
+   "offset": 0,
+   "sort": "str",
+   "policy_version": "str",
+   "policy_hash": "str",
+   "as_of": "str",
+   "ranked_total": 443,
+   "next_cursor": "NoneType"
+  }
+ },
+ "/api/stats": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "kpis": {
+    "open": 443,
+    "completed": 537,
+    "hazards": 23,
+    "long": 71,
+    "nodecision": 443,
+    "funding": 26,
+    "support": 140,
+    "support_unknown": 0
+   },
+   "stages": {
+    "list": 20,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "areas": {
+    "list": 11,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "waves": {
+    "list": 5,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "ages": {
+    "list": 4,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "funding": {
+    "list": 4,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "contractors": {
+    "list": 4,
+    "first_keys": [
+     "booked",
+     "long",
+     "name",
+     "open"
+    ]
+   },
+   "team": {
+    "list": 1,
+    "first_keys": [
+     "code",
+     "hazards",
+     "name",
+     "open",
+     "role"
+    ]
+   },
+   "ai_consumption_economics": {
+    "schema": "str",
+    "od_51_status": "str",
+    "price_source_configured": false,
+    "price_source": "str",
+    "currency": "str",
+    "coverage": "str",
+    "reconciliation": "str",
+    "proposal_count": 1,
+    "accepted_outcome_count": 0,
+    "metered_call_count": 24,
+    "unmetered_call_count": 0,
+    "denominators": "dict",
+    "metered_usage": "dict",
+    "token_cost": "str",
+    "other_tca_components": "dict",
+    "total_cost_of_ai": "str",
+    "token_cost_per_accepted_outcome": "str",
+    "cost_per_accepted_outcome": "str",
+    "quality_floor_status": "str",
+    "quality_qualified_cost_per_accepted_outcome": "str",
+    "booked_value": "str",
+    "by_capability": "dict",
+    "non_benefit_notice": "str"
+   }
+  }
+ },
+ "/api/visits": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "list": 30,
+   "first_keys": [
+    "address",
+    "date",
+    "id",
+    "owner",
+    "person",
+    "phone",
+    "resident",
+    "slot",
+    "support",
+    "support_status",
+    "type",
+    "who"
+   ]
+  }
+ },
+ "/api/workorders": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "list": 601,
+   "first_keys": [
+    "address",
+    "appointment_control",
+    "appointments",
+    "case_id",
+    "contractor",
+    "corrections",
+    "history",
+    "id",
+    "issued_at",
+    "issued_by",
+    "measures",
+    "named_contact"
+   ]
+  }
+ },
+ "/api/finance": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "list": 13,
+   "first_keys": [
+    "address",
+    "case_id",
+    "exceptions",
+    "invoice",
+    "on_hold",
+    "ref",
+    "status",
+    "supplier",
+    "total"
+   ]
+  }
+ },
+ "/api/funding": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "list": 167,
+   "first_keys": [
+    "address",
+    "area",
+    "days",
+    "grants",
+    "have",
+    "id",
+    "need",
+    "owner",
+    "resident",
+    "route",
+    "status"
+   ]
+  }
+ },
+ "/api/governance": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "protocol": {
+    "list": 0,
+    "first_keys": null
+   },
+   "benefits": {},
+   "verdicts": {
+    "cycle_time": "dict",
+    "coordination_hours": "dict"
+   },
+   "value_claims": {
+    "list": 0,
+    "first_keys": null
+   },
+   "releases": {
+    "list": 0,
+    "first_keys": null
+   },
+   "release_gaps": {
+    "list": 3,
+    "first_keys": null
+   },
+   "breaches": {
+    "list": 0,
+    "first_keys": null
+   },
+   "paused": {
+    "list": 0,
+    "first_keys": null
+   },
+   "capture_open": false,
+   "capture_blockers": {
+    "list": 2,
+    "first_keys": null
+   },
+   "note": "str",
+   "prd_quality_review": {
+    "status": "str",
+    "satisfied": false,
+    "accepted": false,
+    "separate_from_report_acceptance": true,
+    "separate_from_remediation_completion": true,
+    "report_acceptance_scope": "str"
+   },
+   "prd_owner_acceptance": {
+    "status": "Unsigned candidate pending separate human owner acceptance",
+    "accepted": false,
+    "separate_from_report_acceptance": true,
+    "separate_from_remediation_completion": true,
+    "report_acceptance_scope": "str"
+   },
+   "rai_evidence": {
+    "baseline": "dict",
+    "current_assessment": "NoneType",
+    "assessment_authority": "str",
+    "findings": "list",
+    "revision": 0,
+    "history_record_count": 0,
+    "invalid_history_count": 0,
+    "current_disposition_count": "NoneType",
+    "dispositions_complete": false,
+    "open_count": 22,
+    "acceptance": "str",
+    "prd_quality_review": "dict",
+    "prd_owner_acceptance": "dict",
+    "live_use": "str",
+    "affected_dispatch": "str",
+    "conditional_eu_assurance": "str",
+    "note": "str"
+   },
+   "rai_exercise_acceptance": {
+    "section": "str",
+    "independent_of_real_ai_delivery_gate": true,
+    "passed": false,
+    "status": "failed",
+    "checks": "dict",
+    "traceability": "dict",
+    "note": "str"
+   },
+   "real_ai_delivery_gate": {
+    "section": "str",
+    "separated_from_rai_exercise_acceptance": true,
+    "passed": false,
+    "status": "blocked",
+    "checks": "dict",
+    "blocking_reasons": "list",
+    "deferred_open_questions": "list",
+    "note": "str"
+   }
+  }
+ },
+ "/api/assistants": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "assistants": {
+    "list": 5,
+    "first_keys": [
+     "binding",
+     "categories",
+     "id",
+     "model_bounds",
+     "purpose",
+     "release",
+     "roles",
+     "version"
+    ]
+   },
+   "registered_tasks": {
+    "list": 9,
+    "first_keys": [
+     "accountable_function",
+     "accountable_individual",
+     "activation",
+     "affected",
+     "approval_state",
+     "authority",
+     "authority_gap",
+     "binding",
+     "delegation",
+     "id",
+     "impact_record",
+     "influence"
+    ]
+   },
+   "disabled": "str",
+   "proactive": false,
+   "principal": "str",
+   "rule": "str",
+   "limits": {
+    "scan_interval": 60,
+    "scan_size": 20,
+    "input_chars": 12000,
+    "output_chars": 8000,
+    "output_tokens": 600,
+    "timeout": 20,
+    "active_calls": 2,
+    "attempts": 2,
+    "backoff": 30,
+    "lease": 60
+   },
+   "manual": "str",
+   "rai_exercise_acceptance": {
+    "section": "str",
+    "independent_of_real_ai_delivery_gate": true,
+    "passed": false,
+    "status": "failed",
+    "checks": "dict",
+    "traceability": "dict",
+    "note": "str"
+   },
+   "real_ai_delivery_gate": {
+    "section": "str",
+    "separated_from_rai_exercise_acceptance": true,
+    "passed": false,
+    "status": "blocked",
+    "checks": "dict",
+    "blocking_reasons": "list",
+    "deferred_open_questions": "list",
+    "note": "str"
+   }
+  }
+ },
+ "/api/assistants/proposals": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "proposals": {
+    "list": 6,
+    "first_keys": [
+     "actionable",
+     "attempts",
+     "capability",
+     "case_id",
+     "continuity_epoch",
+     "created_at",
+     "display_state",
+     "envelope",
+     "epoch_current",
+     "fence",
+     "history_count",
+     "history_next_offset"
+    ]
+   },
+   "disabled": "str",
+   "manual": "str",
+   "next_after": "NoneType"
+  }
+ },
+ "/api/assistants/releases": {
+  "status": 404,
+  "ct": "application/json",
+  "shape": {
+   "error": "Not found."
+  }
+ },
+ "/api/map": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "mode": "points",
+   "total": 443,
+   "shown": 443,
+   "cap": 500,
+   "bounds": {
+    "list": 4,
+    "first_keys": null
+   },
+   "items": {
+    "list": 443,
+    "first_keys": [
+     "address",
+     "id",
+     "kind",
+     "lat",
+     "lon",
+     "name",
+     "sensor",
+     "stage"
+    ]
+   }
+  }
+ },
+ "/api/law": {
+  "status": 503,
+  "ct": "application/json",
+  "shape": {
+   "error": "The law store is not loaded."
+  }
+ },
+ "/api/law/cards": {
+  "status": 503,
+  "ct": "application/json",
+  "shape": {
+   "error": "The law store is not loaded."
+  }
+ },
+ "/api/law/alerts": {
+  "status": 503,
+  "ct": "application/json",
+  "shape": {
+   "status": "unknown",
+   "error": "The law store is not loaded; rule checks are unknown.",
+   "safe_route": "str"
+  }
+ },
+ "/api/ledger/digest": {
+  "status": 403,
+  "ct": "application/json",
+  "shape": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/audit-check": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "intact": true,
+   "entries": 2646,
+   "head": "str",
+   "problem": "NoneType",
+   "digests_checked": 0,
+   "digest_mismatches": {
+    "list": 0,
+    "first_keys": null
+   }
+  }
+ },
+ "/api/time/status": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "enabled": false,
+   "flag_on": false,
+   "dpia_recorded": false,
+   "consultation_recorded": false,
+   "notice_approved": false,
+   "requested": false,
+   "requested_by": "NoneType",
+   "requested_role": "NoneType",
+   "activated": false,
+   "activated_by": "NoneType",
+   "activated_at": "NoneType",
+   "activated_role": "NoneType",
+   "reason": "Time capture is switched off.",
+   "activities": {
+    "list": 7,
+    "first_keys": null
+   },
+   "min_group": 5,
+   "notice_version": "str",
+   "storage": "str"
+  }
+ },
+ "/api/time/mine": {
+  "status": 403,
+  "ct": "application/json",
+  "shape": {
+   "error": "Time capture is switched off.",
+   "enabled": false
+  }
+ },
+ "/api/retention": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "label": "str",
+   "as_of": "str",
+   "records": {
+    "list": 0,
+    "first_keys": null
+   }
+  }
+ },
+ "/api/data-protection": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "label": "str",
+   "owners": "str",
+   "dpo_reviewed": false,
+   "subject_populations": {
+    "constructed_resident_fixture": "dict",
+    "current_staff_identity": "dict",
+    "current_tenant_identity": "dict",
+    "current_review_record": "dict",
+    "future_real_resident": "dict"
+   },
+   "population_separation": {
+    "constructed_fixture_classes": "list",
+    "actual_personal_data_classes": "list"
+   },
+   "hosting_region_vs_inference_residency": {
+    "application_hosting_region": "str",
+    "uk_hosting_does_not_prove_uk_inference_residency": true,
+    "synthetic_resident_does_not_exempt_actual_staff": true,
+    "inference_residency_verified": false,
+    "transfer_position_approved": false,
+    "note": "str"
+   },
+   "whole_system_coverage": {
+    "inputs": "list",
+    "raw_document_bytes": "list",
+    "prompts_outputs_citations": "list",
+    "reviewer_identity": "list",
+    "audit": "list",
+    "telemetry_tokens": "list",
+    "provider_processing": "list",
+    "provider_retained_copies": "list"
+   },
+   "classes": {
+    "list": 10,
+    "first_keys": [
+     "audience",
+     "id",
+     "kind",
+     "missing",
+     "model_bound",
+     "name",
+     "needs_derivative",
+     "processing_surfaces",
+     "provider_copy",
+     "purpose",
+     "references_recorded",
+     "required"
+    ]
+   },
+   "statement": "str"
+  }
+ },
+ "/api/continuity": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "epoch": 1,
+   "suspensions": {
+    "list": 1,
+    "first_keys": [
+     "actor",
+     "actual_authority",
+     "actual_hold",
+     "affected",
+     "affected_assistant_tasks",
+     "affected_assistant_total",
+     "affected_assistant_truncated",
+     "communication",
+     "containment",
+     "epoch",
+     "evidence",
+     "id"
+    ]
+   },
+   "history_valid": true,
+   "changes": {
+    "list": 2,
+    "first_keys": [
+     "evaluation",
+     "from_version",
+     "id",
+     "kind",
+     "reason",
+     "recorded_at",
+     "recorded_by",
+     "reverses",
+     "status",
+     "subject",
+     "superseded_by",
+     "synthetic"
+    ]
+   },
+   "effective": {
+    "configuration:zf-demo-continuity-probe-122": "dict"
+   },
+   "suspended": {
+    "list": 1,
+    "first_keys": [
+     "id",
+     "scope"
+    ]
+   },
+   "note": "str"
+  }
+ },
+ "/api/packages": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "list": 1,
+   "first_keys": [
+    "capacity",
+    "consultation_authority",
+    "consultation_history",
+    "consultation_status",
+    "contract_ref",
+    "contract_version",
+    "id",
+    "leaseholder_consultation_status",
+    "letting_renewal_blocked",
+    "letting_renewal_reason",
+    "name",
+    "period_from"
+   ]
+  }
+ },
+ "/api/closed-cases": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "label": "str",
+   "items": {
+    "list": 20,
+    "first_keys": [
+     "address",
+     "closed_on",
+     "hazard",
+     "id",
+     "postcode",
+     "resident",
+     "status",
+     "team",
+     "town"
+    ]
+   },
+   "total": 537,
+   "page": 1,
+   "pages": 27,
+   "limit": 20,
+   "facets": {
+    "statuses": "list",
+    "teams": "list"
+   },
+   "unknown_closure_dates": 0
+  }
+ },
+ "/api/checklists": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "Loft insulation": {
+    "version": "str",
+    "items": "list"
+   },
+   "Wall insulation": {
+    "version": "str",
+    "items": "list"
+   },
+   "Heat pump": {
+    "version": "str",
+    "items": "list"
+   },
+   "Solar panels": {
+    "version": "str",
+    "items": "list"
+   },
+   "General": {
+    "version": "str",
+    "items": "list"
+   }
+  }
+ },
+ "/api/exceptions": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "state": "roles_not_named",
+   "items": {
+    "list": 0,
+    "first_keys": null
+   },
+   "unrouted": {
+    "list": 1,
+    "first_keys": null
+   },
+   "sources": {
+    "list": 2,
+    "first_keys": null
+   },
+   "banner": {
+    "state": "outage",
+    "text": "str",
+    "components": "dict",
+    "last_checked": "NoneType",
+    "next_steps": "list"
+   },
+   "access": {
+    "roles": "dict",
+    "viewer_roles": "list",
+    "allowed_kinds": "list",
+    "scope": "dict"
+   },
+   "note": "str"
+  }
+ },
+ "/api/account/photo": {
+  "status": 503,
+  "ct": "application/json",
+  "shape": {
+   "error": "str"
+  }
+ },
+ "/api/briefing": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "text": "str",
+   "source": "str",
+   "model": "NoneType",
+   "validated": true,
+   "reason": "str",
+   "task": "str",
+   "release": "NoneType",
+   "prompt_version": "str",
+   "latency_ms": 15.0,
+   "citations": {
+    "list": 6,
+    "first_keys": null
+   },
+   "unresolved": {
+    "list": 0,
+    "first_keys": null
+   },
+   "dropped_uncited": 0,
+   "verified": true,
+   "approval": "str",
+   "instruction_status": "str",
+   "envelope": {
+    "task": "str",
+    "task_version": "str",
+    "registered": true,
+    "registry_version": "str",
+    "prompt_version": "str",
+    "case_ids": "list",
+    "case_version": 1020,
+    "source_versions": "dict",
+    "provider": "NoneType",
+    "deployment": "NoneType",
+    "model": "NoneType",
+    "outcome": "str",
+    "failure": "str",
+    "approval": "str",
+    "approved": false,
+    "reviewer_function": "str",
+    "release": "NoneType",
+    "usage": "NoneType",
+    "meter_id": "NoneType",
+    "meter_root": "NoneType",
+    "configuration": "NoneType",
+    "prompt_hash": "NoneType"
+   },
+   "record_id": "str",
+   "continuity_epoch": 1,
+   "mode": "ai",
+   "generated_at": "str",
+   "source_case_ids": {
+    "list": 8,
+    "first_keys": null
+   },
+   "statements": {
+    "list": 3,
+    "first_keys": [
+     "citations",
+     "text",
+     "unresolved"
+    ]
+   },
+   "scope": "str",
+   "scope_label": "str",
+   "case_count": 443
+  }
+ },
+ "/api/progress": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "label": "str",
+   "start": "str",
+   "end": "str",
+   "as_of": "str",
+   "coverage": {
+    "synthetic_cases": 980,
+    "excluded_unmarked": 0,
+    "known_lifecycle": 980,
+    "unknown_lifecycle": 0
+   },
+   "daily": {
+    "list": 30,
+    "first_keys": [
+     "backlog",
+     "closed",
+     "date",
+     "opened",
+     "reopened"
+    ]
+   },
+   "weekly": {
+    "list": 5,
+    "first_keys": [
+     "backlog",
+     "closed",
+     "date",
+     "opened",
+     "reopened"
+    ]
+   },
+   "time_to_close": {
+    "median_days": 255.0,
+    "p90_days": 353,
+    "samples": 42
+   },
+   "current": {
+    "open": 443,
+    "stalled": 71,
+    "overdue": 0,
+    "journey": "list",
+    "teams": "list"
+   },
+   "ai": {
+    "outcomes": "list",
+    "eligible_records": 0,
+    "unreviewed_or_unavailable": 0,
+    "unknown_review_date": 0,
+    "rules_or_templates": 0,
+    "basis": "str"
+   },
+   "ai_consumption_economics": {
+    "schema": "str",
+    "od_51_status": "str",
+    "price_source_configured": false,
+    "price_source": "str",
+    "currency": "str",
+    "coverage": "str",
+    "reconciliation": "str",
+    "proposal_count": 0,
+    "accepted_outcome_count": 0,
+    "metered_call_count": 0,
+    "unmetered_call_count": 0,
+    "denominators": "dict",
+    "metered_usage": "dict",
+    "token_cost": "str",
+    "other_tca_components": "dict",
+    "total_cost_of_ai": "str",
+    "token_cost_per_accepted_outcome": "str",
+    "cost_per_accepted_outcome": "str",
+    "quality_floor_status": "str",
+    "quality_qualified_cost_per_accepted_outcome": "str",
+    "booked_value": "str",
+    "by_capability": "dict",
+    "non_benefit_notice": "str"
+   }
+  }
+ },
+ "/api/facets": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "stages": {
+    "list": 20,
+    "first_keys": null
+   },
+   "areas": {
+    "list": 11,
+    "first_keys": null
+   },
+   "waves": {
+    "list": 5,
+    "first_keys": null
+   },
+   "contractors": {
+    "list": 4,
+    "first_keys": null
+   },
+   "sorts": {
+    "urgent": "str",
+    "waiting": "str",
+    "contact": "str",
+    "name": "str",
+    "visit": "str"
+   }
+  }
+ },
+ "/api/ranking/snapshot": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "policy_id": "str",
+   "policy_version": "str",
+   "policy_hash": "str",
+   "as_of": "str",
+   "total": 443,
+   "entries": {
+    "list": 443,
+    "first_keys": [
+     "deciding_rule",
+     "id",
+     "rank",
+     "reason_codes"
+    ]
+   },
+   "snapshot_hash": "str"
+  }
+ },
+ "/api/aftercare": {
+  "status": 404,
+  "ct": "application/json",
+  "shape": {
+   "error": "That concern was not found."
+  }
+ },
+ "/api/handoffs": {
+  "status": 200,
+  "ct": "application/json",
+  "shape": {
+   "list": 4,
+   "first_keys": [
+    "accountable_owner",
+    "accountable_owner_code",
+    "address",
+    "answer_note",
+    "answered_at",
+    "approved_limit_hours",
+    "auto_escalated",
+    "case_id",
+    "chase_owner",
+    "chase_owner_code",
+    "confirmed_receiver",
+    "destination"
+   ]
+  }
+ },
+ "page_app": {
+  "title": "My cases today | Zava Forward",
+  "url_path": "/app"
+ },
+ "page_map": {
+  "title": "",
+  "url_path": "/map.html"
+ },
+ "page_law": {
+  "title": "Law store viewer - Zava Forward",
+  "url_path": "/law.html"
+ },
+ "page_time": {
+  "title": "",
+  "url_path": "/time.html"
+ }
+}

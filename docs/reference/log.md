@@ -14212,3 +14212,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] query | Issue 144 live hardening receipt (Refs #144)
 
 * Added [issue-144-live-hardening-receipt-2026-11-21.md](research/issue-144-live-hardening-receipt-2026-11-21.md): a throwaway Container Apps replica of the current-tree agents image ran Healthy under enforced hardening with zero capability sets; throwaway resources deleted. No source change. Pipeline deployment and the three demo apps stay unproven.
+
+## [2026-11-21] update | Issue 350 live pass 2 (Refs #350)
+
+* Added [issue-350-live-r2-criteria-2026-11-21.md](research/issue-350-live-r2-criteria-2026-11-21.md): signed-in staff and read-only Azure evidence for all ten unticked criteria. The 980-case baseline and AI deployment are present, time capture gating is proven for the demo, and the edge 302, law store, photo, licensed map provider, digest blobs and second-role results stay unproven. No source change; nothing ticked.

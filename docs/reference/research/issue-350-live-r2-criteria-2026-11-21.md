@@ -1,0 +1,49 @@
+---
+title: Issue 350 live pass 2, per-criterion result for the ten unticked criteria (2026-11-21)
+description: Fresh live read-only and signed-in staff evidence against the deployed demo for every unticked issue 350 criterion, with what is proven and what stays unproven
+ms.date: 2026-11-21
+---
+
+Refs #350. Synthetic demo, desktop only, under the owner decisions of 2026-11-18 (live Azure authorised in resource group `ama`, cap USD 700, no drills, no Key Vault rotation, no production change; billing reconciliation, DPO and Legal approval and person-run assistive technology testing not needed). Head `0c497160e`. No `src/` file changed, so the tier is FOCUSED. No Azure resource was created or changed and nothing needed deleting. Credentials were read at run time by the Playwright scripts and never printed. This note supersedes the "not attempted" rows of [the 2026-11-19 note](./issue-350-live-2026-11-19.md).
+
+## Method and evidence
+
+Evidence is in `.copilot-tracking/evidence/2026-11-21/issue-350-live/` (scripts, redacted JSON, screenshots). Observed at 06:30 to 06:50 UTC on `ca-cutover-test-demo-api` (revision image `zava-forward-api@sha256:bc5cb9ae`).
+
+* `probe1.txt`: anonymous `curl` with native and browser User-Agent, plus `az containerapp auth show`.
+* `probe3.json`, `probe5.json`, `probe6.json`: signed-in staff session (Chromium, Entra sign-in as the test account, role Retrofit Programme Manager, `identity_source` entra) reading `/api/*` and driving every navigation view.
+* `env-nonsecret.txt`, `jobs.txt`: non-secret app settings and Container Apps job history from the Azure CLI.
+* Limits: the host cannot resolve `sts.microsoftonline.com`, so the resident test account cannot sign in from here ([r6 note](./issue-349-tenant-prerequisites-live-r6-2026-11-19.md)); only one staff role was exercised. The log workspace denies queries from this host (network perimeter) and the signed-in principal has no blob data-plane role.
+
+## Live observations
+
+| Area | Observed |
+| --- | --- |
+| Edge | `/api/me`, `/api/cases`, `/api/staff`, `/app`, `/cases.html`: native curl 401, browser User-Agent with `Accept: application/json` or `text/html` 302; `/healthz` 200. `unauthenticatedClientAction` is `RedirectToLoginPage`. Unchanged since 2026-11-19 |
+| Baseline size | `/api/stats`: 443 open, 537 completed (980 cases), 23 hazards, 71 waiting 60+ days, 26 funding in progress, 140 needing support. `/api/visits` 30, `/api/workorders` 601, `/api/finance` 13, `/api/funding` 167, `/api/packages` 1, `/api/closed-cases` total 537. `/api/me` lists 4 staff in 2 roles (Building Safety Liaison, Retrofit Programme Manager) |
+| AI | App settings now carry `AI_ENDPOINT` (host `aif-cutover-test-rzsrg`), `AI_DEPLOYMENT` `standard`, model `gpt-4.1-nano-2025-04-14`. `az cognitiveservices account deployment list` shows `standard` (GlobalStandard, capacity 10) and `resident-mini` (`gpt-4.1-mini`). `/api/assistants` lists 5 assistants bound to that deployment and 9 registered tasks, all `unapproved`; every release is denied (no approved unexpired release record, OQ-017). All 6 proposals are `suspended` and not actionable; `/api/briefing` returns `source` template with the suspension reason. `real_ai_delivery_gate` is `blocked` (OQ-017, OQ-018, OQ-019) |
+| Map | `ZF_TILE_URL` is `https://tile.openstreetmap.org/{z}/{x}/{y}.png` with OpenStreetMap attribution. `/api/map` returns 443 points (cap 500), equal to the 443 open cases in the list and KPI. Overview shows the map, a sensor-stale filter and "Show the map areas as a list" |
+| Photo | `/api/me` `services.photo` false; `/api/account/photo` 503 "Microsoft photo access is not available"; the header shows the initials avatar |
+| Law store | `/api/law`, `/api/law/cards` 503 "The law store is not loaded"; `/api/law/alerts` 503 with status unknown; `/law.html` shows the same message and owner. No `ZF_LAW_*` setting exists on the app |
+| Ledger and jobs | `/api/audit-check` intact, 2654 entries (2646 an hour earlier, growing with use). `job-cutover-test-demo-audit` (`0 2 * * *`, runs `digest_blob --publish`) succeeded at 02:00 UTC 2026-11-21; `job-cutover-test-demo-orch` and `job-live-simulator` (`*/5`) succeeded at 06:20, 06:25, 06:30. `job-live-receiver` (`*/30`) failed at 05:30 and 06:00, cause not readable from this host. Container `ledger-digests` has an immutability policy; its blobs could not be listed (no data role). `/api/ledger/digest` returns 403 for this role |
+| Time capture | `/api/time/status` `enabled` false with DPIA, consultation and notice all unrecorded; `/api/time/mine` 403 "switched off". The Time capture view explains the six missing conditions and names the owner; My cases, All cases, Visits, Funding, Finance and Capacity views load beside it with no console errors |
+| Navigation views | My cases, All cases, Overview, Progress dashboard, Visits, Funding, Finance, Capacity and work orders, Closed cases, Assistant proposals (renders after about 10 s), Time capture, Aftercare concerns (0 recorded concerns) and Specialist screens all rendered with data or an honest empty or gated state |
+
+## Per-criterion table
+
+| # | Criterion | Result | Basis |
+| --- | --- | --- | --- |
+| 1 | Anonymous protected API 401 for browser-style requests, page redirect kept | Unproven, failing | Row 1 above: browser User-Agent still gets 302 from Easy Auth before the app. The fix is a path-scoped edge design with trusted platform-principal proof, a FULL-tier infrastructure and security change coupled to #349, outside the demo authorisation (no production change). The application half (401 JSON for anonymous `/api/`) is pinned offline by the 2026-11-04 slice |
+| 2 | Every dated feature row and all 16 assets through the public app with authorised roles | Partly proven, not complete | Public sign-in as one staff role works and 13 navigation views plus 20 or more API reads returned live data. Not executed: every matrix row, the 16 assets, any second role (resident sign-in blocked by host DNS), and write journeys. #349 stays open |
+| 3 | Representative continuing synthetic baseline | Partly proven | The 980-case, 601-work-order, 167-funding, 30-visit, 13-finance, 1-package baseline is present (the 2026-10-16 "one fictional case and zero staff" gap is closed). Unproven: owner authorisation and provenance of the restore (not visible from the app), representative contractor, quality, document and sensor cases individually, and the staff count is 4 in 2 roles |
+| 4 | Model deployment, bounded release authority, five assistants, retained tasks, workflow-only and failure behaviour, durable state | Partly proven | Deployment and configuration now exist; five assistants and nine retained tasks are listed; denial, suspension and the manual route behave as designed (workflow-only). Unproven: bounded release authority (no named holder or approved release; OQ-017 to OQ-019 are human decisions), any live model call (none made, none authorised), live durable-state behaviour across restart (offline actual-SQL proof is in [the 107 note](./issue-107-live-r7-criteria-2026-11-21.md)) |
+| 5 | Approved or licensed map provider; map, list, chart, CSV and sensor agreement; accessible alternative | Partly proven | Map, list and KPI agree at 443; an accessible list alternative is present. Unproven: provider approval and licence (the configured public OpenStreetMap tile server is not evidence of an approved or licensed production provider), CSV export agreement (`/api/export` is 403 for this role), sensor agreement |
+| 6 | Delegated photo tokens with consent; binary photo; fallback and account switching | Unproven | Photo is disabled and the fallback avatar and the 503 message are correct. Enabling the token store needs authorised consent, which cannot be inferred. Account switching was proven for sign-out and picker in [#349 r5](./issue-349-tenant-prerequisites-live-r5-2026-11-19.md) only |
+| 7 | Versioned law store configured and seeded through the approved SQL and Blob path | Unproven, failing | Store not loaded (503) and no `ZF_LAW_*` setting. Seeding needs the private SQL server (public access disabled) and a VNet-resident job; viewer, source and approval stay human-owned. The not-loaded state is explicit and safe, not a silent pass |
+| 8 | Ledger, document and digest durability and scheduled jobs | Partly proven | Ledger chain intact and growing; the daily digest job and the five-minute jobs succeed. Unproven: digest blob contents and immutability enforcement (no data role), `/api/ledger/digest` write (role denied, and a write would mutate evidence), document durability and malware scanning (#117), and `job-live-receiver` failing twice (not diagnosable here, outside the five jobs' scheduling proof) |
+| 9 | Time capture gated; unavailable explanation; normal case work independent | Proven for the demo | Status shows all three approvals unrecorded and capture off; the view explains each missing condition; case work and other views load normally. No approval was inferred |
+| 10 | Actual per-role results for workflow, consent, finance, grants, procurement, quality, profile and session, chat and privacy, export, law and recovery | Unproven | Only the Retrofit Programme Manager role was exercised, read-only; no consent, chat, export, recovery or second-role result was recorded. Gated endpoints (`/api/export`, `/api/ledger/digest`) return 403 for this role, which is a role decision, not a functional pass |
+
+## Finding
+
+No application defect was found, so no source change or test was added. The nine partial or unproven rows are owner, tenant, licence or infrastructure matters, or require a second role that this host cannot sign in. No box on #350 is ticked by this note; the owner ticks after review. Independent exact-head review and hosted CI remain outstanding.
