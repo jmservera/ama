@@ -11,7 +11,7 @@
   /* colour */
   --ink:var(--colorNeutralForeground1);--muted:var(--colorNeutralForeground2);--line:#d9dee3;--bg:var(--colorNeutralBackground2);--surface:var(--colorNeutralBackground1);
   --brand:var(--colorBrandBackground);--brand-d:var(--colorBrandBackgroundHover);--soft:#e7f1f3;--soft-line:#b9d6db;
-  --warn:#b42318;--warn-bg:#fde8e6;--caution:#d98a00;--caution-bg:#fff8e1;--caution-line:#f0d58a;
+  --warn:#b42318;--warn-bg:#fde8e6;--caution:#d98a00;--caution-bg:#fff8e1;--caution-line:#f0d58a;--sensor-humid:#8a4b00;
   --ok:#1a6b3a;--ok-bg:#e6f4ea;--field-line:#7a858d;--disabled-bg:#eceff1;--disabled-ink:#6b747b;
   /* type */
   --font:var(--fontFamilyBase);--fs-sm:.85rem;--fs-base:var(--fontSizeBase400);--fs-lg:var(--fontSizeBase500);--fs-xl:var(--fontSizeBase600);--lh:1.5;
@@ -655,9 +655,9 @@ th,td{font-variant-numeric:tabular-nums}
 .sensor-chart-axis{font-weight:600}
 .sensor-chart-line{stroke-width:2.5;stroke-linejoin:round}
 .sensor-chart-line.temp,.key-line.temp{stroke:var(--brand);color:var(--brand)}
-.sensor-chart-line.humid,.key-line.humid{stroke:#8a4b00;color:#8a4b00;stroke-dasharray:7 4}
+.sensor-chart-line.humid,.key-line.humid{stroke:var(--sensor-humid);color:var(--sensor-humid);stroke-dasharray:7 4}
 .sensor-chart-mark.temp{fill:var(--brand)}
-.sensor-chart-mark.humid{fill:#8a4b00}
+.sensor-chart-mark.humid{fill:var(--sensor-humid)}
 .sensor-chart.out-of-date .sensor-chart-svg{border-style:dashed;border-color:var(--caution)}
 .sensor-chart.out-of-date .sensor-chart-line{opacity:.75}
 .sensor-chart-old{margin:var(--sp-2) 0;padding:var(--sp-2) var(--sp-3);border:2px solid var(--caution);border-left-width:8px;background:var(--caution-bg);border-radius:var(--radius)}
