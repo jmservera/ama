@@ -84,6 +84,32 @@ class SignedInPrincipalStaffRouteTests(unittest.TestCase):
         with self.assertRaises((PermissionError, ValueError)):
             self.store.resident_action(impostor, "ZF-1", dict(PAYLOAD))
         self.assertFalse(self.store._case("ZF-1").get("nomination_records"))
+    def test_roster_row_without_oid_still_admits_the_matching_principal(self) -> None:
+        raw = identity.principal(
+            tid=TID, oid=OID, name="Directory Display Name", email="sam@example.test",
+            role=self.sam["role"], roles=(),
+        )
+        row = self.store.staff.pop("sam@example.test")
+        row.pop("oid", None)
+        row.pop("tid", None)
+        row.update(code=raw["code"], email=raw["email"])
+        self.store.staff[raw["email"]] = row
+        principal = identity.bind(self.store, raw)
+        assert principal is not None and not principal.get("bound")
+        payload = dict(PAYLOAD, owner=raw["email"])
+        self.store.resident_action(principal, "ZF-1", payload)
+        self.assertEqual(len(self.store._case("ZF-1")["nomination_records"]), 1)
+
+        other = identity.principal(
+            tid=TID,
+            oid="33333333-3333-4333-8333-333333333333",
+            name="Other",
+            role=row["role"],
+            roles=(),
+        )
+        with self.assertRaises((PermissionError, ValueError)):
+            self.store.resident_action(other, "ZF-1", dict(payload, next_update="2099-01-21"))
+        self.assertEqual(len(self.store._case("ZF-1")["nomination_records"]), 1)
 
 
 if __name__ == "__main__":

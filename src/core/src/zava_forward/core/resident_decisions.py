@@ -143,9 +143,16 @@ def _same_person(first, second):
 
 
 def _same_signed_in_person(actor, roster_person):
-    """Immutable keys must match; display claims and tenant metadata on an Entra principal differ from the roster row."""
-    return all(_identity_value(actor, key) == _identity_value(roster_person, key)
-               for key in ("email", "code", "oid"))
+    """Email and code must match; oid must match only when the roster row records one.
+
+    Display claims and tenant metadata on an Entra principal differ from the roster row, and a row keyed
+    by the derived code and email may store no oid. The verified principal already ties code and email
+    to its object id.
+    """
+    if any(_identity_value(actor, key) != _identity_value(roster_person, key) for key in ("email", "code")):
+        return False
+    recorded_oid = _identity_value(roster_person, "oid")
+    return not recorded_oid or recorded_oid == _identity_value(actor, "oid")
 
 
 def _identity_status(identity):
@@ -556,7 +563,7 @@ def _owner_rights(store, actor, identity, email=None):
         return
     # Legacy lookup authorizes the present action only, never reconstructs history.
     owner = _actor(store, identity) if identity else _person(store, email)
-    if any(actor.get(key) != owner.get(key) for key in ("email", "code", "oid")):
+    if not _same_signed_in_person(actor, owner):
         raise PermissionError("Only the named current owner or a resident-workflow manager can record this step.")
 
 
