@@ -8,7 +8,7 @@ ms.topic: reference
 
 ## Scope
 
-Synthetic demo, desktop only. Owner decisions of 2026-11-18 apply. Head `f0b278d13`. Issue body and child states read with `gh` on 2026-11-21. Credentials were read at runtime and never printed; the probe redacts they are absent from its output. No Azure resource was created or changed, no model turn ran, and no source changed (focused tier).
+Synthetic demo, desktop only. Owner decisions of 2026-11-18 apply. Head `f0b278d13`. Issue body and child states read with `gh` on 2026-11-21. Credentials were read at runtime and never printed; the probe redacts credentials from its output. No Azure resource was created or changed, no model turn ran, and no source changed (focused tier).
 
 ## Live observations
 
