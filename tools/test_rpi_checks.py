@@ -602,6 +602,50 @@ class GateTests(unittest.TestCase):
             with self.subTest(text=text), self.assertRaises(gate.GateError):
                 gate.check_skips(text, required_classes=classes)
 
+    def test_verbose_results_tolerate_thread_logs_after_ok_and_dotted_log_text(self) -> None:
+        cls = gate.SQL_OPT_IN_CLASSES[0]
+        header = f"test_x ({cls}.test_x)"
+        names = gate.SQL_CHAT_REQUIRED_TESTS
+        tail = "Ran 2 tests in 0.1s\n\nOK\n"
+        log = "http-response GET /x status=200"
+        dotted = "waiting ... retry"
+        accepted = (
+            f"{header} ... ok\n{log}\n{log}\ntest_y ({cls}.test_y) ... ok\n{tail}",
+            f"{header} ... {dotted}\nok\n{log}\ntest_y ({cls}.test_y) ... ok\n{tail}",
+            f"{header} ... ok\n{dotted}\ntest_y ({cls}.test_y) ... ok\n{tail}",
+        )
+        for text in accepted:
+            with self.subTest(text=text):
+                gate.check_skips(text, required_classes=(cls,))
+        required = sql_chat_log().replace(
+            f"{names[0]} ... ok\n", f"{names[0]} ... ok\n{log}\n{dotted}\n", 1
+        )
+        gate.check_skips(required, integration=True, required_tests=names)
+        doc = f"{names[0]}\nFirst docstring line ... ok\n{log}\n"
+        docstring = sql_chat_log(extra="").replace(f"{names[0]} ... ok\n", doc, 1)
+        gate.check_skips(docstring, integration=True, required_tests=names[1:])
+        exact = gate.CHAT_PANEL_DISCOVERY_SKIP[0]
+        single = f"{exact} ... ok\n{log}\n{dotted}\nRan 1 test in 0.1s\n\nOK\n"
+        gate.check_skips(single, integration=True, group="browser", expected_test=exact)
+
+    def test_log_noise_never_hides_a_failed_skipped_or_missing_result(self) -> None:
+        cls = gate.SQL_OPT_IN_CLASSES[0]
+        header = f"test_x ({cls}.test_x)"
+        log = "http-response GET /x status=200"
+        tail = "Ran 1 test in 0.1s\n\nOK\n"
+        rejected = (
+            f"{header} ... {log}\n{log}\n{tail}",
+            f"{header} ... {log}\nstate FAIL\n{log}\n{tail}",
+            f"{header} ... FAIL\n{log} ok\n{tail}",
+            f"{header} ... ERROR\n{log} ok\n{tail}",
+            f"{header} ... skipped 'x'\n{log} ok\n{tail.replace('OK', 'OK (skipped=1)')}",
+            f"{header} ... expected failure\n{log} ok\n{tail}",
+            f"{header} ... {log}\n{log}\nwaiting ... retry\n{tail}",
+        )
+        for text in rejected:
+            with self.subTest(text=text), self.assertRaises(gate.GateError):
+                gate.check_skips(text, required_classes=(cls,))
+
     def test_opt_in_test_paths_select_their_required_group(self) -> None:
         for path, group in gate.OPT_IN_TEST_GROUPS.items():
             with self.subTest(path=path):

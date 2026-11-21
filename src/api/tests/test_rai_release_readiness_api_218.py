@@ -33,6 +33,9 @@ release_support: Any = _release_support
 App: Any = _App
 make_handler: Any = _make_handler
 
+# GET /api/ai/report alone takes about 2.5 s unloaded, so a flat 10 s read budget fails under load.
+REQUEST_TIMEOUT_S = 120
+
 
 class RaiReleaseReadinessApi218Tests(unittest.TestCase):
     """Verify Epic #218 HTTP surfaces for OQ-017 rejection and separated RAI readiness."""
@@ -105,7 +108,7 @@ class RaiReleaseReadinessApi218Tests(unittest.TestCase):
                     headers=req_headers,
                     method="POST",
                 )
-                with urlopen(login_req, timeout=10) as resp:
+                with urlopen(login_req, timeout=REQUEST_TIMEOUT_S) as resp:
                     self._cookies[email] = resp.headers["Set-Cookie"].split(";")[0]
             req_headers["Cookie"] = self._cookies[email]
         payload_bytes = json.dumps(body).encode("utf-8") if body is not None else None
@@ -116,10 +119,24 @@ class RaiReleaseReadinessApi218Tests(unittest.TestCase):
             method=method,
         )
         try:
-            with urlopen(req, timeout=10) as resp:
+            with urlopen(req, timeout=REQUEST_TIMEOUT_S) as resp:
                 return resp.status, json.loads(resp.read()), None
         except HTTPError as error:
             return error.code, json.loads(error.read()), None
+
+    def test_request_budget_survives_a_slow_report_under_load(self) -> None:
+        self.assertGreaterEqual(REQUEST_TIMEOUT_S, 60)
+        seen: list[Any] = []
+        real = urlopen
+
+        def record(request: Request, timeout: float | None = None) -> Any:
+            seen.append(timeout)
+            return real(request, timeout=timeout)
+
+        with patch(f"{__name__}.urlopen", record):
+            status, _, _ = self._raw_request("GET", "/api/assistants", headers=self.pm_headers)
+        self.assertEqual(status, 200)
+        self.assertEqual(seen, [REQUEST_TIMEOUT_S, REQUEST_TIMEOUT_S])
 
     def test_live_release_post_without_named_approval_is_rejected_with_oq017_and_audited(
         self,

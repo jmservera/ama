@@ -1685,17 +1685,21 @@ def _region_passed(region: list[str]) -> bool:
     failing = re.compile(
         r"((?<![A-Za-z])(FAIL|ERROR|skipped\b.*)|expected failure|unexpected success)$"
     )
-    return (
-        bool(region)
-        and re.search(r"(?<![A-Za-z])ok$", region[-1]) is not None
-        and not any(failing.search(line) for line in region)
+    # Thread logs may land after the result line and before the next header.
+    return any(re.search(r"(?<![A-Za-z])ok$", line) for line in region) and not any(
+        failing.search(line) for line in region
     )
+
+
+def _test_header_indexes(lines: list[str]) -> list[int]:
+    """Lines that start a verbose result; log text containing "..." does not."""
+    return [i for i, line in enumerate(lines) if re.match(r"\w+ \([\w.]+\) .*\.\.\. ", line)]
 
 
 def _single_test_passed(text: str, expected_test: str) -> bool:
     """Accept one verbose result whose "ok" may follow interleaved log lines."""
-    lines = text.splitlines()
-    headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
+    lines = merge_docstring_headers(text).splitlines()
+    headers = _test_header_indexes(lines)
     if len(headers) != 1 or not lines[headers[0]].startswith(f"{expected_test} ... "):
         return False
     end = next(
@@ -1709,8 +1713,8 @@ def _single_test_passed(text: str, expected_test: str) -> bool:
 
 def _required_tests_passed(text: str, expected: tuple[str, ...]) -> bool:
     """Each expected verbose header occurs exactly once and its own region ends in ok."""
-    lines = text.splitlines()
-    headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
+    lines = merge_docstring_headers(text).splitlines()
+    headers = _test_header_indexes(lines)
     end = next(
         (i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)),
         None,
@@ -1753,7 +1757,7 @@ def required_classes(argv: list[str]) -> tuple[str, ...]:
 def _classes_executed(text: str, classes: tuple[str, ...]) -> bool:
     """Every named class reports at least one test and each of its tests ends in ok."""
     lines = merge_docstring_headers(text).splitlines()
-    headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
+    headers = _test_header_indexes(lines)
     end = next(
         (i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)),
         None,
