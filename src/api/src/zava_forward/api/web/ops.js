@@ -349,7 +349,7 @@ function sensorBody(v, model) {
   if (v.latest && !(v.conflicting_readings || []).length && !v.conflict_notice) kids.push(sensorLatest(v, model));
   const clashes = sensorClashes(v);
   if (clashes.length) kids.push(table("Readings that disagree", clashes, null, { name: "Readings that disagree for the same sensor and time" }));
-  kids.push(sensorChart(v, model));
+  if (!clashes.length) kids.push(sensorChart(v, model));
   const recent = (v.readings || []).slice().reverse();
   if (recent.length) kids.push(table(`Recent readings (up to ${(v.max_readings || {}).window || recent.length})`, recent, null, { name: "Recent readings, newest first" }),
     h("p", { class: "muted" }, sensorSourceNote(recent, labels)), sensorReferences(v));
