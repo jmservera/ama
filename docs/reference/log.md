@@ -14242,3 +14242,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 208 live epic proof refresh (Refs #208)
 
 * Added [issue-208-live-epic-evidence-2026-11-21.md](research/issue-208-live-epic-evidence-2026-11-21.md): refreshed child states, 246 regulatory tests passing, live demo smoke check, and the unproven remainder (owner decisions on #440 and delivery order).
+
+## [2026-11-21] update | Issue 1259 fourth live recheck (Refs #1259)
+
+* Added [2026-11-21-ranking-archive-unusable-1259-live-r4.md](research/2026-11-21-ranking-archive-unusable-1259-live-r4.md): red-before (seven failures) and green-after (110 tests) re-observed on main `d2585a4c9`, no defect and no source change. The final criterion (FULL receipt, independent exact-head assessment, hosted checks) stays unticked.
