@@ -7,7 +7,7 @@ ms.topic: reference
 
 ## Scope
 
-Synthetic demo, desktop only, resource group `ama`, 2026-11-21 06:27 to 06:40 UTC. Refs #144. No source change, no credential read, no change to the demo apps or the shared registry. Two throwaway resources were created and deleted: Basic registry `acr144throwrzsrg` and Container App `ca-144-hardening-probe` in `cae-cutover-test-demo`.
+Synthetic demo, desktop only, resource group `ama`, 2026-11-21 06:27 to 06:35 UTC (commit time bounds the end). Refs #144. No source change, no credential read, no change to the demo apps or the shared registry. Two throwaway resources were created and deleted: Basic registry `acr144throwrzsrg` and Container App `ca-144-hardening-probe` in `cae-cutover-test-demo`.
 
 ## Method
 
