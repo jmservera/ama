@@ -125,10 +125,12 @@ class SameSignedInPersonTests(unittest.TestCase):
     def test_recorded_oid_must_match_even_when_email_and_code_do(self) -> None:
         actor = {"email": "a@x", "code": "C1", "oid": "oid-2"}
         self.assertFalse(self.check(actor, {"email": "a@x", "code": "C1", "oid": "oid-1"}))
-        self.assertTrue(self.check(dict(actor, oid="oid-1"), {"email": "a@x", "code": "C1", "oid": "oid-1"}))
+        row = {"email": "a@x", "code": "C1", "oid": "oid-1"}
+        self.assertTrue(self.check(dict(actor, oid="oid-1"), row))
 
     def test_actor_without_oid_is_refused_when_the_row_records_one(self) -> None:
-        self.assertFalse(self.check({"email": "a@x", "code": "C1"}, {"email": "a@x", "code": "C1", "oid": "oid-1"}))
+        row = {"email": "a@x", "code": "C1", "oid": "oid-1"}
+        self.assertFalse(self.check({"email": "a@x", "code": "C1"}, row))
 
     def test_row_without_oid_admits_only_a_matching_email_and_code(self) -> None:
         row = {"email": "a@x", "code": "C1"}
