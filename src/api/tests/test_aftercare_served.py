@@ -7,6 +7,7 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from datetime import UTC, datetime, timedelta
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
@@ -25,7 +26,7 @@ BODY: dict[str, Any] = dict(
     kind="discomfort",
     statement="Synthetic: the new loft hatch is cold to touch.",
     channel="phone",
-    next_update="2026-11-20",
+    next_update=(datetime.now(UTC) + timedelta(days=7)).date().isoformat(),
 )
 
 
