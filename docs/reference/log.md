@@ -14254,3 +14254,11 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 1288 round 6 live audit (Refs #1288)
 
 * Added [issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md](research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md): 465 local tests OK, live simulator observed feeding two homes, Home sensors screenshot, Quality model blocked at release admission (OQ-017); criteria 4 and 8 unproven, no source change.
+
+## [2026-11-21] update | Issue 203 post-cleanup verification, fourth run (Refs #203)
+
+* Added [issue-203-live-20261121-2026-11-21.md](research/issue-203-live-20261121-2026-11-21.md): checker at 0 violations, apps healthy, src-ci green on a post-cut-over main dispatch run; the running api logs `build: commit=unknown`, so criterion 5 image provenance stays unproven
+
+## [2026-11-21] update | Issue 1258 live r6 (Refs #1258)
+
+* Added [issue-1258-live-r6-2026-11-21.md](research/issue-1258-live-r6-2026-11-21.md): 146 ranking tests pass, a mutation check shows ten ancestor tests failing without the parent sync, criterion 5 unproven. Nothing ticked.

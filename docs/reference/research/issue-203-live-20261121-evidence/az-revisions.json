@@ -1,0 +1,18 @@
+[
+  {
+    "created": "2026-11-20T23:29:57+00:00",
+    "health": "Healthy",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:bc5cb9ae5f325762c41eb97a4563fddc891ed63e6cb2de432fbd587338a937da",
+    "r": "ca-cutover-test-demo-api--0000038",
+    "traffic": 100
+  }
+]
+[
+  {
+    "created": "2026-11-20T22:24:03+00:00",
+    "health": "Healthy",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19",
+    "r": "ca-resident-demo--0000015",
+    "traffic": 100
+  }
+]

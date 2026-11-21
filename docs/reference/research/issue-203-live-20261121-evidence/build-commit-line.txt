@@ -1,0 +1,3 @@
+az containerapp logs show -g ama -n ca-cutover-test-demo-api --tail 300 --type console, filtered for "build:":
+{"TimeStamp": "2026-11-21T07:46:19.3360189+00:00", "Log": "F build: commit=unknown"}
+ca-resident-demo: no build line in the last 300 console lines (not the src/api image).

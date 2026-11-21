@@ -1,0 +1,14 @@
+[
+  {
+    "n": "ca-cutover-test-demo-api",
+    "state": "Succeeded",
+    "rev": "ca-cutover-test-demo-api--0000038",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:bc5cb9ae5f325762c41eb97a4563fddc891ed63e6cb2de432fbd587338a937da"
+  },
+  {
+    "n": "ca-resident-demo",
+    "state": "Succeeded",
+    "rev": "ca-resident-demo--0000015",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:65481780cb3f5a55621f637fa783230004b263085dcaece1dfca93a928bbbd19"
+  }
+]
