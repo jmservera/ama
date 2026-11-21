@@ -1,7 +1,7 @@
 ---
 title: Capstone Demo and Recovery Runbook
-description: Current v2 same-home story, under-two-minute hook, ten-minute route, owner-selected five-home demo target and honest live/evidence preflight
-ms.date: 2026-11-12
+description: Timed panel demo and optional ten-minute walkthrough covering AI evidence, observability, sensors, staff work and resident self-service with explicit readiness limits
+ms.date: 2026-11-21
 ms.topic: how-to
 ---
 
@@ -11,10 +11,23 @@ Show one fictional home, one evidence conflict, one accountable next action
 and the boundary between an AI draft and a human decision. Land that outcome
 inside two minutes; do not begin with a screen tour or platform inventory.
 
-The current full route is ten minutes, separate from the 30-minute
-presentation: eight minutes prepared flow and two for questions or recovery.
-Use S22/page 25 to introduce it and S23/page 26 to close. The closing
-30 seconds already belong to the presentation narration allocation.
+The [assessment guide](../../reference/method/ama-capstone-assessment-guide.md)
+does not allocate a ten-minute demo slot. B3 requires the outcome to land in
+under two minutes; its preparation advice also says to rehearse the demo to
+under two minutes. B5 requires finishing inside the slot with room for questions.
+The [current capstone plan](../README.md#next-work) separately reserves ten
+minutes for the demo alongside a 30-minute presentation, whose narration is
+24:30 with 5:30 reserve. That is the repository plan, not a confirmed panel allocation.
+
+Use 00:00-01:50 below as the complete panel demo. Continue only if the panel
+has confirmed the separate ten-minute slot: prepared navigation ends at 08:00,
+leaving 02:00 for questions or one recovery. The extended route includes the
+short demo; it is not another ten minutes. Confirm whether any demo must instead
+fit inside the presentation slot before the final rehearsal.
+
+Use S22/page 25 to introduce it and S23/page 26 to close. Do not double-count
+the presentation's closing 30 seconds. This runbook is the authored demo script;
+it does not change the generated deck speaker notes or their source manifest.
 
 This is preparation, not an executed demo or rehearsal. No cloud, identity,
 model, resident-data or workflow mutation is authorized by this runbook.
@@ -27,8 +40,7 @@ professional/resident decisions. The current five helpers are evidence
 proposals; a request or approved scan can prepare one without advancing the
 case. Do not call that a delivered L3 booking or L4 autonomous quality flag.
 
-For the prepared walkthrough, show the three existing help modes rather than
-adding features to the ten-minute route:
+For the prepared walkthrough, show the three existing help modes:
 
 * Immediate role queue/next action and the rules label in Today's briefing.
 * A source-linked proposal on the same case or in Assistant proposals, showing
@@ -41,9 +53,19 @@ If discussing resident access, show only an authorised synthetic site or its
 source contract. Explain that website/chat is an added optional route, not
 mandatory works consent. An automatic fictional callback search still needs
 the resident's explicit confirmation; it is not an operational appointment.
-Decision 1 is historical scoring evidence with a pending current rebuild,
-not the current five-helper engine. Refresh the progress and activation
-snapshot before the final demo.
+The 8 November review records Decision 1 as historical scoring evidence with
+a pending rebuild, not the five-helper engine. Do not describe the document
+reader, a deterministic decision rule or generative chat as Decision 1 without
+an attested model/task binding on the chosen build.
+
+That review's Quality autonomy statement is also dated. The
+[current core contract](../../../src/core/README.md#retained-sensor-readings-for-employees-and-quality-evidence-refs-1288-107)
+defines a current, proactive, source-cited model finding as an L4 review flag,
+not human acceptance or delivery to a recipient. The
+[21 November retained audit](../../reference/research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md)
+observed readings for two homes but blocked the Quality model at release admission.
+Source capability, dated observations and live-ready authority remain distinct.
+Refresh the progress and activation snapshot before the final demo.
 
 ## Demo Operating Mode And Five Homes (Owner-Selected Target, 2026-11-12)
 
@@ -69,17 +91,18 @@ remain historical. The observed and blocked histories in the
 ### The five homes
 
 Open each case from the Workbench after authorised staff sign-in. The route is
-`/app#/case/<id>?tab=quality`; the Quality and handover tab holds the sensor
-panel. Case ids are fictional constructed records. Open these only on the
+`/app#/case/<id>?tab=sensors`; the dedicated Home sensors tab holds the sensor
+panel on the current source. Quality and handover remains the human review
+surface. Case ids are fictional constructed records. Open these only on the
 chosen build, and follow the preflight below first.
 
 | # | Case id | Archetype | Property type | Stage in the replayed seed | Direct link |
 | --- | --- | --- | --- | --- | --- |
-| 1 | ZF-2025-0355 | ARC-01 | End terrace | Quality check | [Open ZF-2025-0355](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0355?tab=quality) |
-| 2 | ZF-2025-0382 | ARC-02 | Mid terrace | Quality check | [Open ZF-2025-0382](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0382?tab=quality) |
-| 3 | ZF-2025-0286 | ARC-04 | Bungalow | Quality check | [Open ZF-2025-0286](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0286?tab=quality) |
-| 4 | ZF-2026-0829 | ARC-05 | Mid terrace | Quality check | [Open ZF-2026-0829](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2026-0829?tab=quality) |
-| 5 | ZF-2026-0892 | ARC-06 | Semi-detached | Funding check | [Open ZF-2026-0892](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2026-0892?tab=quality) |
+| 1 | ZF-2025-0355 | ARC-01 | End terrace | Quality check | [Open ZF-2025-0355](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0355?tab=sensors) |
+| 2 | ZF-2025-0382 | ARC-02 | Mid terrace | Quality check | [Open ZF-2025-0382](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0382?tab=sensors) |
+| 3 | ZF-2025-0286 | ARC-04 | Bungalow | Quality check | [Open ZF-2025-0286](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0286?tab=sensors) |
+| 4 | ZF-2026-0829 | ARC-05 | Mid terrace | Quality check | [Open ZF-2026-0829](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2026-0829?tab=sensors) |
+| 5 | ZF-2026-0892 | ARC-06 | Semi-detached | Funding check | [Open ZF-2026-0892](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2026-0892?tab=sensors) |
 
 Provenance and limits:
 
@@ -141,27 +164,247 @@ private access or discover a new live feature in front of the audience.
 
 ## Executive Hook
 
-| Clock | Point | Evidence route |
-| --- | --- | --- |
-| 00:00-00:30 | "A home can be high priority and still not be ready." | State fictional scope; show the same-home blueprint on page 13 |
-| 00:30-01:10 | "Conflicting evidence has an owner; unknown is not silently resolved." | Trace the source/version and dependent-review boundary, not a private case record |
-| 01:10-01:45 | "AI can draft. It cannot grant consent, release work or approve funding." | Show the controlled draft/review flow on page 20 and the retained human decisions |
-| 01:45-02:00 | "The result is an owned next action, not an automatic green status." | Name what is observed, what is proposed and what still needs acceptance |
+These four beats form a complete 1:50 demo. Pre-open the views and use one
+fictional home. Read only the quoted lines; action and fallback instructions
+are presenter notes. State route E or L before starting the clock.
 
-For route L, show only the equivalent pre-arranged, authorized behaviour.
-An animation or a prepared response is never presented as live inference.
+| Clock | Show | Say |
+| --- | --- | --- |
+| 00:00-00:25 | Today's briefing, then the selected case and its next owner | "This fictional home needs attention, but priority is not permission to start work. The employee can see the blocker and who owns the next action. The queue is rules-based; AI suggestions are labelled separately." |
+| 00:25-00:55 | A prepared document reading beside its synthetic source, or its source contract | "The document says the installer has finished, but independent inspection is not recorded. AI can help surface that gap. The employee checks the source and prepares the next action; the model cannot accept the work." |
+| 00:55-01:20 | Same-home journey strip and Home sensors, or their labelled evidence | "The case connects assessment, funding, resident choice, coordination and quality. Sensor readings add evidence and alerts identify something to check. These readings are synthetic, not a diagnosis. Human safety response never waits for AI." |
+| 01:20-01:50 | Separately signed-in synthetic resident view, or its source contract; return to the case | "The resident can look up their own information without first contacting an employee. That is a proposed benefit, not measured savings. Here the blocker and next owner are visible. Test whether this reduces total staff effort." |
+
+For route L, show only equivalent pre-arranged, authorized behaviour. Identify
+a prepared model output as recorded evidence, with its actual date and source.
+For a template or workflow-only answer say: "This is the manual or rules answer,
+not a model response." For route E say: "This is the source contract; this step
+has not been demonstrated live." An animation or invented answer is never inference.
 
 ## Complete The Prepared Flow
 
-| Clock | Focus | Boundary |
+Continue from 01:50 only for the confirmed extended slot. Each window includes
+navigation and response time; stop at its boundary even if a model is still
+waiting. A missing capability takes its fallback within the same window.
+Do not spend the question reserve completing more clicks.
+
+### 01:50-02:35 | Prioritise the employee's work
+
+Action: return to Today's briefing and the same case. Point to its recorded
+blocker, owner and next action. If a reviewed AI priority proposal exists,
+contrast it with the rule-based queue; do not change ranking during the demo.
+
+Say: "The employee starts with work that needs attention, rather than searching
+each spreadsheet. The rules explain the current queue. AI may recommend another
+priority from permitted evidence, but a suggestion is not a new ranking or an
+approval. On this case, I can see what needs checking and the responsible role."
+
+Fallback: show the source-linked queue/proposal contract. Do not manufacture
+a rank change or claim that the queue itself is generated by AI.
+
+### 02:35-03:35 | Upload evidence and check the AI reading
+
+Action: on Documents, use Add document with a short, pre-approved synthetic
+text fixture, then select Read with AI only if that task is authorized. Upload
+and AI reading are separate actions. Compare the returned text with the source
+and the case checklist. A text fixture avoids assuming PDF extraction or OCR.
+
+The rehearsal fixture can contain the following, with the selected fictional
+reference substituted before approval. This is invented demonstration evidence,
+not a report about the retained case:
+
+```text
+Synthetic demonstration record. Not operational evidence.
+Case: selected fictional case reference.
+Installer statement: work is complete.
+Independent inspection: not recorded.
+Next evidence required: an independent inspection record.
+```
+
+Say: "Storing a document does not make it approved evidence. The reader can
+summarise this permitted text; I compare its account with the original. Here the
+installer statement and the missing inspection are different facts. If the model
+misses the gap or adds a claim, I correct the draft or use the manual route.
+We do not claim it finds every fact or every possible issue."
+
+Fallback: use an actual dated reading from the same approved fixture, if one
+exists. Otherwise show the reader contract and the manual note. A clean file
+scan is not evidence acceptance. Do not label this Decision 1 without verified
+task/model provenance.
+
+### 03:35-04:25 | Use the assistant to prepare the next action
+
+Action: open Ask the assistant on the case, select the appropriate advisory
+skill and use the approved question below. Inspect answer origin and citations.
+Do not assume chat can read the uploaded document: only its permitted case
+projection and sources are available. Use the document reader for document text.
+
+```text
+Using only the sources available to you, explain the unresolved checks,
+the responsible roles and the next manual action for this case.
+State what you cannot verify. Do not approve work or change a record.
+```
+
+Say: "The employee can ask for help in the case context. I check whether this
+answer came from a model or from workflow rules, then open the cited source.
+A useful suggestion helps prepare a correction or an evidence request. It
+does not fix the underlying inspection gap. The task owner still obtains the
+evidence and records the decision."
+
+Fallback: show the actual refused, withheld or workflow-only answer and continue
+manually. A reversible draft correction may be demonstrated only on the
+authorized disposable fixture; do not save a review or send a request merely
+to make the screen look complete.
+
+### 04:25-05:15 | Inspect what happened behind the interaction
+
+Action: immediately after the preceding question, open the pre-arranged Azure
+monitoring view only if its correlation to that exact interaction was verified
+in preflight. Use an existing monitoring button if the chosen build has one;
+otherwise switch to the prepared portal tab. Do not promise a button: no
+in-app deep link or conversation-to-Azure receipt was established by this review.
+
+With verified correlation, say: "This trace belongs to the interaction we just
+ran. It shows the instrumented request, any linked execution and provider call,
+elapsed time and recorded failure state. Where settled token usage is available,
+we can inspect it. Tracing does not show the model's private reasoning or prove
+that its answer is correct."
+
+Point only to spans actually present. Show the actual window, sampling and
+missing data. Tokens are not a monetary cost without applicable price and
+billing evidence; Unknown is not zero.
+
+Fallback, required until the Azure path is verified: "The source has opt-in,
+content-free tracing, but this conversation's Azure trace is not verified.
+Here is the instrumentation contract and the protected audit-to-trace join.
+I cannot claim that Azure captured the conversation we just had."
+
+The [monitoring runbook](../../../infra/monitoring-runbooks.md#explicit-otlp-instrumentation-2026-11-16)
+documents API/proposal/core-provider coverage, not universal chat or resident
+coverage. A permitted investigator locates the protected audit trace ID and
+filters the authorized collector; business identifiers and conversation text
+are not exported. If chat is uninstrumented, a separately verified proposal
+trace can illustrate operations, but it is not this conversation's trace.
+
+### 05:15-06:10 | Read sensors and investigate an alert
+
+Action: open Home sensors as Quality Inspector or Retrofit Programme Manager.
+Read the displayed temperature, humidity, observation time, freshness and source
+classification. Show a pre-existing authorized alert, its reason, owner and next
+action. Do not wait for a new reading or start a simulator.
+
+Say: "These values come from retained synthetic readings. Their time and source
+matter: outdoor weather-derived data is not an indoor measurement. An alert
+such as a stale reading tells the employee what to check and who owns it.
+It does not diagnose damp or prove retrofit success. Quality AI can prepare a
+source-cited review finding when released; acceptance belongs to the independent
+inspector."
+
+If an actual current AI finding exists, compare its cited reading references
+with the authorized capture and identify its model/version and unapproved
+status. A rule-derived sensor review draft is not a model-generated L4 flag.
+
+Fallback: show missing, stale, withheld or blocked state honestly. If no alert
+exists, use a labelled synthetic alert fixture or the source contract, not
+a claim that one fired. The retained 21 November audit found two reading-bearing
+homes, not the selected five-home cohort, and blocked the Quality model.
+It cannot establish today's cohort or authorize a live trigger.
+
+### 06:10-07:00 | Trace the full retrofit lifecycle
+
+Action: follow the same-home journey strip and relevant records. Use the
+following map as narration prompts, not as six new calls. Show actual recorded
+stage evidence where it exists; otherwise identify the missing record or show
+a labelled source contract. Never fabricate a completed timeline.
+
+| Lifecycle stage | AI contribution to explain or show | Decision retained |
 | --- | --- | --- |
-| 02:00-03:00 | Evidence conflict and current versions | Do not merge unknown identities or invent stock-to-case links |
-| 03:00-04:20 | Unreviewed proposal | At most the separately approved single task/call; otherwise show the contract |
-| 04:20-05:20 | Inspect cited evidence and usage | Citation presence is not semantic truth; missing usage is unknown, not zero |
-| 05:20-06:25 | Independent decisions | No irreversible consent, work release, sending, grant submission or payment |
-| 06:25-07:15 | Owned unresolved next step | State whether any state changed; do not imply completion |
-| 07:15-08:00 | Debrief actual evidence | No current live, housing-outcome or savings claim from repository inspection |
-| 08:00-10:00 | One question or one recovery | Stop prepared navigation at eight minutes; do not add unprepared features |
+| Stock prioritisation | Evidence-based priority proposal alongside deterministic ranking | Authorized human ranking review |
+| Assessment | Document reading and assessment-preparation proposal | Competent assessor/coordinator review |
+| Funding | Evidence preparation or an actual unapproved application draft | Finance approval and external submission |
+| Resident and contractor coordination | Proposed communication, constraints and next actions | Resident choice and authorized booking/communication |
+| Quality | Source-cited evidence proposal; eligible proactive findings only when released | Independent inspection and defect/reinspection decision |
+| Handover and aftercare | Grounded explanation of recorded status and unresolved checks | Human acceptance, handover and independent safety response |
+
+Say: "This follows the whole lifecycle, not a collection of unrelated screens.
+AI has a preparation role at each applicable stage; known rules and human
+decisions stay visible. Funding approval is not an award, an offered slot is
+not a booking, and contractor completion is not independent acceptance.
+We are tracing records and controls, not completing real works in ten minutes.
+Any missing stage evidence remains a disclosed gap."
+
+Fallback: use the same-home process blueprint and name unimplemented or
+unverified capabilities. Do not call a proposal-only path delivered L3 action.
+
+### 07:00-07:45 | Let the resident answer a routine question
+
+Action: switch to the separately signed-in synthetic resident view. Verify
+in advance that it represents the same home; if not, label it a separate
+fixture rather than implying a shared case. Show own-record status and document
+facts. For an authorized assistant interaction, obtain the explicit record-use
+permission and ask: "Where is my retrofit up to?"
+
+Say: "The resident can look up their own status and document information.
+A routine answer can avoid an employee lookup; we still need to measure whether
+it reduces contacts and total effort. This is a synthetic showcase, not real
+resident enrolment. Record use is optional, login is not works consent, and
+phone, letters and officer support remain available."
+
+Fallback: show the read-only resident source contract or the rules answer.
+Identify answer origin; do not promise a generated reply, live appointments,
+document upload through chat or that a safety report was sent.
+
+### 07:45-08:00 | Close on the business test
+
+Return to the owned next action.
+
+Say: "Test whether reviewed next actions take less total effort and residents
+avoid routine contacts. This demo does not establish savings."
+
+### 08:00-10:00 | Questions or one recovery
+
+Stop prepared navigation at eight minutes. Restate the question, answer from
+the shown evidence and use at most one prepared appendix. If a step failed,
+name the failure and the manual route. Do not add a feature, retry inference
+or increase scope to consume the reserve.
+
+## Six-Point Rehearsal Acceptance
+
+This is a rehearsal checklist, not a completed result. Record each item as
+Pass, Fail, Blocked or Not run, with the build, time and evidence reference.
+The planned timings have not been validated by a rehearsal.
+
+| Requested proof | Script window | Evidence needed before claiming it was demonstrated |
+| --- | --- | --- |
+| AI across the applicable lifecycle stages and document analysis | 02:35-04:25 and 06:10-07:00 | Actual model-origin output, source comparison and task/model provenance per shown example; contracts alone do not prove execution |
+| Observability of the conversation just held | 04:25-05:15 | Exact interaction-to-trace correlation and receipt in the authorized Azure view; monitoring button separately verified or disclosed absent |
+| Sensor readings and alerts | 05:15-06:10 | Authorized retained readings and an actual alert, or an explicitly labelled fixture; rule alerts and AI findings distinguished |
+| Employee prioritisation and issue resolution | 01:50-04:25 | Explainable queue, source-checked assistance and an authorized correction/next action; no claim of a fixed issue while evidence is outstanding |
+| Full process | 06:10-07:00 | Same-home stage records or labelled contracts with missing stages disclosed; a completed live lifecycle requires separate proof |
+| Resident self-service and potential staff time saved | 07:00-07:45 | Own-record access and a grounded routine answer; observed savings require a separate total-effort/contact comparison |
+
+### Prepare the views, not a new deployment
+
+* Rehearse 1:50 separately, then the eight-minute prepared route. Count clicks
+  and waits inside the windows. Cut explanation before using the reserve.
+* Pre-open the staff queue, Documents/source comparison, case assistant,
+  Home sensors, journey and authorized resident view. Keep portal access in a
+  separate clean sharing tab, without exposing tenant identities or raw logs.
+* Select one current authorized home with appropriate readings and linked
+  resident fixture if available. Preserve the five-home target above; a different
+  fixture needs explicit demo scope and must not silently redefine the cohort.
+* Prepare the short text fixture, one expected evidence gap and a manual route.
+  A model can miss the gap; retain that failure instead of replacing its answer.
+* Verify separate admission and finite call/token/time/spend authority for
+  document reading, employee chat, Quality and resident advice. The extended
+  script is not permission for four calls or a background scan.
+* Record actual model/task/version and source references for any prepared
+  output. If none exists, use the source contract, not an invented transcript.
+* Verify collector ingestion, sampling and exact interaction correlation before
+  attempting the Azure segment. No exporter, collector or UI button is installed
+  or activated by this documentation change.
+* Keep unavailable states and the accessible manual route ready. Do not use
+  colour as the sole explanation of an alert, answer origin or approval state.
 
 ## Live Preflight
 
