@@ -14308,3 +14308,8 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
 
 * Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.
+
+## [2026-11-21] update | Demo runbook live status rewrite (Refs #2203)
+
+* Added a dated "Live demo status" section to the [demo runbook](../capstone/demo/runbook.md#live-demo-status-2026-11-21) with Observed and Not verified columns for the 20-home cohort, 5 minute cadence, consent mix, resident checkbox, chat routing, charts, operator-triggered AI scope, offline-sensor alert, role proof and hardening. Relabelled the five-home section as the superseded 2026-11-12 target and kept its table for the cohort regression test.
+* Added [issue-2203-runbook-live-2026-11-21.md](research/issue-2203-runbook-live-2026-11-21.md) with the probes, results, screenshots and a per-criterion table. Unproven for the demo: a live offline alert, the deployed resident checkbox, a fresh operator-triggered AI scope read and wrong-role denial.
