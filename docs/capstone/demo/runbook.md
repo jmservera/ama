@@ -125,7 +125,7 @@ deployment or spend authority.
 | Single-instance simulator start and stop, no SQL tickets | OWNER-SELECTED TARGET | Not verified; the earlier ticket-based design is a proposal only |
 | Five synthetic demo homes | OWNER-SELECTED TARGET | The simulator reads every open case id and refreshes the list hourly; a control cohort of listed homes exists |
 | One new reading every minute | SUPERSEDED | The live simulator publishes every 5 minutes (see the live demo status) |
-| Quality AI restricted to the same five homes | HISTORICAL TARGET | Supersedes the earlier every-open-case scan scope as the selected target; the current source scope is unchanged and unverified |
+| Quality AI restricted to the same five homes | SOURCE IMPLEMENTED, LIVE NOT CONFIGURED | Source enforces it when `ZF_ASSIST_QUALITY_DEMO_HOMES` lists the five ids; the staff assistants registry shows the effective scope. On 2026-11-21 the live API app had no such variable, so the live scope was unset (see the [issue 2205 note](../../reference/research/issue-2205-live-2026-11-21.md)) |
 | Deterministic eligibility is separate from paid analysis | OWNER-SELECTED TARGET | Eligibility does not by itself start a model call |
 | Analysis is operator-triggered during the presentation, not per reading | OWNER-SELECTED TARGET | Not verified |
 | Eight-hour background limit | LATER RECOMMENDATION | Not implemented and not a timer or authority |
@@ -191,7 +191,7 @@ Preflight before any live use (record Pass, Fail, Blocked or Not run as above):
   demo status and readings for the granted homes are fresh in the chosen
   build's sensor store. Check these five historical ids only if you will show them.
 * The effective AI scan scope is evidenced for the homes you will analyse
-  before any analysis is triggered; otherwise use route E (see the route table below), not a live trigger.
+  before any analysis is triggered (the `quality_scope` block of `GET /api/assistants` shows mode, ids, trigger and per-reading calls); otherwise use route E (see the route table below), not a live trigger.
 * Each direct link opens the right case and tab for the signed-in role.
 * Current task-specific authority covers any model call; this section grants none.
 

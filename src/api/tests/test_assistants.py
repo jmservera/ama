@@ -210,6 +210,21 @@ class QualityDemoScope(Base):
     def test_unset_scope_keeps_the_legacy_every_case_behaviour(self):
         self.assertTrue(self.service.invoke(self.pm, QUALITY, "ZF-5")["id"])
 
+    def test_effective_scope_is_listed_for_the_operator_without_a_model_call(self):
+        listed = self.scoped().registry(self.pm)["quality_scope"]
+        self.assertEqual(listed["mode"], "demo-homes")
+        self.assertEqual(listed["homes"], list(DEMO))
+        self.assertEqual(
+            (listed["trigger"], listed["background_scan"], listed["per_reading_calls"]),
+            ("operator-requested-only", "skips-quality", "none"),
+        )
+        self.assertIs(listed["model_call_authority_present"], True)
+        invalid = self.scoped("ZF-1").registry(self.pm)["quality_scope"]
+        self.assertEqual((invalid["mode"], invalid["homes"]), ("invalid-refused", []))
+        legacy = self.service.registry(self.pm)["quality_scope"]
+        self.assertEqual((legacy["mode"], legacy["trigger"]), ("unrestricted", "any"))
+        self.assertEqual(self.provider.calls, 0)
+
     def proactive(self, service, capability=QUALITY, case_id="ZF-1"):
         with service.transaction() as db:
             c = json.loads(
