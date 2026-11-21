@@ -84,6 +84,7 @@ class SignedInPrincipalStaffRouteTests(unittest.TestCase):
         with self.assertRaises((PermissionError, ValueError)):
             self.store.resident_action(impostor, "ZF-1", dict(PAYLOAD))
         self.assertFalse(self.store._case("ZF-1").get("nomination_records"))
+
     def test_roster_row_without_oid_still_admits_the_matching_principal(self) -> None:
         raw = identity.principal(
             tid=TID, oid=OID, name="Directory Display Name", email="sam@example.test",
@@ -110,6 +111,30 @@ class SignedInPrincipalStaffRouteTests(unittest.TestCase):
         with self.assertRaises((PermissionError, ValueError)):
             self.store.resident_action(other, "ZF-1", dict(payload, next_update="2099-01-21"))
         self.assertEqual(len(self.store._case("ZF-1")["nomination_records"]), 1)
+
+
+class SameSignedInPersonTests(unittest.TestCase):
+    """The helper behind both the write gate and the owner-rights check."""
+
+    def check(self, actor: dict[str, Any], row: dict[str, Any]) -> bool:
+        from zava_forward.core import resident_decisions
+
+        helper: Any = resident_decisions._same_signed_in_person
+        return bool(helper(actor, row))
+
+    def test_recorded_oid_must_match_even_when_email_and_code_do(self) -> None:
+        actor = {"email": "a@x", "code": "C1", "oid": "oid-2"}
+        self.assertFalse(self.check(actor, {"email": "a@x", "code": "C1", "oid": "oid-1"}))
+        self.assertTrue(self.check(dict(actor, oid="oid-1"), {"email": "a@x", "code": "C1", "oid": "oid-1"}))
+
+    def test_actor_without_oid_is_refused_when_the_row_records_one(self) -> None:
+        self.assertFalse(self.check({"email": "a@x", "code": "C1"}, {"email": "a@x", "code": "C1", "oid": "oid-1"}))
+
+    def test_row_without_oid_admits_only_a_matching_email_and_code(self) -> None:
+        row = {"email": "a@x", "code": "C1"}
+        self.assertTrue(self.check({"email": "a@x", "code": "C1", "oid": "oid-9"}, row))
+        self.assertFalse(self.check({"email": "a@x", "code": "C2", "oid": "oid-9"}, row))
+        self.assertFalse(self.check({"email": "b@x", "code": "C1", "oid": "oid-9"}, row))
 
 
 if __name__ == "__main__":
