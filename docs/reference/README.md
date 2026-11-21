@@ -295,8 +295,9 @@ the longer slot remains a repository plan to confirm with the panel.
 Conversation-to-Azure correlation, a monitoring button, live model releases
 and measured savings are not established by the script. It retains the
 [owner-selected five-home demo target](../capstone/demo/runbook.md#demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12)
-(Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, labelled a target, not
-implemented or deployed evidence. The
+(Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, now labelled a superseded
+historical target, with the [live demo status](../capstone/demo/runbook.md#live-demo-status-2026-11-21) (20 homes, 5 minute cadence)
+beside it. See the [issue 2203 live evidence note](./research/issue-2203-runbook-live-2026-11-21.md). The
 [8 November autonomy and product-story review](../capstone/source/review-2026-11-08.md)
 corrects the original-versus-built framing, maps exact L2-L4 requests to
 current preparation, distinguishes historical Decision 1 from current
@@ -525,6 +526,8 @@ A [fifth run](./research/issue-184-live-r5-2026-11-18.md) re-reads child states,
 the child-closure criterion stays unproven and nothing is ticked.
 
 A [live demo run](./research/issue-184-live-demo-sim-consent-mix-2026-11-20.md) starts the simulator and receiver jobs on the demo hub, applies a 10 granted and 10 declined consent mix through repository code, and shows a Recent reading and Readings withheld in the staff app.
+
+A [demo coverage note](./research/issue-2191-demo-sim-coverage-2026-11-21.md) records the code change for the simulator to cover at least half of all homes with a configurable skip rate, with local test evidence and the live items not proven.
 
 A [sixth run](./research/issue-184-live-r6-2026-11-19.md) repeats the read-only checks with 91 targeted tests; the
 criterion is still an owner action and nothing is ticked.
@@ -2116,3 +2119,4 @@ For #1274, the [release-download criteria proof](./research/issue-1274-live-rele
 
 Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./research/issue-108-live-r2-20261119-2026-11-19.md), [issue 120 time capture r2](./research/issue-120-live-2026-11-19-r2.md), [issue 126 protocol and benefits gates r3](./research/issue-126-live-r3-2026-11-19.md), [issue 146 monitoring status](./research/issue-146-live-20261119T154738Z-2026-11-19.md) (refreshed in [r6](./research/issue-146-live-20261119T160746Z-2026-11-19.md)) and [issue 440 criteria verdict](./research/issue-440-live-criteria-verdict-2026-11-19.md).
 Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./research/issue-108-live-r2-20261119-2026-11-19.md), [issue 108 re-check 20261119T1621](./research/issue-108-live-20261119T1621-2026-11-19.md), [issue 120 time capture r2](./research/issue-120-live-2026-11-19-r2.md), [issue 126 protocol and benefits gates r3](./research/issue-126-live-r3-2026-11-19.md), [issue 146 monitoring status](./research/issue-146-live-20261119T154738Z-2026-11-19.md) and [issue 440 criteria verdict](./research/issue-440-live-criteria-verdict-2026-11-19.md).
+Further 2026-11-21 evidence: [issue 2206 demo preflight proof](./research/issue-2206-demo-preflight-2026-11-21.md), the read-only preflight script with a live run, evidence only.

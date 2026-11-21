@@ -91,7 +91,7 @@ class Binding:
 
 
 def _bindings(bindings: tuple[Binding, ...]) -> dict[str, Binding]:
-    if not 1 <= len(bindings) <= 100:
+    if not 1 <= len(bindings) <= 500:
         raise StreamError("INVALID_SYNTHETIC_BINDINGS")
     for binding in bindings:
         binding.validate()

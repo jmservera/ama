@@ -14285,6 +14285,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-144-live-registry-import-probe-2026-11-21.md](research/issue-144-live-registry-import-probe-2026-11-21.md): built the current agents image, staged it on a throwaway registry (deleted) and tried a control-plane import into the shared registry, which its network restriction denied; both unticked criteria stay unproven or partly proven. No source change, nothing ticked.
 
+## [2026-11-21] update | Issue 2191 demo simulator coverage (Refs #2191)
+
+* Added [issue-2191-demo-sim-coverage-2026-11-21.md](research/issue-2191-demo-sim-coverage-2026-11-21.md): cohort selection of at least half of all homes, 500 home ceiling, seeded skip rate, local test evidence; live coverage not proven.
 ## [2026-11-21] query | Timed capstone demo script
 
 * Updated [the demo runbook](../capstone/demo/runbook.md), the
@@ -14309,3 +14312,11 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2201 job-live-receiver failure diagnosis (Refs #2201)
 
 * Added [issue-2201-live-receiver-failure-2026-11-21.md](research/issue-2201-live-receiver-failure-2026-11-21.md): read-only Azure evidence (26 Failed runs, failure about 16 minutes into the window, logs blocked by the workspace network rule), the source root cause and the receiver fix. Deployment, three scheduled successes and the store/map proof stay unproven.
+## [2026-11-21] update | Issue 2206 demo preflight (Refs #2206)
+
+* Added [issue-2206-demo-preflight-2026-11-21.md](research/issue-2206-demo-preflight-2026-11-21.md): read-only preflight script with a live run; revisions, jobs, health and record format proven, live counts unproven (SQL private). Nothing ticked.
+
+## [2026-11-21] update | Demo runbook live status rewrite (Refs #2203)
+
+* Added a dated "Live demo status" section to the [demo runbook](../capstone/demo/runbook.md#live-demo-status-2026-11-21) with Observed and Not verified columns for the 20-home cohort, 5 minute cadence, consent mix, resident checkbox, chat routing, charts, operator-triggered AI scope, offline-sensor alert, role proof and hardening. Relabelled the five-home section as the superseded 2026-11-12 target and kept its table for the cohort regression test.
+* Added [issue-2203-runbook-live-2026-11-21.md](research/issue-2203-runbook-live-2026-11-21.md) with the probes, results, screenshots and a per-criterion table. Unproven for the demo: a live offline alert, the deployed resident checkbox, a fresh operator-triggered AI scope read and wrong-role denial.

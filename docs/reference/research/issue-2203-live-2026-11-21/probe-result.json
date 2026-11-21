@@ -1,0 +1,88 @@
+{
+ "role": "Retrofit Programme Manager",
+ "app_roles": [
+  "ZavaForward.ProgrammeManager"
+ ],
+ "map_http": 200,
+ "map_total": 443,
+ "map_sensor_states": {
+  "fresh": 10,
+  "no-readings": 90,
+  "not-loaded": 343
+ },
+ "fresh_homes": 10,
+ "fresh_max_age_seconds": 611,
+ "stale_or_offline_homes": [],
+ "sensors_ZF-2025-0031": {
+  "http": 200,
+  "state": "ok",
+  "freshness": "fresh",
+  "readings": 12,
+  "age_seconds": 613
+ },
+ "sensors_ZF-2025-0148": {
+  "http": 200,
+  "state": "consent-withheld",
+  "freshness": "unknown",
+  "readings": 0,
+  "age_seconds": null
+ },
+ "sensors_ZF-2025-0331": {
+  "http": 200,
+  "state": "consent-withheld",
+  "freshness": "unknown",
+  "readings": 0,
+  "age_seconds": null
+ },
+ "progress_http": 200,
+ "progress_keys": [
+  "label",
+  "start",
+  "end",
+  "as_of",
+  "coverage",
+  "daily",
+  "weekly",
+  "time_to_close",
+  "current",
+  "ai",
+  "ai_consumption_economics"
+ ],
+ "progress_days": 30,
+ "tab_granted": "Recent reading (within 15 minutes)\n\nChecked 21 Nov 2026, 10:40 (UK time)\n\nReadings are advice for a person to check. They do not change the case.\n\nAlerts for this home\n\nNo sensor alerts for this home.\n\nLatest reading\nTemperature\n8.44 degC\nRelative humidity\n88.29 %RH\nObserved\n21 Nov 2026, 10:30 (UK time), 10 minutes ago\nSensor\nS7XBQ3HG3P5\nSource\nOutdoor weather. Not calibrated.\nRecent readings (up to 12)\nRecent readings, newest first\nObserved (UK time)\tTemperature (degC)\tRelative humidity (%RH)\n21 Nov, 10:30\t8.44\t88.29\n21 Nov, 10:25\t8.38\t88.56\n21 Nov, 10:20\t8.35\t88.87\n21 Nov, 10:15\t8.35\t89.17\n21 Nov, 10:10\t8.37\t89.43\n21 Nov, 10:05\t8.39\t89.62\n21 Nov, 10:00\t8.40\t89.69\n21 Nov, 09:55\t8.36\t89.50\n21 Nov, 09:50\t8.27\t89.05\n21 Nov, 09:45\t8.14\t88.49\n21 Nov, 09:40\t7.99\t87.97\n21 Nov, 09:35\t7.85\t87.65\n\nSource of every row: Synthetic simulator reading derived from outdoor weather. Not calibrated. These",
+ "tab_declined": "Readings withheld: monitoring consent is not granted\n\nChecked 21 Nov 2026, 10:40 (UK time)\n\nReadings are advice for a person to check. They do not change the case.\n\nOwner: the resident's consent owner. Next action: use the ordinary quality check. Do not ask for the readings without consent. If you think consent has been given, ask the resident liaison officer to record it.",
+ "browser_sensor_responses": [
+  [
+   200,
+   "cases/ZF-2025-0031/sensors"
+  ],
+  [
+   200,
+   "cases/ZF-2025-0148/sensors"
+  ]
+ ],
+ "progress_charts": 6,
+ "progress_headings": [
+  "Progress summary",
+  "What these figures mean",
+  "Cases opened and closed per day",
+  "Cases opened and closed per week",
+  "Backlog trend",
+  "Cases by journey step now",
+  "Workload by team now",
+  "AI briefing review outcomes"
+ ],
+ "map_filter_present": 1,
+ "map_filter_text": [
+  "Show only homes with stale or offline sensors",
+  "0 of 443 homes have a stale or offline sensor."
+ ],
+ "forecast": {
+  "http": null,
+  "body": "request timed out or failed"
+ },
+ "rai-metrics": {
+  "http": 503,
+  "body": null
+ }
+}

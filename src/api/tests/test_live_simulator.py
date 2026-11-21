@@ -194,6 +194,51 @@ class SendSlotTests(unittest.TestCase):
         self.assertEqual(summary.codes, {"INVALID_HOME_ID": 1})
 
 
+class IntermittentFailureTests(unittest.TestCase):
+    def _slot(self, rate: float, homes: list[str]) -> tuple[ls.Summary, ls.MemorySink]:
+        sink, clock = ls.MemorySink(), Clock()
+        summary = run_async(
+            ls.send_slot(
+                homes,
+                SLOT,
+                lr.Generator(2191),
+                sink,
+                FAST,
+                sleep=clock.sleep,
+                clock=clock.monotonic,
+                failure_rate=rate,
+            )
+        )
+        return summary, sink
+
+    def test_zero_rate_sends_every_home(self) -> None:
+        summary, sink = self._slot(0.0, HOMES)
+        self.assertEqual((summary.sent, summary.skipped), (12, 0))
+        self.assertEqual(len(sink.messages), 12)
+
+    def test_rate_skips_some_homes_repeatably_and_not_as_failures(self) -> None:
+        homes = [f"HOME-{i:03d}" for i in range(200)]
+        summary, sink = self._slot(0.25, homes)
+        again, _ = self._slot(0.25, homes)
+        self.assertEqual(summary.codes, again.codes)
+        self.assertEqual(summary.sent + summary.skipped, 200)
+        self.assertEqual(len(sink.messages), summary.sent)
+        self.assertEqual((summary.failed, summary.codes[ls.SKIPPED]), (0, summary.skipped))
+        self.assertTrue(30 <= summary.skipped <= 70)
+
+    def test_rate_is_validated(self) -> None:
+        for bad in (-0.1, 0.95, float("nan"), "0.2", None):
+            with self.assertRaises(StreamError):
+                ls.check_failure_rate(bad)
+        self.assertEqual(ls.check_failure_rate(0.9), 0.9)
+
+    def test_cli_rejects_a_bad_env_rate(self) -> None:
+        with patch("sys.stderr", io.StringIO()) as err:
+            code = ls.main([], {"ZF_SIM_FAILURE_RATE": "lots"})
+        self.assertEqual(code, 2)
+        self.assertIn("SIM_CONFIG_INVALID", err.getvalue())
+
+
 class AttemptGateTests(unittest.TestCase):
     def _device(self, home: str) -> str:
         return str(lr.Generator(184).reading(home, SLOT).device_id)
