@@ -298,6 +298,7 @@ and measured savings are not established by the script. It retains the
 (Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, now labelled a superseded
 historical target, with the [live demo status](../capstone/demo/runbook.md#live-demo-status-2026-11-21) (20 homes, 5 minute cadence)
 beside it. See the [issue 2203 live evidence note](./research/issue-2203-runbook-live-2026-11-21.md). The
+For #2189, the [Source CI critical path evidence](./research/ci-critical-path-2189.md) records hosted timings (src-api 22 to 28 min) and per-criterion status.
 [8 November autonomy and product-story review](../capstone/source/review-2026-11-08.md)
 corrects the original-versus-built framing, maps exact L2-L4 requests to
 current preparation, distinguishes historical Decision 1 from current
