@@ -14353,6 +14353,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2204 role sign-in and wrong-role denial (Refs #2204)
 
 * Added [issue-2204-role-signin-wrong-role-denial-live-2026-11-21.md](research/issue-2204-role-signin-wrong-role-denial-live-2026-11-21.md): live Programme Manager sign-in, permitted views and wrong-role denials on the demo, a local matrix for every other role and the administrator, and a per-criterion table. Other live roles stay unproven (no accounts, no directory privileges). No source change.
+## [2026-11-21] update | Issue 2189 CI critical path evidence (Refs #2189)
+
+* Added [ci-critical-path-2189.md](research/ci-critical-path-2189.md): hosted timings show src-api at 22 to 28 min; mssql gating exists; sharding and pip cache are not implemented; wall-time and no-skip criteria stay unproven.
 * Index row added to `docs/reference/README.md`.
 ## [2026-11-21] update | Issue 2191 live coverage check (Refs #2191)
 
