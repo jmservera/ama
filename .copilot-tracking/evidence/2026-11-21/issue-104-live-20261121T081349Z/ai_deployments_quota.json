@@ -1,0 +1,19 @@
+[
+  {
+    "cap": 10,
+    "model": "gpt-4.1-nano",
+    "name": "standard",
+    "sku": "GlobalStandard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  },
+  {
+    "cap": 1,
+    "model": "gpt-4.1-mini",
+    "name": "resident-mini",
+    "sku": "Standard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  }
+]
+[]

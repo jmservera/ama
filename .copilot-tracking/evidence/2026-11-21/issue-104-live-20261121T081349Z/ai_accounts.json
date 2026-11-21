@@ -1,0 +1,8 @@
+[
+  {
+    "kind": "AIServices",
+    "loc": "uksouth",
+    "n": "aif-cutover-test-rzsrg",
+    "sku": "S0"
+  }
+]

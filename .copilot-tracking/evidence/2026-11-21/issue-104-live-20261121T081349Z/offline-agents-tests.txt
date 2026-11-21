@@ -1,0 +1,8 @@
+AI_LIMIT_BREACH reason=price-unknown route=workflow-only
+AI_LIMIT_BREACH reason=money-budget-limit route=workflow-only
+AI_LIMIT_BREACH reason=liability-unknown route=workflow-only
+AI_LIMIT_BREACH reason=liability-unknown route=workflow-only
+----------------------------------------------------------------------
+Ran 59 tests in 5.972s
+
+OK
