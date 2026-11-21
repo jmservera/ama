@@ -14270,3 +14270,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Epic 93 criteria re-check (Refs #93)
 
 * Added [issue-93-criteria-recheck-live-2026-11-21.md](research/issue-93-criteria-recheck-live-2026-11-21.md): issue states, 270 offline finance and form tests, a signed-in read-only live probe at revision 0000038, and a per-criterion table (C2 and C3 proven, C1 unproven). No source change, nothing ticked.
+## [2026-11-21] update | Issue 349 live round 7 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r7-2026-11-21.md](research/issue-349-tenant-prerequisites-live-r7-2026-11-21.md): re-ran the browser proof, corrected the round 6 DNS diagnosis, recorded an Entra-level unassigned-principal denial and the per-criterion verdict; no source change

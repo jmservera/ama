@@ -1,0 +1,12 @@
+{
+ "test": {
+  "IfExistsResult": 1,
+  "fed_host": "",
+  "has_password": true
+ },
+ "resident": {
+  "IfExistsResult": 0,
+  "fed_host": "sts.microsoftonline.com",
+  "has_password": true
+ }
+}
