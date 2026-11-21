@@ -14288,3 +14288,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2191 demo simulator coverage (Refs #2191)
 
 * Added [issue-2191-demo-sim-coverage-2026-11-21.md](research/issue-2191-demo-sim-coverage-2026-11-21.md): cohort selection of at least half of all homes, 500 home ceiling, seeded skip rate, local test evidence; live coverage not proven.
+## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
+
+* Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.

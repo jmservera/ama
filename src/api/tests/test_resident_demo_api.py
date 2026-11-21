@@ -200,6 +200,7 @@ class SignInTests(DemoTestCase):
                 "viewer",
                 "account",
                 "agenda_available",
+                "sensor_consent",
                 "callbacks_available",
                 "read_only",
                 "home",
