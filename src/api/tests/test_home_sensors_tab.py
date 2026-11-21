@@ -203,6 +203,7 @@ class Node {
   scrollIntoView() {}
 }
 const document = {createElement: tag => new Node(tag),
+  createElementNS: (ns, tag) => new Node(tag),
   createTextNode: text => new Node("#text", text),
   getElementById: () => ({scrollIntoView() {document.scrolled = true;}})};
 class MutationObserver {
@@ -598,6 +599,7 @@ class HomeSensorsTab(unittest.TestCase):
             [
                 "Alerts for this home",
                 "Latest reading",
+                "Temperature and humidity over time",
                 "Recent readings (up to 12)",
                 "Around the first quality evidence record",
                 "Before",
@@ -618,6 +620,33 @@ class HomeSensorsTab(unittest.TestCase):
         self.assertEqual(shape["name"], "Recent readings, newest first table")
         self.assertEqual(shape["time"], "2026-11-20T13:25:46Z")
         self.assertEqual(shape["firstCell"], "20 Nov, 13:25")
+
+    def test_the_dual_axis_chart_has_a_text_alternative_and_respects_every_state(self) -> None:
+        for name in ("fresh", "stale"):
+            with self.subTest(state=name):
+                text = self.text(name)
+                self.assertIn("Temperature (degC)", text)
+                self.assertIn("Relative humidity (%RH)", text)
+                self.assertIn("different scales", text)
+                self.assertIn("dashed line, squares, right axis", text)
+                self.assertIn("The same readings are in the Recent readings table below.", text)
+        self.assertNotIn("Out of date: these are the last readings", self.text("fresh"))
+        self.assertIn("Out of date: these are the last readings", self.text("stale"))
+        for name in (
+            "no-readings",
+            "withheld",
+            "withheld-with-values",
+            "unavailable",
+            "not-linked",
+            "service-down",
+            "not-connected",
+            "network",
+            "restricted",
+        ):
+            with self.subTest(state=name):
+                self.assertNotIn(
+                    "Temperature and humidity over time", self.matrix[name]["headings"]
+                )
 
     def test_no_internal_identifier_reaches_the_screen_in_any_state(self) -> None:
         banned = re.compile(r"(?i)\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b")
