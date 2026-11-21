@@ -295,8 +295,9 @@ the longer slot remains a repository plan to confirm with the panel.
 Conversation-to-Azure correlation, a monitoring button, live model releases
 and measured savings are not established by the script. It retains the
 [owner-selected five-home demo target](../capstone/demo/runbook.md#demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12)
-(Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, labelled a target, not
-implemented or deployed evidence. The
+(Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, now labelled a superseded
+historical target, with the [live demo status](../capstone/demo/runbook.md#live-demo-status-2026-11-21) (20 homes, 5 minute cadence)
+beside it. See the [issue 2203 live evidence note](./research/issue-2203-runbook-live-2026-11-21.md). The
 [8 November autonomy and product-story review](../capstone/source/review-2026-11-08.md)
 corrects the original-versus-built framing, maps exact L2-L4 requests to
 current preparation, distinguishes historical Decision 1 from current
