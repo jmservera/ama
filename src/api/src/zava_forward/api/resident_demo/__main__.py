@@ -26,6 +26,7 @@ from .aoai import configured_advisor
 from .app import ResidentDemo, serve
 from .chat_log import ChatLog
 from .rep_grants import load_grants
+from .sensor_consent import port_from_env
 
 
 def main() -> int:
@@ -79,6 +80,7 @@ def main() -> int:
         assistant_advisor=advisor,
         agenda=agenda,
         chat_log=chat_log,
+        sensor_consent=port_from_env(os.environ),
         representative_grants=rep_grants,
     )
     server = serve(app)
