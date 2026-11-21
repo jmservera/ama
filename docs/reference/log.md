@@ -14220,3 +14220,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 440 live criteria verdict, third pass (Refs #440)
 
 * Added [issue-440-live-criteria-verdict-2026-11-21-r3.md](research/issue-440-live-criteria-verdict-2026-11-21-r3.md): D1 to D3 re-observed at head 0c497160e with a signed-in demo probe and screenshot, coordinator section statically re-read, criterion 7 evidenced for the demo and 8 unproven. No source change.
+
+## [2026-11-21] update | Issue 1830 fifth pass (Refs #1830)
+
+* Added [issue-1830-live-r5-2026-11-21.md](research/issue-1830-live-r5-2026-11-21.md): executed `rpi-checks.py --preflight` selectors and edge cases, direct 320px and map browser reruns with a negative control, timing from ten retained full receipts including the first jobs 4 run; criterion 2 proven for the demo, others still partial; no source change.
