@@ -14250,3 +14250,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 1274 live evidence (Refs #1274)
 
 * Added [issue-1274-live-evidence-2026-11-21.md](research/issue-1274-live-evidence-2026-11-21.md): failing actionlint and AWF 0.28.23 release endpoints identified from retained job logs for #1243 and #1271, real actionlint 1.7.7 checksum verification and a hosted observation recorded. AWF resilience and the #1273 causes stay unproven. No source change.
+
+## [2026-11-21] update | Issue 1288 round 6 live audit (Refs #1288)
+
+* Added [issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md](research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md): 465 local tests OK, live simulator observed feeding two homes, Home sensors screenshot, Quality model blocked at release admission (OQ-017); criteria 4 and 8 unproven, no source change.
