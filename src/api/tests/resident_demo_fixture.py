@@ -85,6 +85,7 @@ class Client:
             "/demo/view",
             "/demo/assistant",
             "/demo/agenda",
+            "/demo/sensor-consent",
             "/demo/logout",
         ):
             sent[demo.SESSION_HEADER] = self.session_id
