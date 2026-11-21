@@ -39,3 +39,5 @@ Everything an engineer can prove for C1 is proven above. What remains is an owne
 * Azure and issue facts are as read on 2026-11-21 and may change.
 * The live probe is read-only; write paths (invoice intake, grant states, form packs) were not exercised live.
 * Independent exact-head review and hosted CI are outstanding.
+
+The raw live_probe.json (about 42 KB of funding and roster data) is not committed; the figures above come from the retained logs in the evidence folder.
