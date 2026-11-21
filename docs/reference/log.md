@@ -14329,3 +14329,10 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added a dated "Live demo status" section to the [demo runbook](../capstone/demo/runbook.md#live-demo-status-2026-11-21) with Observed and Not verified columns for the 20-home cohort, 5 minute cadence, consent mix, resident checkbox, chat routing, charts, operator-triggered AI scope, offline-sensor alert, role proof and hardening. Relabelled the five-home section as the superseded 2026-11-12 target and kept its table for the cohort regression test.
 * Added [issue-2203-runbook-live-2026-11-21.md](research/issue-2203-runbook-live-2026-11-21.md) with the probes, results, screenshots and a per-criterion table. Unproven for the demo: a live offline alert, the deployed resident checkbox, a fresh operator-triggered AI scope read and wrong-role denial.
+
+## [2026-11-21] update | Demo API rollout of main 78ecac16af (Refs #2202)
+
+* Owner-approved, resource group `ama` only. Built `zava-forward-api:78ecac16af` (digest `sha256:2efbf6831512235a731f6e4c83b1bc8f48f29121acf8aa2126d5865bbecea4b4`) locally and pushed it inside a short registry window; readback after the push was Deny, public access Disabled, no IP rules, exports disabled.
+* Demo API revision `--0000039` to `--0000040`, 100 percent, Healthy, `/healthz` 200. `job-live-simulator` and `job-live-receiver` moved to the same image. The change carries the staff roster read fix (#2211), which stopped every contractor sign-in on the SQL store, and the receiver window fix (#2210).
+* One contractor roster row was added to the demo SQL `staff` table for a demo contractor account; sign-ins then reached the workbench without an auth denial.
+* Not done: `ZF_CONTAINER_HARDENING` stays `off` on the API, simulator and receiver, so the `enforced` live rollout in the infrastructure guide remains pending. The agents and resident apps were not rebuilt. No live receipt has been captured.
