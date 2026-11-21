@@ -14367,6 +14367,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2192 live proof round 2 (Refs #2192)
 
 * Added [issue-2192-live-r2-2026-11-21.md](research/issue-2192-live-r2-2026-11-21.md): live resident checkbox proof; found the resident writes consent for the showcase home while the employee view reads the case id; fix committed locally, live re-proof pending deploy.
+## [2026-11-21] update | Issue 2186 live full receipt relaxation (Refs #2186)
+
+* Added [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): `tools/rpi-checks.py` now lets a full receipt survive inert-only origin/main moves; tests added; real full-receipt run unproven.
 * Index row added to `docs/reference/README.md`.
 ## [2026-11-21] update | Issue 2206 preflight round 2 (Refs #2206)
 
