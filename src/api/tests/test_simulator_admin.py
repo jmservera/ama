@@ -289,7 +289,7 @@ class AdminModuleTests(unittest.TestCase):
             "approval blank": ({"approval_reference": " "}, "CONTROL_INVALID"),
             "no homes": ({"homes": []}, "CONTROL_INVALID"),
             "duplicate homes": ({"homes": [HOMES[0], HOMES[0]]}, "CONTROL_INVALID"),
-            "too many homes": ({"homes": [f"HOME-{i:03d}" for i in range(101)]}, "CONTROL_INVALID"),
+            "too many homes": ({"homes": [f"HOME-{i:03d}" for i in range(501)]}, "CONTROL_INVALID"),
             "homes not list": ({"homes": "HOME-001"}, "CONTROL_INVALID"),
             "bad stamp": ({"expires_at": "2026-11-10"}, "CONTROL_INVALID"),
             "past expiry": ({"expires_at": "2026-11-09T09:00:00Z"}, "CONTROL_WINDOW_INVALID"),

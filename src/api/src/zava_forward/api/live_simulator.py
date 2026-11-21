@@ -48,6 +48,8 @@ DAILY_MESSAGE_BUDGET = B1_DAILY_MESSAGES - RESERVED_HEADROOM
 DEVICE_FILE = re.compile(r"SYN-[A-Z0-9][A-Z0-9_-]{0,19}\Z")
 Sleep = Callable[[float], Awaitable[None]]
 FENCED = "RUN_CONTROL_FENCED"
+SKIPPED = "DEVICE_SKIPPED"
+MAX_FAILURE_RATE = 0.9
 
 
 class SinkError(RuntimeError):
@@ -226,6 +228,7 @@ class Summary:
     homes: int
     sent: int = 0
     failed: int = 0
+    skipped: int = 0
     retries: int = 0
     codes: dict[str, int] = field(default_factory=dict)
 
@@ -284,6 +287,22 @@ def _permitted(attempt_gate: Callable[[str], bool], home: str) -> bool:
         return False
 
 
+def check_failure_rate(rate: object) -> float:
+    if not isinstance(rate, (int, float)) or isinstance(rate, bool):
+        raise StreamError("SIM_CONFIG_INVALID")
+    if not 0 <= rate <= MAX_FAILURE_RATE:
+        raise StreamError("SIM_CONFIG_INVALID")
+    return float(rate)
+
+
+def device_skips(seed: int, home: str, slot: datetime, rate: float) -> bool:
+    """Seeded per home and slot, so a rerun of the same slot repeats the same missing readings."""
+    if rate <= 0:
+        return False
+    key = f"{seed}|{home}|{slot.strftime('%Y-%m-%dT%H:%M')}"
+    return random.Random(key).random() < rate
+
+
 async def send_slot(
     homes: Sequence[str],
     slot: datetime,
@@ -295,14 +314,19 @@ async def send_slot(
     clock: Callable[[], float] = time.monotonic,
     rng: random.Random | None = None,
     attempt_gate: Callable[[str], bool] | None = None,
+    failure_rate: float = 0.0,
 ) -> Summary:
     """Send one reading per home for the slot in batches, throttled, with exponential backoff.
+
+    `failure_rate` is the chance that a device sends nothing this slot (a missing reading,
+    counted as `skipped`, never as a sink failure).
 
     `attempt_gate(home)` is asked after pacing and right before every send attempt, retries
     included. A False or an error stops that home with `RUN_CONTROL_FENCED`; a send already handed
     to the sink is not recalled.
     """
     check_capacity(len(homes), limits, generator.cadence_seconds)
+    failure_rate = check_failure_rate(failure_rate)
     if len(set(homes)) != len(homes):
         raise lr.LiveReadingError("DEVICE_ID_COLLISION")
     jitter = rng or random.Random(generator.seed)
@@ -316,6 +340,10 @@ async def send_slot(
         except lr.LiveReadingError as error:
             summary.codes[str(error)] = summary.codes.get(str(error), 0) + 1
             summary.failed += 1
+            return
+        if device_skips(generator.seed, home, summary.slot, failure_rate):
+            summary.codes[SKIPPED] = summary.codes.get(SKIPPED, 0) + 1
+            summary.skipped += 1
             return
         for attempt in range(limits.attempts):
             await pacer.admit()
@@ -430,6 +458,7 @@ async def run(
     gate: Callable[[datetime], bool] | None = None,
     attempt_gate: Callable[[str], bool] | None = None,
     fence_error: Callable[[], str | None] | None = None,
+    failure_rate: float = 0.0,
 ) -> list[Summary]:
     """Send the current slot, then (unless `once`) one per cadence; missed slots are skipped.
 
@@ -465,6 +494,7 @@ async def run(
                     sleep=sleep,
                     clock=clock,
                     attempt_gate=attempt_gate,
+                    failure_rate=failure_rate,
                 )
                 summaries.append(summary)
                 if report:
@@ -487,11 +517,12 @@ async def run(
 
 def _report(summary: Summary) -> None:
     LOG.info(
-        "slot=%s homes=%d sent=%d failed=%d retries=%d codes=%s",
+        "slot=%s homes=%d sent=%d failed=%d skipped=%d retries=%d codes=%s",
         summary.slot.strftime("%Y-%m-%dT%H:%MZ"),
         summary.homes,
         summary.sent,
         summary.failed,
+        summary.skipped,
         summary.retries,
         dict(sorted(summary.codes.items())),
     )
@@ -535,7 +566,17 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         default_cadence = int(env.get("ZF_SIM_CADENCE_MINUTES", "5"))
     except ValueError:
         default_cadence = 0
+    try:
+        default_failure = float(env.get("ZF_SIM_FAILURE_RATE", "0"))
+    except ValueError:
+        default_failure = -1.0
     parser.add_argument("--seed", type=int, default=default_seed)
+    parser.add_argument(
+        "--failure-rate",
+        type=float,
+        default=default_failure,
+        help="chance 0 to 0.9 that a device sends nothing in a slot (demo missing readings)",
+    )
     parser.add_argument("--max-homes", type=int, default=0, help="0 means every home (stdout only)")
     parser.add_argument("--control-file", default=env.get("ZF_SIM_CONTROL_FILE", ""))
     parser.add_argument("--cadence-minutes", type=int, choices=(1, 5), default=default_cadence)
@@ -549,6 +590,7 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         sink = _sink(args, env)
         if args.cadence_minutes not in (1, 5):
             raise StreamError("SIM_CONFIG_INVALID")
+        failure_rate = check_failure_rate(args.failure_rate)
         generator = lr.Generator(args.seed, cadence_seconds=args.cadence_minutes * 60)
         try:
             demo = demo_homes(env.get("ZF_ASSIST_QUALITY_DEMO_HOMES"))
@@ -620,6 +662,7 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
                 attempt_gate=permit if control_path is not None else None,
                 fence_error=lambda: refusals[0] if refusals else None,
                 refresh_slots=1,
+                failure_rate=failure_rate,
             )
         )
     except HomeListError as error:

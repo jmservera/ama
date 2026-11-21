@@ -14288,6 +14288,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Employee sensor charts demo evidence (Refs #2193)
 
 * Added [employee-sensor-charts-2193.md](research/demo-employee-charts/employee-sensor-charts-2193.md): dual-axis Home sensors chart and map card gauges with screenshots, axe run and unit tests. Live deployment unproven.
+## [2026-11-21] update | Issue 2191 demo simulator coverage (Refs #2191)
+
+* Added [issue-2191-demo-sim-coverage-2026-11-21.md](research/issue-2191-demo-sim-coverage-2026-11-21.md): cohort selection of at least half of all homes, 500 home ceiling, seeded skip rate, local test evidence; live coverage not proven.
 ## [2026-11-21] query | Timed capstone demo script
 
 * Updated [the demo runbook](../capstone/demo/runbook.md), the
