@@ -1,0 +1,142 @@
+{
+ "entra_redirect": true,
+ "me_status": 200,
+ "me": {
+  "role": "Retrofit Programme Manager",
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "app_admin": false,
+  "view_only": false,
+  "identity_source": "entra",
+  "navigation": [
+   {
+    "label": "My cases",
+    "href": "#/",
+    "access": null
+   },
+   {
+    "label": "All cases",
+    "href": "#/all",
+    "access": null
+   },
+   {
+    "label": "Overview",
+    "href": "#/overview",
+    "access": null
+   },
+   {
+    "label": "Progress dashboard",
+    "href": "#/progress",
+    "access": null
+   },
+   {
+    "label": "Visits",
+    "href": "#/visits",
+    "access": null
+   },
+   {
+    "label": "Funding",
+    "href": "#/funding",
+    "access": null
+   },
+   {
+    "label": "Finance",
+    "href": "#/finance",
+    "access": null
+   },
+   {
+    "label": "Capacity and work orders",
+    "href": "#/capacity",
+    "access": null
+   },
+   {
+    "label": "Closed cases",
+    "href": "#/closed",
+    "access": null
+   },
+   {
+    "label": "Assistant proposals",
+    "href": "#/assistants",
+    "access": null
+   },
+   {
+    "label": "Time capture",
+    "href": "#/time",
+    "access": null
+   },
+   {
+    "label": "Aftercare concerns",
+    "href": "#/aftercare",
+    "access": null
+   },
+   {
+    "label": "Specialist screens",
+    "href": "#/screens",
+    "access": null
+   }
+  ],
+  "services": {
+   "photo": false,
+   "law_alerts": false,
+   "assistants": true,
+   "cases": true
+  }
+ },
+ "probes": {
+  "/api/cases": 200,
+  "/api/stats": 200,
+  "/api/finance/queue": 403,
+  "/api/packages": 200,
+  "/api/funding": 200,
+  "/api/admin/simulator-control": 403,
+  "/api/audit": 403,
+  "simulator_body_keys": [
+   "code",
+   "error"
+  ],
+  "simulator_error": "Only an application administrator can use simulator run control."
+ },
+ "views": {
+  "01-workbench": {
+   "route": "/#/",
+   "h1": [
+    "Every home has an owner.",
+    "From survey to handover",
+    "What one case contains",
+    "AI prepares.\nA person decides."
+   ],
+   "text_has_unavailable": true
+  },
+  "02-denied-simulator": {
+   "route": "/#/simulator",
+   "h1": [
+    "Every home has an owner.",
+    "From survey to handover",
+    "What one case contains",
+    "AI prepares.\nA person decides."
+   ],
+   "text_has_unavailable": true
+  },
+  "03-denied-repairs-role-screen": {
+   "route": "/#/role/repairs",
+   "h1": [
+    "Every home has an owner.",
+    "From survey to handover",
+    "What one case contains",
+    "AI prepares.\nA person decides."
+   ],
+   "text_has_unavailable": true
+  },
+  "04-permitted-pm-queue": {
+   "route": "/#/role/programme_manager",
+   "h1": [
+    "Every home has an owner.",
+    "From survey to handover",
+    "What one case contains",
+    "AI prepares.\nA person decides."
+   ],
+   "text_has_unavailable": true
+  }
+ }
+}

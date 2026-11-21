@@ -1,0 +1,395 @@
+[
+ {
+  "case": "Retrofit Coordinator",
+  "app_roles": [
+   "ZavaForward.Coordinator"
+  ],
+  "me_status": 200,
+  "role": "Retrofit Coordinator",
+  "app_admin": false,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Assistant proposals",
+   "Time capture",
+   "Aftercare concerns",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 403,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Resident Liaison Officer",
+  "app_roles": [
+   "ZavaForward.LiaisonOfficer"
+  ],
+  "me_status": 200,
+  "role": "Resident Liaison Officer",
+  "app_admin": false,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Assistant proposals",
+   "Time capture",
+   "Aftercare concerns",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 403,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Building Safety Liaison",
+  "app_roles": [
+   "ZavaForward.SafetyLiaison"
+  ],
+  "me_status": 200,
+  "role": "Building Safety Liaison",
+  "app_admin": false,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Assistant proposals",
+   "Time capture",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 403,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Grants and Evidence Officer",
+  "app_roles": [
+   "ZavaForward.GrantsOfficer"
+  ],
+  "me_status": 200,
+  "role": "Grants and Evidence Officer",
+  "app_admin": false,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Finance",
+   "Assistant proposals",
+   "Time capture",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 200,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Quality Inspector",
+  "app_roles": [
+   "ZavaForward.QualityInspector"
+  ],
+  "me_status": 200,
+  "role": "Quality Inspector",
+  "app_admin": false,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Assistant proposals",
+   "Time capture",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 403,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Retrofit Programme Manager",
+  "app_roles": [
+   "ZavaForward.ProgrammeManager"
+  ],
+  "me_status": 200,
+  "role": "Retrofit Programme Manager",
+  "app_admin": false,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Finance",
+   "Capacity and work orders",
+   "Closed cases",
+   "Assistant proposals",
+   "Time capture",
+   "Aftercare concerns",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 200,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Programme Support Officer",
+  "app_roles": [
+   "ZavaForward.SupportOfficer"
+  ],
+  "me_status": 200,
+  "role": "Programme Support Officer",
+  "app_admin": false,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Finance",
+   "Capacity and work orders",
+   "Closed cases",
+   "Assistant proposals",
+   "Time capture",
+   "Aftercare concerns",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 200,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Contractor",
+  "app_roles": [
+   "ZavaForward.Contractor"
+  ],
+  "me_status": 200,
+  "role": "Contractor",
+  "app_admin": null,
+  "view_only": null,
+  "nav_labels": [
+   "My jobs",
+   "Specialist screens"
+  ],
+  "nav_unavailable": [],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 403,
+   "/api/finance": 403,
+   "/api/packages": 403,
+   "/api/funding": 403,
+   "/api/workorders": 200,
+   "/api/audit-check": 403,
+   "/api/admin/simulator-control": 403
+  }
+ },
+ {
+  "case": "Application Administrator (alone)",
+  "app_roles": [
+   "ZavaForward.ApplicationAdmin"
+  ],
+  "me_status": 200,
+  "role": "Application Administrator",
+  "app_admin": true,
+  "view_only": true,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Finance",
+   "Capacity and work orders",
+   "Closed cases",
+   "Assistant proposals",
+   "Time capture",
+   "Aftercare concerns",
+   "Specialist screens",
+   "Simulator control"
+  ],
+  "nav_unavailable": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Finance",
+   "Capacity and work orders",
+   "Closed cases",
+   "Assistant proposals",
+   "Time capture",
+   "Aftercare concerns",
+   "Specialist screens",
+   "Simulator control"
+  ],
+  "statuses": {
+   "/api/cases": 403,
+   "/api/stats": 403,
+   "/api/finance": 403,
+   "/api/packages": 403,
+   "/api/funding": 403,
+   "/api/workorders": 403,
+   "/api/audit-check": 403,
+   "/api/admin/simulator-control": 200
+  }
+ },
+ {
+  "case": "Application Administrator + Coordinator",
+  "app_roles": [
+   "ZavaForward.ApplicationAdmin",
+   "ZavaForward.Coordinator"
+  ],
+  "me_status": 200,
+  "role": "Retrofit Coordinator",
+  "app_admin": true,
+  "view_only": false,
+  "nav_labels": [
+   "My cases",
+   "All cases",
+   "Overview",
+   "Progress dashboard",
+   "Visits",
+   "Funding",
+   "Finance",
+   "Capacity and work orders",
+   "Closed cases",
+   "Assistant proposals",
+   "Time capture",
+   "Aftercare concerns",
+   "Specialist screens",
+   "Simulator control"
+  ],
+  "nav_unavailable": [
+   "Finance",
+   "Capacity and work orders",
+   "Closed cases"
+  ],
+  "statuses": {
+   "/api/cases": 200,
+   "/api/stats": 200,
+   "/api/finance": 403,
+   "/api/packages": 200,
+   "/api/funding": 200,
+   "/api/workorders": 200,
+   "/api/audit-check": 200,
+   "/api/admin/simulator-control": 200
+  }
+ },
+ {
+  "case": "DENIED: Contractor role claim without a roster company binding",
+  "app_roles": [
+   "ZavaForward.Contractor"
+  ],
+  "me_status": 401
+ },
+ {
+  "case": "DENIED: Contractor + admin",
+  "app_roles": [
+   "ZavaForward.ApplicationAdmin",
+   "ZavaForward.Contractor"
+  ],
+  "me_status": 401
+ },
+ {
+  "case": "DENIED: two staff roles",
+  "app_roles": [
+   "ZavaForward.Coordinator",
+   "ZavaForward.Contractor"
+  ],
+  "me_status": 401
+ },
+ {
+  "case": "DENIED: unmapped role claim",
+  "app_roles": [
+   "ZavaForward.Nope"
+  ],
+  "me_status": 401
+ },
+ {
+  "case": "DENIED: no role claim",
+  "app_roles": [],
+  "me_status": 401
+ },
+ {
+  "case": "anonymous (no principal header)",
+  "me_status": 401
+ }
+]
