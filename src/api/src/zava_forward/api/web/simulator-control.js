@@ -106,7 +106,7 @@ async function simulatorControlView() {
         }, "Start");
       } },
         h("h2", { id: "simulator-start-heading" }, "Start a finite run"),
-        h("p", { id: "sim-start-help" }, "The existing limits apply: 1 to 100 homes, an expiry in the future and at most 14 days away, and the daily message budget. A start that breaks a limit is refused."),
+        h("p", { id: "sim-start-help" }, "The existing limits apply: 1 to 500 homes, an expiry in the future and at most 14 days away, and the daily message budget. A start that breaks a limit is refused."),
         h("div", {}, h("label", { for: "sim-owner" }, "Named owner"), owner),
         h("div", {}, h("label", { for: "sim-approval" }, "Approval reference"), approval),
         h("div", {}, h("label", { for: "sim-expires" }, "Expiry time (UTC)"), expires, h("p", { id: "sim-expires-help", class: "muted" }, "Use the form 2026-11-12T18:00:00Z.")),
