@@ -14308,6 +14308,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
 
 * Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.
+## [2026-11-21] update | Issue 2206 demo preflight (Refs #2206)
+
+* Added [issue-2206-demo-preflight-2026-11-21.md](research/issue-2206-demo-preflight-2026-11-21.md): read-only preflight script with a live run; revisions, jobs, health and record format proven, live counts unproven (SQL private). Nothing ticked.
 
 ## [2026-11-21] update | Demo runbook live status rewrite (Refs #2203)
 
