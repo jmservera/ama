@@ -806,7 +806,10 @@ class ReceiverJobContractTests(unittest.TestCase):
 
     def test_receiver_job_is_manual_with_its_own_identity_and_command(self) -> None:
         for needle in (
-            "triggerType: 'Manual'",
+            "param cronExpression string = ''",
+            "triggerType: empty(cronExpression) ? 'Manual' : 'Schedule'",
+            "manualTriggerConfig: empty(cronExpression) ?",
+            "scheduleTriggerConfig: empty(cronExpression) ? null",
             "zava_forward.api.live_receiver",
             "ZF_SIM_CLIENT_ID",
             "ZF_SIM_ROUTING_READY",
