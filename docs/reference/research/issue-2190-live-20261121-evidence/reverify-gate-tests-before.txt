@@ -1,0 +1,15 @@
+
+======================================================================
+ERROR: test_verbose_results_tolerate_thread_logs_after_ok_and_dotted_log_text (tools.test_rpi_checks.GateTests.test_verbose_results_tolerate_thread_logs_after_ok_and_dotted_log_text)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2190-live-20261121T212428Z/tools/test_rpi_checks.py", line 623, in test_verbose_results_tolerate_thread_logs_after_ok_and_dotted_log_text
+    gate.check_skips(required, integration=True, required_tests=names)
+  File "/home/azureuser/source/ama-wt/issue-2190-live-20261121T212428Z/tools/rpi-checks.py", line 1860, in check_skips
+    raise GateError("Required actual SQL chat test execution evidence missing/mismatched")
+rpi_checks.GateError: Required actual SQL chat test execution evidence missing/mismatched
+
+----------------------------------------------------------------------
+Ran 120 tests in 34.645s
+
+FAILED (errors=3)

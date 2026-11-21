@@ -14360,3 +14360,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2191 live coverage check (Refs #2191)
 
 * Added [issue-2191-live-coverage-2026-11-21.md](research/issue-2191-live-coverage-2026-11-21.md): live store holds 443 homes, the cohort is 20 (4.5%), the deployed image skips 128 of 443 at rate 0.3 in a deleted dry-run probe. The 50% criterion stays unproven because per-device secrets do not scale; no source change.
+## [2026-11-21] update | Gate flakes reproduced and fixed (Refs #2190)
+
+* Added [issue-2190-live-20261121-2026-11-21.md](research/issue-2190-live-20261121-2026-11-21.md): reproduction and explanation of three gate flakes (rpi-checks log interleaving, employee chat late_success snapshot race, 218 urllib timeout under load), fixes, loaded repeat runs and a per-criterion verdict. Gate-tool and check edits; no web UI source change.
+* Index row added to `docs/reference/README.md`.

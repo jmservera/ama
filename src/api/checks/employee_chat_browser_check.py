@@ -99,6 +99,9 @@ def late_success(page: Page, pending: str, transition: str) -> None:
             expect(page.locator("#employee-chat")).to_have_count(0)
             page.get_by_label("Work email", exact=True).focus()
 
+        # The route render fetches its case list asynchronously and rewrites the workspace status
+        # when that read ends; settle it so the snapshot compares only the late success effect.
+        page.wait_for_load_state("networkidle")
         before = page.evaluate("""() => {
           const state = window.employeeLate;
           state.focus = document.activeElement;
