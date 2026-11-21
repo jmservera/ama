@@ -25,7 +25,7 @@ from zava_forward.core.synthetic import sensor_identity
 from zava_forward.core.synthetic.sensor_stream import StreamError, accountable_text
 
 VERSION = "live-sim-control-v1"
-MAX_COHORT = 100
+MAX_COHORT = 500
 MAX_WINDOW = timedelta(days=14)
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ\Z")
 PLACEHOLDERS = frozenset({"tbc", "tbd", "todo", "n/a", "na", "none", "unknown", "unassigned"})
@@ -145,7 +145,7 @@ def main(argv: Sequence[str] | None = None, now: datetime | None = None) -> int:
     )
     parser.add_argument("--approval")
     parser.add_argument("--owner")
-    parser.add_argument("--homes", help="start: comma separated home ids, at most 100")
+    parser.add_argument("--homes", help="start: comma separated home ids, at most 500")
     args = parser.parse_args(list(argv) if argv is not None else None)
     moment = now or datetime.now(UTC)
     try:

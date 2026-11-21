@@ -2572,9 +2572,9 @@ landed separately in #1203.)
 
 ### Bounded cohort and finite run control (2026-11-08)
 
-The receiver binds at most 100 devices, so the hub sink never sends "every home". It reads a
+The receiver binds at most 500 devices, so the hub sink never sends "every home". It reads a
 control document (`live-sim-control-v1`, `--control-file` or `ZF_SIM_CONTROL_FILE`) that names
-the demo cohort (1 to 100 home ids), an owner, an approval reference, `enabled` and a hard
+the demo cohort (1 to 500 home ids), an owner, an approval reference, `enabled` and a hard
 `expires_at`. `--sink iothub` refuses to start without it. The simulator re-reads it every slot;
 a stop (`enabled` false), an expiry, or an unreadable or invalid file ends sending
 (fail closed, exit 0 with nothing sent). Cohort homes missing from the store are skipped, and an
@@ -2586,6 +2586,12 @@ python -m zava_forward.api.live_control start --file control.json --expires-at 2
 python -m zava_forward.api.live_control status --file control.json
 python -m zava_forward.api.live_control stop --file control.json
 ```
+
+For the demo, `python tools/demo_consent_mix.py select HOME_ID...` picks at least half of all
+homes, evenly spread, and `plan` alternates granted and declined consent across them. Set
+`ZF_SIM_FAILURE_RATE` (or `--failure-rate`, 0 to 0.9, default 0) to make each device skip a slot
+with that chance; the slot log reports `skipped` and the code `DEVICE_SKIPPED`, and the reading is
+missing rather than failed (issue 2191).
 
 A start must expire in the future and within 14 days. The file holds no credential. Admin-only
 control is Azure RBAC: only holders of write access to the certificate file share (and of the
