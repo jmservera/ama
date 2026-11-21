@@ -1,0 +1,27 @@
+{
+ "title": "Dawn Brown",
+ "latest": "Sensor status\n\u2713\nSensor recent\n. Recent reading (within 15 minutes)\nLatest reading\n7.3 \u00b0C, 93.2% relative humidity\nLast reading time\n21 Nov 2026, 22:50 (UK time), 1 minutes ago\nSource\nSynthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+ "meters": [
+  {
+   "label": "Temperature 7.3 degC, scale 0 to 40",
+   "value": 7.3,
+   "min": 0,
+   "max": 40,
+   "text": "7.3 degC"
+  },
+  {
+   "label": "Relative humidity 93.2 %RH, scale 0 to 100",
+   "value": 93.2,
+   "min": 0,
+   "max": 100,
+   "text": "93.2 %RH"
+  }
+ ],
+ "labels": [
+  "Temperature: 7.3 degC",
+  "Relative humidity: 93.2 %RH"
+ ],
+ "old": false,
+ "oldNote": null,
+ "animations": 0
+}

@@ -3006,8 +3006,9 @@ function mapPanel(coordinator = null, filters = null) {
   const sensorSource = h("dd");
   const sensorGaugeBox = h("div", { class: "map-gauge-box" });
   const sensorBox = h("div", { class: "map-sensor-box" }, h("h4", {}, "Indoor sensor"),
-    h("dl", { class: "map-sensor-list" }, h("dt", {}, "Sensor status"), sensorState, h("dt", {}, "Latest reading"), sensorValues,
-      h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource), sensorGaugeBox);
+    h("dl", { class: "map-sensor-list" }, h("dt", {}, "Sensor status"), sensorState, h("dt", {}, "Latest reading"), sensorValues),
+    sensorGaugeBox,
+    h("dl", { class: "map-sensor-list" }, h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource));
   const navigate = h("a", { class: "btn" }, "Open home");
   const restoreMarker = (id) => {
     const target = markers.get(id)?.getElement();

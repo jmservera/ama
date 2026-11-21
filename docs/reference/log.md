@@ -14376,3 +14376,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2191-live-cohort-222-2026-11-21.md](research/issue-2191-live-cohort-222-2026-11-21.md): the live simulator now covers 222 of 443 homes (111 granted, 111 declined) with a 0.1 skip rate; the earlier secret-limit reason was refuted (a 450 secret job was accepted). Fixed the 100 control cap in `SensorConsumer.configure` and added the `failureRate` Bicep parameter.
 * Index row updated in `docs/reference/README.md`.
+## [2026-11-21] update | Issue 2193 employee sensor charts live re-check (Refs #2193)
+
+* Updated [employee-sensor-charts-2193.md](research/demo-employee-charts/employee-sensor-charts-2193.md): live Playwright observation of the dual-axis chart and map card gauges on the demo API, probe script and screenshots. The gauge reorder is local only; stale, offline and withheld states are test-only.

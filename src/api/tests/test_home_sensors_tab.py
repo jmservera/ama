@@ -686,6 +686,18 @@ class HomeSensorsTab(unittest.TestCase):
         self.assertNotIn("Sensor review draft", self.text("conflict"))
 
 
+class MapCardGaugeOrder(unittest.TestCase):
+    def test_the_gauges_sit_directly_under_the_latest_reading(self) -> None:
+        app = (WEB / "app.js").read_text()
+        start = app.index("const sensorBox = h(")
+        block = app[start : app.index("const navigate", start)]
+        order = [
+            block.index(token)
+            for token in ("sensorValues", "sensorGaugeBox", "sensorWhen", "sensorSource")
+        ]
+        self.assertEqual(order, sorted(order))
+
+
 class AlertLabel(unittest.TestCase):
     def label(self, kind: str) -> dict[str, Any]:
         responses = {"/sensors": reply(payload(kind)), "/sensor-drafts": reply(drafts("none"))}
