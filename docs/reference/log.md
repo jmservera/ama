@@ -14273,3 +14273,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 349 live round 7 (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r7-2026-11-21.md](research/issue-349-tenant-prerequisites-live-r7-2026-11-21.md): re-ran the browser proof, corrected the round 6 DNS diagnosis, recorded an Entra-level unassigned-principal denial and the per-criterion verdict; no source change
+
+## [2026-11-21] update | Epic 104 criteria re-check (Refs #104)
+
+* Added [issue-104-criteria-recheck-live-2026-11-21.md](research/issue-104-criteria-recheck-live-2026-11-21.md): issue states, 59 offline bounded-AI tests, read-only Azure deployment and quota reads, and a per-criterion table (C1 and C2 unproven, ticked criteria still proven). No source change, nothing ticked.

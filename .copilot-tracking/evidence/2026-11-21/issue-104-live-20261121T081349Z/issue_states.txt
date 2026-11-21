@@ -1,0 +1,28 @@
+== 104
+open 2026-11-15T09:32:28Z labels=epic,brd,prd,adr,area:ai,status:partially-delivered
+- [ ] Complete the scoped stabilization checkpoint defined in #440 before epic closure: reconcile BRD/PRD and ADR intent, run relevant local-first regression/integration checks, disposition bugs and necessary refactoring, and record authorized Azure-only residuals and any owner-approved pivot/defer decision. Merged children alone do not satisfy this criterion.
+- [ ] All child features closed or deferred
+== 105
+closed 2026-10-16T14:34:37Z labels=feature,prd,area:ai,status:partially-delivered
+== 106
+closed 2026-10-16T14:34:39Z labels=feature,prd,area:ai,status:partially-delivered
+== 107
+open 2026-11-19T16:21:38Z labels=feature,prd,adr,area:ai,status:partially-delivered
+== 108
+open 2026-11-20T03:49:11Z labels=feature,prd,adr,area:ai,status:partially-delivered
+- [ ] Model names, versions and quotas are confirmed in the chosen region
+== 164
+closed 2026-11-19T14:24:41Z labels=feature,prd,adr,status:partially-delivered,area:agent-chat
+== 216
+closed 2026-11-19T14:20:15Z labels=feature,prd,adr,status:partially-delivered,status:not-started,area:regulatory-assistant
+== 432
+closed 2026-11-18T08:28:13Z labels=feature,brd,prd,area:ai,status:not-started
+== 435
+open 2026-11-19T16:21:29Z labels=story,area:ai,status:not-started
+- [ ] The owner decides the placement (strengthened slide 16 with a Q&A card and optional appendix, a new main-route slide, or spoken only), and the deck is rebuilt and revalidated through the PowerPoint workflow if it changes
+- [ ] The mentor confirms what they meant by Tokenomics, and whether a figure or a method is expected
+- [ ] The owner decides whether to authorise a finite measured token batch on held-out cases, with spend authority recorded; if not, the pitch states the gap and no figure is shown
+== 440
+open 2026-11-17T01:27:23Z labels=enhancement,area:delivery-quality,area:governance,status:partially-delivered,delivery:feedback-first
+- [ ] Triage confirmed findings into deduplicated, independently scoped RPI bug/refactor issues with severity, reproduction, requirement/ADR links, acceptance criteria and explicit dependencies. Gate affected epic closure/dependent feature expansion on blocking findings only; independent work continues. Owner approval is required for requirement changes, architectural pivots and deliberate deferrals.
+- [ ] Deliver genuine research, plan/details, changes and independent review artifacts in the PR. Treat the coordinator change as a Major HVE Builder behavior change with static review, behavior testing and host validation. Record actual unresolved blockers; no unsupported acceptance ticks or issue closure.
