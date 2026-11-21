@@ -14305,3 +14305,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2192 resident sensor consent checkbox (Refs #2192)
 
 * Added [issue-2192-live-2026-11-21.md](research/issue-2192-live-2026-11-21.md): resident grant and withdraw checkbox with audit row and employee withheld state, proven locally with Playwright and unit tests; live Azure deployment unproven. Nothing ticked.
+
+## [2026-11-21] update | Issue 2201 job-live-receiver failure diagnosis (Refs #2201)
+
+* Added [issue-2201-live-receiver-failure-2026-11-21.md](research/issue-2201-live-receiver-failure-2026-11-21.md): read-only Azure evidence (26 Failed runs, failure about 16 minutes into the window, logs blocked by the workspace network rule), the source root cause and the receiver fix. Deployment, three scheduled successes and the store/map proof stay unproven.

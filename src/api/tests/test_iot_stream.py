@@ -177,7 +177,7 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
         await asyncio.Event().wait()
 
     async def run_receiver(
-        self, count: int, stop: asyncio.Event | None = None
+        self, count: int, stop: asyncio.Event | None = None, bounded: bool = False
     ) -> tuple[Receipt, ...]:
         self.client.receive = self.receive
         with (
@@ -191,7 +191,9 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
             patch("zava_forward.api.iot_stream.datetime", FixtureClock),
         ):
             try:
-                return await self.receiver.run(max_seconds=2, max_events=count, stop=stop)
+                return await self.receiver.run(
+                    max_seconds=2, max_events=count, stop=stop, bounded_window=bounded
+                )
             finally:
                 credential.assert_called_once_with(client_id=None)
                 self.assertEqual(factory.call_args.kwargs["retry_total"], 0)
@@ -237,6 +239,27 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
         await self.run_receiver(2)
         self.assertEqual(self.count("sensor_reading"), 1)
         self.assertEqual(self.count("sensor_data_quality_exception"), 1)
+
+    async def test_bounded_window_ends_on_deadline_and_skips_refused_events(self) -> None:
+        first, second = observations()
+        foreign = event(first, device="SYN-OTHER")
+        self.events = [("0", foreign), ("0", event(first)), ("0", foreign)]
+        with self.assertRaisesRegex(StreamError, "^IOT_DEVICE_NOT_ALLOWED$"):
+            await self.run_receiver(5)
+        self.client = Mock(close=AsyncMock())
+        self.credentials = Mock(close=AsyncMock())
+        receipts = await self.run_receiver(5, bounded=True)
+        self.assertEqual(len(receipts), 1)
+        self.assertEqual(self.receiver.rejected, {"IOT_DEVICE_NOT_ALLOWED": 2})
+        self.assertEqual(self.count("sensor_reading"), 1)
+
+    async def test_bounded_window_keeps_sql_failure_fatal(self) -> None:
+        self.events = [("0", event(observations()[0]))]
+        with patch.object(
+            self.receiver.ingestion, "consume", side_effect=ConsumerError("SENSOR_SQL_UNAVAILABLE")
+        ):
+            with self.assertRaisesRegex(StreamError, "^SENSOR_SQL_UNAVAILABLE$"):
+                await self.run_receiver(2, bounded=True)
 
     async def test_sql_failure_stops_admission_without_checkpoint_then_recovers(self) -> None:
         first, second = observations()
