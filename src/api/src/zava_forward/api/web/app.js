@@ -2935,6 +2935,20 @@ const sensorReading = (sensor) => {
   if (typeof sensor?.humidity_pct === "number") parts.push(`${sensor.humidity_pct}% relative humidity`);
   return parts.join(", ");
 };
+const MAP_GAUGES = [["temperature_c", "Temperature", "degC", 0, 40], ["humidity_pct", "Relative humidity", "%RH", 0, 100]];
+// Gauges repeat the text values; each carries its number as text, so no meaning relies on the bar.
+const sensorGauges = (sensor) => {
+  const items = MAP_GAUGES.filter(([key]) => typeof sensor?.[key] === "number").map(([key, name, unit, min, max]) => {
+    const value = sensor[key];
+    const id = `map-gauge-${key}`;
+    return h("div", { class: "map-gauge" }, h("label", { for: id }, `${name}: ${value} ${unit}`),
+      h("meter", { id, min, max, value: Math.min(max, Math.max(min, value)), "aria-label": `${name} ${value} ${unit}, scale ${min} to ${max}` }, `${value} ${unit}`),
+      h("span", { class: "map-gauge-scale", "aria-hidden": "true" }, `${min}`, h("span", {}, `${max} ${unit}`)));
+  });
+  const old = ["stale", "offline"].includes(sensor?.state);
+  return h("div", { class: `map-gauges${old ? " out-of-date" : ""}`, hidden: !items.length }, items,
+    old && items.length ? h("p", { class: "muted" }, "Out of date: last values received.") : null);
+};
 const sensorBadge = (p) => h("span", { class: `sensor-badge${sensorAlert(p) ? " alert" : ""}` },
   h("span", { "aria-hidden": "true" }, sensorInfo(p).mark), ` ${sensorInfo(p).short}`);
 const sensorLine = (p) => [sensorInfo(p).short, sensorReading(p.sensor)].filter(Boolean).join(", ");
@@ -2990,9 +3004,10 @@ function mapPanel(coordinator = null, filters = null) {
   const sensorValues = h("dd");
   const sensorWhen = h("dd");
   const sensorSource = h("dd");
+  const sensorGaugeBox = h("div", { class: "map-gauge-box" });
   const sensorBox = h("div", { class: "map-sensor-box" }, h("h4", {}, "Indoor sensor"),
     h("dl", { class: "map-sensor-list" }, h("dt", {}, "Sensor status"), sensorState, h("dt", {}, "Latest reading"), sensorValues,
-      h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource));
+      h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource), sensorGaugeBox);
   const navigate = h("a", { class: "btn" }, "Open home");
   const restoreMarker = (id) => {
     const target = markers.get(id)?.getElement();
@@ -3023,6 +3038,7 @@ function mapPanel(coordinator = null, filters = null) {
     sensorState.replaceChildren(sensorBadge(point), h("span", { class: "sr-only" }, `. ${point.sensor?.label || ""}`));
     sensorValues.textContent = sensorReading(point.sensor) || "No values shown";
     sensorWhen.textContent = sensorTimeText(point.sensor);
+    sensorGaugeBox.replaceChildren(sensorGauges(point.sensor));
     sensorSource.textContent = point.sensor?.source || "No synthetic reading shown for this home.";
     navigate.href = `#/case/${encodeURIComponent(point.id)}`;
     homeCard.hidden = false;
