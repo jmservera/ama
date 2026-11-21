@@ -315,7 +315,7 @@
     input.addEventListener("change", function () {
       var wanted = input.checked;
       input.disabled = true;
-      status.textContent = "Saving your choice\u2026";
+      status.textContent = "Saving your choice...";
       api("/demo/sensor-consent", { method: "POST", body: JSON.stringify({ granted: wanted }) }).then(function (res) {
         input.disabled = false;
         if (res.ok && res.body.sensor_consent) {
