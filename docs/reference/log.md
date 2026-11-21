@@ -14216,3 +14216,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 350 live pass 2 (Refs #350)
 
 * Added [issue-350-live-r2-criteria-2026-11-21.md](research/issue-350-live-r2-criteria-2026-11-21.md): signed-in staff and read-only Azure evidence for all ten unticked criteria. The 980-case baseline and AI deployment are present, time capture gating is proven for the demo, and the edge 302, law store, photo, licensed map provider, digest blobs and second-role results stay unproven. No source change; nothing ticked.
+
+## [2026-11-21] update | Issue 440 live criteria verdict, third pass (Refs #440)
+
+* Added [issue-440-live-criteria-verdict-2026-11-21-r3.md](research/issue-440-live-criteria-verdict-2026-11-21-r3.md): D1 to D3 re-observed at head 0c497160e with a signed-in demo probe and screenshot, coordinator section statically re-read, criterion 7 evidenced for the demo and 8 unproven. No source change.
