@@ -1,0 +1,81 @@
+{
+ "case": "ZF-2025-0331",
+ "before": {
+  "hashes": {
+   "stage": "41e1fb32b626",
+   "days_in_stage": "e5b861a6d8a9",
+   "closed": "fcbcf165908d",
+   "resident": "0abbd77566ff",
+   "hazards": "8d114edf457e",
+   "measure_decisions": "4c80358ff229"
+  },
+  "stage": "Waiting for block programme",
+  "days_in_stage": 116,
+  "hazard_state": [
+   [
+    "Repair evidenced, hold active",
+    "2025-12-21",
+    {
+     "scope": "Home",
+     "case_id": "ZF-2025-0331",
+     "status": "Active",
+     "accountable_role": null,
+     "legacy": true
+    }
+   ]
+  ],
+  "awaiting_hazard_action": null,
+  "n_nominations": 0
+ },
+ "owner_options": 1,
+ "record": {
+  "status": 403,
+  "err": "Reload your current staff identity before recording this step."
+ },
+ "after_record": {
+  "hashes_equal": true,
+  "n_nominations": 0
+ },
+ "hazard_true": {
+  "status": 403,
+  "keys": [
+   "error"
+  ],
+  "route": {
+   "action": null,
+   "endpoint": null,
+   "message": null
+  }
+ },
+ "after_hazard_true": {
+  "hashes_equal": true,
+  "n_nominations": 0
+ },
+ "forbidden_fields": {
+  "retaliation_flag": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: retaliation_flag."
+  },
+  "refusal": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: refusal."
+  },
+  "hazard_pause": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: hazard_pause."
+  },
+  "priority_penalty": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: priority_penalty."
+  }
+ },
+ "hazard_missing": {
+  "status": 400,
+  "keys": [
+   "error"
+  ]
+ },
+ "final_hashes_equal": true,
+ "final_n_nominations": 0,
+ "html_has_protection": true
+}

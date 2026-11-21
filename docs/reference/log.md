@@ -14341,3 +14341,8 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [public-browser-access-live-r8-2026-11-21.md](research/public-browser-access-live-r8-2026-11-21.md): browser sign-in and a 36-path signed-in sweep on the demo; `/api/time/status` is now 200; the `/api/handoffs/unaccepted` 500 (naive `offered_at`) is fixed in a local commit and not deployed. Criteria 3 and 4 proven; 1 partly proven (browser redirect needs an owner infra decision); 5 unproven.
 * Index row added to `docs/reference/README.md`.
+
+## [2026-11-21] update | Issue 220 eighth live run (Refs #220)
+
+* Added [issue-220-live-r8-oid-less-roster-2026-11-21.md](research/issue-220-live-r8-oid-less-roster-2026-11-21.md): the staff-recorded route write is still 403 on revision 0000040; root cause is an oid-less roster row; local fix and regression test, not deployed. Criterion 5 stays unticked.
+* Index row added to `docs/reference/README.md`.
