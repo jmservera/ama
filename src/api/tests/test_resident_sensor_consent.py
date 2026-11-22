@@ -20,6 +20,8 @@ class FakePort:
     def set(self, home_id: str, granted: bool) -> str:
         if self.fail:
             raise ValueError("down")
+        if home_id not in self.states and home_id != "ZF-1":
+            raise ValueError("UNKNOWN_HOME")
         self.calls.append((home_id, granted))
         self.states[home_id] = "granted" if granted else "declined"
         return self.states[home_id]
@@ -47,6 +49,15 @@ class SensorConsentTests(DemoTestCase):
         status, body, _ = client.call("POST", "/demo/sensor-consent", {"granted": True})
         self.assertEqual(body["sensor_consent"]["state"], "granted")
         self.assertEqual(self.port.calls, [("ZF-1", False), ("ZF-1", True)])
+
+    def test_withdrawal_also_reaches_the_case_id_home_the_employee_view_reads(self) -> None:
+        self.reader.rows["C-1"] = make_row("C-1", "one@example.com", sensor_home_id="ZF-1")
+        self.port.states["C-1"] = "granted"
+        client = self.signed_in()
+        status, _, _ = client.call("POST", "/demo/sensor-consent", {"granted": False})
+        self.assertEqual(status, 200)
+        self.assertEqual(self.port.calls, [("ZF-1", False), ("C-1", False)])
+        self.assertEqual(self.port.states["C-1"], "declined")
 
     def test_unavailable_without_a_writer_or_when_the_store_fails(self) -> None:
         client = self.signed_in()

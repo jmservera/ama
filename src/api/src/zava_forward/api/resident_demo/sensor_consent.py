@@ -50,6 +50,19 @@ def port_from_env(env: Mapping[str, str]) -> ConsentPort | None:
     return SensorConsentPort(SensorConsumer(SensorMssqlConnector(sql)))
 
 
+def apply(port: ConsentPort, home_id: str, case_id: str, granted: bool) -> None:
+    """Change the resident's sensor home, then the case-id home the employee view reads.
+
+    The employee sensor view keys readings by case id, so the choice must reach that home
+    too; a case without controls under its own id is skipped."""
+    port.set(home_id, granted)
+    if case_id != home_id:
+        try:
+            port.set(case_id, granted)
+        except ValueError:
+            pass
+
+
 def card(port: ConsentPort | None, home_id: str | None) -> dict[str, object]:
     """The resident-facing consent card; fails closed to unavailable."""
     base: dict[str, object] = {"notice": dict(NOTICE), "label": LABEL}
