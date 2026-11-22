@@ -408,6 +408,29 @@ class ContractTests(Base):
         after = {a["id"]: a for a in self.service.forecast(self.pm)["assistants"]}[cap]["new_proposals"]
         self.assertEqual(after, first - 1)
 
+    def test_forecast_does_not_hold_the_write_lock(self):
+        """A long read-only forecast must not block other writers (it once held the map for 150 s live)."""
+        probed = []
+        real = self.service.snapshot
+
+        def snapshot(*args, **kwargs):
+            if not probed:
+                other = sqlite3.connect(self.dbpath, isolation_level=None)
+                try:
+                    other.execute("PRAGMA busy_timeout=0")
+                    other.execute("BEGIN IMMEDIATE")
+                    other.execute("ROLLBACK")
+                    probed.append("free")
+                except sqlite3.OperationalError:
+                    probed.append("locked")
+                finally:
+                    other.close()
+            return real(*args, **kwargs)
+
+        with patch.object(self.service, "snapshot", snapshot):
+            self.service.forecast(self.pm)
+        self.assertEqual(probed, ["free"])
+
     def test_forecast_is_staff_only_and_bounded(self):
         for role in ("Contractor", "Unknown"):
             with self.assertRaises(PermissionError):
