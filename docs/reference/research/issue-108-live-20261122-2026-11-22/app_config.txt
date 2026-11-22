@@ -1,0 +1,22 @@
+== resident app AOAI-related env (names; endpoint hosts only)
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+[]
+== api app
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+[
+  {
+    "n": "AI_DEPLOYMENT",
+    "v": "standard"
+  },
+  {
+    "n": "AI_DEPLOYMENT_STRONG",
+    "v": "standard"
+  },
+  {
+    "n": "ZF_DEPLOYMENT_PROFILE",
+    "v": "demo"
+  }
+]
+== revisions
+ca-resident-demo--0000025
+ca-cutover-test-demo-api--0000053
