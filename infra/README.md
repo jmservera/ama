@@ -1822,6 +1822,12 @@ prior state (Deny, no rules, public access Disabled, exports disabled).
   To stop earlier run `az containerapp ingress disable -n ca-resident-demo -g ama`; ingress is currently external,
   as before this deploy, and minimum replicas stay 0. Rollback is the previous digest `sha256:24a9cbe34593ca297976aea4b78c8f445ef261898e5d4329bc3eee0db23ab28b`.
 
+### Live roll of the resident image from main `0696d9446` (2026-11-22, Refs #2192)
+
+Owner-approved synthetic demo, resource group `ama`, no Bicep. Local `docker build` of `src/api/Dockerfile.resident-demo`, pushed with the trapped registry script; readback Disabled, Deny, no rules, exports disabled. Image `zava-resident-demo:2192-0696d9446`, digest `sha256:3066f40840ec84050490c9533e9d4b08f33026f8371a5c94e68fd3ea05d428b7`. Revision `ca-resident-demo--0000020` to `--0000021`, 100 percent, Healthy; only the image changed. Rollback digest `sha256:39348ec9881fd9f04196a4bc839266e7f13a14d0f7e1114373773d5db22e9bc3`.
+
+Live proof for the test resident (case `ZF-2025-0029`): employee sensors state `consent-withheld` before, `ok` with 12 readings after the resident ticks, `consent-withheld` after the resident unticks; the resident was left unticked. Azure SQL audit rows were not read. Evidence and the per-criterion table: [issue-2192-live-r3-2026-11-22.md](../docs/reference/research/issue-2192-live-r3-2026-11-22.md).
+
 ### Live sensors seed for the test resident (2026-11-04, Refs #1072, Refs #462)
 
 Owner-approved until the end of November 2026: one-off in-VNet job runs to the private demo SQL database, public network access kept Disabled, no firewall rule, spec restored with readback.
