@@ -14428,3 +14428,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2204 contractor binding and capability combinations live (Refs #2204)
 
 * Added [issue-2204-contractor-capability-combos-live-2026-11-22.md](research/issue-2204-contractor-capability-combos-live-2026-11-22.md): the Kat Larsson roster binding already exists in Azure SQL; the Contractor path signed in live with a temporary row (removed); the four capability roles signed in on the Programme Manager. Rule and restart actions stay unproven. No source change.
+## [2026-11-22] update | Standing preference: AI usage approved for the demo
+
+* Recorded the owner's AI-usage approval for the demo in [memory.md](memory.md) because the Copilot memory service could not store it for this repository.
