@@ -1479,6 +1479,17 @@ class Assistants:
             finally:
                 db.close()
 
+    @contextmanager
+    def _read_connection(self):
+        """A lock-free autocommit connection for estimates that write nothing.
+
+        `_transaction` holds the application-wide exclusive lock, so a long read inside it blocks every other writer and the map."""
+        db = self.store.assistant_connection()
+        try:
+            yield db
+        finally:
+            db.close()
+
     def now(self, db):
         query = (
             "SELECT DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'), SYSUTCDATETIME()) / 1000.0"
@@ -2486,7 +2497,7 @@ class Assistants:
             )
         bounds = model_bounds(self.limits)
         cycles = period_seconds // self.limits.scan_interval
-        with self.transaction() as db, rel.read_only():
+        with self._read_connection() as db, rel.read_only():
             allowed = [k for k, v in REGISTRY.items() if user.get("role") in v["roles"]]
             if not allowed:
                 raise PermissionError("Staff assistance only.")
