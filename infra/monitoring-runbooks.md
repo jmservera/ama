@@ -214,6 +214,19 @@ bounded concurrency; no schema/capacity changes or disabling audit controls.
 Recovery: CPU and latency observations in the same window and reconciliation
 of failed writes/retries before resumed work.
 
+### SQL DTU
+
+Anchor: `sql-dtu`. `alert-${prefix}-sql-dtu`: `dtu_consumption_percent` Average >80
+over 15 minutes, every five minutes, severity 3; authored only when `sqlTier` is
+`dtu` (the metric is absent on vCore tiers). Proposed owner: Digital service owner.
+Demo observation 2026-11-22: hourly maxima 82 to 92 percent, hourly averages 15.7
+to 20.9 percent on Standard capacity 100, so Average avoids alerting on single spikes.
+Triage: `dtu_consumption_percent`, `dtu_used` and `dtu_limit` for the window, then
+concurrent load; no SQL text, parameters or rows exported. Response: preserve manual
+work; any tier change is a separately approved release action. Recovery: DTU back
+under threshold and failed writes reconciled. Metric query (Portal Metrics or
+`az monitor metrics list --metric dtu_consumption_percent --aggregation Average Maximum`).
+
 ### API errors
 
 Anchor: `api-errors`. `alert-${applicationPrefix}-api-5xx`: Requests Total >5
@@ -528,6 +541,24 @@ still need visible monitoring ownership/manual-route status. Recovery: qualified
 corrective tests and distinct authorized human restart approval; current actual
 restart remains held as documented in #221. Constructed thresholds/fixtures are
 synthetic offline tests only, never actual human authorization.
+
+### Job live receiver
+
+Anchor: `job-live-receiver`. `alert-job-live-receiver-failed`, created by
+`infra/live-receiver-job.bicep` only when `failureAlertActionGroupId` is set:
+`Microsoft.App/jobs` `Executions` Total >0 with `state=Failed` over 15 minutes,
+every five minutes, severity 2. Proposed owner: Digital service owner. Demo
+observation 2026-11-22: 61 Failed of 107 recorded executions and no alert before
+this rule. Triage: `az containerapp job execution list` status and start time, then
+platform events; no console-content dumps. Response: the receiver is a telemetry
+reader, so keep manual routes and do not replay without audit. Recovery: next
+scheduled execution Succeeded.
+
+### API 5xx query
+
+The 5xx rule is the metric alert in the API errors entry. The same view as a query:
+`az monitor metrics list --metric Requests --filter "statusCodeCategory eq '5xx'" --aggregation Total`.
+In Application Insights: `AppRequests | where Success == false and ResultCode startswith "5" | summarize count() by bin(TimeGenerated, 5m)`.
 
 ## Executable Coverage Check
 

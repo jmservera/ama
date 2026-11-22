@@ -14565,3 +14565,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 138 eleventh live re-probe (Refs #138)
 
 * Added [issue-138-live-r11-2026-11-22.md](research/issue-138-live-r11-2026-11-22.md): no federated credential, no protection rules on the required environments, 0 runners, what-if workflow skipped; post-deployment check logic proven live against the demo API; repository scan 0 findings. Criteria 1 to 4 unproven, 5 and 6 partly proven. No source or estate change.
+## [2026-11-22] update | Issue 146 SQL DTU and receiver job alerts (Refs #146)
+
+* Added [issue-146-live5-monitoring-2026-11-22.md](research/issue-146-live5-monitoring-2026-11-22.md): read-only live inventory, source-only SQL DTU and receiver job failure alerts with runbook entries, and a per-criterion table. No estate change.
