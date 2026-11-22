@@ -14618,3 +14618,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] add | Nomination test bootstrap isolation re-run (Refs #1847)
 
 * Added [nomination-bootstrap-isolation-rerun-1847-2026-11-22.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-22.md): fresh-process re-run on main 3219004e90 with retained outputs; five criteria proven, the full gate and external receipt unproven. No source or test change.
+## [2026-11-22] update | Issue 1830 r7 replay of the original #1297 defect (Refs #1830)
+
+* Added [issue-1830-live-r7-2026-11-22.md](research/issue-1830-live-r7-2026-11-22.md): original #1297 320px defect fails at `18d3de459f` and passes at head through a direct recipe; preflight tests and selectors and the map check re-run. Criteria 1, 3 and 4 remain partly proven. No source or estate change.
