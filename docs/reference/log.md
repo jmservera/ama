@@ -14662,3 +14662,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1258 live evidence r7 (Refs #1258)
 
 * Added [ranking-archive-ancestor-durability-live-r7-2026-11-22.md](research/ranking-archive-ancestor-durability-live-r7-2026-11-22.md): 110 tests OK at head equal to main, real strace of first publication into a nested archive; FULL receipt, independent review and hosted checks stay unproven. No source change.
+
+## [2026-11-22] update | Issue 1259 live run 6 (Refs #1259)
+
+* Added [2026-11-22-ranking-archive-unusable-1259-live-r6.md](research/2026-11-22-ranking-archive-unusable-1259-live-r6.md): red-before (7 failures) and green-after (110 tests) for unusable ranking archive paths, with per-criterion status. No source change.
