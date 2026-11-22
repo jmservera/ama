@@ -14658,3 +14658,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1288 ninth live audit (Refs #1288)
 
 * Added [issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md](research/issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md): main confirmed current, 92 focused tests OK, seven homes with fresh live readings and a Home sensors screenshot, Quality model still blocked at release admission, forecast endpoint 503/504 recorded as an anomaly. Criteria 4 and 8 stay unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 1258 live evidence r7 (Refs #1258)
+
+* Added [ranking-archive-ancestor-durability-live-r7-2026-11-22.md](research/ranking-archive-ancestor-durability-live-r7-2026-11-22.md): 110 tests OK at head equal to main, real strace of first publication into a nested archive; FULL receipt, independent review and hosted checks stay unproven. No source change.
