@@ -1,0 +1,13 @@
+{
+ "api": {
+  "/api/handoffs/unaccepted": 200,
+  "/api/handoffs/unaccepted.csv": 200,
+  "/api/ai/report": 500,
+  "/api/law": 404,
+  "/api/account/photo": 503,
+  "/api/time/status": 200,
+  "/api/handoffs": 200,
+  "/api/handoffs/unowned": 200,
+  "/api/assistants/proposals": 200
+ }
+}

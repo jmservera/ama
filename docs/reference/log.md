@@ -14636,3 +14636,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2188 gate speed-up criteria refresh (Refs #2188)
 
 * Added [issue-2188-live-gate-speed-2026-11-22.md](research/issue-2188-live-gate-speed-2026-11-22.md): retry and receipt retries now implemented (#2272), images still serialised by `docker_lock`, image build 70.5 s to 7.2 s, 144 tooling tests pass; gate-level before and after unproven. No source change.
+## [2026-11-22] update | Issue 344 public browser access live run 9 (Refs #344)
+
+* Added [public-browser-access-live-r9-2026-11-22.md](research/public-browser-access-live-r9-2026-11-22.md): the anonymous 401 versus redirect split is traced to the browser User-Agent under `RedirectToLoginPage`; 13 workbench destinations walked signed in; SQL still private; criteria 1 partly proven and 5 unproven with reasons. No source or estate change.
