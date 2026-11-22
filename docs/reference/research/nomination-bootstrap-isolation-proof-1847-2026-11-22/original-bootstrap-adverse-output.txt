@@ -1,0 +1,7 @@
+# original bootstrap (7de4a8110^) temporarily restored
+## test_bulk_edits test_nomination_route
+Ran 55 tests in 22.009s
+FAILED (failures=1, errors=20)
+## test_nomination_bootstrap
+Ran 3 tests in 0.874s
+FAILED (failures=2)

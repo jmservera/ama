@@ -1,0 +1,66 @@
+== deployments aoai-resident-469
+ERROR: (ResourceNotFound) The Resource 'Microsoft.CognitiveServices/accounts/aoai-resident-469' under resource group 'ama' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+Code: ResourceNotFound
+Message: The Resource 'Microsoft.CognitiveServices/accounts/aoai-resident-469' under resource group 'ama' was not found. For more details please go to https://aka.ms/ARMResourceNotFoundFix
+== deployments aif-cutover-test-rzsrg
+[
+  {
+    "cap": 10,
+    "model": "gpt-4.1-nano",
+    "name": "standard",
+    "rl": [
+      {
+        "c": 10.0,
+        "k": "request",
+        "r": 60.0
+      },
+      {
+        "c": 10000.0,
+        "k": "token",
+        "r": 60.0
+      }
+    ],
+    "sku": "GlobalStandard",
+    "state": "Succeeded",
+    "version": "2025-04-14"
+  },
+  {
+    "cap": 1,
+    "model": "gpt-4.1-mini",
+    "name": "resident-mini",
+    "rl": [
+      {
+        "c": 1.0,
+        "k": "request",
+        "r": 60.0
+      },
+      {
+        "c": 1000.0,
+        "k": "token",
+        "r": 60.0
+      }
+    ],
+    "sku": "Standard",
+    "state": "Succeeded",
+    "version": "2025-04-14"
+  }
+]
+== account regions
+N                       Loc      Kind
+----------------------  -------  ----------
+aif-cutover-test-rzsrg  uksouth  AIServices
+== usage swedencentral
+N                                  Cur    Lim
+---------------------------------  -----  ---------
+OpenAI.GlobalBatch.gpt-4.1-mini    0.0    1000000.0
+OpenAI.GlobalBatch.gpt-4.1         0.0    200000.0
+OpenAI.DataZoneBatch.gpt-4.1       0.0    30000.0
+OpenAI.GlobalBatch.gpt-4.1-nano    0.0    200000.0
+OpenAI.DataZoneBatch.gpt-4.1-mini  0.0    100000.0
+OpenAI.DataZoneBatch.gpt-4.1-nano  0.0    30000.0
+== usage uksouth
+N                                Cur    Lim
+-------------------------------  -----  ---------
+OpenAI.GlobalBatch.gpt-4.1-mini  0.0    1000000.0
+OpenAI.GlobalBatch.gpt-4.1       0.0    200000.0
+OpenAI.GlobalBatch.gpt-4.1-nano  0.0    200000.0
