@@ -18,7 +18,7 @@ import csv
 import io
 from pathlib import Path
 
-from zava_forward.importer.xlsx import write_workbook
+from zava_forward.core.xlsx import write_workbook
 
 DEFAULT_OUT = Path(__file__).resolve().parent.parent / "docs/reference/research/demo-workbook"
 

@@ -14482,3 +14482,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2257 employee map fetch failure (Refs #2257)
 
 * Added [issue-2257-mapfetch-live-2026-11-22.md](research/issue-2257-mapfetch-live-2026-11-22.md): 8 of 8 fresh sessions now load the map; system logs show probe timeouts and a scale-in inside the original failure window; the client now retries a reset read, proven live by route interception.
+## [2026-11-22] update | Issue 2008 web .xlsx import preview (Refs #2008)
+
+* Added [issue-2008-web-xlsx-import-2026-11-22.md](research/issue-2008-web-xlsx-import-2026-11-22.md): the "Check a spreadsheet" screen accepts the synthetic `.xlsx` and shows mapping, conflicts and a row preview (code moved from the importer to core, tested locally with Playwright, not deployed), with a per-criterion table.

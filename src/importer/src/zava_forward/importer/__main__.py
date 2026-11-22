@@ -16,15 +16,15 @@ from zava_forward.core.diagnostic_logging import install_diagnostic_redaction
 from zava_forward.core.exception_queue import STEWARD, ExceptionQueue
 from zava_forward.core.exception_register import staff_from_env
 from zava_forward.core.factory import open_store
+from zava_forward.core.import_preview import STRUCTURES, preview_file
 from zava_forward.core.import_refusals import PartiallyRecordedError
 from zava_forward.core.sqlstore import CommittedReloadError
 from zava_forward.core.store import ConflictError
+from zava_forward.core.xlsx import WorkbookError
 
 from zava_forward.importer.exceptions import RefusalLedger, route, submit_file, transfer
-from zava_forward.importer.mapping import STRUCTURES, preview_file
 from zava_forward.importer.quarantine import ImportError_, QuarantineStore
 from zava_forward.importer.version import __version__
-from zava_forward.importer.xlsx import WorkbookError
 
 
 def _ensure_schema(conn: sqlite3.Connection) -> tuple[QuarantineStore, RefusalLedger]:

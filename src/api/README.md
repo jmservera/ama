@@ -6267,6 +6267,8 @@ link. Not yet exported: governance, continuity (its own export exists) and the
 chat, resident and form-staging candidate and review surfaces. The row-level history sheet and
 `.xlsx` output stay in the importer library; the API offers CSV only.
 
+`POST /api/import-check` (any signed-in staff role) is a read-only preview. `{"text": CSV}` returns the simple column check. `{"name", "xlsx_base64"}` (#2008) previews an `.xlsx` with `Store.import_check_workbook`, which reuses `zava_forward.core.import_preview` and `zava_forward.core.xlsx` (moved from the importer so the API image needs no new package or dependency): declared `case-list` structure, column mapping, conflicts and a row preview capped at 200 rows, with the same size, formula and content-scan guards. The request body limit is 8,000,000 bytes and the screen refuses workbooks over 5 MB. Nothing is stored or written. Synthetic data only.
+
 ## Contractor job pack read (#132, slice 2)
 
 `GET /api/workorders/{id}/job-pack` returns the staff-mediated job pack built by

@@ -1,0 +1,196 @@
+{
+  "accept_attribute": ".csv,text/csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "source_unchanged": true,
+  "sha256_before": "1c2ae3e68d32ed77d1a9bd5f40dea6e2a7e706a250c431d876037fb50a0a517c",
+  "sha256_after": "1c2ae3e68d32ed77d1a9bd5f40dea6e2a7e706a250c431d876037fb50a0a517c",
+  "response": {
+    "kind": "workbook",
+    "source_name": "demo-case-list.xlsx",
+    "source_sha256": "1c2ae3e68d32ed77d1a9bd5f40dea6e2a7e706a250c431d876037fb50a0a517c",
+    "sheet": "Cases",
+    "columns": [
+      {
+        "field": "reference",
+        "header": "Ref",
+        "how": "alias"
+      },
+      {
+        "field": "address",
+        "header": "Property address",
+        "how": "alias"
+      },
+      {
+        "field": "postcode",
+        "header": "Post code",
+        "how": "alias"
+      },
+      {
+        "field": "stage",
+        "header": "Workflow stage",
+        "how": "alias"
+      },
+      {
+        "field": "status",
+        "header": "Status",
+        "how": "exact"
+      },
+      {
+        "field": "owner",
+        "header": "Case owner",
+        "how": "alias"
+      }
+    ],
+    "unmapped_headers": [
+      "Resident name",
+      "Notes"
+    ],
+    "conflicts": [
+      "Duplicate reference DEMO-002 on rows 3 and 11"
+    ],
+    "ready": 6,
+    "to_fix_count": 4,
+    "matched_existing": 0,
+    "rows": [
+      {
+        "row": 2,
+        "values": {
+          "reference": "DEMO-001",
+          "address": "1 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AA",
+          "stage": "Survey booked",
+          "status": "Open",
+          "owner": "Demo Officer A"
+        },
+        "problems": [],
+        "ready": true
+      },
+      {
+        "row": 3,
+        "values": {
+          "reference": "DEMO-002",
+          "address": "2 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AB",
+          "stage": "Assessment",
+          "status": "Open",
+          "owner": "Demo Officer A"
+        },
+        "problems": [],
+        "ready": true
+      },
+      {
+        "row": 4,
+        "values": {
+          "reference": "DEMO-003",
+          "address": "3 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AD",
+          "stage": "Design",
+          "status": "Open",
+          "owner": "Demo Officer B"
+        },
+        "problems": [],
+        "ready": true
+      },
+      {
+        "row": 5,
+        "values": {
+          "reference": "DEMO-004",
+          "address": "4 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AE",
+          "stage": "Install",
+          "status": "On hold",
+          "owner": "Demo Officer B"
+        },
+        "problems": [],
+        "ready": true
+      },
+      {
+        "row": 6,
+        "values": {
+          "reference": "DEMO-005",
+          "address": "5 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AF",
+          "stage": "Handover",
+          "status": "Open",
+          "owner": "Demo Officer C"
+        },
+        "problems": [],
+        "ready": true
+      },
+      {
+        "row": 7,
+        "values": {
+          "reference": "DEMO-006",
+          "address": "6 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AG",
+          "stage": "Survey booked",
+          "status": "Open",
+          "owner": "Demo Officer C"
+        },
+        "problems": [],
+        "ready": true
+      },
+      {
+        "row": 8,
+        "values": {
+          "reference": "DEMO-007",
+          "address": "",
+          "postcode": "ZZ1 1AH",
+          "stage": "Assessment",
+          "status": "Open",
+          "owner": "Demo Officer A"
+        },
+        "problems": [
+          "address is empty"
+        ],
+        "ready": false
+      },
+      {
+        "row": 9,
+        "values": {
+          "reference": "DEMO-008",
+          "address": "8 Fictional Row, Exampletown",
+          "postcode": "ZZ-18",
+          "stage": "Design",
+          "status": "Open",
+          "owner": "Demo Officer B"
+        },
+        "problems": [
+          "postcode looks wrong"
+        ],
+        "ready": false
+      },
+      {
+        "row": 10,
+        "values": {
+          "reference": "DEMO-009",
+          "address": "9 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AJ",
+          "stage": "",
+          "status": "Open",
+          "owner": "Demo Officer C"
+        },
+        "problems": [
+          "stage is empty"
+        ],
+        "ready": false
+      },
+      {
+        "row": 11,
+        "values": {
+          "reference": "DEMO-002",
+          "address": "10 Fictional Row, Exampletown",
+          "postcode": "ZZ1 1AK",
+          "stage": "Install",
+          "status": "Open",
+          "owner": "Demo Officer A"
+        },
+        "problems": [
+          "duplicate reference (first on row 3)"
+        ],
+        "ready": false
+      }
+    ],
+    "rows_total": 10,
+    "message": "Your file has not been changed."
+  }
+}

@@ -7,12 +7,12 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from zava_forward.core.import_preview import Field, Structure, preview_bytes
 from zava_forward.core.synthetic import scale_fixture, stock_fabric, stock_register
+from zava_forward.core.xlsx import write_workbook
 
 from zava_forward.importer.export import compare
-from zava_forward.importer.mapping import Field, Structure, preview_bytes
 from zava_forward.importer.quarantine import QuarantineStore
-from zava_forward.importer.xlsx import write_workbook
 
 SEED = 165
 SIZE = 40
@@ -66,7 +66,7 @@ def cohort_rows(seed: int = SEED, size: int = SIZE) -> list[list[str]]:
 
 
 def workbook(seed: int = SEED, size: int = SIZE) -> bytes:
-    return write_workbook({"Cohort": cohort_rows(seed, size)})
+    return bytes(write_workbook({"Cohort": cohort_rows(seed, size)}))
 
 
 def keyed(rows: list[dict[str, str]]) -> dict[str, dict[str, str]]:

@@ -11,9 +11,10 @@ import io
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 
-from .mapping import READ_ME_SHEET, READ_ONLY_COPY_NOTICE
+from zava_forward.core.import_preview import READ_ME_SHEET, READ_ONLY_COPY_NOTICE
+from zava_forward.core.xlsx import safe_cell, write_workbook
+
 from .quarantine import BatchRecord
-from .xlsx import safe_cell, write_workbook
 
 NOTE = (
     f"{READ_ONLY_COPY_NOTICE} (synthetic demo data). "
@@ -68,12 +69,14 @@ def to_xlsx(
     rows: Sequence[Sequence[object]],
     history: Sequence[BatchRecord],
 ) -> bytes:
-    return write_workbook(
-        {
-            READ_ME_SHEET: [[NOTE]],
-            sheet_name[:31]: [list(headers), *[list(r) for r in rows]],
-            "History": [HISTORY_HEAD, *history_rows(history)],
-        }
+    return bytes(
+        write_workbook(
+            {
+                READ_ME_SHEET: [[NOTE]],
+                sheet_name[:31]: [list(headers), *[list(r) for r in rows]],
+                "History": [HISTORY_HEAD, *history_rows(history)],
+            }
+        )
     )
 
 

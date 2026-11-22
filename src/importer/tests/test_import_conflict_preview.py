@@ -5,10 +5,11 @@ import tempfile
 import unittest
 from pathlib import Path
 
+from zava_forward.core.import_preview import preview_file
+from zava_forward.core.xlsx import write_workbook
+
 from zava_forward.importer.export import compare
-from zava_forward.importer.mapping import preview_file
 from zava_forward.importer.quarantine import ImportError_, QuarantineStore
-from zava_forward.importer.xlsx import write_workbook
 
 HEADER = ["Ref", "Property Address", "Post code", "Stage", "Owner"]
 CURRENT = [

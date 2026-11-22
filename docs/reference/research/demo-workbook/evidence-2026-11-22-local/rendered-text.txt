@@ -1,0 +1,40 @@
+Back to the list
+Check a spreadsheet
+
+Choose a spreadsheet saved as CSV or Excel (.xlsx). We match the columns for you, show any conflicts and list each row with anything to fix. Your file is never changed.
+
+Rejected import batches, failed model calls, stranded tasks and conflicting source values are tracked in the data steward and operator exception queue.
+
+Spreadsheet (CSV or Excel .xlsx)
+
+Your file has not been changed.
+
+Sheet "Cases": 6 rows are ready to bring in and 4 need fixing. 0 match a home we already have a record for.
+
+How we matched your columns
+Your columns and the details they were matched to
+Detail we need	Your column	How we matched it
+Reference	Ref	Matched by a similar name
+Address	Property address	Matched by a similar name
+Postcode	Post code	Matched by a similar name
+Stage	Workflow stage	Matched by a similar name
+Status	Status	Matched by name
+Owner	Case owner	Matched by a similar name
+
+Columns we did not use: Resident name, Notes.
+
+Conflicts to resolve
+Duplicate reference DEMO-002 on rows 3 and 11
+Row by row
+Each row of your spreadsheet with what we found
+Row	Reference	Address	Postcode	Stage	Status	Owner	Result
+2	DEMO-001	1 Fictional Row, Exampletown	ZZ1 1AA	Survey booked	Open	Demo Officer A	Ready
+3	DEMO-002	2 Fictional Row, Exampletown	ZZ1 1AB	Assessment	Open	Demo Officer A	Ready
+4	DEMO-003	3 Fictional Row, Exampletown	ZZ1 1AD	Design	Open	Demo Officer B	Ready
+5	DEMO-004	4 Fictional Row, Exampletown	ZZ1 1AE	Install	On hold	Demo Officer B	Ready
+6	DEMO-005	5 Fictional Row, Exampletown	ZZ1 1AF	Handover	Open	Demo Officer C	Ready
+7	DEMO-006	6 Fictional Row, Exampletown	ZZ1 1AG	Survey booked	Open	Demo Officer C	Ready
+8	DEMO-007		ZZ1 1AH	Assessment	Open	Demo Officer A	To fix: address is empty
+9	DEMO-008	8 Fictional Row, Exampletown	ZZ-18	Design	Open	Demo Officer B	To fix: postcode looks wrong
+10	DEMO-009	9 Fictional Row, Exampletown	ZZ1 1AJ		Open	Demo Officer C	To fix: stage is empty
+11	DEMO-002	10 Fictional Row, Exampletown	ZZ1 1AK	Install	Open	Demo Officer A	To fix: duplicate reference (first on row 3)

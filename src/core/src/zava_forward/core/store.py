@@ -2809,3 +2809,37 @@ class Store(
             matched_existing=matched,
             message="Your file has not been changed.",
         )
+
+    def import_check_workbook(self, name, data):
+        """Row-level preview of an .xlsx case list: mapping, conflicts and rows; change nothing."""
+        from .import_preview import preview_bytes
+        from .xlsx import WorkbookError
+
+        try:
+            prev = preview_bytes(str(name or "workbook.xlsx")[:120], data)
+        except WorkbookError as error:
+            raise ValueError(f"We could not read that workbook: {error}.") from error
+        known = {c["home"]["postcode"].replace(" ", "").upper() for c in self.cases.values()}
+        rows = [
+            dict(row=r.row, values=r.values, problems=r.problems, ready=not r.problems)
+            for r in prev.rows
+        ]
+        return dict(
+            kind="workbook",
+            source_name=prev.source_name,
+            source_sha256=prev.source_sha256,
+            sheet=prev.sheet,
+            columns=[dict(field=c.field, header=c.header, how=c.how) for c in prev.columns],
+            unmapped_headers=prev.unmapped_headers,
+            conflicts=prev.conflicts[:50],
+            ready=prev.ready,
+            to_fix_count=len(prev.to_fix),
+            matched_existing=sum(
+                1
+                for r in prev.rows
+                if r.values.get("postcode", "").replace(" ", "").upper() in known
+            ),
+            rows=rows[:200],
+            rows_total=len(rows),
+            message=prev.message,
+        )

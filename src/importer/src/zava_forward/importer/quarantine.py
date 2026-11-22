@@ -14,7 +14,7 @@ import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-from .mapping import Preview
+from zava_forward.core.import_preview import Preview
 
 SCHEMA = (
     "CREATE TABLE import_batches ("

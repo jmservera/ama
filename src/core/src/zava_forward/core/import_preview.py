@@ -10,8 +10,7 @@ import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from zava_forward.core.doc_controls import LocalSignatureScanner
-
+from .doc_controls import LocalSignatureScanner
 from .xlsx import WorkbookError, read_workbook
 
 POSTCODE = re.compile(r"[A-Za-z]{1,2}\d[A-Za-z\d]? ?\d[A-Za-z]{2}")
@@ -213,7 +212,9 @@ def build_preview(
 def preview_bytes(source_name: str, data: bytes, structure: Structure = CASE_LIST) -> Preview:
     """Scan, hash and preview workbook bytes already read; nothing is read from disk."""
     digest = hashlib.sha256(data).hexdigest()
-    verdict, detail = LocalSignatureScanner().scan("import", digest[:12], source_name, data, "")
+    verdict, detail = LocalSignatureScanner().scan(  # type: ignore[no-untyped-call]
+        "import", digest[:12], source_name, data, ""
+    )
     if verdict != "clean":
         raise WorkbookError(f"file did not pass the content scan: {verdict} ({detail})")
     return build_preview(structure, source_name, digest, read_workbook(data))
