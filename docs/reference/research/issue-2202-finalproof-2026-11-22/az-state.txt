@@ -1,0 +1,15 @@
+Read-only Azure CLI output, resource group ama, taken 2026-11-22 about 19:45 UTC. No secrets.
+
+ca-cutover-test-demo-api--0000053  Running  Healthy  100%  created 2026-11-22T19:38:35Z
+  image crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:065628c9764418977041093f45bc1d7b44fa6d8b9cde1f074659dfa766467eed
+  ZF_CONTAINER_HARDENING=enforced
+ca-resident-demo--0000025  RunningAtMaxScale  Healthy  100%  created 2026-11-22T19:38:51Z
+  image crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:e6b50684234aae4b508ed31f4e758e8ef77fd21983f645221f91614a4b906618
+  ZF_CONTAINER_HARDENING: not set on this app
+ca-cutover-test-demo-agents  ZF_CONTAINER_HARDENING=enforced
+  image crcutovertestrzsrg.azurecr.io/zava-forward-agents@sha256:59ea12f41b7ce30cbe36488b16d6dc61d08c30558dfb683cf1b2ac430a41c695
+job-live-simulator image zava-forward-api@sha256:295164ca739d5602ca323c65c305cff9d76a3e72faa4623e0dfa931363fd4f72
+job-live-receiver  image zava-forward-api@sha256:541068a62d81ab518bdd132a2e0d5eda6513bcc6c3d0c9903184ba5fcea62c38
+Receiver executions: 18:00, 18:30, 19:00 Succeeded; 19:30 Running at read time.
+Simulator executions: 19:22, 19:30, 19:37, 19:45 Succeeded.
+Revision list for the API shows only --0000053 (single revision mode; earlier revisions are not retained).

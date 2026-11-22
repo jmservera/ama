@@ -14503,3 +14503,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2191 fresh coverage re-proof (Refs #2191)
 
 * Added [issue-2191-live-coverage-reproof-2026-11-22.md](research/issue-2191-live-coverage-reproof-2026-11-22.md): 24.9 percent traced to the consent mix and S0 DTU saturation; a second 30 minute live series on S3 shows 15 of 15 samples above half of 443 homes (mean 56.3 percent). No estate change.
+
+## [2026-11-22] update | Issue 2202 final live proof on revisions 0000053 and 0000025 (Refs #2202)
+
+* Added [issue-2202-finalproof-2026-11-22.md](research/issue-2202-finalproof-2026-11-22.md): 10 employee chat asks answered in 3.1 to 5.4 s (hold label shown, no generative answer), map, xlsx check-a-spreadsheet, resident chart, safety count 23 and handoff waiting view pass; per-criterion table for #2202 marks image rollout, rollback, consent checkbox, map gauges and half of homes as partly proven or not re-run. No estate change.
