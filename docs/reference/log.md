@@ -14475,7 +14475,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 * Added [issue-2245-live-2026-11-22.md](research/issue-2245-live-2026-11-22.md): employee chat rules-only cause (open suspension SUS-1, now reported as a hold), resident expiry read from `ZF_DEMO_EXPIRES_AT`, resident image rolled to revision 0000022, and a per-criterion table. Live generative answers stay unproven pending an owner decision on SUS-1 and the resident ledger expiry.
 ## [2026-11-22] update | Issue 2255 target clock live data path (Refs #2255)
 
-* Added [issue-2255-live-2026-11-22.md](research/issue-2255-live-2026-11-22.md): read-only probe of `ca-cutover-test-demo-api` revision 0000050 shows 22 of 22 hazards with null `aware_at` and `response_due_at` and clock status `fail_closed_missing_timestamp`. A redeploy alone would not populate the clock; the data needs an awareness time and target. No source change.
+* Added [issue-2255-backfill-2026-11-22.md](research/issue-2255-backfill-2026-11-22.md): read-only probe of `ca-cutover-test-demo-api` revision 0000050 shows 22 of 22 hazards with null `aware_at` and `response_due_at` and clock status `fail_closed_missing_timestamp`. A redeploy alone would not populate the clock; the data needs an awareness time and target. No source change.
 ## [2026-11-22] update | Issue 2256 handoff waiting list cause (Refs #2256)
 
 * Added [issue-2256-handoff-waiting-2026-11-22.md](research/issue-2256-handoff-waiting-2026-11-22.md): live probe showed four offered handoffs in `/api/handoffs` but none in `/api/handoffs/unaccepted`, because seeded `offered_at` values have no timezone and the ageing code dropped them. Fix keeps them listed with an unknown waiting time.
@@ -14568,3 +14568,20 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 146 SQL DTU and receiver job alerts (Refs #146)
 
 * Added [issue-146-live5-monitoring-2026-11-22.md](research/issue-146-live5-monitoring-2026-11-22.md): read-only live inventory, source-only SQL DTU and receiver job failure alerts with runbook entries, and a per-criterion table. No estate change.
+## [2026-11-22] update | Issue 2243 diagnosable ledger refusal (Refs #2243)
+
+* Added [issue-2243-guard-2026-11-22.md](research/issue-2243-guard-2026-11-22.md): live probe on `ca-resident-demo--0000025` still returns `usage_limit`; `resident_ai.reserve` now returns a refusal reason (`ledger_expired`, `budget_spent`, `resident_rate_limit`) that the resident label and console log show. Per-criterion table; the SQL row, procedure deployment and model reply stay unproven.
+## [2026-11-22] update | Issue 2255 demo hazard clock backfill (Refs #2255)
+
+* Added [issue-2255-backfill-2026-11-22.md](research/issue-2255-backfill-2026-11-22.md): live backfill of `aware_at` and a reference response target on 23 synthetic demo hazards through the demo API replica, with probe outputs, screenshots and a per-criterion table.
+
+## [2026-11-22] update | Issue 220 ninth live run (Refs #220)
+
+* Added [issue-220-live-r9-live-success-2026-11-22.md](research/issue-220-live-r9-live-success-2026-11-22.md): on revision 0000053 the staff-recorded record and correction succeed, protected case state is unchanged, guard fields are refused; per-criterion table. Retaliation over time is production-only.
+
+## [2026-11-22] update | Issue 144 live hosting probe (Refs #144)
+
+* Added [issue-144-live-hosting-2026-11-22.md](research/issue-144-live-hosting-2026-11-22.md): digest-pinned worker and job images, live non-root proof, read-only root file system disproved, no pipeline run, per-criterion table.
+## [2026-11-22] update | Issue 198 rubric criteria re-verification (Refs #198)
+
+* Added [issue-198-rubric-live-20261122T215913Z-2026-11-22.md](research/issue-198-rubric-live-20261122T215913Z-2026-11-22.md): no mvp or prototype glob in the registry, score 79 against baseline 47, 84 rubric script tests pass. Criterion 3 unproven, criterion 4 partly proven; no source change.

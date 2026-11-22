@@ -1,0 +1,21 @@
+{
+ "label": "before",
+ "cases_listed": [
+  "22"
+ ],
+ "clock_unknown": 22,
+ "clock_with_elapsed_hours": 0,
+ "named_owners": 22,
+ "clock_samples": [
+  "Hazard clock: elapsed time unknown"
+ ],
+ "status_words": {
+  "overdue": 0,
+  "running": 0,
+  "Overdue": 1,
+  "Running": 0
+ },
+ "api_status": 200,
+ "api_total": 22,
+ "api_open_hazard_aware_and_status": {}
+}

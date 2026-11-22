@@ -1,0 +1,20 @@
+#292 MERGED 2026-10-15T16:31:12Z feat(rubric): exclude vendor, data and build paths under src (#198)
+#295 MERGED 2026-10-15T17:00:43Z chore: retire prototype/ (#202 step 1)
+#300 MERGED 2026-10-15T19:02:50Z refactor(src): move api, orchestrator, web and image (M5 of #199)
+#302 MERGED 2026-10-15T19:27:15Z docs(src): split mvp readme and repoint docs (M6 of #199)
+#705 MERGED 2026-11-01T09:03:53Z docs(rubric): record src counting state and reassess failures
+#748 MERGED 2026-11-01T20:04:38Z ci(rubric): record score on main only and document advisory Copilot review (D1, D2)
+#851 MERGED 2026-11-03T10:40:07Z chore(rubric): drop dead mvp excludes from solution-code registry (Refs #198)
+#880 MERGED 2026-11-03T21:02:58Z docs(architecture): record rubric before-and-after score (Refs #198, Refs #203)
+#295 rubric mentions:
+5:* Removed `.github/workflows/prototype-validation.yml` and the dead `prototype/deploy/**/*.bicep` glob from `.github/rubric/artifacts.json`.
+6:* Repointed live references: rubric README (prototype sections removed), rubric `test_prepare.py` fixtures, capstone README, ADR 0006 status, parity matrix status, coordinator agent, reference index; appended `docs/reference/log.md`. Dated historical records and `tools/rename-zava*` identifiers left exact.
+9:## Rubric registry
+10:The `artifacts.json` edit takes effect only after this PR merges. The prototype is not scored, so no dip is expected; any dip is accepted (owner, 2026-10-14).
+18:* Rubric script tests: 19 failed before, 11 after; the 8 removed were stale prototype cases. Remaining 11 are pre-existing.
+#300 rubric mentions:
+7:* CI path filters, PYTHONPATH, docs, rubric registry, matrix, index and log updated. RPI artifacts under `.copilot-tracking/`.
+10:Baseline main 747 (mvp 443, core 252, agents 31, importer 9, api 8, orchestrator 4); after 747 (core 252, agents 31, importer 9, api 438 with 94 skipped, orchestrator 17). infra tests 75 OK. ruff, format and mypy clean in all projects; node --check OK; wheels and installed-server smoke test OK.
+#302 rubric mentions:
+4:* Repointed docs, infra README, comments, copilot instructions, rubric registry; removed dead mvp sys.path in infra tests.
+8:Validation: baseline 747 on main, after 747 (core 252, agents 31, orchestrator 17, importer 9, api 438, 92 skipped); infra 75; rename tests 25; importer lint clean. Docker and SQL Server unavailable locally; image and mssql jobs rely on CI. No dependency change.

@@ -1,0 +1,8 @@
+HEAD 42546c9221
+grep exit 1
+tracked mvp/prototype files: 0
+total 79 rubric_version 2 commit 21b810439f
+mvp-ci.yml
+mvp-validation.yml
+rubric-score.lock.yml
+rubric-score.md

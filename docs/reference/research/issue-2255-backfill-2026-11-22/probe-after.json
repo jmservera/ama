@@ -1,0 +1,27 @@
+{
+ "label": "after",
+ "cases_listed": [
+  "22"
+ ],
+ "clock_unknown": 0,
+ "clock_with_elapsed_hours": 22,
+ "named_owners": 22,
+ "clock_samples": [
+  "Hazard clock: 10 hours elapsed",
+  "Hazard clock: 10023 hours elapsed",
+  "Hazard clock: 1023 hours elapsed",
+  "Hazard clock: 135 hours elapsed",
+  "Hazard clock: 1911 hours elapsed",
+  "Hazard clock: 3063 hours elapsed"
+ ],
+ "running_sample": "Hazard clock: 68 hours elapsed; service response due 2026-10-20T04:00:00Z; response open. Accountable owner: Karen Lawson. Safety clock in this recorded view: 68 elapsed hours; awareness: 2026-10-13T04:00:00Z; named follow-up owner: Karen Lawson; service response due: 2026-10-20T04:00:00Z; resident update due: Unknown. Existing hazard and repairs service own",
+ "overdue_sample": "Hazard clock: 10023 hours elapsed; service response due 2025-08-31T09:00:00Z; response overdue. Accountable owner: Karen Lawson. Safety clock in this recorded view: 10023 elapsed hours; awareness: 2025-08-24T09:00:00Z; named follow-up owner: Karen Lawson; service response due: 2025-08-31T09:00:00Z; resident update due: Unknown. Existing hazard and repairs servi",
+ "status_words": {
+  "overdue": 17,
+  "running": 0,
+  "Overdue": 35,
+  "Running": 0
+ },
+ "api_status": 200,
+ "api_total": 22
+}

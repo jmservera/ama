@@ -480,6 +480,8 @@ The [seventh run](./research/issue-220-live-r7-stop-2026-11-19.md) repeats the c
 
 The [eighth run](./research/issue-220-live-r8-oid-less-roster-2026-11-21.md) finds the 403 persists on revision 0000040 because roster rows without an oid are refused, and fixes the comparison locally; live success stays unproven until redeploy.
 
+The [ninth run](./research/issue-220-live-r9-live-success-2026-11-22.md) shows the staff-recorded and digital routes succeeding live on revision 0000053 with protected state unchanged; retaliation over time stays production-only.
+
 The [epic 218 selection note](./research/issue-218-first-unmet-demo-criterion-2026-11-19.md) adds an offline regression test for the signed-in staff principal and a per-criterion table for the epic.
 For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
@@ -561,6 +563,7 @@ The [2026-11-19 criteria reconciliation](./research/issue-1818-criteria-reconcil
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
+The [issue 144 live hosting probe](./research/issue-144-live-hosting-2026-11-22.md) records digest-pinned images, live non-root proof, a writable root file system and no pipeline run.
 The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 The [web `.xlsx` import note](./research/issue-2008-web-xlsx-import-2026-11-22.md) records the
 local proof that the "Check a spreadsheet" screen previews the workbook with mapping and conflicts.
@@ -691,6 +694,8 @@ The [receiver streak note](./research/issue-2201-live-receiver-streak-2026-11-22
 The [receiver S3 streak](./research/issue-2201-live-receiver-s3-streak-2026-11-22.md) records nine consecutive scheduled Succeeded runs (14:00 to 18:00 UTC) on image 541068, SQL on Standard S3 with an 89 percent peak and no failed connections, and a fresh map probe (#2201).
 
 The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
+
+The [issue 2255 backfill note](./research/issue-2255-backfill-2026-11-22.md) records the backfill of `aware_at` and a reference response target on the synthetic demo hazards, run through the demo API replica, with before and after safety-queue proofs.
 
 The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
 
@@ -1737,6 +1742,7 @@ or infra acceptance claimed.
 | [Rubric Scoring Failed on Main, Live Run-History Proof](./research/rubric-1397-live-run-history-2026-11-18.md) | Issue 1397: no longer failing on main; consumed payload was the placeholder (second call refused at max 1); recovery via run 42841391974 and PR 1398; per-criterion table |
 | [Rubric src Counting and mvp Stop, Live r2 Audit](./research/issue-198-rubric-live-r2-2026-11-18.md) | Issue 198 second audit with retained raw output: 5 of 7 proven, criteria 3 and 4 unprovable; new finding of 10 stale-mvp test failures and two `mvp-*.yml` workflows |
 | [Rubric src Counting and mvp Stop, 2026-11-21 Re-verification](./research/issue-198-rubric-live-20261121-2026-11-21.md) | Issue 198 fresh re-check at f0b278d13: 5 of 7 proven, no mvp or prototype glob, 84 rubric script tests pass; criteria 3 and 4 remain unprovable pending owner waiver |
+| [Rubric src Counting and mvp Stop, 2026-11-22 Re-verification](./research/issue-198-rubric-live-20261122T215913Z-2026-11-22.md) | Issue 198 re-check at 42546c9221: no mvp or prototype glob, score 79 against 47, 84 rubric script tests pass; criterion 3 unproven, 4 partly proven |
 | [Usability Programme Evidence on the Live Demo](./research/issue-155-live-usability-programme-evidence-2026-11-18.md) | Issue 155: per-criterion status; the SA-010 staff-agreement criterion cannot be proven on the demo, code gate and live read-only checks recorded (the signed-in workbench was not captured) |
 | [Operator Suspension Live Demo Evidence](./research/issue-221-live-suspension-restart-evidence-2026-11-18.md) | Issue 221: unintended live `all` suspension, manual-route and restart-denial observations, deployed build accepting a placeholder restart authority; per-criterion table |
 | [Resident and Representative UX on the Live Demo](./research/issue-154-live-resident-ux-evidence-2026-11-18.md) | Issue 154: no live resident contact observed on the synthetic showcase; usability-programme validation and the representative view cannot be proven for the demo |
@@ -2200,3 +2206,5 @@ Further 2026-11-21 evidence: [issue 2190 gate flakes](./research/issue-2190-live
 Further 2026-11-22 evidence: [issue 2190 re-verification](./research/issue-2190-live-20261122-note.md), the three gate flake fixes re-run on current main with a per-criterion verdict, evidence only.
 
 A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
+
+The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records the second live probe on revision 0000025, the diagnosable ledger refusal states added to the resident AI path and a per-criterion table.
