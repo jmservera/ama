@@ -38,19 +38,25 @@ BEGIN
   SET @now = SYSUTCDATETIME();
   SELECT @count = COUNT(*) FROM resident_ai.attempt
     WHERE resident = @resident AND reserved_at > DATEADD(HOUR, -1, @now);
-  IF @spent IS NULL OR @spent >= 2000 OR @count >= 5
-     OR @now >= @expires
-     OR EXISTS (SELECT 1 FROM resident_ai.attempt WHERE reservation = @reservation)
+  -- The second column names the first refusing gate so the owner can see which ledger state to change.
+  DECLARE @why VARCHAR(32) = CASE
+    WHEN @spent IS NULL THEN 'budget_missing'
+    WHEN @now >= @expires THEN 'ledger_expired'
+    WHEN @spent >= 2000 THEN 'budget_spent'
+    WHEN @count >= 5 THEN 'resident_rate_limit'
+    WHEN EXISTS (SELECT 1 FROM resident_ai.attempt WHERE reservation = @reservation) THEN 'duplicate'
+  END;
+  IF @why IS NOT NULL
   BEGIN
     COMMIT;
-    SELECT CAST(0 AS INT) AS accepted;
+    SELECT CAST(0 AS INT) AS accepted, @why AS refusal;
     RETURN;
   END;
   UPDATE resident_ai.budget SET reserved_cents = reserved_cents + 1 WHERE id = 1;
   INSERT INTO resident_ai.attempt (reservation, resident, reserved_at)
     VALUES (@reservation, @resident, @now);
   COMMIT;
-  SELECT CAST(1 AS INT) AS accepted;
+  SELECT CAST(1 AS INT) AS accepted, CAST(NULL AS VARCHAR(32)) AS refusal;
 END;
 GO
 CREATE OR ALTER PROCEDURE resident_ai.complete

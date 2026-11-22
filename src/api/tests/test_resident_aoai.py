@@ -9,6 +9,7 @@ from zava_forward.core.resident_assistant import AssistantUnavailable, CaseProgr
 
 from zava_forward.api.resident_demo import chat
 from zava_forward.api.resident_demo.aoai import (
+    FALLBACK_REASONS,
     MAX_COST_USD,
     MAX_PAYLOAD,
     AzureAdvisor,
@@ -255,6 +256,28 @@ class AzureAdvisorTests(unittest.TestCase):
             conn.cursor.return_value.execute.call_args.args,
             ("EXEC resident_ai.complete @reservation=?, @prompt=?, @completion=?", (ticket, 10, 2)),
         )
+
+    @staticmethod
+    def _sql_reserve(row: list[Any]) -> str | None:
+        conn = Mock()
+        conn.cursor.return_value.fetchone.return_value = row
+        return SqlAccounting(lambda: conn).reserve(resident_key("C-1"))
+
+    def test_sql_refusal_names_the_ledger_state_and_old_procedure_stays_usage_limit(self) -> None:
+        for reason in ("ledger_expired", "budget_spent", "resident_rate_limit"):
+            with self.assertRaises(AssistantUnavailable) as refused:
+                self._sql_reserve([0, reason])
+            self.assertEqual(refused.exception.args[0], reason)
+            self.assertIn(reason, FALLBACK_REASONS)
+        rows: list[list[Any]] = [[0], [0, "duplicate"], [0, "budget_missing"], [0, None]]
+        for row in rows:
+            self.assertIsNone(self._sql_reserve(row))
+
+    def test_ledger_expiry_refusal_labels_the_reply_for_the_owner(self) -> None:
+        self.accounting.reserve.side_effect = AssistantUnavailable("ledger_expired")
+        result = self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertIn("ledger has expired", result.label)
+        self.transport.assert_not_called()
 
     def test_question_generates_prose_with_projected_grounding_and_prepaid_cost(self) -> None:
         self.transport.side_effect = None

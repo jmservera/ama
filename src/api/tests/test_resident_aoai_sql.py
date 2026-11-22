@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from zava_forward.core import resident_showcase_sql as rsql
+from zava_forward.core.resident_assistant import AssistantUnavailable
 
 from zava_forward.api.resident_demo.aoai import SqlAccounting, resident_key
 
@@ -16,6 +17,13 @@ ON = os.environ.get("ZF_TEST_MSSQL") == "1" and os.environ.get("ZF_SQL_SERVER") 
     "localhost",
 )
 SQL = Path(__file__).resolve().parents[3] / "infra/sql/resident-assistant.sql"
+
+
+def _ticket(accounting: SqlAccounting, resident: str) -> str | None:
+    try:
+        return accounting.reserve(resident)
+    except AssistantUnavailable:
+        return None
 
 
 @unittest.skipUnless(ON, "opt-in isolated local SQL Server")
@@ -90,16 +98,18 @@ class AccountingSqlTests(unittest.TestCase):
         self.q("UPDATE resident_ai.budget SET reserved_cents=1999")
         with ThreadPoolExecutor(max_workers=8) as pool:
             tickets = list(
-                pool.map(lambda i: self.accounting.reserve(resident_key(str(i))), range(8))
+                pool.map(lambda i: _ticket(self.accounting, resident_key(str(i))), range(8))
             )
         self.assertEqual(sum(ticket is not None for ticket in tickets), 1)
         self.assertEqual(self.q("SELECT reserved_cents FROM resident_ai.budget")[0][0], 2000)
-        self.assertIsNone(self.accounting.reserve(resident_key("new-resident")))
+        with self.assertRaises(AssistantUnavailable) as refused:
+            self.accounting.reserve(resident_key("new-resident"))
+        self.assertEqual(refused.exception.args[0], "budget_spent")
 
     def test_five_per_resident_concurrency_and_independent_resident(self) -> None:
         with ThreadPoolExecutor(max_workers=8) as pool:
             tickets = list(
-                pool.map(lambda _: self.accounting.reserve(resident_key("same")), range(8))
+                pool.map(lambda _: _ticket(self.accounting, resident_key("same")), range(8))
             )
         self.assertEqual(sum(ticket is not None for ticket in tickets), 5)
         self.assertIsNotNone(self.accounting.reserve(resident_key("other")))
@@ -136,7 +146,9 @@ class AccountingSqlTests(unittest.TestCase):
 
     def test_expiry_is_data_refused_after_and_default_preserved(self) -> None:
         self.q("UPDATE resident_ai.budget SET expires_at=DATEADD(SECOND,-1,SYSUTCDATETIME())")
-        self.assertIsNone(self.accounting.reserve(resident_key("one")))
+        with self.assertRaises(AssistantUnavailable) as refused:
+            self.accounting.reserve(resident_key("one"))
+        self.assertEqual(refused.exception.args[0], "ledger_expired")
         self.assertEqual(self.q("SELECT reserved_cents FROM resident_ai.budget")[0][0], 0)
         self.q("UPDATE resident_ai.budget SET expires_at=DATEADD(DAY,1,SYSUTCDATETIME())")
         self.assertIsNotNone(self.accounting.reserve(resident_key("one")))

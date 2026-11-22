@@ -39,12 +39,17 @@ RESERVATION_CENTS = 1
 MAX_INPUT_TOKENS = 8192
 MAX_COST_USD = MAX_INPUT_TOKENS * 0.000484 / 1000 + MAX_OUTPUT * 0.001936 / 1000
 
+LEDGER_REFUSALS = ("ledger_expired", "budget_spent", "resident_rate_limit")
+
 FALLBACK_REASONS = {
     "expired": "the AI exercise has ended",
     "data_protection_hold": "data protection approvals are not recorded",
     "question_limit": "the question is too long or empty",
     "request_limit": "the question and supporting information exceed the AI request limit",
     "usage_limit": "the AI usage limit was reached",
+    "ledger_expired": "the AI ledger has expired and needs a new end date",
+    "budget_spent": "the AI budget is fully reserved and needs an owner top-up",
+    "resident_rate_limit": "you have reached the hourly AI question limit",
     "credential_or_expiry": "AI access is unavailable or the exercise has ended",
     "accounting_unavailable": "the AI usage check is unavailable",
     "meter_held": "the AI consumption limit or price check stopped the request",
@@ -101,7 +106,7 @@ class SqlAccounting:
     def __init__(self, connect: Callable[[], Any]) -> None:
         self.connect = connect
 
-    def _run(self, statement: str, params: tuple[object, ...]) -> object:
+    def _run(self, statement: str, params: tuple[object, ...]) -> Any:
         import mssql_python
 
         conn = None
@@ -110,7 +115,7 @@ class SqlAccounting:
             cursor = conn.cursor()
             cursor.execute(statement, params)
             row = cursor.fetchone() if cursor.description else None
-            return row[0] if row else None
+            return row
         except (mssql_python.Error, OSError, ValueError, TypeError):
             raise AssistantUnavailable("accounting_unavailable") from None
         finally:
@@ -122,11 +127,17 @@ class SqlAccounting:
 
     def reserve(self, resident: str) -> str | None:
         reservation = str(uuid.uuid4())
-        accepted = self._run(
+        row = self._run(
             "EXEC resident_ai.reserve @resident=?, @reservation=?",
             (resident, reservation),
         )
-        return reservation if accepted == 1 else None
+        if row and row[0] == 1:
+            return reservation
+        # Older procedures return one column; a missing or unknown reason stays usage_limit.
+        refusal = row[1] if row and len(row) > 1 else None
+        if refusal in LEDGER_REFUSALS:
+            raise AssistantUnavailable(refusal)
+        return None
 
     def complete(self, reservation: str, prompt: int, completion: int) -> None:
         self._run(

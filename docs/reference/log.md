@@ -14565,3 +14565,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 138 eleventh live re-probe (Refs #138)
 
 * Added [issue-138-live-r11-2026-11-22.md](research/issue-138-live-r11-2026-11-22.md): no federated credential, no protection rules on the required environments, 0 runners, what-if workflow skipped; post-deployment check logic proven live against the demo API; repository scan 0 findings. Criteria 1 to 4 unproven, 5 and 6 partly proven. No source or estate change.
+## [2026-11-22] update | Issue 2243 diagnosable ledger refusal (Refs #2243)
+
+* Added [issue-2243-guard-2026-11-22.md](research/issue-2243-guard-2026-11-22.md): live probe on `ca-resident-demo--0000025` still returns `usage_limit`; `resident_ai.reserve` now returns a refusal reason (`ledger_expired`, `budget_spent`, `resident_rate_limit`) that the resident label and console log show. Per-criterion table; the SQL row, procedure deployment and model reply stay unproven.
