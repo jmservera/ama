@@ -14553,3 +14553,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 470 closure evidence (Refs #470)
 
 * Added [issue-470-live-2026-11-22.md](research/issue-470-live-2026-11-22.md): 123 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after) unproven, speed-up PR #2272 unmerged, full gate not run. No source change.
+## [2026-11-22] update | Issue 203 fifth post-cleanup verification (Refs #203)
+
+* Added [issue-203-live-20261122-2026-11-22.md](research/issue-203-live-20261122-2026-11-22.md): criterion 1 proven at `origin/main` (checker 0 violations, 8 tests); criterion 5 partly proven, image provenance unproven (`commit=unknown`, no deploy run). No source or estate change.
