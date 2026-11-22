@@ -42,3 +42,21 @@ No source change. A code change would be a guess at an unobserved failure, and t
 | Find the cause in the demo container logs | Unproven | Failing replica gone; Log Analytics and Application Insights refuse queries from this host |
 | Fix with a regression test | Not applicable | No cause established; a speculative fix was rejected for the reason above |
 | Re-prove 200 live | Proven for the demo account on revision 0000047, 2026-11-22 | `before.json`, `after-burst.json`. The account's assigned role at probe time was not re-read; the original failure was for ProgrammeManager |
+
+## Second pass (2026-11-22, about 16:00 UTC, revision 0000050)
+
+* Re-ran [live_probe.py](./issue-2237-retention-500-live-2026-11-22/live_probe.py): `GET /api/retention` returned 200 with 0 records, and the 15 sequential, 20 parallel and 20 mixed requests all returned 200 ([rerun-2026-11-22T16.json](./issue-2237-retention-500-live-2026-11-22/rerun-2026-11-22T16.json)). The employee `/api/me` returned no role value, so the role at probe time remains unconfirmed.
+* The last 300 console lines of the replica held no `http-error` line and no traceback.
+* Local probe of `retention_due` with one malformed case record, run against this worktree's `src/core`. Each row mutates one field of an otherwise valid closed case:
+
+| Malformed field | Result |
+| --- | --- |
+| `contacts: null` | `TypeError` (would be a 500) |
+| `resident_contact_history: null` | `TypeError` |
+| a non-dict item in `contacts` | `AttributeError` |
+| `legal_hold` as a string | `AttributeError` |
+| non-date `stage_since` on a closed case | `ValueError` |
+| a document without `kind` | `KeyError` |
+| null or missing `resident`, `stage_since`, tombstone | no error |
+
+These show that corrupt case data can produce a 500, so the failure class is plausible. No evidence shows that the demo store held such a record on 2026-11-22; the case writers validate these fields, and the live call now succeeds. The decision stays as above: no source change, because skipping a malformed record would hide a due retention item and failing loudly is the safer behaviour. The criteria table is unchanged.

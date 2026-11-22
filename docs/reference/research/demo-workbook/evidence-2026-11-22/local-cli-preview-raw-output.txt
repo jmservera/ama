@@ -1,0 +1,20 @@
+Your file has not been changed. source=demo-case-list.xlsx sha256=1c2ae3e68d32ed77d1a9bd5f40dea6e2a7e706a250c431d876037fb50a0a517c sheet=Cases
+  reference: Ref (alias)
+  address: Property address (alias)
+  postcode: Post code (alias)
+  stage: Workflow stage (alias)
+  status: Status (exact)
+  owner: Case owner (alias)
+  CONFLICT: Duplicate reference DEMO-002 on rows 3 and 11
+  ready=6 to_fix=4
+  row 2: OK
+  row 3: OK
+  row 4: OK
+  row 5: OK
+  row 6: OK
+  row 7: OK
+  row 8: address is empty
+  row 9: postcode looks wrong
+  row 10: stage is empty
+  row 11: duplicate reference (first on row 3)
+exit=1

@@ -561,6 +561,7 @@ The [2026-11-19 criteria reconciliation](./research/issue-1818-criteria-reconcil
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
+The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
