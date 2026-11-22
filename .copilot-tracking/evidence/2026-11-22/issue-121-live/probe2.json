@@ -1,0 +1,484 @@
+{
+ "/api/me": {
+  "status": 200,
+  "body": {
+   "keys": [
+    "user",
+    "counts",
+    "staff",
+    "account",
+    "services",
+    "map",
+    "navigation",
+    "work_queues",
+    "regulatory_output_guard"
+   ],
+   "role_count_only": "identity reduced before save"
+  }
+ },
+ "/api/data-protection": {
+  "status": 200,
+  "body": {
+   "label": "synthetic-demo",
+   "owners": "DPO and Legal (named owners not yet recorded; issue #121 dependency)",
+   "dpo_reviewed": false,
+   "subject_populations": {
+    "constructed_resident_fixture": {
+     "kind": "constructed",
+     "class_ids": [
+      "fixture_resident"
+     ]
+    },
+    "current_staff_identity": {
+     "kind": "actual",
+     "class_ids": [
+      "staff_identity",
+      "prompt_output",
+      "audit_ledger",
+      "telemetry",
+      "provider_retained_copy"
+     ]
+    },
+    "current_tenant_identity": {
+     "kind": "actual",
+     "class_ids": [
+      "tenant_identity"
+     ]
+    },
+    "current_review_record": {
+     "kind": "actual",
+     "class_ids": [
+      "review_record"
+     ]
+    },
+    "future_real_resident": {
+     "kind": "actual",
+     "class_ids": [
+      "future_real_resident",
+      "raw_document"
+     ]
+    }
+   },
+   "population_separation": {
+    "constructed_fixture_classes": [
+     "fixture_resident"
+    ],
+    "actual_personal_data_classes": [
+     "staff_identity",
+     "tenant_identity",
+     "review_record",
+     "future_real_resident",
+     "raw_document",
+     "prompt_output",
+     "audit_ledger",
+     "telemetry",
+     "provider_retained_copy"
+    ]
+   },
+   "hosting_region_vs_inference_residency": {
+    "application_hosting_region": "uksouth",
+    "uk_hosting_does_not_prove_uk_inference_residency": true,
+    "synthetic_resident_does_not_exempt_actual_staff": true,
+    "inference_residency_verified": false,
+    "transfer_position_approved": false,
+    "note": "UK South application hosting does not establish UK model-inference, abuse-monitoring reviewer or provider retained-copy residency."
+   },
+   "whole_system_coverage": {
+    "inputs": [
+     "staff_identity",
+     "tenant_identity",
+     "future_real_resident",
+     "raw_document",
+     "prompt_output"
+    ],
+    "raw_document_bytes": [
+     "raw_document"
+    ],
+    "prompts_outputs_citations": [
+     "future_real_resident",
+     "prompt_output"
+    ],
+    "reviewer_identity": [
+     "review_record",
+     "audit_ledger"
+    ],
+    "audit": [
+     "staff_identity",
+     "tenant_identity",
+     "review_record",
+     "audit_ledger"
+    ],
+    "telemetry_tokens": [
+     "staff_identity",
+     "telemetry"
+    ],
+    "provider_processing": [
+     "future_real_resident",
+     "raw_document",
+     "prompt_output",
+     "provider_retained_copy"
+    ],
+    "provider_retained_copies": [
+     "provider_retained_copy"
+    ]
+   },
+   "classes": [
+    {
+     "id": "fixture_resident",
+     "name": "Constructed resident fixtures",
+     "kind": "constructed",
+     "subject_population": "constructed_resident_fixture",
+     "processing_surfaces": [
+      "inputs",
+      "prompts_outputs_citations"
+     ],
+     "purpose": "Offline development and demonstration",
+     "audience": "Developers and demonstration users",
+     "storage": "Fixture files and demo SQL; entirely constructed",
+     "special_category": false,
+     "model_bound": true,
+     "needs_derivative": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "staff_identity",
+     "name": "Staff identities and role assignments",
+     "kind": "actual",
+     "subject_population": "current_staff_identity",
+     "processing_surfaces": [
+      "inputs",
+      "audit",
+      "telemetry_tokens"
+     ],
+     "purpose": "Access control and attribution of actions",
+     "audience": "Administrators and auditors",
+     "storage": "Entra ID claims, SQL actor columns",
+     "special_category": false,
+     "model_bound": false,
+     "needs_derivative": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "tenant_identity",
+     "name": "Current tenant or representative account identities",
+     "kind": "actual",
+     "subject_population": "current_tenant_identity",
+     "processing_surfaces": [
+      "inputs",
+      "audit"
+     ],
+     "purpose": "Signed-in tenant or representative portal session attribution; excluded from prompts",
+     "audience": "Authorised case staff and portal session boundary",
+     "storage": "Session and portal account claims; excluded from model dispatch until approved",
+     "special_category": true,
+     "model_bound": true,
+     "needs_derivative": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "review_record",
+     "name": "Reviewer identity and review decisions",
+     "kind": "actual",
+     "subject_population": "current_review_record",
+     "processing_surfaces": [
+      "reviewer_identity",
+      "audit"
+     ],
+     "purpose": "Evidence of named human approval",
+     "audience": "Approvers and auditors",
+     "storage": "SQL review and approval rows, audit ledger",
+     "special_category": false,
+     "model_bound": false,
+     "needs_derivative": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "future_real_resident",
+     "name": "Future real resident household and case records",
+     "kind": "actual",
+     "subject_population": "future_real_resident",
+     "processing_surfaces": [
+      "inputs",
+      "prompts_outputs_citations",
+      "provider_processing"
+     ],
+     "purpose": "Future live retrofit case coordination once DPO and Legal gates pass",
+     "audience": "Authorised case staff",
+     "storage": "Not collected in the demonstrator; blocked until DPO and Legal approvals are recorded",
+     "special_category": true,
+     "model_bound": true,
+     "needs_derivative": false,
+     "provider_copy": "Blocked until processor, transfer and retention terms are approved",
+     "required": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "raw_document",
+     "name": "Uploaded document and image bytes",
+     "kind": "actual",
+     "subject_population": "future_real_resident",
+     "processing_surfaces": [
+      "inputs",
+      "raw_document_bytes",
+      "provider_processing"
+     ],
+     "purpose": "Evidence storage for a case",
+     "audience": "Case staff",
+     "storage": "Blob storage with scan tags",
+     "special_category": true,
+     "model_bound": true,
+     "needs_derivative": true,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER",
+      "NECESSITY"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "ART9",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER",
+      "NECESSITY"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "prompt_output",
+     "name": "Prompts, outputs and citations",
+     "kind": "actual",
+     "subject_population": "current_staff_identity",
+     "processing_surfaces": [
+      "inputs",
+      "prompts_outputs_citations",
+      "provider_processing"
+     ],
+     "purpose": "Bounded assistant answers with sources",
+     "audience": "Signed-in staff",
+     "storage": "Not stored by Zava except chat threads; provider copy unknown",
+     "special_category": false,
+     "model_bound": true,
+     "needs_derivative": false,
+     "provider_copy": "Provider abuse-monitoring and retention terms unknown",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "audit_ledger",
+     "name": "Audit ledger entries",
+     "kind": "actual",
+     "subject_population": "current_staff_identity",
+     "processing_surfaces": [
+      "audit",
+      "reviewer_identity"
+     ],
+     "purpose": "Tamper-evident record of actions",
+     "audience": "Auditors",
+     "storage": "Append-only SQL ledger, digests in Blob with an unlocked immutability policy",
+     "special_category": false,
+     "model_bound": false,
+     "needs_derivative": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "telemetry",
+     "name": "Diagnostics, telemetry and token counts",
+     "kind": "actual",
+     "subject_population": "current_staff_identity",
+     "processing_surfaces": [
+      "telemetry_tokens"
+     ],
+     "purpose": "Operation and metering without content",
+     "audience": "Operators",
+     "storage": "Process output, Azure Monitor",
+     "special_category": false,
+     "model_bound": false,
+     "needs_derivative": false,
+     "provider_copy": "None known; provider terms are unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    },
+    {
+     "id": "provider_retained_copy",
+     "name": "Model-provider processing and retained copies",
+     "kind": "actual",
+     "subject_population": "current_staff_identity",
+     "processing_surfaces": [
+      "provider_processing",
+      "provider_retained_copies"
+     ],
+     "purpose": "External model inference transient processing and unverified provider-retained copies",
+     "audience": "External processor and authorised assurance owners",
+     "storage": "External model-provider infrastructure; not controlled by local deletion",
+     "special_category": false,
+     "model_bound": true,
+     "needs_derivative": false,
+     "provider_copy": "Provider abuse-monitoring, diagnostic and stateful retention copies unverified",
+     "required": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "missing": [
+      "LAWFUL_BASIS",
+      "RETENTION",
+      "ERASURE",
+      "TRANSFER"
+     ],
+     "synthetic": [],
+     "references_recorded": false,
+     "retention": "Unknown until Legal sets a period"
+    }
+   ],
+   "statement": "Recorded references are not verified DPO or Legal approval. UK application hosting does not prove UK model-inference residency. Local deletion is not provider erasure."
+  }
+ },
+ "/api/retention": {
+  "status": 200,
+  "body": {
+   "label": "synthetic-demo placeholder period from the trigger; not an approved retention schedule. The DPO and Legal set the real periods (PR-003, OD-14).",
+   "as_of": "2026-11-22",
+   "records": []
+  }
+ },
+ "/api/audit-check": {
+  "status": 200,
+  "body": {
+   "intact": true,
+   "entries": 5715,
+   "head": "61bd9f6effaaa1b56c596b5a4e68e55890e46873a93cf61721ff92b343833947",
+   "problem": null,
+   "digests_checked": 0,
+   "digest_mismatches": []
+  }
+ },
+ "/api/documents": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/rights": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ }
+}

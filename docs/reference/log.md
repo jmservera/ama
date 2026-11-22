@@ -14534,3 +14534,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1288 eighth live audit of Quality sensor values (Refs #1288)
 
 * Added [issue-1288-live-r8-quality-sensor-evidence-2026-11-22.md](research/issue-1288-live-r8-quality-sensor-evidence-2026-11-22.md): 92 focused tests OK, seven homes with fresh live readings, Home sensors screenshot, Quality model still blocked at release admission (OQ-017); criteria 4 and 8 unproven, no source change.
+## [2026-11-22] update | Issue 121 live data protection re-check (Refs #121)
+
+* Added [issue-121-live-recheck-2026-11-22.md](research/issue-121-live-recheck-2026-11-22.md): the live register on revision 0000053 now matches source (populations, residency, provider retained copies); a live document hold and an unknown-task refusal are shown; the DPO and Legal approval and owner criteria remain production-only. No source or estate change.

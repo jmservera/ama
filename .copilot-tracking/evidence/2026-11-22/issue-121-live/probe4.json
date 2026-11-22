@@ -1,0 +1,11 @@
+{
+ "target_found": true,
+ "mime": "text/plain",
+ "status": 200,
+ "raw": "T:{\"text\": \"The file is stored. It is not sent to AI; add a short note about what it is.\", \"source\": \"template\", \"model\": null, \"validated\": true, \"task\": \"read_document\", \"reason\": \"Intact material i",
+ "source": "template",
+ "model": null,
+ "task": "read_document",
+ "reason": "Intact material is not sent; use a reviewed, redacted derivative or a scoped necessity exception. Handle the item manually; a named human decides. No model is used.",
+ "text": "The file is stored. It is not sent to AI; add a short note about what it is."
+}
