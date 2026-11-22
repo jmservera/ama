@@ -1,0 +1,37 @@
+{
+  "args": [
+    "--control-file",
+    "/certs/control.json",
+    "--seconds",
+    "1500",
+    "--events",
+    "100000"
+  ],
+  "cpu": {
+    "cpu": 0.25,
+    "memory": "0.5Gi"
+  },
+  "env": [
+    "ZF_CONTAINER_HARDENING",
+    "PYTHONDONTWRITEBYTECODE",
+    "TMPDIR",
+    "ZF_STATE",
+    "ZF_SIM_HUB_HOSTNAME",
+    "ZF_SIM_APPROVAL",
+    "ZF_SIM_SYSTEM_ORIGIN",
+    "ZF_SIM_WEBSOCKETS",
+    "ZF_SIM_ROUTING_READY",
+    "ZF_SIM_CLIENT_ID",
+    "ZF_SIM_CONTROL_FILE",
+    "ZF_STORE",
+    "ZF_SQL_AUTH",
+    "ZF_SQL_CLIENT_ID",
+    "ZF_SQL_SERVER",
+    "ZF_SQL_DATABASE",
+    "ZF_RECEIVER_LOOKBACK_SECONDS",
+    "ZF_RECEIVER_BATCH_SIZE"
+  ],
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:541068a62d81ab518bdd132a2e0d5eda6513bcc6c3d0c9903184ba5fcea62c38",
+  "retry": 0,
+  "timeout": 1620
+}

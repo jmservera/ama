@@ -685,6 +685,8 @@ The [AI answers diagnosis](./research/issue-2245-live-2026-11-22.md) explains wh
 
 The [receiver streak note](./research/issue-2201-live-receiver-streak-2026-11-22.md) records the 14:00, 14:30 and 15:00 UTC scheduled successes, no recurrence of `IOT_CALLBACK_FAILED` (its exception type is dropped by the handler), and a fresh map probe with readings to 15:20Z (#2201).
 
+The [receiver S3 streak](./research/issue-2201-live-receiver-s3-streak-2026-11-22.md) records nine consecutive scheduled Succeeded runs (14:00 to 18:00 UTC) on image 541068, SQL on Standard S3 with an 89 percent peak and no failed connections, and a fresh map probe (#2201).
+
 The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
 
 The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
