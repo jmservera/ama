@@ -48,6 +48,7 @@ const scenarios = {
     row({case_id: "ZF-2", age_hours: 1, due_at: "2026-11-10T09:00:00+00:00", needs_escalation: true,
       reasons: ["Handoff due time has passed"]}),
     row({case_id: "ZF-4", age_hours: -0.01}),
+    row({case_id: "ZF-5", age_hours: null}),
     row({case_id: "ZF/3", status: "Escalated", escalated: true, chase_owner: null,
       proposed_receiver: null})],
   empty: [],
@@ -113,7 +114,9 @@ class WaitingViewText(unittest.TestCase):
 
     def test_rows_show_elapsed_as_of_owner_and_only_server_supplied_reasons(self) -> None:
         case = self.out["mixed"]
-        old, due, fresh, escalated = case["rowsText"][1:]
+        old, due, fresh, unknown, escalated = case["rowsText"][1:]
+        self.assertIn("Unknown. The offered time has no recorded timezone.", unknown)
+        self.assertIn("ZF-5", unknown)
         self.assertIn("400 hours", old)
         self.assertIn("No escalation reason recorded.", old)
         self.assertNotIn("late", old.lower())

@@ -388,9 +388,7 @@ def handoff_ageing(c, as_of, max_age_hours=None, *, policy=None):
     now = datetime.fromisoformat(as_of)
     if now.tzinfo is None or now.utcoffset() is None:
         raise ValueError("Ageing needs an as-of time with a timezone.")
-    offered = datetime.fromisoformat(h["offered_at"])
-    if offered.tzinfo is None or offered.utcoffset() is None:
-        raise ValueError("Handoff offered_at needs a timezone.")
+    offered = _optional_tz_instant(h.get("offered_at"))
     explicit_limit = _validate_max_age_hours(max_age_hours)
     approved = approved_handoff_policy(policy)
     limit = (
@@ -398,12 +396,14 @@ def handoff_ageing(c, as_of, max_age_hours=None, *, policy=None):
         if explicit_limit is not None
         else approved_handoff_limit_hours(approved, urgency=h.get("urgency"))
     )
-    raw_seconds = (now - offered).total_seconds()
-    age = round(raw_seconds / 3600, 2)
+    # A recorded offer without a usable timezone stays visible; its waiting time is unknown, never guessed.
+    raw_seconds = (now - offered).total_seconds() if offered is not None else None
+    age = round(raw_seconds / 3600, 2) if raw_seconds is not None else None
     reasons = []
-    if h["due_at"] and datetime.fromisoformat(h["due_at"]) < now:
+    due = _optional_tz_instant(h["due_at"])
+    if due is not None and due < now:
         reasons.append("Handoff due time has passed")
-    if limit is not None and raw_seconds > limit * 3600:
+    if limit is not None and raw_seconds is not None and raw_seconds > limit * 3600:
         shown_limit = max_age_hours if explicit_limit is not None else limit
         reasons.append(f"Unaccepted for more than the approved {shown_limit} hours")
     if limit is None:
@@ -962,16 +962,14 @@ class WorkflowMixin:
             for c in self.cases.values():
                 if c.get("closed"):
                     continue
-                try:
-                    row = handoff_ageing(c, as_of, max_age_hours, policy=policy)
-                except (KeyError, ValueError):
-                    # A handoff whose offered time is missing or has no timezone cannot be aged;
-                    # it stays visible in the pending and unowned queues.
-                    continue
+                row = handoff_ageing(c, as_of, max_age_hours, policy=policy)
                 h = c.get("handoff") or {}
                 if row and self._direct_handoff_visible(user, h):
                     rows.append(row)
-            return sorted(rows, key=lambda r: (-r["age_hours"], r["case_id"]))
+            return sorted(
+                rows,
+                key=lambda r: (r["age_hours"] is None, -(r["age_hours"] or 0), r["case_id"]),
+            )
 
     def unowned_handoffs(self, user, as_of=None, max_age_hours=None):
         """Shared role-visible queue of handoffs without a confirmed accepting receiver."""

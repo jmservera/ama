@@ -138,7 +138,7 @@ class HandoffSlaHelpersTests(unittest.TestCase):
             self.assertFalse(view["overdue"])
             self.assertFalse(view["needs_escalation"])
 
-    def test_missing_offered_at_is_tolerated_in_view_and_rejected_in_ageing(self) -> None:
+    def test_missing_offered_at_is_tolerated_in_view_and_ageing_reports_unknown(self) -> None:
         legacy = self._case_with_handoff()
         legacy["handoff"].pop("offered_at")
         view = WORKFLOWS.handoff_view(
@@ -146,8 +146,9 @@ class HandoffSlaHelpersTests(unittest.TestCase):
         )
         self.assertIsNone(view["elapsed_hours"])
         self.assertFalse(view["overdue"])
-        with self.assertRaises(KeyError):
-            WORKFLOWS.handoff_ageing(legacy, "2026-10-16T00:00:00+00:00", policy=APPROVED_POLICY)
+        row = WORKFLOWS.handoff_ageing(legacy, "2026-10-16T00:00:00+00:00", policy=APPROVED_POLICY)
+        self.assertIsNone(row["age_hours"])
+        self.assertFalse(row["needs_escalation"])
 
 
 class JsonHandoffEscalation83Tests(unittest.TestCase):
@@ -289,7 +290,7 @@ class JsonHandoffEscalation83Tests(unittest.TestCase):
         self.assertIn("Pam Lead", rex_detail["work"]["handoff"]["escalation_next_action"])
         self.assertNotIn("PRIVATE-NEXT", json.dumps(rex_detail))
 
-    def test_unaccepted_handoffs_skips_a_handoff_with_an_offered_time_that_cannot_be_aged(
+    def test_unaccepted_handoffs_lists_a_handoff_with_an_offered_time_that_cannot_be_aged(
         self,
     ) -> None:
         sam = self.actors["sam"]
@@ -299,7 +300,11 @@ class JsonHandoffEscalation83Tests(unittest.TestCase):
         self._offer_aged("ZF-2", sam, "rex@example.test", "2026-10-13T09:00")
 
         rows = self.store.unaccepted_handoffs(rex, as_of=as_of)
-        self.assertEqual([row["case_id"] for row in rows], ["ZF-1"])
+        self.assertEqual([row["case_id"] for row in rows], ["ZF-1", "ZF-2"])
+        unknown = rows[1]
+        self.assertIsNone(unknown["age_hours"])
+        self.assertEqual(unknown["chase_owner"], "Sam Example")
+        self.assertFalse(unknown["needs_escalation"])
 
     def test_role_queues_surface_unowned_and_escalated_handoffs_without_leaking_canaries(
         self,
