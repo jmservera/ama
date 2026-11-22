@@ -225,6 +225,28 @@ class Migration(unittest.TestCase):
             self.assertEqual(s.page_cases(pam, "all", filters=dict(stage=stage), limit=100)["total"],
                              sum(1 for c in s.cases.values() if not c["closed"] and c["stage"] == stage))
 
+    def test_stale_safety_column_is_repaired_so_list_matches_tile_and_map_issue_2254(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "zavaforward.json"
+            p.write_text(json.dumps(dataset(make_cases(60))))
+            db = os.path.join(tmp, "pw.sqlite")
+            SqlStore(str(p), db)
+            raw = sqlite3.connect(db)
+            flip = raw.execute("SELECT id, body FROM cases WHERE closed=0 AND hazard=0 LIMIT 1").fetchone()
+            body = json.loads(flip[1])
+            body["hazards"] = [dict(category="Damp", priority="P1", noticed="2026-01-01", referred=None,
+                                    repaired=None, released=False, job="J", owner="Bea")]
+            raw.execute("UPDATE cases SET body=? WHERE id=?", (json.dumps(body), flip[0]))
+            raw.commit()
+            raw.close()
+            s = SqlStore(str(p), db)
+            pam = STAFF[1]
+            tile = s.stats()["kpis"]["hazards"]
+            by_body = sum(1 for c in s.cases.values() if not c["closed"] and any(not h["released"] for h in c["hazards"]))
+            listed = s.page_cases(pam, "all", filters=dict(flag="hazard"), limit=100)["total"]
+            self.assertEqual(tile, by_body)
+            self.assertEqual(listed, tile)
+
     def test_repair_skips_legacy_bodies_that_lack_row_fields(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "zavaforward.json"
