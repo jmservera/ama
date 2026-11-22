@@ -20,6 +20,7 @@ NOTIFICATIONS = ("actual80", "forecast100")
 MATRIX = {
     "alert-${prefix}-foundry-throttle": "foundry-client-errors",
     "alert-${prefix}-sql-cpu": "sql-cpu",
+    "alert-${prefix}-sql-dtu": "sql-dtu",
     "alert-${applicationPrefix}-api-5xx": "api-errors",
     "alert-${applicationPrefix}-api-restarts": "api-restarts",
     "alert-${applicationPrefix}-ledger-digest-mismatch": "ledger-digest-mismatch",
