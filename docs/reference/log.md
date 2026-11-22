@@ -14553,3 +14553,15 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 470 closure evidence (Refs #470)
 
 * Added [issue-470-live-2026-11-22.md](research/issue-470-live-2026-11-22.md): 123 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after) unproven, speed-up PR #2272 unmerged, full gate not run. No source change.
+## [2026-11-22] update | Issue 203 fifth post-cleanup verification (Refs #203)
+
+* Added [issue-203-live-20261122-2026-11-22.md](research/issue-203-live-20261122-2026-11-22.md): criterion 1 proven at `origin/main` (checker 0 violations, 8 tests); criterion 5 partly proven, image provenance unproven (`commit=unknown`, no deploy run). No source or estate change.
+## [2026-11-22] update | Issue 1204 tick-criterion re-check (Refs #1204)
+
+* Added [issue-1204-tick-criterion-live-2026-11-22.md](research/issue-1204-tick-criterion-live-2026-11-22.md): checker gives 0 violations on 216 real ticks and 11 tests pass; no real window carries the new fields, so the unticked criterion stays unticked. No source change.
+## [2026-11-22] update | Issue 223 human-review effectiveness live run 5 (Refs #223)
+
+* Added [issue-223-live-r5-2026-11-22.md](research/issue-223-live-r5-2026-11-22.md): gate and focused tests re-run, live retention of reviewer, reason and source hashes shown, per-criterion table; OQ-017 authority and measured human effort remain unproven.
+## [2026-11-22] update | Issue 138 eleventh live re-probe (Refs #138)
+
+* Added [issue-138-live-r11-2026-11-22.md](research/issue-138-live-r11-2026-11-22.md): no federated credential, no protection rules on the required environments, 0 runners, what-if workflow skipped; post-deployment check logic proven live against the demo API; repository scan 0 findings. Criteria 1 to 4 unproven, 5 and 6 partly proven. No source or estate change.

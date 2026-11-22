@@ -60,3 +60,10 @@ No source change. A code change would be a guess at an unobserved failure, and t
 | null or missing `resident`, `stage_since`, tombstone | no error |
 
 These show that corrupt case data can produce a 500, so the failure class is plausible. No evidence shows that the demo store held such a record on 2026-11-22; the case writers validate these fields, and the live call now succeeds. The decision stays as above: no source change, because skipping a malformed record would hide a due retention item and failing loudly is the safer behaviour. The criteria table is unchanged.
+
+## Retry (2026-11-22, about 21:40 UTC, revision 0000053)
+
+* Re-ran [live_probe.py](./issue-2237-retention-500-live-2026-11-22/live_probe.py): `GET /api/retention` returned 200 with 0 records; the 15 sequential, 20 parallel and 20 mixed requests all returned 200 ([retry-2026-11-22T21.json](./issue-2237-retention-500-live-2026-11-22/retry-2026-11-22T21.json)). `/api/me` again returned no role value, so the role at probe time is unconfirmed.
+* `az containerapp logs show --tail 300` returned 18 `http-error` lines from the current replica (19:44 to 20:33 UTC). Sixteen were `GET /healthz` client-disconnect warnings, one was `POST /api/chat/threads` 500 (`ProgrammingError`) and one was `GET /api/ai/report` 500 (`FileNotFoundError`). None concerned `/api/retention`, so the original 500 is still not observed in any log. The two other 500s are separate defects and are not part of this issue.
+* A Log Analytics query on `log-cutover-test` was retried and still failed (`BadArgumentError` with the workspace id supplied; the earlier note recorded `InsufficientAccessError` and an NSP refusal), so older replicas' logs stay out of reach.
+* No source change; the Azure estate was not changed. The per-criterion table above is unchanged.
