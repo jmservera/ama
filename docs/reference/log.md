@@ -14401,3 +14401,10 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2192 live redeploy proof (Refs #2192)
 
 * Added [issue-2192-live-r3-2026-11-22.md](research/issue-2192-live-r3-2026-11-22.md): resident image built from main `0696d9446` and rolled to `ca-resident-demo` revision `0000021` (rollback `0000020`); the employee sensors state for the test resident changed `consent-withheld` to `ok` and back after the resident ticked and unticked. Azure SQL audit rows not read.
+
+## [2026-11-22] update | Issue 2201 three consecutive receiver runs (Refs #2201)
+
+* Added [issue-2201-live-three-runs-2026-11-22.md](research/issue-2201-live-three-runs-2026-11-22.md): `job-live-receiver` Succeeded on 04:00, 04:30 and 05:00 UTC cron runs on the PR 2231 image digest; map and sensors probe; per-criterion table. Read only, no source or Bicep change.
+## [2026-11-22] update | Issue 1830 live r6 preflight and timing re-check (Refs #1830)
+
+* Added [issue-1830-live-r6-2026-11-22.md](research/issue-1830-live-r6-2026-11-22.md): fresh preflight selector runs, a 320px reflow negative control, the map check rerun and timing from four new full receipts; criterion 2 proven for the demo, others partly proven. No source change.

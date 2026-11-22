@@ -670,6 +670,8 @@ The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-202
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
 
+The [three-run proof](./research/issue-2201-live-three-runs-2026-11-22.md) records three consecutive scheduled Succeeded runs of the receiver on the current image (#2201).
+
 The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
 
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
@@ -1666,6 +1668,7 @@ or infra acceptance claimed.
 | [Issue 1830 Live r4, Blockers Unchanged](./research/issue-1830-live-r4-2026-11-19.md) | Fourth re-verification of the gate preflight and timing tools; no owner decision yet, so no criterion is buildable |
 | [Issue 1830 Live r4, No Buildable Criterion](./research/issue-1830-live-r4-2026-11-19.md) | Fourth re-check; retained receipts are gone and preflight execution stays refused; no source change |
 | [Issue 1830 Live r5, Preflight Executed (#1830)](./research/issue-1830-live-r5-2026-11-21.md) | Fifth re-check at head 0c497160e: executed preflight selectors, 320px and map browser reruns, negative control; no source change |
+| [Issue 1830 Live r6, Preflight Rerun (#1830)](./research/issue-1830-live-r6-2026-11-22.md) | Sixth re-check at head 8bc751023f: preflight reruns, 320px negative control, map check, timing from four new full receipts; no source change |
 | [Issue 2188 Live, Gate Speed-up Criteria](./research/issue-2188-live-gate-speed-2026-11-21.md) | Per-criterion evidence: layer cache 80.7 s to 1.3 s on one image, retry not implemented, tamper rejection tests pass |
 | [Issue 2186 Live, Full Receipt Across Docs-only Moves](./research/issue-2186-live-full-receipt-docs-move-2026-11-21.md) | Full receipts now relax over inert main moves; code, tool and image moves still invalidate; end-to-end full receipt unproven |
 | [Issue 1830 Live Criterion 1 Measurement](./research/issue-1830-live-20261119T1346Z-2026-11-19.md) | Timing from eight retained passed full receipts, queue wait from four gate logs, critical chain, parallel-versus-summed time and setup cost; `report --log` refusal fix; criteria 1, 3 and 4 partly proven, 2 unproven (Refs #1830) |
