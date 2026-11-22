@@ -1537,6 +1537,7 @@ class MssqlBeginRecovery(unittest.TestCase):
         vars(fake_driver)["Error"] = self.Error
         conn.driver = fake_driver
         conn.conn_str, conn.raw, conn.in_tran, conn.attrs = "", Raw(), False, {}
+        conn.startup_retries = 0
         conn.state = state  # type: ignore[attr-defined]
         return conn
 
