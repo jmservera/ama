@@ -292,7 +292,7 @@ class ChatAdmissionOnSqlStore(Base):
             self.assertIsNone(chat_admission(store))
             qi = self.people["Quality Inspector"]
             store.suspend(qi, dict(SUSPEND, scope=CHAT_TASK), self.service.affected(CHAT_TASK))
-            self.assertEqual(chat_admission(store), continuity.reason_text(store.continuity_suspension(CHAT_TASK)))
+            self.assertEqual(chat_admission(store), "ai-suspended")
             self.assertTrue(chat_admission(store))
 
     def test_registry_authorization_without_demo_switch_keeps_release_gate(self):
