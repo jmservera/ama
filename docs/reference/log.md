@@ -14496,3 +14496,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2192 live proof on revision 0000024 (Refs #2192)
 
 * Added [issue-2192-live-r4-2026-11-22.md](research/issue-2192-live-r4-2026-11-22.md): desktop Playwright proof that the employee sensor state follows the resident consent choice (withheld, then ok with 12 readings, then withheld after restore), map loads with 443 markers, chat disclosure labels present with AI on hold by a suspension; audit entry still proven only in core tests.
+
+## [2026-11-22] update | Issue 2245 chat ask with no response (Refs #2245)
+
+* Added [issue-2245-chattimeout-2026-11-22.md](research/issue-2245-chattimeout-2026-11-22.md): live probes found 3 to 4 s asks, one 19.4 s HTTP 500 (`ProgrammingError`, SQL write-lock wait) and no 120 s hang; model and hold paths excluded; demo meter seeding now runs once per day and configuration, with a regression test.

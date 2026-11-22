@@ -375,6 +375,18 @@ class ChatDemoMeterOnSqlStore(Base):
         self.assertEqual(outcomes, ["returned", "financial-held"])
         self.assertEqual(self.kinds(service).count("reserved"), 1)
 
+    def test_repeated_admission_seeds_the_ledger_once_and_reseeds_on_new_settings(self):
+        store, service, _ = self.chat_model(self.DEMO_ON)
+        with mock.patch.dict(os.environ, self.DEMO_ON), \
+                mock.patch.object(store.ai.consumption, "price", wraps=store.ai.consumption.price) as price, \
+                mock.patch.object(store.ai.consumption, "authorize", wraps=store.ai.consumption.authorize) as authorize:
+            self.assertEqual([chat_admission(store) for _ in range(3)], [None, None, None])
+            self.assertEqual((price.call_count, authorize.call_count), (1, 1))
+            with mock.patch.object(chat_demo_meter, "CALLS", chat_demo_meter.CALLS + 1):
+                chat_demo_meter.ensure(store, 600)
+            self.assertEqual(price.call_count, 2)
+        self.assertEqual(self.kinds(service).count("price"), 1)
+
     def test_without_the_switch_nothing_is_seeded_and_the_call_is_refused(self):
         service, reply, sent = self.ask(self.ENV)
         self.assertIsInstance(reply, ModelUnavailable)
