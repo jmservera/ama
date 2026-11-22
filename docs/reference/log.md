@@ -14625,3 +14625,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1837 live re-proof r2 (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-22-r2.md](research/issue-1837-live-demo-evidence-2026-11-22-r2.md): main check, demo revision 0000053 no-write probes, 66 unit tests and three axe browser journeys, per-criterion table. No source or estate change.
+
+## [2026-11-22] update | Issue 1844 mobile map summary live re-proof (Refs #1844)
+
+* Added [issue-1844-live-20261122-2026-11-22.md](research/issue-1844-live-20261122-2026-11-22.md): pre-fix run fails 5 of 5 controls covered, current run passes 436 checks with 0 skips across eight narrow states; per-criterion table. No source change.
