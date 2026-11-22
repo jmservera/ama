@@ -14642,3 +14642,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 619 live re-proof (Refs #619)
 
 * Added [issue-619-live-at-consent-evidence-2026-11-22.md](research/issue-619-live-at-consent-evidence-2026-11-22.md): Playwright rerun of axe, keyboard, reflow and the synthetic resident consent journey after the web redesigns, plus a 200 percent text probe; person-run criteria stay unproven. No source or estate change.
+## [2026-11-22] update | Issue 349 tenant prerequisites live run 8 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r8-2026-11-22.md](research/issue-349-tenant-prerequisites-live-r8-2026-11-22.md): Graph reads now succeed, proving the single-tenant registration, 13 roles, valid credential and preserved callbacks; criteria 4 and 5 stay open; no source or estate change

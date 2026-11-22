@@ -1,0 +1,25 @@
+{
+  "aad": {
+    "enabled": true,
+    "secretSetting": "entra-0dbb6bafc8af414fad0b5daa7695cbc9-7a8a02692e5a",
+    "validation": {
+      "allowedAudiences": [
+        "api://<GUID>"
+      ],
+      "defaultAuthorizationPolicy": {
+        "allowedApplications": []
+      }
+    }
+  },
+  "login": {
+    "preserveUrlFragmentsForLogins": false,
+    "tokenStore": {
+      "enabled": false
+    }
+  },
+  "platform": {
+    "enabled": true
+  },
+  "tokenStore": false,
+  "unauth": "RedirectToLoginPage"
+}

@@ -1,0 +1,18 @@
+[
+  {
+    "aud": "AzureADMyOrg",
+    "n": "zava-forward-api"
+  },
+  {
+    "aud": "AzureADMyOrg",
+    "n": "ExchangeOnlineApp-26-04-15-01"
+  },
+  {
+    "aud": "AzureADMyOrg",
+    "n": "m365-squad"
+  },
+  {
+    "aud": "AzureADMyOrg",
+    "n": "proper-warm-api"
+  }
+]

@@ -1,0 +1,7 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "ing": true,
+  "min": 1,
+  "res": "Running",
+  "rev": "ca-cutover-test-demo-api--0000054"
+}

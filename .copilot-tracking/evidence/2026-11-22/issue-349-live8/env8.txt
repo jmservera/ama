@@ -1,0 +1,27 @@
+[
+  {
+    "n": "ENTRA_TENANT_ID",
+    "secret": null,
+    "set": true
+  },
+  {
+    "n": "ENTRA_CLIENT_ID",
+    "secret": null,
+    "set": true
+  },
+  {
+    "n": "ZF_SQL_AUTH",
+    "secret": null,
+    "set": true
+  },
+  {
+    "n": "ZF_AUTH",
+    "secret": null,
+    "set": true
+  },
+  {
+    "n": "ZF_ENTRA_TENANT_ID",
+    "secret": null,
+    "set": true
+  }
+]

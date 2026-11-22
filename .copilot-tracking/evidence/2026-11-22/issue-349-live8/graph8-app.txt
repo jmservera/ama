@@ -1,0 +1,108 @@
+{
+  "audience": "AzureADMyOrg",
+  "certs": 0,
+  "createdDateTime": "2026-10-16T19:55:32Z",
+  "idTokenIssuance": true,
+  "identifierUris": [
+    "api://<GUID>"
+  ],
+  "redirects": [
+    "https://<app-host>/.auth/login/aad/callback",
+    "https://ep-cutover-test-esdrcphsarcahhde.b01.azurefd.net/.auth/login/aad/callback",
+    "https://<app-host>/.auth/login/aad/callback"
+  ],
+  "roles": [
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.ApplicationAdmin"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.AIRestart"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.RegulatoryChat"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.RuleOwner"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.RuleAuthor"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.Contractor"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.SupportOfficer"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.ProgrammeManager"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.QualityInspector"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.GrantsOfficer"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.SafetyLiaison"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.LiaisonOfficer"
+    },
+    {
+      "enabled": true,
+      "types": [
+        "User"
+      ],
+      "v": "ZavaForward.Coordinator"
+    }
+  ],
+  "secrets": 1
+}

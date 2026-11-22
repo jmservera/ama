@@ -1,0 +1,1 @@
+runtime ENTRA_CLIENT_ID equals Easy Auth client id: true
