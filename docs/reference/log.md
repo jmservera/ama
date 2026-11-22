@@ -14421,3 +14421,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2204-all-roles-live-2026-11-22.md](research/issue-2204-all-roles-live-2026-11-22.md): 13 app roles assigned to the test account one at a time through Graph, live Playwright sign-in per role, wrong-role denials, original assignment restored.
 * Source: live `az rest` and Playwright run on `ca-cutover-test-demo-api`; no source change.
+## [2026-11-22] update | Issue 2237 retention 500 live investigation (Refs #2237)
+
+* Added [issue-2237-retention-500-live-2026-11-22.md](research/issue-2237-retention-500-live-2026-11-22.md): GET /api/retention returns 200 live (55 of 55 calls); the earlier 500 cannot be traced because the replica is gone and Log Analytics and Application Insights refuse queries; no source change.

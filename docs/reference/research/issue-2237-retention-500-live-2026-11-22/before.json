@@ -1,0 +1,27 @@
+{
+  "me": {
+    "status": 200,
+    "role": null,
+    "keys": [
+      "account",
+      "counts",
+      "map",
+      "navigation",
+      "regulatory_output_guard",
+      "services",
+      "staff",
+      "user",
+      "work_queues"
+    ]
+  },
+  "retention": {
+    "status": 200,
+    "keys": [
+      "as_of",
+      "label",
+      "records"
+    ],
+    "records": 0,
+    "error": ""
+  }
+}
