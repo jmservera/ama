@@ -14375,4 +14375,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Issue 2191 live cohort of half of all homes (Refs #2191)
 
 * Added [issue-2191-live-cohort-222-2026-11-21.md](research/issue-2191-live-cohort-222-2026-11-21.md): the live simulator now covers 222 of 443 homes (111 granted, 111 declined) with a 0.1 skip rate; the earlier secret-limit reason was refuted (a 450 secret job was accepted). Fixed the 100 control cap in `SensorConsumer.configure` and added the `failureRate` Bicep parameter.
+## [2026-11-21] update | Issue 2195 live routing, axe run and chat 500 fix (Refs #2195)
+
+* Added [issue-2195-chat-routing-live-r5-2026-11-21.md](research/issue-2195-chat-routing-live-r5-2026-11-21.md): live routing proof, pinned axe 4.10.3 run with 0 violations, recurring chat 500s tied to ProgrammingError in logs, and a per-connection statement lock in `mssqlstore` with a regression test. Live effect of the fix stays unproven until deployment.
 * Index row updated in `docs/reference/README.md`.
