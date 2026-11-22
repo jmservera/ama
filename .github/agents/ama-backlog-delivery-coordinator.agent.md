@@ -329,6 +329,9 @@ runs hourly and applies the Cleanup contract. Neither is a status-only poll.
   completed scope, authority and expiry, current blockers and the cleanup
   retention boundaries, and never recreate unauthorized work. Apply the safe
   replacement and deduplication rules above to any duplicate.
+* Worker scripts, priority config and the restart runbook live in
+  [tools/coordinator/](../../tools/coordinator/README.md); use them to rebuild the
+  worker loop after a VM restart.
 * Honest limit: these are CLI session schedules (`/every [interval]
   [prompt...]`) that need a running coordinator session. They are not an
   operating-system service or autostart guarantee. `/restart` restores
