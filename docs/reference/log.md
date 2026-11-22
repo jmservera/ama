@@ -14692,3 +14692,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 470 live re-check r2 (Refs #470)
 
 * Added [issue-470-live-r2-2026-11-22.md](research/issue-470-live-r2-2026-11-22.md): 128 gate tests pass; criteria 1, 2, 3 and 5 proven, criterion 4 unproven (no matched full-gate pair; PR 2272 now merged). No source change.
+
+## [2026-11-22] update | Issue 2164 live re-check r3 (Refs #2164)
+
+* Updated [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix 6a03928ccb still on main, the scope-bypass and view-only tests pass; the API app moved to revision 0000054 and its digest still cannot be traced to a commit. No source or estate change.

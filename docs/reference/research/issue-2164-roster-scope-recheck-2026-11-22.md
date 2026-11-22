@@ -12,6 +12,7 @@ Scope: synthetic demo, desktop only. Source reads and unit tests only; no creden
 * `python3 -m unittest` in `src/api` for `ReviewTests.test_bound_entra_staff_inherit_roster_scope_and_revocation` and `ReviewTests.test_unbound_and_view_only_entra_principals`: 2 tests, OK.
 * `python3 -m unittest test_assistants_identity` in `src/core`: 5 tests, OK.
 * Deployed `ca-cutover-test-demo-api` (resource group `ama`) runs `crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:065628c9...467eed`, revision `ca-cutover-test-demo-api--0000053` (read-only `az containerapp show`). The digest cannot be mapped to a commit without the build record, so the deployed behaviour is not proven here.
+* Re-check at 2026-11-22T23:56Z (r3): the app is now on revision `ca-cutover-test-demo-api--0000054`, digest `sha256:3f2be664...faf945`. `az acr repository show-tags` for `crcutovertestrzsrg` is refused by the registry network rules, so the new digest is still not traceable to a commit and the deployed behaviour stays unproven.
 
 ## Acceptance criteria
 
