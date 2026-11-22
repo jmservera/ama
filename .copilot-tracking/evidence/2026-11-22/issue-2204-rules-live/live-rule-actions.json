@@ -1,0 +1,89 @@
+{
+ "started_utc": "2026-11-22T14:04:47Z",
+ "steps": [
+  {
+   "label": "A PM only",
+   "attempt": 1,
+   "me_status": 200,
+   "app_roles": [
+    "ZavaForward.ProgrammeManager"
+   ],
+   "rule_roles": [],
+   "role": "Retrofit Programme Manager",
+   "results": {
+    "GET cards": 200,
+    "POST propose without RuleAuthor": 403
+   }
+  },
+  {
+   "label": "A PM+RuleAuthor",
+   "attempt": 1,
+   "me_status": 200,
+   "app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RuleAuthor"
+   ],
+   "rule_roles": [
+    "rule_author"
+   ],
+   "role": "Retrofit Programme Manager",
+   "results": {
+    "GET cards": 200,
+    "RuleAuthor propose (POST /api/law/cards)": 201,
+    "version": 1,
+    "draft state": "draft",
+    "recorded role": "rule_author",
+    "approve with RuleAuthor only (wrong role)": 403
+   }
+  },
+  {
+   "label": "A PM+RuleOwner",
+   "attempt": 1,
+   "me_status": 200,
+   "app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RuleOwner"
+   ],
+   "rule_roles": [
+    "rule_owner"
+   ],
+   "role": "Retrofit Programme Manager",
+   "results": {
+    "propose with RuleOwner only (wrong role)": 403,
+    "RuleOwner approve own authored card": {
+     "status": 409,
+     "error": "an author cannot approve their own card, or the author identity cannot be resolved"
+    },
+    "RuleOwner approve seed card (unassigned owner)": {
+     "status": 409,
+     "error": "only the named owner role of this card can do this"
+    },
+    "RuleOwner activate a draft": {
+     "status": 409,
+     "error": "only an approved version can be activated"
+    },
+    "RuleOwner hold a draft": {
+     "status": 409,
+     "error": "only an active card can be held"
+    },
+    "RuleOwner retire a draft": {
+     "status": 409,
+     "error": "only an approved, active or held card can be retired"
+    },
+    "state after owner attempts": "draft",
+    "events": [
+     [
+      "draft",
+      "rule_author"
+     ]
+    ]
+   }
+  }
+ ],
+ "restored": {
+  "count": 1,
+  "only_pm": true,
+  "original_was_pm_only": true
+ },
+ "failure": null
+}
