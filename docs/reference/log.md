@@ -14629,3 +14629,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1844 mobile map summary live re-proof (Refs #1844)
 
 * Added [issue-1844-live-20261122-2026-11-22.md](research/issue-1844-live-20261122-2026-11-22.md): pre-fix run fails 5 of 5 controls covered, current run passes 436 checks with 0 skips across eight narrow states; per-criterion table. No source change.
+
+## [2026-11-22] update | Issue 350 live pass 5 (Refs #350)
+
+* Added [issue-350-live-r5-2026-11-22.md](research/issue-350-live-r5-2026-11-22.md): fifth read-only live re-measurement of the ten unticked criteria. Law store is configured but unseeded, digest blobs are listable, jobs succeed; edge 302, photo, release authority and second-role results stay unproven. No source or estate change.
