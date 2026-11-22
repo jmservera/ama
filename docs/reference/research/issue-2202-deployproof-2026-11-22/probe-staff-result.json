@@ -1,0 +1,31 @@
+{
+ "map_markers_secs": 3.3,
+ "overview_text": "Overview Coordinator heatmap and lifecycle funnel 443 Open cases Selected 23 Safety issues open Select filter 71 Waiting 60+ days Select filter 443 Awaiting resident decision Select filter 26 Funding in progress Select filter 140 Residents needing extra support Select filter 537 Completed Show map for All areas County Durham Newcastle upon Tyne Northumberland Gateshead Sunderland Hartlepool Redcar and Cleveland North Tyneside Stockton-on-Tees Middlesbrough Darlington Map of open cases Expand map Select a home for a summary, then choose Open home. Escape closes the summary first. O Normal W Waiting 60+ days ! Safety issue open Show only homes with stale or offline sensors Applies to individual homes. Zoom in until homes are shown one by one. 443 homes shown Show the map areas as a list (keyboard and screen reader friendly) Show these as a list O W W W W O O O O O O O ! O W ! W W W O W W W O W O O ! O O O O O O S O W O ! O O O O W O W O O W O O W ! W W W W ! O W O W W W W O O O O W O O O O W W W O O W O O O W O W O W O W W O O O O O O O W O O O O O W O O O O ! O O O O O O O O O O O O O ! W ! O O W O O O O O O ! O W O O ! ! O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O ! O O O O O O O O O O O O O ! O ! O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O ! O O O O O ! O O O O O O W W O W W W O W O W O O O O O O O O O O O O O O O O O O O O O O ! O W W O O O O O O O O W O O O W O O O O O O O O O O O",
+ "tile_safety": [
+  "23"
+ ],
+ "markers": 443,
+ "safety_markers": 23,
+ "map_status": 200,
+ "map_items": 443,
+ "sensor_states": {
+  "consent-withheld": 22,
+  "fresh": 58,
+  "no-readings": 19,
+  "stale": 1,
+  "not-loaded": 343
+ },
+ "map_hazard_items": 0,
+ "api_hazard_total": 23,
+ "list_heading": [
+  "23"
+ ],
+ "clock_unknown": 0,
+ "clock_with_elapsed": 22,
+ "service_response_due": 44,
+ "named_owners": 44,
+ "clock_sample": "Hazard clock: 10023 hours elapsed; service response due 2025-08-31T09:00:00Z; response overdue. Accountable owner: Karen Lawson. Safety clock in this recorded view: 10023 elapsed hours; awareness: 2025-08-24T09:00:00Z; named follow-up owner: Karen Lawson; service response due: 2025-08-31T09:00:00Z; resident update due: Unknown. Exi",
+ "handoff_text": "Back to the list Handoff waiting times This screen lists every handoff that has not been accepted yet and that your role can see. It is not the list called Handoffs waiting for you. It is read-only: nothing here changes a handoff. No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw. For conflicting source values, failed imports, failed model calls and stranded tasks, open the data steward and operator exception queue. Recorded as of 22 Nov 2026, 17:49 UTC. Longest wait first. Unaccepted handoffs and how long each has waited Case State Status Waiting Due Chase owner Proposed receiver Escalation ZF-2025-0029 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Daisy Phillips Miguel Garcia No escalation reason recorded. ZF-2025-0030 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Aadi Kapoor Miguel Garcia No escalation reason recorded. ZF-2025-0031 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Aadi Kapoor Miguel Garcia No escalation reason recorded. ZF-2025-0032 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Aadi Kapoor Miguel Garcia No escalation reason recorded. Check again",
+ "handoff_rows": 4,
+ "case_0030_offer": "t keep chasing. Open next action Owner Aadi Kapoor, Retrofit Programme Manager. Offered to Miguel Garcia, not yet confirmed Blockers Funding has not been confirmed. Details See all blockers AI AI review count unavailable. AI assistance unava"
+}
