@@ -14670,3 +14670,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2202 gates recheck on API 0000054 and resident 0000026 (Refs #2202)
 
 * Added [issue-2202-gates-recheck-2026-11-22.md](research/issue-2202-gates-recheck-2026-11-22.md): read-only recheck of the revisions (Running, Healthy, hardening enforced on api and agents) and the two owner gates, the open suspension (scope all, recorded 2026-11-18) and the resident ledger budget expiry (not directly readable, SQL public access disabled). Generative AI answers stay unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 2244 live re-verification on revision 0000054 (Refs #2244)
+
+* Added [issue-2244-live-r54-2026-11-22.md](research/issue-2244-live-r54-2026-11-22.md): revision 0000054 healthy, fix present in the container, zero restarts, clean scale-out start; held-lock live test, lock holder and read-only schema check stay unproven. No source change.
