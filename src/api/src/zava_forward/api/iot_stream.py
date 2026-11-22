@@ -8,7 +8,7 @@ import re
 import time
 from collections.abc import Awaitable, Callable, Iterable, Mapping
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -218,6 +218,21 @@ async def _cleanup(operations: list[Awaitable[object]]) -> None:
             task.add_done_callback(_observe)
 
 
+def _lookback_seconds() -> float | None:
+    """Optional `ZF_RECEIVER_LOOKBACK_SECONDS`: a bounded window starts that far back, not at the
+    oldest retained event, so a window spends its time on readings that can still be fresh."""
+    raw = os.environ.get("ZF_RECEIVER_LOOKBACK_SECONDS")
+    if not raw:
+        return None
+    try:
+        value = float(raw)
+    except ValueError:
+        raise StreamError("INVALID_RECEIVE_LIMIT") from None
+    if not 60 <= value <= 86400:
+        raise StreamError("INVALID_RECEIVE_LIMIT")
+    return value
+
+
 class HubReceiver:
     def __init__(
         self,
@@ -351,11 +366,15 @@ class HubReceiver:
                     else TransportType.Amqp
                 ),
             )
+            start: str | datetime = "-1"
+            lookback = _lookback_seconds()
+            if bounded_window and lookback is not None:
+                start = datetime.now(UTC) - timedelta(seconds=lookback)
             receive = asyncio.create_task(
                 client.receive(
                     on_event,
                     on_error=on_error,
-                    starting_position="-1",
+                    starting_position=start,
                     starting_position_inclusive=False,
                     max_wait_time=0.1,
                     prefetch=1,

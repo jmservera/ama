@@ -41,6 +41,29 @@ class ConsentMixPlan(unittest.TestCase):
         with self.assertRaises(ValueError):
             mix.select_cohort([f"ZF-2025-{n:04d}" for n in range(1, 1100)])
 
+    def test_reading_cohort_stores_readings_for_half_of_all_homes_and_keeps_a_declined_minority(
+        self,
+    ) -> None:
+        everything = [f"ZF-2025-{n:04d}" for n in range(1, 444)]
+        cohort, granted = mix.select_reading_cohort(everything)
+        self.assertGreaterEqual(granted * (1 - mix.HEADROOM), len(everything) * 0.5)
+        self.assertGreater(len(cohort), granted)
+        self.assertEqual(len(set(cohort)), len(cohort))
+        _, controls, _ = mix.plan(cohort, NOW, granted)
+        consents = [c.consent for c in controls]
+        self.assertEqual(granted, consents.count("granted"))
+        self.assertEqual(len(cohort) - granted, consents.count("declined"))
+        self.assertEqual(len({c.consent for c in controls[:12]}), 2)
+
+    def test_reading_cohort_and_granted_count_are_validated(self) -> None:
+        with self.assertRaises(ValueError):
+            mix.select_reading_cohort([f"ZF-2025-{n:04d}" for n in range(1, 1100)])
+        with self.assertRaises(ValueError):
+            mix.select_reading_cohort(HOMES[:2])
+        for bad in (0, len(HOMES)):
+            with self.assertRaises(ValueError):
+                mix.plan(HOMES, NOW, bad)
+
     def test_refuses_duplicate_or_empty_cohort(self) -> None:
         with self.assertRaises(ValueError):
             mix.plan([], NOW)

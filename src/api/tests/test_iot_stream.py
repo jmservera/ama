@@ -9,7 +9,7 @@ import time
 import unittest
 from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
 
@@ -158,7 +158,8 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
         on_event: Callable[[PartitionContext, EventData | None], Awaitable[None]],
         **kwargs: object,
     ) -> None:
-        self.assertEqual(kwargs["starting_position"], "-1")
+        start = kwargs["starting_position"]
+        self.start_seen = start
         for partition, item in self.events:
             context = self.contexts.get(partition)
             if context is None:
@@ -252,6 +253,26 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(receipts), 1)
         self.assertEqual(self.receiver.rejected, {"IOT_DEVICE_NOT_ALLOWED": 2})
         self.assertEqual(self.count("sensor_reading"), 1)
+
+    async def test_bounded_window_can_start_from_a_lookback(self) -> None:
+        first, _ = observations()
+        self.events = [("0", event(first))]
+        with patch.dict("os.environ", {"ZF_RECEIVER_LOOKBACK_SECONDS": "900"}):
+            receipts = await self.run_receiver(5, bounded=True)
+        self.assertEqual(len(receipts), 1)
+        self.assertEqual(self.start_seen, FixtureClock.now(UTC) - timedelta(seconds=900))
+
+    async def test_lookback_is_ignored_unbounded_and_validated(self) -> None:
+        first, _ = observations()
+        self.events = [("0", event(first))]
+        with patch.dict("os.environ", {"ZF_RECEIVER_LOOKBACK_SECONDS": "900"}):
+            self.assertEqual(len(await self.run_receiver(1)), 1)
+        self.assertEqual(self.start_seen, "-1")
+        for bad in ("10", "abc", "999999"):
+            with patch.dict("os.environ", {"ZF_RECEIVER_LOOKBACK_SECONDS": bad}):
+                with self.assertRaisesRegex(StreamError, "^INVALID_RECEIVE_LIMIT$"):
+                    with patch("zava_forward.api.iot_stream.datetime", FixtureClock):
+                        await self.receiver.run(max_seconds=2, max_events=5, bounded_window=True)
 
     async def test_bounded_window_keeps_sql_failure_fatal(self) -> None:
         self.events = [("0", event(observations()[0]))]
