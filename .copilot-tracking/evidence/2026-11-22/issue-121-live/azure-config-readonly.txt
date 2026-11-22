@@ -1,0 +1,40 @@
+## containerapp env (names of ZF_DATA_PROCESSING present?)
+[
+  {
+    "n": "ZF_ENV",
+    "v": "production"
+  },
+  {
+    "n": "CHAT_RETENTION_DAYS",
+    "v": "30"
+  }
+]
+## log analytics
+[
+  {
+    "days": 90,
+    "n": "log-cutover-test"
+  }
+]
+## sql
+[
+  {
+    "db": "retrofit",
+    "sku": "Standard"
+  }
+]
+{
+  "pitr": 14
+}
+{
+  "m": "PT0S",
+  "w": "PT0S",
+  "y": "PT0S"
+}
+## model
+[
+  {
+    "loc": "uksouth",
+    "n": "aif-cutover-test-rzsrg"
+  }
+]
