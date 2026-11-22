@@ -1,0 +1,120 @@
+{
+ "tag": "firstask",
+ "requests": [
+  {
+   "t": 3.7,
+   "m": "GET",
+   "path": "api/me",
+   "secs": 0.06,
+   "status": 200
+  },
+  {
+   "t": 3.7,
+   "m": "GET",
+   "path": "api/facets",
+   "secs": 0.09,
+   "status": 200
+  },
+  {
+   "t": 3.8,
+   "m": "GET",
+   "path": "api/ai/priority",
+   "secs": 0.14,
+   "status": 200
+  },
+  {
+   "t": 3.8,
+   "m": "GET",
+   "path": "api/handoffs",
+   "secs": 0.14,
+   "status": 200
+  },
+  {
+   "t": 3.8,
+   "m": "GET",
+   "path": "api/cases?view=mine&sort=urgent&limit=50&offset=0",
+   "secs": 0.14,
+   "status": 200
+  },
+  {
+   "t": 3.8,
+   "m": "GET",
+   "path": "api/briefing",
+   "secs": 2.44,
+   "status": 200
+  },
+  {
+   "t": 0.1,
+   "m": "GET",
+   "path": "api/me",
+   "secs": 0.06,
+   "status": 200
+  },
+  {
+   "t": 0.1,
+   "m": "GET",
+   "path": "api/facets",
+   "secs": 0.09,
+   "status": 200
+  },
+  {
+   "t": 0.2,
+   "m": "GET",
+   "path": "api/chat/status",
+   "secs": 0.09,
+   "status": 200
+  },
+  {
+   "t": 0.2,
+   "m": "GET",
+   "path": "api/chat/skills",
+   "secs": 0.09,
+   "status": 200
+  },
+  {
+   "t": 0.2,
+   "m": "GET",
+   "path": "api/handoffs",
+   "secs": 0.11,
+   "status": 200
+  },
+  {
+   "t": 0.2,
+   "m": "GET",
+   "path": "api/ai/priority",
+   "secs": 0.18,
+   "status": 200
+  },
+  {
+   "t": 0.2,
+   "m": "GET",
+   "path": "api/cases?view=mine&sort=urgent&limit=50&offset=0",
+   "secs": 0.26,
+   "status": 200
+  },
+  {
+   "t": 0.5,
+   "m": "POST",
+   "path": "api/chat/threads",
+   "secs": 0.3,
+   "status": 200
+  },
+  {
+   "t": 0.2,
+   "m": "GET",
+   "path": "api/briefing",
+   "secs": 4.85,
+   "status": 200
+  },
+  {
+   "t": 0.8,
+   "m": "POST",
+   "path": "api/chat/\\1/<id>/ask",
+   "secs": 6.48,
+   "status": 200
+  }
+ ],
+ "ask_started_after_load_secs": 0.4,
+ "answered_after_secs": 7.2,
+ "log_tail": "omes to look at first.\nWorkflow-only help, no record changed\n\nAI answers are on hold because an open suspension covers AI work, so no model was called. Continue with the ordinary case workflow; nothing is lost and nothing has been changed. A person with restart authority must lift the suspension.\n\nSkill: stock-prioritisation. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 1 of 30. Workflow-only or unverified help. No record changed.\nSources (0)"
+}
