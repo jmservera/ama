@@ -706,6 +706,8 @@ The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 
+The [thread creation 500 note](./research/issue-2245-thread500-2026-11-22.md) records the console evidence of the `ProgrammingError` 500, a 12-create live probe with no 500, one regression test and a per-criterion table for issue 2245.
+
 The [final live proof](./research/issue-2202-finalproof-2026-11-22.md) records a desktop check of API revision 0000053 and resident revision 0000025 (10 employee chat asks in 3.1 to 5.4 s, map, xlsx check-a-spreadsheet, resident chart, safety count, handoff waiting view, AI hold label) with a per-criterion table for issue 2202.
 
 The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) records the resident and API revisions, the resident AI chat falling back with `usage_limit` after the expiry fix, and a post-merge probe plan.

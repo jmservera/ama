@@ -14606,3 +14606,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2257 verify-fixed (Refs #2257)
 
 * Added [issue-2257-verify-live-2026-11-22.md](research/issue-2257-verify-live-2026-11-22.md): revision 0000053 recovers from an injected `/api/map` reset (443 markers) and 8 of 8 fresh sign-ins load; request-level cause remains unproven. A map-path regression test was added.
+## [2026-11-22] update | Issue 2245 thread creation 500 live check (Refs #2245)
+
+* Added [issue-2245-thread500-2026-11-22.md](research/issue-2245-thread500-2026-11-22.md): console evidence of the ProgrammingError 500, 12 of 12 live creates returning 200, a write-transaction bound regression test and a per-criterion table. The 500 stays unreproduced and its lock holder unproven.

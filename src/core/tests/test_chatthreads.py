@@ -250,6 +250,13 @@ class SqlChatTests(ChatBehaviour, unittest.TestCase):
         data, db = base.seed(tmp)
         return SqlStore(data, db)
 
+    def test_thread_creation_takes_the_write_lock_at_most_twice(self):
+        # On the live SQL store each lock wait can end in a 500 (issue 2245), so creation must not add write transactions.
+        begins = []
+        self.store.db.set_trace_callback(lambda q: begins.append(q) if q.strip().upper().startswith("BEGIN") else None)
+        self.thread()
+        self.assertLessEqual(len(begins), 2)
+
     def test_migration_is_idempotent_and_survives_restart(self):
         t = self.thread()
         self.store.chat_add_message(SAM, t["id"], "user", "kept")
