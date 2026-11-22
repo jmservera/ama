@@ -14526,3 +14526,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 202 demo release preparation (Refs #202)
 
 * Added [issue-202-release-notes-demo-2026-11-22.md](research/issue-202-release-notes-demo-2026-11-22.md), [issue-202-release-checklist-2026-11-22.md](research/issue-202-release-checklist-2026-11-22.md) and [issue-202-release-prep-2026-11-22.md](research/issue-202-release-prep-2026-11-22.md): draft notes, owner checklist and a per-criterion table. No tag, folder deletion, push or estate change; mvp workflow removal stays unproven (FULL tier).
+
+## [2026-11-22] update | Issue 440 post-demo deferral wording (Refs #440)
+
+* Added [issue-440-post-demo-deferral-wording-2026-11-22.md](research/issue-440-post-demo-deferral-wording-2026-11-22.md): draft body text deferring criteria 7 and 8 until after the demo, awaiting owner approval. The GitHub issue was not edited and both criteria stay unticked.
