@@ -14537,3 +14537,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 121 live data protection re-check (Refs #121)
 
 * Added [issue-121-live-recheck-2026-11-22.md](research/issue-121-live-recheck-2026-11-22.md): the live register on revision 0000053 now matches source (populations, residency, provider retained copies); a live document hold and an unknown-task refusal are shown; the DPO and Legal approval and owner criteria remain production-only. No source or estate change.
+
+## [2026-11-22] update | Issue 116 provider-boundary round 7 (Refs #116)
+
+* Added [issue-116-live-r7-evidence-2026-11-22.md](research/issue-116-live-r7-evidence-2026-11-22.md): 123 boundary tests pass at head 6fd6e3f838, a read-only unauthenticated live probe returns 401, and live payload contents stay unproven. No source or estate change.
