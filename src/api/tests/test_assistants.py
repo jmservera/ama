@@ -20,7 +20,7 @@ from unittest.mock import Mock
 
 import release_support
 import test_mvp
-from zava_forward.core import continuity, mssqlstore, projection, quality
+from zava_forward.core import continuity, identity, mssqlstore, projection, quality
 from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import (
     Assistants, Limits, MSSQL_DDL, PURPOSE, REGISTRY, RULES, VERSION, canonical, capture, digest, eligible,
@@ -898,6 +898,50 @@ class ReviewTests(Base):
                    lambda: self.service.detail(self.pm, p["id"]), lambda: self.verify(p)):
             with self.assertRaises(PermissionError):
                 op()
+
+    def bound_entra(self, **row_fields):
+        tid, oid = "11111111-1111-4111-8111-111111111111", "22222222-2222-4222-8222-222222222222"
+        user = identity.principal(tid, oid, "Retrofit Programme Manager")
+        email = "bound-pm@example.test"
+        user = dict(user, code="ROLE-BOUND", email=email, bound=dict(code="ROLE-BOUND", email=email))
+        row = dict(code="ROLE-BOUND", name="Bound PM", email=email, role="Retrofit Programme Manager",
+                   oid=oid, tid=tid, **row_fields)
+        with self.service.transaction() as db:
+            db.execute("INSERT INTO staff (email, body) VALUES (?,?)", (email, canonical(row)))
+        return user
+
+    def test_bound_entra_staff_inherit_roster_scope_and_revocation(self):
+        user = self.bound_entra(case_ids=["ZF-2"])
+        with self.service.transaction() as db:
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, user, "stock-prioritisation", "ZF-1")
+            self.assertEqual(self.service.authorize(db, user, "stock-prioritisation", "ZF-2")["id"], "ZF-2")
+        with self.assertRaises(PermissionError):
+            self.service.invoke(user, "stock-prioritisation", "ZF-1")
+        self.assertEqual(self.service.listing(user)["proposals"], [])
+        with self.service.transaction() as db:
+            area = json.loads(db.execute("SELECT body FROM cases WHERE id='ZF-2'").fetchone()[0])["home"]["area"]
+            row = json.loads(db.execute("SELECT body FROM staff WHERE email=?", (user["email"],)).fetchone()[0])
+            db.execute("UPDATE staff SET body=? WHERE email=?",
+                       (canonical(dict(row, case_ids=None, areas=[area + "-other"])), user["email"]))
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, user, "stock-prioritisation", "ZF-2")
+            for change in (dict(disabled=True), dict(active=False), dict(role="Contractor"), dict(oid="x")):
+                db.execute("UPDATE staff SET body=? WHERE email=?",
+                           (canonical(dict(row, **change)), user["email"]))
+                with self.assertRaises(PermissionError):
+                    self.service.authorize(db, user, "stock-prioritisation")
+            db.execute("DELETE FROM staff WHERE email=?", (user["email"],))
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, user, "stock-prioritisation")
+
+    def test_unbound_and_view_only_entra_principals(self):
+        user = identity.principal("11111111-1111-4111-8111-111111111111",
+                                  "33333333-3333-4333-8333-333333333333", "Retrofit Programme Manager")
+        with self.service.transaction() as db:
+            self.assertEqual(self.service.authorize(db, user, "stock-prioritisation", "ZF-1")["id"], "ZF-1")
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, dict(user, view_only=True), "stock-prioritisation", "ZF-1")
 
     def test_independent_qa_reviewer_and_separate_human_verification(self):
         self.case(lambda c: c.update(quality=[dict(measure="Loft insulation", state="Submitted",

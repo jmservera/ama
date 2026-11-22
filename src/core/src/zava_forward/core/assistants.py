@@ -1512,9 +1512,25 @@ class Assistants:
                 "This assistant belongs to a different role. Use the manual owner route."
             )
         if identity.is_entra(user):
-            # Entra principals have no roster row under their synthetic email; the verified
-            # tenant/object keys are the current authority, as in the other staff paths.
+            # An unbound Entra principal has no roster row, so its verified tenant/object keys are
+            # the authority. A roster-bound one is re-read from its row (matched on the immutable
+            # keys), so the row's scope and revocation apply to it as to any roster staff.
             current = identity.verified(user)
+            if current is not None and current.get("view_only"):
+                raise PermissionError("View-only access cannot use assistants.")
+            bound = current.get("bound") if current else None
+            if bound:
+                row = db.execute(
+                    "SELECT body FROM staff WHERE email=?", (str(bound.get("email")).lower(),)
+                ).fetchone()
+                staff = json.loads(row[0]) if row else None
+                current = (
+                    staff
+                    if staff
+                    and staff.get("oid") == user.get("oid")
+                    and staff.get("tid") in (None, "", user.get("tid"))
+                    else None
+                )
         else:
             row = db.execute(
                 "SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)
