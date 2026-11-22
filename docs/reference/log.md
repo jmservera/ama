@@ -14684,3 +14684,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2243 resident AI re-verification on revision 0000026 (Refs #2243)
 
 * Added [issue-2243-rev26-2026-11-22.md](research/issue-2243-rev26-2026-11-22.md): live probe of resident revision 0000026 (both model-eligible questions still `usage_limit`), API 0000054 employee chat rules-only, ledger-expiry and SUS-1 owner gates, per-criterion table; model-backed answer stays unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 1204 tick criterion second re-check (Refs #1204)
+
+* Added [issue-1204-tick-criterion-live-r2-2026-11-22.md](research/issue-1204-tick-criterion-live-r2-2026-11-22.md): rescan finds no tick_log with the new fields; handoff checker passes and 22 tests pass; the unticked criterion stays unticked. No source change.
