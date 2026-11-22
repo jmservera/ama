@@ -14621,3 +14621,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1830 r7 replay of the original #1297 defect (Refs #1830)
 
 * Added [issue-1830-live-r7-2026-11-22.md](research/issue-1830-live-r7-2026-11-22.md): original #1297 320px defect fails at `18d3de459f` and passes at head through a direct recipe; preflight tests and selectors and the map check re-run. Criteria 1, 3 and 4 remain partly proven. No source or estate change.
+
+## [2026-11-22] update | Issue 1837 live re-proof r2 (Refs #1837)
+
+* Added [issue-1837-live-demo-evidence-2026-11-22-r2.md](research/issue-1837-live-demo-evidence-2026-11-22-r2.md): main check, demo revision 0000053 no-write probes, 66 unit tests and three axe browser journeys, per-criterion table. No source or estate change.
