@@ -72,3 +72,15 @@ than validated evidence:
   is accepted for demo scope only. Real resident data, production use, Legal
   and DPO approval stay out of this approval. Agents must not mark AI-related
   demo work human-blocked on OQ-017 or DH-006.
+
+## Delivery Decision, 2026-11-22
+
+* Owner decision (2026-11-22): the multi-hour full local gate is not the
+  per-change gate. Per change, use targeted local tests (including the tests
+  of every touched area and ruff, mypy and format checks), hosted CI on the
+  exact head, independent review, and a post-merge smoke test against the
+  deployed demo (health, chat ask, map, resident chart) with a rollback to the
+  last good revision. Run the full gate only for major changes (infrastructure,
+  deployment, SQL, security, release) and once after a large group of merged
+  changes, on the integrated main tip. Human, legal and resident gates are
+  unchanged.
