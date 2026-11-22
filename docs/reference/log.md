@@ -14511,3 +14511,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 184 live chain proof (Refs #184)
 
 * Added [issue-184-live-chain-2026-11-22.md](research/issue-184-live-chain-2026-11-22.md): read only hop-by-hop proof from simulator job to the employee map on resource group `ama`, a 6 hour secret scan with 0 matches and a per-criterion table; the resident live view and per-message SQL trace are marked unproven. No estate change.
+## [2026-11-22] update | Issue 115 ledger digest live verification (Refs #115)
+
+* Added [issue-115-ledger-digest-live-2026-11-22.md](research/issue-115-ledger-digest-live-2026-11-22.md): 53 digest tests pass, daily digest job succeeds, container policy is 365 days and unlocked, alerts enabled; lock and mismatch drill stay unproven for the demo.
