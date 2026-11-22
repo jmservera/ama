@@ -46,6 +46,8 @@ param useWebSockets bool = false
 @description('Read the device origin from the message annotations the hub stamps (the demo hub does) instead of application properties. A device-supplied origin property is still refused.')
 param systemOrigin bool = false
 param location string = resourceGroup().location
+@description('Optional Action Group resource id. When set, a failed-execution alert is created for this job; empty creates no rule.')
+param failureAlertActionGroupId string = ''
 
 var jobName = 'job-live-receiver'
 var digestOk = contains(image, '@sha256:') && !contains(image, ' ') && startsWith(image, '${registryServer}/')
@@ -139,6 +141,35 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
     }
   }
   dependsOn: [guard]
+}
+
+resource failureAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = if (!empty(failureAlertActionGroupId)) {
+  name: 'alert-${jobName}-failed'
+  location: 'global'
+  properties: {
+    description: 'Receiver job failed execution. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#job-live-receiver.'
+    severity: 2
+    enabled: true
+    scopes: [job.id]
+    evaluationFrequency: 'PT5M'
+    windowSize: 'PT15M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          name: 'failed-execution'
+          metricNamespace: 'Microsoft.App/jobs'
+          metricName: 'Executions'
+          dimensions: [{ name: 'state', operator: 'Include', values: ['Failed'] }]
+          operator: 'GreaterThan'
+          threshold: 0
+          timeAggregation: 'Total'
+          criterionType: 'StaticThresholdCriterion'
+        }
+      ]
+    }
+    actions: [{ actionGroupId: failureAlertActionGroupId }]
+  }
 }
 
 output jobName string = job.name

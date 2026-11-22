@@ -588,6 +588,35 @@ resource sqlCpu 'Microsoft.Insights/metricAlerts@2018-03-01' = {
   dependsOn: [sql]
 }
 
+resource sqlDtu 'Microsoft.Insights/metricAlerts@2018-03-01' = if (sqlTier == 'dtu') {
+  name: 'alert-${prefix}-sql-dtu'
+  location: 'global'
+  tags: allTags
+  properties: {
+    description: 'SQL DTU consumption above threshold. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: ${runbookBase}#sql-dtu.'
+    severity: 3
+    enabled: true
+    scopes: [resourceId('Microsoft.Sql/servers/databases', 'sql-${prefix}-${unique}', 'retrofit')]
+    evaluationFrequency: 'PT5M'
+    windowSize: 'PT15M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          name: 'dtu'
+          metricName: 'dtu_consumption_percent'
+          operator: 'GreaterThan'
+          threshold: 80
+          timeAggregation: 'Average'
+          criterionType: 'StaticThresholdCriterion'
+        }
+      ]
+    }
+    actions: [{ actionGroupId: monitoring.outputs.actionGroupId }]
+  }
+  dependsOn: [sql]
+}
+
 resource apiErrors 'Microsoft.Insights/metricAlerts@2018-03-01' = if (deployApplications) {
   name: 'alert-${applicationPrefix}-api-5xx'
   location: 'global'

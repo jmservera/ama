@@ -7,6 +7,7 @@ from pathlib import Path
 INFRA = Path(__file__).resolve().parents[1]
 MAIN = (INFRA / "main.bicep").read_text(encoding="utf-8")
 MODULE = (INFRA / "modules" / "operationalMonitoring.bicep").read_text(encoding="utf-8")
+RECEIVER = (INFRA / "live-receiver-job.bicep").read_text(encoding="utf-8")
 RUNBOOK = (INFRA / "monitoring-runbooks.md").read_text(encoding="utf-8")
 LINK = re.compile(r"monitoring-runbooks\.md#|\$\{runbookBase\}#")
 
@@ -52,6 +53,8 @@ class AlertCoverageTests(unittest.TestCase):
         rules = [
             (MAIN, "ledgerDigestMismatch", "ledger-digest-mismatch"),
             (MAIN, "ledgerVerifyMissing", "ledger-verify-missing"),
+            (MAIN, "sqlDtu", "sql-dtu"),
+            (RECEIVER, "failureAlert", "job-live-receiver"),
             (MODULE, "agentTasksPoison", "agent-tasks-poison"),
             (MODULE, "aiLimitBreach", "ai-limits"),
         ]
