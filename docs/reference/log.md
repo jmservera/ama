@@ -14520,3 +14520,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2186 verify output test for full receipts (Refs #2186)
 
 * Extended [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): one test shows verify reports the docs-only relaxation for a full receipt; real full-receipt run still unproven.
+## [2026-11-22] update | Issue 2190 gate flake fixes re-verified (Refs #2190)
+
+* Added [issue-2190-live-20261122-note.md](research/issue-2190-live-20261122-note.md): gate tests (123), the 218 module and six loaded chat-check runs pass on current main; flake 2 still has no deterministic regression test.
