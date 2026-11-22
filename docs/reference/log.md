@@ -14574,3 +14574,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2255 demo hazard clock backfill (Refs #2255)
 
 * Added [issue-2255-backfill-2026-11-22.md](research/issue-2255-backfill-2026-11-22.md): live backfill of `aware_at` and a reference response target on 23 synthetic demo hazards through the demo API replica, with probe outputs, screenshots and a per-criterion table.
+
+## [2026-11-22] update | Issue 220 ninth live run (Refs #220)
+
+* Added [issue-220-live-r9-live-success-2026-11-22.md](research/issue-220-live-r9-live-success-2026-11-22.md): on revision 0000053 the staff-recorded record and correction succeed, protected case state is unchanged, guard fields are refused; per-criterion table. Retaliation over time is production-only.

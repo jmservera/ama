@@ -480,6 +480,8 @@ The [seventh run](./research/issue-220-live-r7-stop-2026-11-19.md) repeats the c
 
 The [eighth run](./research/issue-220-live-r8-oid-less-roster-2026-11-21.md) finds the 403 persists on revision 0000040 because roster rows without an oid are refused, and fixes the comparison locally; live success stays unproven until redeploy.
 
+The [ninth run](./research/issue-220-live-r9-live-success-2026-11-22.md) shows the staff-recorded and digital routes succeeding live on revision 0000053 with protected state unchanged; retaliation over time stays production-only.
+
 The [epic 218 selection note](./research/issue-218-first-unmet-demo-criterion-2026-11-19.md) adds an offline regression test for the signed-in staff principal and a per-criterion table for the epic.
 For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: route panels and permissions read live, representative options absent
