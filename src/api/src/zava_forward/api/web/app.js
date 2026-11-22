@@ -334,9 +334,9 @@ async function fetchReadRetrying(path, options = {}) {
       let res;
       try {
         res = await fetch(path, options);
-      } catch (error) {
+      } catch (dropped_error) {
         // A reset connection, for example from a replica leaving the pool, is safe to repeat for a read; an abort is not.
-        if (options.signal?.aborted || dropped >= NETWORK_RETRY_DELAYS.length) throw error;
+        if (options.signal?.aborted || dropped >= NETWORK_RETRY_DELAYS.length) throw dropped_error;
         await wait(NETWORK_RETRY_MESSAGE, NETWORK_RETRY_DELAYS[dropped++]);
         continue;
       }
