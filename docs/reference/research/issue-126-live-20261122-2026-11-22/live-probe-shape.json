@@ -1,0 +1,122 @@
+{
+ "signed_in": true,
+ "me_status": 200,
+ "role": null,
+ "governance_status": 200,
+ "top_level_keys": [
+  "benefits",
+  "breaches",
+  "capture_blockers",
+  "capture_open",
+  "note",
+  "paused",
+  "prd_owner_acceptance",
+  "prd_quality_review",
+  "protocol",
+  "rai_evidence",
+  "rai_exercise_acceptance",
+  "real_ai_delivery_gate",
+  "release_gaps",
+  "releases",
+  "value_claims",
+  "verdicts"
+ ],
+ "rai_keys": [
+  "acceptance",
+  "affected_dispatch",
+  "assessment_authority",
+  "baseline",
+  "conditional_eu_assurance",
+  "current_assessment",
+  "current_disposition_count",
+  "dispositions_complete",
+  "findings",
+  "history_record_count",
+  "invalid_history_count",
+  "live_use",
+  "note",
+  "open_count",
+  "prd_owner_acceptance",
+  "prd_quality_review",
+  "revision"
+ ],
+ "rai_summary": {
+  "history_record_count": 0,
+  "current_disposition_count": null,
+  "dispositions_complete": false,
+  "open_count": 22,
+  "acceptance": "Unknown",
+  "live_use": "BLOCKED pending separate qualified evidence and approvals",
+  "affected_dispatch": "DISABLED until appropriate evidence and qualified approvals exist"
+ },
+ "finding_count": 22,
+ "shape": {
+  "protocol": "list[0]",
+  "benefits": {},
+  "verdicts": {
+   "cycle_time": "dict[2]",
+   "coordination_hours": "dict[2]"
+  },
+  "value_claims": "list[0]",
+  "releases": "list[0]",
+  "release_gaps": "list[3]",
+  "breaches": "list[0]",
+  "paused": "list[0]",
+  "capture_open": false,
+  "capture_blockers": "list[2]",
+  "note": "Emergency and statutory hazard response continues outside any pause.",
+  "prd_quality_review": {
+   "status": "str",
+   "satisfied": false,
+   "accepted": false,
+   "separate_from_report_acceptance": true,
+   "separate_from_remediation_completion": true,
+   "report_acceptance_scope": "baseline-assessment-and-remediation-planning only"
+  },
+  "prd_owner_acceptance": {
+   "status": "Unsigned candidate pending separate human owner acceptance",
+   "accepted": false,
+   "separate_from_report_acceptance": true,
+   "separate_from_remediation_completion": true,
+   "report_acceptance_scope": "baseline-assessment-and-remediation-planning only"
+  },
+  "rai_evidence": {
+   "baseline": "dict[6]",
+   "current_assessment": null,
+   "assessment_authority": "Caller-declared, not deployment attestation",
+   "findings": "list[22]",
+   "revision": 0,
+   "history_record_count": 0,
+   "invalid_history_count": 0,
+   "current_disposition_count": null,
+   "dispositions_complete": false,
+   "open_count": 22,
+   "acceptance": "Unknown",
+   "prd_quality_review": "dict[6]",
+   "prd_owner_acceptance": "dict[5]",
+   "live_use": "BLOCKED pending separate qualified evidence and approvals",
+   "affected_dispatch": "DISABLED until appropriate evidence and qualified approvals exist",
+   "conditional_eu_assurance": "Applies only after qualified applicability review",
+   "note": "str"
+  },
+  "rai_exercise_acceptance": {
+   "section": "rai_exercise_acceptance",
+   "independent_of_real_ai_delivery_gate": true,
+   "passed": false,
+   "status": "failed",
+   "checks": "dict[8]",
+   "traceability": "dict[6]",
+   "note": "str"
+  },
+  "real_ai_delivery_gate": {
+   "section": "real_ai_delivery_gate",
+   "separated_from_rai_exercise_acceptance": true,
+   "passed": false,
+   "status": "blocked",
+   "checks": "dict[7]",
+   "blocking_reasons": "list[4]",
+   "deferred_open_questions": "list[3]",
+   "note": "str"
+  }
+ }
+}
