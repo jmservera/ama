@@ -14592,3 +14592,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2253 resident chart live verification (Refs #2253)
 
 * Updated [issue-2253-resident-chart-2026-11-22.md](research/issue-2253-resident-chart-2026-11-22.md): the deployed demo (revision 0000025) shows 16.8 px labels, no overlap and circle markers; the not-proven-live limit is closed.
+
+## [2026-11-22] update | Issue 2256 live verification of the Handoff waiting times fix (Refs #2256)
+
+* Added [issue-2256-liveverify-2026-11-22.md](research/issue-2256-liveverify-2026-11-22.md): Playwright probe shows the waiting list now lists the four offered handoffs on the deployed demo; due time unknown in seeded data. No estate change.
