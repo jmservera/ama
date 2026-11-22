@@ -14666,3 +14666,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1259 live run 6 (Refs #1259)
 
 * Added [2026-11-22-ranking-archive-unusable-1259-live-r6.md](research/2026-11-22-ranking-archive-unusable-1259-live-r6.md): red-before (7 failures) and green-after (110 tests) for unusable ranking archive paths, with per-criterion status. No source change.
+
+## [2026-11-22] update | Issue 2202 gates recheck on API 0000054 and resident 0000026 (Refs #2202)
+
+* Added [issue-2202-gates-recheck-2026-11-22.md](research/issue-2202-gates-recheck-2026-11-22.md): read-only recheck of the revisions (Running, Healthy, hardening enforced on api and agents) and the two owner gates, the open suspension (scope all, recorded 2026-11-18) and the resident ledger budget expiry (not directly readable, SQL public access disabled). Generative AI answers stay unproven. No source or estate change.

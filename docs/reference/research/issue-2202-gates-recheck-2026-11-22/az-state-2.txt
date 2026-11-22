@@ -1,0 +1,11 @@
+enforced
+ca-cutover-test-demo-api	crcutovertestrzsrg.azurecr.io/zava-forward-api@3f2be6644fd4
+ca-resident-demo	crcutovertestrzsrg.azurecr.io/zava-resident-demo@a71084bd2d42
+job-live-simulator
+Running	2026-11-22T23:45:00+00:00
+Succeeded	2026-11-22T23:37:00+00:00
+Succeeded	2026-11-22T23:30:00+00:00
+job-live-receiver
+Running	2026-11-22T23:30:00+00:00
+Succeeded	2026-11-22T23:00:00+00:00
+Succeeded	2026-11-22T22:30:00+00:00

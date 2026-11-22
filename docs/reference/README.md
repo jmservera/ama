@@ -712,6 +712,8 @@ The [thread creation 500 note](./research/issue-2245-thread500-2026-11-22.md) re
 
 The [final live proof](./research/issue-2202-finalproof-2026-11-22.md) records a desktop check of API revision 0000053 and resident revision 0000025 (10 employee chat asks in 3.1 to 5.4 s, map, xlsx check-a-spreadsheet, resident chart, safety count, handoff waiting view, AI hold label) with a per-criterion table for issue 2202.
 
+The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads API revision 0000054 and resident revision 0000026 and records the two owner gates for generative AI answers: the open suspension (scope all, 2026-11-18) and the resident ledger budget expiry.
+
 The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) records the resident and API revisions, the resident AI chat falling back with `usage_limit` after the expiry fix, and a post-merge probe plan.
 
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.

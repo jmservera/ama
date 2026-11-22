@@ -1,0 +1,34 @@
+N                                  H        R        T    C
+---------------------------------  -------  -------  ---  -------------------------
+ca-cutover-test-demo-api--0000054  Healthy  Running  100  2026-11-22T23:14:23+00:00
+N                          H        R                  T    C
+-------------------------  -------  -----------------  ---  -------------------------
+ca-resident-demo--0000026  Healthy  RunningAtMaxScale  100  2026-11-22T23:14:37+00:00
+== ca-cutover-test-demo-api env
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+Name                     Value
+-----------------------  ------------------------------------------------
+ZF_CONTAINER_HARDENING   enforced
+ZF_BLOB_CONTAINER        evidence
+AI_ENDPOINT              https://aif-cutover-test-rzsrg.openai.azure.com/
+AI_DEPLOYMENT            standard
+AI_DEPLOYMENT_STRONG     standard
+AI_MODEL_VERSION         gpt-4.1-nano-2025-04-14
+AI_MODEL_VERSION_STRONG  gpt-4.1-nano-2025-04-14
+ZF_LAW_BLOB_CONTAINER    law-snapshots
+== ca-resident-demo env
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+Name                Value
+------------------  --------------------
+ZF_DEMO_EXPIRES_AT  2028-01-01T00:00:00Z
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+ca-cutover-test-demo-api
+ca-resident-demo
+ca-cutover-test-demo-agents
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+job-cutover-test-demo-load	crcutovertestrzsrg.azurecr.io/zava-forward-importer@51b6a480bd7e
+job-cutover-test-demo-audit	crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@e3b290bfa2af
+job-cutover-test-demo-orch	crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@e3b290bfa2af
+job-live-simulator	crcutovertestrzsrg.azurecr.io/zava-forward-api@295164ca739d
+job-live-receiver	crcutovertestrzsrg.azurecr.io/zava-forward-api@541068a62d81
+job-tmp-probe-2061	crcutovertestrzsrg.azurecr.io/zava-forward-api@295164ca739d

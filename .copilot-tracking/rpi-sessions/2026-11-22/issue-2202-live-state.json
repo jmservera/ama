@@ -1,39 +1,39 @@
 {
- "task_id": "2202-live-20261122T193952Z",
- "task_slug": "issue-2202-finalproof",
+ "task_id": "2202-live-20261122T234430Z",
+ "task_slug": "issue-2202-gates-recheck",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-22/issue-2202-finalproof-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-22/issue-2202-finalproof-plan.md",
-  "details": ".copilot-tracking/details/2026-11-22/issue-2202-finalproof-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-22/issue-2202-finalproof-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-22/issue-2202-finalproof-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-22/issue-2202-finalproof-review.md"
+  "research": ".copilot-tracking/research/2026-11-22/issue-2202-gates-recheck-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-22/issue-2202-gates-recheck-plan.md",
+  "details": ".copilot-tracking/details/2026-11-22/issue-2202-gates-recheck-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-22/issue-2202-gates-recheck-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-22/issue-2202-gates-recheck-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-22/issue-2202-gates-recheck-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Live Azure proof authorised for demo, desktop only, no push, docs-only focused tier",
+   "decision": "Live Azure read-only recheck authorised for demo, desktop only, docs-only focused tier, no push",
    "status": "confirmed",
    "evidence": "owner decisions 2026-11-18 and task brief"
   },
   {
-   "decision": "research disposition executed, Planning Readiness Ready",
+   "decision": "research executed, Planning Readiness Ready",
    "status": "recorded",
-   "evidence": ".copilot-tracking/research/2026-11-22/issue-2202-finalproof-research.md"
+   "evidence": ".copilot-tracking/research/2026-11-22/issue-2202-gates-recheck-research.md"
   },
   {
    "decision": "critique executed once",
    "status": "approve with direct dispositions",
-   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2202-finalproof-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2202-gates-recheck-critique.md"
   },
   {
    "decision": "review executed once",
    "status": "conformant with routed open work",
-   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2202-finalproof-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2202-gates-recheck-review.md"
   }
  ],
  "blockers": [],
@@ -44,15 +44,15 @@
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Decide suspension and resident ledger expiry, then re-prove generative AI",
-   "rationale": "AI answers unprovable on the demo",
-   "evidence": "docs/reference/research/issue-2202-finalproof-2026-11-22.md"
+   "task": "Owner lifts SUS-1 and extends resident_ai.budget.expires_at, then re-prove AI answers",
+   "rationale": "only blockers for generative answers",
+   "evidence": "docs/reference/research/issue-2202-gates-recheck-2026-11-22.md"
   },
   {
    "rank": 2,
-   "task": "Re-run consent checkbox and half-of-homes coverage on current revisions",
-   "rationale": "two criteria not re-run on 0025",
-   "evidence": "docs/reference/research/issue-2202-finalproof-2026-11-22.md"
+   "task": "Re-run chart, map, consent, coverage on 0054/0026",
+   "rationale": "proven only on earlier revisions",
+   "evidence": "docs/reference/research/issue-2202-gates-recheck-2026-11-22.md"
   }
  ]
 }
