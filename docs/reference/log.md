@@ -14431,3 +14431,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Standing preference: AI usage approved for the demo
 
 * Recorded the owner's AI-usage approval for the demo in [memory.md](memory.md) because the Copilot memory service could not store it for this repository.
+
+## [2026-11-22] update | Issue 2201 receiver recheck after the 2234 merge (Refs #2201)
+
+* Added [issue-2201-live-receiver-recheck-2026-11-22.md](research/issue-2201-live-receiver-recheck-2026-11-22.md): every `job-live-receiver` execution since 10:34 UTC with starter, scheduled Succeeded runs at 12:00 (shortened window), 12:30 and 13:00, a Failed 13:30 run, workspace access refusal blocking logs, S0 database at 100 percent DTU, and the map still 200 with 443 items. Root cause for the new failures stays unproven. No source change.

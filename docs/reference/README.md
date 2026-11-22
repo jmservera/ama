@@ -672,6 +672,8 @@ The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) ad
 
 The [three-run proof](./research/issue-2201-live-three-runs-2026-11-22.md) records three consecutive scheduled Succeeded runs of the receiver on the current image (#2201).
 
+The [receiver recheck](./research/issue-2201-live-receiver-recheck-2026-11-22.md) lists every scheduled run since the 2234 merge with who started it: 12:00, 12:30 and 13:00 UTC Succeeded, 13:30 Failed, failure logs unreachable, map 200 with 443 items (#2201).
+
 The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
 
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
