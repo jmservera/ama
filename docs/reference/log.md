@@ -15248,3 +15248,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Issue 2128 credential storage and teardown proof (Refs #2128)
 
 * Added [issue-2128-live-credential-storage-2026-11-23.md](research/issue-2128-live-credential-storage-2026-11-23.md): 24-hour live log scan clean, throwaway-hub provision and teardown with a restarted durable store, per-criterion table. Source change: opt-in `--vault-url` Key Vault store in `device_provision`. A real Key Vault write stays unproven.
+## [2026-11-22] update | Issue 2245 thread creation 500 live check (Refs #2245)
+
+* Added [issue-2245-thread500-2026-11-22.md](research/issue-2245-thread500-2026-11-22.md): console evidence of the ProgrammingError 500, 12 of 12 live creates returning 200, a write-transaction bound regression test and a per-criterion table. The 500 stays unreproduced and its lock holder unproven.
