@@ -14517,3 +14517,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1274 release-download live re-proof (Refs #1274)
 
 * Added [issue-1274-live-evidence-2026-11-22.md](research/issue-1274-live-evidence-2026-11-22.md): failing actionlint and AWF job logs re-read, real actionlint 1.7.7 checksum verification and 12 plus 123 tests repeated; AWF 0.28.23 and the #1273 cause stay unproven. No source or estate change.
+## [2026-11-22] update | Issue 2186 verify output test for full receipts (Refs #2186)
+
+* Extended [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): one test shows verify reports the docs-only relaxation for a full receipt; real full-receipt run still unproven.

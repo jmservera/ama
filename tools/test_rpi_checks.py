@@ -4014,6 +4014,28 @@ os.fstat(3)
                     self.git("branch", "-qD", "side-main")
                     self.git("update-ref", "refs/remotes/origin/main", self.base)
 
+    def test_verify_reports_docs_only_relaxation_for_full_receipt(self) -> None:
+        self.commit("pr", "src/api/src/zava_forward/api/server.py")
+        moved = self.move_main("docs/other.md")
+        proof = gate.base_relaxation(self.root, self.base, moved, [], inert_only=True)
+        receipt = {
+            "scope": "full",
+            "identity": {"head": self.base, "base": self.base},
+            "base_relaxation": proof,
+        }
+        path = self.out / "receipt.json"
+        gate.atomic_json(path, {"scope": "full"})
+        out = io.StringIO()
+        with (
+            patch.object(gate, "validate_receipt", return_value=receipt),
+            patch.object(gate, "require_fresh_images"),
+            redirect_stdout(out),
+        ):
+            gate.verify(self.root, path, moved)
+        self.assertIn("VERIFIED full local gate", out.getvalue())
+        self.assertIn("BASE RELAXED (disjoint-move)", out.getvalue())
+        self.assertIn("1 path(s)", out.getvalue())
+
     def test_relaxed_receipt_passes_selection_and_identity_but_not_tampering(
         self,
     ) -> None:
