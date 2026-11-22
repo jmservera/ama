@@ -720,6 +720,8 @@ The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) reco
 
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
+The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.

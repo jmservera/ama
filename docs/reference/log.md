@@ -14674,3 +14674,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2244 live re-verification on revision 0000054 (Refs #2244)
 
 * Added [issue-2244-live-r54-2026-11-22.md](research/issue-2244-live-r54-2026-11-22.md): revision 0000054 healthy, fix present in the container, zero restarts, clean scale-out start; held-lock live test, lock holder and read-only schema check stay unproven. No source change.
+
+## [2026-11-22] update | Issue 2255 clocks re-verified on 0000054 (Refs #2255)
+
+* Added [issue-2255-reverify-2026-11-22.md](research/issue-2255-reverify-2026-11-22.md): read-only live re-check on revision 0000054: 22 of 22 hazard clocks with a target, 0 unknown, 17 overdue, 5 running, owner on 23 rows. Re-seed survival stays unproven. No source change.
