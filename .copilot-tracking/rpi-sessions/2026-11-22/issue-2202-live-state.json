@@ -1,34 +1,34 @@
 {
- "task_id": "2202-live-20261122T021055Z",
- "task_slug": "issue-2202-live",
+ "task_id": "2202-live-20261122T134041Z",
+ "task_slug": "issue-2202-demosmoke",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-22/issue-2202-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-22/issue-2202-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-22/issue-2202-live-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-22/issue-2202-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-22/issue-2202-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-22/issue-2202-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-22/issue-2202-demosmoke-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-22/issue-2202-demosmoke-plan.md",
+  "details": ".copilot-tracking/details/2026-11-22/issue-2202-demosmoke-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-22/issue-2202-demosmoke-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-22/issue-2202-demosmoke-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-22/issue-2202-demosmoke-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Live Azure rollout authorised for demo (rg ama, cap USD 700); ACR left Disabled; no Bicep redeploy",
+   "decision": "Live Azure smoke authorised for demo, desktop only, no code push",
    "status": "confirmed",
    "evidence": "owner decisions 2026-11-18 and task brief"
   },
   {
    "decision": "critique executed once",
    "status": "approve with direct dispositions",
-   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2202-live-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2202-demosmoke-critique.md"
   },
   {
    "decision": "review executed once",
    "status": "conformant with routed open work",
-   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2202-live-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2202-demosmoke-review.md"
   }
  ],
  "blockers": [],
@@ -39,15 +39,21 @@
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Roll resident image for 2192",
-   "rationale": "employee effect of consent unproven",
-   "evidence": "research note"
+   "task": "Fix resident AI expiry (2243)",
+   "rationale": "AI is the main demo feature",
+   "evidence": "issue 2243"
   },
   {
    "rank": 2,
-   "task": "Confirm three consecutive receiver successes (2201)",
-   "rationale": "one success so far",
-   "evidence": "receiver executions"
+   "task": "Harden API start-up against write lock (2244)",
+   "rationale": "13 minute outage",
+   "evidence": "issue 2244"
+  },
+  {
+   "rank": 3,
+   "task": "Employee chat model calls and 500 (2245)",
+   "rationale": "no generative answer seen",
+   "evidence": "issue 2245"
   }
  ]
 }

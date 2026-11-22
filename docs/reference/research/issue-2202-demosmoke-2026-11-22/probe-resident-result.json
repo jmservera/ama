@@ -1,0 +1,28 @@
+{
+ "title": "Your home improvement progress - synthetic showcase, not live",
+ "login_status": 200,
+ "chat": [
+  {
+   "question": "What does Awaab's Law require of a landlord for damp and mould?",
+   "http": 200,
+   "label": "Summary by rules - workflow only, no AI used",
+   "routing": {
+    "agent": "Safety route helper",
+    "routed": true,
+    "text": "Routed to the Safety route helper: your question mentions a possible danger."
+   },
+   "answer": "Do not wait for chat or a callback if someone may be in danger. For an immediate emergency, call 999. Report damp, mould or another safety concern to your housing officer or emergency repairs service using your usual contact details. A person must handle safety reports. This chat has not sent a report or alerted anyone."
+  },
+  {
+   "question": "Which documents are missing from my case?",
+   "http": 200,
+   "label": "Summary by rules - AI unavailable: the AI exercise has ended",
+   "routing": {
+    "agent": "Documents helper",
+    "routed": true,
+    "text": "Routed to the Documents helper: your question is about documents for your case."
+   },
+   "answer": "This view does not show which documents have been requested for your case. It cannot tell you what to send. Document D1, EPC: a generated placeholder, not a presented document. The file check result is unknown in this view. Ask staff to check it. The resident-facing warning and error list is not recorded. Document D2, Survey: a generated placeholder, not a presented document. The file check result"
+  }
+ ]
+}
