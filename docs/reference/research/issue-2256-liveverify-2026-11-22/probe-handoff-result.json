@@ -1,0 +1,140 @@
+{
+  "handoffs": {
+    "status": 200,
+    "rows": 4,
+    "keys": [
+      "accountable_owner",
+      "accountable_owner_code",
+      "address",
+      "answer_note",
+      "answered_at",
+      "approved_limit_hours",
+      "auto_escalated",
+      "case_id",
+      "chase_owner",
+      "chase_owner_code",
+      "confirmed_receiver",
+      "destination",
+      "due_at",
+      "effective_due_at",
+      "elapsed_hours",
+      "escalation_next_action",
+      "escalation_status",
+      "escalation_target",
+      "escalation_target_code",
+      "escalation_target_role",
+      "from_code",
+      "from_name",
+      "is_synthetic",
+      "needs_escalation",
+      "next_action",
+      "note",
+      "offered_at",
+      "offered_by",
+      "overdue",
+      "overdue_hours",
+      "proposed_receiver",
+      "resident",
+      "resident_update_due_at",
+      "resident_update_owner",
+      "sla_due_at",
+      "state",
+      "status",
+      "to_code",
+      "to_name",
+      "urgency"
+    ],
+    "sample": [
+      {
+        "case_id": "ZF-2025-0029",
+        "offered_at": "2026-10-13T09:00",
+        "status": "Sent",
+        "chase_owner": "Daisy Phillips",
+        "due_at": null,
+        "needs_escalation": false
+      },
+      {
+        "case_id": "ZF-2025-0030",
+        "offered_at": "2026-10-13T09:00",
+        "status": "Sent",
+        "chase_owner": "Aadi Kapoor",
+        "due_at": null,
+        "needs_escalation": false
+      },
+      {
+        "case_id": "ZF-2025-0031",
+        "offered_at": "2026-10-13T09:00",
+        "status": "Sent",
+        "chase_owner": "Aadi Kapoor",
+        "due_at": null,
+        "needs_escalation": false
+      },
+      {
+        "case_id": "ZF-2025-0032",
+        "offered_at": "2026-10-13T09:00",
+        "status": "Sent",
+        "chase_owner": "Aadi Kapoor",
+        "due_at": null,
+        "needs_escalation": false
+      }
+    ]
+  },
+  "unaccepted": {
+    "status": 200,
+    "rows": 4,
+    "keys": [
+      "age_hours",
+      "approved_limit_hours",
+      "as_of",
+      "case_id",
+      "chase_owner",
+      "chase_owner_code",
+      "due_at",
+      "escalated",
+      "limit_note",
+      "needs_escalation",
+      "proposed_receiver",
+      "reasons",
+      "status"
+    ],
+    "sample": [
+      {
+        "case_id": "ZF-2025-0029",
+        "status": "Sent",
+        "age_hours": null,
+        "due_at": null,
+        "chase_owner": "Daisy Phillips",
+        "needs_escalation": false,
+        "reasons": []
+      },
+      {
+        "case_id": "ZF-2025-0030",
+        "status": "Sent",
+        "age_hours": null,
+        "due_at": null,
+        "chase_owner": "Aadi Kapoor",
+        "needs_escalation": false,
+        "reasons": []
+      },
+      {
+        "case_id": "ZF-2025-0031",
+        "status": "Sent",
+        "age_hours": null,
+        "due_at": null,
+        "chase_owner": "Aadi Kapoor",
+        "needs_escalation": false,
+        "reasons": []
+      },
+      {
+        "case_id": "ZF-2025-0032",
+        "status": "Sent",
+        "age_hours": null,
+        "due_at": null,
+        "chase_owner": "Aadi Kapoor",
+        "needs_escalation": false,
+        "reasons": []
+      }
+    ]
+  },
+  "screen_text": "Back to the list Handoff waiting times This screen lists every handoff that has not been accepted yet and that your role can see. It is not the list called Handoffs waiting for you. It is read-only: nothing here changes a handoff. No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw. For conflicting source values, failed imports, failed model calls and stranded tasks, open the data steward and operator exception queue. Recorded as of 22 Nov 2026, 23:02 UTC. Longest wait first. Unaccepted handoffs and how long each has waited Case State Status Waiting Due Chase owner Proposed receiver Escalation ZF-2025-0029 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Daisy Phillips Miguel Garcia No escalation reason recorded. ZF-2025-0030 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Aadi Kapoor Miguel Garcia No escalation reason recorded. ZF-2025-0031 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Aadi Kapoor Miguel Garcia No escalation reason recorded. ZF-2025-0032 Action needed Sent Unknown. The offered time has no recorded timezone. Unknown Aadi Kapoor Miguel Garcia No escalation reason recorded. Check again"
+}

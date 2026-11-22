@@ -14585,3 +14585,20 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 198 rubric criteria re-verification (Refs #198)
 
 * Added [issue-198-rubric-live-20261122T215913Z-2026-11-22.md](research/issue-198-rubric-live-20261122T215913Z-2026-11-22.md): no mvp or prototype glob in the registry, score 79 against baseline 47, 84 rubric script tests pass. Criterion 3 unproven, criterion 4 partly proven; no source change.
+## [2026-11-22] update | Issue 2008 deployed .xlsx import proof (Refs #2008)
+
+* Added [issue-2008-live-xlsx-deployed-2026-11-22.md](research/issue-2008-live-xlsx-deployed-2026-11-22.md): the synthetic workbook run on the deployed demo with the staff test sign-in shows mapping, one conflict and a 10-row preview, source hash unchanged, screenshots and raw output retained. No source change.
+
+## [2026-11-22] update | Issue 2253 resident chart live verification (Refs #2253)
+
+* Updated [issue-2253-resident-chart-2026-11-22.md](research/issue-2253-resident-chart-2026-11-22.md): the deployed demo (revision 0000025) shows 16.8 px labels, no overlap and circle markers; the not-proven-live limit is closed.
+
+## [2026-11-22] update | Issue 2256 live verification of the Handoff waiting times fix (Refs #2256)
+
+* Added [issue-2256-liveverify-2026-11-22.md](research/issue-2256-liveverify-2026-11-22.md): Playwright probe shows the waiting list now lists the four offered handoffs on the deployed demo; due time unknown in seeded data. No estate change.
+## [2026-11-22] update | Issue 435 fifth per-criterion pass (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-22.md](research/capstone-pitch-435-live-2026-11-22.md): fresh deck read (slide 16 is S14, Tokenomics is slide 22) and read-only demo API check; placement decision and #432 spend authority proven for the synthetic demo, mentor confirmation unproven. No source, deck or estate change.
+## [2026-11-22] update | Issue 462 resident showcase live run 5 (Refs #462)
+
+* Added [resident-showcase-live-r5-2026-11-22.md](research/resident-showcase-live-r5-2026-11-22.md): 36-check Playwright rerun against the live demo, new image digest and minReplicas 1 noted, per-criterion table; criterion 2 stays unproven. No source or estate change.
