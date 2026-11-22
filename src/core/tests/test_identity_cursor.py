@@ -9,6 +9,8 @@ ROW = ('{"code": "KL", "role": "Contractor"}',)
 
 
 class _Raw:
+    rowcount = 1
+
     def fetchall(self) -> list[tuple[str]]:
         return [ROW]
 
