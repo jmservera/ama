@@ -318,7 +318,10 @@ class HubReceiver:
                     if len(receipts) >= max_events:
                         finished.set()
                 except (ConsumerError, StreamError) as error:
-                    failure = StreamError(str(error))
+                    # The deadline reached while a write was in flight is the normal
+                    # end of a bounded window, not a failure of the run.
+                    if not (bounded_window and str(error) == "IOT_OPERATION_TIMEOUT"):
+                        failure = StreamError(str(error))
                     finished.set()
                 except Exception:
                     failure = StreamError("IOT_CALLBACK_FAILED")

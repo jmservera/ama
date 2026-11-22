@@ -282,6 +282,18 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.receiver.sql_retries, 1)
         self.assertEqual(self.count("sensor_reading"), 1)
 
+    async def test_bounded_window_ends_normally_when_the_deadline_hits_a_write(self) -> None:
+        self.events = [("0", event(observations()[0]))]
+        with patch(
+            "zava_forward.api.iot_stream._bounded", side_effect=StreamError("IOT_OPERATION_TIMEOUT")
+        ):
+            receipts = await self.run_receiver(2, bounded=True)
+            self.assertEqual(receipts, ())
+            self.client = Mock(close=AsyncMock())
+            self.credentials = Mock(close=AsyncMock())
+            with self.assertRaisesRegex(StreamError, "^IOT_OPERATION_TIMEOUT$"):
+                await self.run_receiver(2)
+
     async def test_bounded_window_never_retries_an_uncertain_commit(self) -> None:
         self.events = [("0", event(observations()[0]))]
         self.receiver.sql_backoff = (0.0, 0.0)
