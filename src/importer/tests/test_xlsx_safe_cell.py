@@ -2,9 +2,7 @@
 
 import unittest
 
-from zava_forward.core import list_export
-
-from zava_forward.importer import xlsx
+from zava_forward.core import list_export, xlsx
 
 
 class SafeCellTests(unittest.TestCase):

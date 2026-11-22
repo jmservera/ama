@@ -76,6 +76,28 @@ class StoreTests(unittest.TestCase):
         self.assertEqual(r["matched_existing"], 1)
         self.assertEqual(r["to_fix"][0]["row"], 3)
 
+    def test_import_check_workbook_shows_mapping_conflicts_and_rows(self):
+        from zava_forward.core.xlsx import write_workbook
+
+        data = write_workbook({"Cases": [
+            ["Ref", "Property address", "Post code", "Workflow stage", "Notes"],
+            ["R-1", "1 X St", "ZZ1 1ZZ", "Survey", "n"],
+            ["R-2", "", "ZZ-18", "Survey", "n"],
+            ["R-1", "3 X St", "ZZ1 2ZZ", "Survey", "n"],
+        ]})
+        r = self.store.import_check_workbook("demo.xlsx", data)
+        self.assertEqual((r["kind"], r["sheet"], r["ready"], r["to_fix_count"]), ("workbook", "Cases", 1, 2))
+        how = {c["field"]: c["how"] for c in r["columns"]}
+        self.assertEqual((how["reference"], how["status"]), ("alias", "unmapped"))
+        self.assertEqual(r["unmapped_headers"], ["Notes"])
+        self.assertEqual(r["conflicts"], ["Duplicate reference R-1 on rows 2 and 4"])
+        self.assertEqual(r["rows"][1]["problems"], ["address is empty", "postcode looks wrong"])
+        self.assertEqual(r["message"], "Your file has not been changed.")
+
+    def test_import_check_workbook_refuses_unreadable_file_in_plain_words(self):
+        with self.assertRaisesRegex(ValueError, "We could not read that workbook"):
+            self.store.import_check_workbook("bad.xlsx", b"not a workbook")
+
     def test_draft_never_claims_it_was_sent(self):
         self.assertIn("Nothing is sent", self.store.draft("ZF-1", "visit")["note"])
 
@@ -123,6 +145,20 @@ class ApiTests(unittest.TestCase):
         code, body, _ = self.call("/api/cases/ZF-2/advance", {}, cookie)
         self.assertEqual(code, 409)
         self.assertEqual(len(json.loads(body)["reasons"]), 2)
+
+    def test_import_check_accepts_a_workbook_and_refuses_bad_base64(self):
+        import base64
+
+        from zava_forward.core.xlsx import write_workbook
+
+        _, _, hdr = self.call("/api/login", {"email": "sam@example.test", "password": "zf-test"})
+        cookie = hdr["Set-Cookie"].split(";")[0]
+        data = write_workbook({"Cases": [["Reference", "Address", "Postcode", "Stage"], ["R-1", "1 X St", "ZZ1 1ZZ", "Survey"]]})
+        code, body, _ = self.call("/api/import-check", {"name": "a.xlsx", "xlsx_base64": base64.b64encode(data).decode()}, cookie)
+        self.assertEqual((code, json.loads(body)["ready"]), (200, 1))
+        code, body, _ = self.call("/api/import-check", {"name": "a.xlsx", "xlsx_base64": "!!"}, cookie)
+        self.assertEqual(code, 400)
+        self.assertIn("We could not read that file", json.loads(body)["error"])
 
     def test_stale_advance_refusal_names_case_owner_and_next_action(self):
         from dataset import RESIDENT_BINDINGS, supplied_contract_fixture

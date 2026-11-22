@@ -13,9 +13,10 @@ import zipfile
 from pathlib import Path
 from unittest import mock
 
+from zava_forward.core.import_preview import CASE_LIST, build_preview, preview_bytes
+from zava_forward.core.xlsx import WorkbookError, read_workbook, safe_cell, write_workbook
+
 from zava_forward.importer.export import compare, to_csv
-from zava_forward.importer.mapping import CASE_LIST, build_preview, preview_bytes
-from zava_forward.importer.xlsx import WorkbookError, read_workbook, safe_cell, write_workbook
 
 SECRET_ADDRESS = "SYNTHETIC-SECRET-ADDRESS 12 Example Row"
 SECRET_HEADER = "SYNTHETIC-SECRET-HEADER"
@@ -244,7 +245,7 @@ class SyntheticDataBoundaryTests(unittest.TestCase):
     def test_preview_bytes_refuses_content_that_fails_the_scan(self) -> None:
         with (
             mock.patch(
-                "zava_forward.importer.mapping.LocalSignatureScanner.scan",
+                "zava_forward.core.import_preview.LocalSignatureScanner.scan",
                 return_value=("infected", "synthetic"),
             ),
             self.assertRaisesRegex(WorkbookError, "content scan"),

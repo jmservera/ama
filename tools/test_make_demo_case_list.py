@@ -7,8 +7,8 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from zava_forward.importer.mapping import preview_file
-from zava_forward.importer.xlsx import read_workbook
+from zava_forward.core.import_preview import preview_file
+from zava_forward.core.xlsx import read_workbook
 
 SCRIPT = Path(__file__).with_name("make-demo-case-list.py")
 spec = importlib.util.spec_from_file_location("make_demo_case_list", SCRIPT)

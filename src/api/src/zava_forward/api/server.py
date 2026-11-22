@@ -2052,6 +2052,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._send(200, encoded)
                     return self._json(200, getattr(s, GOVERNANCE_ACTIONS[parts[2]])(u, body))
                 if url.path == "/api/import-check":
+                    if "xlsx_base64" in body:
+                        try:
+                            data = base64.b64decode(body["xlsx_base64"], validate=True)
+                        except (ValueError, TypeError):
+                            raise ValueError("We could not read that file. Choose an .xlsx or CSV file.")
+                        return self._json(200, s.import_check_workbook(body.get("name"), data))
                     return self._json(200, s.import_check(body.get("text", "")))
                 if url.path == "/api/ai/candidate-comparison":
                     if u["role"] not in MANAGER_ROLES:

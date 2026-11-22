@@ -2480,13 +2480,53 @@ function fundingPanel(c, id, refresh, savedFields = [], session = caseSession) {
   return panel;
 }
 
+const IMPORT_FIELD_LABELS = { reference: "Reference", address: "Address", postcode: "Postcode", stage: "Stage", status: "Status", owner: "Owner" };
+const IMPORT_MATCH_LABELS = { exact: "Matched by name", alias: "Matched by a similar name", unmapped: "Not found" };
+const IMPORT_XLSX_LIMIT = 5 * 1024 * 1024;
+
+function bytesToBase64(buffer) {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
+  return btoa(binary);
+}
+
+function importWorkbookResult(r) {
+  const fields = Object.keys(IMPORT_FIELD_LABELS);
+  const shown = r.rows.length;
+  return h("div", {},
+    h("p", { class: "notice" }, r.message),
+    h("p", {}, `Sheet "${r.sheet}": ${r.ready} rows are ready to bring in and ${r.to_fix_count} need fixing. ${r.matched_existing} match a home we already have a record for.`),
+    h("h2", {}, "How we matched your columns"),
+    h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "How we matched your columns" },
+      h("table", {}, h("caption", { class: "sr-only" }, "Your columns and the details they were matched to"),
+        h("thead", {}, h("tr", {}, ["Detail we need", "Your column", "How we matched it"].map((x) => h("th", { scope: "col" }, x)))),
+        h("tbody", {}, r.columns.map((c) => h("tr", {}, h("td", {}, IMPORT_FIELD_LABELS[c.field] || c.field), h("td", {}, c.header || "Not found"), h("td", {}, IMPORT_MATCH_LABELS[c.how] || c.how)))))),
+    r.unmapped_headers.length ? h("p", {}, `Columns we did not use: ${r.unmapped_headers.join(", ")}.`) : null,
+    h("h2", {}, "Conflicts to resolve"),
+    r.conflicts.length ? h("ul", {}, r.conflicts.map((x) => h("li", {}, x))) : h("p", {}, "No conflicts found."),
+    h("h2", {}, "Row by row"),
+    h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Row by row" },
+      h("table", {}, h("caption", { class: "sr-only" }, "Each row of your spreadsheet with what we found"),
+        h("thead", {}, h("tr", {}, [h("th", { scope: "col" }, "Row"), ...fields.map((f) => h("th", { scope: "col" }, IMPORT_FIELD_LABELS[f])), h("th", { scope: "col" }, "Result")])),
+        h("tbody", {}, r.rows.map((x) => h("tr", {}, h("td", {}, String(x.row)), ...fields.map((f) => h("td", {}, x.values[f] || "")), h("td", {}, x.ready ? "Ready" : `To fix: ${x.problems.join("; ")}`)))))),
+    r.rows_total > shown ? h("p", { class: "muted" }, `Showing the first ${shown} of ${r.rows_total} rows.`) : null);
+}
+
 function importView() {
   const out = h("div", {});
-  const file = h("input", { type: "file", accept: ".csv,text/csv", id: "f" });
+  const file = h("input", { type: "file", accept: ".csv,text/csv,.xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", id: "f" });
   file.addEventListener("change", AsyncAction.handler(async () => {
     if (!file.files.length) return;
     try {
-      const text = await file.files[0].text();
+      const chosen = file.files[0];
+      if (/\.xlsx$/i.test(chosen.name)) {
+        if (chosen.size > IMPORT_XLSX_LIMIT) throw new Error("That workbook is larger than 5 MB. Save a smaller copy and try again.");
+        const r = await api("/api/import-check", { name: chosen.name, xlsx_base64: bytesToBase64(await chosen.arrayBuffer()) });
+        out.replaceChildren(importWorkbookResult(r));
+        return;
+      }
+      const text = await chosen.text();
       const r = await api("/api/import-check", { text });
       out.replaceChildren(
         h("p", { class: "notice" }, r.message),
@@ -2496,10 +2536,10 @@ function importView() {
     } catch (e) { out.replaceChildren(h("p", { class: "err" }, e.message)); }
   }));
   show(h("a", { class: "back", href: "#/" }, "Back to the list"), h("h1", {}, "Check a spreadsheet"),
-    h("p", {}, "Choose any spreadsheet saved as CSV. We match the columns for you and list anything to fix. Your file is never changed."),
+    h("p", {}, "Choose a spreadsheet saved as CSV or Excel (.xlsx). We match the columns for you, show any conflicts and list each row with anything to fix. Your file is never changed."),
     h("p", {}, "Rejected import batches, failed model calls, stranded tasks and conflicting source values are tracked in the ",
       h("a", { href: "#/exceptions" }, "data steward and operator exception queue"), "."),
-    h("label", { for: "f" }, "Spreadsheet (CSV)"), file, out);
+    h("label", { for: "f" }, "Spreadsheet (CSV or Excel .xlsx)"), file, out);
 }
 
 const EXCEPTIONS_READ_ERROR = "The exception queue could not load, so conflicting source values and operational failures cannot be verified right now. Owner: application support. Next action: choose Check again, then contact application support if it continues.";

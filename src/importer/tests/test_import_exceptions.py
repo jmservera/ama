@@ -16,6 +16,7 @@ from zava_forward.core.exception_queue import ExceptionQueue
 from zava_forward.core.import_refusals import PartiallyRecordedError
 from zava_forward.core.sqlstore import CommittedReloadError, SqlStore
 from zava_forward.core.store import Store
+from zava_forward.core.xlsx import write_workbook
 
 from zava_forward.importer import exceptions as ex
 from zava_forward.importer.exceptions import (
@@ -26,7 +27,6 @@ from zava_forward.importer.exceptions import (
     transfer,
 )
 from zava_forward.importer.quarantine import ImportError_, QuarantineStore
-from zava_forward.importer.xlsx import write_workbook
 
 STEWARD = "synthetic.steward@example.test"
 GOOD = [
@@ -129,7 +129,7 @@ class ProducerTests(Base):
         path = self.source("big.xlsx")
         with (
             mock.patch.object(ex, "MAX_SOURCE_BYTES", 10),
-            mock.patch("zava_forward.importer.mapping.MAX_SOURCE_BYTES", 10),
+            mock.patch("zava_forward.core.import_preview.MAX_SOURCE_BYTES", 10),
         ):
             result = submit_file(self.store, self.ledger, path, "Pat")
         self.assertEqual(must(result.refusal).source_sha256, "")
@@ -169,7 +169,7 @@ class IdentityTests(Base):
     def oversized(self, path: Path) -> ex.Refusal:
         with (
             mock.patch.object(ex, "MAX_SOURCE_BYTES", 10),
-            mock.patch("zava_forward.importer.mapping.MAX_SOURCE_BYTES", 10),
+            mock.patch("zava_forward.core.import_preview.MAX_SOURCE_BYTES", 10),
         ):
             return must(submit_file(self.store, self.ledger, path, "Pat").refusal)
 
@@ -223,7 +223,7 @@ class IdentityTests(Base):
             return "infected", "scan: infected"
 
         return mock.patch(
-            "zava_forward.importer.mapping.LocalSignatureScanner.scan", side_effect=scan
+            "zava_forward.core.import_preview.LocalSignatureScanner.scan", side_effect=scan
         )
 
     def test_replacement_after_preview_failure_never_lends_its_digest(self) -> None:
@@ -255,7 +255,7 @@ class IdentityTests(Base):
         path = self.source("grow.xlsx", raw=b"12345")
         with (
             mock.patch.object(ex, "MAX_SOURCE_BYTES", 8),
-            mock.patch("zava_forward.importer.mapping.MAX_SOURCE_BYTES", 8),
+            mock.patch("zava_forward.core.import_preview.MAX_SOURCE_BYTES", 8),
             mock.patch.object(Path, "stat") as stat,
         ):
             stat.return_value = mock.Mock(st_size=5, st_mtime_ns=1, st_ino=1, st_dev=1)

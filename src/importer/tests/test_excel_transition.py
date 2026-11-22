@@ -7,10 +7,11 @@ from collections.abc import Mapping
 from pathlib import Path
 from unittest import mock
 
+from zava_forward.core.import_preview import CASE_LIST, build_preview, preview_bytes, preview_file
+from zava_forward.core.xlsx import WorkbookError, read_workbook, write_workbook
+
 from zava_forward.importer.export import compare, history_rows, to_csv, to_xlsx
-from zava_forward.importer.mapping import CASE_LIST, build_preview, preview_bytes, preview_file
 from zava_forward.importer.quarantine import ImportError_, QuarantineStore
-from zava_forward.importer.xlsx import WorkbookError, read_workbook, write_workbook
 
 GOOD = [
     ["Ref", "Property Address", "Post code", "Stage", "Owner"],
@@ -93,7 +94,7 @@ class XlsxTests(unittest.TestCase):
                 )
 
     def test_total_size_and_sheet_caps(self) -> None:
-        from zava_forward.importer import xlsx
+        from zava_forward.core import xlsx
 
         with mock.patch.object(xlsx, "MAX_TOTAL_BYTES", 50), self.assertRaises(WorkbookError):
             read_workbook(SYNTHETIC_BYTES)
