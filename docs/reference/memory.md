@@ -75,9 +75,12 @@ than validated evidence:
 
 ## Delivery Decision, 2026-11-22
 
-* Owner decision (2026-11-22): do not run the multi-hour full local gate for
-  demo-phase delivery. The full gate was hurting throughput. Replace it with
-  targeted local tests, hosted CI on the exact head, and a post-merge smoke
-  test against the deployed demo (health, chat ask, map, resident chart) with
-  a rollback to the last good revision. Human, legal, resident and
-  independent-review gates are unchanged. Revisit before production release.
+* Owner decision (2026-11-22): the multi-hour full local gate is not the
+  per-change gate. Per change, use targeted local tests (including the tests
+  of every touched area and ruff, mypy and format checks), hosted CI on the
+  exact head, independent review, and a post-merge smoke test against the
+  deployed demo (health, chat ask, map, resident chart) with a rollback to the
+  last good revision. Run the full gate only for major changes (infrastructure,
+  deployment, SQL, security, release) and once after a large group of merged
+  changes, on the integrated main tip. Human, legal and resident gates are
+  unchanged.
