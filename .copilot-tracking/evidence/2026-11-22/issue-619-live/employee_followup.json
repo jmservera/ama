@@ -1,0 +1,88 @@
+{
+ "steps": [
+  {
+   "step": "case_with_blocker_found",
+   "found": true,
+   "summary_count": 1
+  },
+  {
+   "step": "blocker_summary_text",
+   "summary": [
+    "Funding has not been confirmed."
+   ],
+   "trigger_aria_label": "Case: why blocked. Funding has not been confirmed. Details"
+  },
+  {
+   "step": "blocker_enter_escape",
+   "opened": 1,
+   "closed": true,
+   "focus_on_trigger": true
+  },
+  {
+   "step": "blocker_space_opens",
+   "opened": 1
+  },
+  {
+   "step": "axe_blocker_case",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 30
+  },
+  {
+   "step": "hz_aware_focus",
+   "tag": "INPUT:datetime-local",
+   "visible": false,
+   "style": {
+    "outline": "solid 3px",
+    "shadow": "rgb(242, 169, 0) 0px 0px 0px 2px",
+    "appearance": "auto"
+   },
+   "focus_visible_matches": true
+  },
+  {
+   "step": "chat_geometry_320x256_open",
+   "viewport": [
+    320,
+    256
+   ],
+   "panel": [
+    16,
+    24,
+    304,
+    168
+   ],
+   "panelScroll": [
+    501,
+    142,
+    "auto"
+   ],
+   "input": [
+    29,
+    508,
+    291,
+    556
+   ],
+   "send": [
+    103,
+    484,
+    159,
+    526
+   ]
+  },
+  {
+   "step": "chat_320_focus_send_reachable",
+   "focus": {
+    "tag": "BUTTON",
+    "id": "",
+    "role": null,
+    "name": "Send"
+   },
+   "scrolled_into_view": true
+  },
+  {
+   "step": "chat_320x450_input_send_in_view",
+   "input": true,
+   "send": true
+  }
+ ]
+}

@@ -14639,3 +14639,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 344 public browser access live run 9 (Refs #344)
 
 * Added [public-browser-access-live-r9-2026-11-22.md](research/public-browser-access-live-r9-2026-11-22.md): the anonymous 401 versus redirect split is traced to the browser User-Agent under `RedirectToLoginPage`; 13 workbench destinations walked signed in; SQL still private; criteria 1 partly proven and 5 unproven with reasons. No source or estate change.
+## [2026-11-22] update | Issue 619 live re-proof (Refs #619)
+
+* Added [issue-619-live-at-consent-evidence-2026-11-22.md](research/issue-619-live-at-consent-evidence-2026-11-22.md): Playwright rerun of axe, keyboard, reflow and the synthetic resident consent journey after the web redesigns, plus a 200 percent text probe; person-run criteria stay unproven. No source or estate change.
