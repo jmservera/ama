@@ -14700,3 +14700,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 220 live run 10 (Refs #220)
 
 * Added [issue-220-live-r10-revision-0054-2026-11-22.md](research/issue-220-live-r10-revision-0054-2026-11-22.md): the run 9 probe repeated on revision 0000054; record and correction succeed, protected case state is unchanged, guard fields are refused; 40 offline tests pass. Retaliation over time stays production-only. No source change.
+
+## [2026-11-22] update | Issue 198 criteria re-verification, run 20261122T235603Z (Refs #198)
+
+* Added [issue-198-rubric-live-20261122T235603Z-2026-11-22.md](research/issue-198-rubric-live-20261122T235603Z-2026-11-22.md): criteria 3 and 4 re-checked at base 10cad2e413. No mvp or prototype glob remains, score 79 (baseline 47), 84 rubric tests pass. Criterion 3 unproven, criterion 4 partly proven. No source or estate change.

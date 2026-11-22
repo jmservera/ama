@@ -1,0 +1,7 @@
+* `git rm` all 10 tracked `prototype/` files (all already mapped in the parity matrix, group P1: 1 archive, 9 retire).
+* Removed `.github/workflows/prototype-validation.yml` and the dead `prototype/deploy/**/*.bicep` glob from `.github/rubric/artifacts.json`.
+* Repointed live references: rubric README (prototype sections removed), rubric `test_prepare.py` fixtures, capstone README, ADR 0006 status, parity matrix status, coordinator agent, reference index; appended `docs/reference/log.md`. Dated historical records and `tools/rename-zava*` identifiers left exact.
+The `artifacts.json` edit takes effect only after this PR merges. The prototype is not scored, so no dip is expected; any dip is accepted (owner, 2026-10-14).
+`Prototype validation / validate` disappears with the workflow. I could not read branch protection or rulesets (API 403, plan limit), so I did not guess. If it is a required check, remove it from required checks before merging, or ask for a minimal same-name workflow.
+* Rubric script tests: 19 failed before, 11 after; the 8 removed were stale prototype cases. Remaining 11 are pre-existing.
+* grep for `prototype/` and `prototype-validation`: remaining hits are dated history, ADR/matrix records or explanatory notes.
