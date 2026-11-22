@@ -14448,3 +14448,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2191 live SQL capacity and fresh coverage (Refs #2191)
 
 * Added [issue-2191-live-sql-capacity-2026-11-22.md](research/issue-2191-live-sql-capacity-2026-11-22.md): the `retrofit` database on Standard S0 was at its DTU limit despite receiver batching; scaled to S3 with `az` (no Bicep); a 30 minute sample series showed 51.7 to 58.7 percent of 443 homes fresh (mean 56.4 percent). Throwaway sampler job deleted.
+
+## [2026-11-22] update | Issue 2204 rule owner actions proven live (Refs #2204)
+
+* Added [issue-2204-rule-actions-owner-live-2026-11-22.md](research/issue-2204-rule-actions-owner-live-2026-11-22.md): a RuleOwner-only identity is refused at sign-in because the API needs a staff role (no MFA block); with Programme Manager added for the run, Alan Steiner approved, activated, held, released and retired a card authored by the main test account, with wrong-role and invalid-state refusals recorded. Roles restored; per-criterion table included.

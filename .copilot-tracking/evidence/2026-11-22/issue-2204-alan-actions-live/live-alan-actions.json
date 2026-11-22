@@ -1,0 +1,147 @@
+{
+ "started_utc": "2026-11-22T14:53:01Z",
+ "steps": [
+  {
+   "label": "B RuleOwner+PM pre-check",
+   "attempt": 1,
+   "me_status": 200,
+   "app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RuleOwner"
+   ],
+   "rule_roles": [
+    "rule_owner"
+   ],
+   "role": "Retrofit Programme Manager",
+   "results": {
+    "GET cards": 200,
+    "RuleOwner propose (wrong role)": {
+     "status": 403,
+     "error": "A provisioned rule author or named owner capability is required."
+    }
+   }
+  },
+  {
+   "label": "A PM+RuleAuthor",
+   "attempt": 1,
+   "me_status": 200,
+   "app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RuleAuthor"
+   ],
+   "rule_roles": [
+    "rule_author"
+   ],
+   "role": "Retrofit Programme Manager",
+   "results": {
+    "GET cards": 200,
+    "RuleAuthor propose naming the second identity as owner": 201,
+    "version": 2,
+    "draft state": "draft",
+    "author approves own card (wrong role)": {
+     "status": 403,
+     "error": "A provisioned rule author or named owner capability is required."
+    },
+    "author activates (wrong role)": {
+     "status": 403,
+     "error": "A provisioned rule author or named owner capability is required."
+    }
+   }
+  },
+  {
+   "label": "B RuleOwner+PM actions",
+   "attempt": 1,
+   "me_status": 200,
+   "app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RuleOwner"
+   ],
+   "rule_roles": [
+    "rule_owner"
+   ],
+   "role": "Retrofit Programme Manager",
+   "results": {
+    "identity matches named owner": true,
+    "approve": {
+     "status": 200,
+     "error": null,
+     "state_after": "approved"
+    },
+    "approve again (already approved)": {
+     "status": 409,
+     "error": "only a draft can be approved",
+     "state_after": "approved"
+    },
+    "activate": {
+     "status": 200,
+     "error": null,
+     "state_after": "active"
+    },
+    "hold": {
+     "status": 200,
+     "error": null,
+     "state_after": "held"
+    },
+    "release": {
+     "status": 200,
+     "error": null,
+     "state_after": "active"
+    },
+    "hold again": {
+     "status": 200,
+     "error": null,
+     "state_after": "held"
+    },
+    "retire": {
+     "status": 200,
+     "error": null,
+     "state_after": "retired"
+    },
+    "release after retire (invalid)": {
+     "status": 409,
+     "error": "only a held card can be released",
+     "state_after": "retired"
+    },
+    "final events (state, role)": [
+     [
+      "draft",
+      "rule_author"
+     ],
+     [
+      "approved",
+      "rule_owner"
+     ],
+     [
+      "active",
+      "rule_owner"
+     ],
+     [
+      "held",
+      "rule_owner"
+     ],
+     [
+      "active",
+      "rule_owner"
+     ],
+     [
+      "held",
+      "rule_owner"
+     ],
+     [
+      "retired",
+      "rule_owner"
+     ]
+    ]
+   }
+  }
+ ],
+ "original_roles_known": {
+  "A_is_PM_only": true,
+  "B_is_RuleOwner_only": true
+ },
+ "restored": {
+  "A_PM_only": true,
+  "B_RuleOwner_only": true
+ },
+ "failure": null
+}
