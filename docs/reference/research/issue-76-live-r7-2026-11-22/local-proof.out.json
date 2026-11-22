@@ -1,0 +1,24 @@
+[
+ {
+  "id": "ZF-4",
+  "hazard": [
+   {
+    "clock_status": "overdue",
+    "clock_remaining_hours": -6.0,
+    "clock_label": "Awaab's Law 24h emergency action clock (recorded reference)",
+    "accountable_owner": "Bea Safe",
+    "named_owner": "Bea Safe"
+   }
+  ],
+  "visible_text": "Hazard clock: 12 hours elapsed; service response due 2026-10-15T18:00:00Z; response overdue. Accountable owner: Bea Safe. Safety clock in this recorded view: 12 elapsed hours; awareness: 2026-10-15T12:00:00Z; named follow-up owner: Bea Safe; service response due: 2026-10-15T18:00:00Z; resident update due: Unknown. Existing hazard and repairs service owns timing. Named follow-up owner recorded. Service response: Overdue; resident update: Unknown. Clock: Awaab's Law 24h emergency action clock (recorded reference). Overdue by 6 hours; target was 2026-10-15T18:00:00Z. Accountable owner: Bea Safe (Building Safety Liaison, ID OWNER:BEA-SAFE).",
+  "safety_panel_text": "Clock: Awaab's Law 24h emergency action clock (recorded reference): overdue by 6 hours (target was 2026-10-15T18:00:00Z). Accountable owner: Bea Safe (Building Safety Liaison, ID OWNER:BEA-SAFE)."
+ },
+ {
+  "id": "ZF-1",
+  "hazard": []
+ },
+ {
+  "id": "ZF-5",
+  "hazard": []
+ }
+]

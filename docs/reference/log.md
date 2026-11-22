@@ -14441,3 +14441,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2204 law store enabled, rule actions live (Refs #2204)
 
 * Added [issue-2204-rule-actions-law-store-live-2026-11-22.md](research/issue-2204-rule-actions-law-store-live-2026-11-22.md): the 503 came from missing `ZF_LAW_STORE`; enabled the mssql law store with az (revision 0000050, container `law-snapshots`); RuleAuthor propose returned 201; RuleOwner actions reached the domain gates and were refused. A distinct-owner approval is unproven because no second identity could sign in. No source change.
+## [2026-11-22] update | Issue 76 hazard clock build (Refs #76)
+
+* Added [issue-76-live-r7-2026-11-22.md](research/issue-76-live-r7-2026-11-22.md): queue and case-card clocks now carry the target clock and named owner; local Playwright and unit proof on synthetic data.
+* Source: code change in `taskqueues.py` and `app.js`; no Azure change.

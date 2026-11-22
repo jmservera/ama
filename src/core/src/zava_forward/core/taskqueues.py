@@ -123,7 +123,12 @@ SAFEGUARDING_HELD = "Safeguarding items are shown only to roles with a recorded 
 
 
 def safeguarding_clocks(
-    case: dict[str, Any], now: datetime, *, visible: bool, as_of: str
+    case: dict[str, Any],
+    now: datetime,
+    *,
+    visible: bool,
+    as_of: str,
+    staff: Sequence[Mapping[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Recorded safeguarding deadlines and named owner; no duration is ever derived or invented.
 
@@ -168,6 +173,20 @@ def safeguarding_clocks(
                 version=item.get("version") or UNKNOWN,
                 as_of=as_of,
             )
+        )
+        clocks[-1].update(
+            {
+                key: value
+                for key, value in clock_fields(
+                    item,
+                    case=case,
+                    as_of=as_of,
+                    staff=staff,
+                    default_kind="safeguarding",
+                    reason_ok=visible,
+                ).items()
+                if key != "owner_role"
+            }
         )
     return clocks
 
@@ -246,6 +265,39 @@ def hazard_clock(
         known=known,
         pending=any(state in ("Open", "Overdue") for state in states),
     )
+
+
+CLOCK_KEYS = (
+    "clock_label",
+    "clock_status",
+    "clock_deadline_utc",
+    "clock_remaining_hours",
+    "clock_basis",
+    "named_owner",
+    "owner_role",
+    "owner_id",
+    "unassigned",
+    "escalation_owner",
+)
+
+
+def clock_fields(
+    item: Mapping[str, Any],
+    *,
+    case: Mapping[str, Any],
+    as_of: str,
+    staff: Sequence[Mapping[str, Any]] | None,
+    default_kind: str,
+    reason_ok: bool,
+) -> dict[str, Any]:
+    """Target clock and named owner for one item; a safeguarding label needs reason visibility."""
+    projected = project_safety_clock_and_owner(
+        item, case=case, as_of=as_of, staff=staff, default_kind=default_kind
+    )
+    fields = {key: projected[key] for key in CLOCK_KEYS}
+    if not reason_ok and projected["item_kind"] == "safeguarding":
+        fields["clock_label"] = "Safety review clock"
+    return fields
 
 
 def timing(due: object, done: object, now: datetime) -> str:
@@ -844,6 +896,14 @@ def context(
                     response_due_at=hazard.get("response_due_at") or UNKNOWN,
                     resident_update_due_at=hazard.get("resident_update_due_at") or UNKNOWN,
                     authority="Existing hazard and repairs service",
+                    **clock_fields(
+                        hazard,
+                        case=case,
+                        as_of=as_of,
+                        staff=staff,
+                        default_kind="hazard",
+                        reason_ok=reason_ok,
+                    ),
                     **origin(path, hazard.get("referral_version")),
                 )
             )
@@ -999,7 +1059,9 @@ def context(
         returned=returned_view,
         blockers=blockers,
         hazard_clocks=clocks,
-        safeguarding_clocks=safeguarding_clocks(case, now, visible=reason_ok, as_of=as_of),
+        safeguarding_clocks=safeguarding_clocks(
+            case, now, visible=reason_ok, as_of=as_of, staff=staff
+        ),
         safeguarding_visibility=SAFEGUARDING_HELD,
         overdue=overdue,
         evidence_freshness=freshness,

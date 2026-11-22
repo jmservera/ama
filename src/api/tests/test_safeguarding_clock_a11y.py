@@ -15,15 +15,18 @@ SCRIPT = r"""
 const fs = require("node:fs");
 const vm = require("node:vm");
 const source = fs.readFileSync(process.argv[1], "utf8");
-const start = source.indexOf("function workSummary(");
-let depth = 0, end = 0;
-for (let j = source.indexOf(") {", start) + 2; j < source.length; j++) {
-  if (source[j] === "{") depth++;
-  if (source[j] === "}" && --depth === 0) { end = j + 1; break; }
-}
+const extract = (name) => {
+  const start = source.indexOf("function " + name + "(");
+  let depth = 0, end = 0;
+  for (let j = source.indexOf(") {", start) + 2; j < source.length; j++) {
+    if (source[j] === "{") depth++;
+    if (source[j] === "}" && --depth === 0) { end = j + 1; break; }
+  }
+  return source.slice(start, end);
+};
 const h = (tag, props, ...kids) => ({tag, class: (props || {}).class, kids: kids.flat(Infinity)});
 const context = vm.createContext({h});
-vm.runInContext(source.slice(start, end), context);
+vm.runInContext(extract("clockStatusText") + extract("workSummary"), context);
 const text = (n) => typeof n === "string" ? n : n ? (n.kids || []).map(text).join(" ") : "";
 const out = JSON.parse(process.argv[2]).map((work) => {
   const node = vm.runInContext("workSummary(" + JSON.stringify(work) + ")", context);
