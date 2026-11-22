@@ -111,7 +111,11 @@ async function run(responses, signal) {
     "plain-language status while waiting");
   assert.equal(out.status, "", "status clears after recovery");
 
-  await assert.rejects(run([new TypeError("network"), reply(200)]), /network/);
+  out = await run([new TypeError("network"), reply(200, "application/json")]);
+  assert.equal(out.res.status, 200, "a dropped connection is retried once");
+  assert.deepEqual(out.delays, [400]);
+  assert.ok(out.shown.every(text => /connection dropped/.test(text)), "plain-language status while retrying");
+  assert.equal(out.status, "", "status clears after recovery");
   out = await run([reply(502), reply(200)]);
   assert.equal(out.res.status, 200);
   out = await run([reply(500, "application/json; charset=utf-8")]);
@@ -132,9 +136,9 @@ async function run(responses, signal) {
   assert.equal(out.res.status, 503);
   assert.deepEqual(out.delays, [500, 1500, 3000]);
 
-  const failing = [new TypeError("a"), new TypeError("b")];
-  await assert.rejects(run(failing), /a/);
-  assert.equal(failing.length, 1, "a network failure is rejected on the first attempt");
+  const failing = [new TypeError("a"), new TypeError("b"), new TypeError("c"), new TypeError("d")];
+  await assert.rejects(run(failing), /c/);
+  assert.equal(failing.length, 1, "a persistent network failure is retried twice, then rejected");
 
   const controller = new AbortController();
   controller.abort();

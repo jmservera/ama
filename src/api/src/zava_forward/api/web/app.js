@@ -310,8 +310,10 @@ document.addEventListener("visibilitychange", () => {
 });
 
 const STARTUP_RETRY_DELAYS = [500, 1500, 3000];
+const NETWORK_RETRY_DELAYS = [400, 1200];
 const SCRIPT_RETRY_DELAYS = [250, 500, 1500];
 const STARTUP_RETRY_MESSAGE = "The service is still starting. Trying again, this can take a few seconds.";
+const NETWORK_RETRY_MESSAGE = "The connection dropped. Trying again.";
 
 // A cold start can answer the first reads with a gateway failure: 500/502/503/504 that is not our JSON error.
 function startupFailure(res) {
@@ -321,19 +323,29 @@ function startupFailure(res) {
 
 async function fetchReadRetrying(path, options = {}) {
   let previous = null;
+  const wait = async (message, delay) => {
+    if (previous === null && workspaceStatus.textContent !== message) previous = workspaceStatus.textContent;
+    workspaceStatus.textContent = message;
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    options.signal?.throwIfAborted();
+  };
   try {
-    for (let attempt = 0; ; attempt++) {
-      // A network-level failure is not a cold start signal and is never retried.
-      const res = await fetch(path, options);
+    for (let attempt = 0, dropped = 0; ; attempt++) {
+      let res;
+      try {
+        res = await fetch(path, options);
+      } catch (error) {
+        // A reset connection, for example from a replica leaving the pool, is safe to repeat for a read; an abort is not.
+        if (options.signal?.aborted || dropped >= NETWORK_RETRY_DELAYS.length) throw error;
+        await wait(NETWORK_RETRY_MESSAGE, NETWORK_RETRY_DELAYS[dropped++]);
+        continue;
+      }
       if (!startupFailure(res) || attempt >= STARTUP_RETRY_DELAYS.length) return res;
-      if (previous === null && workspaceStatus.textContent !== STARTUP_RETRY_MESSAGE) previous = workspaceStatus.textContent;
-      workspaceStatus.textContent = STARTUP_RETRY_MESSAGE;
-      await new Promise((resolve) => setTimeout(resolve, STARTUP_RETRY_DELAYS[attempt]));
-      options.signal?.throwIfAborted();
+      await wait(STARTUP_RETRY_MESSAGE, STARTUP_RETRY_DELAYS[attempt]);
     }
   } finally {
     // Restore the status this retry replaced, whether the read succeeds, fails or is aborted.
-    if (previous !== null && workspaceStatus.textContent === STARTUP_RETRY_MESSAGE) workspaceStatus.textContent = previous;
+    if (previous !== null && [STARTUP_RETRY_MESSAGE, NETWORK_RETRY_MESSAGE].includes(workspaceStatus.textContent)) workspaceStatus.textContent = previous;
   }
 }
 
