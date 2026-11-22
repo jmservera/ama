@@ -67,3 +67,10 @@ These show that corrupt case data can produce a 500, so the failure class is pla
 * `az containerapp logs show --tail 300` returned 18 `http-error` lines from the current replica (19:44 to 20:33 UTC). Sixteen were `GET /healthz` client-disconnect warnings, one was `POST /api/chat/threads` 500 (`ProgrammingError`) and one was `GET /api/ai/report` 500 (`FileNotFoundError`). None concerned `/api/retention`, so the original 500 is still not observed in any log. The two other 500s are separate defects and are not part of this issue.
 * A Log Analytics query on `log-cutover-test` was retried and still failed (`BadArgumentError` with the workspace id supplied; the earlier note recorded `InsufficientAccessError` and an NSP refusal), so older replicas' logs stay out of reach.
 * No source change; the Azure estate was not changed. The per-criterion table above is unchanged.
+
+## Revision 0000054 (2026-11-22, about 23:35 UTC)
+
+* `ca-cutover-test-demo-api` has one active revision, `--0000054` (created 23:14 UTC, 100 percent traffic).
+* Re-ran [live_probe.py](./issue-2237-retention-500-live-2026-11-22/live_probe.py): `GET /api/retention` returned 200 with keys `as_of`, `label`, `records` and 0 records; the 15 sequential, 20 parallel and 20 mixed requests all returned 200 ([r54-2026-11-22T23.json](./issue-2237-retention-500-live-2026-11-22/r54-2026-11-22T23.json)). `/api/me` returned no role value, so the role at probe time is unconfirmed.
+* `az containerapp logs show --tail 300` held 4 `http-error` lines, all `GET /healthz` client-disconnect warnings. None concerned `/api/retention`.
+* No source change; the Azure estate was not changed. The table above is unchanged: the 500 is not reproducible, its cause is unrecoverable from this host, no fix or regression test is justified, and the 200 is re-proven live on revision 0000054 for the demo account.
