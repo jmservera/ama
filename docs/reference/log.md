@@ -14588,3 +14588,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2008 deployed .xlsx import proof (Refs #2008)
 
 * Added [issue-2008-live-xlsx-deployed-2026-11-22.md](research/issue-2008-live-xlsx-deployed-2026-11-22.md): the synthetic workbook run on the deployed demo with the staff test sign-in shows mapping, one conflict and a 10-row preview, source hash unchanged, screenshots and raw output retained. No source change.
+
+## [2026-11-22] update | Issue 2253 resident chart live verification (Refs #2253)
+
+* Updated [issue-2253-resident-chart-2026-11-22.md](research/issue-2253-resident-chart-2026-11-22.md): the deployed demo (revision 0000025) shows 16.8 px labels, no overlap and circle markers; the not-proven-live limit is closed.
