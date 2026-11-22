@@ -14596,3 +14596,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2256 live verification of the Handoff waiting times fix (Refs #2256)
 
 * Added [issue-2256-liveverify-2026-11-22.md](research/issue-2256-liveverify-2026-11-22.md): Playwright probe shows the waiting list now lists the four offered handoffs on the deployed demo; due time unknown in seeded data. No estate change.
+## [2026-11-22] update | Issue 435 fifth per-criterion pass (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-22.md](research/capstone-pitch-435-live-2026-11-22.md): fresh deck read (slide 16 is S14, Tokenomics is slide 22) and read-only demo API check; placement decision and #432 spend authority proven for the synthetic demo, mentor confirmation unproven. No source, deck or estate change.
