@@ -14582,3 +14582,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 144 live hosting probe (Refs #144)
 
 * Added [issue-144-live-hosting-2026-11-22.md](research/issue-144-live-hosting-2026-11-22.md): digest-pinned worker and job images, live non-root proof, read-only root file system disproved, no pipeline run, per-criterion table.
+## [2026-11-22] update | Issue 198 rubric criteria re-verification (Refs #198)
+
+* Added [issue-198-rubric-live-20261122T215913Z-2026-11-22.md](research/issue-198-rubric-live-20261122T215913Z-2026-11-22.md): no mvp or prototype glob in the registry, score 79 against baseline 47, 84 rubric script tests pass. Criterion 3 unproven, criterion 4 partly proven; no source change.
