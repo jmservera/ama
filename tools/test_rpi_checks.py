@@ -3887,7 +3887,9 @@ os.fstat(3)
                 "schema": 4,
                 "status": "passed",
                 "scope": scope,
-                "selection": gate.selection(self.root, self.base, "changed", []),
+                "selection": gate.selection(
+                    self.root, self.base, "all" if scope == "full" else "changed", []
+                ),
                 "extras": [],
                 "identity": gate.clean_identity(self.root, self.base),
                 "stack": stack or [],
@@ -3897,20 +3899,56 @@ os.fstat(3)
         (folder / "receipt.sha256").write_text(gate.digest(path))
         return path
 
-    def test_full_scope_and_exact_base_option_never_relax(self) -> None:
+    def test_exact_base_option_never_relaxes(self) -> None:
         self.commit("pr", "docs/pr.md")
-        full, partial = self.relaxed_receipt("full"), self.relaxed_receipt("partial")
+        partial = self.relaxed_receipt("partial")
         moved = self.move_main("docs/other.md")
-        for path, options in ((full, {}), (partial, {"relax_base": False})):
-            with patch.object(gate, "base_relaxation") as relax:
-                with self.assertRaises(gate.GateError):
-                    gate.validate_receipt(self.root, path, moved, **options)
-                relax.assert_not_called()
+        with patch.object(gate, "base_relaxation") as relax:
+            with self.assertRaises(gate.GateError):
+                gate.validate_receipt(self.root, partial, moved, relax_base=False)
+            relax.assert_not_called()
         with (
             patch.object(gate, "tool_identity", side_effect=gate.GateError("reached identity")),
             self.assertRaisesRegex(gate.GateError, "reached identity"),
         ):
             gate.validate_receipt(self.root, partial, moved)
+
+    def test_full_receipt_survives_only_inert_main_moves(self) -> None:
+        self.commit("pr", "src/api/src/zava_forward/api/server.py")
+        full = self.relaxed_receipt("full")
+        cases = {
+            "docs": (("docs/other.md", ".copilot-tracking/x.json"), True),
+            "unrelated project code": (("src/importer/src/zava_forward/importer/x.py",), False),
+            "unrelated project tests": (("src/importer/tests/test_x.py",), False),
+            "markdown under src": (("src/importer/README.md",), False),
+            "gate tool": (("tools/rpi-checks.py",), False),
+            "image definition": (("src/api/Dockerfile",), False),
+            "mixed docs and code": (("docs/a.md", "src/core/src/zava_forward/core/y.py"), False),
+        }
+        for label, (paths, allowed) in cases.items():
+            with self.subTest(label):
+                moved = self.move_main(*paths)
+                try:
+                    if allowed:
+                        with (
+                            patch.object(
+                                gate,
+                                "tool_identity",
+                                side_effect=gate.GateError("reached identity"),
+                            ),
+                            self.assertRaisesRegex(gate.GateError, "reached identity"),
+                        ):
+                            gate.validate_receipt(self.root, full, moved)
+                        proof = gate.base_relaxation(
+                            self.root, self.base, moved, [], inert_only=True
+                        )
+                        self.assertEqual(proof["kind"], "disjoint-move")
+                    else:
+                        with self.assertRaisesRegex(gate.GateError, "Base moved on"):
+                            gate.validate_receipt(self.root, full, moved)
+                finally:
+                    self.git("branch", "-qD", "side-main")
+                    self.git("update-ref", "refs/remotes/origin/main", self.base)
 
     def test_relaxed_receipt_passes_selection_and_identity_but_not_tampering(
         self,

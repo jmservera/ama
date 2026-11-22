@@ -462,12 +462,15 @@ def moved_path_blocker(
     return ""
 
 
-def base_relaxation(root: Path, recorded: str, current: str, extras: list[str]) -> dict[str, Any]:
+def base_relaxation(
+    root: Path, recorded: str, current: str, extras: list[str], *, inert_only: bool = False
+) -> dict[str, Any]:
     """Prove origin/main moved without touching the receipt's changed set or its dependents.
 
     Fails closed unless the move is a fast-forward and either the gated head already contains
     every moved commit (a rebased stack merged in order) or every moved path is inert or maps
-    to groups disjoint from the candidate's selection.
+    to groups disjoint from the candidate's selection. A full receipt (inert_only) covers every
+    group, so only inert paths can be proven unrelated.
     """
     resolved = git(root, "rev-parse", f"{current}^{{commit}}")
     if resolved != git(root, "rev-parse", "refs/remotes/origin/main"):
@@ -503,6 +506,8 @@ def base_relaxation(root: Path, recorded: str, current: str, extras: list[str]) 
     pr_groups = set(changed_groups(pr_paths, extras))
     for path in moved:
         reason = moved_path_blocker(path, set(pr_paths), pr_groups, extras)
+        if inert_only and not (inert_path(path) and not reason):
+            reason = reason or "a full receipt covers every group, so only inert paths qualify"
         if reason:
             raise GateError(f"Base moved on {path}: {reason}; rerun the gate on the current base")
     return {
@@ -3275,11 +3280,13 @@ def validate_receipt(
         raise GateError("Failed receipt lacks a safe resume checkpoint")
     recorded = receipt["identity"]["base"]
     relaxation = None
-    # Only partial receipts may survive an origin/main move, and only with explicit proof.
+    # A moved base needs explicit proof; a full receipt survives only inert (docs) moves.
     if recorded != git(root, "rev-parse", f"{base}^{{commit}}"):
-        if not relax_base or receipt["scope"] != "partial":
+        if not relax_base:
             raise GateError("Reviewed base differs from current origin/main; reconcile")
-        relaxation = base_relaxation(root, recorded, base, receipt["extras"])
+        relaxation = base_relaxation(
+            root, recorded, base, receipt["extras"], inert_only=receipt["scope"] == "full"
+        )
     reviewed = recorded if relaxation else None
     selected = selection(root, reviewed or base, receipt["selection"]["mode"], receipt["extras"])
     scope = "full" if selected["groups"] == required_groups(receipt["extras"]) else "partial"

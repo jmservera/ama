@@ -1,0 +1,25 @@
+---
+title: Issue 2186 Live, Full Receipt Across Docs-only Main Moves
+description: Per-criterion evidence and the defect fixed so a full gate receipt survives inert origin/main moves
+ms.date: 2026-11-21
+---
+
+Source head: `dd8df9631a` (origin/main). Evidence: local unit tests, no Azure or browser surface (the change is a gate tool).
+
+## Finding
+
+`validate_receipt` in `tools/rpi-checks.py` refused any moved base unless the receipt scope was `partial`, so a full receipt died on every docs commit. That defect is fixed: a full receipt now relaxes when origin/main moved as a fast-forward and every moved path is inert (`docs/`, `.copilot-tracking/`, `support/`, markdown outside `src/`). Any other moved path, including code, tests, workflows, `tools/` and Dockerfiles, still raises `Base moved on <path>`.
+
+## Residual risk
+
+Tests read `docs/` (for example `src/core/tests/test_live_doc_links.py` scans every live markdown file), so a docs move can break the merged result even though the gated head passes. The receipt never tested the merge with the moved base; the existing partial relaxation carries the same exposure. Hosted CI on the merged head remains the check for it.
+
+## Criteria
+
+| Criterion | Status | Evidence |
+| --- | --- | --- |
+| Extend BASE RELAXED to full receipts when main moved only inert paths | Proven | `test_full_receipt_survives_only_inert_main_moves`: docs and tracking moves reach tool identity (accepted past the base check) |
+| Relaxation recorded in receipt verify output | Proven | Existing `test_verify_requires_stack_member_and_reports_relaxation` asserts the `BASE RELAXED` line; the same `base_relaxation` result feeds it for full receipts |
+| Code, tool and image changes still invalidate | Proven | Same test rejects src code, src tests, src markdown, `tools/rpi-checks.py`, `src/api/Dockerfile` and a mixed move with `Base moved on`; identity digests of matrix and helper are unchanged |
+| Test added | Proven | `python3 -m unittest tools.test_rpi_checks -q`: 119 tests pass |
+| End-to-end verify of a real full receipt on a docs-moved main | Unproven | No full receipt was produced; `rpi-checks.py --all` is not run in this task |

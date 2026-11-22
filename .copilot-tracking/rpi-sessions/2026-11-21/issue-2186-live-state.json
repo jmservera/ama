@@ -1,0 +1,48 @@
+{
+ "task_id": "issue-2186-live",
+ "task_slug": "issue-2186-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-21/issue-2186-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-21/issue-2186-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-21/issue-2186-live-details.md",
+  "critique": ".copilot-tracking/reviews/plans/2026-11-21/issue-2186-live-plan-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-21/issue-2186-live-changes.md",
+  "review": ".copilot-tracking/reviews/logs/2026-11-21/issue-2186-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "critique executed once, verdict proceed",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/reviews/plans/2026-11-21/issue-2186-live-plan-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/reviews/logs/2026-11-21/issue-2186-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Commit locally"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Verify a real full receipt over a docs-moved main",
+   "rationale": "criterion unproven",
+   "evidence": "research note"
+  },
+  {
+   "rank": 2,
+   "task": "Decide whether test-read docs paths should block relaxation",
+   "rationale": "residual risk",
+   "evidence": "test_live_doc_links"
+  }
+ ]
+}
