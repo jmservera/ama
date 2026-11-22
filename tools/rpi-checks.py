@@ -765,6 +765,47 @@ def with_helpers(parts: list[list[str]], helpers: list[str]) -> list[list[str]]:
     return [*parts[:-1], [*parts[-1], *helpers]] if helpers else parts
 
 
+SHARD_ATTEMPTS = 2
+
+
+def retryable_failure(entry: dict[str, Any]) -> bool:
+    """A test failure may be retried once; timeouts, missing tools and interrupts never are."""
+    code = entry.get("exit_code")
+    return (
+        isinstance(code, int)
+        and code > 0
+        and code not in (124, 127, 130)
+        and not entry.get("interrupted")
+    )
+
+
+def validate_retries(receipt: dict[str, Any]) -> None:
+    retries = receipt.get("retries") or []
+    files = receipt.get("files") or {}
+    if not isinstance(retries, list) or len(retries) > 64:
+        raise GateError("Receipt retries are invalid")
+    seen: set[str] = set()
+    for row in retries:
+        if (
+            not isinstance(row, dict)
+            or set(row) != {"group", "log", "sha256", "exit_code", "argv"}
+            or not isinstance(row["group"], str)
+            or not isinstance(row["log"], str)
+            or row["log"] in seen
+            or not re.fullmatch(r"[0-9]{4}-[a-zA-Z0-9_.:-]+\.log", row["log"])
+            or files.get(row["log"]) != row["sha256"]
+            or not isinstance(row["exit_code"], int)
+            or row["exit_code"] <= 0
+            or row["exit_code"] in (124, 127, 130)
+            or not isinstance(row["argv"], list)
+            or any(not isinstance(a, str) for a in row["argv"])
+        ):
+            raise GateError("Receipt retries are invalid")
+        seen.add(row["log"])
+    if seen & {row["log"] for row in receipt.get("commands", [])}:
+        raise GateError("Receipt retry log reused by a command row")
+
+
 def shard_argv(python: str, modules: list[str]) -> list[str]:
     patterns = [item for module in modules for item in ("-k", f"{module}.*")]
     return [python, "-m", "unittest", "discover", "-s", "tests", "-v", *patterns]
@@ -1028,6 +1069,7 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         )
     ):
         raise GateError("Receipt image cache or test shard policy is invalid")
+    validate_retries(receipt)
     helpers = receipt.get("shard_helpers") or {}
     if not (
         isinstance(helpers, dict)
@@ -1937,6 +1979,8 @@ class Runner:
         self.image_cache, self.stack = image_cache, stack or []
         self.test_shards: dict[str, int] = {}
         self.shard_helpers: dict[str, list[str]] = {}
+        self.retries: list[dict[str, Any]] = []
+        self.log_seq = 0
         self.selection = selected or selection(root, base, "all", extras)
         admit_browser_output(out, self.selection["groups"])
         self.jobs, self.resume = jobs, resume
@@ -2054,7 +2098,9 @@ class Runner:
             "integration": integration,
         }
         with self.row_lock:
-            logfile = f"{len(self.rows):04d}-{self.group}.log"
+            index = max(len(self.rows), self.log_seq)
+            self.log_seq = index + 1
+            logfile = f"{index:04d}-{self.group}.log"
             self.rows.append(entry)
         self.local.last_entry = entry
         entry["log"] = logfile
@@ -2323,6 +2369,14 @@ class Runner:
             raise GateError(f"Test discovery for {project} failed before sharding")
         return [line for line in result.stdout.splitlines() if line]
 
+    def record_retry(self, failed: dict[str, Any]) -> None:
+        # The failed log stays in the output directory and is hashed into the receipt.
+        with self.row_lock:
+            self.rows[:] = [row for row in self.rows if row is not failed]
+            self.retries.append(
+                {key: failed[key] for key in ("group", "log", "sha256", "exit_code", "argv")}
+            )
+
     def sharded_tests(self, project: str, py: str, cwd: str, parts: list[list[str]]) -> None:
         # Fail closed: a TestCase imported from a helper module matches no module pattern.
         ids = self.discover_test_ids(project, py, cwd)
@@ -2342,13 +2396,22 @@ class Runner:
 
         def run(modules: list[str]) -> dict[str, Any]:
             self.group = group
-            self.command(
-                shard_argv(py, modules),
-                cwd,
-                env=self.tests_env(project),
-                suite=True,
-                timeout=suite_timeout(project),
-            )
+            for attempt in range(SHARD_ATTEMPTS):
+                try:
+                    self.command(
+                        shard_argv(py, modules),
+                        cwd,
+                        env=self.tests_env(project),
+                        suite=True,
+                        timeout=suite_timeout(project),
+                    )
+                except GateError:
+                    failed: dict[str, Any] = self.local.last_entry
+                    if attempt + 1 == SHARD_ATTEMPTS or not retryable_failure(failed):
+                        raise
+                    self.record_retry(failed)
+                else:
+                    break
             entry: dict[str, Any] = self.local.last_entry
             return entry
 
@@ -3210,6 +3273,7 @@ class Runner:
             "image_cache": self.image_cache,
             "test_shards": self.test_shards,
             "shard_helpers": self.shard_helpers,
+            "retries": self.retries,
             "stack": self.stack,
             "skipped": self.selection.get("skipped", {}),
             "extras": self.extras,
