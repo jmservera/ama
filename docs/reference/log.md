@@ -15173,3 +15173,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Legal, DPO and RAI approvals are deferred to production (#2337); no named Legal contact exists yet and the demo disclaimer stays as is.
 * Person-run assistive technology testing is deferred to production (#2338); who runs it is undecided and the demo carries no statement about it.
 * CI: unit tests are sharded and Trivy and SBOM moved to the manual workflow `src-supply-chain.yml` (#2335); the longest api test shard now takes about 7 minutes against about 28 for the old job.
+## [2026-11-22] update | Issue 2245 thread creation 500 live check (Refs #2245)
+
+* Added [issue-2245-thread500-2026-11-22.md](research/issue-2245-thread500-2026-11-22.md): console evidence of the ProgrammingError 500, 12 of 12 live creates returning 200, a write-transaction bound regression test and a per-criterion table. The 500 stays unreproduced and its lock holder unproven.
