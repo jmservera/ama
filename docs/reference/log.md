@@ -14492,3 +14492,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2201 receiver streak and SQL S3 health (Refs #2201)
 
 * Added [issue-2201-live-receiver-s3-streak-2026-11-22.md](research/issue-2201-live-receiver-s3-streak-2026-11-22.md): nine consecutive scheduled receiver successes on image 541068, S3 DTU peak 89 percent with no connection failures, one failure line (13:30, `IOT_CALLBACK_FAILED`) and a fresh map probe. No source change.
+
+## [2026-11-22] update | Issue 2192 live proof on revision 0000024 (Refs #2192)
+
+* Added [issue-2192-live-r4-2026-11-22.md](research/issue-2192-live-r4-2026-11-22.md): desktop Playwright proof that the employee sensor state follows the resident consent choice (withheld, then ok with 12 readings, then withheld after restore), map loads with 443 markers, chat disclosure labels present with AI on hold by a suspension; audit entry still proven only in core tests.

@@ -1555,6 +1555,7 @@ or infra acceptance claimed.
 | [Issue 2192 sensor consent checkbox (#2192)](./research/issue-2192-live-2026-11-21.md) | Resident grant and withdraw checkbox, audit row, employee withheld state; proven locally with Playwright, live deploy unproven |
 | [Issue 2192 live proof round 2 (#2192)](./research/issue-2192-live-r2-2026-11-21.md) | Live resident checkbox proof, home key mismatch with the employee view, fix and per-criterion table |
 | [Issue 2192 live proof round 3 (#2192)](./research/issue-2192-live-r3-2026-11-22.md) | Resident image rolled to revision 0000021; employee state follows the resident consent choice live; per-criterion table |
+| [Issue 2192 live proof round 4 (#2192)](./research/issue-2192-live-r4-2026-11-22.md) | Resident revision 0000024: employee sensor state follows the resident consent choice live; map and AI chat label recheck; per-criterion table |
 | [Issue 2257 employee map fetch failure (#2257)](./research/issue-2257-mapfetch-live-2026-11-22.md) | Live probe, replica churn correlation and client retry proof; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
