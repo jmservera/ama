@@ -14696,3 +14696,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2164 live re-check r3 (Refs #2164)
 
 * Updated [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix 6a03928ccb still on main, the scope-bypass and view-only tests pass; the API app moved to revision 0000054 and its digest still cannot be traced to a commit. No source or estate change.
+
+## [2026-11-22] update | Issue 220 live run 10 (Refs #220)
+
+* Added [issue-220-live-r10-revision-0054-2026-11-22.md](research/issue-220-live-r10-revision-0054-2026-11-22.md): the run 9 probe repeated on revision 0000054; record and correction succeed, protected case state is unchanged, guard fields are refused; 40 offline tests pass. Retaliation over time stays production-only. No source change.
