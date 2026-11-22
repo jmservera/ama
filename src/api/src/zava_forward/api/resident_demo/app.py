@@ -828,7 +828,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                 self._json(503, dict(error=sc.ERROR_TEXT))
                 return
             try:
-                app.sensor_consent.set(row.sensor_home_id, body["granted"])
+                sc.apply(app.sensor_consent, row.sensor_home_id, row.case_id, body["granted"])
             except Exception:
                 self._json(503, dict(error=sc.ERROR_TEXT))
                 return

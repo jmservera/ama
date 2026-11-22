@@ -14363,4 +14363,8 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-21] update | Gate flakes reproduced and fixed (Refs #2190)
 
 * Added [issue-2190-live-20261121-2026-11-21.md](research/issue-2190-live-20261121-2026-11-21.md): reproduction and explanation of three gate flakes (rpi-checks log interleaving, employee chat late_success snapshot race, 218 urllib timeout under load), fixes, loaded repeat runs and a per-criterion verdict. Gate-tool and check edits; no web UI source change.
+
+## [2026-11-21] update | Issue 2192 live proof round 2 (Refs #2192)
+
+* Added [issue-2192-live-r2-2026-11-21.md](research/issue-2192-live-r2-2026-11-21.md): live resident checkbox proof; found the resident writes consent for the showcase home while the employee view reads the case id; fix committed locally, live re-proof pending deploy.
 * Index row added to `docs/reference/README.md`.
