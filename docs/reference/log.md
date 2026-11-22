@@ -14452,3 +14452,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2204 rule owner actions proven live (Refs #2204)
 
 * Added [issue-2204-rule-actions-owner-live-2026-11-22.md](research/issue-2204-rule-actions-owner-live-2026-11-22.md): a RuleOwner-only identity is refused at sign-in because the API needs a staff role (no MFA block); with Programme Manager added for the run, Alan Steiner approved, activated, held, released and retired a card authored by the main test account, with wrong-role and invalid-state refusals recorded. Roles restored; per-criterion table included.
+
+## [2026-11-22] update | Issue 2201 receiver failure causes from logs (Refs #2201)
+
+* Added [issue-2201-live-receiver-logs-2026-11-22.md](research/issue-2201-live-receiver-logs-2026-11-22.md): Log Analytics console text names `SENSOR_SQL_UNAVAILABLE` for the 10:35 to 11:50 failures, an operator argument error at 11:32 and `IOT_CALLBACK_FAILED` for 13:30; the database is now S3 and the 14:00 and 14:30 scheduled runs Succeeded. Three-run streak and map freshness not yet proven. No source change.
