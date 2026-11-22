@@ -14416,3 +14416,8 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2205 live Quality scope proof (Refs #2205)
 
 * Added [issue-2205-live-2026-11-22.md](research/issue-2205-live-2026-11-22.md): live registry on revision `0000045` lists mode `demo-homes` with the five ids, operator-requested-only, no per-reading calls, `model_call_authority_present` false (OQ-017). Read only, no Azure write, no source change.
+
+## [2026-11-22] update | Issue 2204 all roles live (Refs #2204)
+
+* Added [issue-2204-all-roles-live-2026-11-22.md](research/issue-2204-all-roles-live-2026-11-22.md): 13 app roles assigned to the test account one at a time through Graph, live Playwright sign-in per role, wrong-role denials, original assignment restored.
+* Source: live `az rest` and Playwright run on `ca-cutover-test-demo-api`; no source change.

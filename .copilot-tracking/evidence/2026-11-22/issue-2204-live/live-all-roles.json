@@ -1,0 +1,916 @@
+{
+ "started_utc": "2026-11-22T10:48:51Z",
+ "roles": [
+  {
+   "role": "ProgrammeManager",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Retrofit Programme Manager",
+    "app_roles": [
+     "ZavaForward.ProgrammeManager"
+    ],
+    "app_admin": false,
+    "view_only": false,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": null
+     },
+     {
+      "label": "All cases",
+      "access": null
+     },
+     {
+      "label": "Overview",
+      "access": null
+     },
+     {
+      "label": "Progress dashboard",
+      "access": null
+     },
+     {
+      "label": "Visits",
+      "access": null
+     },
+     {
+      "label": "Funding",
+      "access": null
+     },
+     {
+      "label": "Finance",
+      "access": null
+     },
+     {
+      "label": "Capacity and work orders",
+      "access": null
+     },
+     {
+      "label": "Closed cases",
+      "access": null
+     },
+     {
+      "label": "Assistant proposals",
+      "access": null
+     },
+     {
+      "label": "Time capture",
+      "access": null
+     },
+     {
+      "label": "Aftercare concerns",
+      "access": null
+     },
+     {
+      "label": "Specialist screens",
+      "access": null
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 200,
+    "/api/stats": 200,
+    "/api/finance": 200,
+    "/api/packages": 200,
+    "/api/funding": 200,
+    "/api/work-orders": 403,
+    "/api/audit-check": 200,
+    "/api/retention": 500,
+    "/api/admin/simulator-control": 403
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control"
+     ],
+     "nothing_changed": true
+    }
+   },
+   "attempt": 2,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "Coordinator",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Retrofit Coordinator",
+    "app_roles": [
+     "ZavaForward.Coordinator"
+    ],
+    "app_admin": false,
+    "view_only": false,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": null
+     },
+     {
+      "label": "All cases",
+      "access": null
+     },
+     {
+      "label": "Overview",
+      "access": null
+     },
+     {
+      "label": "Progress dashboard",
+      "access": null
+     },
+     {
+      "label": "Visits",
+      "access": null
+     },
+     {
+      "label": "Funding",
+      "access": null
+     },
+     {
+      "label": "Assistant proposals",
+      "access": null
+     },
+     {
+      "label": "Time capture",
+      "access": null
+     },
+     {
+      "label": "Aftercare concerns",
+      "access": null
+     },
+     {
+      "label": "Specialist screens",
+      "access": null
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 200,
+    "/api/stats": 200,
+    "/api/finance": 403,
+    "/api/packages": 200,
+    "/api/funding": 200,
+    "/api/work-orders": 403,
+    "/api/audit-check": 200,
+    "/api/retention": 403,
+    "/api/admin/simulator-control": 403
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control"
+     ],
+     "nothing_changed": true
+    }
+   },
+   "attempt": 1,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "LiaisonOfficer",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Resident Liaison Officer",
+    "app_roles": [
+     "ZavaForward.LiaisonOfficer"
+    ],
+    "app_admin": false,
+    "view_only": false,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": null
+     },
+     {
+      "label": "All cases",
+      "access": null
+     },
+     {
+      "label": "Overview",
+      "access": null
+     },
+     {
+      "label": "Progress dashboard",
+      "access": null
+     },
+     {
+      "label": "Visits",
+      "access": null
+     },
+     {
+      "label": "Funding",
+      "access": null
+     },
+     {
+      "label": "Assistant proposals",
+      "access": null
+     },
+     {
+      "label": "Time capture",
+      "access": null
+     },
+     {
+      "label": "Aftercare concerns",
+      "access": null
+     },
+     {
+      "label": "Specialist screens",
+      "access": null
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 200,
+    "/api/stats": 200,
+    "/api/finance": 403,
+    "/api/packages": 200,
+    "/api/funding": 200,
+    "/api/work-orders": 403,
+    "/api/audit-check": 200,
+    "/api/retention": 403,
+    "/api/admin/simulator-control": 403
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control"
+     ],
+     "nothing_changed": true
+    }
+   },
+   "attempt": 1,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "QualityInspector",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Quality Inspector",
+    "app_roles": [
+     "ZavaForward.QualityInspector"
+    ],
+    "app_admin": false,
+    "view_only": false,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": null
+     },
+     {
+      "label": "All cases",
+      "access": null
+     },
+     {
+      "label": "Overview",
+      "access": null
+     },
+     {
+      "label": "Progress dashboard",
+      "access": null
+     },
+     {
+      "label": "Visits",
+      "access": null
+     },
+     {
+      "label": "Funding",
+      "access": null
+     },
+     {
+      "label": "Assistant proposals",
+      "access": null
+     },
+     {
+      "label": "Time capture",
+      "access": null
+     },
+     {
+      "label": "Specialist screens",
+      "access": null
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 200,
+    "/api/stats": 200,
+    "/api/finance": 403,
+    "/api/packages": 200,
+    "/api/funding": 200,
+    "/api/work-orders": 403,
+    "/api/audit-check": 200,
+    "/api/retention": 403,
+    "/api/admin/simulator-control": 403
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control"
+     ],
+     "nothing_changed": true
+    }
+   },
+   "attempt": 2,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "ApplicationAdmin",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Application Administrator",
+    "app_roles": [
+     "ZavaForward.ApplicationAdmin"
+    ],
+    "app_admin": true,
+    "view_only": true,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "All cases",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Overview",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Progress dashboard",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Visits",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Funding",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Finance",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Capacity and work orders",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Closed cases",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Assistant proposals",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Time capture",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Aftercare concerns",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Specialist screens",
+      "access": "needs a role with this authority"
+     },
+     {
+      "label": "Simulator control",
+      "access": "needs a role with this authority"
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 403,
+    "/api/stats": 403,
+    "/api/finance": 403,
+    "/api/packages": 403,
+    "/api/funding": 403,
+    "/api/work-orders": 403,
+    "/api/audit-check": 403,
+    "/api/retention": 403,
+    "/api/admin/simulator-control": 200
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "No case work for this account"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control",
+      "Current status",
+      "Manual route"
+     ],
+     "nothing_changed": false
+    }
+   },
+   "attempt": 2,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "SafetyLiaison",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Building Safety Liaison",
+    "app_roles": [
+     "ZavaForward.SafetyLiaison"
+    ],
+    "app_admin": false,
+    "view_only": false,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": null
+     },
+     {
+      "label": "All cases",
+      "access": null
+     },
+     {
+      "label": "Overview",
+      "access": null
+     },
+     {
+      "label": "Progress dashboard",
+      "access": null
+     },
+     {
+      "label": "Visits",
+      "access": null
+     },
+     {
+      "label": "Funding",
+      "access": null
+     },
+     {
+      "label": "Assistant proposals",
+      "access": null
+     },
+     {
+      "label": "Time capture",
+      "access": null
+     },
+     {
+      "label": "Specialist screens",
+      "access": null
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 200,
+    "/api/stats": 200,
+    "/api/finance": 403,
+    "/api/packages": 200,
+    "/api/funding": 200,
+    "/api/work-orders": 403,
+    "/api/audit-check": 200,
+    "/api/retention": 403,
+    "/api/admin/simulator-control": 403
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control"
+     ],
+     "nothing_changed": true
+    }
+   },
+   "attempt": 1,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "GrantsOfficer",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Grants and Evidence Officer",
+    "app_roles": [
+     "ZavaForward.GrantsOfficer"
+    ],
+    "app_admin": false,
+    "view_only": false,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": null
+     },
+     {
+      "label": "All cases",
+      "access": null
+     },
+     {
+      "label": "Overview",
+      "access": null
+     },
+     {
+      "label": "Progress dashboard",
+      "access": null
+     },
+     {
+      "label": "Visits",
+      "access": null
+     },
+     {
+      "label": "Funding",
+      "access": null
+     },
+     {
+      "label": "Finance",
+      "access": null
+     },
+     {
+      "label": "Assistant proposals",
+      "access": null
+     },
+     {
+      "label": "Time capture",
+      "access": null
+     },
+     {
+      "label": "Specialist screens",
+      "access": null
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 200,
+    "/api/stats": 200,
+    "/api/finance": 200,
+    "/api/packages": 200,
+    "/api/funding": 200,
+    "/api/work-orders": 403,
+    "/api/audit-check": 200,
+    "/api/retention": 403,
+    "/api/admin/simulator-control": 403
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control"
+     ],
+     "nothing_changed": true
+    }
+   },
+   "attempt": 1,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "SupportOfficer",
+   "entra_redirect": true,
+   "me_status": 200,
+   "me": {
+    "role": "Programme Support Officer",
+    "app_roles": [
+     "ZavaForward.SupportOfficer"
+    ],
+    "app_admin": false,
+    "view_only": false,
+    "identity_source": "entra",
+    "navigation": [
+     {
+      "label": "My cases",
+      "access": null
+     },
+     {
+      "label": "All cases",
+      "access": null
+     },
+     {
+      "label": "Overview",
+      "access": null
+     },
+     {
+      "label": "Progress dashboard",
+      "access": null
+     },
+     {
+      "label": "Visits",
+      "access": null
+     },
+     {
+      "label": "Funding",
+      "access": null
+     },
+     {
+      "label": "Finance",
+      "access": null
+     },
+     {
+      "label": "Capacity and work orders",
+      "access": null
+     },
+     {
+      "label": "Closed cases",
+      "access": null
+     },
+     {
+      "label": "Assistant proposals",
+      "access": null
+     },
+     {
+      "label": "Time capture",
+      "access": null
+     },
+     {
+      "label": "Aftercare concerns",
+      "access": null
+     },
+     {
+      "label": "Specialist screens",
+      "access": null
+     }
+    ]
+   },
+   "probes": {
+    "/api/cases": 200,
+    "/api/stats": 200,
+    "/api/finance": 200,
+    "/api/packages": 200,
+    "/api/funding": 200,
+    "/api/work-orders": 403,
+    "/api/audit-check": 200,
+    "/api/retention": 403,
+    "/api/admin/simulator-control": 403
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Simulator run control"
+     ],
+     "nothing_changed": true
+    }
+   },
+   "attempt": 1,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "Contractor",
+   "entra_redirect": true,
+   "me_status": 401,
+   "me_error": {
+    "error": "Please sign in."
+   },
+   "probes": {
+    "/api/cases": 401,
+    "/api/stats": 401,
+    "/api/finance": 401,
+    "/api/packages": 401,
+    "/api/funding": 401,
+    "/api/work-orders": 401,
+    "/api/audit-check": 401,
+    "/api/retention": 401,
+    "/api/admin/simulator-control": 401
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    }
+   },
+   "attempt": 3,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "RuleAuthor",
+   "entra_redirect": true,
+   "me_status": 401,
+   "me_error": {
+    "error": "Please sign in."
+   },
+   "probes": {
+    "/api/cases": 401,
+    "/api/stats": 401,
+    "/api/finance": 401,
+    "/api/packages": 401,
+    "/api/funding": 401,
+    "/api/work-orders": 401,
+    "/api/audit-check": 401,
+    "/api/retention": 401,
+    "/api/admin/simulator-control": 401
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    }
+   },
+   "attempt": 3,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "RuleOwner",
+   "entra_redirect": true,
+   "me_status": 401,
+   "me_error": {
+    "error": "Please sign in."
+   },
+   "probes": {
+    "/api/cases": 401,
+    "/api/stats": 401,
+    "/api/finance": 401,
+    "/api/packages": 401,
+    "/api/funding": 401,
+    "/api/work-orders": 401,
+    "/api/audit-check": 401,
+    "/api/retention": 401,
+    "/api/admin/simulator-control": 401
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    }
+   },
+   "attempt": 3,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "RegulatoryChat",
+   "entra_redirect": true,
+   "me_status": 401,
+   "me_error": {
+    "error": "Please sign in."
+   },
+   "probes": {
+    "/api/cases": 401,
+    "/api/stats": 401,
+    "/api/finance": 401,
+    "/api/packages": 401,
+    "/api/funding": 401,
+    "/api/work-orders": 401,
+    "/api/audit-check": 401,
+    "/api/retention": 401,
+    "/api/admin/simulator-control": 401
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    }
+   },
+   "attempt": 3,
+   "only_role_held": true,
+   "removed": true
+  },
+  {
+   "role": "AIRestart",
+   "entra_redirect": true,
+   "me_status": 401,
+   "me_error": {
+    "error": "Please sign in."
+   },
+   "probes": {
+    "/api/cases": 401,
+    "/api/stats": 401,
+    "/api/finance": 401,
+    "/api/packages": 401,
+    "/api/funding": 401,
+    "/api/work-orders": 401,
+    "/api/audit-check": 401,
+    "/api/retention": 401,
+    "/api/admin/simulator-control": 401
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    },
+    "denied-simulator": {
+     "h": [
+      "Account not authorised"
+     ],
+     "nothing_changed": false
+    }
+   },
+   "attempt": 3,
+   "only_role_held": true,
+   "removed": true
+  }
+ ],
+ "original": [
+  {
+   "role_id": "b854f84f-0135-5474-b2e4-b0ae2029a987",
+   "is_pm": true
+  }
+ ],
+ "restored": {
+  "count": 1,
+  "only_pm": true
+ },
+ "failure": null
+}

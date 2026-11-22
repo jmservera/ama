@@ -1,0 +1,14 @@
+ProgrammeManager 200 Retrofit Programme Manager
+Coordinator 200 Retrofit Coordinator
+LiaisonOfficer 200 Resident Liaison Officer
+SafetyLiaison 200 Resident Liaison Officer
+QualityInspector 200 Quality Inspector
+GrantsOfficer 200 Quality Inspector
+SupportOfficer 200 Grants and Evidence Officer
+Contractor 401 None
+ApplicationAdmin 200 Application Administrator
+RuleAuthor 401 None
+RuleOwner 401 None
+RegulatoryChat 401 None
+AIRestart 401 None
+restored {'count': 1, 'only_pm': True} failure None
