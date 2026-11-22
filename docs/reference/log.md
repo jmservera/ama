@@ -14645,3 +14645,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 349 tenant prerequisites live run 8 (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r8-2026-11-22.md](research/issue-349-tenant-prerequisites-live-r8-2026-11-22.md): Graph reads now succeed, proving the single-tenant registration, 13 roles, valid credential and preserved callbacks; criteria 4 and 5 stay open; no source or estate change
+## [2026-11-22] update | Issue 1274 live re-proof run 2 (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-22-run2.md](research/issue-1274-live-evidence-2026-11-22-run2.md): retained job logs re-read, actionlint 1.7.7 checksum and tests repeated, per-criterion table; AWF and #1273 residue stays unproven. No source or estate change.
