@@ -1,0 +1,17 @@
+[
+  {
+    "state": "actual-model-unavailable",
+    "violations": [],
+    "passes": 20
+  },
+  {
+    "state": "synthetic-cited-answer",
+    "violations": [],
+    "passes": 20
+  },
+  {
+    "state": "demo-disclaimer-model-answer",
+    "violations": [],
+    "passes": 20
+  }
+]

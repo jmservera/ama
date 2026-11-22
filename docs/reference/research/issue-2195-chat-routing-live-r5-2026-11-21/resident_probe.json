@@ -1,0 +1,63 @@
+{
+ "http": [
+  [
+   "POST",
+   "/demo/login",
+   200
+  ],
+  [
+   "POST",
+   "/demo/assistant",
+   200
+  ],
+  [
+   "POST",
+   "/demo/assistant",
+   200
+  ],
+  [
+   "POST",
+   "/demo/assistant",
+   200
+  ]
+ ],
+ "buttons": [
+  "Sign in",
+  "Try again",
+  "Generate AI summary",
+  "Show rules summary instead",
+  "Messages",
+  "Uploads",
+  "Downloads",
+  "Operational appointments",
+  "Consent and decisions",
+  "Synthetic callbacks",
+  "Close chat",
+  "Use the manual callback form",
+  "Dock to right edge",
+  "Attach",
+  "Voice",
+  "Send"
+ ],
+ "dialog_text": "Help with your case\nClose chat\nAbout this chat\nChat size\nUse my question and limited own-case details for this chat, including AI when enabled. This is not consent to works.\n\nSynthetic demo only: questions you type may be saved, without your name or email, to help the team improve this chat. Only emails, postcodes, case references and long numbers are masked, so do not type names, addresses or oth",
+ "qs": [
+  {
+   "key": "status",
+   "question": "How is my case going?",
+   "routing": "Routed to the Case progress helper: your question is about how your case is going.",
+   "dialog_tail": " you type may be saved, without your name or email, to help the team improve this chat. Only emails, postcodes, case references and long numbers are masked, so do not type names, addresses or other real personal details. This is not used to make decisions about you.\n\nPress Enter to send. Press Shift and Enter for a new line. Press Escape to close the chat.\nAttachments and voice input are not supported in this chat. Use the existing document or contact routes.\nResident assistant\nAttach\nVoice\nSend"
+  },
+  {
+   "key": "documents",
+   "question": "Which documents do I need to upload?",
+   "routing": "Routed to the Documents helper: your question is about documents for your case.",
+   "dialog_tail": " you type may be saved, without your name or email, to help the team improve this chat. Only emails, postcodes, case references and long numbers are masked, so do not type names, addresses or other real personal details. This is not used to make decisions about you.\n\nPress Enter to send. Press Shift and Enter for a new line. Press Escape to close the chat.\nAttachments and voice input are not supported in this chat. Use the existing document or contact routes.\nResident assistant\nAttach\nVoice\nSend"
+  },
+  {
+   "key": "none",
+   "question": "What is the weather like?",
+   "routing": "Handled by the General assistant: no helper matches this question, so it stays here.",
+   "dialog_tail": " you type may be saved, without your name or email, to help the team improve this chat. Only emails, postcodes, case references and long numbers are masked, so do not type names, addresses or other real personal details. This is not used to make decisions about you.\n\nPress Enter to send. Press Shift and Enter for a new line. Press Escape to close the chat.\nAttachments and voice input are not supported in this chat. Use the existing document or contact routes.\nResident assistant\nAttach\nVoice\nSend"
+  }
+ ]
+}

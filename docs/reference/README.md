@@ -670,6 +670,7 @@ The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-202
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.
+The [live r5 note](./research/issue-2195-chat-routing-live-r5-2026-11-21.md) adds the live routing proof on revision 0000043, a clean pinned axe run, evidence that the chat 500s recur, and a local statement-serialisation fix that is not yet deployed.
 
 For #144, the [container hosting live evidence](./research/issue-144-container-hosting-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo probe of the deployed apps: digest-pinned images, non-root

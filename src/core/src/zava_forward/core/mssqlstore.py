@@ -16,6 +16,7 @@ import json
 import os
 import re
 import struct
+import threading
 
 from .chatthreads import MEMORY_ADDED as CHAT_MEMORY_ADDED, MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX
 from .sqlstore import INDEXES, SqlStore
@@ -128,18 +129,26 @@ def connection_string(env=None):
 
 
 class _Cursor:
-    def __init__(self, cur):
-        self.cur = cur
+    """Rows are read inside the connection guard, so no cursor keeps a result open on the shared connection."""
+
+    def __init__(self, cur, rows=None, rowcount=None):
+        self.cur, self.rows = cur, rows
+        self._rowcount = cur.rowcount if rowcount is None else rowcount
 
     @property
     def rowcount(self):
-        return self.cur.rowcount
+        return self._rowcount
 
     def fetchone(self):
+        if self.rows is not None:
+            return self.rows.pop(0) if self.rows else None
         r = self.cur.fetchone()
         return None if r is None else tuple(r)
 
     def fetchall(self):
+        if self.rows is not None:
+            rows, self.rows = self.rows, []
+            return rows
         return [tuple(r) for r in self.cur.fetchall()]
 
     def __iter__(self):
@@ -171,19 +180,26 @@ class _Conn:
         return sql
 
     def _run(self, sql, args, many=False):
-        for attempt in (0, 1):
-            try:
-                if self.raw is None:
-                    self._connect()
-                cur = self.raw.cursor()
-                (cur.executemany if many else cur.execute)(sql, args)
-                return cur
-            except self.driver.Error as e:
-                dead = bool(_PROGRESS.search(str(e)))
-                if dead:
-                    self.raw = None
-                if attempt or not dead or self.in_tran:
-                    raise
+        # mssql-python is thread-safety level 1: threads must not share a connection concurrently.
+        # One statement runs and its rows are read at a time (issue #2195: live chat 500s).
+        guard = self.__dict__.setdefault("guard", threading.RLock())
+        with guard:
+            for attempt in (0, 1):
+                try:
+                    if self.raw is None:
+                        self._connect()
+                    cur = self.raw.cursor()
+                    (cur.executemany if many else cur.execute)(sql, args)
+                    rowcount = cur.rowcount
+                    if getattr(cur, "description", None) is None:
+                        return _Cursor(cur, None, rowcount)
+                    return _Cursor(cur, [tuple(r) for r in cur.fetchall()], rowcount)
+                except self.driver.Error as e:
+                    dead = bool(_PROGRESS.search(str(e)))
+                    if dead:
+                        self.raw = None
+                    if attempt or not dead or self.in_tran:
+                        raise
 
     def execute(self, sql, args=()):
         key = sql.strip().upper()
@@ -207,7 +223,7 @@ class _Conn:
             finally:
                 self.in_tran = False
             return None
-        return _Cursor(self._run(self._rewrite(sql), tuple(args)))
+        return self._run(self._rewrite(sql), tuple(args))
 
     def _abandon_partial_begin(self):
         """BEGIN TRAN may have run before the lock request failed; never leave that transaction open.
@@ -226,7 +242,7 @@ class _Conn:
             self.raw = None
 
     def executemany(self, sql, rows):
-        return _Cursor(self._run(self._rewrite(sql), list(rows), many=True))
+        return self._run(self._rewrite(sql), list(rows), many=True)
 
     def close(self):
         if self.raw is not None:

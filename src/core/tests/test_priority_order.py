@@ -1560,6 +1560,60 @@ class MssqlBeginRecovery(unittest.TestCase):
         self.assertIsNone(conn.raw)
 
 
+class SharedConnectionThreads(unittest.TestCase):
+    """The mssql-python connection is not thread-safe; statements must not overlap (#2195)."""
+
+    def test_concurrent_reads_never_overlap_on_the_shared_connection(self) -> None:
+        import threading
+        import time
+
+        from zava_forward.core import mssqlstore
+
+        class Error(Exception):
+            pass
+
+        busy = {"n": 0, "clash": 0}
+
+        class Cursor:
+            rowcount = -1
+            description = (("x",),)
+
+            def execute(self, sql: str, args: Any = ()) -> None:
+                if busy["n"]:
+                    busy["clash"] += 1
+                    raise Error("Invalid cursor state")
+                busy["n"] = 1
+
+            def fetchall(self) -> list[Any]:
+                time.sleep(0.002)
+                busy["n"] = 0
+                return [(1,)]
+
+        class Raw:
+            def cursor(self) -> Cursor:
+                return Cursor()
+
+        conn = mssqlstore._Conn.__new__(mssqlstore._Conn)
+        fake_driver = types.ModuleType("fake_mssql_python")
+        vars(fake_driver)["Error"] = Error
+        conn.driver, conn.raw, conn.in_tran, conn.attrs = fake_driver, Raw(), False, {}
+        failures: list[BaseException] = []
+
+        def work() -> None:
+            try:
+                for _ in range(20):
+                    self.assertEqual(conn.execute("SELECT 1").fetchall(), [(1,)])
+            except BaseException as error:
+                failures.append(error)
+
+        threads = [threading.Thread(target=work) for _ in range(6)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        self.assertEqual((failures, busy["clash"]), ([], 0))
+
+
 class LoopbackGuard(unittest.TestCase):
     PASSWORD = "SYN-one-time-secret"
     CONTAINER = "ab" * 32
