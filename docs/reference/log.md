@@ -14364,3 +14364,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2190-live-20261121-2026-11-21.md](research/issue-2190-live-20261121-2026-11-21.md): reproduction and explanation of three gate flakes (rpi-checks log interleaving, employee chat late_success snapshot race, 218 urllib timeout under load), fixes, loaded repeat runs and a per-criterion verdict. Gate-tool and check edits; no web UI source change.
 * Index row added to `docs/reference/README.md`.
+## [2026-11-21] update | Issue 2206 preflight round 2 (Refs #2206)
+
+* Extended [issue-2206-demo-preflight-2026-11-21.md](research/issue-2206-demo-preflight-2026-11-21.md): in-network read-only count proven live (20 homes, 10 granted, 10 declined); cold-start health false failure fixed in `tools/demo_preflight.py`; receiver failure cause unproven because log access is blocked.

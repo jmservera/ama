@@ -89,6 +89,23 @@ class Preflight(unittest.TestCase):
         self.assertEqual("FAIL", result.status)
         self.assertNotIn(SECRET, result.detail)
 
+    def test_health_cold_start_timeout_retries_once(self) -> None:
+        calls: list[int] = []
+
+        def slow(url: str, timeout: int = 15) -> tuple[int, str]:
+            calls.append(timeout)
+            if timeout == 15:
+                raise TimeoutError
+            return 200, ""
+
+        result = pf.check_health(FakeAz(), slow, "g", "a")
+        self.assertEqual(("PASS", [15, 90]), (result.status, calls))
+
+        def dead(url: str, timeout: int = 15) -> tuple[int, str]:
+            raise TimeoutError
+
+        self.assertEqual("FAIL", pf.check_health(FakeAz(), dead, "g", "a").status)
+
     def test_counts_unreachable_is_unavailable_and_strict_fails(self) -> None:
         def down() -> list[dict[str, object]]:
             raise ConnectionError(SECRET)

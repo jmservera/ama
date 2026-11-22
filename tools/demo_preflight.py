@@ -35,7 +35,7 @@ SQL_DATABASE = "retrofit"
 READ_ONLY_VERBS = {"list", "show", "get-access-token"}
 
 Runner = Callable[[list[str]], str]
-Getter = Callable[[str], tuple[int, str]]
+Getter = Callable[..., tuple[int, str]]
 CountReader = Callable[[], list[dict[str, object]]]
 
 
@@ -53,8 +53,8 @@ def run_az(argv: list[str]) -> str:
     return done.stdout
 
 
-def http_get(url: str) -> tuple[int, str]:
-    with urllib.request.urlopen(url, timeout=15) as resp:
+def http_get(url: str, timeout: int = 15) -> tuple[int, str]:
+    with urllib.request.urlopen(url, timeout=timeout) as resp:
         return resp.status, resp.read(2048).decode("utf-8", "replace")
 
 
@@ -111,10 +111,17 @@ def check_health(runner: Runner, getter: Getter, group: str, app: str) -> Result
                 "--query", "properties.configuration.ingress.fqdn", "-o", "tsv",
             ]
         ).strip()  # fmt: skip
-        code, _ = getter(f"https://{fqdn}/healthz")
+        url = f"https://{fqdn}/healthz"
+        try:
+            code, _ = getter(url)
+            note = ""
+        except TimeoutError:
+            # A replica scaled to zero needs longer than the first timeout to start.
+            code, _ = getter(url, 90)
+            note = " (cold start, retried)"
     except Exception as exc:  # noqa: BLE001 - any failure is reported
         return Result(name, "FAIL", type(exc).__name__)
-    return Result(name, "PASS" if code == 200 else "FAIL", f"GET /healthz {code}")
+    return Result(name, "PASS" if code == 200 else "FAIL", f"GET /healthz {code}{note}")
 
 
 def check_counts(reader: CountReader | None) -> Result:
