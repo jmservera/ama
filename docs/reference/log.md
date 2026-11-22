@@ -14568,3 +14568,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 146 SQL DTU and receiver job alerts (Refs #146)
 
 * Added [issue-146-live5-monitoring-2026-11-22.md](research/issue-146-live5-monitoring-2026-11-22.md): read-only live inventory, source-only SQL DTU and receiver job failure alerts with runbook entries, and a per-criterion table. No estate change.
+## [2026-11-22] update | Issue 2243 diagnosable ledger refusal (Refs #2243)
+
+* Added [issue-2243-guard-2026-11-22.md](research/issue-2243-guard-2026-11-22.md): live probe on `ca-resident-demo--0000025` still returns `usage_limit`; `resident_ai.reserve` now returns a refusal reason (`ledger_expired`, `budget_spent`, `resident_rate_limit`) that the resident label and console log show. Per-criterion table; the SQL row, procedure deployment and model reply stay unproven.
