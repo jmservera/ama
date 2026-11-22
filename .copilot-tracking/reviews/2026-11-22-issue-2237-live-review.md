@@ -11,3 +11,5 @@ Review executed once. Outcome: conformant for a documentation-only record, with 
 * Open: the cause of the one-off 500 is unproven; the criteria "reproduce" and "cause in logs" stay unticked.
 
 Follow-up 1: on the next 500, run `az containerapp logs show` at once and record the `http-error` class and frame. Follow-up 2: owner decision on giving the operator query access to `log-cutover-test` and `appi-cutover-test`.
+
+Second pass review (docs only, executed once): the added section states the new probe and the local table without claiming a cause; criteria statuses unchanged and consistent with the changes record. Outcome: conformant.

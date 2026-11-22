@@ -14463,3 +14463,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2201 receiver streak and map freshness (Refs #2201)
 
 * Added [issue-2201-live-receiver-streak-2026-11-22.md](research/issue-2201-live-receiver-streak-2026-11-22.md): read-only check of `job-live-receiver` and `job-live-simulator` since 15:00 UTC. Receiver runs at 14:00, 14:30 and 15:00 Succeeded (three consecutive), every simulator run Succeeded, `IOT_CALLBACK_FAILED` did not recur so its exception is still unproven (the handler drops the exception type), and the map probe shows readings to 15:20Z. No source change.
+
+## [2026-11-22] update | Issue 2237 second pass (Refs #2237)
+
+* Extended [issue-2237-retention-500-live-2026-11-22.md](research/issue-2237-retention-500-live-2026-11-22.md): live re-probe on revision 0000050 (all 200), no error lines in the replica log, and a local table of malformed-record shapes that would raise in `retention_due`. No source change; cause still unproven.
