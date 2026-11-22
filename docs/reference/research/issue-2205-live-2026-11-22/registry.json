@@ -1,0 +1,108 @@
+{
+  "status": 200,
+  "keys": [
+    "assistants",
+    "disabled",
+    "limits",
+    "manual",
+    "principal",
+    "proactive",
+    "quality_scope",
+    "rai_exercise_acceptance",
+    "real_ai_delivery_gate",
+    "registered_tasks",
+    "rule"
+  ],
+  "quality_scope": {
+    "mode": "demo-homes",
+    "homes": [
+      "ZF-2025-0029",
+      "ZF-2025-0030",
+      "ZF-2025-0031",
+      "ZF-2025-0032",
+      "ZF-2025-0041"
+    ],
+    "trigger": "operator-requested-only",
+    "background_scan": "skips-quality",
+    "per_reading_calls": "none",
+    "model_call_authority_present": false
+  },
+  "quality_entries": [
+    {
+      "id": "quality-evidence",
+      "version": "1.0.0",
+      "release": {
+        "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+        "missing": [
+          "approved, unexpired release record"
+        ],
+        "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+        "manual": "Use the ordinary case controls.",
+        "task": "quality-evidence",
+        "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+        "authority_holders": [
+          {
+            "authority": "release",
+            "holder": null,
+            "status": "gap",
+            "reference": "OQ-017"
+          },
+          {
+            "authority": "residual-risk acceptance",
+            "holder": null,
+            "status": "gap",
+            "reference": "OQ-017"
+          },
+          {
+            "authority": "suspension",
+            "holder": null,
+            "status": "gap",
+            "reference": "OQ-017"
+          },
+          {
+            "authority": "restart",
+            "holder": null,
+            "status": "gap",
+            "reference": "OQ-017"
+          }
+        ]
+      },
+      "binding": {
+        "registry_version": "1.0.0",
+        "schema_version": "evidence-proposal-v1",
+        "provider": "azure-openai",
+        "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+        "deployment": "standard",
+        "prompt_version": "9582b9a76f52d5ef",
+        "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+        "data_version": "b979970eefcae01d",
+        "provenance_version": "constructed-synthetic-demo-labelled",
+        "permission_version": "03579f28ea6debec",
+        "model_version": "gpt-4.1-nano-2025-04-14",
+        "task_contract_version": "6cfe405476cc2f0888cc73b765c1fda54471ded52e187a32525c45ade9bfe863",
+        "evaluation_version": "task-release-evaluation-v1"
+      },
+      "model_bounds": {
+        "calls_per_attempt": 1,
+        "max_attempts": 2,
+        "max_calls_per_request": 2,
+        "max_agent_depth": 1,
+        "tools": 0,
+        "attempt_ceiling": 3
+      },
+      "roles": [
+        "Quality Inspector",
+        "Retrofit Programme Manager"
+      ],
+      "categories": [
+        "home",
+        "measures",
+        "quality",
+        "checklists",
+        "documents",
+        "sensor"
+      ],
+      "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+    }
+  ]
+}

@@ -14413,3 +14413,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2191-live-readings-2026-11-22.md](research/issue-2191-live-readings-2026-11-22.md): root cause of 24.9 percent fresh stored coverage (half the cohort declined and never stored, then receiver SQL write throughput), live 288 home cohort (261 granted, 27 declined), 7.5 minute simulator cadence, receiver `ZF_RECEIVER_LOOKBACK_SECONDS`, 20 coverage samples (14.9 to 56.7 percent, mean 39.9) and a per-criterion table. The half-of-homes criterion stays unproven as a steady state.
 * Source: `tools/demo_consent_mix.py` reading-share cohort planner; `HubReceiver` optional start lookback; tests added.
+## [2026-11-22] update | Issue 2205 live Quality scope proof (Refs #2205)
+
+* Added [issue-2205-live-2026-11-22.md](research/issue-2205-live-2026-11-22.md): live registry on revision `0000045` lists mode `demo-homes` with the five ids, operator-requested-only, no per-reading calls, `model_call_authority_present` false (OQ-017). Read only, no Azure write, no source change.
