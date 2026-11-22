@@ -693,6 +693,8 @@ The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a d
 
 The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026-11-22.md) records a desktop Playwright check of 2255, 2253, 2254, 2256 and the map on revisions 0000051 and 0000023 (passes), and shows generative AI answers still blocked by an open suspension and the resident ledger expiry, with screenshots and a per-item table.
 
+The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
+
 The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) records the resident and API revisions, the resident AI chat falling back with `usage_limit` after the expiry fix, and a post-merge probe plan.
 
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.

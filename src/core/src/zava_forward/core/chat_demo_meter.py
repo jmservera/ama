@@ -41,6 +41,10 @@ def ensure(
     start, end = day.isoformat(), (day + timedelta(days=1)).isoformat()
     label = f"synthetic-demo-chat-{day.date().isoformat()}"
     configuration = ai.configuration(ai.fast, TEMPERATURE, max_tokens)
+    # Each ledger write opens a new SQL connection, takes the exclusive write lock and rereads it.
+    seeded = (label, configuration, CALLS, TOKENS, AMOUNT)
+    if getattr(ledger, "demo_chat_seeded", None) == seeded:
+        return True
     try:
         price = ledger.price(
             source=PRICE_SOURCE,
@@ -74,4 +78,5 @@ def ensure(
     except Exception as error:
         logging.getLogger(__name__).warning("Demo chat meter not seeded (%s)", type(error).__name__)
         return False
+    ledger.demo_chat_seeded = seeded
     return True
