@@ -682,6 +682,8 @@ The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records
 
 The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
 
+The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) records the resident and API revisions, the resident AI chat falling back with `usage_limit` after the expiry fix, and a post-merge probe plan.
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.

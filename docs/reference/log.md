@@ -14456,3 +14456,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2201 receiver failure causes from logs (Refs #2201)
 
 * Added [issue-2201-live-receiver-logs-2026-11-22.md](research/issue-2201-live-receiver-logs-2026-11-22.md): Log Analytics console text names `SENSOR_SQL_UNAVAILABLE` for the 10:35 to 11:50 failures, an operator argument error at 11:32 and `IOT_CALLBACK_FAILED` for 13:30; the database is now S3 and the 14:00 and 14:30 scheduled runs Succeeded. Three-run streak and map freshness not yet proven. No source change.
+## [2026-11-22] update | Issue 2243 resident AI chat live probe (Refs #2243)
+
+* Added [issue-2243-live-probe-2026-11-22.md](research/issue-2243-live-probe-2026-11-22.md): read-only live probe of `ca-resident-demo` (revision 0000022) and `ca-cutover-test-demo-api` (revision 0000050). Resident chat still falls back to rules, now with `reason=usage_limit` instead of the expired label, which points at the SQL `resident_ai.budget.expires_at` row (not readable, SQL is private). Includes the post-merge probe plan and a per-criterion table.
