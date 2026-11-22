@@ -14398,3 +14398,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2202-live-deploy-2026-11-22.md](research/issue-2202-live-deploy-2026-11-22.md): image-only rollout of main 0d2081ef7a to the demo API (revision 0000045) and both live jobs through the trapped registry push, registry read back Disabled; per-issue table for 2191, 2192, 2193, 2195 and 2201. Proven live: chat routing with no 500s, map-card gauges, consent checkbox, one Succeeded receiver run. Unproven: employee effect of consent (resident image not redeployed), stored readings for half of homes (110 of 441), three consecutive receiver successes.
 * Source: `HubReceiver` ends a bounded window normally when the deadline hits an in-flight write (`IOT_OPERATION_TIMEOUT` had failed three runs); test added.
+## [2026-11-22] update | Issue 2192 live redeploy proof (Refs #2192)
+
+* Added [issue-2192-live-r3-2026-11-22.md](research/issue-2192-live-r3-2026-11-22.md): resident image built from main `0696d9446` and rolled to `ca-resident-demo` revision `0000021` (rollback `0000020`); the employee sensors state for the test resident changed `consent-withheld` to `ok` and back after the resident ticked and unticked. Azure SQL audit rows not read.

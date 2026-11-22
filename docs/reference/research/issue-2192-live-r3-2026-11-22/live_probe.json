@@ -1,0 +1,95 @@
+{
+ "case_count": 50,
+ "resident_case": "ZF-2025-0029",
+ "employee_before": {
+  "ZF-2025-0029": {
+   "status": 200,
+   "state": "consent-withheld",
+   "readings": 0,
+   "message": "",
+   "keys": [
+    "advisory",
+    "after",
+    "anchor",
+    "badges",
+    "before",
+    "calibrated",
+    "case_id",
+    "citation_keys",
+    "detail",
+    "freshness",
+    "freshness_text",
+    "generated_at"
+   ]
+  }
+ },
+ "checkbox_present": true,
+ "resident_text": "Sharing your sensor readings\n\nYour home sensor measures temperature and humidity and sends the readings to Zava North Homes.\n\nHousing and repairs staff with a work reason see the readings. They are not shared outside Zava North Homes by this service.\n\nShare my home sensor readings with Zava North Homes staff\n\nStaff cannot see your readings. New readings are not stored for your home.\n\nSaying no, or stopping later, does not change your repairs, your tenancy or our safety duties. We will still repair your home and meet our legal safety checks.",
+ "initial_checked": false,
+ "checkbox_attrs": {
+  "type": "checkbox",
+  "labelWrapped": true,
+  "described": "sensor-consent-status sensor-consent-stop",
+  "role": null
+ },
+ "step1_set_opposite": {
+  "checked": true,
+  "status": "Staff can see your readings.",
+  "focus_on_checkbox": "sensor-consent"
+ },
+ "employee_after_step1": {
+  "ZF-2025-0029": {
+   "status": 200,
+   "state": "ok",
+   "readings": 12,
+   "message": "",
+   "keys": [
+    "advisory",
+    "after",
+    "after_absent",
+    "age_seconds",
+    "anchor",
+    "as_of_rule",
+    "badges",
+    "before",
+    "before_absent",
+    "calibrated",
+    "case_id",
+    "citation_keys"
+   ]
+  }
+ },
+ "step2_back_to_initial": {
+  "checked": false,
+  "status": "Staff cannot see your readings. New readings are not stored for your home.",
+  "focus_on_checkbox": "sensor-consent"
+ },
+ "employee_after_step2": {
+  "ZF-2025-0029": {
+   "status": 200,
+   "state": "consent-withheld",
+   "readings": 0,
+   "message": "",
+   "keys": [
+    "advisory",
+    "after",
+    "anchor",
+    "badges",
+    "before",
+    "calibrated",
+    "case_id",
+    "citation_keys",
+    "detail",
+    "freshness",
+    "freshness_text",
+    "generated_at"
+   ]
+  }
+ },
+ "final_restore": {
+  "checked": false,
+  "status": "Staff cannot see your readings. New readings are not stored for your home.",
+  "focus_on_checkbox": "sensor-consent"
+ },
+ "reload_checked": false
+}
