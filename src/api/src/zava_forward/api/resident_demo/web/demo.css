@@ -89,12 +89,13 @@ button[aria-disabled=true]{cursor:wait}
 .sensor-value{font-size:var(--fontSizeBase500);font-variant-numeric:tabular-nums;margin:var(--spacingHorizontalS) 0}
 .sensor-chart{margin:var(--spacingHorizontalXXL) 0}
 .sensor-chart h3{font-size:var(--fontSizeBase400);margin:0}
-.sensor-chart svg{display:block;width:100%;height:auto;color:var(--ink)}
-.sensor-chart text{fill:currentColor;font:1.25rem var(--fontFamilyBase);font-variant-numeric:tabular-nums}
+.sensor-chart svg{display:block;width:100%;max-width:42rem;height:auto;color:var(--ink)}
+.sensor-chart text{fill:currentColor;font:12px var(--fontFamilyBase);font-variant-numeric:tabular-nums}
+@media (max-width:30rem){.sensor-chart text{font-size:18px}}
 .sensor-chart figcaption{color:var(--muted)}
 .sensor-summary{margin:var(--spacingHorizontalS) 0;color:var(--ink)}
 .sensor-axis{stroke:var(--muted);fill:none}
-.sensor-line{stroke:var(--brand);stroke-width:2;fill:none}
+.sensor-line{stroke:var(--brand);stroke-width:1.5;fill:none}
 .sensor-point{fill:var(--brand)}
 .sensor-table{max-width:100%;overflow-x:auto;margin-top:var(--spacingHorizontalM)}
 .sensor-table table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}

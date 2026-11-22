@@ -918,7 +918,7 @@ function waitingRows(data) {
   const textOrNull = (v) => v === null || typeof v === "string";
   if (!Array.isArray(data)) return null;
   const valid = data.every((x) => x && typeof x === "object" && text(x.case_id) && text(x.status)
-    && text(x.as_of) && !Number.isNaN(Date.parse(x.as_of)) && Number.isFinite(x.age_hours)
+    && text(x.as_of) && !Number.isNaN(Date.parse(x.as_of)) && (x.age_hours === null || Number.isFinite(x.age_hours))
     && textOrNull(x.due_at) && textOrNull(x.chase_owner) && textOrNull(x.proposed_receiver)
     && typeof x.escalated === "boolean" && typeof x.needs_escalation === "boolean"
     && Array.isArray(x.reasons) && x.reasons.every(text) && x.approved_limit_hours === null);
@@ -968,7 +968,7 @@ async function handoffWaitingView() {
             h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, x.case_id)),
             h("td", {}, x.escalated ? "Escalated: unaccepted handoff" : "Action needed"),
             h("td", {}, x.status),
-            h("td", {}, waitingHours(x.age_hours)),
+            h("td", {}, x.age_hours === null ? "Unknown. The offered time has no recorded timezone." : waitingHours(x.age_hours)),
             h("td", {}, waitingTime(x.due_at)),
             h("td", {}, x.chase_owner || "No one named yet. Next action: ask the case lead to name one"),
             h("td", {}, x.proposed_receiver || "No one named yet. Next action: ask the case lead to name one"),

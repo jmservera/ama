@@ -689,6 +689,8 @@ The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a d
 
 The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) records the resident and API revisions, the resident AI chat falling back with `usage_limit` after the expiry fix, and a post-merge probe plan.
 
+The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.

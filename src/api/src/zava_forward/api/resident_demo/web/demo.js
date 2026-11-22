@@ -236,6 +236,11 @@
     var end = future.length ? Date.parse(future[future.length - 1].forecast_at) : latestAt;
     var points = [];
     var previous = null;
+    var markerGap = 9;
+    var lastMarkerX = -markerGap;
+    var latestIndex = history.length - 1;
+    while (latestIndex > 0 && history[latestIndex][metric.key] === null) latestIndex--;
+    var thinned = false;
     function segment() {
       if (points.length > 1) svg.appendChild(svgEl("polyline", { points: points.join(" "), class: "sensor-line" }));
       points = [];
@@ -247,7 +252,12 @@
       var x = end === start ? 263 : 56 + (stamp - start) / (end - start) * 414;
       var y = 150 - (reading[metric.key] - metric.min) / (metric.max - metric.min) * 140;
       points.push(x + "," + y);
-      svg.appendChild(svgEl("circle", { cx: x, cy: y, r: 3, class: "sensor-point" }));
+      if (x - lastMarkerX >= markerGap || reading === history[latestIndex]) {
+        svg.appendChild(svgEl("circle", { cx: x, cy: y, r: 2.5, class: "sensor-point" }));
+        lastMarkerX = x;
+      } else {
+        thinned = true;
+      }
       previous = stamp;
     });
     segment();
@@ -279,7 +289,7 @@
       caption.appendChild(sensorTime(history[history.length - 1].observed_at));
     }
     if (future.length) {
-      caption.appendChild(el("p", "Solid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).", "sensor-key"));
+      caption.appendChild(el("p", "Solid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate)." + (thinned ? " Circles mark some of the stored readings; the table lists every reading." : ""), "sensor-key"));
     }
     figure.appendChild(caption);
     return figure;

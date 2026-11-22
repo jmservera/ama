@@ -1,0 +1,17 @@
+{
+ "kpis_hazards": 23,
+ "kpis_open": 443,
+ "list_total": 22,
+ "map_mode": "points",
+ "map_hazard_items": 23,
+ "in_map_not_list": [
+  "ZF-2025-0148"
+ ],
+ "in_list_not_map": [],
+ "detail_ZF-2025-0148": {
+  "hazards": [],
+  "safeguarding_keys": [],
+  "closed": false,
+  "stage": "Waiting for block programme"
+ }
+}

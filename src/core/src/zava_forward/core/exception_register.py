@@ -230,6 +230,8 @@ class ExceptionRegisterMixin:
                         row = handoff_ageing(  # type: ignore[no-untyped-call]
                             case, as_of, policy=policy
                         )
+                        if row and row.get("age_hours") is None:
+                            raise ValueError("Handoff offered time is missing or has no timezone.")
                         feed_stranded_tasks(queue, overdue, operator)
                         if row:
                             feed_unaccepted_handoffs(queue, [row], operator)
