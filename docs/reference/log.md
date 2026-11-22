@@ -14578,3 +14578,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 220 ninth live run (Refs #220)
 
 * Added [issue-220-live-r9-live-success-2026-11-22.md](research/issue-220-live-r9-live-success-2026-11-22.md): on revision 0000053 the staff-recorded record and correction succeed, protected case state is unchanged, guard fields are refused; per-criterion table. Retaliation over time is production-only.
+
+## [2026-11-22] update | Issue 144 live hosting probe (Refs #144)
+
+* Added [issue-144-live-hosting-2026-11-22.md](research/issue-144-live-hosting-2026-11-22.md): digest-pinned worker and job images, live non-root proof, read-only root file system disproved, no pipeline run, per-criterion table.

@@ -563,6 +563,7 @@ The [2026-11-19 criteria reconciliation](./research/issue-1818-criteria-reconcil
 For #2008, the [synthetic demo workbook and import evidence](./research/issue-2008-demo-workbook-import-evidence-2026-11-18.md)
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
+The [issue 144 live hosting probe](./research/issue-144-live-hosting-2026-11-22.md) records digest-pinned images, live non-root proof, a writable root file system and no pipeline run.
 The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 The [web `.xlsx` import note](./research/issue-2008-web-xlsx-import-2026-11-22.md) records the
 local proof that the "Check a spreadsheet" screen previews the workbook with mapping and conflicts.
