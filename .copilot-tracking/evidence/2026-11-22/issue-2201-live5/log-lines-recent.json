@@ -1,0 +1,30 @@
+[
+  {
+    "ContainerGroupName": "job-live-receiver-29922540-tzbw8",
+    "Log": "sql_retries=32",
+    "Stream": "stderr",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T13:25:37.9355509Z"
+  },
+  {
+    "ContainerGroupName": "job-live-receiver-29922540-tzbw8",
+    "Log": "receipts=654",
+    "Stream": "stdout",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T13:26:19.1585185Z"
+  },
+  {
+    "ContainerGroupName": "job-live-receiver-29922570-rxtlj",
+    "Log": "Cannot run: IOT_CALLBACK_FAILED",
+    "Stream": "stderr",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T13:53:41.0873746Z"
+  },
+  {
+    "ContainerGroupName": "job-live-receiver-29922600-85gvb",
+    "Log": "receipts=1037",
+    "Stream": "stdout",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T14:25:44.0157843Z"
+  }
+]

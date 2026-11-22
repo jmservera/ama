@@ -676,6 +676,8 @@ The [three-run proof](./research/issue-2201-live-three-runs-2026-11-22.md) recor
 
 The [receiver recheck](./research/issue-2201-live-receiver-recheck-2026-11-22.md) lists every scheduled run since the 2234 merge with who started it: 12:00, 12:30 and 13:00 UTC Succeeded, 13:30 Failed, failure logs unreachable, map 200 with 443 items (#2201).
 
+The [receiver log causes](./research/issue-2201-live-receiver-logs-2026-11-22.md) read the console logs now that the workspace answers: SQL saturation caused the SQL failures, 13:30 was `IOT_CALLBACK_FAILED`, and 14:00 and 14:30 UTC Succeeded after the S3 scale (#2201).
+
 The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
 
 The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
