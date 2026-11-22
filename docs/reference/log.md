@@ -14507,3 +14507,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2202 final live proof on revisions 0000053 and 0000025 (Refs #2202)
 
 * Added [issue-2202-finalproof-2026-11-22.md](research/issue-2202-finalproof-2026-11-22.md): 10 employee chat asks answered in 3.1 to 5.4 s (hold label shown, no generative answer), map, xlsx check-a-spreadsheet, resident chart, safety count 23 and handoff waiting view pass; per-criterion table for #2202 marks image rollout, rollback, consent checkbox, map gauges and half of homes as partly proven or not re-run. No estate change.
+
+## [2026-11-22] update | Issue 184 live chain proof (Refs #184)
+
+* Added [issue-184-live-chain-2026-11-22.md](research/issue-184-live-chain-2026-11-22.md): read only hop-by-hop proof from simulator job to the employee map on resource group `ama`, a 6 hour secret scan with 0 matches and a per-criterion table; the resident live view and per-message SQL trace are marked unproven. No estate change.

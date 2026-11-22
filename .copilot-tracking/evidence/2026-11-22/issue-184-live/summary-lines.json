@@ -1,0 +1,242 @@
+[
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 20:08:51,024 zava_forward.live_simulator slot=2026-11-22T20:05Z homes=288 sent=264 failed=0 skipped=24 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T20:08:51.025125Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 20:07:21,665 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T20:07:21.6661113Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 20:02:05,053 zava_forward.live_simulator slot=2026-11-22T20:00Z homes=288 sent=261 failed=0 skipped=27 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T20:02:05.0531937Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 20:00:42,182 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T20:00:42.1846678Z"
+  },
+  {
+    "JobName": "job-live-receiver",
+    "Log": "receipts=1034",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:55:24.6655619Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:53:50,941 zava_forward.live_simulator slot=2026-11-22T19:50Z homes=288 sent=258 failed=0 skipped=30 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:53:50.9414018Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:52:22,714 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:52:22.7142865Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:46:53,032 zava_forward.live_simulator slot=2026-11-22T19:45Z homes=288 sent=262 failed=0 skipped=26 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:46:53.0326532Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:45:23,332 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:45:23.3332072Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:38:45,736 zava_forward.live_simulator slot=2026-11-22T19:35Z homes=288 sent=258 failed=0 skipped=30 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:38:45.7368082Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:37:21,472 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:37:21.4727688Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:31:48,178 zava_forward.live_simulator slot=2026-11-22T19:30Z homes=288 sent=256 failed=0 skipped=32 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:31:48.1786418Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:30:28,705 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:30:28.7056266Z"
+  },
+  {
+    "JobName": "job-live-receiver",
+    "Log": "receipts=1052",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:25:25.135065Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:24:01,357 zava_forward.live_simulator slot=2026-11-22T19:20Z homes=288 sent=270 failed=0 skipped=18 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:24:01.3573221Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:22:23,980 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:22:23.9805513Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:16:47,147 zava_forward.live_simulator slot=2026-11-22T19:15Z homes=288 sent=262 failed=0 skipped=26 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:16:47.1474446Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:15:23,565 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:15:23.5663898Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:08:56,873 zava_forward.live_simulator slot=2026-11-22T19:05Z homes=288 sent=264 failed=0 skipped=24 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:08:56.8733565Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:07:28,397 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:07:28.3982431Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:01:58,522 zava_forward.live_simulator slot=2026-11-22T19:00Z homes=288 sent=256 failed=0 skipped=32 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:01:58.5226895Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 19:00:32,863 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T19:00:32.8634916Z"
+  },
+  {
+    "JobName": "job-live-receiver",
+    "Log": "receipts=1024",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:55:22.650688Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:53:47,072 zava_forward.live_simulator slot=2026-11-22T18:50Z homes=288 sent=257 failed=0 skipped=31 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:53:47.0728289Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:52:21,686 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:52:21.6869734Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:46:45,607 zava_forward.live_simulator slot=2026-11-22T18:45Z homes=288 sent=251 failed=0 skipped=37 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:46:45.6078749Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:45:24,358 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:45:24.3586463Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:38:50,044 zava_forward.live_simulator slot=2026-11-22T18:35Z homes=288 sent=261 failed=0 skipped=27 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:38:50.0446386Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:37:24,617 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:37:24.6178832Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:32:14,206 zava_forward.live_simulator slot=2026-11-22T18:30Z homes=288 sent=255 failed=0 skipped=33 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:32:14.2071269Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:30:52,515 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:30:52.5160355Z"
+  },
+  {
+    "JobName": "job-live-receiver",
+    "Log": "receipts=1030",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:25:26.6865731Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:23:47,469 zava_forward.live_simulator slot=2026-11-22T18:20Z homes=288 sent=260 failed=0 skipped=28 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:23:47.4698611Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:22:27,499 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:22:27.5004407Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:16:50,505 zava_forward.live_simulator slot=2026-11-22T18:15Z homes=288 sent=255 failed=0 skipped=33 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:16:50.5060365Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:15:32,159 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:15:32.1596772Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:08:43,109 zava_forward.live_simulator slot=2026-11-22T18:05Z homes=288 sent=254 failed=0 skipped=34 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:08:43.1097148Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:07:21,743 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:07:21.7435286Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:02:02,431 zava_forward.live_simulator slot=2026-11-22T18:00Z homes=288 sent=261 failed=0 skipped=27 retries=0 codes=<withheld>",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:02:02.4317157Z"
+  },
+  {
+    "JobName": "job-live-simulator",
+    "Log": "2026-11-22 18:00:37,183 zava_forward.live_simulator capacity {'homes': 288, 'messages_per_day': 82944, 'daily_budget': 360000, 'quota_fraction': 0.2074, 'seconds_per_slot': 28.8, 'hub_usd_per_month': 10.0}",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T18:00:37.1833213Z"
+  }
+]
