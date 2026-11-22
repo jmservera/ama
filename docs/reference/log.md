@@ -14559,3 +14559,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1204 tick-criterion re-check (Refs #1204)
 
 * Added [issue-1204-tick-criterion-live-2026-11-22.md](research/issue-1204-tick-criterion-live-2026-11-22.md): checker gives 0 violations on 216 real ticks and 11 tests pass; no real window carries the new fields, so the unticked criterion stays unticked. No source change.
+## [2026-11-22] update | Issue 223 human-review effectiveness live run 5 (Refs #223)
+
+* Added [issue-223-live-r5-2026-11-22.md](research/issue-223-live-r5-2026-11-22.md): gate and focused tests re-run, live retention of reviewer, reason and source hashes shown, per-criterion table; OQ-017 authority and measured human effort remain unproven.
