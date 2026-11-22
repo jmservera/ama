@@ -27,3 +27,7 @@ Tests read `docs/` (for example `src/core/tests/test_live_doc_links.py` scans ev
 ## Update 2026-11-22
 
 Added `test_verify_reports_docs_only_relaxation_for_full_receipt`, which drives `verify()` for a full-scope receipt after a docs-only move and asserts the `BASE RELAXED (disjoint-move)` line with the moved-path count. `python3 -m unittest tools.test_rpi_checks -q`: 124 tests pass. The verify test stubs `validate_receipt`, so the end-to-end verify of a real full receipt stays unproven (`rpi-checks.py --all` is not run).
+
+## Update 2026-11-22, second run
+
+No source edit was needed. `python3 -m unittest tools.test_rpi_checks -q` ran 127 tests, all OK, and `ruff format --isolated --line-length 100 --check` is clean for `tools/rpi-checks.py` and its test file. The four criteria keep the statuses above; the end-to-end verify of a real full receipt stays unproven because `rpi-checks.py --all` is not run. Record: `.copilot-tracking/changes/2026-11-22/issue-2186-live-r2-changes.md`.

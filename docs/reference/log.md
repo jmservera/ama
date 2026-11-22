@@ -14609,3 +14609,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2245 thread creation 500 live check (Refs #2245)
 
 * Added [issue-2245-thread500-2026-11-22.md](research/issue-2245-thread500-2026-11-22.md): console evidence of the ProgrammingError 500, 12 of 12 live creates returning 200, a write-transaction bound regression test and a per-criterion table. The 500 stays unreproduced and its lock holder unproven.
+## [2026-11-22] update | Issue 2186 full receipt across docs moves, second run (Refs #2186)
+
+* Updated [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): rerun of 127 gate-tool tests, per-criterion statuses unchanged, end-to-end full receipt still unproven. No source change.
