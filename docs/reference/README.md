@@ -678,6 +678,8 @@ The [sixth audit](./research/issue-1288-live-r6-quality-sensor-evidence-2026-11-
 
 The [eighth audit](./research/issue-1288-live-r8-quality-sensor-evidence-2026-11-22.md) sees seven homes with fresh live readings, 92 focused tests OK and the Quality model still blocked at release admission; criteria 4 and 8 stay unproven.
 
+The [ninth audit](./research/issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md) re-confirms current main, 92 focused tests OK, seven homes with fresh live readings and the release-admission block; it also records a forecast endpoint 503/504 after another worker's rollout. Criteria 4 and 8 stay unproven.
+
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).

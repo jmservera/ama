@@ -14655,3 +14655,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Human-review effectiveness live run 6 (Refs #223)
 
 * Added [issue-223-live-r6-2026-11-22.md](research/issue-223-live-r6-2026-11-22.md): gate and focused tests re-run, live retention of reviewer, reason and source hashes shown again, per-criterion table; no criterion is newly ticked. No source change.
+## [2026-11-22] update | Issue 1288 ninth live audit (Refs #1288)
+
+* Added [issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md](research/issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md): main confirmed current, 92 focused tests OK, seven homes with fresh live readings and a Home sensors screenshot, Quality model still blocked at release admission, forecast endpoint 503/504 recorded as an anomaly. Criteria 4 and 8 stay unproven. No source or estate change.
