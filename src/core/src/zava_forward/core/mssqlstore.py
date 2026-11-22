@@ -16,7 +16,9 @@ import json
 import os
 import re
 import struct
+import logging
 import threading
+import time
 
 from .chatthreads import MEMORY_ADDED as CHAT_MEMORY_ADDED, MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX
 from .sqlstore import INDEXES, SqlStore
@@ -83,6 +85,13 @@ GATE_TRIGGERS = (
 
 BEGIN = ("BEGIN TRAN; DECLARE @r INT; EXEC @r = sp_getapplock @Resource = N'zavaforward_write', @LockMode = N'Exclusive', "
          "@LockOwner = N'Transaction', @LockTimeout = 15000; IF @r < 0 THROW 50002, 'could not take the write lock', 1;")
+
+LOCK_FAILED = "could not take the write lock"
+LOCK_RETRY_ATTEMPTS = 8
+LOCK_RETRY_BASE = 1.0
+LOCK_RETRY_CAP = 30.0
+_sleep = time.sleep
+_log = logging.getLogger(__name__)
 
 _PROGRESS = re.compile(r"(?i)\bcommunication link\b|connection (?:is )?(?:dead|closed|reset)|08S01|08001|08003|08007|timeout expired|TCP Provider")
 
@@ -162,6 +171,7 @@ class _Conn:
         import mssql_python
         self.driver, self.conn_str, self.raw, self.in_tran = mssql_python, conn_str, None, False
         self.attrs = {}
+        self.startup_retries = 0  # extra BEGIN attempts after a lock timeout; non-zero only while the store starts
         if token:
             raw = token.encode("utf-16-le")
             self.attrs = {1256: struct.pack("<I", len(raw)) + raw}  # SQL_COPT_SS_ACCESS_TOKEN
@@ -204,12 +214,7 @@ class _Conn:
     def execute(self, sql, args=()):
         key = sql.strip().upper()
         if key == "BEGIN IMMEDIATE":
-            try:
-                self._run(BEGIN, ())
-            except BaseException:
-                self._abandon_partial_begin()
-                raise
-            self.in_tran = True
+            self._begin()
             return None
         if key in ("COMMIT", "ROLLBACK"):
             try:
@@ -224,6 +229,23 @@ class _Conn:
                 self.in_tran = False
             return None
         return self._run(self._rewrite(sql), tuple(args))
+
+    def _begin(self):
+        """Take the write lock. During start-up a lock timeout is retried with backoff, so a long writer delays the start
+        instead of crash-looping the app (issue #2244). Any other failure, and the last timeout, propagate unchanged."""
+        retries = self.startup_retries
+        for attempt in range(retries + 1):
+            try:
+                self._run(BEGIN, ())
+                self.in_tran = True
+                return
+            except BaseException as e:
+                self._abandon_partial_begin()
+                if attempt >= retries or not isinstance(e, self.driver.Error) or LOCK_FAILED not in str(e):
+                    raise
+                delay = min(LOCK_RETRY_CAP, LOCK_RETRY_BASE * 2 ** attempt)
+                _log.warning("SQL write lock busy at start-up; retry %d of %d in %.0f s", attempt + 1, retries, delay)
+                _sleep(delay)
 
     def _abandon_partial_begin(self):
         """BEGIN TRAN may have run before the lock request failed; never leave that transaction open.
@@ -276,6 +298,15 @@ class MssqlStore(SqlStore):
 
     def _open(self, db_path):
         self.db = _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
+        self.db.startup_retries = LOCK_RETRY_ATTEMPTS - 1
+
+    def _initialize(self, *args):
+        try:
+            super()._initialize(*args)
+        finally:
+            db = getattr(self, "db", None)
+            if isinstance(db, _Conn):
+                db.startup_retries = 0
 
     _epoch_sql = "SELECT DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'), SYSUTCDATETIME()) / 1000.0"
 
