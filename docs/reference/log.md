@@ -14615,3 +14615,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2164 roster scope re-proof (Refs #2164)
 
 * Added [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table; deployed-image criterion stays unproven. No source or estate change.
+## [2026-11-22] add | Nomination test bootstrap isolation re-run (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-rerun-1847-2026-11-22.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-22.md): fresh-process re-run on main 3219004e90 with retained outputs; five criteria proven, the full gate and external receipt unproven. No source or test change.

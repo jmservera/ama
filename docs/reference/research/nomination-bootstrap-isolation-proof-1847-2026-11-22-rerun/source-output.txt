@@ -1,0 +1,16 @@
+# source layout head 3219004e90
+## test_bulk_edits test_nomination_route
+----------------------------------------------------------------------
+Ran 55 tests in 31.942s
+
+OK
+## test_nomination_route test_bulk_edits
+----------------------------------------------------------------------
+Ran 55 tests in 21.748s
+
+OK
+## test_nomination_bootstrap test_bulk_edits test_nomination_route
+----------------------------------------------------------------------
+Ran 58 tests in 14.164s
+
+OK

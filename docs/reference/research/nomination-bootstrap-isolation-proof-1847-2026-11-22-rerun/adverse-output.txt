@@ -1,0 +1,5 @@
+# original bootstrap (7de4a8110^), noneditable, bulk first
+----------------------------------------------------------------------
+Ran 55 tests in 12.975s
+
+FAILED (failures=1, errors=20)
