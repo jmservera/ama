@@ -72,3 +72,12 @@ than validated evidence:
   is accepted for demo scope only. Real resident data, production use, Legal
   and DPO approval stay out of this approval. Agents must not mark AI-related
   demo work human-blocked on OQ-017 or DH-006.
+
+## Delivery Decision, 2026-11-22
+
+* Owner decision (2026-11-22): do not run the multi-hour full local gate for
+  demo-phase delivery. The full gate was hurting throughput. Replace it with
+  targeted local tests, hosted CI on the exact head, and a post-merge smoke
+  test against the deployed demo (health, chat ask, map, resident chart) with
+  a rollback to the last good revision. Human, legal, resident and
+  independent-review gates are unchanged. Revisit before production release.
