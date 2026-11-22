@@ -14475,7 +14475,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 * Added [issue-2245-live-2026-11-22.md](research/issue-2245-live-2026-11-22.md): employee chat rules-only cause (open suspension SUS-1, now reported as a hold), resident expiry read from `ZF_DEMO_EXPIRES_AT`, resident image rolled to revision 0000022, and a per-criterion table. Live generative answers stay unproven pending an owner decision on SUS-1 and the resident ledger expiry.
 ## [2026-11-22] update | Issue 2255 target clock live data path (Refs #2255)
 
-* Added [issue-2255-live-2026-11-22.md](research/issue-2255-live-2026-11-22.md): read-only probe of `ca-cutover-test-demo-api` revision 0000050 shows 22 of 22 hazards with null `aware_at` and `response_due_at` and clock status `fail_closed_missing_timestamp`. A redeploy alone would not populate the clock; the data needs an awareness time and target. No source change.
+* Added [issue-2255-backfill-2026-11-22.md](research/issue-2255-backfill-2026-11-22.md): read-only probe of `ca-cutover-test-demo-api` revision 0000050 shows 22 of 22 hazards with null `aware_at` and `response_due_at` and clock status `fail_closed_missing_timestamp`. A redeploy alone would not populate the clock; the data needs an awareness time and target. No source change.
 ## [2026-11-22] update | Issue 2256 handoff waiting list cause (Refs #2256)
 
 * Added [issue-2256-handoff-waiting-2026-11-22.md](research/issue-2256-handoff-waiting-2026-11-22.md): live probe showed four offered handoffs in `/api/handoffs` but none in `/api/handoffs/unaccepted`, because seeded `offered_at` values have no timezone and the ageing code dropped them. Fix keeps them listed with an unknown waiting time.
@@ -14565,3 +14565,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 138 eleventh live re-probe (Refs #138)
 
 * Added [issue-138-live-r11-2026-11-22.md](research/issue-138-live-r11-2026-11-22.md): no federated credential, no protection rules on the required environments, 0 runners, what-if workflow skipped; post-deployment check logic proven live against the demo API; repository scan 0 findings. Criteria 1 to 4 unproven, 5 and 6 partly proven. No source or estate change.
+## [2026-11-22] update | Issue 2255 demo hazard clock backfill (Refs #2255)
+
+* Added [issue-2255-backfill-2026-11-22.md](research/issue-2255-backfill-2026-11-22.md): live backfill of `aware_at` and a reference response target on 23 synthetic demo hazards through the demo API replica, with probe outputs, screenshots and a per-criterion table.

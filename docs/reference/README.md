@@ -691,6 +691,8 @@ The [receiver S3 streak](./research/issue-2201-live-receiver-s3-streak-2026-11-2
 
 The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
 
+The [issue 2255 backfill note](./research/issue-2255-backfill-2026-11-22.md) records the backfill of `aware_at` and a reference response target on the synthetic demo hazards, run through the demo API replica, with before and after safety-queue proofs.
+
 The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
 
 The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records read only proof that scheduled simulator runs reach IoT Hub, the receiver and the employee map (288 `SYN-` devices, hub ingress equal to egress, fresh case readings), the clean secret scan and the unproven resident live view (#184).
