@@ -1,50 +1,50 @@
 {
- "task_id": "2191-capacity-live-20261122T133925Z",
- "task_slug": "issue-2191-capacity",
+ "task_id": "2191-halfhomes-live-20261122T182946Z",
+ "task_slug": "issue-2191-halfhomes",
  "parent_task": {
-  "task_id": "2191-live-20261122T051143Z",
-  "task_slug": "issue-2191-live"
+  "task_id": "2191-capacity-live-20261122T133925Z",
+  "task_slug": "issue-2191-capacity"
  },
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-22/issue-2191-capacity-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-22/issue-2191-capacity-plan.md",
-  "details": ".copilot-tracking/details/2026-11-22/issue-2191-capacity-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-22/issue-2191-capacity-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-22/issue-2191-capacity-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-22/issue-2191-capacity-review.md"
+  "research": ".copilot-tracking/research/2026-11-22/issue-2191-halfhomes-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-22/issue-2191-halfhomes-plan.md",
+  "details": ".copilot-tracking/details/2026-11-22/issue-2191-halfhomes-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-22/issue-2191-halfhomes-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-22/issue-2191-halfhomes-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-22/issue-2191-halfhomes-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Live Azure authorised (rg ama, cap USD 700, az only, never Bicep, no push)",
+   "decision": "Live Azure authorised (rg ama, cap USD 700, az only, no push, focused tier)",
    "status": "confirmed",
    "evidence": "owner decisions 2026-11-18 and task brief"
   },
   {
    "decision": "critique executed once (self-critique)",
    "status": "approve with direct dispositions",
-   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2191-capacity-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2191-halfhomes-critique.md"
   },
   {
    "decision": "Review executed once, outcome conformant",
    "status": "recorded",
-   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2191-capacity-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2191-halfhomes-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Owner selects follow-up, stops or switches to manual"
+  "action": "Owner selects follow-up"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
    "task": "Trial S2 then step down if coverage holds",
    "rationale": "S3 costs about USD 5 a day",
-   "evidence": "docs/reference/research/issue-2191-live-sql-capacity-2026-11-22.md"
+   "evidence": "docs/reference/research/issue-2191-live-coverage-reproof-2026-11-22.md"
   }
  ]
 }

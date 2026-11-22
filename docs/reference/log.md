@@ -14500,3 +14500,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2245 chat ask with no response (Refs #2245)
 
 * Added [issue-2245-chattimeout-2026-11-22.md](research/issue-2245-chattimeout-2026-11-22.md): live probes found 3 to 4 s asks, one 19.4 s HTTP 500 (`ProgrammingError`, SQL write-lock wait) and no 120 s hang; model and hold paths excluded; demo meter seeding now runs once per day and configuration, with a regression test.
+## [2026-11-22] update | Issue 2191 fresh coverage re-proof (Refs #2191)
+
+* Added [issue-2191-live-coverage-reproof-2026-11-22.md](research/issue-2191-live-coverage-reproof-2026-11-22.md): 24.9 percent traced to the consent mix and S0 DTU saturation; a second 30 minute live series on S3 shows 15 of 15 samples above half of 443 homes (mean 56.3 percent). No estate change.
