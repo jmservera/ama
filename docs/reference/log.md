@@ -14479,3 +14479,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2256 handoff waiting list cause (Refs #2256)
 
 * Added [issue-2256-handoff-waiting-2026-11-22.md](research/issue-2256-handoff-waiting-2026-11-22.md): live probe showed four offered handoffs in `/api/handoffs` but none in `/api/handoffs/unaccepted`, because seeded `offered_at` values have no timezone and the ageing code dropped them. Fix keeps them listed with an unknown waiting time.
+## [2026-11-22] update | Issue 2257 employee map fetch failure (Refs #2257)
+
+* Added [issue-2257-mapfetch-live-2026-11-22.md](research/issue-2257-mapfetch-live-2026-11-22.md): 8 of 8 fresh sessions now load the map; system logs show probe timeouts and a scale-in inside the original failure window; the client now retries a reset read, proven live by route interception.

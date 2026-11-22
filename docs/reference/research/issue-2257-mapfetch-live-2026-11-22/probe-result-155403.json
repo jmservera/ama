@@ -1,0 +1,114 @@
+[
+ {
+  "run": 1,
+  "start_utc": "15:51:46",
+  "map_wait_s": 4.0,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 13.0,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 2,
+  "start_utc": "15:51:59",
+  "map_wait_s": 4.0,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 12.86,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 3,
+  "start_utc": "15:52:12",
+  "map_wait_s": 4.0,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 12.72,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 4,
+  "start_utc": "15:52:25",
+  "map_wait_s": 10.4,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 18.76,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 5,
+  "start_utc": "15:52:44",
+  "map_wait_s": 10.8,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 19.41,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 6,
+  "start_utc": "15:53:04",
+  "map_wait_s": 10.6,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 19.18,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 7,
+  "start_utc": "15:53:23",
+  "map_wait_s": 11.5,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 19.85,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 8,
+  "start_utc": "15:53:43",
+  "map_wait_s": 11.1,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 19.95,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ }
+]
