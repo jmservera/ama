@@ -14678,3 +14678,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2255 clocks re-verified on 0000054 (Refs #2255)
 
 * Added [issue-2255-reverify-2026-11-22.md](research/issue-2255-reverify-2026-11-22.md): read-only live re-check on revision 0000054: 22 of 22 hazard clocks with a target, 0 unknown, 17 overdue, 5 running, owner on 23 rows. Re-seed survival stays unproven. No source change.
+## [2026-11-22] update | Issue 2061 live evidence pass (Refs #2061)
+
+* Added [issue-2061-live-evidence-2026-11-22.md](research/issue-2061-live-evidence-2026-11-22.md): single environment and ingress re-read, Entra redirect URI table (two stale URIs), employee and resident sign-in, negative access probe for `id-resident-demo`, simulator to receiver telemetry; import flow, before role inventory and stale URI removal remain unproven. No source or estate change; one throwaway job created and deleted.
