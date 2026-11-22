@@ -14688,3 +14688,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1204 tick criterion second re-check (Refs #1204)
 
 * Added [issue-1204-tick-criterion-live-r2-2026-11-22.md](research/issue-1204-tick-criterion-live-r2-2026-11-22.md): rescan finds no tick_log with the new fields; handoff checker passes and 22 tests pass; the unticked criterion stays unticked. No source change.
+
+## [2026-11-22] update | Issue 470 live re-check r2 (Refs #470)
+
+* Added [issue-470-live-r2-2026-11-22.md](research/issue-470-live-r2-2026-11-22.md): 128 gate tests pass; criteria 1, 2, 3 and 5 proven, criterion 4 unproven (no matched full-gate pair; PR 2272 now merged). No source change.
