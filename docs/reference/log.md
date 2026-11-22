@@ -14599,3 +14599,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 435 fifth per-criterion pass (Refs #435)
 
 * Added [capstone-pitch-435-live-2026-11-22.md](research/capstone-pitch-435-live-2026-11-22.md): fresh deck read (slide 16 is S14, Tokenomics is slide 22) and read-only demo API check; placement decision and #432 spend authority proven for the synthetic demo, mentor confirmation unproven. No source, deck or estate change.
+## [2026-11-22] update | Issue 462 resident showcase live run 5 (Refs #462)
+
+* Added [resident-showcase-live-r5-2026-11-22.md](research/resident-showcase-live-r5-2026-11-22.md): 36-check Playwright rerun against the live demo, new image digest and minReplicas 1 noted, per-criterion table; criterion 2 stays unproven. No source or estate change.
