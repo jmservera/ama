@@ -125,7 +125,7 @@ deployment or spend authority.
 | Single-instance simulator start and stop, no SQL tickets | OWNER-SELECTED TARGET | Not verified; the earlier ticket-based design is a proposal only |
 | Five synthetic demo homes | OWNER-SELECTED TARGET | The simulator reads every open case id and refreshes the list hourly; a control cohort of listed homes exists |
 | One new reading every minute | SUPERSEDED | The live simulator publishes every 5 minutes (see the live demo status) |
-| Quality AI restricted to the same five homes | SOURCE IMPLEMENTED, LIVE NOT CONFIGURED | Source enforces it when `ZF_ASSIST_QUALITY_DEMO_HOMES` lists the five ids; the staff assistants registry shows the effective scope. On 2026-11-21 the live API app had no such variable, so the live scope was unset (see the [issue 2205 note](../../reference/research/issue-2205-live-2026-11-21.md)) |
+| Quality AI restricted to the same five homes | SOURCE IMPLEMENTED, LIVE CONFIGURED 2026-11-22 | Source enforces it when `ZF_ASSIST_QUALITY_DEMO_HOMES` lists the five ids; the staff assistants registry shows the effective scope. On 2026-11-21 the live API app had no such variable, so the live scope was unset (see the [issue 2205 note](../../reference/research/issue-2205-live-2026-11-21.md)); on 2026-11-22 revision 0000045 carried the five ids and the registry confirmed it ([live proof](../../reference/research/issue-2205-live-2026-11-22.md)) |
 | Deterministic eligibility is separate from paid analysis | OWNER-SELECTED TARGET | Eligibility does not by itself start a model call |
 | Analysis is operator-triggered during the presentation, not per reading | OWNER-SELECTED TARGET | Not verified |
 | Eight-hour background limit | LATER RECOMMENDATION | Not implemented and not a timer or authority |
