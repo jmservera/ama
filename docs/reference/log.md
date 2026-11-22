@@ -14537,3 +14537,19 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 121 live data protection re-check (Refs #121)
 
 * Added [issue-121-live-recheck-2026-11-22.md](research/issue-121-live-recheck-2026-11-22.md): the live register on revision 0000053 now matches source (populations, residency, provider retained copies); a live document hold and an unknown-task refusal are shown; the DPO and Legal approval and owner criteria remain production-only. No source or estate change.
+
+## [2026-11-22] update | Issue 116 provider-boundary round 7 (Refs #116)
+
+* Added [issue-116-live-r7-evidence-2026-11-22.md](research/issue-116-live-r7-evidence-2026-11-22.md): 123 boundary tests pass at head 6fd6e3f838, a read-only unauthenticated live probe returns 401, and live payload contents stay unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 114 durable SQL store re-verification (Refs #114)
+
+* Added [issue-114-live-reverify-2026-11-22.md](research/issue-114-live-reverify-2026-11-22.md): 62 ledger and recovery tests pass; the demo API image changed to revision 0000053 after the reliance-check merge, but its content is inferred, not proven; load and DH-005 not re-run. No source or estate change.
+
+## [2026-11-22] add | Issue 126 live criteria re-check (Refs #126)
+
+* Added [issue-126-live-20261122-2026-11-22.md](research/issue-126-live-20261122-2026-11-22.md): 125 core and 10 API governance tests OK, read-only probe of revision 0000053 (capture closed, 22 open RAI findings, real-AI gate blocked) and per-criterion table; five criteria stay unproven. No source change.
+
+## [2026-11-22] update | Issue 470 closure evidence (Refs #470)
+
+* Added [issue-470-live-2026-11-22.md](research/issue-470-live-2026-11-22.md): 123 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after) unproven, speed-up PR #2272 unmerged, full gate not run. No source change.
