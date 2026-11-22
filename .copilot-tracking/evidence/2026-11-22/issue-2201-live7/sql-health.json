@@ -1,0 +1,201 @@
+{
+  "cost": 1614,
+  "interval": "PT30M",
+  "namespace": "Microsoft.Sql/servers/databases",
+  "resourceregion": "uksouth",
+  "timespan": "2026-11-22T14:00:00Z/2026-11-22T18:30:00Z",
+  "value": [
+    {
+      "displayDescription": "DTU Percentage. Applies to DTU-based databases.",
+      "errorCode": "Success",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit/providers/Microsoft.Insights/metrics/dtu_consumption_percent",
+      "name": {
+        "localizedValue": "DTU percentage",
+        "value": "dtu_consumption_percent"
+      },
+      "resourceGroup": "ama",
+      "timeseries": [
+        {
+          "data": [
+            {
+              "maximum": 81.0,
+              "timeStamp": "2026-11-22T14:00:00Z",
+              "total": 1712.0
+            },
+            {
+              "maximum": 89.0,
+              "timeStamp": "2026-11-22T14:30:00Z",
+              "total": 1866.0
+            },
+            {
+              "maximum": 79.0,
+              "timeStamp": "2026-11-22T15:00:00Z",
+              "total": 1968.0
+            },
+            {
+              "maximum": 82.0,
+              "timeStamp": "2026-11-22T15:30:00Z",
+              "total": 1935.0
+            },
+            {
+              "maximum": 77.0,
+              "timeStamp": "2026-11-22T16:00:00Z",
+              "total": 1906.0
+            },
+            {
+              "maximum": 82.0,
+              "timeStamp": "2026-11-22T16:30:00Z",
+              "total": 2007.0
+            },
+            {
+              "maximum": 85.0,
+              "timeStamp": "2026-11-22T17:00:00Z",
+              "total": 2156.0
+            },
+            {
+              "maximum": 83.0,
+              "timeStamp": "2026-11-22T17:30:00Z",
+              "total": 2192.0
+            },
+            {
+              "maximum": 83.0,
+              "timeStamp": "2026-11-22T18:00:00Z",
+              "total": 2325.0
+            }
+          ],
+          "metadatavalues": []
+        }
+      ],
+      "type": "Microsoft.Insights/metrics",
+      "unit": "Percent"
+    },
+    {
+      "displayDescription": "Failed Connections",
+      "errorCode": "Success",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit/providers/Microsoft.Insights/metrics/connection_failed",
+      "name": {
+        "localizedValue": "Failed Connections : System Errors",
+        "value": "connection_failed"
+      },
+      "resourceGroup": "ama",
+      "timeseries": [
+        {
+          "data": [
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T14:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T14:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T15:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T15:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T16:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T16:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T17:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T17:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T18:00:00Z",
+              "total": 0.0
+            }
+          ],
+          "metadatavalues": []
+        }
+      ],
+      "type": "Microsoft.Insights/metrics",
+      "unit": "Count"
+    },
+    {
+      "displayDescription": "Deadlocks. Not applicable to data warehouses.",
+      "errorCode": "Success",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit/providers/Microsoft.Insights/metrics/deadlock",
+      "name": {
+        "localizedValue": "Deadlocks",
+        "value": "deadlock"
+      },
+      "resourceGroup": "ama",
+      "timeseries": [
+        {
+          "data": [
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T14:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T14:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T15:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T15:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T16:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T16:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T17:00:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T17:30:00Z",
+              "total": 0.0
+            },
+            {
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T18:00:00Z",
+              "total": 0.0
+            }
+          ],
+          "metadatavalues": []
+        }
+      ],
+      "type": "Microsoft.Insights/metrics",
+      "unit": "Count"
+    }
+  ]
+}

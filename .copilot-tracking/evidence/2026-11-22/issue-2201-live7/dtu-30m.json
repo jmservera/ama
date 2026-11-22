@@ -1,0 +1,98 @@
+{
+  "cost": 798,
+  "interval": "PT30M",
+  "namespace": "Microsoft.Sql/servers/databases",
+  "resourceregion": "uksouth",
+  "timespan": "2026-11-22T12:00:00Z/2026-11-22T18:40:00Z",
+  "value": [
+    {
+      "displayDescription": "DTU Percentage. Applies to DTU-based databases.",
+      "errorCode": "Success",
+      "id": "/subscriptions/e51ebc89-79d0-4a52-a82b-01a292eefd5b/resourceGroups/ama/providers/Microsoft.Sql/servers/sql-cutover-test-rzsrg/databases/retrofit/providers/Microsoft.Insights/metrics/dtu_consumption_percent",
+      "name": {
+        "localizedValue": "DTU percentage",
+        "value": "dtu_consumption_percent"
+      },
+      "resourceGroup": "ama",
+      "timeseries": [
+        {
+          "data": [
+            {
+              "average": 94.58823529411765,
+              "maximum": 100.0,
+              "timeStamp": "2026-11-22T12:00:00Z"
+            },
+            {
+              "average": 84.36666666666666,
+              "maximum": 100.0,
+              "timeStamp": "2026-11-22T12:30:00Z"
+            },
+            {
+              "average": 85.4,
+              "maximum": 100.0,
+              "timeStamp": "2026-11-22T13:00:00Z"
+            },
+            {
+              "average": 78.21008403361344,
+              "maximum": 100.0,
+              "timeStamp": "2026-11-22T13:30:00Z"
+            },
+            {
+              "average": 14.266666666666667,
+              "maximum": 81.0,
+              "timeStamp": "2026-11-22T14:00:00Z"
+            },
+            {
+              "average": 15.55,
+              "maximum": 89.0,
+              "timeStamp": "2026-11-22T14:30:00Z"
+            },
+            {
+              "average": 16.4,
+              "maximum": 79.0,
+              "timeStamp": "2026-11-22T15:00:00Z"
+            },
+            {
+              "average": 16.125,
+              "maximum": 82.0,
+              "timeStamp": "2026-11-22T15:30:00Z"
+            },
+            {
+              "average": 16.016806722689076,
+              "maximum": 77.0,
+              "timeStamp": "2026-11-22T16:00:00Z"
+            },
+            {
+              "average": 16.725,
+              "maximum": 82.0,
+              "timeStamp": "2026-11-22T16:30:00Z"
+            },
+            {
+              "average": 17.966666666666665,
+              "maximum": 85.0,
+              "timeStamp": "2026-11-22T17:00:00Z"
+            },
+            {
+              "average": 18.266666666666666,
+              "maximum": 83.0,
+              "timeStamp": "2026-11-22T17:30:00Z"
+            },
+            {
+              "average": 19.375,
+              "maximum": 83.0,
+              "timeStamp": "2026-11-22T18:00:00Z"
+            },
+            {
+              "average": 0.0,
+              "maximum": 0.0,
+              "timeStamp": "2026-11-22T18:30:00Z"
+            }
+          ],
+          "metadatavalues": []
+        }
+      ],
+      "type": "Microsoft.Insights/metrics",
+      "unit": "Percent"
+    }
+  ]
+}

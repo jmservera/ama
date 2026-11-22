@@ -1,0 +1,14 @@
+[
+  {
+    "cap": 100,
+    "n": "retrofit",
+    "sku": "Standard",
+    "tier": "Standard"
+  },
+  {
+    "cap": 4,
+    "n": "master",
+    "sku": "GP_SYSTEM",
+    "tier": "System"
+  }
+]

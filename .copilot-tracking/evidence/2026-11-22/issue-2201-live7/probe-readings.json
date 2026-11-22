@@ -1,0 +1,833 @@
+{
+ "now_utc": "2026-11-22T18:32:11.111Z",
+ "map": {
+  "status": 200,
+  "keys": [
+   "bounds",
+   "cap",
+   "items",
+   "mode",
+   "shown",
+   "total"
+  ],
+  "bounds_len": 4,
+  "bounds_first": 54.5079743,
+  "items_len": 443,
+  "items_first": {
+   "id": "ZF-2025-0029",
+   "lat": 54.9868044,
+   "lon": -1.6904066,
+   "name": "Dawn Brown",
+   "address": "Flat 1, 157,159,161,163,165,167 Tebay Drive, NE5 2XH",
+   "stage": "Contact paused",
+   "kind": "normal",
+   "sensor": {
+    "state": "consent-withheld",
+    "label": "Readings withheld: monitoring consent is not granted",
+    "alert": false,
+    "calibrated": false
+   }
+  }
+ },
+ "sensors": {
+  "ZF-2025-0031": {
+   "s": 200,
+   "j": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0031",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is unknown; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-22T18:32:42Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is unknown; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is unknown; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-22T18:32:42Z",
+     "input_digest": "94de7fbf98003947576a017409aa29646bd3e0f6ba500acc684b20faa82b4d73",
+     "output_digest": "310cac09c5a59d53e6dff1ba39eab1fe9817cd9ae982c91ca38951b0941b39d2",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0031",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0029": {
+   "s": 200,
+   "j": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0029",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is declined; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-22T18:32:46Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is declined; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is declined; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-22T18:32:46Z",
+     "input_digest": "b60ecfc4b40ca69696894252e8b30fd1a7c8fe0286cf169094db8fd3a4802b81",
+     "output_digest": "b6756c332647a8c34670d108723f4577023c3ae78ca9a395cc01c36037074648",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0029",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0030": {
+   "s": 200,
+   "j": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0030",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1705Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T17:05:00Z",
+      "temperature_c": "11.25",
+      "humidity_pct": "83.29",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1715Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T17:15:00Z",
+      "temperature_c": "10.99",
+      "humidity_pct": "83.43",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1720Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T17:20:00Z",
+      "temperature_c": "10.83",
+      "humidity_pct": "83.53",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1730Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T17:30:00Z",
+      "temperature_c": "10.59",
+      "humidity_pct": "83.82",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1735Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T17:35:00Z",
+      "temperature_c": "10.57",
+      "humidity_pct": "83.78",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1745Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T17:45:00Z",
+      "temperature_c": "10.66",
+      "humidity_pct": "82.93",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1750Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T17:50:00Z",
+      "temperature_c": "10.74",
+      "humidity_pct": "82.40",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1800Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T18:00:00Z",
+      "temperature_c": "10.83",
+      "humidity_pct": "81.81",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1805Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T18:05:00Z",
+      "temperature_c": "10.77",
+      "humidity_pct": "81.86",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1815Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T18:15:00Z",
+      "temperature_c": "10.44",
+      "humidity_pct": "82.20",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1820Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T18:20:00Z",
+      "temperature_c": "10.24",
+      "humidity_pct": "82.43",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261122T1830Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-22T18:30:00Z",
+      "temperature_c": "9.94",
+      "humidity_pct": "82.90",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-STQEOYP62W2-20261122T1830Z",
+     "sensor_id": "STQEOYP62W2",
+     "observed_at": "2026-11-22T18:30:00Z",
+     "temperature_c": "9.94",
+     "humidity_pct": "82.90",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No retained readings before the first quality evidence record.",
+    "after_absent": "No retained readings from the first quality evidence record onward.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1705Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1715Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1720Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1730Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1735Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1745Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1750Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1800Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1805Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1815Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1820Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1830Z"
+    ],
+    "generated_at": "2026-11-22T18:32:47Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1830Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "9.94",
+      "humidity_pct": "82.90",
+      "observed_at": "2026-11-22T18:30:00Z"
+     },
+     "text": "[sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T1830Z] temperature_c 9.94 degC, humidity_pct 82.90 %RH (relative humidity), observed 2026-11-22T18:30:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "STQEOYP62W2",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "rising",
+       "change": 2.09,
+       "unit": "degC",
+       "text": "Temperature is rising over the last 7 days (+2.1 degC)."
+      },
+      "humidity_pct": {
+       "direction": "falling",
+       "change": -7.08,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is falling over the last 7 days (-7.1 %RH)."
+      }
+     },
+     "summary": "Temperature is rising over the last 7 days (+2.1 degC). Moisture (relative humidity) is falling over the last 7 days (-7.1 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "52fd1f5b8ed3463f4c9a98f73ba60df9f2c5de7b392970fa47e98c94cad0a8d2"
+    },
+    "age_seconds": 167,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-22T18:32:47Z",
+     "input_digest": "9cea543911f8111ae5abb44c79393cf52dd9bd34f713b196b84e4e1ba7d218f0",
+     "output_digest": "ccd6f298655fab7c5fad5de75705ccfad94c2f88c8ea8ba8027a941486d08dc4",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0030",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0148": {
+   "s": 200,
+   "j": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0148",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is declined; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-22T18:32:48Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is declined; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is declined; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-22T18:32:48Z",
+     "input_digest": "7a17ea2813cc9aa6b2481ac01043fe73fc270422b92e373c1f29424cc27de2b4",
+     "output_digest": "cccc88c45a15a16dd18590e25a83427f070bedcebdc6a34a07052522f9e3d8e2",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0148",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0331": {
+   "s": 200,
+   "j": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0331",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1705Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T17:05:00Z",
+      "temperature_c": "9.66",
+      "humidity_pct": "80.37",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1715Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T17:15:00Z",
+      "temperature_c": "9.59",
+      "humidity_pct": "80.60",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1720Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T17:20:00Z",
+      "temperature_c": "9.54",
+      "humidity_pct": "80.77",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1730Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T17:30:00Z",
+      "temperature_c": "9.43",
+      "humidity_pct": "81.11",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1735Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T17:35:00Z",
+      "temperature_c": "9.40",
+      "humidity_pct": "81.21",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1745Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T17:45:00Z",
+      "temperature_c": "9.50",
+      "humidity_pct": "81.16",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1750Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T17:50:00Z",
+      "temperature_c": "9.58",
+      "humidity_pct": "81.07",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1800Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T18:00:00Z",
+      "temperature_c": "9.67",
+      "humidity_pct": "80.96",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1805Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T18:05:00Z",
+      "temperature_c": "9.67",
+      "humidity_pct": "80.99",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1815Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T18:15:00Z",
+      "temperature_c": "9.65",
+      "humidity_pct": "81.20",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1820Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T18:20:00Z",
+      "temperature_c": "9.62",
+      "humidity_pct": "81.36",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261122T1830Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-22T18:30:00Z",
+      "temperature_c": "9.51",
+      "humidity_pct": "81.74",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SIBP5GIQWTN-20261122T1830Z",
+     "sensor_id": "SIBP5GIQWTN",
+     "observed_at": "2026-11-22T18:30:00Z",
+     "temperature_c": "9.51",
+     "humidity_pct": "81.74",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "after_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1705Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1715Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1720Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1730Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1735Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1745Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1750Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1800Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1805Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1815Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1820Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1830Z"
+    ],
+    "generated_at": "2026-11-22T18:32:48Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1830Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "9.51",
+      "humidity_pct": "81.74",
+      "observed_at": "2026-11-22T18:30:00Z"
+     },
+     "text": "[sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261122T1830Z] temperature_c 9.51 degC, humidity_pct 81.74 %RH (relative humidity), observed 2026-11-22T18:30:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SIBP5GIQWTN",
+     "readings_used": 24,
+     "reason": "Fewer than 6 readings, or under 24 hours of readings, in the last 7 days.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values.",
+     "input_digest": "39cb811deeebcd5c31f161c37ccdddbe763da3d45851e7b1dc1f02901a776dbd"
+    },
+    "age_seconds": 168,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-22T18:32:48Z",
+     "input_digest": "148cea23770154ab77d62b99fb8785d2bd3918dc2246f292dd5a3ce546c47e43",
+     "output_digest": "10d80a6271fe95036f7cbe9c70aad95144a17f94be381e44aec2c8171d0de31a",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0331",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  }
+ }
+}

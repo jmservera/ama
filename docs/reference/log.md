@@ -14489,3 +14489,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2202 live proof of merged demo fixes (Refs #2202)
 
 * Added [issue-2202-deployproof-2026-11-22.md](research/issue-2202-deployproof-2026-11-22.md): live Playwright proof on API revision 0000051 and resident revision 0000023. Passes: hazard clocks and owners (2255), resident chart (2253), safety count 23 in tile, map, list and API (2254), handoff waiting view (2256), map load. Fails: generative answers in employee chat (open suspension) and the resident app (ledger expiry), both awaiting owner decisions. No source change.
+## [2026-11-22] update | Issue 2201 receiver streak and SQL S3 health (Refs #2201)
+
+* Added [issue-2201-live-receiver-s3-streak-2026-11-22.md](research/issue-2201-live-receiver-s3-streak-2026-11-22.md): nine consecutive scheduled receiver successes on image 541068, S3 DTU peak 89 percent with no connection failures, one failure line (13:30, `IOT_CALLBACK_FAILED`) and a fresh map probe. No source change.
