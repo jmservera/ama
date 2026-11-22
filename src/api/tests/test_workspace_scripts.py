@@ -114,7 +114,10 @@ async function run(responses, signal) {
   out = await run([new TypeError("network"), reply(200, "application/json")]);
   assert.equal(out.res.status, 200, "a dropped connection is retried once");
   assert.deepEqual(out.delays, [400]);
-  assert.ok(out.shown.every(text => /connection dropped/.test(text)), "plain-language status while retrying");
+  assert.ok(
+    out.shown.every(text => /connection dropped/.test(text)),
+    "plain-language status while retrying",
+  );
   assert.equal(out.status, "", "status clears after recovery");
   out = await run([reply(502), reply(200)]);
   assert.equal(out.res.status, 200);
