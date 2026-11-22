@@ -65,3 +65,10 @@ than validated evidence:
 * `support/` is the owner's private working area. `support/cohort.md` is for
   internal use and is not part of the knowledge base. Consult it only when
   the owner asks who could help with a question.
+* AI is the most important part of the demo, so AI usage is generally
+  approved for the demo (owner statement, 2026-11-22). The owner holds the
+  OQ-017 model-call authority and has approved model calls for the demo. All
+  demo data is synthetic and the model is planned to move to the UK, so DH-006
+  is accepted for demo scope only. Real resident data, production use, Legal
+  and DPO approval stay out of this approval. Agents must not mark AI-related
+  demo work human-blocked on OQ-017 or DH-006.
