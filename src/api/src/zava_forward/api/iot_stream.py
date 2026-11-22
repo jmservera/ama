@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import logging
 import math
 import os
 import re
@@ -25,6 +26,8 @@ from zava_forward.core.synthetic.sensor_identity import home_key
 from zava_forward.core.synthetic.sensor_stream import Frame, Pacer, RunBudget, StreamError, wire
 
 from .sensor_ingestion import SensorIngestion
+
+LOGGER = logging.getLogger(__name__)
 
 DEVICE = b"iothub-connection-device-id"
 MODULE = b"iothub-connection-module-id"
@@ -338,7 +341,9 @@ class HubReceiver:
                     if not (bounded_window and str(error) == "IOT_OPERATION_TIMEOUT"):
                         failure = StreamError(str(error))
                     finished.set()
-                except Exception:
+                except Exception as error:
+                    # Class name only: messages can carry connection strings or payload values.
+                    LOGGER.error("IOT_CALLBACK_FAILED exception_type=%s", type(error).__name__)
                     failure = StreamError("IOT_CALLBACK_FAILED")
                     finished.set()
 

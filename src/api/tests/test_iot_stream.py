@@ -315,6 +315,22 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaisesRegex(StreamError, "^IOT_OPERATION_TIMEOUT$"):
                 await self.run_receiver(2)
 
+    async def test_unexpected_callback_error_logs_the_class_but_not_the_message(self) -> None:
+        self.events = [("0", event(observations()[0]))]
+        with (
+            patch.object(
+                self.receiver.ingestion,
+                "consume",
+                side_effect=RuntimeError("SENTINEL-SECRET-PAYLOAD"),
+            ),
+            self.assertLogs("zava_forward.api.iot_stream", level="ERROR") as logs,
+        ):
+            with self.assertRaisesRegex(StreamError, "^IOT_CALLBACK_FAILED$"):
+                await self.run_receiver(2)
+        text = "\n".join(logs.output)
+        self.assertIn("IOT_CALLBACK_FAILED exception_type=RuntimeError", text)
+        self.assertNotIn("SENTINEL", text)
+
     async def test_bounded_window_never_retries_an_uncertain_commit(self) -> None:
         self.events = [("0", event(observations()[0]))]
         self.receiver.sql_backoff = (0.0, 0.0)
