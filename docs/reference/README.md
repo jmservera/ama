@@ -718,6 +718,8 @@ The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads 
 
 The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) records the resident and API revisions, the resident AI chat falling back with `usage_limit` after the expiry fix, and a post-merge probe plan.
 
+The [issue 2243 revision 0000026 re-verification](./research/issue-2243-rev26-2026-11-22.md) shows the resident chat still falling back with `usage_limit` on revision 0000026, names the ledger-expiry and SUS-1 owner gates, and holds a per-criterion table.
+
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
 The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.
