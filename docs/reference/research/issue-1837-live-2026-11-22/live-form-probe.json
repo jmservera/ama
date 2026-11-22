@@ -1,0 +1,85 @@
+{
+ "forms": [
+  "challenge_open"
+ ],
+ "fields": [
+  [
+   "action",
+   "hidden",
+   false
+  ],
+  [
+   "proposal_id",
+   "select-one",
+   false
+  ],
+  [
+   "target_kind",
+   "select-one",
+   false
+  ],
+  [
+   "channel",
+   "select-one",
+   false
+  ],
+  [
+   "assisted_channel",
+   "select-one",
+   false
+  ],
+  [
+   "raised_by",
+   "select-one",
+   false
+  ],
+  [
+   "representative_ref",
+   "select-one",
+   false
+  ],
+  [
+   "source",
+   "text",
+   false
+  ],
+  [
+   "request",
+   "text",
+   false
+  ],
+  [
+   "explanation",
+   "text",
+   false
+  ],
+  [
+   "owner",
+   "select-one",
+   false
+  ],
+  [
+   "non_digital_route",
+   "text",
+   false
+  ],
+  [
+   "next_update",
+   "date",
+   false
+  ]
+ ],
+ "posts": [
+  [
+   "POST",
+   "/cases/ZF-2025-0331/resident",
+   "application/json",
+   true
+  ]
+ ],
+ "post_statuses": [
+  400
+ ],
+ "status_text": "Supply every required route field: explanation, next_update, non_digital_route, request, source.",
+ "case_unchanged": true
+}
