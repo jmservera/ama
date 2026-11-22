@@ -1,0 +1,14 @@
+# GitHub config probe 2026-11-22 (names/counts only)
+dev: absent (HTTP 404)
+test: absent (HTTP 404)
+pilot: absent (HTTP 404)
+dev-plan: exists rules=0
+test-plan: exists rules=0
+pilot-plan: exists rules=0
+dev-release: absent (HTTP 404)
+test-release: absent (HTTP 404)
+pilot-release: absent (HTTP 404)
+repo variables: GH_AW_DEFAULT_MAX_DAILY_AI_CREDITS
+self-hosted runners: 0
+Entra app registrations scanned (first 40): federated credentials found = 0
+infra-plan last runs: all skipped (INFRA_PLAN_ENABLED unset)

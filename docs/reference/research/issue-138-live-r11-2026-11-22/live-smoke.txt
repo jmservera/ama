@@ -1,0 +1,4 @@
+# live smoke using pipeline.smoke (criterion 5 logic against deployed demo API)
+Post-deployment health and all three authentication-denial checks passed
+# negative: wrong expectation raises
+PipelineError: Post-deployment health check failed; expected HTTP 200
