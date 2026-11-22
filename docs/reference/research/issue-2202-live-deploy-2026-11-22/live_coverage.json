@@ -1,0 +1,14 @@
+{
+ "total": 441,
+ "with_reading": 110,
+ "states": {
+  "fresh": 109,
+  "no-readings": 324,
+  "stale": 1,
+  "consent-withheld": 7
+ },
+ "age_min_le_15": 109,
+ "age_min_le_60": 110,
+ "newest_age_min": 8.867594533333333,
+ "measured_utc": "2026-11-22T04:28:52.055672+00:00"
+}

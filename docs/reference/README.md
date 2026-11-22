@@ -670,6 +670,8 @@ The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-202
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
 
+The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.

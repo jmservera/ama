@@ -5023,3 +5023,18 @@ approval. One bounded diagnostic (D1) ran on 2026-11-11 from `main` `7880b95b1`:
 * Not shown: the complete local gate, hosted CI for the follow-up PR, an independent exact-head
   review, live SQL, row expiry, cost or headroom, and live Azure alignment. Issue #521 criteria 1 and 4
   stay unmet; no closure is claimed. The D1 allowance is consumed.
+
+### Demo image rollout without Bicep (2026-11-22, Refs #2202)
+
+The merged demo changes (PRs 2224 to 2228) reached the demo API and both live jobs by
+image update only, with no Bicep deployment. The trapped `/tmp/acr-push.sh` opened the
+registry, waited 150 s, pushed and restored it; after each push `crcutovertestrzsrg` read
+back public access `Disabled`, default action `Deny` and export policy `disabled`. Then
+`az containerapp update` (API) and `az containerapp job update` (`job-live-simulator`,
+`job-live-receiver`) set the same digest. Final digest
+`sha256:295164ca739d5602ca323c65c305cff9d76a3e72faa4623e0dfa931363fd4f72`, API revision
+`ca-cutover-test-demo-api--0000045` (Healthy, 100% traffic). Rollback: the previous digest
+`sha256:60b1d0263487a846a2b2252fec86199d6fed6d021772bbad63ab1a71c4447878` (revision
+`--0000043`). The first rollout (digest `sha256:131a4748...`, revision `--0000044`) exposed
+a receiver defect, `IOT_OPERATION_TIMEOUT` at the end of the window, fixed in the second.
+Evidence and the per-issue table: [issue-2202 note](../docs/reference/research/issue-2202-live-deploy-2026-11-22.md).
