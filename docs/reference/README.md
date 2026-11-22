@@ -2138,3 +2138,5 @@ Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./rese
 * [Employee sensor charts demo evidence (issue 2193)](./research/demo-employee-charts/employee-sensor-charts-2193.md): dual-axis chart and map card gauges, local and live proof, 2026-11-21 wave 2.
 Further 2026-11-21 evidence: [issue 2206 demo preflight proof](./research/issue-2206-demo-preflight-2026-11-21.md), the read-only preflight script with a live run, evidence only.
 Further 2026-11-21 evidence: [issue 2190 gate flakes](./research/issue-2190-live-20261121-2026-11-21.md), reproduction, fixes and a per-criterion verdict for three gate flakes, evidence only.
+
+A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.

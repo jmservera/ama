@@ -1,0 +1,32 @@
+{
+ "launchers": [
+  "employee-chat-launcher:"
+ ],
+ "employee_chat_routing": {
+  "Which homes should I prioritise first by EPC and stock facts?": [],
+  "What is the status of the funding grant claim?": [],
+  "Show a quality defect inspection note on the sensor readings": []
+ },
+ "chat_responses": [
+  [
+   200,
+   "chat/status"
+  ],
+  [
+   200,
+   "chat/skills"
+  ],
+  [
+   200,
+   "chat/threads"
+  ],
+  [
+   200,
+   "chat/threads/CT-25bbd3f9ea104725/ask"
+  ]
+ ],
+ "answers_tail": "You\n\nWhich homes should I prioritise first by EPC and stock facts?\n\nYou\n\nWhat is the status of the funding grant claim?\n\nYou\n\nShow a quality defect inspection note on the sensor readings\n\nAssistant\nOutcome: answer\nRouted to the Quality evidence agent. The question is about quality checks and inspection evidence.\nAnswer origin: Deterministic decision or workflow rule (not generative AI; no record changed)\n\nNo retained sensor reading is shown for this case. Monitoring consent is unknown; no values are shown.\n[Origin: decision_rule] Recorded case fields and fixed rules, not generative AI.\nA survey document is on the record.\nGrant eligibility, PAS 2035 sign-off and sensor or damp findings are decided by the named roles in the case workflow. This chat only restates what the case record shows. It does not confirm a legal duty, approve a claim or sign-off, or determine a technical cause.\nA person decides. Sensor readings do not establish a root cause. Ask Aadi Kapoor, who owns this case.\nThis reply comes from the case rules only. No generative AI model wrote it. No record was changed. A person decides next steps.\n\nSkill: quality-evidence. Model calls: 0. Tokens: Unknown. Outcome: answer. Cost: Unknown. Questions in this conversation: 2 of 30. Source: deterministic decision rules from recorded case facts (0 generative calls). Check the sources.\nSources (3)",
+ "status_line": [
+  "Answer added. Check the sources before relying on it."
+ ]
+}

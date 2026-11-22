@@ -1,5 +1,7 @@
 """Issue 2192: the resident sensor consent checkbox backend, fail-closed and owner-only."""
 
+import contextlib
+import io
 import unittest
 
 from resident_demo_fixture import Client, DemoTestCase, make_row
@@ -68,6 +70,19 @@ class SensorConsentTests(DemoTestCase):
         self.app.sensor_consent = None
         status, _, _ = client.call("POST", "/demo/sensor-consent", {"granted": False})
         self.assertEqual(status, 503)
+
+    def test_a_failed_write_logs_only_the_failure_code(self) -> None:
+        class Locked(FakePort):
+            def set(self, home_id: str, granted: bool) -> str:
+                raise RuntimeError("SENSOR_SQL_UNAVAILABLE")
+
+        self.app.sensor_consent = Locked()
+        client = self.signed_in()
+        with contextlib.redirect_stderr(io.StringIO()) as err:
+            status, body, _ = client.call("POST", "/demo/sensor-consent", {"granted": False})
+        self.assertEqual((status, body["error"]), (503, sc.ERROR_TEXT))
+        self.assertIn("RuntimeError SENSOR_SQL_UNAVAILABLE", err.getvalue())
+        self.assertNotIn("ZF-1", err.getvalue())
 
     def test_refuses_bad_bodies_missing_csrf_and_residents_without_a_sensor_home(self) -> None:
         client = self.signed_in()

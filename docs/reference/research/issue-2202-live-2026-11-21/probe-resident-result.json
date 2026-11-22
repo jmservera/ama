@@ -1,0 +1,46 @@
+{
+ "login_status": 200,
+ "sensor_consent_checkbox_count": 1,
+ "sensor_consent_checked": false,
+ "sensor_consent_status": "Staff cannot see your readings. New readings are not stored for your home.",
+ "sensor_consent_label": "Share my home sensor readings with Zava North Homes staff",
+ "consent_toggle": [
+  {
+   "wanted": false,
+   "skipped": "already in that state"
+  },
+  {
+   "wanted": true,
+   "http": 200,
+   "checked_after": true,
+   "status": "Staff can see your readings."
+  }
+ ],
+ "consent_original": false,
+ "consent_final_checked": true,
+ "sensor_section": "Your home sensors and forecast\n\nSynthetic sensor history for your home. These are stored demo readings, not live measurements or safety advice.\n\nSharing your sensor readings\n\nYour home sensor measures temperature and humidity and sends the readings to Zava North Homes.\n\nHousing and repairs staff with a work reason see the readings. They are not shared outside Zava North Homes by this service.\n\nShare my home sensor readings with Zava North Homes staff\n\nStaff can see your readings.\n\nSaying no, or stopping later, does not change your repairs, your tenancy or our safety duties. We will still repair your home and meet our legal safety checks.\n\nReading status: The newest stored reading is recent (",
+ "chat": [
+  {
+   "question": "Which documents are missing from my case?",
+   "http": 200,
+   "label": "Summary by rules - AI unavailable: the AI exercise has ended",
+   "routing": {
+    "agent": "Documents helper",
+    "routed": true,
+    "text": "Routed to the Documents helper: your question is about documents for your case."
+   },
+   "answer": "This view does not show which documents have been requested for your case. It cannot tell you what to send. Document D1, EPC: a generated placeholder, not a presented document. The file check result is unknown in this view. Ask staff to check it. The resident-facing warning and error list is not rec"
+  },
+  {
+   "question": "I can see damp and mould in my bedroom, who can help?",
+   "http": 200,
+   "label": "Summary by rules - workflow only, no AI used",
+   "routing": {
+    "agent": "Safety route helper",
+    "routed": true,
+    "text": "Routed to the Safety route helper: your question mentions a possible danger."
+   },
+   "answer": "Do not wait for chat or a callback if someone may be in danger. For an immediate emergency, call 999. Report damp, mould or another safety concern to your housing officer or emergency repairs service using your usual contact details. A person must handle safety reports. This chat has not sent a repo"
+  }
+ ]
+}

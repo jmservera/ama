@@ -1,0 +1,96 @@
+{
+ "role": "Retrofit Programme Manager",
+ "map_total": 443,
+ "map_sensor_states": {
+  "fresh": 10,
+  "no-readings": 90,
+  "not-loaded": 343
+ },
+ "fresh_homes": 10,
+ "fresh_max_age_seconds": 848,
+ "share_with_readings_pct": 2.3,
+ "app_js_has_map_gauge": null,
+ "tab_svg_count": 1,
+ "tab_chart_text": [
+  "Recent reading (within 15 minutes)",
+  "Checked 21 Nov 2026, 23:09 (UK time)",
+  "Readings are advice for a person to check. They do not change the case.",
+  "Alerts for this home",
+  "No sensor alerts for this home.",
+  "Latest reading",
+  "Temperature",
+  "6.30 degC",
+  "Relative humidity",
+  "92.83 %RH",
+  "Observed",
+  "21 Nov 2026, 22:55 (UK time), 14 minutes ago",
+  "Sensor",
+  "S7XBQ3HG3P5",
+  "Source",
+  "Outdoor weather. Not calibrated.",
+  "Temperature and humidity over time",
+  "6.1",
+  "6.2",
+  "6.3",
+  "6.4",
+  "6.5",
+  "6.6",
+  "92",
+  "92.2",
+  "92.4",
+  "92.6",
+  "92.8",
+  "93",
+  "Temperature (degC)"
+ ],
+ "tab_axis_labels": [
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null,
+  null
+ ],
+ "tab_paths": 2,
+ "gauge_home": "ZF-2025-0029",
+ "markers_visible": 23,
+ "card_visible": true,
+ "card_text": "Dawn Brown\n\u00d7\n\nFlat 1, 157,159,161,163,165,167 Tebay Drive, NE5 2XH\n\nCase\nZF-2025-0029\nCurrent stage\nContact paused\nMap status\nO\nNormal\nIndoor sensor\nSensor status\n\u2713\nSensor recent\n. Recent reading (within 15 minutes)\nLatest reading\n7.2 \u00b0C, 93.4% relative humidity\nLast reading time\n21 Nov 2026, 22:55 (UK time), 14 minutes ago\nSource\nSynthetic simulator reading. Not calibrated, so not a verified indoor measurement.\nTemperature: 7.2 degC\n0\n40 degC\nRelative humidity: 93.4 %RH\n0\n100 %RH\nOpen home",
+ "meters": [
+  [
+   "map-gauge-temperature_c",
+   7.2,
+   0,
+   40
+  ],
+  [
+   "map-gauge-humidity_pct",
+   93.4,
+   0,
+   100
+  ]
+ ],
+ "employee_chat": {
+  "Which documents are missing for this home?": {
+   "http": 403,
+   "routing": null,
+   "label": null
+  },
+  "Is there a damp and mould hazard to chase?": {
+   "http": 403,
+   "routing": null,
+   "label": null
+  }
+ }
+}
