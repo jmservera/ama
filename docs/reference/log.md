@@ -14556,3 +14556,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 203 fifth post-cleanup verification (Refs #203)
 
 * Added [issue-203-live-20261122-2026-11-22.md](research/issue-203-live-20261122-2026-11-22.md): criterion 1 proven at `origin/main` (checker 0 violations, 8 tests); criterion 5 partly proven, image provenance unproven (`commit=unknown`, no deploy run). No source or estate change.
+## [2026-11-22] update | Issue 1204 tick-criterion re-check (Refs #1204)
+
+* Added [issue-1204-tick-criterion-live-2026-11-22.md](research/issue-1204-tick-criterion-live-2026-11-22.md): checker gives 0 violations on 216 real ticks and 11 tests pass; no real window carries the new fields, so the unticked criterion stays unticked. No source change.
