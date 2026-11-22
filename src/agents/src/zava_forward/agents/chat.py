@@ -23,6 +23,7 @@ from zava_forward.core.chat_panel import ModelReply, ModelUnavailable, valid_usa
 
 from zava_forward.agents.dispatch import AgentWorker
 
+AI_SUSPENDED = "ai-suspended"
 CHAT_MAX_TOKENS = 600
 CHAT_TIMEOUT = 20
 
@@ -69,7 +70,7 @@ class ChatModel:
             )
             raise unavailable("admission-check-failed") from None
         if denied:
-            raise unavailable("activation-not-approved")
+            raise unavailable(AI_SUSPENDED if denied == AI_SUSPENDED else "activation-not-approved")
         outer = CURRENT.get()
         if outer is None:
             root = reference(uuid.uuid4().hex)
@@ -115,4 +116,4 @@ class ChatModel:
         )
 
 
-__all__ = ["ChatModel"]
+__all__ = ["AI_SUSPENDED", "ChatModel"]

@@ -28,7 +28,7 @@ from zava_forward.core import identity, list_export, projection, quality, rankin
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
 from zava_forward.api import auth, build_info, plain_language, sensor_badges, simulator_admin, welcome
 from zava_forward.api.workbench import navigation
-from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+from zava_forward.agents.chat import AI_SUSPENDED, CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core import sensor_review_draft, simulation_lane, telemetry
 from zava_forward.core.ai import Ai, may_carry_captured_readings
@@ -87,8 +87,8 @@ def chat_admission(store):
     if ai_registry.demo_activation_honoured(CHAT_TASK):
         # Demo-only: the SQL release record covers retained legacy tasks and always denies the chat task; suspension still applies.
         chat_demo_meter.ensure(store, CHAT_MAX_TOKENS)
-        return store.continuity_block(CHAT_TASK)
-    return store.release_block(CHAT_TASK, store.ai.fast) or store.continuity_block(CHAT_TASK)
+        return AI_SUSPENDED if store.continuity_block(CHAT_TASK) else None
+    return store.release_block(CHAT_TASK, store.ai.fast) or (AI_SUSPENDED if store.continuity_block(CHAT_TASK) else None)
 
 
 def tile_config(env=None):
@@ -1627,7 +1627,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         "provider_position": dec["provider_position"],
                         "activation": "demo-only" if demo else "disabled; approval evidence required",
                         "demo_activation": demo,
-                        "demo_disclaimer": ai_registry.DEMO_ACTIVATION["disclaimer"] if demo else None,
+                        "demo_disclaimer": (ai_registry.DEMO_ACTIVATION["disclaimer"] + (" AI answers are on hold: an open suspension covers AI work, so replies use rules only." if s.continuity_block(CHAT_TASK) else "")) if demo else None,
                         "role_limits": all_role_limits(), "your_role_limits": role_limits(c.current_user(user).get("role")),
                         "output_guard": app.guard_telemetry.snapshot(),
                         "limits": {"calls_per_turn": 1, "calls_per_request": 1, "retries": 0, "output_tokens": 600,

@@ -14470,3 +14470,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2008 demo workbook re-verification (Refs #2008)
 
 * Added [issue-2008-live-rerun-2026-11-22.md](research/issue-2008-live-rerun-2026-11-22.md): fresh local row-level preview, generator test and deployed demo run with the staff test sign-in (source hashes unchanged), plus a per-criterion table. The deployed screen still accepts CSV only, so conflicts and the `.xlsx` preview remain local. No source change.
+## [2026-11-22] update | Issues 2245 and 2243 live AI diagnosis (Refs #2245)
+
+* Added [issue-2245-live-2026-11-22.md](research/issue-2245-live-2026-11-22.md): employee chat rules-only cause (open suspension SUS-1, now reported as a hold), resident expiry read from `ZF_DEMO_EXPIRES_AT`, resident image rolled to revision 0000022, and a per-criterion table. Live generative answers stay unproven pending an owner decision on SUS-1 and the resident ledger expiry.

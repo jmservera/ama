@@ -677,7 +677,9 @@ The [three-run proof](./research/issue-2201-live-three-runs-2026-11-22.md) recor
 
 The [receiver recheck](./research/issue-2201-live-receiver-recheck-2026-11-22.md) lists every scheduled run since the 2234 merge with who started it: 12:00, 12:30 and 13:00 UTC Succeeded, 13:30 Failed, failure logs unreachable, map 200 with 443 items (#2201).
 
+
 The [receiver log causes](./research/issue-2201-live-receiver-logs-2026-11-22.md) read the console logs now that the workspace answers: SQL saturation caused the SQL failures, 13:30 was `IOT_CALLBACK_FAILED`, and 14:00 and 14:30 UTC Succeeded after the S3 scale (#2201).
+The [AI answers diagnosis](./research/issue-2245-live-2026-11-22.md) explains why the demo employee chat used rules only (open suspension SUS-1) and why the resident chat said the AI exercise had ended, with the fixes, the resident rollout and a per-criterion table for 2245 and 2243.
 
 The [receiver streak note](./research/issue-2201-live-receiver-streak-2026-11-22.md) records the 14:00, 14:30 and 15:00 UTC scheduled successes, no recurrence of `IOT_CALLBACK_FAILED` (its exception type is dropped by the handler), and a fresh map probe with readings to 15:20Z (#2201).
 

@@ -1,0 +1,45 @@
+{
+ "tag": "before",
+ "http": [
+  {
+   "path": "demo/assistant",
+   "status": 200,
+   "keys": [
+    "action",
+    "answer",
+    "callback_search",
+    "help",
+    "label",
+    "notice",
+    "routing",
+    "sources"
+   ],
+   "label": "Summary by rules - AI unavailable: the AI exercise has ended"
+  },
+  {
+   "path": "demo/assistant",
+   "status": 200,
+   "keys": [
+    "action",
+    "answer",
+    "callback_search",
+    "help",
+    "label",
+    "notice",
+    "routing",
+    "sources"
+   ],
+   "label": "Summary by rules - workflow only, no AI used"
+  }
+ ],
+ "asks": [
+  {
+   "question": "How is my case going?",
+   "result": "You\n\nHow is my case going?\n\nAssistant\nRouted to the Case progress helper: your question is about how your case is going.\nSummary by rules - AI unavailable: the AI exercise has ended\n\nContact is paused. We will not contact you until the pause is lifted. You can ask for help below. Chat cannot lift a pause, restart contact or change your case. Only a person can do that. Speak to your housing officer, or write to or visit your local Zava North Homes office, and ask them to lift the pause if you want contact to restart. That is your choice. This showcase has no phone numbers or addresses recorded, so use your usual contact details. This chat has not sent a request or told anyone.\n\nAdvisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.\nSources (2)"
+  },
+  {
+   "question": "I smelled something odd near the vent, what should I do?",
+   "result": "peak to your housing officer, or write to or visit your local Zava North Homes office, and ask them to lift the pause if you want contact to restart. That is your choice. This showcase has no phone numbers or addresses recorded, so use your usual contact details. This chat has not sent a request or told anyone.\n\nAdvisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.\nSources (2)\nYou\n\nI smelled something odd near the vent, what should I do?\n\nAssistant\nHandled by the General assistant: no helper matches this question, so it stays here.\nSummary by rules - workflow only, no AI used\n\nI cannot answer that or act on instructions in a message. Try asking: \"How is my case going?\", \"What documents am I missing?\", \"What forms do I need?\" or \"What is my address?\" I cannot approve, decide, diagnose, give consent, book from chat text or access anyone else's record. A person can help through your housing officer.\n\nAdvisory only. This assistant cannot submit forms, give consent, book works or make decisions. Speak to your housing officer, or write to or visit your local office.\nSources (1)"
+  }
+ ]
+}
