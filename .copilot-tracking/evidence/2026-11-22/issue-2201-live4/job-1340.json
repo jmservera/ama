@@ -1,0 +1,19 @@
+{
+  "args": [
+    "--control-file",
+    "/certs/control.json",
+    "--seconds",
+    "1500",
+    "--events",
+    "100000"
+  ],
+  "cmd": [
+    "python",
+    "-m",
+    "zava_forward.api.live_receiver"
+  ],
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:541068a62d81ab518bdd132a2e0d5eda6513bcc6c3d0c9903184ba5fcea62c38",
+  "mod": "2026-11-22T12:01:08.2350941",
+  "retry": 0,
+  "timeout": 1620
+}
