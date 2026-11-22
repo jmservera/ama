@@ -14648,3 +14648,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1274 live re-proof run 2 (Refs #1274)
 
 * Added [issue-1274-live-evidence-2026-11-22-run2.md](research/issue-1274-live-evidence-2026-11-22-run2.md): retained job logs re-read, actionlint 1.7.7 checksum and tests repeated, per-criterion table; AWF and #1273 residue stays unproven. No source or estate change.
+## [2026-11-22] update | Human-review effectiveness live run 6 (Refs #223)
+
+* Added [issue-223-live-r6-2026-11-22.md](research/issue-223-live-r6-2026-11-22.md): gate and focused tests re-run, live retention of reviewer, reason and source hashes shown again, per-criterion table; no criterion is newly ticked. No source change.
