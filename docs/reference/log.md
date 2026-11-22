@@ -14459,3 +14459,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2243 resident AI chat live probe (Refs #2243)
 
 * Added [issue-2243-live-probe-2026-11-22.md](research/issue-2243-live-probe-2026-11-22.md): read-only live probe of `ca-resident-demo` (revision 0000022) and `ca-cutover-test-demo-api` (revision 0000050). Resident chat still falls back to rules, now with `reason=usage_limit` instead of the expired label, which points at the SQL `resident_ai.budget.expires_at` row (not readable, SQL is private). Includes the post-merge probe plan and a per-criterion table.
+
+## [2026-11-22] update | Issue 2201 receiver streak and map freshness (Refs #2201)
+
+* Added [issue-2201-live-receiver-streak-2026-11-22.md](research/issue-2201-live-receiver-streak-2026-11-22.md): read-only check of `job-live-receiver` and `job-live-simulator` since 15:00 UTC. Receiver runs at 14:00, 14:30 and 15:00 Succeeded (three consecutive), every simulator run Succeeded, `IOT_CALLBACK_FAILED` did not recur so its exception is still unproven (the handler drops the exception type), and the map probe shows readings to 15:20Z. No source change.

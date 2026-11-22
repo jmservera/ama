@@ -1,0 +1,16 @@
+[
+  {
+    "ContainerGroupName": "job-live-receiver-29922600-85gvb",
+    "Log": "receipts=1037",
+    "Stream": "stdout",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T14:25:44.0157843Z"
+  },
+  {
+    "ContainerGroupName": "job-live-receiver-29922630-nscfk",
+    "Log": "receipts=1055",
+    "Stream": "stdout",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T14:55:20.0855247Z"
+  }
+]
