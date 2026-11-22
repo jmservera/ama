@@ -14,6 +14,7 @@ from zava_forward.core.sensor_consumer import (
     Observation,
     Receipt,
     SensorConsumer,
+    SensorControl,
     preflight,
 )
 from zava_forward.core.synthetic import (
@@ -207,6 +208,19 @@ class SensorConsumerTests(unittest.TestCase):
             self.consumer.configure(POLICY, [changed])
             self.assert_rejected({**row, "reading_id": f"STOCK-CONTROL-{index}"}, reason)
         self.assertEqual(self.counts(), (0, 3, 3))
+
+    def test_configure_accepts_a_cohort_of_half_of_all_homes_and_refuses_over_the_cap(self) -> None:
+        def batch(size: int) -> list[SensorControl]:
+            return [
+                replace(CONTROL, home_id=f"cohort-home-{i}", sensor_id=f"SENSOR-{i}")
+                for i in range(size)
+            ]
+
+        self.consumer.configure(POLICY, batch(222))
+        self.consumer.configure(POLICY, batch(220))
+        with self.assertRaises(ValueError) as refused:
+            self.consumer.configure(POLICY, batch(501))
+        self.assertEqual(str(refused.exception), "INVALID_CONTROL_BATCH")
 
     def test_canonical_identity_rejects_malformed_keys(self) -> None:
         row = observations()[0]

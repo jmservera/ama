@@ -38,6 +38,8 @@ param maxPerSecond int = 10
 param containerHardening string = 'enforced'
 @description('Use MQTT/AMQP over WebSockets on 443. The demo private endpoints are reachable on 443 only (8883 and 5671 time out).')
 param useWebSockets bool = false
+@description('Chance 0 to 0.9 that a device sends nothing in a slot, so the demo shows missing readings (issue 2191). Seeded, so a slot repeats. 0 keeps every reading.')
+param failureRate string = '0'
 param location string = resourceGroup().location
 
 var jobName = 'job-live-simulator'
@@ -107,6 +109,7 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
           { name: 'ZF_SIM_HUB_HOSTNAME', value: hubHostname }
           { name: 'ZF_SIM_APPROVAL', value: approvalReference }
           { name: 'ZF_SIM_WEBSOCKETS', value: useWebSockets ? '1' : '0' }
+          { name: 'ZF_SIM_FAILURE_RATE', value: failureRate }
           { name: 'ZF_SIM_CERT_DIR', value: '/certs' }
           { name: 'ZF_SIM_CONTROL_FILE', value: '/certs/control.json' }
           { name: 'ZF_STORE', value: 'mssql' }

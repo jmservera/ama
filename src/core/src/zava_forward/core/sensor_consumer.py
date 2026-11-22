@@ -22,6 +22,7 @@ from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
 
 DISPATCH_WAIT_SECONDS = 45.0
+MAX_CONTROLS = 500
 IDENTITY = re.compile(r"[A-Z0-9][A-Z0-9_-]*\Z")
 NUMBER = re.compile(r"-?(?:0|[1-9][0-9]{0,2})(?:\.[0-9]{1,2})?\Z")
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ\Z")
@@ -460,7 +461,7 @@ class SensorConsumer:
     def configure(self, policy: ExercisePolicy, controls: Sequence[SensorControl]) -> None:
         """Trusted in-process exercise setup, never called with an observation."""
         policy.validate()
-        if len(controls) > 100 or len({c.sensor_id for c in controls}) != len(controls):
+        if len(controls) > MAX_CONTROLS or len({c.sensor_id for c in controls}) != len(controls):
             raise ValueError("INVALID_CONTROL_BATCH")
         for control in controls:
             control.validate()
@@ -483,13 +484,13 @@ class SensorConsumer:
     ) -> set[str] | None:
         """Homes whose effective controls change; None means any home (policy change or unreadable
         prior controls), which keeps the wait conservative."""
-        top = "TOP 101 " if self.mssql else ""
-        tail = "" if self.mssql else " LIMIT 101"
+        top = f"TOP {MAX_CONTROLS + 1} " if self.mssql else ""
+        tail = "" if self.mssql else f" LIMIT {MAX_CONTROLS + 1}"
         rows = db.execute(
             f"SELECT {top}sensor_id, body FROM sensor_consumer_control{tail}"
         ).fetchall()
         old = db.execute("SELECT body FROM sensor_consumer_policy").fetchone()
-        if len(rows) > 100 or (old and old[0] != json.dumps(asdict(policy))):
+        if len(rows) > MAX_CONTROLS or (old and old[0] != json.dumps(asdict(policy))):
             return None
         try:
             homes = {str(r[0]): str(json.loads(_json_text(r[1]))["home_id"]) for r in rows}
