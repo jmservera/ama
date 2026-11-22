@@ -14467,3 +14467,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2237 second pass (Refs #2237)
 
 * Extended [issue-2237-retention-500-live-2026-11-22.md](research/issue-2237-retention-500-live-2026-11-22.md): live re-probe on revision 0000050 (all 200), no error lines in the replica log, and a local table of malformed-record shapes that would raise in `retention_due`. No source change; cause still unproven.
+## [2026-11-22] update | Issue 2008 demo workbook re-verification (Refs #2008)
+
+* Added [issue-2008-live-rerun-2026-11-22.md](research/issue-2008-live-rerun-2026-11-22.md): fresh local row-level preview, generator test and deployed demo run with the staff test sign-in (source hashes unchanged), plus a per-criterion table. The deployed screen still accepts CSV only, so conflicts and the `.xlsx` preview remain local. No source change.
