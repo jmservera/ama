@@ -14424,3 +14424,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2237 retention 500 live investigation (Refs #2237)
 
 * Added [issue-2237-retention-500-live-2026-11-22.md](research/issue-2237-retention-500-live-2026-11-22.md): GET /api/retention returns 200 live (55 of 55 calls); the earlier 500 cannot be traced because the replica is gone and Log Analytics and Application Insights refuse queries; no source change.
+
+## [2026-11-22] update | Issue 2204 contractor binding and capability combinations live (Refs #2204)
+
+* Added [issue-2204-contractor-capability-combos-live-2026-11-22.md](research/issue-2204-contractor-capability-combos-live-2026-11-22.md): the Kat Larsson roster binding already exists in Azure SQL; the Contractor path signed in live with a temporary row (removed); the four capability roles signed in on the Programme Manager. Rule and restart actions stay unproven. No source change.

@@ -1,0 +1,544 @@
+{
+ "started_utc": "2026-11-22T12:21:09Z",
+ "cases": [
+  {
+   "case": "Contractor-bound",
+   "me_status": 200,
+   "me": {
+    "role": "Contractor",
+    "app_roles": null,
+    "rule_roles": null,
+    "contractor": "Northern Facade Systems Ltd",
+    "view_only": null,
+    "app_admin": null,
+    "navigation": [
+     "My jobs",
+     "Specialist screens"
+    ]
+   },
+   "cases_count": 0,
+   "case_companies": [],
+   "probes": {
+    "GET /api/cases": 200,
+    "GET /api/workorders": 200,
+    "GET /api/stats": 403,
+    "GET /api/finance": 403,
+    "GET /api/admin/simulator-control": 403,
+    "GET /api/chat/regulatory/status": 403,
+    "GET /api/law/cards": 403,
+    "POST /api/law/cards": [
+     403,
+     ""
+    ],
+    "POST /api/law/cards/ZZ-PROBE/1/approve": [
+     403,
+     ""
+    ],
+    "POST /api/continuity/restart-decide": [
+     403,
+     ""
+    ]
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "Your jobs",
+      "Assigned jobs",
+      "Your work orders"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    },
+    "chat": {
+     "h": [
+      "Your jobs",
+      "Assigned jobs",
+      "Your work orders"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    }
+   },
+   "attempt": 4,
+   "stale_claim_retry": true,
+   "assigned_exactly": true,
+   "expected_app_roles": [
+    "ZavaForward.Contractor"
+   ]
+  },
+  {
+   "case": "PM-baseline",
+   "me_status": 200,
+   "me": {
+    "role": "Retrofit Programme Manager",
+    "app_roles": [
+     "ZavaForward.ProgrammeManager"
+    ],
+    "rule_roles": [],
+    "contractor": null,
+    "view_only": false,
+    "app_admin": false,
+    "navigation": [
+     "My cases",
+     "All cases",
+     "Overview",
+     "Progress dashboard",
+     "Visits",
+     "Funding",
+     "Finance",
+     "Capacity and work orders",
+     "Closed cases",
+     "Assistant proposals",
+     "Time capture",
+     "Aftercare concerns",
+     "Specialist screens"
+    ]
+   },
+   "cases_count": 0,
+   "case_companies": [],
+   "probes": {
+    "GET /api/cases": 200,
+    "GET /api/workorders": 200,
+    "GET /api/stats": 200,
+    "GET /api/finance": 200,
+    "GET /api/admin/simulator-control": 403,
+    "GET /api/chat/regulatory/status": 403,
+    "GET /api/law/cards": 503,
+    "POST /api/law/cards": [
+     403,
+     ""
+    ],
+    "POST /api/law/cards/ZZ-PROBE/1/approve": [
+     403,
+     ""
+    ],
+    "POST /api/continuity/restart-decide": [
+     403,
+     ""
+    ]
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    },
+    "chat": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    }
+   },
+   "attempt": 3,
+   "assigned_exactly": true,
+   "expected_app_roles": [
+    "ZavaForward.ProgrammeManager"
+   ]
+  },
+  {
+   "case": "PM+AIRestart",
+   "me_status": 200,
+   "me": {
+    "role": "Retrofit Programme Manager",
+    "app_roles": [
+     "ZavaForward.AIRestart",
+     "ZavaForward.ProgrammeManager"
+    ],
+    "rule_roles": [
+     "ai_restart"
+    ],
+    "contractor": null,
+    "view_only": false,
+    "app_admin": false,
+    "navigation": [
+     "My cases",
+     "All cases",
+     "Overview",
+     "Progress dashboard",
+     "Visits",
+     "Funding",
+     "Finance",
+     "Capacity and work orders",
+     "Closed cases",
+     "Assistant proposals",
+     "Time capture",
+     "Aftercare concerns",
+     "Specialist screens"
+    ]
+   },
+   "cases_count": 0,
+   "case_companies": [],
+   "probes": {
+    "GET /api/cases": 200,
+    "GET /api/workorders": 200,
+    "GET /api/stats": 200,
+    "GET /api/finance": 200,
+    "GET /api/admin/simulator-control": 403,
+    "GET /api/chat/regulatory/status": 403,
+    "GET /api/law/cards": 503,
+    "POST /api/law/cards": [
+     403,
+     ""
+    ],
+    "POST /api/law/cards/ZZ-PROBE/1/approve": [
+     403,
+     ""
+    ],
+    "POST /api/continuity/restart-decide": [
+     403,
+     ""
+    ]
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    },
+    "chat": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    }
+   },
+   "attempt": 1,
+   "assigned_exactly": true,
+   "expected_app_roles": [
+    "ZavaForward.AIRestart",
+    "ZavaForward.ProgrammeManager"
+   ]
+  },
+  {
+   "case": "PM+RegulatoryChat",
+   "me_status": 200,
+   "me": {
+    "role": "Retrofit Programme Manager",
+    "app_roles": [
+     "ZavaForward.ProgrammeManager",
+     "ZavaForward.RegulatoryChat"
+    ],
+    "rule_roles": [
+     "regulatory_chat"
+    ],
+    "contractor": null,
+    "view_only": false,
+    "app_admin": false,
+    "navigation": [
+     "My cases",
+     "All cases",
+     "Overview",
+     "Progress dashboard",
+     "Visits",
+     "Funding",
+     "Finance",
+     "Capacity and work orders",
+     "Closed cases",
+     "Assistant proposals",
+     "Time capture",
+     "Aftercare concerns",
+     "Specialist screens"
+    ]
+   },
+   "cases_count": 0,
+   "case_companies": [],
+   "probes": {
+    "GET /api/cases": [
+     200,
+     ""
+    ],
+    "GET /api/workorders": [
+     200,
+     ""
+    ],
+    "GET /api/stats": [
+     200,
+     ""
+    ],
+    "GET /api/finance": [
+     200,
+     ""
+    ],
+    "GET /api/admin/simulator-control": [
+     403,
+     "{\"error\": \"Only an application administrator can use simulator run control.\", \"code\": \"ADMIN_REQUIRED\"}"
+    ],
+    "GET /api/chat/regulatory/status": [
+     403,
+     "{\"error\": \"Regulatory chat is restricted to an enabled synthetic-demo dataset.\"}"
+    ],
+    "GET /api/law/cards": [
+     503,
+     "{\"error\": \"The law store is not loaded.\"}"
+    ],
+    "POST /api/law/cards": [
+     403,
+     ""
+    ],
+    "POST /api/law/cards/ZZ-PROBE/1/approve": [
+     403,
+     ""
+    ],
+    "POST /api/continuity/restart-decide": [
+     403,
+     ""
+    ]
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    },
+    "chat": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    }
+   },
+   "attempt": 2,
+   "assigned_exactly": true,
+   "expected_app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RegulatoryChat"
+   ]
+  },
+  {
+   "case": "PM+RuleAuthor",
+   "me_status": 200,
+   "me": {
+    "role": "Retrofit Programme Manager",
+    "app_roles": [
+     "ZavaForward.ProgrammeManager",
+     "ZavaForward.RuleAuthor"
+    ],
+    "rule_roles": [
+     "rule_author"
+    ],
+    "contractor": null,
+    "view_only": false,
+    "app_admin": false,
+    "navigation": [
+     "My cases",
+     "All cases",
+     "Overview",
+     "Progress dashboard",
+     "Visits",
+     "Funding",
+     "Finance",
+     "Capacity and work orders",
+     "Closed cases",
+     "Assistant proposals",
+     "Time capture",
+     "Aftercare concerns",
+     "Specialist screens"
+    ]
+   },
+   "cases_count": 0,
+   "case_companies": [],
+   "probes": {
+    "GET /api/cases": [
+     200,
+     ""
+    ],
+    "GET /api/workorders": [
+     200,
+     ""
+    ],
+    "GET /api/stats": [
+     200,
+     ""
+    ],
+    "GET /api/finance": [
+     200,
+     ""
+    ],
+    "GET /api/admin/simulator-control": [
+     403,
+     "{\"error\": \"Only an application administrator can use simulator run control.\", \"code\": \"ADMIN_REQUIRED\"}"
+    ],
+    "GET /api/chat/regulatory/status": [
+     403,
+     "{\"error\": \"A separately assigned RegulatoryChat capability is required.\"}"
+    ],
+    "GET /api/law/cards": [
+     503,
+     "{\"error\": \"The law store is not loaded.\"}"
+    ],
+    "POST /api/law/cards": [
+     403,
+     ""
+    ],
+    "POST /api/law/cards/ZZ-PROBE/1/approve": [
+     403,
+     ""
+    ],
+    "POST /api/continuity/restart-decide": [
+     403,
+     ""
+    ]
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    },
+    "chat": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    }
+   },
+   "attempt": 3,
+   "assigned_exactly": true,
+   "expected_app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RuleAuthor"
+   ]
+  },
+  {
+   "case": "PM+RuleOwner",
+   "me_status": 200,
+   "me": {
+    "role": "Retrofit Programme Manager",
+    "app_roles": [
+     "ZavaForward.ProgrammeManager",
+     "ZavaForward.RuleOwner"
+    ],
+    "rule_roles": [
+     "rule_owner"
+    ],
+    "contractor": null,
+    "view_only": false,
+    "app_admin": false,
+    "navigation": [
+     "My cases",
+     "All cases",
+     "Overview",
+     "Progress dashboard",
+     "Visits",
+     "Funding",
+     "Finance",
+     "Capacity and work orders",
+     "Closed cases",
+     "Assistant proposals",
+     "Time capture",
+     "Aftercare concerns",
+     "Specialist screens"
+    ]
+   },
+   "cases_count": 0,
+   "case_companies": [],
+   "probes": {
+    "GET /api/cases": [
+     200,
+     ""
+    ],
+    "GET /api/workorders": [
+     200,
+     ""
+    ],
+    "GET /api/stats": [
+     200,
+     ""
+    ],
+    "GET /api/finance": [
+     200,
+     ""
+    ],
+    "GET /api/admin/simulator-control": [
+     403,
+     "{\"error\": \"Only an application administrator can use simulator run control.\", \"code\": \"ADMIN_REQUIRED\"}"
+    ],
+    "GET /api/chat/regulatory/status": [
+     403,
+     "{\"error\": \"A separately assigned RegulatoryChat capability is required.\"}"
+    ],
+    "GET /api/law/cards": [
+     503,
+     "{\"error\": \"The law store is not loaded.\"}"
+    ],
+    "POST /api/law/cards": [
+     403,
+     ""
+    ],
+    "POST /api/law/cards/ZZ-PROBE/1/approve": [
+     403,
+     ""
+    ],
+    "POST /api/continuity/restart-decide": [
+     403,
+     ""
+    ]
+   },
+   "views": {
+    "workbench": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    },
+    "chat": {
+     "h": [
+      "My cases today",
+      "Filter",
+      "Today's briefing"
+     ],
+     "not_available": false,
+     "synthetic_lookup": false
+    }
+   },
+   "attempt": 1,
+   "assigned_exactly": true,
+   "expected_app_roles": [
+    "ZavaForward.ProgrammeManager",
+    "ZavaForward.RuleOwner"
+   ]
+  }
+ ],
+ "original": [
+  {
+   "is_pm": true
+  }
+ ],
+ "restored": {
+  "count": 1,
+  "only_pm": true
+ },
+ "failure": null
+}

@@ -1,0 +1,4 @@
+PM+RegulatoryChat 200 Retrofit Programme Manager ['regulatory_chat']
+PM+RuleAuthor 200 Retrofit Programme Manager ['rule_author']
+PM+RuleOwner 200 Retrofit Programme Manager ['rule_owner']
+restored {'count': 1, 'only_pm': True} failure None
