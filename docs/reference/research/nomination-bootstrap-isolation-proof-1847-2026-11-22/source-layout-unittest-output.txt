@@ -1,0 +1,16 @@
+# source layout
+## test_bulk_edits test_nomination_route
+----------------------------------------------------------------------
+Ran 55 tests in 73.110s
+
+OK
+## test_nomination_route test_bulk_edits
+----------------------------------------------------------------------
+Ran 55 tests in 30.880s
+
+OK
+## test_nomination_bootstrap test_bulk_edits test_nomination_route
+----------------------------------------------------------------------
+Ran 58 tests in 24.909s
+
+OK
