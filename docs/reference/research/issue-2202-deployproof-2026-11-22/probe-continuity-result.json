@@ -1,0 +1,24 @@
+{
+ "http": 200,
+ "keys": [
+  "changes",
+  "effective",
+  "epoch",
+  "history_valid",
+  "note",
+  "suspended",
+  "suspensions"
+ ],
+ "suspensions": [
+  {
+   "scope": "all",
+   "scope_kind": "release",
+   "reason": "Demo probe: negative test",
+   "incident_owner": "Demo owner",
+   "containment": "None; probe is refused",
+   "recorded_at": "2026-11-18T11:51",
+   "status": "Suspended",
+   "synthetic": false
+  }
+ ]
+}

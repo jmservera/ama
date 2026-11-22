@@ -14485,3 +14485,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2008 web .xlsx import preview (Refs #2008)
 
 * Added [issue-2008-web-xlsx-import-2026-11-22.md](research/issue-2008-web-xlsx-import-2026-11-22.md): the "Check a spreadsheet" screen accepts the synthetic `.xlsx` and shows mapping, conflicts and a row preview (code moved from the importer to core, tested locally with Playwright, not deployed), with a per-criterion table.
+
+## [2026-11-22] update | Issue 2202 live proof of merged demo fixes (Refs #2202)
+
+* Added [issue-2202-deployproof-2026-11-22.md](research/issue-2202-deployproof-2026-11-22.md): live Playwright proof on API revision 0000051 and resident revision 0000023. Passes: hazard clocks and owners (2255), resident chart (2253), safety count 23 in tile, map, list and API (2254), handoff waiting view (2256), map load. Fails: generative answers in employee chat (open suspension) and the resident app (ledger expiry), both awaiting owner decisions. No source change.

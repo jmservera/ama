@@ -1,0 +1,108 @@
+{
+ "cases": {
+  "ZF-2025-0122": {
+   "clock": null,
+   "owner_named": false
+  },
+  "ZF-2025-0257": {
+   "clock": null,
+   "owner_named": false
+  },
+  "ZF-2025-0505": {
+   "clock": null,
+   "owner_named": false
+  },
+  "ZF-2025-0148": {
+   "clock": null,
+   "owner_named": false
+  },
+  "ZF-2025-0331": {
+   "clock": "Hazard clock: 7167 hours elapsed; service response due 2025-12-28T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0622": {
+   "clock": "Hazard clock: 4935 hours elapsed; service response due 2026-04-07T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0870": {
+   "clock": "Hazard clock: 3063 hours elapsed; service response due 2026-06-11T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0973": {
+   "clock": "Hazard clock: 879 hours elapsed; service response due 2026-09-23T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0944": {
+   "clock": "Hazard clock: 1023 hours elapsed; service response due 2026-09-10T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2025-0932": {
+   "clock": "Hazard clock: 135 hours elapsed; service response due 2026-10-24T09:00:00Z; response open. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2025-0317": {
+   "clock": "Hazard clock: 7911 hours elapsed; service response due 2025-12-04T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2025-0450": {
+   "clock": "Hazard clock: 135 hours elapsed; service response due 2026-10-24T09:00:00Z; response open. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2025-0499": {
+   "clock": "Hazard clock: 7791 hours elapsed; service response due 2025-12-02T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0527": {
+   "clock": "Hazard clock: 4647 hours elapsed; service response due 2026-04-12T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0597": {
+   "clock": "Hazard clock: 135 hours elapsed; service response due 2026-10-24T09:00:00Z; response open. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0708": {
+   "clock": "Hazard clock: 10 hours elapsed; service response due 2026-10-16T14:00:00Z; response open. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0724": {
+   "clock": "Hazard clock: 5271 hours elapsed; service response due 2026-03-17T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0841": {
+   "clock": "Hazard clock: 3471 hours elapsed; service response due 2026-06-07T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2025-0218": {
+   "clock": "Hazard clock: 7311 hours elapsed; service response due 2025-12-29T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0618": {
+   "clock": "Hazard clock: 4911 hours elapsed; service response due 2026-04-08T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0783": {
+   "clock": "Hazard clock: 1911 hours elapsed; service response due 2026-08-11T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0526": {
+   "clock": "Hazard clock: 399 hours elapsed; service response due 2026-10-13T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  },
+  "ZF-2026-0949": {
+   "clock": "Hazard clock: 591 hours elapsed; service response due 2026-09-28T09:00:00Z; response overdue. Accountable owner: Karen Lawson.",
+   "owner_named": true
+  }
+ },
+ "n_cases": 23,
+ "with_hours": 19,
+ "unknown": 0,
+ "no_clock_text": [
+  "ZF-2025-0122",
+  "ZF-2025-0257",
+  "ZF-2025-0505",
+  "ZF-2025-0148"
+ ],
+ "running": 5,
+ "overdue": 17,
+ "owner_named": 19
+}
