@@ -14549,3 +14549,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] add | Issue 126 live criteria re-check (Refs #126)
 
 * Added [issue-126-live-20261122-2026-11-22.md](research/issue-126-live-20261122-2026-11-22.md): 125 core and 10 API governance tests OK, read-only probe of revision 0000053 (capture closed, 22 open RAI findings, real-AI gate blocked) and per-criterion table; five criteria stay unproven. No source change.
+
+## [2026-11-22] update | Issue 470 closure evidence (Refs #470)
+
+* Added [issue-470-live-2026-11-22.md](research/issue-470-live-2026-11-22.md): 123 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after) unproven, speed-up PR #2272 unmerged, full gate not run. No source change.
