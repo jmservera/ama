@@ -14445,3 +14445,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-76-live-r7-2026-11-22.md](research/issue-76-live-r7-2026-11-22.md): queue and case-card clocks now carry the target clock and named owner; local Playwright and unit proof on synthetic data.
 * Source: code change in `taskqueues.py` and `app.js`; no Azure change.
+## [2026-11-22] update | Issue 2191 live SQL capacity and fresh coverage (Refs #2191)
+
+* Added [issue-2191-live-sql-capacity-2026-11-22.md](research/issue-2191-live-sql-capacity-2026-11-22.md): the `retrofit` database on Standard S0 was at its DTU limit despite receiver batching; scaled to S3 with `az` (no Bicep); a 30 minute sample series showed 51.7 to 58.7 percent of 443 homes fresh (mean 56.4 percent). Throwaway sampler job deleted.
