@@ -1,0 +1,15 @@
+{
+ "url_after_login": "/app",
+ "me_status": 200,
+ "role": "Retrofit Programme Manager",
+ "map_status": 200,
+ "map_total": 443,
+ "sensor_states": {
+  "consent-withheld": 22,
+  "stale": 28,
+  "fresh": 31,
+  "no-readings": 19,
+  "not-loaded": 343
+ },
+ "markers_in_dom": 443
+}

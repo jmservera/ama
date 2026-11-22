@@ -676,6 +676,8 @@ The [receiver recheck](./research/issue-2201-live-receiver-recheck-2026-11-22.md
 
 The [live rollout note](./research/issue-2202-live-deploy-2026-11-22.md) records the image-only deploy of the merged demo changes, the receiver deadline fix and a per-issue proven/unproven table for 2191, 2192, 2193, 2195 and 2201.
 
+The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.

@@ -14435,3 +14435,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2201 receiver recheck after the 2234 merge (Refs #2201)
 
 * Added [issue-2201-live-receiver-recheck-2026-11-22.md](research/issue-2201-live-receiver-recheck-2026-11-22.md): every `job-live-receiver` execution since 10:34 UTC with starter, scheduled Succeeded runs at 12:00 (shortened window), 12:30 and 13:00, a Failed 13:30 run, workspace access refusal blocking logs, S0 database at 100 percent DTU, and the map still 200 with 443 items. Root cause for the new failures stays unproven. No source change.
+## [2026-11-22] update | Issue 2202 live demo smoke with defects (Refs #2202)
+
+* Added [issue-2202-demosmoke-2026-11-22.md](research/issue-2202-demosmoke-2026-11-22.md): desktop Playwright smoke of the demo API and resident app with screenshots. Map sensor items and resident sign-in pass; resident AI chat is rules-only (2243), the API crash-looped for about 13 minutes on the SQL write lock (2244), employee chat had a 500 and no generative answer (2245). Per-criterion table for issue 2202; no source change.
