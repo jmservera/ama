@@ -14514,3 +14514,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 115 ledger digest live verification (Refs #115)
 
 * Added [issue-115-ledger-digest-live-2026-11-22.md](research/issue-115-ledger-digest-live-2026-11-22.md): 53 digest tests pass, daily digest job succeeds, container policy is 365 days and unlocked, alerts enabled; lock and mismatch drill stay unproven for the demo.
+## [2026-11-22] update | Issue 1274 release-download live re-proof (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-22.md](research/issue-1274-live-evidence-2026-11-22.md): failing actionlint and AWF job logs re-read, real actionlint 1.7.7 checksum verification and 12 plus 123 tests repeated; AWF 0.28.23 and the #1273 cause stay unproven. No source or estate change.
