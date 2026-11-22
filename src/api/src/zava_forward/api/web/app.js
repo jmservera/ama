@@ -871,13 +871,7 @@ function workSummary(work) {
     h("p", { class: "muted" }, `Source: ${work.source}; evidence: ${work.evidence}; version: ${work.version}; recorded: ${work.recorded_at}; recorded as of: ${work.as_of}.`),
     work.handoff && h("p", {}, `Destination: ${work.handoff.destination}; proposed receiver: ${work.handoff.proposed_receiver}; confirmed receiver: ${work.handoff.confirmed_receiver}; chase owner: ${work.handoff.chase_owner}; resident-update owner: ${work.handoff.resident_update_owner}.`),
     (work.hazard_clocks || []).map((clock) => {
-      const clockSummary = clock.clock_label
-        ? ` Clock: ${clock.clock_label} (${clock.clock_status === "fail_closed_missing_timestamp"
-          ? "fail-closed: timestamp not recorded"
-          : clock.clock_status === "completed"
-            ? `completed${clock.clock_deadline_utc ? `, target ${clock.clock_deadline_utc}` : ""}`
-            : `${clock.clock_status}, ${clock.clock_remaining_hours}h remaining, due ${clock.clock_deadline_utc}`}).`
-        : "";
+      const clockSummary = clockStatusText(clock);
       const ownerSummary = clock.named_owner
         ? ` Accountable owner: ${clock.named_owner} (${clock.owner_role || "Building Safety Liaison"}, ID ${clock.owner_id || "recorded"})${clock.unassigned ? ` [Unassigned item; escalation owner: ${clock.escalation_owner || clock.named_owner}]` : ""}.`
         : "";
@@ -885,7 +879,21 @@ function workSummary(work) {
         `${clock.clock_text || "Safety clock: elapsed time and target window not supplied."} Accountable owner: ${clock.accountable_owner || "Building Safety lead (escalation owner)"}. Safety clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; awareness: ${clock.aware_at}; named follow-up owner: ${clock.owner}; service response due: ${clock.response_due_at}; resident update due: ${clock.resident_update_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Service response: ${clock.response_state}; resident update: ${clock.resident_update_state}.${clockSummary}${ownerSummary}`);
     }),
     (work.safeguarding_clocks || []).map((clock) => h("p", { class: "safeguarding-clock" },
-      `Safeguarding clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; referred: ${clock.referred_at}; named accountable owner: ${clock.owner} (${clock.owner_role}); response due: ${clock.response_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Response: ${clock.response_state}.`)));
+      `Safeguarding clock in this recorded view: ${clock.elapsed_hours === null ? "Unknown" : `${clock.elapsed_hours} elapsed hours`}; referred: ${clock.referred_at}; named accountable owner: ${clock.owner} (${clock.owner_role}); response due: ${clock.response_due_at}. ${clock.authority} owns timing. ${clock.owner_status} Response: ${clock.response_state}.${clockStatusText(clock)}`)));
+}
+
+// Plain wording; status is always text, never colour alone. A missing awareness time is stated, not guessed.
+function clockStatusText(clock) {
+  if (!clock.clock_label) return "";
+  const hours = (value) => `${Math.abs(Math.round(Number(value)))} ${Math.abs(Math.round(Number(value))) === 1 ? "hour" : "hours"}`;
+  const state = clock.clock_status === "fail_closed_missing_timestamp"
+    ? "Time remaining unknown: the time the team became aware is not recorded. Next action: record it so the clock can run"
+    : clock.clock_status === "completed"
+      ? `Completed${clock.clock_deadline_utc ? `; target was ${clock.clock_deadline_utc}` : ""}`
+      : clock.clock_status === "overdue"
+        ? `Overdue by ${hours(clock.clock_remaining_hours)}; target was ${clock.clock_deadline_utc}`
+        : `${hours(clock.clock_remaining_hours)} remaining until the target ${clock.clock_deadline_utc}`;
+  return ` Clock: ${clock.clock_label}. ${state}.`;
 }
 
 function workSteps(work) {
@@ -2106,11 +2114,14 @@ function safetyPanel(c, id, refresh) {
       ownerId = ownerId || chosen.id;
       escalationOwner = escalationOwner || esc.name;
     }
+    const hoursText = (value) => `${Math.abs(Math.round(Number(value)))} hours`;
     const clockText = clockStatus === "fail_closed_missing_timestamp"
-      ? `${clockLabel}: fail-closed (timestamp not recorded)`
+      ? `${clockLabel}: time remaining unknown, the time the team became aware is not recorded. Next action: record it so the clock can run`
       : clockStatus === "completed"
         ? `${clockLabel}: completed${clockDeadline ? ` (target ${clockDeadline})` : ""}`
-        : `${clockLabel}: ${clockStatus}, ${clockRemaining}h remaining (due ${clockDeadline})`;
+        : clockStatus === "overdue"
+          ? `${clockLabel}: overdue by ${hoursText(clockRemaining)} (target was ${clockDeadline})`
+          : `${clockLabel}: ${hoursText(clockRemaining)} remaining until the target ${clockDeadline}`;
     const ownerText = `Accountable owner: ${namedOwner} (${ownerRole || defaultRole}, ID ${ownerId || "recorded"})${unassigned ? ` — Unassigned item; escalation owner: ${escalationOwner}` : ""}`;
     return h("p", { class: "safety-clock-owner" }, `Clock: ${clockText}. ${ownerText}.`);
   };

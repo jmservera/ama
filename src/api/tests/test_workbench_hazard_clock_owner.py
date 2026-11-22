@@ -120,6 +120,82 @@ class HazardClockOwner(unittest.TestCase):
             self.assertTrue(item["clock_text"])
             self.assertTrue(item["accountable_owner"])
 
+    def test_queue_clock_shows_time_remaining_overdue_or_missing_awareness(self) -> None:
+        running, overdue, missing = clocks(
+            dict(
+                category="Damp",
+                priority="Emergency",
+                aware_at="2026-10-16T06:00:00Z",
+                owner="Bea Safe",
+            ),
+            dict(
+                category="Mould",
+                priority="Significant",
+                aware_at="2026-10-01T00:00:00Z",
+                owner="Bea Safe",
+            ),
+            dict(category="Mould", priority="Significant", noticed="2025-12-21", owner="Bea Safe"),
+        )
+        self.assertEqual(running["clock_status"], "running")
+        self.assertEqual(overdue["clock_status"], "overdue")
+        self.assertEqual(missing["clock_status"], "fail_closed_missing_timestamp")
+        self.assertIn("18 hours remaining until the target", render(work_for([running])))
+        shown = render(work_for([overdue]))
+        self.assertIn("Overdue by 204 hours", shown)
+        self.assertNotIn("-204", shown)
+        shown = render(work_for([missing]))
+        self.assertIn("Time remaining unknown", shown)
+        self.assertIn("Next action: record it", shown)
+        self.assertIn("Accountable owner: Bea Safe", shown)
+
+    def test_safeguarding_queue_clock_has_target_and_owner(self) -> None:
+        case = copy.deepcopy(CASE)
+        case["safeguarding_items"] = [
+            dict(
+                category="Safeguarding",
+                priority="Significant",
+                referred_at="2026-10-14T09:00:00Z",
+                response_due_at="2026-10-17T09:00:00Z",
+                owner=dict(name="Sam Lead", role="Safeguarding lead"),
+            )
+        ]
+        work = taskqueues.context(
+            case,
+            as_of="2026-10-16T12:00:00Z",
+            reason_ok=True,
+            policy=ranking.CURRENT,
+            stock_queries=[],
+            building_reasons=[],
+            resident_reasons=[],
+            technical_missing=[],
+            handoff=None,
+        )
+        (clock,) = work["safeguarding_clocks"]
+        self.assertEqual(clock["clock_status"], "running")
+        self.assertEqual(clock["clock_remaining_hours"], 21.0)
+        self.assertEqual(clock["owner"], "Sam Lead")
+        self.assertIn("21 hours remaining", render(dict(work, hazard_clocks=[])))
+
+    def test_safeguarding_label_is_redacted_without_reason_visibility(self) -> None:
+        case = copy.deepcopy(CASE)
+        case["hazards"] = [
+            dict(category="Safeguarding", priority="Routine", aware_at="2026-10-16T00:00:00Z")
+        ]
+        work = taskqueues.context(
+            case,
+            as_of="2026-10-16T12:00:00Z",
+            reason_ok=False,
+            policy=ranking.CURRENT,
+            stock_queries=[],
+            building_reasons=[],
+            resident_reasons=[],
+            technical_missing=[],
+            handoff=None,
+        )
+        (clock,) = work["hazard_clocks"]
+        self.assertEqual(clock["clock_label"], "Safety review clock")
+        self.assertNotIn("afeguard", json.dumps(clock))
+
     def test_ui_falls_back_when_owner_missing_from_payload(self) -> None:
         shown = render(work_for([dict(owner="Unknown", elapsed_hours=None)]))
         self.assertIn("Accountable owner: Building Safety lead (escalation owner)", shown)
