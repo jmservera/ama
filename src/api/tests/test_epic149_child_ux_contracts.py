@@ -132,6 +132,16 @@ class ApprovalAndConsentBoundaries(unittest.TestCase):
         self.assertIn("give consent", js)
         self.assertIn("does not imply consent or refusal", read(API / "web" / "app.js"))
 
+    def test_resident_sensor_chart_text_and_markers_stay_legible(self) -> None:
+        css: str = read(STYLESHEETS["resident-demo"])
+        js: str = read(API / "resident_demo" / "web" / "demo.js")
+        text_rule = re.search(r"\.sensor-chart text\{[^}]*font:(\d+)px", css)
+        self.assertIsNotNone(text_rule, "chart text size must be in SVG user units, not rem")
+        self.assertLessEqual(int(text_rule.group(1)), 14)  # type: ignore[union-attr]
+        self.assertRegex(css, r"\.sensor-chart svg\{[^}]*max-width:\d+rem")
+        self.assertIn("markerGap", js)
+        self.assertIn("Circles mark some of the stored readings", js)
+
 
 class HumanEvidenceNotFabricated(unittest.TestCase):
     def test_no_automated_surface_claims_human_sign_off(self) -> None:
