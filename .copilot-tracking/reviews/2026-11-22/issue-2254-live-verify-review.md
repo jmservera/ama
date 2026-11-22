@@ -1,0 +1,1 @@
+# Review (2026-11-22): executed once. Outcome: conformant for verify-only scope. Claims match the recorded probe output; three unproven items are stated in the changes table. Follow-up: map deployed digest to commit; capture All cases page text.

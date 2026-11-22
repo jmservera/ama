@@ -1947,6 +1947,44 @@ class GateTests(unittest.TestCase):
                 self.assertEqual(gate.main(), 0)
                 self.assertEqual(lock.call_count, expected, groups)
 
+    def test_focused_main_ignores_a_held_lock_but_heavy_group_is_blocked(self) -> None:
+        lock_path = self.out / "held-heavy-lock"
+        for groups, expected in ((["project-core"], 0), (["mssql"], 1)):
+            output = self.out / f"held-{expected}"
+            held = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
+            self.addCleanup(os.close, held)
+            fcntl.flock(held, fcntl.LOCK_EX)
+            with (
+                patch.object(gate, "HEAVY_LOCK_PATH", lock_path),
+                patch.object(gate.Path, "cwd", return_value=self.root),
+                patch.object(
+                    sys,
+                    "argv",
+                    [
+                        "rpi-checks.py",
+                        "--changed",
+                        "--base",
+                        self.base,
+                        "--out",
+                        str(output),
+                        "--lock-timeout",
+                        "0",
+                    ],
+                ),
+                patch.object(gate, "clean_identity"),
+                patch.object(gate, "selection", return_value={"groups": groups}),
+                patch.object(gate, "admit_browser_output"),
+                patch.object(gate, "tool_identity"),
+                patch.object(gate, "required_groups", return_value=["all"]),
+                patch.object(gate, "Runner") as runner,
+                patch.object(gate, "verify"),
+                redirect_stdout(io.StringIO()),
+                redirect_stderr(io.StringIO()),
+            ):
+                runner.return_value.run.return_value = output / "receipt.json"
+                self.assertEqual(gate.main(), expected, groups)
+            fcntl.flock(held, fcntl.LOCK_UN)
+
     def test_outer_flock_composes_and_descendants_do_not_inherit_lock(self) -> None:
         lock = self.out / "outer-lock"
         script = """

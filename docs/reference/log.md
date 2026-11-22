@@ -14602,3 +14602,34 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 462 resident showcase live run 5 (Refs #462)
 
 * Added [resident-showcase-live-r5-2026-11-22.md](research/resident-showcase-live-r5-2026-11-22.md): 36-check Playwright rerun against the live demo, new image digest and minReplicas 1 noted, per-criterion table; criterion 2 stays unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 2257 verify-fixed (Refs #2257)
+
+* Added [issue-2257-verify-live-2026-11-22.md](research/issue-2257-verify-live-2026-11-22.md): revision 0000053 recovers from an injected `/api/map` reset (443 markers) and 8 of 8 fresh sign-ins load; request-level cause remains unproven. A map-path regression test was added.
+## [2026-11-22] update | Issue 2245 thread creation 500 live check (Refs #2245)
+
+* Added [issue-2245-thread500-2026-11-22.md](research/issue-2245-thread500-2026-11-22.md): console evidence of the ProgrammingError 500, 12 of 12 live creates returning 200, a write-transaction bound regression test and a per-criterion table. The 500 stays unreproduced and its lock holder unproven.
+## [2026-11-22] update | Issue 2186 full receipt across docs moves, second run (Refs #2186)
+
+* Updated [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): rerun of 127 gate-tool tests, per-criterion statuses unchanged, end-to-end full receipt still unproven. No source change.
+## [2026-11-22] update | Issue 2164 roster scope re-proof (Refs #2164)
+
+* Added [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table; deployed-image criterion stays unproven. No source or estate change.
+## [2026-11-22] add | Nomination test bootstrap isolation re-run (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-rerun-1847-2026-11-22.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-22.md): fresh-process re-run on main 3219004e90 with retained outputs; five criteria proven, the full gate and external receipt unproven. No source or test change.
+## [2026-11-22] update | Issue 1830 r7 replay of the original #1297 defect (Refs #1830)
+
+* Added [issue-1830-live-r7-2026-11-22.md](research/issue-1830-live-r7-2026-11-22.md): original #1297 320px defect fails at `18d3de459f` and passes at head through a direct recipe; preflight tests and selectors and the map check re-run. Criteria 1, 3 and 4 remain partly proven. No source or estate change.
+
+## [2026-11-22] update | Issue 1837 live re-proof r2 (Refs #1837)
+
+* Added [issue-1837-live-demo-evidence-2026-11-22-r2.md](research/issue-1837-live-demo-evidence-2026-11-22-r2.md): main check, demo revision 0000053 no-write probes, 66 unit tests and three axe browser journeys, per-criterion table. No source or estate change.
+
+## [2026-11-22] update | Issue 1844 mobile map summary live re-proof (Refs #1844)
+
+* Added [issue-1844-live-20261122-2026-11-22.md](research/issue-1844-live-20261122-2026-11-22.md): pre-fix run fails 5 of 5 controls covered, current run passes 436 checks with 0 skips across eight narrow states; per-criterion table. No source change.
+
+## [2026-11-22] update | Issue 350 live pass 5 (Refs #350)
+
+* Added [issue-350-live-r5-2026-11-22.md](research/issue-350-live-r5-2026-11-22.md): fifth read-only live re-measurement of the ten unticked criteria. Law store is configured but unseeded, digest blobs are listable, jobs succeed; edge 302, photo, release authority and second-role results stay unproven. No source or estate change.
