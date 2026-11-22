@@ -1,0 +1,89 @@
+== job-live-simulator
+{
+  "args": [
+    "--sink",
+    "iothub",
+    "--once",
+    "--max-per-second",
+    "10"
+  ],
+  "cron": "0,7,15,22,30,37,45,52 * * * *",
+  "env": [
+    {
+      "n": "ZF_SIM_HUB_HOSTNAME",
+      "v": "iot-cutover-test-rzsrg.azure-devices.net"
+    },
+    {
+      "n": "ZF_SIM_APPROVAL",
+      "v": "OWNER-2026-11-20-demo-184"
+    },
+    {
+      "n": "ZF_SIM_WEBSOCKETS",
+      "v": "1"
+    },
+    {
+      "n": "ZF_SIM_FAILURE_RATE",
+      "v": "0.1"
+    },
+    {
+      "n": "ZF_SIM_CERT_DIR",
+      "v": "/certs"
+    },
+    {
+      "n": "ZF_SIM_CONTROL_FILE",
+      "v": "/certs/control.json"
+    }
+  ],
+  "timeout": 270
+}
+== job-live-receiver
+{
+  "args": [
+    "--control-file",
+    "/certs/control.json",
+    "--seconds",
+    "1500",
+    "--events",
+    "100000"
+  ],
+  "cron": "*/30 * * * *",
+  "env": [
+    {
+      "n": "ZF_SIM_HUB_HOSTNAME",
+      "v": "iot-cutover-test-rzsrg.azure-devices.net"
+    },
+    {
+      "n": "ZF_SIM_APPROVAL",
+      "v": "OWNER-2026-11-20-demo-184"
+    },
+    {
+      "n": "ZF_SIM_SYSTEM_ORIGIN",
+      "v": "1"
+    },
+    {
+      "n": "ZF_SIM_WEBSOCKETS",
+      "v": "1"
+    },
+    {
+      "n": "ZF_SIM_ROUTING_READY",
+      "v": "1"
+    },
+    {
+      "n": "ZF_SIM_CLIENT_ID",
+      "v": "1b1fe44e-f4cf-4aae-98d0-b30c7927a5e3"
+    },
+    {
+      "n": "ZF_SIM_CONTROL_FILE",
+      "v": "/certs/control.json"
+    },
+    {
+      "n": "ZF_RECEIVER_LOOKBACK_SECONDS",
+      "v": "360"
+    },
+    {
+      "n": "ZF_RECEIVER_BATCH_SIZE",
+      "v": "10"
+    }
+  ],
+  "timeout": 1620
+}

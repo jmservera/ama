@@ -1,0 +1,5 @@
+{
+  "dtu": 100,
+  "sku": "Standard",
+  "status": "Online"
+}
