@@ -23,3 +23,7 @@ Tests read `docs/` (for example `src/core/tests/test_live_doc_links.py` scans ev
 | Code, tool and image changes still invalidate | Proven | Same test rejects src code, src tests, src markdown, `tools/rpi-checks.py`, `src/api/Dockerfile` and a mixed move with `Base moved on`; identity digests of matrix and helper are unchanged |
 | Test added | Proven | `python3 -m unittest tools.test_rpi_checks -q`: 119 tests pass |
 | End-to-end verify of a real full receipt on a docs-moved main | Unproven | No full receipt was produced; `rpi-checks.py --all` is not run in this task |
+
+## Update 2026-11-22
+
+Added `test_verify_reports_docs_only_relaxation_for_full_receipt`, which drives `verify()` for a full-scope receipt after a docs-only move and asserts the `BASE RELAXED (disjoint-move)` line with the moved-path count. `python3 -m unittest tools.test_rpi_checks -q`: 124 tests pass. The verify test stubs `validate_receipt`, so the end-to-end verify of a real full receipt stays unproven (`rpi-checks.py --all` is not run).

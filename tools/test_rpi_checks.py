@@ -3645,6 +3645,70 @@ os.fstat(3)
             runner.sharded_tests("api", "py", "src/api", [["0"], ["1"], ["2"]])
         self.assertEqual(sorted(finished), ["1.*", "2.*"])
 
+    def _retry_runner(self, codes: list[int], name: str = "retry") -> Any:
+        runner = self.runner(self.out / name)
+        runner.snapshot = self.root
+        runner.group = "project-api"
+        calls = iter(codes)
+
+        def command(argv: list[str], *args: Any, **kwargs: Any) -> str:
+            code = next(calls)
+            index = max(len(runner.rows), runner.log_seq)
+            runner.log_seq = index + 1
+            entry = {
+                "group": runner.group,
+                "argv": argv,
+                "log": f"{index:04d}-project-api.log",
+                "sha256": "0" * 64,
+                "exit_code": code,
+            }
+            with runner.row_lock:
+                runner.rows.append(entry)
+            runner.local.last_entry = entry
+            if code:
+                raise gate.GateError("failed")
+            return ""
+
+        patch.object(runner, "command", side_effect=command).start()
+        patch.object(runner, "discover_test_ids", return_value=["0.a"]).start()
+        patch.object(gate, "shard_argv", side_effect=lambda py, mods: [py, "0.*"]).start()
+        self.addCleanup(patch.stopall)
+        return runner
+
+    def test_failed_shard_is_retried_once_and_recorded(self) -> None:
+        runner = self._retry_runner([1, 0])
+        runner.sharded_tests("api", "py", "src/api", [["0"]])
+        self.assertEqual([row["exit_code"] for row in runner.rows], [0])
+        self.assertEqual([row["exit_code"] for row in runner.retries], [1])
+        self.assertNotEqual(runner.retries[0]["log"], runner.rows[0]["log"])
+
+    def test_second_shard_failure_or_timeout_is_not_excused(self) -> None:
+        for codes in ([1, 1], [124]):
+            runner = self._retry_runner(codes, f"retry-{len(codes)}")
+            with self.assertRaises(gate.GateError):
+                runner.sharded_tests("api", "py", "src/api", [["0"]])
+            self.assertEqual(len(runner.retries), len(codes) - 1)
+
+    def test_validate_retries_rejects_tampered_or_forged_records(self) -> None:
+        good = {
+            "group": "project-api",
+            "log": "0003-project-api.log",
+            "sha256": "a" * 64,
+            "exit_code": 1,
+            "argv": ["py"],
+        }
+        receipt = {"retries": [good], "files": {good["log"]: good["sha256"]}, "commands": []}
+        gate.validate_retries(receipt)
+        for bad in (
+            dict(receipt, files={good["log"]: "b" * 64}),
+            dict(receipt, retries=[dict(good, exit_code=0)]),
+            dict(receipt, retries=[dict(good, exit_code=124)]),
+            dict(receipt, commands=[{"log": good["log"]}]),
+            dict(receipt, retries=[dict(good, extra=1)]),
+        ):
+            with self.assertRaises(gate.GateError):
+                gate.validate_retries(bad)
+
     def test_unsharded_test_ids_detect_tests_no_shard_pattern_selects(self) -> None:
         parts = [["test_a"], ["test_b", "test_c"]]
         ids = [
@@ -3949,6 +4013,28 @@ os.fstat(3)
                 finally:
                     self.git("branch", "-qD", "side-main")
                     self.git("update-ref", "refs/remotes/origin/main", self.base)
+
+    def test_verify_reports_docs_only_relaxation_for_full_receipt(self) -> None:
+        self.commit("pr", "src/api/src/zava_forward/api/server.py")
+        moved = self.move_main("docs/other.md")
+        proof = gate.base_relaxation(self.root, self.base, moved, [], inert_only=True)
+        receipt = {
+            "scope": "full",
+            "identity": {"head": self.base, "base": self.base},
+            "base_relaxation": proof,
+        }
+        path = self.out / "receipt.json"
+        gate.atomic_json(path, {"scope": "full"})
+        out = io.StringIO()
+        with (
+            patch.object(gate, "validate_receipt", return_value=receipt),
+            patch.object(gate, "require_fresh_images"),
+            redirect_stdout(out),
+        ):
+            gate.verify(self.root, path, moved)
+        self.assertIn("VERIFIED full local gate", out.getvalue())
+        self.assertIn("BASE RELAXED (disjoint-move)", out.getvalue())
+        self.assertIn("1 path(s)", out.getvalue())
 
     def test_relaxed_receipt_passes_selection_and_identity_but_not_tampering(
         self,
