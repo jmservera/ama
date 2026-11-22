@@ -62,6 +62,11 @@ FALLBACK = (
     "The assistant is not available right now. Continue with the ordinary case workflow; "
     "nothing is lost and nothing has been changed."
 )
+SUSPENDED_FALLBACK = (
+    "AI answers are on hold because an open suspension covers AI work, so no model was called. "
+    "Continue with the ordinary case workflow; nothing is lost and nothing has been changed. "
+    "A person with restart authority must lift the suspension."
+)
 UNSTORED_NOTE = (
     "This reply uses rules only. Nothing you typed was saved and no record was changed. "
     "A person decides next steps. Chat storage is not approved yet."
@@ -69,6 +74,10 @@ UNSTORED_NOTE = (
 RULES_NOTE = (
     "This reply uses rules only because the assistant is not available. "
     "No record was changed. A person decides next steps."
+)
+SUSPENDED_NOTE = (
+    "This reply uses rules only because an open suspension holds AI answers, so no model was "
+    "called. No record was changed. A person decides next steps."
 )
 WITHHELD = (
     "That reply was withheld because it asked for an action or exposed content "
@@ -974,7 +983,11 @@ class ChatPanel:
                     meter_id=exc.meter_id,
                     meter_root=exc.meter_root,
                 )
-                raw, kind, text = "", "fallback", FALLBACK
+                raw, kind, text = (
+                    "",
+                    "fallback",
+                    SUSPENDED_FALLBACK if exc.outcome == "ai-suspended" else FALLBACK,
+                )
             except Exception as error:
                 logging.getLogger(__name__).warning(
                     "Employee chat model unavailable (%s)", type(error).__name__
@@ -1032,12 +1045,14 @@ class ChatPanel:
                 body, cites, sources = rules
                 kind, text = "answer", body + "\n" + FALLBACK_NOTE
                 model_name, source = "workflow-only", "decision-rules-fallback"
-        if kind == "fallback" and text == FALLBACK and case_id:
+        if kind == "fallback" and text in (FALLBACK, SUSPENDED_FALLBACK) and case_id:
             facts = iso.case_facts(iso.current_user(user), case_id)
             if facts:
                 grounded = {f"{case_id}/{path}": value for path, value in facts.items()}
                 kind, body, cites = grounded_answer(case_id, normalise_policy_text(masked), facts)
-                text = redact(body)[0] + "\n" + RULES_NOTE
+                held = receipt.get("provider_outcome") == "ai-suspended"
+                note = SUSPENDED_NOTE if held else RULES_NOTE
+                text = redact(body)[0] + "\n" + note
                 sources = {
                     key: value
                     for key, value in {**grounded, **WORKFLOW_RULES}.items()

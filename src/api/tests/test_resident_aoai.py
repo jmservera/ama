@@ -16,7 +16,7 @@ from zava_forward.api.resident_demo.aoai import (
     configured_advisor,
     resident_key,
 )
-from zava_forward.api.resident_demo.assistant import EXPIRES
+from zava_forward.api.resident_demo.assistant import EXPIRES, expires_at
 
 ENDPOINT = "https://aoai-resident-test.openai.azure.com"
 CASE = CaseProgress("Your survey is being arranged.", "Your officer will contact you.")
@@ -155,6 +155,28 @@ class AzureAdvisorTests(unittest.TestCase):
             self.assertEqual(result.label, "AI suggestion, not approved")
             self.assertIn(expected, result.answer)
             self.assertIn("housing officer", result.help)
+
+    def test_expiry_follows_zf_demo_expires_at_and_fails_closed(self) -> None:
+        later = "2028-01-01T00:00:00Z"
+        self.assertEqual(expires_at({}), EXPIRES)
+        for bad in ("", "tomorrow", "2028-01-01T00:00:00", "2028-01-01T00:00:00+01:00"):
+            self.assertEqual(expires_at({"ZF_DEMO_EXPIRES_AT": bad}), EXPIRES, bad)
+        stamp = expires_at({"ZF_DEMO_EXPIRES_AT": later})
+        self.assertGreater(stamp, EXPIRES)
+        self.advisor.clock = lambda: EXPIRES + 86400
+        with patch.dict("os.environ", {"ZF_DEMO_EXPIRES_AT": later}):
+            self.transport.return_value = reply()
+            result = self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1"))
+            self.assertEqual(result.label, "AI suggestion, not approved")
+            self.advisor.clock = lambda: stamp
+            self.assertIn(
+                "Summary by rules",
+                self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1")).label,
+            )
+        self.advisor.clock = lambda: EXPIRES + 86400
+        self.assertIn(
+            "Summary by rules", self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1")).label
+        )
 
     def test_expiry_before_reservation_and_during_credentials_and_response(self) -> None:
         for times, calls in (

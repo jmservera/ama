@@ -25,7 +25,7 @@ from zava_forward.core.resident_assistant import (
     guidance,
 )
 
-from .assistant import EXPIRES, RequestEnvelope, _post
+from .assistant import RequestEnvelope, _post, expires_at
 from .ledger_meter import AdvisorLedger, advisor_meters
 
 LOG = logging.getLogger(__name__)
@@ -176,7 +176,7 @@ class AzureAdvisor:
     def _question(self, question: str, case: CaseProgress, resident: str, base: Advice) -> Advice:
         if data_protection.dispatch_hold("tenant_identity", os.environ):
             raise AssistantUnavailable("data_protection_hold")
-        if self.clock() >= EXPIRES:
+        if self.clock() >= expires_at():
             raise AssistantUnavailable("expired")
         if not isinstance(question, str) or not 1 <= len(question.strip()) <= 500:
             raise AssistantUnavailable("question_limit")
@@ -251,7 +251,7 @@ class AzureAdvisor:
             or not 1 <= len(ids) <= len(sources)
             or any(not isinstance(item, str) or item not in sources for item in ids)
             or len(set(ids)) != len(ids)
-            or self.clock() >= EXPIRES
+            or self.clock() >= expires_at()
         ):
             raise AssistantUnavailable("invalid_answer")
         references = tuple(dict.fromkeys(ref for item in ids for ref in source_references[item]))
@@ -276,7 +276,7 @@ class AzureAdvisor:
     def _answer(self, topic: Topic, case: CaseProgress, resident: str, base: Advice) -> Advice:
         if data_protection.dispatch_hold("tenant_identity", os.environ):
             raise AssistantUnavailable("data_protection_hold")
-        if self.clock() >= EXPIRES:
+        if self.clock() >= expires_at():
             raise AssistantUnavailable("expired")
         options = guidance(topic, case)
         schema = {
@@ -333,7 +333,7 @@ class AzureAdvisor:
             or not 1 <= len(ids) <= 2
             or any(not isinstance(item, str) or item not in options for item in ids)
             or len(set(ids)) != len(ids)
-            or self.clock() >= EXPIRES
+            or self.clock() >= expires_at()
         ):
             raise AssistantUnavailable("invalid_guidance")
         # Open cases cannot be described as closed or missing; model cannot introduce that meaning.
@@ -374,7 +374,7 @@ class AzureAdvisor:
                 token = acquire()
             except ValueError:
                 raise AssistantUnavailable("credential_or_expiry") from None
-            if not token or "\r" in token or "\n" in token or self.clock() >= EXPIRES:
+            if not token or "\r" in token or "\n" in token or self.clock() >= expires_at():
                 raise AssistantUnavailable("credential_or_expiry")
             raw = self.transport(self.url, payload, token)
         except Exception as error:

@@ -1,0 +1,591 @@
+{
+ "tag": "before",
+ "asks": [
+  {
+   "key": "general",
+   "question": "Tell me what you can help with",
+   "http_rows": [
+    {
+     "path": "api/chat/threads",
+     "status": 200,
+     "keys": [
+      "id"
+     ]
+    },
+    {
+     "path": "api/chat/threads/<id>/ask",
+     "status": 200,
+     "keys": [
+      "answer_origin",
+      "answer_source",
+      "answer_source_label",
+      "citations",
+      "consumption",
+      "context",
+      "kind",
+      "label",
+      "model",
+      "reply",
+      "routing",
+      "skill",
+      "workflow_only"
+     ],
+     "kind": "fallback",
+     "model": "workflow-only",
+     "answer_source": "fallback",
+     "label": "AI suggestion, not approved",
+     "consumption": {
+      "thread_id": "CT-53c82f11f830416b",
+      "task": "chat-case-conversation",
+      "model_calls": 0,
+      "tokens": null,
+      "provider_outcome": "activation-not-approved",
+      "outcome": "fallback",
+      "cost": "Unknown",
+      "missing_cost_inputs": [
+       "dated model price",
+       "complete review effort"
+      ],
+      "context_limit_chars": 16000,
+      "history_limit_chars": 4000,
+      "memory_used": false,
+      "calls_per_request": 1,
+      "role_limits": {
+       "access": true,
+       "calls_per_request": 1,
+       "turns_per_thread": 30,
+       "output_tokens": 600
+      },
+      "thread_turns_used": 1,
+      "thread_turn_limit": 30,
+      "context_chars": 2034,
+      "history_chars": 0,
+      "meter_id": null,
+      "meter_root": null
+     },
+     "workflow_only": true
+    }
+   ],
+   "log_tail": "You\n\nTell me what you can help with\n\nAssistant\nOutcome: workflow-only help\nHandled by the General agent. No specialist agent matches this question, so the general agent answers it.\nWorkflow-only help, no record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: general. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 1 of 30. Workflow-only or unverified help. No record changed.\nSources (0)"
+  },
+  {
+   "key": "explain",
+   "question": "Explain in two sentences why airtightness testing matters before retrofit insulation.",
+   "http_rows": [
+    {
+     "path": "api/chat/threads/<id>/ask",
+     "status": 200,
+     "keys": [
+      "answer_origin",
+      "answer_source",
+      "answer_source_label",
+      "citations",
+      "consumption",
+      "context",
+      "kind",
+      "label",
+      "model",
+      "reply",
+      "routing",
+      "skill",
+      "workflow_only"
+     ],
+     "kind": "fallback",
+     "model": "workflow-only",
+     "answer_source": "fallback",
+     "label": "AI suggestion, not approved",
+     "consumption": {
+      "thread_id": "CT-53c82f11f830416b",
+      "task": "chat-case-conversation",
+      "model_calls": 0,
+      "tokens": null,
+      "provider_outcome": "activation-not-approved",
+      "outcome": "fallback",
+      "cost": "Unknown",
+      "missing_cost_inputs": [
+       "dated model price",
+       "complete review effort"
+      ],
+      "context_limit_chars": 16000,
+      "history_limit_chars": 4000,
+      "memory_used": false,
+      "calls_per_request": 1,
+      "role_limits": {
+       "access": true,
+       "calls_per_request": 1,
+       "turns_per_thread": 30,
+       "output_tokens": 600
+      },
+      "thread_turns_used": 2,
+      "thread_turn_limit": 30,
+      "context_chars": 2158,
+      "history_chars": 67,
+      "meter_id": null,
+      "meter_root": null
+     },
+     "workflow_only": true
+    }
+   ],
+   "log_tail": "is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: general. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 1 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nExplain in two sentences why airtightness testing matters before retrofit insulation.\n\nAssistant\nOutcome: workflow-only help\nHandled by the General agent. No specialist agent matches this question, so the general agent answers it.\nWorkflow-only help, no record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: general. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 2 of 30. Workflow-only or unverified help. No record changed.\nSources (0)"
+  },
+  {
+   "key": "stock",
+   "question": "Which stock should we prioritise by EPC ranking?",
+   "http_rows": [
+    {
+     "path": "api/chat/threads/<id>/ask",
+     "status": 200,
+     "keys": [
+      "answer_origin",
+      "answer_source",
+      "answer_source_label",
+      "citations",
+      "consumption",
+      "context",
+      "kind",
+      "label",
+      "model",
+      "reply",
+      "routing",
+      "skill",
+      "workflow_only"
+     ],
+     "kind": "fallback",
+     "model": "workflow-only",
+     "answer_source": "fallback",
+     "label": "AI suggestion, not approved",
+     "consumption": {
+      "thread_id": "CT-53c82f11f830416b",
+      "task": "chat-case-conversation",
+      "model_calls": 0,
+      "tokens": null,
+      "provider_outcome": "activation-not-approved",
+      "outcome": "fallback",
+      "cost": "Unknown",
+      "missing_cost_inputs": [
+       "dated model price",
+       "complete review effort"
+      ],
+      "context_limit_chars": 16000,
+      "history_limit_chars": 4000,
+      "memory_used": false,
+      "calls_per_request": 1,
+      "role_limits": {
+       "access": true,
+       "calls_per_request": 1,
+       "turns_per_thread": 30,
+       "output_tokens": 600
+      },
+      "thread_turns_used": 3,
+      "thread_turn_limit": 30,
+      "context_chars": 1889,
+      "history_chars": 159,
+      "meter_id": null,
+      "meter_root": null
+     },
+     "workflow_only": true
+    }
+   ],
+   "log_tail": "nged\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: general. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 2 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nWhich stock should we prioritise by EPC ranking?\n\nAssistant\nOutcome: workflow-only help\nRouted to the Stock prioritisation agent. The question is about stock facts and which homes to look at first.\nWorkflow-only help, no record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: stock-prioritisation. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 3 of 30. Workflow-only or unverified help. No record changed.\nSources (0)"
+  },
+  {
+   "key": "funding",
+   "question": "Can you check the grant claim and invoice?",
+   "http_rows": [
+    {
+     "path": "api/chat/threads/<id>/ask",
+     "status": 200,
+     "keys": [
+      "answer_origin",
+      "answer_source",
+      "answer_source_label",
+      "citations",
+      "consumption",
+      "context",
+      "kind",
+      "label",
+      "model",
+      "reply",
+      "routing",
+      "skill",
+      "workflow_only"
+     ],
+     "kind": "fallback",
+     "model": "workflow-only",
+     "answer_source": "fallback",
+     "label": "AI suggestion, not approved",
+     "consumption": {
+      "thread_id": "CT-53c82f11f830416b",
+      "task": "chat-case-conversation",
+      "model_calls": 0,
+      "tokens": null,
+      "provider_outcome": "activation-not-approved",
+      "outcome": "fallback",
+      "cost": "Unknown",
+      "missing_cost_inputs": [
+       "dated model price",
+       "complete review effort"
+      ],
+      "context_limit_chars": 16000,
+      "history_limit_chars": 4000,
+      "memory_used": false,
+      "calls_per_request": 1,
+      "role_limits": {
+       "access": true,
+       "calls_per_request": 1,
+       "turns_per_thread": 30,
+       "output_tokens": 600
+      },
+      "thread_turns_used": 4,
+      "thread_turn_limit": 30,
+      "context_chars": 1908,
+      "history_chars": 214,
+      "meter_id": null,
+      "meter_root": null
+     },
+     "workflow_only": true
+    }
+   ],
+   "log_tail": "o record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: stock-prioritisation. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 3 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nCan you check the grant claim and invoice?\n\nAssistant\nOutcome: workflow-only help\nRouted to the Funding evidence agent. The question is about grant, claim and funding evidence.\nWorkflow-only help, no record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: funding-evidence. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 4 of 30. Workflow-only or unverified help. No record changed.\nSources (0)"
+  },
+  {
+   "key": "quality",
+   "question": "Is the quality inspection evidence complete?",
+   "http_rows": [
+    {
+     "path": "api/chat/threads/<id>/ask",
+     "status": 200,
+     "keys": [
+      "answer_origin",
+      "answer_source",
+      "answer_source_label",
+      "citations",
+      "consumption",
+      "context",
+      "kind",
+      "label",
+      "model",
+      "reply",
+      "routing",
+      "skill",
+      "workflow_only"
+     ],
+     "kind": "fallback",
+     "model": "workflow-only",
+     "answer_source": "fallback",
+     "label": "AI suggestion, not approved",
+     "consumption": {
+      "thread_id": "CT-53c82f11f830416b",
+      "task": "chat-case-conversation",
+      "model_calls": 0,
+      "tokens": null,
+      "provider_outcome": "activation-not-approved",
+      "outcome": "fallback",
+      "cost": "Unknown",
+      "missing_cost_inputs": [
+       "dated model price",
+       "complete review effort"
+      ],
+      "context_limit_chars": 16000,
+      "history_limit_chars": 4000,
+      "memory_used": false,
+      "calls_per_request": 1,
+      "role_limits": {
+       "access": true,
+       "calls_per_request": 1,
+       "turns_per_thread": 30,
+       "output_tokens": 600
+      },
+      "thread_turns_used": 5,
+      "thread_turn_limit": 30,
+      "context_chars": 2065,
+      "history_chars": 263,
+      "meter_id": null,
+      "meter_root": null
+     },
+     "workflow_only": true
+    }
+   ],
+   "log_tail": "ecord changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: funding-evidence. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 4 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nIs the quality inspection evidence complete?\n\nAssistant\nOutcome: workflow-only help\nRouted to the Quality evidence agent. The question is about quality checks and inspection evidence.\nWorkflow-only help, no record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: quality-evidence. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 5 of 30. Workflow-only or unverified help. No record changed.\nSources (0)"
+  }
+ ],
+ "chat_http": [
+  {
+   "path": "api/chat/threads",
+   "status": 200,
+   "keys": [
+    "id"
+   ]
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "keys": [
+    "answer_origin",
+    "answer_source",
+    "answer_source_label",
+    "citations",
+    "consumption",
+    "context",
+    "kind",
+    "label",
+    "model",
+    "reply",
+    "routing",
+    "skill",
+    "workflow_only"
+   ],
+   "kind": "fallback",
+   "model": "workflow-only",
+   "answer_source": "fallback",
+   "label": "AI suggestion, not approved",
+   "consumption": {
+    "thread_id": "CT-53c82f11f830416b",
+    "task": "chat-case-conversation",
+    "model_calls": 0,
+    "tokens": null,
+    "provider_outcome": "activation-not-approved",
+    "outcome": "fallback",
+    "cost": "Unknown",
+    "missing_cost_inputs": [
+     "dated model price",
+     "complete review effort"
+    ],
+    "context_limit_chars": 16000,
+    "history_limit_chars": 4000,
+    "memory_used": false,
+    "calls_per_request": 1,
+    "role_limits": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "thread_turns_used": 1,
+    "thread_turn_limit": 30,
+    "context_chars": 2034,
+    "history_chars": 0,
+    "meter_id": null,
+    "meter_root": null
+   },
+   "workflow_only": true
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "keys": [
+    "answer_origin",
+    "answer_source",
+    "answer_source_label",
+    "citations",
+    "consumption",
+    "context",
+    "kind",
+    "label",
+    "model",
+    "reply",
+    "routing",
+    "skill",
+    "workflow_only"
+   ],
+   "kind": "fallback",
+   "model": "workflow-only",
+   "answer_source": "fallback",
+   "label": "AI suggestion, not approved",
+   "consumption": {
+    "thread_id": "CT-53c82f11f830416b",
+    "task": "chat-case-conversation",
+    "model_calls": 0,
+    "tokens": null,
+    "provider_outcome": "activation-not-approved",
+    "outcome": "fallback",
+    "cost": "Unknown",
+    "missing_cost_inputs": [
+     "dated model price",
+     "complete review effort"
+    ],
+    "context_limit_chars": 16000,
+    "history_limit_chars": 4000,
+    "memory_used": false,
+    "calls_per_request": 1,
+    "role_limits": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "thread_turns_used": 2,
+    "thread_turn_limit": 30,
+    "context_chars": 2158,
+    "history_chars": 67,
+    "meter_id": null,
+    "meter_root": null
+   },
+   "workflow_only": true
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "keys": [
+    "answer_origin",
+    "answer_source",
+    "answer_source_label",
+    "citations",
+    "consumption",
+    "context",
+    "kind",
+    "label",
+    "model",
+    "reply",
+    "routing",
+    "skill",
+    "workflow_only"
+   ],
+   "kind": "fallback",
+   "model": "workflow-only",
+   "answer_source": "fallback",
+   "label": "AI suggestion, not approved",
+   "consumption": {
+    "thread_id": "CT-53c82f11f830416b",
+    "task": "chat-case-conversation",
+    "model_calls": 0,
+    "tokens": null,
+    "provider_outcome": "activation-not-approved",
+    "outcome": "fallback",
+    "cost": "Unknown",
+    "missing_cost_inputs": [
+     "dated model price",
+     "complete review effort"
+    ],
+    "context_limit_chars": 16000,
+    "history_limit_chars": 4000,
+    "memory_used": false,
+    "calls_per_request": 1,
+    "role_limits": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "thread_turns_used": 3,
+    "thread_turn_limit": 30,
+    "context_chars": 1889,
+    "history_chars": 159,
+    "meter_id": null,
+    "meter_root": null
+   },
+   "workflow_only": true
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "keys": [
+    "answer_origin",
+    "answer_source",
+    "answer_source_label",
+    "citations",
+    "consumption",
+    "context",
+    "kind",
+    "label",
+    "model",
+    "reply",
+    "routing",
+    "skill",
+    "workflow_only"
+   ],
+   "kind": "fallback",
+   "model": "workflow-only",
+   "answer_source": "fallback",
+   "label": "AI suggestion, not approved",
+   "consumption": {
+    "thread_id": "CT-53c82f11f830416b",
+    "task": "chat-case-conversation",
+    "model_calls": 0,
+    "tokens": null,
+    "provider_outcome": "activation-not-approved",
+    "outcome": "fallback",
+    "cost": "Unknown",
+    "missing_cost_inputs": [
+     "dated model price",
+     "complete review effort"
+    ],
+    "context_limit_chars": 16000,
+    "history_limit_chars": 4000,
+    "memory_used": false,
+    "calls_per_request": 1,
+    "role_limits": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "thread_turns_used": 4,
+    "thread_turn_limit": 30,
+    "context_chars": 1908,
+    "history_chars": 214,
+    "meter_id": null,
+    "meter_root": null
+   },
+   "workflow_only": true
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "keys": [
+    "answer_origin",
+    "answer_source",
+    "answer_source_label",
+    "citations",
+    "consumption",
+    "context",
+    "kind",
+    "label",
+    "model",
+    "reply",
+    "routing",
+    "skill",
+    "workflow_only"
+   ],
+   "kind": "fallback",
+   "model": "workflow-only",
+   "answer_source": "fallback",
+   "label": "AI suggestion, not approved",
+   "consumption": {
+    "thread_id": "CT-53c82f11f830416b",
+    "task": "chat-case-conversation",
+    "model_calls": 0,
+    "tokens": null,
+    "provider_outcome": "activation-not-approved",
+    "outcome": "fallback",
+    "cost": "Unknown",
+    "missing_cost_inputs": [
+     "dated model price",
+     "complete review effort"
+    ],
+    "context_limit_chars": 16000,
+    "history_limit_chars": 4000,
+    "memory_used": false,
+    "calls_per_request": 1,
+    "role_limits": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "thread_turns_used": 5,
+    "thread_turn_limit": 30,
+    "context_chars": 2065,
+    "history_chars": 263,
+    "meter_id": null,
+    "meter_root": null
+   },
+   "workflow_only": true
+  }
+ ],
+ "status": {
+  "http": 200,
+  "body": "{\"warning\": \"Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, financial hardship or other special-category details, and do not paste resident contact details. Use the case record instead. Matching text is masked before it is saved, but masking can miss things.\", \"retention\": \"30 days\", \"storage_approved\": true, \"provider_position\": {\"valid\": true, \"provider\": \"Azure OpenAI through the existing Foundry deployments (ADR 0001 to ADR 0003)\", \"region\": \"uksouth\", \"residency_zone\": \"uk_south\", \"deployment_type\": \"Standard\", \"deployment_attested\": false, \"primary_region\": \"uksouth\", \"eu_data_zone_regions\": [\"swedencentral\", \"westeurope\", \"northeurope\", \"francecentral\", \"germanywestcentral\", \"italynorth\", \"polandcentral\", \"spaincentral\"]"
+ },
+ "banner": "Employee assistant\nClose chat\nAbout this chat\nChat size\n\nLoading skills.\n\nDo not enter personal or sensitive resident information. Chat cannot approve or change records.\nYour work question\nPress Enter to send. Press Shift and Enter for a new line. Press Escape to close the chat.\nAttachments and voice input are not supported in this chat. Use the existing document or contact routes.\nAgent skill\nGeneral work help\nAttach\nVoice\nSend"
+}

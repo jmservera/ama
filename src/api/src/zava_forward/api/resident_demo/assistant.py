@@ -1,10 +1,11 @@
 """Optional Azure topic-selector adapter. No runtime auto-enablement or credential discovery."""
 
 import json
+import os
 import re
 import time
 import urllib.request
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
@@ -12,10 +13,24 @@ from zava_forward.core.ai_consumption import usage as valid_usage
 from zava_forward.core.resident_assistant import AssistantUnavailable, Topic
 
 EXPIRES = datetime(2026, 11, 1, tzinfo=UTC).timestamp()
+EXPIRY_ENV = "ZF_DEMO_EXPIRES_AT"
 MAX_REPLY = 4096
 MAX_PROMPT_BYTES = 512
 MAX_OUTPUT_TOKENS = 16
 TIMEOUT_SECONDS = 5
+
+
+def expires_at(env: Mapping[str, str] | None = None) -> float:
+    """Expiry from ZF_DEMO_EXPIRES_AT (explicit UTC); unset or invalid keeps the closed default."""
+    raw = (os.environ if env is None else env).get(EXPIRY_ENV, "").strip()
+    try:
+        moment = datetime.fromisoformat(raw.replace("Z", "+00:00"))
+    except ValueError:
+        return EXPIRES
+    offset = moment.utcoffset()
+    if offset is None or offset.total_seconds() != 0:
+        return EXPIRES
+    return moment.timestamp()
 
 
 @dataclass(frozen=True)
@@ -92,7 +107,7 @@ class AzureTopicProvider:
             raise AssistantUnavailable("invalid_topic")
         if (
             not self.enabled
-            or self.clock() >= EXPIRES
+            or self.clock() >= expires_at()
             or self.token is None
             or self.reserve is None
         ):
@@ -113,7 +128,7 @@ class AzureTopicProvider:
             if not token or "\r" in token or "\n" in token:
                 self._close("provider-unavailable")
                 raise AssistantUnavailable("credential_unavailable")
-            if self.clock() >= EXPIRES:
+            if self.clock() >= expires_at():
                 self._close("provider-unavailable")
                 raise AssistantUnavailable("expired")
             payload = json.dumps(

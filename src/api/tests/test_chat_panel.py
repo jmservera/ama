@@ -783,6 +783,20 @@ class PanelTests(roles.Matrix):
             self.assertEqual(refused["kind"], "refused")
             self.assertEqual(len(self.prompts), before)
 
+    def test_open_suspension_is_reported_as_a_hold_not_as_missing_approval(self) -> None:
+        with (
+            patch("zava_forward.api.server.chat_admission", wraps=chat_admission),
+            patch.dict(os.environ, self.DEMO_ON),
+            patch.object(self.store, "continuity_block", return_value="Suspended (SUS-1)"),
+        ):
+            status = self.api(ROLE, "/api/chat/status")[1]
+            self.assertIn("AI answers are on hold", status["demo_disclaimer"])
+            d = self.ask(self.thread(), "Tell me what you can help with")[1]
+            self.assertEqual(d["consumption"]["provider_outcome"], "ai-suspended")
+            self.assertEqual(d["consumption"]["model_calls"], 0)
+            self.assertIn("an open suspension holds AI answers", d["reply"])
+        self.assertEqual(self.prompts, [])
+
     def test_demo_switch_off_or_wrong_keeps_rules_only_status_and_no_call(self) -> None:
         wrong = {**self.DEMO_ON, "ZF_CHAT_DEMO_ACTIVATION": "yes"}
         for env in ({}, wrong):
