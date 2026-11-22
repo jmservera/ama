@@ -14612,3 +14612,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 2186 full receipt across docs moves, second run (Refs #2186)
 
 * Updated [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): rerun of 127 gate-tool tests, per-criterion statuses unchanged, end-to-end full receipt still unproven. No source change.
+## [2026-11-22] update | Issue 2164 roster scope re-proof (Refs #2164)
+
+* Added [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table; deployed-image criterion stays unproven. No source or estate change.
