@@ -156,6 +156,62 @@ async function run(responses, signal) {
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_map_read_recovers_from_a_dropped_connection(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const cut = (from, to) => {
+  const start = source.indexOf(from), end = source.indexOf(to);
+  assert.ok(start >= 0 && end > start, "marker missing: " + from);
+  return source.slice(start, end);
+};
+const code = cut("const pendingMutations", "const fmtDate")
+  + cut("const STARTUP_RETRY_DELAYS", "const workspaceScriptLoads");
+assert.match(source, /await api\(coordinator[\s\S]*?\/api\/map\?/,
+  "the map draw reads through api()");
+async function load(outcomes) {
+  const calls = [];
+  const context = vm.createContext({
+    workspaceStatus: {textContent: ""},
+    routeController: new AbortController(),
+    setTimeout(fn) { queueMicrotask(fn); return 1; },
+    fetch: async url => {
+      calls.push(url);
+      const next = outcomes.shift();
+      if (next instanceof Error) throw next;
+      return next;
+    },
+  });
+  vm.runInContext(code, context);
+  const data = await vm.runInContext('api("/api/map?zoom=5")', context);
+  return {data, calls};
+}
+const ok = {status: 200, ok: true, headers: {get: () => "application/json"},
+  json: async () => ({markers: [1, 2, 3]})};
+(async () => {
+  const out = await load([new TypeError("Failed to fetch"), ok]);
+  assert.deepEqual(out.data.markers, [1, 2, 3], "the first reset is retried without a reload");
+  assert.equal(out.calls.length, 2);
+  const failing = [new TypeError("Failed to fetch"), new TypeError("Failed to fetch"),
+    new TypeError("Failed to fetch"), ok];
+  await assert.rejects(load(failing), /Failed to fetch/);
+  assert.equal(failing.length, 1, "retries stay bounded");
+})().catch(error => { console.error(error); process.exitCode = 1; });
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_law_helper_failure_renders_native_reload_before_reads(self) -> None:
         result = subprocess.run(
             [

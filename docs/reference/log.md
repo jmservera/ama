@@ -14602,3 +14602,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 462 resident showcase live run 5 (Refs #462)
 
 * Added [resident-showcase-live-r5-2026-11-22.md](research/resident-showcase-live-r5-2026-11-22.md): 36-check Playwright rerun against the live demo, new image digest and minReplicas 1 noted, per-criterion table; criterion 2 stays unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 2257 verify-fixed (Refs #2257)
+
+* Added [issue-2257-verify-live-2026-11-22.md](research/issue-2257-verify-live-2026-11-22.md): revision 0000053 recovers from an injected `/api/map` reset (443 markers) and 8 of 8 fresh sign-ins load; request-level cause remains unproven. A map-path regression test was added.
