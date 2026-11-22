@@ -1,0 +1,12 @@
+N                           S          St                         E
+--------------------------  ---------  -------------------------  -------------------------
+job-live-receiver-29922060  Succeeded  2026-11-22T05:00:00+00:00  2026-11-22T05:25:44+00:00
+job-live-receiver-29922030  Succeeded  2026-11-22T04:30:00+00:00  2026-11-22T04:55:29+00:00
+job-live-receiver-29922000  Succeeded  2026-11-22T04:00:00+00:00  2026-11-22T04:25:37+00:00
+job-live-receiver-29921970  Failed     2026-11-22T03:30:00+00:00
+job-live-receiver-29921940  Failed     2026-11-22T03:00:00+00:00
+job-live-receiver-29921910  Failed     2026-11-22T02:30:00+00:00
+{
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:295164ca739d5602ca323c65c305cff9d76a3e72faa4623e0dfa931363fd4f72",
+  "mod": "2026-11-22T03:34:29.5587872"
+}
