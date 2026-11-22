@@ -14530,3 +14530,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 440 post-demo deferral wording (Refs #440)
 
 * Added [issue-440-post-demo-deferral-wording-2026-11-22.md](research/issue-440-post-demo-deferral-wording-2026-11-22.md): draft body text deferring criteria 7 and 8 until after the demo, awaiting owner approval. The GitHub issue was not edited and both criteria stay unticked.
+
+## [2026-11-22] update | Issue 1288 eighth live audit of Quality sensor values (Refs #1288)
+
+* Added [issue-1288-live-r8-quality-sensor-evidence-2026-11-22.md](research/issue-1288-live-r8-quality-sensor-evidence-2026-11-22.md): 92 focused tests OK, seven homes with fresh live readings, Home sensors screenshot, Quality model still blocked at release admission (OQ-017); criteria 4 and 8 unproven, no source change.

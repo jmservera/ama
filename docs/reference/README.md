@@ -671,6 +671,8 @@ re-runs 304 local sensor tests and a read-only Azure probe; no code gap in crite
 The [fifth audit](./research/issue-1288-live-r5-quality-sensor-evidence-2026-11-19.md) repeats this with 272 tests; the result is unchanged.
 The [sixth audit](./research/issue-1288-live-r6-quality-sensor-evidence-2026-11-21.md) sees the live simulator feeding two homes and the Quality model blocked at release admission; criteria 4 and 8 stay unproven.
 
+The [eighth audit](./research/issue-1288-live-r8-quality-sensor-evidence-2026-11-22.md) sees seven homes with fresh live readings, 92 focused tests OK and the Quality model still blocked at release admission; criteria 4 and 8 stay unproven.
+
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).

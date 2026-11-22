@@ -1,0 +1,6 @@
+........http-response GET /api/assistants/proposals status=503
+.....
+----------------------------------------------------------------------
+Ran 92 tests in 118.612s
+
+OK (skipped=9)
