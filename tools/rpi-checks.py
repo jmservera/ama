@@ -27,6 +27,7 @@ from typing import Any
 from urllib.request import urlopen
 
 PROJECTS = ("core", "agents", "api", "orchestrator", "importer")
+IMAGE_CONCURRENCY = 4
 IMAGES = ("api", "agents", "orchestrator", "importer")
 INERT_PREFIXES = ("docs/", ".copilot-tracking/", "support/")
 # Paths no test reads (the link test skips both); markdown elsewhere, docs/ included, is test input.
@@ -1994,7 +1995,9 @@ class Runner:
         self.local = threading.local()
         self.row_lock = threading.Lock()
         self.install_lock = threading.Lock()
-        self.docker_lock = threading.Lock()
+        self.docker_gate = threading.Lock()
+        self.docker_slots = threading.BoundedSemaphore(IMAGE_CONCURRENCY)
+        self.trivy_lock = threading.Lock()
         self.cancelled = threading.Event()
         self.active: dict[int, subprocess.Popen[str]] = {}
         self.token = secrets.token_hex(12)
@@ -2929,48 +2932,49 @@ class Runner:
                 "--severity",
                 "HIGH,CRITICAL",
             ]
-            self.command(
-                [
-                    *args,
-                    "--ignore-unfixed",
-                    "--exit-code",
-                    "1",
-                    "--format",
-                    "json",
-                    "--output",
-                    str(self.out / f"{project}-gate.json"),
-                    image_id,
-                ],
-                timeout=900,
-                retry=True,
-            )
-            gate_row = self.local.last_entry
-            gate_row.pop("expected_probe_failure", None)
-            self.command(
-                [
-                    *args,
-                    "--ignore-unfixed=false",
-                    "--exit-code",
-                    "0",
-                    "--format",
-                    "json",
-                    "--output",
-                    str(self.out / f"{project}-all.json"),
-                    image_id,
-                ],
-                timeout=900,
-            )
-            self.command(
-                [
-                    *args,
-                    "--format",
-                    "spdx-json",
-                    "--output",
-                    str(self.out / f"{project}.spdx.json"),
-                    image_id,
-                ],
-                timeout=900,
-            )
+            with self.trivy_lock:
+                self.command(
+                    [
+                        *args,
+                        "--ignore-unfixed",
+                        "--exit-code",
+                        "1",
+                        "--format",
+                        "json",
+                        "--output",
+                        str(self.out / f"{project}-gate.json"),
+                        image_id,
+                    ],
+                    timeout=900,
+                    retry=True,
+                )
+                gate_row = self.local.last_entry
+                gate_row.pop("expected_probe_failure", None)
+                self.command(
+                    [
+                        *args,
+                        "--ignore-unfixed=false",
+                        "--exit-code",
+                        "0",
+                        "--format",
+                        "json",
+                        "--output",
+                        str(self.out / f"{project}-all.json"),
+                        image_id,
+                    ],
+                    timeout=900,
+                )
+                self.command(
+                    [
+                        *args,
+                        "--format",
+                        "spdx-json",
+                        "--output",
+                        str(self.out / f"{project}.spdx.json"),
+                        image_id,
+                    ],
+                    timeout=900,
+                )
             for suffix in ("gate.json", "all.json", "spdx.json"):
                 report = json.loads(
                     (
@@ -3027,6 +3031,20 @@ class Runner:
                 capture_output=True,
             )
 
+    @contextlib.contextmanager
+    def docker_capacity(self, slots: int) -> Iterator[None]:
+        # Image groups share the slots; mssql takes all of them to run alone.
+        held = 0
+        try:
+            with self.docker_gate:
+                for _ in range(slots):
+                    self.docker_slots.acquire()
+                    held += 1
+            yield
+        finally:
+            for _ in range(held):
+                self.docker_slots.release()
+
     def dispatch(self, group: str) -> None:
         if group.startswith("project-"):
             self.projects((group.removeprefix("project-"),), install=False)
@@ -3035,7 +3053,7 @@ class Runner:
         elif group == "browser":
             self.browser()
         elif group == "mssql" or group.startswith("image-") or group == "logo-0600":
-            with self.docker_lock:
+            with self.docker_capacity(IMAGE_CONCURRENCY if group == "mssql" else 1):
                 if group == "mssql":
                     self.sql()
                 else:

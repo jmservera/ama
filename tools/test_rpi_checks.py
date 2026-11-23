@@ -2885,33 +2885,51 @@ os.fstat(3)
         self.assertEqual({row["group"] for row in runner.rows}, {"project-core", "project-agents"})
         self.assertFalse(runner.active)
 
-    def test_sql_and_image_resources_are_serial(self) -> None:
+    def test_images_build_concurrently_and_mssql_runs_alone(self) -> None:
         runner = self.runner()
-        runner.jobs = 3
+        runner.jobs = 6
         runner.groups = ["namespace", "project-api"]
-        active = 0
-        peak = 0
         mutex = threading.Lock()
+        active: dict[str, int] = {"image": 0, "mssql": 0}
+        peaks = {"image": 0, "overlap": 0}
+        barrier = threading.Barrier(4, timeout=10)
+        use_barrier = True
 
-        def work(*args: Any, **kwargs: Any) -> None:
-            nonlocal active, peak
+        def enter(kind: str) -> None:
             with mutex:
-                active += 1
-                peak = max(active, peak)
+                active[kind] += 1
+                peaks["image"] = max(peaks["image"], active["image"])
+                if active["mssql"] and active["image"]:
+                    peaks["overlap"] += 1
+
+        def leave(kind: str) -> None:
+            with mutex:
+                active[kind] -= 1
+
+        def sql() -> None:
+            enter("mssql")
+            threading.Event().wait(0.05)
+            leave("mssql")
+            runner.groups.append("mssql")
+
+        def image(project: str, *, stress: bool = False) -> None:
+            enter("image")
+            if use_barrier:
+                barrier.wait()
             threading.Event().wait(0.02)
-            with mutex:
-                active -= 1
-            group = (
-                "mssql" if not args else "logo-0600" if kwargs.get("stress") else f"image-{args[0]}"
-            )
-            runner.groups.append(group)
+            leave("image")
+            runner.groups.append("logo-0600" if stress else f"image-{project}")
 
         with (
-            patch.object(runner, "sql", side_effect=work),
-            patch.object(runner, "image", side_effect=work),
+            patch.object(runner, "sql", side_effect=sql),
+            patch.object(runner, "image", side_effect=image),
         ):
-            runner.schedule(["mssql", "image-api", "image-agents", "logo-0600"])
-        self.assertEqual(peak, 1)
+            runner.schedule(["image-api", "image-agents", "image-orchestrator", "logo-0600"])
+            self.assertEqual(peaks["image"], 4)
+            runner.groups = ["namespace", "project-api"]
+            use_barrier = False
+            runner.schedule(["mssql", "image-api", "image-agents", "image-importer"])
+        self.assertEqual(peaks["overlap"], 0)
 
     def test_worker_limit_respects_cpu_memory_and_invalid_jobs(self) -> None:
         real_read = Path.read_text

@@ -14763,3 +14763,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 198 criteria re-verification, run 20261123T010043Z (Refs #198)
 
 * Added [issue-198-rubric-live-20261123T010043Z-2026-11-23.md](research/issue-198-rubric-live-20261123T010043Z-2026-11-23.md): registry has no mvp or prototype glob, score 79, 84 rubric tests pass, live revisions 0000054 and 0000026 confirmed. Criterion 3 unproven, criterion 4 end state proven only; owner-gated. No source or estate change.
+## [2026-11-23] update | Issue 2188 concurrent image builds (Refs #2188)
+
+* Added [issue-2188-live-image-concurrency-2026-11-23.md](research/issue-2188-live-image-concurrency-2026-11-23.md): `tools/rpi-checks.py` no longer serialises image groups on one docker lock; up to four build concurrently, `mssql` stays exclusive and Trivy scans are serialised. Retry criterion already implemented. 129 gate-tool tests pass; whole-gate before and after unproven.
