@@ -190,7 +190,7 @@ class Grounding(qs.Seed, ta.ApiTests):
         self.service.scan()
         self.assertEqual(self.quality_task(), [])
 
-        # A manual proposal still reaches the model with the same marker and is never an autonomous flag.
+        # A manual proposal still reaches the model with the same marker, never as an autonomous flag.
         tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
         self.assertTrue(self.service.execute(tid))
         sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]
