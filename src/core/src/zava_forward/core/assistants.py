@@ -2408,10 +2408,10 @@ class Assistants:
             cause = "sql-write-lock-busy" if is_write_lock_busy(exc) else "other"
             state = driver_sqlstate(exc)
             LOG.warning(
-                "map sensor summary unavailable exc=%s cause=%s%s",
+                "map sensor summary unavailable exc=%s cause=%s sqlstate=%s",
                 type(exc).__name__,
                 cause,
-                f" sqlstate={state}" if state else "",
+                state or "none",
             )
             out = {i: sensor_map.fixed("unavailable") for i in ids[: sensor_map.HOME_CAP]}
         out.update({i: sensor_map.fixed("not-loaded") for i in ids[sensor_map.HOME_CAP :]})
