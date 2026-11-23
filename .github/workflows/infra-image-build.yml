@@ -1,0 +1,45 @@
+name: Infrastructure PR image build
+
+# Builds and tags a versioned image for review. It never logs in to Azure or a
+# registry, never pushes and never deploys; release stays in src-deploy.yml.
+on:
+  pull_request:
+    paths:
+      - "infra/**"
+      - "src/**"
+      - ".github/workflows/infra-image-build.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ama-image-build-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [api, agents, orchestrator, importer]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - name: Build versioned image without publishing
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: |
+          tag="sha-${GITHUB_SHA}-r${GITHUB_RUN_ID}-a${GITHUB_RUN_ATTEMPT}"
+          echo "IMAGE=zava-forward-${PROJECT}:${tag}" >> "$GITHUB_ENV"
+          docker build -f "src/$PROJECT/Dockerfile" --build-arg "ZF_BUILD_COMMIT=$GITHUB_SHA" -t "zava-forward-${PROJECT}:${tag}" src
+      - name: Startup checks without cloud credentials
+        env:
+          PROJECT: ${{ matrix.project }}
+        run: |
+          docker image inspect "$IMAGE" --format '{{.Id}}' > /dev/null
+          python3 src/check-container.py "$PROJECT" "$IMAGE"

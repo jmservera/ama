@@ -449,6 +449,31 @@ def compare(args: argparse.Namespace) -> dict[str, Any]:
     return report
 
 
+def render_markdown(report: dict[str, Any]) -> str:
+    """Render a compare report as a table for a PR description."""
+    lines = [f"Verdict: {report['verdict']}", ""]
+    if report["verdict"] != "COMPARABLE":
+        lines += [f"* {reason}" for reason in report["reasons"]]
+        return "\n".join(lines)
+    lines += [
+        "| Arm | Receipts | Span median (s) | Min (s) | Max (s) |",
+        "| --- | --- | --- | --- | --- |",
+    ]
+    for arm in ("before", "after"):
+        item = report[arm]
+        lines.append(
+            f"| {arm} | {len(item['receipts'])} | {item['span_median']} | "
+            f"{item['span_min']} | {item['span_max']} |"
+        )
+    lines += [
+        "",
+        f"Median span delta (after minus before): {report['span_median_delta']} s",
+        "",
+        report["note"],
+    ]
+    return "\n".join(lines)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -466,6 +491,7 @@ def build_parser() -> argparse.ArgumentParser:
     cmp_.add_argument("--verification-after", type=Path)
     cmp_.add_argument("--allow-tree-delta", choices=["RUNNER_ONLY"])
     cmp_.add_argument("--repo", type=Path)
+    cmp_.add_argument("--markdown", action="store_true", help="print a PR-ready table, not JSON")
     return parser
 
 
@@ -483,7 +509,10 @@ def main(argv: list[str] | None = None) -> int:
     except TimingError as error:
         print(f"REFUSED: {error}", file=sys.stderr)
         return error.code
-    print(json.dumps(output, indent=2, sort_keys=True))
+    if args.command == "compare" and args.markdown:
+        print(render_markdown(output))
+    else:
+        print(json.dumps(output, indent=2, sort_keys=True))
     return code
 
 

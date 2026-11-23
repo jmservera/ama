@@ -618,6 +618,17 @@ variance, and AI limit holds by reason. The usage and hold panels read the
 non-authoritative `AI_USAGE` and `AI_LIMIT_BREACH` console markers and show
 Insufficient, never zero, when they are absent.
 
+### AI usage saved query
+
+Anchor: `ai-usage-saved-query`. `operationalMonitoring.bicep` also authors the
+workspace saved search `zava-ai-usage-by-capability-and-period`, which shows
+metered AI calls and tokens by capability and period beside an Azure cost record
+column and `Unreconciled, not zero` variance. Accountable role: Finance for
+the variance and price, Digital service owner for the query; appointment
+pending. It reads the non-authoritative `AI_USAGE` console marker, returns no
+rows rather than zero when the marker is absent, and does not reconcile billing.
+Deployment to Azure remains an owner-authorised action.
+
 Application log lines are now redacted in the process before they reach the
 console: every service entrypoint installs
 [diagnostic_logging.py](../src/core/src/zava_forward/core/diagnostic_logging.py),

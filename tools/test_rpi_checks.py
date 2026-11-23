@@ -3768,6 +3768,19 @@ os.fstat(3)
         self.assertEqual([row["exit_code"] for row in runner.retries], [1])
         self.assertNotEqual(runner.retries[0]["log"], runner.rows[0]["log"])
 
+    def test_wall_seconds_spans_earliest_start_to_latest_finish_with_retries(self) -> None:
+        rows = [
+            {"started": "2026-11-23T10:00:00+00:00", "finished": "2026-11-23T10:00:30+00:00"},
+            {"started": "2026-11-23T10:00:10+00:00", "finished": "2026-11-23T10:01:00.4+00:00"},
+        ]
+        retries = [
+            {"started": "2026-11-23T10:01:00+00:00", "finished": "2026-11-23T10:02:00+00:00"}
+        ]
+        self.assertEqual(gate.wall_seconds(rows), 60.4)
+        self.assertEqual(gate.wall_seconds([*rows, *retries]), 120.0)
+        self.assertIsNone(gate.wall_seconds([{"started": "2026-11-23T10:00:00+00:00"}]))
+        self.assertIsNone(gate.wall_seconds([]))
+
     def test_second_shard_failure_or_timeout_is_not_excused(self) -> None:
         for codes in ([1, 1], [124]):
             runner = self._retry_runner(codes, f"retry-{len(codes)}")
@@ -4076,6 +4089,7 @@ os.fstat(3)
             "root README read by tests": (("README.md",), False),
             "infra README read by tests": (("infra/README.md",), False),
             "docs data file": (("docs/architecture/x.json",), False),
+            "docs binary scanned by repo-wide checks": (("docs/presentations/x.pptx",), False),
             "unrelated project code": (("src/importer/src/zava_forward/importer/x.py",), False),
             "unrelated project tests": (("src/importer/tests/test_x.py",), False),
             "markdown under src": (("src/importer/README.md",), False),

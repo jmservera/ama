@@ -560,6 +560,7 @@ def eligible(capability, snapshot, now_date, changed=False, known=False):
         sensors.get("state") == "ok"
         and sensors.get("readings")
         and not sensors.get("conflicting_readings")
+        and not sensors.get("implausible_readings")
         and s["quality"]
         and not known
     )
@@ -603,6 +604,7 @@ def review_flag(
     # capture is unknown, never an empty one.
     observed = current is not None and now_sensors.get("state") in ("ok", "no-readings")
     captured_conflicts = list(sensors.get("conflicting_readings") or [])
+    captured_implausible = list(sensors.get("implausible_readings") or [])
     current_conflicts = list(now_sensors.get("conflicting_readings") or []) if observed else []
     same_bucket_conflict = bool(
         current_conflicts
@@ -619,6 +621,8 @@ def review_flag(
         status = "reviewed"
     elif state == "ready" and clashes:
         status = "conflicting-readings"
+    elif state == "ready" and captured_implausible:
+        status = "implausible-readings"
     elif not actionable or state != "ready":
         status = "not-current"
     elif not proactive:
@@ -714,6 +718,9 @@ def review_flag(
         "Retained sensor readings conflict for the same sensor and time, so no automatic review flag is raised. "
         "Do not choose between conflicting readings; use the ordinary quality check."
         if status == "conflicting-readings"
+        else "A retained sensor reading is missing a value or outside the possible range, so no automatic review flag is raised. "
+        "Do not rely on it; use the ordinary quality check."
+        if status == "implausible-readings"
         else "Suggests a person review the cited readings. It does not accept work, close a defect, authorise payment or consent, "
         "diagnose a hazard or change any ranking."
         + (
@@ -776,6 +783,9 @@ def review_flag(
         out["conflicting_readings"] = clashes
         if conflict_notice:
             out["conflict_notice"] = conflict_notice
+    if status == "implausible-readings":
+        out["implausible_readings"] = captured_implausible
+        out["implausible_notice"] = sensors.get("implausible_notice")
     return out
 
 

@@ -571,6 +571,7 @@ adds a generated `.xlsx` (generator in `tools/`), its local row-level preview an
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
 The [issue 144 live hosting probe](./research/issue-144-live-hosting-2026-11-22.md) records digest-pinned images, live non-root proof, a writable root file system and no pipeline run.
 The [issue 144 live hardening re-probe](./research/issue-144-live-hardening-reprobe-2026-11-23.md) adds an offline verifier and records live `NoNewPrivs` 1, empty effective capabilities, a writable root file system and no pipeline run.
+The [issue 144 hardening receipt](./research/issue-144-live-hardening-receipt-2026-11-23.md) records the guard enforced on every app and job and a live application process that is non-root with NoNewPrivs and empty capability sets; read-only root stays unproven.
 The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 The [web `.xlsx` import note](./research/issue-2008-web-xlsx-import-2026-11-22.md) records the
 local proof that the "Check a spreadsheet" screen previews the workbook with mapping and conflicts.
@@ -583,6 +584,9 @@ A [second pass](./research/issue-146-live2-monitoring-evidence-2026-11-18.md) re
 A [2026-11-19 triage](./research/issue-146-live-triage-2026-11-19.md) records a fresh read-only inventory and states that the only buildable item is an `infra/` change needing the full tier.
 A [2026-11-19 re-check](./research/issue-146-live4-monitoring-2026-11-19.md) confirms the same installed inventory and classifies every unticked criterion as infrastructure-scope, private-link-blocked or human-owned.
 A [2026-11-22 pass](./research/issue-146-live5-monitoring-2026-11-22.md) adds source for a SQL DTU alert and a receiver job failure alert, with a live read-only inventory and a per-criterion result.
+
+A [2026-11-23 pass](./research/issue-2314-alerts-runbooks-2026-11-23.md) adds a saved search for AI usage by capability and period with unreconciled variance, and a per-criterion result.
+A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) executes the workbook queries live now that workspace query access is open, fixes a failing AI variance query and records what stays unproven.
 
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
@@ -697,6 +701,8 @@ The [eleventh audit](./research/issue-1288-live-r11-quality-sensor-evidence-2026
 
 The [twelfth audit](./research/issue-1288-live-r12-quality-sensor-evidence-2026-11-23.md) repeats them: 531 focused tests OK, seven homes with fresh live readings and the release-admission block unchanged. Criteria 4 and 8 stay unproven.
 
+The [thirteenth audit](./research/issue-1288-live-r13-quality-sensor-evidence-2026-11-23.md) closes a code gap: physically impossible retained readings now carry an `implausible_readings` marker into the Quality model snapshot and block the proactive request and the autonomous flag. Criteria 4 and 8 stay unproven.
+
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
@@ -722,6 +728,8 @@ The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a d
 The [issue 2245 chat note](./research/issue-2245-live-2026-11-23.md) finds the live demo has no generative chat answers because a leftover AI suspension holds them (already stated in the banner), and makes a busy SQL write lock on chat thread creation answer 503 instead of 500.
 
 The [issue 2245 recheck](./research/issue-2245-recheck-2026-11-23.md) reproduces the thread creation 500 live on revision 0000055 under a busy SQL write lock, with the fix not yet deployed and the AI suspension unchanged, plus a per-criterion table.
+
+The [issue 2245 SQL store override note](./research/issue-2245-override-sqlstore-2026-11-23.md) records that the owner-directed AI suspension override did not reach the SQL store, the local fix, and a live probe on revision 0000057 with a per-criterion table.
 
 The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.md) records revision 0000054 healthy for 33 min with the start-up lock retry present, zero restarts and a clean second-replica start; the held-lock test stays unproven.
 
@@ -1660,12 +1668,14 @@ or infra acceptance claimed.
 | [Issue 2257 live comparison on revision 0000054 (#2257)](./research/issue-2257-live-2026-11-23.md) | Dropped-connection recovery proven; a server 500 on fresh sessions found; sensor overlay hardening; per-criterion table |
 | [Issue 2257 map retry control and re-probe on revision 0000055 (#2257)](./research/issue-2257-retry-control-2026-11-23.md) | Visible retry button and bounded redraw; 8 of 8 fresh sessions loaded; per-criterion table |
 | [Issue 2302 AI consumption economics in the management view (#2302)](./research/issue-2302-ai-economics-live-2026-11-23.md) | Live Overview card on revision 0000055, focused Unknown-not-zero tests, per-criterion table |
+| [Issue 2303 chat golden file in the API image (#2303)](./research/issue-2303-chat-golden-image-2026-11-23.md) | Local container reproduction and fix, contract test, per-criterion table |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2257 SQLSTATE in the map overlay warning (#2257)](./research/issue-2257-live-r5-2026-11-23.md) | Overlay warning records the driver SQLSTATE for non-lock failures; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
 | [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
 | [Issue 2304 assistants forecast did not answer on live data (#2304)](./research/issue-2304-forecast-live-2026-11-23.md) | Live 200 s hang reproduced, statement-count profile, bulk-read fix with a 10 s named state; live re-check blocked by the private registry; per-criterion table |
+| [Issue 2313 what-if workflow and PR image build (#2313)](./research/issue-2313-what-if-live-2026-11-23.md) | Existing infra-plan.yml covers what-if; new credential-free versioned image build; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |
@@ -1827,6 +1837,7 @@ or infra acceptance claimed.
 | [Issue 470 Closure Evidence, Faster Local Gate (2026-11-22)](./research/issue-470-live-2026-11-22.md) | 123 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after) unproven, speed-up PR 2272 unmerged |
 | [Issue 470 Live Re-check r2, Faster Local Gate (2026-11-22)](./research/issue-470-live-r2-2026-11-22.md) | 128 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after) unproven; PR 2272 now merged, full gate not run |
 | [Issue 470 Live Re-check r3, Faster Local Gate (2026-11-23)](./research/issue-470-live-r3-2026-11-23.md) | 129 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after in a PR) unproven and owner-gated; no source change |
+| [Issue 470 Live Re-check r4, Faster Local Gate (2026-11-23)](./research/issue-470-live-r4-2026-11-23.md) | 129 gate tests pass proving criteria 1, 2, 3 and 5; `rpi-gate-timing.py compare --markdown` added for PR-ready tables; criterion 4 (measured full-run before/after) unproven, full gate not run |
 | [Issue 1830 Live Audit, Gate Preflight and Timing](./research/issue-1830-live-20261118T1648Z-2026-11-18.md) | Per-criterion audit of issue 1830 with timing reports from seven retained full receipts; criteria 1 and 3 partly evidenced, 2 and 4 unproven (the preflight candidate refuses all selected execution); no source change |
 | [Issue 1830 Live r3, No Buildable Criterion](./research/issue-1830-live-r3-2026-11-19.md) | Re-verification of the gate preflight and timing tools; every remaining criterion needs an owner decision, a pull request or lost data; no source change |
 | [Issue 1830 Live r4, No Buildable Criterion](./research/issue-1830-live-r4-2026-11-19.md) | Re-verified 2026-11-19: preflight still refuses execution by design, no retained receipts; per-criterion table, no source change |
@@ -1840,6 +1851,7 @@ or infra acceptance claimed.
 | [Issue 2188 Live, Gate Speed-up Criteria Refresh](./research/issue-2188-live-gate-speed-2026-11-22.md) | Supersedes the retry finding: shard retry and receipt retries implemented, image build 70.5 s to 7.2 s, images still serial, gate-level pair unproven |
 | [Issue 2187 Live, Gate Heavy Lock Scope](./research/issue-2187-live-gate-lock-2026-11-23.md) | Heavy lock only for browser, SQL and image groups already merged in #2215; #2286 did not touch it; no remainder; per-criterion table |
 | [Issue 2188 Live, Concurrent Image Builds](./research/issue-2188-live-image-concurrency-2026-11-23.md) | Image groups now build up to four at a time, mssql stays exclusive, Trivy serialised; per-criterion table |
+| [Issue 2188 Live, Wall Time in the Gate Receipt](./research/issue-2188-live-wall-time-2026-11-23.md) | Receipt records `wall_seconds`; before and after gate pair remains unproven; per-criterion table |
 | [Issue 2186 Live, Full Receipt Across Docs-only Moves](./research/issue-2186-live-full-receipt-docs-move-2026-11-21.md) | Full receipts now relax over inert main moves; code, tool and image moves still invalidate; end-to-end full receipt unproven |
 | [Issue 1830 Live Criterion 1 Measurement](./research/issue-1830-live-20261119T1346Z-2026-11-19.md) | Timing from eight retained passed full receipts, queue wait from four gate logs, critical chain, parallel-versus-summed time and setup cost; `report --log` refusal fix; criteria 1, 3 and 4 partly proven, 2 unproven (Refs #1830) |
 | [Issue 349 Tenant Prerequisites, Live Demo Re-verification](./research/issue-349-tenant-prerequisites-live-2026-11-18.md) | Issue 349: per-criterion proven/unproven status from read-only Azure checks (auth config, vault path, private endpoint) and Playwright runs with the test sign-in |
@@ -2269,4 +2281,5 @@ The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records t
 
 The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.
 
+The [issue 2244 StartUp probe note, run 3](./research/issue-2244-live-r3-2026-11-23.md) shows the live API StartUp window (121 s) is shorter than the start-up lock retry budget (211 s), raises the Bicep window to 241 s with a pinning test, and gives the per-criterion table.
 The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.
