@@ -15125,3 +15125,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2303 live rerun on revision 0000057 (Refs #2303)
 
 * Added [issue-2303-live-2026-11-23](research/issue-2303-live-2026-11-23/README.md): read-only Playwright probe shows `GET /api/ai/report` still returns 500 (FileNotFoundError) on the running revision; the head fix and contract test pass; deployment stays owner-gated. No source or estate change.
+
+## [2026-11-23] add | Issue 107 ninth live pass (Refs #107)
+
+* Added [issue-107-live-r9-criteria-2026-11-23.md](research/issue-107-live-r9-criteria-2026-11-23.md): read-only observation of revision 0000058 and a rerun of the release and restart tests (99 OK on SQLite). The approved-release criterion stays unproven (no named approver). No source or estate change.
