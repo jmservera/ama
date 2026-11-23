@@ -3942,6 +3942,10 @@ os.fstat(3)
         docs_only = set(gate.changed_groups(["docs/pr.md"], []))
         self.assertEqual(docs_only, {"preflight", "namespace", "static"})
         self.assertEqual(gate.moved_path_blocker("docs/x.md", pr_paths, api, []), "")
+        self.assertIn(
+            "also changed",
+            gate.moved_path_blocker("docs/pr.md", pr_paths | {"docs/pr.md"}, api, []),
+        )
         for path in (
             "src/README.md",
             "src/api/tests/README.md",
@@ -4047,7 +4051,11 @@ os.fstat(3)
         self.commit("pr", "src/api/src/zava_forward/api/server.py")
         full = self.relaxed_receipt("full")
         cases = {
-            "docs": (("docs/other.md", ".copilot-tracking/x.json"), True),
+            "unread paths": (("support/x.md", ".copilot-tracking/x.json"), True),
+            "docs markdown read by link test": (("docs/other.md",), False),
+            "root README read by tests": (("README.md",), False),
+            "infra README read by tests": (("infra/README.md",), False),
+            "docs data file": (("docs/architecture/x.json",), False),
             "unrelated project code": (("src/importer/src/zava_forward/importer/x.py",), False),
             "unrelated project tests": (("src/importer/tests/test_x.py",), False),
             "markdown under src": (("src/importer/README.md",), False),
@@ -4082,7 +4090,7 @@ os.fstat(3)
 
     def test_verify_reports_docs_only_relaxation_for_full_receipt(self) -> None:
         self.commit("pr", "src/api/src/zava_forward/api/server.py")
-        moved = self.move_main("docs/other.md")
+        moved = self.move_main("support/other.md")
         proof = gate.base_relaxation(self.root, self.base, moved, [], inert_only=True)
         receipt = {
             "scope": "full",

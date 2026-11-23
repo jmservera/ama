@@ -29,6 +29,8 @@ from urllib.request import urlopen
 PROJECTS = ("core", "agents", "api", "orchestrator", "importer")
 IMAGES = ("api", "agents", "orchestrator", "importer")
 INERT_PREFIXES = ("docs/", ".copilot-tracking/", "support/")
+# Paths no test reads (the link test skips both); markdown elsewhere, docs/ included, is test input.
+RECEIPT_INERT_PREFIXES = (".copilot-tracking/", "support/")
 # Projects whose unit suite may be split across worker processes, with the maximum shard count.
 SHARDED_PROJECTS = {"api": 3}
 # Unit suite ceiling in seconds; core ran 1535 s on a loaded host (issue #470), so it gets double.
@@ -441,11 +443,11 @@ def moved_path_blocker(
     path: str, pr_paths: set[str], pr_groups: set[str], extras: list[str]
 ) -> str:
     """Reason a main-side path invalidates a partial receipt, or an empty string."""
+    if path in pr_paths:
+        return "also changed by the candidate"
     if inert_path(path):
         # Tests read markdown under src/, so only other inert paths are provably irrelevant.
         return "markdown under src/ may be read by tests" if path.startswith("src/") else ""
-    if path in pr_paths:
-        return "also changed by the candidate"
     if path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py"):
         return "changes the gate matrix itself"
     mapped = set(changed_groups([path], extras))
@@ -506,8 +508,8 @@ def base_relaxation(
     pr_groups = set(changed_groups(pr_paths, extras))
     for path in moved:
         reason = moved_path_blocker(path, set(pr_paths), pr_groups, extras)
-        if inert_only and not (inert_path(path) and not reason):
-            reason = reason or "a full receipt covers every group, so only inert paths qualify"
+        if inert_only and not (receipt_inert_path(path) and not reason):
+            reason = reason or "a full receipt covers every group, so only unread paths qualify"
         if reason:
             raise GateError(f"Base moved on {path}: {reason}; rerun the gate on the current base")
     return {
@@ -692,6 +694,10 @@ def required_groups(extras: list[str]) -> list[str]:
 
 def inert_path(path: str) -> bool:
     return path.endswith(".md") or path.startswith(INERT_PREFIXES)
+
+
+def receipt_inert_path(path: str) -> bool:
+    return path.startswith(RECEIPT_INERT_PREFIXES)
 
 
 def suite_timeout(project: str) -> int:
