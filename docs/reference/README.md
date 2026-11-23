@@ -654,7 +654,8 @@ for Storage malware scanning is enabled on the demo account, but the app still r
 [third pass](./research/issue-117-live-r3-closure-2026-11-18.md) reconfirms both results and records why the
 `ZF_SCANNER=defender` change was not made for the demo. A [fifth pass](./research/issue-117-live-r6-2026-11-19.md)
 re-confirms the enabled engine, and a direct probe was blocked by storage network rules. A [sixth pass](./research/issue-117-live-r7-2026-11-19.md)
-re-runs the scan tests with no change in the remaining gap.
+re-runs the scan tests with no change in the remaining gap. A [seventh pass](./research/issue-117-live-r8-2026-11-23.md)
+adds tests for the real Defender tag reader and scanner factory fail-closed edges.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human

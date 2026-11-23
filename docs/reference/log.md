@@ -14990,3 +14990,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2164 deployed code proof (Refs #2164)
 
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
+
+## [2026-11-23] add | Issue 117 tag reader tests (Refs #117)
+
+* Added [issue-117-live-r8-2026-11-23.md](research/issue-117-live-r8-2026-11-23.md): tests for the Defender tag reader and scanner factory fail-closed edges; the live Defender path stays unproven.

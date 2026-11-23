@@ -548,6 +548,62 @@ class SqliteRescan(unittest.TestCase):
         self.assertEqual(reopened.get_document("ZF-1", "d0", DATA["staff"][0])[2], b"SYN body")
 
 
+class DefenderTagReader(unittest.TestCase):
+    """The real tag reader and scanner factory fail closed (issue #117)."""
+
+    @staticmethod
+    def scanner(status: int, body: bytes) -> Any:
+        def transport(*args: Any, **kwargs: Any) -> tuple[int, dict[str, str], bytes]:
+            return status, {}, body
+
+        constructor: Any = AzureBlobDocumentStore
+        blob = constructor("https://synthetic.invalid", "docs", sas="SYN", transport=transport)
+        scanner: Any = DefenderForStorageScanner
+        result: Any = scanner(blob)
+        return result
+
+    @staticmethod
+    def tags(value: str) -> bytes:
+        return (
+            f"<Tags><TagSet><Tag><Key>{DEFENDER_TAG}</Key><Value>{value}</Value></Tag>"
+            "</TagSet></Tags>"
+        ).encode()
+
+    def verdict(self, status: int, body: bytes) -> str:
+        verdict: str = self.scanner(status, body).scan(
+            "ZF-1", "d0", "a.pdf", b"", "application/pdf"
+        )[0]
+        return verdict
+
+    def test_clean_and_malicious_tags_are_read_from_the_blob_tag_xml(self) -> None:
+        self.assertEqual(self.verdict(200, self.tags("No threats found")), "clean")
+        self.assertEqual(self.verdict(200, self.tags("Malicious")), "infected")
+
+    def test_refused_unreadable_or_missing_tags_stay_pending(self) -> None:
+        for status, body in (
+            (403, b"denied"),
+            (404, b""),
+            (200, b"not xml"),
+            (200, b"<Tags><TagSet></TagSet></Tags>"),
+        ):
+            with self.subTest(status=status, body=body):
+                self.assertEqual(self.verdict(status, body), "pending")
+
+    def test_scanner_configuration_errors_are_refused(self) -> None:
+        from zava_forward.core import doc_controls, documents
+
+        local_store: Any = documents.LocalDocumentStore
+        open_scanner: Any = doc_controls.open_scanner
+
+        with tempfile.TemporaryDirectory() as root:
+            local = local_store(root)
+            with self.assertRaises(ValueError):
+                open_scanner(local, {"ZF_SCANNER": "defender"})
+            with self.assertRaises(ValueError):
+                open_scanner(local, {"ZF_SCANNER": "bogus"})
+            self.assertIsInstance(open_scanner(local, {}), doc_controls.LocalSignatureScanner)
+
+
 @unittest.skipUnless(
     os.environ.get("ZF_DOCUMENT_RESCAN_MSSQL") == "1", "requires owned loopback SQL Server"
 )
