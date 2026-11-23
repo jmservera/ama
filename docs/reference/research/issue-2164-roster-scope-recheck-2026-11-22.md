@@ -1,7 +1,7 @@
 ---
 title: "Issue 2164 roster scope for Entra staff: re-proof on main (2026-11-22)"
 description: Evidence that the fix merged in 6a03928ccb satisfies the issue 2164 criteria, with the one live item that stays unproven.
-ms.date: 2026-11-22
+ms.date: 2026-11-23
 ---
 
 Scope: synthetic demo, desktop only. Source reads and unit tests only; no credentials were used and no Azure resource was created or changed.
@@ -22,3 +22,10 @@ Scope: synthetic demo, desktop only. Source reads and unit tests only; no creden
 | Test for scope bypass | Proven | First test above passes |
 | Test for view_only with an eligible role | Proven | Second test above passes |
 | Deployed image carries the fix | Unproven | Digest not traceable to a commit; not required by the issue |
+
+## Re-check on 2026-11-23 (main b11b8259bd)
+
+* Read-only `az containerapp show` in resource group `ama`: `ca-cutover-test-demo-api--0000054` (created 2026-11-22T23:14Z, digest `sha256:3f2be664...faf945`) and `ca-resident-demo--0000026`. The registry reports `publicNetworkAccess` Disabled, so the digest still cannot be mapped to a commit.
+* Timing argument, circumstantial only: 6a03928ccb merged at 2026-11-22T21:26:50Z, the last later `src/api` or `src/core` commit before the revision is a6ba1956db (23:05:25Z), and the revision was created at 23:14Z. A build from main at that point would contain the fix, but no build record was available to confirm it.
+* Tests re-run: `src/api` two #2164 tests OK; `src/core` `test_assistants_identity` 5 tests OK. No source change.
+* A live behavioural proof needs a roster-bound Entra principal with a restricted `case_ids` list, which means editing a roster row on live data. The owner decisions of 2026-11-18 exclude production changes, so this stays unproven; the issue does not require it.

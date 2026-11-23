@@ -14769,3 +14769,31 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2190 flake regression tests (Refs #2190)
 
 * Added [issue-2190-live-20261123-note.md](research/issue-2190-live-20261123-note.md): behavioural slow-server test for the 218 timeout, a deterministic settle wait with ordering tests for the chat late_success check, and a stricter `_region_passed` result rule; per-criterion verdict.
+
+## [2026-11-23] update | Issue 2256 handoff waiting list re-verified (Refs #2256)
+
+* Added [issue-2256-live-2026-11-23.md](research/issue-2256-live-2026-11-23.md): root cause already fixed by #2258; revisions 0000054 and 0000026 list ZF-2025-0030 on the waiting screen. Due time unproven because seeded offers have no due_at. No code change.
+
+## [2026-11-23] update | Issue 2255 live re-check (Refs #2255)
+
+* Added [issue-2255-live-2026-11-23.md](research/issue-2255-live-2026-11-23.md): read-only probe on revision 0000054 shows 22 of 22 hazard clocks with a target (17 overdue, 5 running, 0 unknown). Re-seed survival stays unproven and owner-gated. No source change.
+
+## [2026-11-23] add | Nomination test bootstrap isolation fourth re-run (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23.md): source, editable and noneditable layouts in both orders, identities observed, no code gap; criterion 6 (full gate receipt) stays owner-gated.
+
+## [2026-11-23] update | Issue 1288 quality sensor evidence, tenth live audit (Refs #1288)
+
+* Added [issue-1288-live-r10-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r10-quality-sensor-evidence-2026-11-23.md): revisions 0000054 and 0000026, 92 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
+
+## [2026-11-23] update | Issue 2164 roster scope re-check, run 20261123T010755Z (Refs #2164)
+
+* Extended [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix in main, tests pass, live revisions 0000054 and 0000026 confirmed read-only; the deployed digest still cannot be tied to a commit.
+
+## [2026-11-23] update | Issue 619 live re-proof on revisions 0000054 and 0000026 (Refs #619)
+
+* Added [issue-619-live-at-consent-evidence-2026-11-23.md](research/issue-619-live-at-consent-evidence-2026-11-23.md): main equals live, 127 targeted tests pass, axe 0 violations, consent refusal holds, 200 percent text finding assessed as not a code gap. Person-run AT, real resident journey and Fluent 2 re-audit stay unproven and owner-gated. No source or estate change.
+
+## [2026-11-23] update | Human-review effectiveness live run 7 (Refs #223)
+
+* Added [issue-223-live-r7-2026-11-23.md](research/issue-223-live-r7-2026-11-23.md): gate and focused tests re-run, live retention of reviewer, reason and source hashes shown on revision 0000054, per-criterion table; no criterion is newly ticked. No source change.

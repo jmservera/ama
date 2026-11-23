@@ -1,0 +1,7 @@
+Fresh processes from src/core/tests, head b11b8259bd, 2026-11-23.
+editable, bulk-first (test_bulk_edits test_nomination_route test_nomination_bootstrap): Ran 58 tests, OK
+editable, nomination-first (test_nomination_route test_bulk_edits): Ran 55 tests, OK
+source roots, bulk-first (all three modules): Ran 58 tests, OK
+noneditable site-packages, bulk-first (test_bulk_edits test_nomination_route): Ran 40 tests, FAILED (errors=1);
+  the single error is ImportError "unsupported layout: zava_forward modules were loaded from outside <worktree>/src before test_nomination_route; use an editable install or the source roots on sys.path"
+Live: ca-cutover-test-demo-api latest ready revision 0000054; ca-resident-demo 0000026 (az containerapp show, resource group ama, read-only).

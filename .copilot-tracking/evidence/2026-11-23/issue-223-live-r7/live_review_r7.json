@@ -1,0 +1,118 @@
+{
+ "me": {
+  "status": 200,
+  "role": "Retrofit Programme Manager"
+ },
+ "cases": {
+  "status": 200,
+  "count": 50
+ },
+ "case_id": "ZF-2025-0148",
+ "runs": {
+  "workflow_only": {
+   "status": 200,
+   "keys": [
+    "approval",
+    "citations",
+    "continuity_epoch",
+    "dropped_uncited",
+    "envelope",
+    "generated_at",
+    "instruction_status",
+    "label",
+    "latency_ms",
+    "mode",
+    "model",
+    "prompt_version",
+    "reason",
+    "record_id",
+    "release",
+    "source",
+    "source_case_ids",
+    "statements",
+    "task",
+    "text",
+    "unresolved",
+    "validated",
+    "verified"
+   ],
+   "source": "template",
+   "model": null,
+   "verified": true,
+   "rec_status": null,
+   "id": "3094133bdb15",
+   "citations": [
+    "Stage: Waiting for block programme",
+    "Waiting on: Helen Marsden"
+   ],
+   "shown_output": "None",
+   "err": null
+  },
+  "ai_default": {
+   "status": 200,
+   "keys": [
+    "approval",
+    "citations",
+    "continuity_epoch",
+    "dropped_uncited",
+    "envelope",
+    "generated_at",
+    "instruction_status",
+    "label",
+    "latency_ms",
+    "mode",
+    "model",
+    "prompt_version",
+    "reason",
+    "record_id",
+    "release",
+    "source",
+    "source_case_ids",
+    "statements",
+    "task",
+    "text",
+    "unresolved",
+    "validated",
+    "verified"
+   ],
+   "source": "template",
+   "model": null,
+   "verified": true,
+   "rec_status": null,
+   "id": "e4bcebc02144",
+   "citations": [
+    "Stage: Waiting for block programme",
+    "Waiting on: Helen Marsden"
+   ],
+   "shown_output": "None",
+   "err": null
+  }
+ },
+ "reject_no_reason": {
+  "status": 400,
+  "err": "Say why."
+ },
+ "review_target": "3094133bdb15",
+ "reject_with_reason": {
+  "status": 200,
+  "rec_status": "Rejected",
+  "reviewer_action": "reject",
+  "reviewer_reason": "unsupported: r7 seeded-defect probe [source: Stage:]",
+  "resolved_by_present": true,
+  "review_evidence_keys": [
+   "case_version",
+   "compared",
+   "disposition",
+   "effect",
+   "reason",
+   "reviewer",
+   "source_hashes"
+  ],
+  "source_hashes_present": true,
+  "err": null
+ },
+ "second_review": {
+  "status": 400,
+  "err": "This AI output has already been reviewed."
+ }
+}
