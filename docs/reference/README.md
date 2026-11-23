@@ -745,6 +745,8 @@ The [issue 2243 live re-verification of 2026-11-23](./research/issue-2243-live-2
 
 The [issue 2244 live re-verification of 2026-11-23](./research/issue-2244-live-2026-11-23.md) confirms live API revision 0000054 runs the same `mssqlstore.py` as main (start-up retry from #2273), adds read-only schema fast paths so start-up skips the write lock when nothing changes, and records C1 to C5 as proven or unproven.
 
+The [issue 2244 live re-verification, run 2](./research/issue-2244-live-r2-2026-11-23.md) confirms revision 0000055 carries the start-up fast paths, shows two scale-out replicas exiting on a lock timeout in the law store start-up (not covered by the #2273 retry), and records the fix and the per-criterion table.
+
 The [issue 2243 live re-verification, run 2](./research/issue-2243-live-r2-2026-11-23.md) repeats the probe about 1.5 hours later on the same revisions with the same `usage_limit` result and 70 passing targeted tests; only the owner-gated ledger criterion remains.
 
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.

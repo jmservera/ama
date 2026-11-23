@@ -14941,3 +14941,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2254 safety count run 3 (Refs #2254)
 
 * Added [issue-2254-live-r3-2026-11-23.md](research/issue-2254-live-r3-2026-11-23.md): live tile, map, list and API agree at 23; the repair test now also asserts the map hazard count. Test-only change; no `src/` code or estate change.
+## [2026-11-23] update | Issue 2244 start-up lock, law store retry (Refs #2244)
+
+* Added [issue-2244-live-r2-2026-11-23.md](research/issue-2244-live-r2-2026-11-23.md): revision 0000055 carries the fast paths; two scale-out replicas exited on a lock timeout in the law store start-up; retry added in code, not deployed; C4 and C5 unproven.
