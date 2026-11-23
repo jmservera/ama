@@ -26,7 +26,11 @@ def rev(name: str, health: str = "Healthy", traffic: int = 100, active: bool = T
 
 
 class FakeAz:
-    def __init__(self, revisions=None, executions=None) -> None:
+    def __init__(self, revisions=None, executions=None, deployment=None) -> None:
+        self.deployment = deployment or {
+            "image": "reg.azurecr.io/zava@sha256:" + "ab" * 32,
+            "hardening": "enforced",
+        }
         self.calls: list[list[str]] = []
         self.revisions = revisions if revisions is not None else [rev("app--1")]
         self.executions = (
@@ -41,6 +45,8 @@ class FakeAz:
             return json.dumps(self.revisions)
         if "execution" in argv:
             return json.dumps(self.executions)
+        if "show" in argv and any("ZF_CONTAINER_HARDENING" in part for part in argv):
+            return json.dumps(self.deployment)
         if "show" in argv:
             return "app.example.io\n"
         return SECRET
@@ -115,6 +121,32 @@ class Preflight(unittest.TestCase):
         self.assertNotIn(SECRET, result.detail)
         self.assertEqual(0, pf.exit_code([result], False))
         self.assertEqual(1, pf.exit_code([result], True))
+
+    def test_deployment_reports_digest_and_requires_enforced_hardening(self) -> None:
+        good = pf.check_deployment(FakeAz(), "ama", "app", "a")
+        self.assertEqual(
+            ("PASS", "digest abababababab; ZF_CONTAINER_HARDENING=enforced"),
+            (good.status, good.detail),
+        )
+        for body in (
+            {"image": "reg/zava@sha256:" + "cd" * 32, "hardening": None},
+            {"image": "reg/zava:latest", "hardening": "enforced"},
+        ):
+            self.assertEqual(
+                "FAIL", pf.check_deployment(FakeAz(deployment=body), "ama", "job", "j").status
+            )
+
+    def test_deployment_query_selects_only_the_hardening_value(self) -> None:
+        az = FakeAz()
+        pf.check_deployment(az, "ama", "job", "j")
+        self.assertEqual(["containerapp", "job", "show"], az.calls[0][:3])
+        self.assertEqual(1, sum("env[?name==" in part for part in az.calls[0]))
+
+    def test_default_run_covers_agents_app_and_jobs(self) -> None:
+        az = FakeAz()
+        names = [r.name for r in pf.collect(az, ok_get, None)]
+        self.assertIn("deployment ca-cutover-test-demo-agents", names)
+        self.assertIn("deployment job-live-receiver", names)
 
     def test_only_read_only_az_commands(self) -> None:
         az = FakeAz()

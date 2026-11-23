@@ -30,6 +30,7 @@ JOBS = [
     "job-live-simulator",
     "job-live-receiver",
 ]
+AGENTS_APP = "ca-cutover-test-demo-agents"
 SQL_SERVER = "sql-cutover-test-rzsrg.database.windows.net"
 SQL_DATABASE = "retrofit"
 READ_ONLY_VERBS = {"list", "show", "get-access-token"}
@@ -82,6 +83,26 @@ def check_revisions(runner: Runner, group: str, app: str) -> Result:
     healthy = all(p.get("healthState") == "Healthy" for p in active)
     ok = healthy and traffic == 100
     return Result(name, "PASS" if ok else "FAIL", "; ".join(parts))
+
+
+def check_deployment(runner: Runner, group: str, kind: str, name: str) -> Result:
+    """Report the image digest and the hardening switch; no other environment value is read."""
+    label = f"deployment {name}"
+    argv = ["containerapp", "job", "show"] if kind == "job" else ["containerapp", "show"]
+    query = (
+        "{image: properties.template.containers[0].image, hardening: "
+        "properties.template.containers[0].env[?name=='ZF_CONTAINER_HARDENING'].value | [0]}"
+    )
+    try:
+        body = _json(runner, [*argv, "-g", group, "-n", name, "--query", query, "-o", "json"])
+    except Exception as exc:  # noqa: BLE001 - any failure is reported
+        return Result(label, "FAIL", str(exc))
+    body = body if isinstance(body, dict) else {}
+    image = str(body.get("image") or "")
+    digest = image.partition("@sha256:")[2][:12]
+    hardening = body.get("hardening")
+    detail = f"digest {digest or 'none'}; ZF_CONTAINER_HARDENING={hardening}"
+    return Result(label, "PASS" if hardening == "enforced" and digest else "FAIL", detail)
 
 
 def check_job(runner: Runner, group: str, job: str) -> Result:
@@ -177,6 +198,10 @@ def collect(
     for app in apps or APPS:
         results.append(check_revisions(runner, group, app))
         results.append(check_health(runner, getter, group, app))
+    results.extend(
+        check_deployment(runner, group, "app", app) for app in apps or [*APPS, AGENTS_APP]
+    )
+    results.extend(check_deployment(runner, group, "job", job) for job in jobs or JOBS)
     results.extend(check_job(runner, group, job) for job in jobs or JOBS)
     results.append(check_counts(reader))
     return results

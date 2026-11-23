@@ -664,7 +664,8 @@ for Storage malware scanning is enabled on the demo account, but the app still r
 [third pass](./research/issue-117-live-r3-closure-2026-11-18.md) reconfirms both results and records why the
 `ZF_SCANNER=defender` change was not made for the demo. A [fifth pass](./research/issue-117-live-r6-2026-11-19.md)
 re-confirms the enabled engine, and a direct probe was blocked by storage network rules. A [sixth pass](./research/issue-117-live-r7-2026-11-19.md)
-re-runs the scan tests with no change in the remaining gap.
+re-runs the scan tests with no change in the remaining gap. A [seventh pass](./research/issue-117-live-r8-2026-11-23.md)
+adds tests for the real Defender tag reader and scanner factory fail-closed edges.
 
 For #111, the [sensor analysis live evidence](./research/issue-111-sensor-analysis-live-evidence-2026-11-18.md)
 records that the unticked R1 to R3 criterion cannot be proven on the demo: R2 and R3 need named human
@@ -1791,6 +1792,7 @@ or infra acceptance claimed.
 | [Chat Storage Approval for the Synthetic-Data Demo](./research/chat-demo-storage-approval-2026-11-01.md) | Owner decision 2026-11-01 enabling chat storage for the synthetic-data demo only: DPIA, lawful basis, notice and 30-day retention references the deploy settings point to. Not a production or real-data approval; #163 criteria 2 and 5 stay deferred | 2026-11-01 |
 | [Azure SQL Ledger Load, Restore and Deletion Evidence (Demo)](./research/sql-ledger-live-2026-11-18.md) | Live measured evidence for #114 on the synthetic demo: 30-minute five-session load against PRD limits, cost estimate, point-in-time restore with deletion re-application (DH-005), and the per-year ledger verification gap in the deployed image | 2026-11-18 |
 | [Azure SQL Ledger Tamper Evidence and Per-Year Verification Rerun (Demo)](./research/sql-ledger-live-r2-2026-11-18.md) | Second live run for #114: tamper detection on live audit entries (edit, delete, reorder, truncate, digest), per-year sealing, native ledger check blocked by permission, per-criterion record | 2026-11-18 |
+| [Azure SQL Ledger Re-verification (Demo, 2026-11-23)](./research/issue-114-live-reverify-2026-11-23.md) | Fresh read-only live probe for #114 (7,022 entries intact, gate absent from the orchestrator image), one added test, per-criterion record |
 | [Issue 114 Live Re-verification (Demo)](./research/issue-114-live-reverify-2026-11-18.md) | Per-criterion re-check of #114: 62 local tests pass for per-year verification; deployed image lacks the reliance gate, so the live criterion stays unproven | 2026-11-18 |
 | [Issue 115 Ledger Digest Live Verification (Demo)](./research/issue-115-ledger-digest-live-2026-11-22.md) | Tests, daily digest job, unlocked 365-day policy and enabled alerts checked on the demo; lock and mismatch drill unproven |
 | [Issue 114 Live Re-verification (Demo), 2026-11-22](./research/issue-114-live-reverify-2026-11-22.md) | 62 ledger and recovery tests pass; deployed API revision 0000053 postdates the reliance-check merge; sealed-year, load and DH-005 live proofs stay unproven |
@@ -2292,5 +2294,6 @@ The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records t
 
 The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.
 
+The [issue 2202 deployment receipt](./research/issue-2202-live-receipt-2026-11-23.md) records live image digests, hardening and revision health from the extended `tools/demo_preflight.py`; the image source commit stays unproven.
 The [issue 2244 StartUp probe note, run 3](./research/issue-2244-live-r3-2026-11-23.md) shows the live API StartUp window (121 s) is shorter than the start-up lock retry budget (211 s), raises the Bicep window to 241 s with a pinning test, and gives the per-criterion table.
 The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.

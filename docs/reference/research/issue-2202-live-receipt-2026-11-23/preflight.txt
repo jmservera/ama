@@ -1,0 +1,24 @@
+Demo preflight, resource group ama, 2026-11-23T15:39:50Z
+
+| Check | Result | Detail |
+| --- | --- | --- |
+| revisions ca-cutover-test-demo-api | PASS | ca-cutover-test-demo-api--0000055 Healthy/Running 100% |
+| health ca-cutover-test-demo-api | PASS | GET /healthz 200 |
+| revisions ca-resident-demo | PASS | ca-resident-demo--0000028 Healthy/RunningAtMaxScale 100% |
+| health ca-resident-demo | PASS | GET /healthz 200 |
+| deployment ca-cutover-test-demo-api | PASS | digest b628e0678f72; ZF_CONTAINER_HARDENING=enforced |
+| deployment ca-resident-demo | PASS | digest e6c7e755343a; ZF_CONTAINER_HARDENING=enforced |
+| deployment ca-cutover-test-demo-agents | PASS | digest 59ea12f41b7c; ZF_CONTAINER_HARDENING=enforced |
+| deployment job-cutover-test-demo-load | PASS | digest 51b6a480bd7e; ZF_CONTAINER_HARDENING=enforced |
+| deployment job-cutover-test-demo-audit | PASS | digest e3b290bfa2af; ZF_CONTAINER_HARDENING=enforced |
+| deployment job-cutover-test-demo-orch | PASS | digest e3b290bfa2af; ZF_CONTAINER_HARDENING=enforced |
+| deployment job-live-simulator | PASS | digest 295164ca739d; ZF_CONTAINER_HARDENING=enforced |
+| deployment job-live-receiver | PASS | digest 541068a62d81; ZF_CONTAINER_HARDENING=enforced |
+| job job-cutover-test-demo-load | UNAVAILABLE | no executions |
+| job job-cutover-test-demo-audit | PASS | latest Succeeded at 2026-11-23T02:00:00+00:00 |
+| job job-cutover-test-demo-orch | PASS | latest Succeeded at 2026-11-23T15:35:00+00:00 |
+| job job-live-simulator | PASS | latest Succeeded at 2026-11-23T15:37:00+00:00 |
+| job job-live-receiver | PASS | latest Running at 2026-11-23T15:30:00+00:00 |
+| cohort and consent counts | UNAVAILABLE | SQL not reachable (ProgrammingError) |
+
+Summary: 16 pass, 0 fail, 2 unavailable.
