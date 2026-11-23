@@ -8,8 +8,9 @@ import json
 import os
 import tempfile
 import threading
+import time
 import unittest
-from http.server import ThreadingHTTPServer
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -124,19 +125,34 @@ class RaiReleaseReadinessApi218Tests(unittest.TestCase):
         except HTTPError as error:
             return error.code, json.loads(error.read()), None
 
-    def test_request_budget_survives_a_slow_report_under_load(self) -> None:
-        self.assertGreaterEqual(REQUEST_TIMEOUT_S, 60)
-        seen: list[Any] = []
-        real = urlopen
+    def test_request_budget_is_the_read_timeout_against_a_slow_server(self) -> None:
+        delay_s = 0.8
 
-        def record(request: Request, timeout: float | None = None) -> Any:
-            seen.append(timeout)
-            return real(request, timeout=timeout)
+        class Slow(BaseHTTPRequestHandler):
+            def do_GET(self) -> None:  # noqa: N802 http.server API
+                time.sleep(delay_s)
+                body = b'{"slow": true}'
+                self.send_response(200)
+                self.send_header("Content-Length", str(len(body)))
+                self.end_headers()
+                self.wfile.write(body)
 
-        with patch(f"{__name__}.urlopen", record):
-            status, _, _ = self._raw_request("GET", "/api/assistants", headers=self.pm_headers)
-        self.assertEqual(status, 200)
-        self.assertEqual(seen, [REQUEST_TIMEOUT_S, REQUEST_TIMEOUT_S])
+            def log_message(self, *_args: Any) -> None:
+                return
+
+        slow = ThreadingHTTPServer(("127.0.0.1", 0), Slow)
+        thread = threading.Thread(target=slow.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(thread.join, 5)
+        self.addCleanup(slow.server_close)
+        self.addCleanup(slow.shutdown)
+        self.base = f"http://127.0.0.1:{slow.server_port}"
+
+        self.assertGreater(REQUEST_TIMEOUT_S, delay_s)
+        status, payload, _ = self._raw_request("GET", "/slow")
+        self.assertEqual((status, payload), (200, {"slow": True}))
+        with patch(f"{__name__}.REQUEST_TIMEOUT_S", delay_s / 4), self.assertRaises(TimeoutError):
+            self._raw_request("GET", "/slow")
 
     def test_live_release_post_without_named_approval_is_rejected_with_oq017_and_audited(
         self,

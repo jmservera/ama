@@ -320,9 +320,8 @@ class GateTests(unittest.TestCase):
             c.lineno
             for c in ast.walk(func)
             if isinstance(c, ast.Call)
-            and isinstance(c.func, ast.Attribute)
-            and c.func.attr == "wait_for_load_state"
-            and [a.value for a in c.args if isinstance(a, ast.Constant)] == ["networkidle"]
+            and isinstance(c.func, ast.Name)
+            and c.func.id == "settle_route"
         ]
         baseline = [
             c.lineno
@@ -669,6 +668,9 @@ class GateTests(unittest.TestCase):
             f"{header} ... skipped 'x'\n{log} ok\n{tail.replace('OK', 'OK (skipped=1)')}",
             f"{header} ... expected failure\n{log} ok\n{tail}",
             f"{header} ... {log}\n{log}\nwaiting ... retry\n{tail}",
+            f"{header} ... {log}\nhttp-response status ok\n{tail}",
+            f"{header} ... {log} ok\n{log}\n{tail}",
+            f"{header} ... {log}\nstate=ok\n{tail}",
         )
         for text in rejected:
             with self.subTest(text=text), self.assertRaises(gate.GateError):

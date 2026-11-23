@@ -14766,3 +14766,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2188 concurrent image builds (Refs #2188)
 
 * Added [issue-2188-live-image-concurrency-2026-11-23.md](research/issue-2188-live-image-concurrency-2026-11-23.md): `tools/rpi-checks.py` no longer serialises image groups on one docker lock; up to four build concurrently, `mssql` stays exclusive and Trivy scans are serialised. Retry criterion already implemented. 129 gate-tool tests pass; whole-gate before and after unproven.
+## [2026-11-23] update | Issue 2190 flake regression tests (Refs #2190)
+
+* Added [issue-2190-live-20261123-note.md](research/issue-2190-live-20261123-note.md): behavioural slow-server test for the 218 timeout, a deterministic settle wait with ordering tests for the chat late_success check, and a stricter `_region_passed` result rule; per-criterion verdict.

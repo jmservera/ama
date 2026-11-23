@@ -1,0 +1,7 @@
+PASS owned server is running and responsive on loopback
+PASS employee chat: real fallback; six selections; arrived transport; nine controlled late successes; metadata/thread/ask denials; route/session disposal; keyboard, focus, live, reduced motion, reflow and dialog axe
+
+real	0m34.068s
+user	0m6.508s
+sys	0m1.073s
+rc=0

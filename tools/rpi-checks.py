@@ -1739,8 +1739,10 @@ def _region_passed(region: list[str]) -> bool:
     failing = re.compile(
         r"((?<![A-Za-z])(FAIL|ERROR|skipped\b.*)|expected failure|unexpected success)$"
     )
-    # Thread logs may land after the result line and before the next header.
-    return any(re.search(r"(?<![A-Za-z])ok$", line) for line in region) and not any(
+    # Thread logs may land after the result line and before the next header. The result is a
+    # line that is exactly "ok" or "ok" glued to an unterminated log fragment ("status=503ok");
+    # a log line that merely ends in a separate word or value "ok" is not a result.
+    return any(re.search(r"(?<![\sA-Za-z=:])ok$|^ok$", line) for line in region) and not any(
         failing.search(line) for line in region
     )
 
