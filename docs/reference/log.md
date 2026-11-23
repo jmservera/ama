@@ -14900,3 +14900,19 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Ranking archive criteria check r9 (Refs #1258, Refs #1259)
 
 * Added [issue-1258-1259-live-r9-2026-11-23.md](research/issue-1258-1259-live-r9-2026-11-23.md): 146 tests pass, parent-sync mutation fails 12 tests, unusable-path mutation fails 5 tests. Process criteria unproven and owner-gated. No source or estate change.
+## [2026-11-23] add | Issue 1844 live r3 re-verification (Refs #1844)
+
+* Added [issue-1844-live-r3-2026-11-23.md](research/issue-1844-live-r3-2026-11-23.md): 436 harness passes with 0 skips on head 9dbfab6f56, live probe on API revision 0000055 shows 0 of 2 zoom controls covered at 320 and 390 px, and criterion 6 stays owner-gated. No source or estate change.
+## [2026-11-23] add | Issue 2254 map markers on screen (Refs #2254)
+
+* Added [issue-2254-map-markers-live-2026-11-23.md](research/issue-2254-map-markers-live-2026-11-23.md): tile 23, 23 of 443 markers titled Safety issue open, API map, cases and KPI all 23. No source or estate change.
+## [2026-11-23] update | Issue 1274 criteria re-verification run 4 (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-23-run4.md](research/issue-1274-live-evidence-2026-11-23-run4.md): retained log lines for the actionlint 504, checksum verification and 12 and 129 regression tests repeated at main 5c08bedd8f; AWF 0.28.23 and hosted CI on a new reviewed head remain unproven.
+
+## [2026-11-23] add | Gate heavy lock scope check (Refs #2187)
+
+* Added [issue-2187-live-gate-lock-2026-11-23.md](research/issue-2187-live-gate-lock-2026-11-23.md): the heavy lock is already limited to browser, SQL and image groups (#2215), #2286 did not change it, 129 tools tests pass. No source change.
+## [2026-11-23] add | Issue 2190 gate flakes re-verification r2 (Refs #2190)
+
+* Added [issue-2190-live-20261123T071426Z-note.md](research/issue-2190-live-20261123T071426Z-note.md): the merged fixes pass (129 gate tests, 7 API tests); flake 2 race reproduction stays unproven by design. No source or estate change.
