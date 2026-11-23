@@ -4867,6 +4867,12 @@ Keep the seed file private and outside the
 repository. Tests: `tests/test_seed_merge.py`, and `MssqlLedgerMigration` in
 `src/api/tests/test_mssqlstore.py` for ledger and plain SQL Server databases.
 
+`python -m zava_forward.core.demo_handoff_due_seed inspect|apply|revert` (with `ZF_STORE=sqlite|mssql`, Refs #2256) is an
+opt-in demo data fix. For a pending handoff whose `offered_at` has no timezone it rewrites the time as Europe/London
+(a synthetic-demo assumption) and writes a missing `due_at` as the offer plus 72 hours (a labelled demo window, not the
+OD-09 limit). Changed handoffs carry a `demo_due_seed` marker so `revert` restores them; history is never edited and the
+API still never guesses a time. Tests: `tests/test_demo_handoff_due_seed.py`.
+
 ## Frozen protocol, benefits register and release gates (issue #126)
 
 `src/core/src/zava_forward/core/governance.py` records, and never decides, the pilot governance in the existing store (JSON or SQL, so it survives a restart). Managers use `GET /api/governance` and `POST /api/governance/{protocol-freeze,protocol-approve,benefits-record,benefits-approve,release,breach,restart}`. No AI assistant, ranking or tool has any part in it.

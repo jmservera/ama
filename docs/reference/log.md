@@ -14916,3 +14916,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2190 gate flakes re-verification r2 (Refs #2190)
 
 * Added [issue-2190-live-20261123T071426Z-note.md](research/issue-2190-live-20261123T071426Z-note.md): the merged fixes pass (129 gate tests, 7 API tests); flake 2 race reproduction stays unproven by design. No source or estate change.
+## [2026-11-23] add | Issue 2256 B2 handoff due-time seed tool (Refs #2256)
+
+* Added [issue-2256-b2-seed-2026-11-23.md](research/issue-2256-b2-seed-2026-11-23.md): a revertible demo seed tool gives timezone-aware offer and due times to pending handoffs; proven locally, not applied to live SQL.
