@@ -14741,3 +14741,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1258 criteria re-verification r8 (Refs #1258)
 
 * Added [issue-1258-live-r8-2026-11-23.md](research/issue-1258-live-r8-2026-11-23.md): 146 tests pass, the parent-sync mutation fails 12 tests, live revisions 0000054 and 0000026 confirmed. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. No source or estate change.
+## [2026-11-23] update | Issue 2061 live re-verification (Refs #2061)
+
+* Added [issue-2061-live-evidence-2026-11-23.md](research/issue-2061-live-evidence-2026-11-23.md): criteria re-checked on revisions 0000054 and 0000026. Import workbook check and map with fresh simulator readings proven, both sign-ins pass, 759 infra tests pass. Stale Entra URI removal, a fresh what-if, the full gate receipt and the resident app identity drift (live sensor-consent wiring absent from Bicep) remain open.
