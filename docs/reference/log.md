@@ -14814,3 +14814,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2121 live recheck on revision 0000054 (Refs #2121)
 
 * Added [issue-2121-live-2026-11-23.md](research/issue-2121-live-2026-11-23.md): direct HTTPS, anonymous denial, browser sign-in, role and persistence proven again; AI call unproven because of an AI suspension; c and e owner-gated. No source change.
+## [2026-11-23] update | Simulator run controls main versus live (Refs #2127)
+
+* Added [issue-2127-run-controls-live-2026-11-23.md](research/issue-2127-run-controls-live-2026-11-23.md): 11 focused tests pass, live budgets, owner tags and 270 second replica timeout recorded, bicep 240 versus live 270 drift noted, no source change
