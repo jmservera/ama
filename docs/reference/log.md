@@ -15002,3 +15002,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2303 chat golden file in the API image (Refs #2303)
 
 * Added [issue-2303-chat-golden-image-2026-11-23.md](research/issue-2303-chat-golden-image-2026-11-23.md): the image lacked `chat_golden.json`, its variable and the dockerignore allowance; fixed and proven in a local container; deployment proof stays unproven.
+
+## [2026-11-23] add | Issue 2244 StartUp probe vs retry budget (Refs #2244)
+
+* Added [issue-2244-live-r3-2026-11-23.md](research/issue-2244-live-r3-2026-11-23.md): live StartUp window 121 s against a 211 s retry budget; Bicep window raised to 241 s and test-pinned; not deployed.
