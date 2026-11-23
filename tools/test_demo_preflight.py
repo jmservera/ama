@@ -26,7 +26,8 @@ def rev(name: str, health: str = "Healthy", traffic: int = 100, active: bool = T
 
 
 class FakeAz:
-    def __init__(self, revisions=None, executions=None) -> None:
+    def __init__(self, revisions=None, executions=None, hardening: str = "enforced") -> None:
+        self.hardening = hardening
         self.calls: list[list[str]] = []
         self.revisions = revisions if revisions is not None else [rev("app--1")]
         self.executions = (
@@ -37,6 +38,8 @@ class FakeAz:
 
     def __call__(self, argv: list[str]) -> str:
         self.calls.append(argv)
+        if any("ZF_CONTAINER_HARDENING" in part for part in argv):
+            return self.hardening + "\n"
         if "revision" in argv:
             return json.dumps(self.revisions)
         if "execution" in argv:
@@ -73,6 +76,23 @@ class Preflight(unittest.TestCase):
         self.assertEqual(
             "FAIL", pf.check_revisions(FakeAz([rev("a", active=False)]), "g", "a").status
         )
+
+    def test_hardening_must_be_enforced_on_apps_and_jobs(self) -> None:
+        self.assertEqual("PASS", pf.check_hardening(FakeAz(), "g", "a").status)
+        for value in ("None", "", "off"):
+            bad = pf.check_hardening(FakeAz(hardening=value), "g", "a")
+            self.assertEqual("FAIL", bad.status, value)
+        job = FakeAz()
+        self.assertEqual("PASS", pf.check_hardening(job, "g", "j", job=True).status)
+        self.assertIn("job", job.calls[0])
+        results = pf.collect(FakeAz(hardening="off"), ok_get, None, apps=["a"], jobs=["j"])
+        self.assertEqual(
+            ["hardening a", "hardening j"],
+            [r.name for r in results if r.name.startswith("hardening") and r.status == "FAIL"],
+        )
+        names = [r.name for r in pf.collect(FakeAz(), ok_get, None) if r.name.startswith("hard")]
+        self.assertIn("hardening ca-cutover-test-demo-agents", names)
+        self.assertIn("hardening job-live-receiver", names)
 
     def test_failed_job_fails_and_no_executions_is_unavailable(self) -> None:
         bad = FakeAz(executions=[{"properties": {"status": "Failed", "startTime": "2026-11-21"}}])

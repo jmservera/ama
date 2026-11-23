@@ -30,6 +30,9 @@ JOBS = [
     "job-live-simulator",
     "job-live-receiver",
 ]
+HARDENING_APPS = [*APPS, "ca-cutover-test-demo-agents"]
+HARDENING_JOBS = ["job-live-simulator", "job-live-receiver"]
+HARDENING_ENV = "ZF_CONTAINER_HARDENING"
 SQL_SERVER = "sql-cutover-test-rzsrg.database.windows.net"
 SQL_DATABASE = "retrofit"
 READ_ONLY_VERBS = {"list", "show", "get-access-token"}
@@ -82,6 +85,18 @@ def check_revisions(runner: Runner, group: str, app: str) -> Result:
     healthy = all(p.get("healthState") == "Healthy" for p in active)
     ok = healthy and traffic == 100
     return Result(name, "PASS" if ok else "FAIL", "; ".join(parts))
+
+
+def check_hardening(runner: Runner, group: str, name: str, job: bool = False) -> Result:
+    label = f"hardening {name}"
+    argv = ["containerapp", "job", "show"] if job else ["containerapp", "show"]
+    query = f"properties.template.containers[0].env[?name=='{HARDENING_ENV}'].value | [0]"
+    try:
+        value = runner([*argv, "-g", group, "-n", name, "--query", query, "-o", "tsv"]).strip()
+    except Exception as exc:  # noqa: BLE001 - any failure is reported
+        return Result(label, "FAIL", str(exc))
+    shown = value if value and value != "None" else "not set"
+    return Result(label, "PASS" if value == "enforced" else "FAIL", f"{HARDENING_ENV} {shown}")
 
 
 def check_job(runner: Runner, group: str, job: str) -> Result:
@@ -178,6 +193,12 @@ def collect(
         results.append(check_revisions(runner, group, app))
         results.append(check_health(runner, getter, group, app))
     results.extend(check_job(runner, group, job) for job in jobs or JOBS)
+    results.extend(
+        check_hardening(runner, group, app) for app in (apps if apps else HARDENING_APPS)
+    )
+    results.extend(
+        check_hardening(runner, group, job, job=True) for job in (jobs if jobs else HARDENING_JOBS)
+    )
     results.append(check_counts(reader))
     return results
 

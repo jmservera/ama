@@ -15106,3 +15106,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2245 demo AI override gap on the SQL store (Refs #2245)
 
 * Added [issue-2245-override-sqlstore-2026-11-23.md](research/issue-2245-override-sqlstore-2026-11-23.md): the owner-directed AI suspension override did not apply to `SqlStore`; fixed in source with a regression test. A live free-form ask on revision 0000057 returned 500 after 30.5 s; "Model calls: 1" stays unproven until a fixed revision is deployed.
+
+## [2026-11-23] add | Issue 2202 deployed hardening check (Refs #2202)
+
+* Added [issue-2202-live2-2026-11-23.md](research/issue-2202-live2-2026-11-23.md): read-only proof of enforced hardening on every demo app and live job, agents app difference explained, and a tested `check_hardening` in `tools/demo_preflight.py`.
