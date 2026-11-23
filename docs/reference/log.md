@@ -15192,3 +15192,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Epic 93 criteria re-check and eval register fix (Refs #93)
 
 * Added [issue-93-criteria-recheck-live-2026-11-23.md](research/issue-93-criteria-recheck-live-2026-11-23.md): live read-only finance probe, three unregistered #2316 eval payloads that broke a finance form review pack test registered in the provenance register, per-criterion table; C1 stays unproven.
+
+## [2026-11-23] add | Issue 114 ledger re-verification (Refs #114)
+
+* Added [issue-114-live-reverify-2026-11-23.md](research/issue-114-live-reverify-2026-11-23.md): read-only live probe of the demo ledger (intact, one year), reliance gate absent from the orchestrator image, one added test. No ticks changed.
