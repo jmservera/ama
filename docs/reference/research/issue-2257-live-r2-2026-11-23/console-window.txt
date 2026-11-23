@@ -1,0 +1,9 @@
+2026-11-23T07:19:53.36017  Connecting to the container 'api'...
+2026-11-23T07:19:53.44042  Successfully Connected to container: 'api' [Revision: 'ca-cutover-test-demo-api--0000055', Replica: 'ca-cutover-test-demo-api--0000055-7959bcd8f8-mbzml']
+2026-11-23T07:09:04.0186659Z stderr F 2026-11-23 07:09:04,018 zava_forward.core.assistants WARNING map sensor summary unavailable exc=ProgrammingError
+2026-11-23T07:09:06.2140683Z stderr F 2026-11-23 07:09:06,213 zava_forward.api.server WARNING http-error GET /api/briefing status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception
+2026-11-23T07:09:06.2164106Z stderr F 2026-11-23 07:09:06,216 zava_forward.api.server WARNING http-response GET /api/briefing status=503
+2026-11-23T07:09:57.7692949Z stderr F 2026-11-23 07:09:57,769 zava_forward.api.server WARNING http-response GET /api/cases/ZF-2025-0148/sensors status=503
+2026-11-23T07:10:04.5440553Z stderr F 2026-11-23 07:10:04,543 zava_forward.api.server WARNING http-error GET /api/briefing status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception
+2026-11-23T07:10:04.5441978Z stderr F 2026-11-23 07:10:04,544 zava_forward.api.server WARNING http-response GET /api/briefing status=503
+2026-11-23T07:16:44.8156130Z stderr F 2026-11-23 07:16:44,815 zava_forward.core.assistants WARNING map sensor summary unavailable exc=ProgrammingError

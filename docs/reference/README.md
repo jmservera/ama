@@ -693,6 +693,8 @@ The [tenth audit](./research/issue-1288-live-r10-quality-sensor-evidence-2026-11
 
 The [eleventh audit](./research/issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md) repeats the checks on revisions 0000055 and 0000027: 272 focused tests OK, seven homes with fresh live readings and the release-admission block unchanged. Criteria 4 and 8 stay unproven.
 
+The [twelfth audit](./research/issue-1288-live-r12-quality-sensor-evidence-2026-11-23.md) repeats them: 531 focused tests OK, seven homes with fresh live readings and the release-admission block unchanged. Criteria 4 and 8 stay unproven.
+
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
@@ -1585,6 +1587,7 @@ or infra acceptance claimed.
 | [Nomination test bootstrap isolation re-run (#1847)](./research/nomination-bootstrap-isolation-rerun-1847-2026-11-22.md) | Third fresh-process pass on main 3219004e90: five criteria proven with retained outputs, the original bootstrap failing again (1 failure, 20 errors), the full gate unrun |
 | [Nomination test bootstrap isolation fourth re-run (#1847)](./research/nomination-bootstrap-isolation-rerun-1847-2026-11-23.md) | Fresh-process re-run on head b11b8259bd with live revisions 0000054/0000026 confirmed; criteria 1-5 proven, criterion 6 owner-gated. |
 | [Nomination test bootstrap isolation fifth re-run (#1847)](./research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-fifth.md) | Fresh-process re-run on head ac58e5c451 in source, editable and noneditable layouts, both orders; criteria 1-5 proven, criterion 6 owner-gated. |
+| [Nomination test bootstrap isolation sixth re-run (#1847)](./research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md) | Fresh-process re-run on head 5c08bedd8f in source, editable and noneditable layouts, both orders; criteria 1-5 proven, criterion 6 owner-gated. |
 | [Held-out AI batch, tokens per proposal (#432)](./research/ai-heldout-batch-432-live-2026-11-18.md) | Measured live batch on 12 synthetic cases (gpt-4.1-nano): 180 to 225 tokens per proposal, 2,522 total, USD 0.000744 list price under a recorded owner authority; per-criterion status for #432; billing reconciliation not done (owner waiver) | 2026-11-18 |
 | [Issue 2061 single external demo environment inventory](./research/issue-2061-live-single-environment-2026-11-19.md) | Read-only live inventory and ADR 0008 (Proposed) for the one-environment demo; criterion 1 built, criteria 2 to 8 unproven | 2026-11-19 |
 | [Issue 2061 demo single-environment Bicep profile](./research/issue-2061-demo-single-environment-profile-2026-11-20.md) | Per-criterion proven/unproven status for the implemented profile; what-if 0 Delete; Entra, sign-in and end-to-end unproven | 2026-11-20 |
@@ -1633,6 +1636,7 @@ or infra acceptance claimed.
 | [Issue 2257 employee map fetch failure (#2257)](./research/issue-2257-mapfetch-live-2026-11-22.md) | Live probe, replica churn correlation and client retry proof; per-criterion table |
 | [Issue 2257 verify-fixed on revision 0000053 (#2257)](./research/issue-2257-verify-live-2026-11-22.md) | Re-verification that the deployed demo recovers from a dropped map read; per-criterion table |
 | [Issue 2257 live comparison on revision 0000054 (#2257)](./research/issue-2257-live-2026-11-23.md) | Dropped-connection recovery proven; a server 500 on fresh sessions found; sensor overlay hardening; per-criterion table |
+| [Issue 2257 live re-probe on revision 0000055 (#2257)](./research/issue-2257-live-r2-2026-11-23.md) | 8 of 8 fresh sessions load; overlay failure now degrades; reset recovery proven; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |

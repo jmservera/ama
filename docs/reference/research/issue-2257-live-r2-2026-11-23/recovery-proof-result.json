@@ -1,0 +1,18 @@
+{
+ "deployed": {
+  "map_requests": [
+   "aborted",
+   200
+  ],
+  "markers": 443,
+  "unavailable": false
+ },
+ "patched": {
+  "map_requests": [
+   "aborted",
+   200
+  ],
+  "markers": 443,
+  "unavailable": false
+ }
+}

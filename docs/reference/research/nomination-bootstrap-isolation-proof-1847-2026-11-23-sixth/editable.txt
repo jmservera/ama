@@ -1,0 +1,5 @@
+# editable layout
+zava-forward-agents 0.1.0   /home/azureuser/source/ama-wt/issue-1847-live-20261123T071458Z/src/agents
+zava-forward-core   0.1.0   /home/azureuser/source/ama-wt/issue-1847-live-20261123T071458Z/src/core
+{"order": "bulk", "result": "imported", "store_file": "/home/azureuser/source/ama-wt/issue-1847-live-20261123T071458Z/src/core/src/zava_forward/core/store.py", "conflict_same": true, "gate_same": true, "store_same": true, "patch_target_same": true}
+{"order": "nom", "result": "imported", "store_file": "/home/azureuser/source/ama-wt/issue-1847-live-20261123T071458Z/src/core/src/zava_forward/core/store.py", "conflict_same": true, "gate_same": true, "store_same": true, "patch_target_same": true}

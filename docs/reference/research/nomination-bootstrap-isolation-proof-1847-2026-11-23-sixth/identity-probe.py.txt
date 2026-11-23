@@ -1,0 +1,16 @@
+import json, sys
+order = sys.argv[1]
+try:
+    if order == "bulk":
+        import test_bulk_edits as b
+        import test_nomination_route as n
+    else:
+        import test_nomination_route as n
+        import test_bulk_edits as b
+    m = sys.modules["zava_forward.core.store"]
+    print(json.dumps({"order": order, "result": "imported", "store_file": m.__file__,
+      "conflict_same": n.ConflictError is b.ConflictError is m.ConflictError,
+      "gate_same": n.GateError is m.GateError, "store_same": n.Store is b.Store is m.Store,
+      "patch_target_same": b.bulk_edits is sys.modules["zava_forward.core.bulk_edits"]}))
+except ImportError as e:
+    print(json.dumps({"order": order, "result": "rejected", "msg": str(e)[:200]}))

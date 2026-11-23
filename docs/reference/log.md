@@ -14868,6 +14868,10 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1288 eleventh live audit (Refs #1288)
 
 * Added [issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md): revisions 0000055 and 0000027, 272 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
+## [2026-11-23] update | Issue 1288 twelfth live audit (Refs #1288)
+
+* Added [issue-1288-live-r12-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r12-quality-sensor-evidence-2026-11-23.md): revisions 0000055 and 0000027, 531 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
+
 ## [2026-11-23] update | Issue 1837 live re-verification r2 (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-23-r2.md](research/issue-1837-live-demo-evidence-2026-11-23-r2.md): fix still on main; 66 unit tests, three axe journeys (nomination on third run) and a live refusal probe re-run. Live write and independent review stay unproven. No source change.
@@ -14916,3 +14920,13 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2190 gate flakes re-verification r2 (Refs #2190)
 
 * Added [issue-2190-live-20261123T071426Z-note.md](research/issue-2190-live-20261123T071426Z-note.md): the merged fixes pass (129 gate tests, 7 API tests); flake 2 race reproduction stays unproven by design. No source or estate change.
+## [2026-11-23] add | Issue 2256 B2 handoff due-time seed tool (Refs #2256)
+
+* Added [issue-2256-b2-seed-2026-11-23.md](research/issue-2256-b2-seed-2026-11-23.md): a revertible demo seed tool gives timezone-aware offer and due times to pending handoffs; proven locally, not applied to live SQL.
+## [2026-11-23] add | Issue 2257 live re-probe r2 on revision 0000055 (Refs #2257)
+
+* Added [issue-2257-live-r2-2026-11-23.md](research/issue-2257-live-r2-2026-11-23.md): 8 of 8 fresh sessions loaded 443 markers, reset recovery proven, two overlay failures logged while the map still returned 200. Lock cause inferred, not proven. No source or estate change.
+
+## [2026-11-23] add | Nomination test bootstrap isolation sixth re-run (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md): both orders in source, editable and noneditable layouts with identities observed; criterion 6 (full gate receipt) stays owner-gated. No source or test change.

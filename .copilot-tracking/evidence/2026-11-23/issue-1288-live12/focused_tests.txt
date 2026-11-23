@@ -1,0 +1,30 @@
+.....http-response GET /api/assistants/proposals status=503
+..............................http-response GET /api/assistants/proposals status=503
+............................................ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss...........Sensor consent index could not be reconciled; retained readings stay withheld.
+.Sensor consent index could not be reconciled; retained readings stay withheld.
+........................http-response GET /api/assistants/proposals status=503
+.......http-response GET /api/assistants/proposals status=503
+..........http-response GET /api/assistants/proposals status=503
+.....sssssssss....http-response GET /api/assistants/proposals status=503
+.........http-response GET /api/assistants/proposals status=503
+........http-response GET /api/assistants/proposals status=503
+..........http-response GET /api/assistants/proposals status=503
+.................http-response GET /api/assistants/proposals status=503
+.......http-response GET /api/assistants/proposals status=503
+........http-response GET /api/assistants/proposals status=503
+............http-response GET /api/assistants/proposals status=503
+.......http-response GET /api/assistants/proposals status=503
+......http-response GET /api/assistants/proposals status=503
+.........http-response GET /api/assistants/proposals status=503
+....sssssssssssssssssssssssssssssssssssss....http-response GET /api/assistants/proposals status=503
+...........http-response GET /api/assistants/proposals status=503
+...........http-response GET /api/assistants/proposals status=503
+...........http-response GET /api/assistants/proposals status=503
+....sssssssssssssssssssssssssssssssssssssss..http-response GET /api/assistants/proposals status=503
+.....................http-response GET /api/assistants/proposals status=503
+..................................................
+----------------------------------------------------------------------
+Ran 531 tests in 588.710s
+
+OK (skipped=179)
+exit=0
