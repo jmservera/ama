@@ -15203,3 +15203,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 116 live round 10 (Refs #116)
 
 * Added [issue-116-live-r10-evidence-2026-11-23.md](research/issue-116-live-r10-evidence-2026-11-23.md): the shared provider-boundary allowlist now refuses non-base64 image data before any other gate; regression test fails without the fix. Live payloads stay unproven.
+## [2026-11-23] add | Issue 220 guard key normalisation (Refs #220)
+
+* Added [issue-220-live-r12-key-normalisation-2026-11-23.md](research/issue-220-live-r12-key-normalisation-2026-11-23.md): the adverse-field guard now rejects case, spacing and hyphen variants of forbidden keys; regression test added; not deployed to the live demo.
