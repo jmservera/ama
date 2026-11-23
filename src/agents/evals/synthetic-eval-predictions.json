@@ -1,0 +1,29 @@
+{
+  "version": "synthetic-eval-predictions-v1",
+  "predictions": {
+    "h1": {
+      "answer": "accept",
+      "critical_errors": []
+    },
+    "h2": {
+      "answer": "refuse",
+      "critical_errors": []
+    },
+    "h3": {
+      "answer": "accept",
+      "critical_errors": []
+    },
+    "h4": {
+      "answer": "refuse",
+      "critical_errors": []
+    },
+    "h5": {
+      "answer": "accept",
+      "critical_errors": []
+    },
+    "h6": {
+      "answer": "accept",
+      "critical_errors": []
+    }
+  }
+}

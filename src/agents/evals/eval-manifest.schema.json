@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "eval-manifest-schema-v1",
+  "title": "Frozen evaluation manifest (#2312, refs #108)",
+  "type": "object",
+  "required": [
+    "versions",
+    "held_out",
+    "prompt_case_ids",
+    "tuning_case_ids",
+    "thresholds",
+    "cohorts",
+    "threshold_approval"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "$ref": "#/$defs/name" },
+    "versions": {
+      "type": "object",
+      "required": ["task", "model", "prompt", "policy", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "task": { "$ref": "#/$defs/name" },
+        "model": { "$ref": "#/$defs/name" },
+        "prompt": { "$ref": "#/$defs/name" },
+        "policy": { "$ref": "#/$defs/name" },
+        "source": { "$ref": "#/$defs/name" }
+      }
+    },
+    "held_out": {
+      "type": "object",
+      "required": [
+        "case_ids",
+        "seed",
+        "denominator",
+        "labelled_by",
+        "prompt_author",
+        "expected",
+        "critical_errors"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "case_ids": { "$ref": "#/$defs/ids" },
+        "seed": { "$ref": "#/$defs/name" },
+        "denominator": { "type": "integer", "minimum": 1 },
+        "labelled_by": { "$ref": "#/$defs/name" },
+        "prompt_author": { "$ref": "#/$defs/name" },
+        "expected": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": { "$ref": "#/$defs/name" }
+        },
+        "critical_errors": { "$ref": "#/$defs/ids" }
+      }
+    },
+    "prompt_case_ids": { "type": "array", "items": { "$ref": "#/$defs/name" } },
+    "tuning_case_ids": { "type": "array", "items": { "$ref": "#/$defs/name" } },
+    "thresholds": {
+      "type": "object",
+      "required": ["max_critical_misses", "min_accuracy", "min_sample_per_cohort"],
+      "additionalProperties": false,
+      "properties": {
+        "max_critical_misses": { "type": "integer", "minimum": 0 },
+        "min_accuracy": { "type": "number", "minimum": 0, "maximum": 1 },
+        "min_sample_per_cohort": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "cohorts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": { "$ref": "#/$defs/ids" }
+    },
+    "threshold_approval": {
+      "type": "object",
+      "required": ["by", "manifest_digest"],
+      "additionalProperties": false,
+      "properties": {
+        "by": { "$ref": "#/$defs/name" },
+        "manifest_digest": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+      }
+    }
+  },
+  "$defs": {
+    "name": { "type": "string", "minLength": 1, "maxLength": 400 },
+    "ids": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/name" } }
+  }
+}
