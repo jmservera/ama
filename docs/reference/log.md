@@ -14868,6 +14868,10 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1288 eleventh live audit (Refs #1288)
 
 * Added [issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md): revisions 0000055 and 0000027, 272 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
+## [2026-11-23] update | Issue 1288 twelfth live audit (Refs #1288)
+
+* Added [issue-1288-live-r12-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r12-quality-sensor-evidence-2026-11-23.md): revisions 0000055 and 0000027, 531 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
+
 ## [2026-11-23] update | Issue 1837 live re-verification r2 (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-23-r2.md](research/issue-1837-live-demo-evidence-2026-11-23-r2.md): fix still on main; 66 unit tests, three axe journeys (nomination on third run) and a live refusal probe re-run. Live write and independent review stay unproven. No source change.

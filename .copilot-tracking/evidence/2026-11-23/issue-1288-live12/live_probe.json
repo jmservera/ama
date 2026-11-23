@@ -1,0 +1,4847 @@
+{
+ "me": {
+  "status": 200,
+  "role": "Retrofit Programme Manager"
+ },
+ "case_ids": [
+  "ZF-2025-0148",
+  "ZF-2025-0331",
+  "ZF-2025-0150",
+  "ZF-2025-0151",
+  "ZF-2025-0031",
+  "ZF-2025-0032",
+  "ZF-2025-0389",
+  "ZF-2025-0339",
+  "ZF-2025-0340",
+  "ZF-2025-0364",
+  "ZF-2026-0742",
+  "ZF-2026-0741"
+ ],
+ "sensors": {
+  "ZF-2025-0148": {
+   "status": 503,
+   "body": {
+    "error": "Sensor readings unavailable; continue the ordinary quality check manually."
+   }
+  },
+  "ZF-2025-0331": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0331",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0535Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T05:35:00Z",
+      "temperature_c": "4.95",
+      "humidity_pct": "93.78",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0545Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T05:45:00Z",
+      "temperature_c": "5.17",
+      "humidity_pct": "93.91",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0550Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T05:50:00Z",
+      "temperature_c": "5.28",
+      "humidity_pct": "94.03",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0600Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T06:00:00Z",
+      "temperature_c": "5.39",
+      "humidity_pct": "94.18",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0605Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T06:05:00Z",
+      "temperature_c": "5.39",
+      "humidity_pct": "94.09",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0615Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T06:15:00Z",
+      "temperature_c": "5.40",
+      "humidity_pct": "93.56",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0630Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T06:30:00Z",
+      "temperature_c": "5.53",
+      "humidity_pct": "92.64",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0635Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T06:35:00Z",
+      "temperature_c": "5.63",
+      "humidity_pct": "92.48",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0645Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T06:45:00Z",
+      "temperature_c": "5.90",
+      "humidity_pct": "92.38",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0650Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T06:50:00Z",
+      "temperature_c": "6.03",
+      "humidity_pct": "92.40",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0700Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T07:00:00Z",
+      "temperature_c": "6.15",
+      "humidity_pct": "92.44",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SIBP5GIQWTN-20261123T0705Z",
+      "sensor_id": "SIBP5GIQWTN",
+      "observed_at": "2026-11-23T07:05:00Z",
+      "temperature_c": "6.12",
+      "humidity_pct": "92.40",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SIBP5GIQWTN-20261123T0705Z",
+     "sensor_id": "SIBP5GIQWTN",
+     "observed_at": "2026-11-23T07:05:00Z",
+     "temperature_c": "6.12",
+     "humidity_pct": "92.40",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "after_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0535Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0545Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0550Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0600Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0605Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0615Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0630Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0635Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0645Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0650Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0700Z",
+     "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0705Z"
+    ],
+    "generated_at": "2026-11-23T07:10:12Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0705Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "6.12",
+      "humidity_pct": "92.40",
+      "observed_at": "2026-11-23T07:05:00Z"
+     },
+     "text": "[sensor:SIBP5GIQWTN:LIVE-SIBP5GIQWTN-20261123T0705Z] temperature_c 6.12 degC, humidity_pct 92.40 %RH (relative humidity), observed 2026-11-23T07:05:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SIBP5GIQWTN",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "steady",
+       "change": -0.36,
+       "unit": "degC",
+       "text": "Temperature is steady over the last 7 days (-0.4 degC)."
+      },
+      "humidity_pct": {
+       "direction": "rising",
+       "change": 3.67,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is rising over the last 7 days (+3.7 %RH)."
+      }
+     },
+     "summary": "Temperature is steady over the last 7 days (-0.4 degC). Moisture (relative humidity) is rising over the last 7 days (+3.7 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "3ee7d7cd616f86fef691fae7549cb2e0e9f0057c42134549548a23b1529dbbf7"
+    },
+    "age_seconds": 312,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:12Z",
+     "input_digest": "361e5ce286835abe22f11e862ae714a0a91357d63262542849bc1e4c2e1d27cb",
+     "output_digest": "ccbf547bbde233e13f195ce4ef22461cb5dcd1ea3c7c2bae7439192aacf2dd66",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0331",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0150": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0150",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0545Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T05:45:00Z",
+      "temperature_c": "6.37",
+      "humidity_pct": "92.67",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0550Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T05:50:00Z",
+      "temperature_c": "6.44",
+      "humidity_pct": "92.96",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0600Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:00:00Z",
+      "temperature_c": "6.50",
+      "humidity_pct": "93.30",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0605Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:05:00Z",
+      "temperature_c": "6.54",
+      "humidity_pct": "93.05",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0615Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:15:00Z",
+      "temperature_c": "6.79",
+      "humidity_pct": "91.58",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0620Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:20:00Z",
+      "temperature_c": "6.95",
+      "humidity_pct": "90.71",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0630Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:30:00Z",
+      "temperature_c": "7.19",
+      "humidity_pct": "89.56",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0635Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:35:00Z",
+      "temperature_c": "7.25",
+      "humidity_pct": "89.31",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0645Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:45:00Z",
+      "temperature_c": "7.24",
+      "humidity_pct": "88.71",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0650Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T06:50:00Z",
+      "temperature_c": "7.21",
+      "humidity_pct": "88.44",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0700Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T07:00:00Z",
+      "temperature_c": "7.17",
+      "humidity_pct": "88.18",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SOCRKGMAB2X-20261123T0705Z",
+      "sensor_id": "SOCRKGMAB2X",
+      "observed_at": "2026-11-23T07:05:00Z",
+      "temperature_c": "7.19",
+      "humidity_pct": "88.18",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SOCRKGMAB2X-20261123T0705Z",
+     "sensor_id": "SOCRKGMAB2X",
+     "observed_at": "2026-11-23T07:05:00Z",
+     "temperature_c": "7.19",
+     "humidity_pct": "88.18",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "after_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0545Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0550Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0600Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0605Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0615Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0620Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0630Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0635Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0645Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0650Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0700Z",
+     "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0705Z"
+    ],
+    "generated_at": "2026-11-23T07:10:25Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0705Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "7.19",
+      "humidity_pct": "88.18",
+      "observed_at": "2026-11-23T07:05:00Z"
+     },
+     "text": "[sensor:SOCRKGMAB2X:LIVE-SOCRKGMAB2X-20261123T0705Z] temperature_c 7.19 degC, humidity_pct 88.18 %RH (relative humidity), observed 2026-11-23T07:05:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SOCRKGMAB2X",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "steady",
+       "change": -0.09,
+       "unit": "degC",
+       "text": "Temperature is steady over the last 7 days (-0.1 degC)."
+      },
+      "humidity_pct": {
+       "direction": "steady",
+       "change": -0.44,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is steady over the last 7 days (-0.4 %RH)."
+      }
+     },
+     "summary": "Temperature is steady over the last 7 days (-0.1 degC). Moisture (relative humidity) is steady over the last 7 days (-0.4 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "783d6cbec036ae7ab517cc362fda46c6290d5d638f1823c989994463a2e2f94b"
+    },
+    "age_seconds": 325,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:25Z",
+     "input_digest": "4c2f675eb930b89018da3b83786eb7a824012346f2591e2e73932a72515e53a3",
+     "output_digest": "d1927c7c793894d3dba52c7df1491fb8b816bf8268fe9c4e55dd1ff5e010d59f",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0150",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0151": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0151",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is unknown; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-23T07:10:29Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is unknown; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is unknown; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:29Z",
+     "input_digest": "9f4b417c6b04f273e7232a0e2932a72237162f6e63c6ca2835a0a34131098af0",
+     "output_digest": "ce665e14cd0e7edc48cac081860da84efd7d31ba153ba0ec9f9d418cc6d27f5b",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0151",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0031": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0031",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is unknown; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-23T07:10:33Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is unknown; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is unknown; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:33Z",
+     "input_digest": "94de7fbf98003947576a017409aa29646bd3e0f6ba500acc684b20faa82b4d73",
+     "output_digest": "56c3d86165d4e518eca878e4c0041699060366a0b5f4aac9154175cf0fd09c2f",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0031",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0032": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0032",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0535Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T05:35:00Z",
+      "temperature_c": "6.38",
+      "humidity_pct": "94.99",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0545Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T05:45:00Z",
+      "temperature_c": "6.48",
+      "humidity_pct": "95.28",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0550Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T05:50:00Z",
+      "temperature_c": "6.52",
+      "humidity_pct": "95.50",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0600Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T06:00:00Z",
+      "temperature_c": "6.55",
+      "humidity_pct": "95.76",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0605Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T06:05:00Z",
+      "temperature_c": "6.58",
+      "humidity_pct": "95.87",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0615Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T06:15:00Z",
+      "temperature_c": "6.73",
+      "humidity_pct": "96.45",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0620Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T06:20:00Z",
+      "temperature_c": "6.84",
+      "humidity_pct": "96.73",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0630Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T06:30:00Z",
+      "temperature_c": "7.03",
+      "humidity_pct": "96.82",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0635Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T06:35:00Z",
+      "temperature_c": "7.12",
+      "humidity_pct": "96.39",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0650Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T06:50:00Z",
+      "temperature_c": "7.49",
+      "humidity_pct": "93.80",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0700Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T07:00:00Z",
+      "temperature_c": "7.61",
+      "humidity_pct": "92.87",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261123T0705Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-23T07:05:00Z",
+      "temperature_c": "7.59",
+      "humidity_pct": "93.03",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SDR52ASLZXU-20261123T0705Z",
+     "sensor_id": "SDR52ASLZXU",
+     "observed_at": "2026-11-23T07:05:00Z",
+     "temperature_c": "7.59",
+     "humidity_pct": "93.03",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No retained readings before the first quality evidence record.",
+    "after_absent": "No retained readings from the first quality evidence record onward.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0535Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0545Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0550Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0600Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0605Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0615Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0620Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0630Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0635Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0650Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0700Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0705Z"
+    ],
+    "generated_at": "2026-11-23T07:10:36Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0705Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "7.59",
+      "humidity_pct": "93.03",
+      "observed_at": "2026-11-23T07:05:00Z"
+     },
+     "text": "[sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261123T0705Z] temperature_c 7.59 degC, humidity_pct 93.03 %RH (relative humidity), observed 2026-11-23T07:05:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SDR52ASLZXU",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "rising",
+       "change": 0.88,
+       "unit": "degC",
+       "text": "Temperature is rising over the last 7 days (+0.9 degC)."
+      },
+      "humidity_pct": {
+       "direction": "falling",
+       "change": -3.18,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is falling over the last 7 days (-3.2 %RH)."
+      }
+     },
+     "summary": "Temperature is rising over the last 7 days (+0.9 degC). Moisture (relative humidity) is falling over the last 7 days (-3.2 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "6c981313cdad7250353149a544e9adedcc92aedfdec33e0098c72d326cdd714d"
+    },
+    "age_seconds": 336,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:36Z",
+     "input_digest": "f481ff0721466e3c95dc79a5804cec84427be4fab82b25028e197eb34cdd0709",
+     "output_digest": "ce3562983c0b8fa8951bf3c95a9d3bec6b1b89634946767ca245b6502fb3fb6e",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0032",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0389": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0389",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0530Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T05:30:00Z",
+      "temperature_c": "6.14",
+      "humidity_pct": "93.22",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0535Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T05:35:00Z",
+      "temperature_c": "6.21",
+      "humidity_pct": "93.12",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0545Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T05:45:00Z",
+      "temperature_c": "6.38",
+      "humidity_pct": "93.17",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0550Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T05:50:00Z",
+      "temperature_c": "6.47",
+      "humidity_pct": "93.25",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0600Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T06:00:00Z",
+      "temperature_c": "6.54",
+      "humidity_pct": "93.35",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0605Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T06:05:00Z",
+      "temperature_c": "6.55",
+      "humidity_pct": "93.50",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0615Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T06:15:00Z",
+      "temperature_c": "6.58",
+      "humidity_pct": "94.31",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0630Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T06:30:00Z",
+      "temperature_c": "6.73",
+      "humidity_pct": "94.95",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0635Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T06:35:00Z",
+      "temperature_c": "6.85",
+      "humidity_pct": "94.66",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0645Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T06:45:00Z",
+      "temperature_c": "7.24",
+      "humidity_pct": "93.82",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0650Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T06:50:00Z",
+      "temperature_c": "7.44",
+      "humidity_pct": "93.41",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SRNU43SXNVA-20261123T0700Z",
+      "sensor_id": "SRNU43SXNVA",
+      "observed_at": "2026-11-23T07:00:00Z",
+      "temperature_c": "7.64",
+      "humidity_pct": "92.99",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SRNU43SXNVA-20261123T0700Z",
+     "sensor_id": "SRNU43SXNVA",
+     "observed_at": "2026-11-23T07:00:00Z",
+     "temperature_c": "7.64",
+     "humidity_pct": "92.99",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "after_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0530Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0535Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0545Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0550Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0600Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0605Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0615Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0630Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0635Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0645Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0650Z",
+     "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0700Z"
+    ],
+    "generated_at": "2026-11-23T07:10:36Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0700Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "7.64",
+      "humidity_pct": "92.99",
+      "observed_at": "2026-11-23T07:00:00Z"
+     },
+     "text": "[sensor:SRNU43SXNVA:LIVE-SRNU43SXNVA-20261123T0700Z] temperature_c 7.64 degC, humidity_pct 92.99 %RH (relative humidity), observed 2026-11-23T07:00:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SRNU43SXNVA",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "steady",
+       "change": -0.02,
+       "unit": "degC",
+       "text": "Temperature is steady over the last 7 days (-0.0 degC)."
+      },
+      "humidity_pct": {
+       "direction": "steady",
+       "change": 0.4,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is steady over the last 7 days (+0.4 %RH)."
+      }
+     },
+     "summary": "Temperature is steady over the last 7 days (-0.0 degC). Moisture (relative humidity) is steady over the last 7 days (+0.4 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "c5eb6ca3d83599ba55414ffd48b0b820a380b4b313fc91f37900a8e431aba98c"
+    },
+    "age_seconds": 636,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:36Z",
+     "input_digest": "3c9b421e5a522ca81438c0f477ccf071b8370322f6fa006f4262b98a5808aa8b",
+     "output_digest": "b926c9f0357a362d9b3a718d1670cc6e28d9a5013a72754775b81f2a06907d5f",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0389",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0339": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0339",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is unknown; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-23T07:10:37Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is unknown; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is unknown; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:37Z",
+     "input_digest": "734d83a6b6999cb3b32dbbd8e577a7d8fe94aa8e36eff7d2a896b21152a0ecf0",
+     "output_digest": "dcb8304980441d2a963269e0d10991ab020ef001b8f8fb74fb862fc0b3852068",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0339",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0340": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0340",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0535Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T05:35:00Z",
+      "temperature_c": "6.07",
+      "humidity_pct": "94.54",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0550Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T05:50:00Z",
+      "temperature_c": "6.13",
+      "humidity_pct": "93.37",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0600Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:00:00Z",
+      "temperature_c": "6.14",
+      "humidity_pct": "92.97",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0605Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:05:00Z",
+      "temperature_c": "6.13",
+      "humidity_pct": "93.21",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0615Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:15:00Z",
+      "temperature_c": "6.10",
+      "humidity_pct": "94.59",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0620Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:20:00Z",
+      "temperature_c": "6.09",
+      "humidity_pct": "95.32",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0630Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:30:00Z",
+      "temperature_c": "6.17",
+      "humidity_pct": "95.90",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0635Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:35:00Z",
+      "temperature_c": "6.27",
+      "humidity_pct": "95.67",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0645Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:45:00Z",
+      "temperature_c": "6.55",
+      "humidity_pct": "95.18",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0650Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T06:50:00Z",
+      "temperature_c": "6.68",
+      "humidity_pct": "94.97",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0700Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T07:00:00Z",
+      "temperature_c": "6.82",
+      "humidity_pct": "94.77",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0705Z",
+      "sensor_id": "SNCJ7LG3HSM",
+      "observed_at": "2026-11-23T07:05:00Z",
+      "temperature_c": "6.80",
+      "humidity_pct": "94.61",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SNCJ7LG3HSM-20261123T0705Z",
+     "sensor_id": "SNCJ7LG3HSM",
+     "observed_at": "2026-11-23T07:05:00Z",
+     "temperature_c": "6.80",
+     "humidity_pct": "94.61",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "after_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0535Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0550Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0600Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0605Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0615Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0620Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0630Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0635Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0645Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0650Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0700Z",
+     "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0705Z"
+    ],
+    "generated_at": "2026-11-23T07:10:37Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0705Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "6.80",
+      "humidity_pct": "94.61",
+      "observed_at": "2026-11-23T07:05:00Z"
+     },
+     "text": "[sensor:SNCJ7LG3HSM:LIVE-SNCJ7LG3HSM-20261123T0705Z] temperature_c 6.80 degC, humidity_pct 94.61 %RH (relative humidity), observed 2026-11-23T07:05:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SNCJ7LG3HSM",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "steady",
+       "change": 0.13,
+       "unit": "degC",
+       "text": "Temperature is steady over the last 7 days (+0.1 degC)."
+      },
+      "humidity_pct": {
+       "direction": "steady",
+       "change": 0.38,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is steady over the last 7 days (+0.4 %RH)."
+      }
+     },
+     "summary": "Temperature is steady over the last 7 days (+0.1 degC). Moisture (relative humidity) is steady over the last 7 days (+0.4 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "d3553ca0f6b270eb21da57469de9f7664f16bdeb4a493419d843bcd75b18b4ee"
+    },
+    "age_seconds": 337,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:37Z",
+     "input_digest": "635002e5e92458a944c390d762d86d6f1f4ab91b099e8d0ee41ed08693c18c11",
+     "output_digest": "41bbaf98269df2d110db1a09a8338f007c0c24073dcedb0723e09cdd8e8db79e",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0340",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0364": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0364",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0530Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T05:30:00Z",
+      "temperature_c": "4.98",
+      "humidity_pct": "94.43",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0535Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T05:35:00Z",
+      "temperature_c": "5.01",
+      "humidity_pct": "94.27",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0545Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T05:45:00Z",
+      "temperature_c": "4.99",
+      "humidity_pct": "93.94",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0600Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T06:00:00Z",
+      "temperature_c": "4.92",
+      "humidity_pct": "93.69",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0605Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T06:05:00Z",
+      "temperature_c": "4.94",
+      "humidity_pct": "93.44",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0615Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T06:15:00Z",
+      "temperature_c": "5.09",
+      "humidity_pct": "92.01",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0620Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T06:20:00Z",
+      "temperature_c": "5.19",
+      "humidity_pct": "91.15",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0630Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T06:30:00Z",
+      "temperature_c": "5.37",
+      "humidity_pct": "90.02",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0635Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T06:35:00Z",
+      "temperature_c": "5.47",
+      "humidity_pct": "89.93",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0645Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T06:45:00Z",
+      "temperature_c": "5.72",
+      "humidity_pct": "90.26",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0700Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T07:00:00Z",
+      "temperature_c": "5.96",
+      "humidity_pct": "90.81",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SLP23ZKAY6M-20261123T0705Z",
+      "sensor_id": "SLP23ZKAY6M",
+      "observed_at": "2026-11-23T07:05:00Z",
+      "temperature_c": "5.97",
+      "humidity_pct": "90.70",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SLP23ZKAY6M-20261123T0705Z",
+     "sensor_id": "SLP23ZKAY6M",
+     "observed_at": "2026-11-23T07:05:00Z",
+     "temperature_c": "5.97",
+     "humidity_pct": "90.70",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "after_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0530Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0535Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0545Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0600Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0605Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0615Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0620Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0630Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0635Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0645Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0700Z",
+     "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0705Z"
+    ],
+    "generated_at": "2026-11-23T07:10:37Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0705Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "5.97",
+      "humidity_pct": "90.70",
+      "observed_at": "2026-11-23T07:05:00Z"
+     },
+     "text": "[sensor:SLP23ZKAY6M:LIVE-SLP23ZKAY6M-20261123T0705Z] temperature_c 5.97 degC, humidity_pct 90.70 %RH (relative humidity), observed 2026-11-23T07:05:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SLP23ZKAY6M",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "falling",
+       "change": -0.55,
+       "unit": "degC",
+       "text": "Temperature is falling over the last 7 days (-0.5 degC)."
+      },
+      "humidity_pct": {
+       "direction": "steady",
+       "change": 0.9,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is steady over the last 7 days (+0.9 %RH)."
+      }
+     },
+     "summary": "Temperature is falling over the last 7 days (-0.5 degC). Moisture (relative humidity) is steady over the last 7 days (+0.9 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "c1af5425412bc8659289decccbf052002cd841ecc2ba44bda4fecb22b517d215"
+    },
+    "age_seconds": 337,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:37Z",
+     "input_digest": "da76de7b7cfdc10d07b364737090c7d098f84e16219ec23a3c01a4793b77eccc",
+     "output_digest": "b7d8aed24f51846f16606181e98d6e31df3ef7bfa67fae1249a6be056633a81e",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0364",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2026-0742": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2026-0742",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0545Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T05:45:00Z",
+      "temperature_c": "6.39",
+      "humidity_pct": "97.19",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0550Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T05:50:00Z",
+      "temperature_c": "6.45",
+      "humidity_pct": "97.24",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0600Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:00:00Z",
+      "temperature_c": "6.52",
+      "humidity_pct": "97.32",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0605Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:05:00Z",
+      "temperature_c": "6.57",
+      "humidity_pct": "97.19",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0615Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:15:00Z",
+      "temperature_c": "6.86",
+      "humidity_pct": "96.38",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0620Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:20:00Z",
+      "temperature_c": "7.04",
+      "humidity_pct": "95.88",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0630Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:30:00Z",
+      "temperature_c": "7.31",
+      "humidity_pct": "95.13",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0635Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:35:00Z",
+      "temperature_c": "7.36",
+      "humidity_pct": "94.97",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0645Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:45:00Z",
+      "temperature_c": "7.34",
+      "humidity_pct": "94.87",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0650Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T06:50:00Z",
+      "temperature_c": "7.30",
+      "humidity_pct": "94.89",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0700Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T07:00:00Z",
+      "temperature_c": "7.26",
+      "humidity_pct": "94.92",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SZOQRUS2MYH-20261123T0705Z",
+      "sensor_id": "SZOQRUS2MYH",
+      "observed_at": "2026-11-23T07:05:00Z",
+      "temperature_c": "7.27",
+      "humidity_pct": "94.68",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SZOQRUS2MYH-20261123T0705Z",
+     "sensor_id": "SZOQRUS2MYH",
+     "observed_at": "2026-11-23T07:05:00Z",
+     "temperature_c": "7.27",
+     "humidity_pct": "94.68",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "after_absent": "No quality evidence record time exists, so no comparison around it can be shown.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0545Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0550Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0600Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0605Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0615Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0620Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0630Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0635Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0645Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0650Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0700Z",
+     "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0705Z"
+    ],
+    "generated_at": "2026-11-23T07:10:37Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0705Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "7.27",
+      "humidity_pct": "94.68",
+      "observed_at": "2026-11-23T07:05:00Z"
+     },
+     "text": "[sensor:SZOQRUS2MYH:LIVE-SZOQRUS2MYH-20261123T0705Z] temperature_c 7.27 degC, humidity_pct 94.68 %RH (relative humidity), observed 2026-11-23T07:05:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SZOQRUS2MYH",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "falling",
+       "change": -0.89,
+       "unit": "degC",
+       "text": "Temperature is falling over the last 7 days (-0.9 degC)."
+      },
+      "humidity_pct": {
+       "direction": "rising",
+       "change": 2.64,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is rising over the last 7 days (+2.6 %RH)."
+      }
+     },
+     "summary": "Temperature is falling over the last 7 days (-0.9 degC). Moisture (relative humidity) is rising over the last 7 days (+2.6 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "f37891ad62eab2c8dede1b480bf644f2700769a0610b8a050300a5f105e65da8"
+    },
+    "age_seconds": 337,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:37Z",
+     "input_digest": "6533e63ee249f2c98cde045e0c9e8afc43833dae2aff4cf4d4a83a4761fb9267",
+     "output_digest": "41c03d133109f6376ca1b6be0d5d9c14a83fbaf248fe2a48f799128279d0bd22",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2026-0742",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2026-0741": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2026-0741",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": null,
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is unknown; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-23T07:10:37Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is unknown; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is unknown; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-23T07:10:37Z",
+     "input_digest": "93be1885caad692f8e496721ad7438407a8f23d4666bd2c235a24b7a0dbfcaec",
+     "output_digest": "816cf8c8053b0d63f59b2e9a967fc9024f80d634f4e197ff2c1cdfdf69666d44",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2026-0741",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  }
+ },
+ "assistants": {
+  "status": 200,
+  "body": {
+   "assistants": [
+    {
+     "id": "stock-prioritisation",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "stock-prioritisation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "3768ed36e3242c28",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+      "data_version": "bd66b741abf300ac",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "b591a7fb7d211c1bb8ac4d398cea1e2ee52b6a7dbfeccc2f97de1408d420ec91",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "purpose": "Explain stock facts and prepare a data-owner query"
+    },
+    {
+     "id": "assessment-preparation",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "assessment-preparation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "227fbd67300191c2",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+      "data_version": "85e08cf5af33f7cd",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "00242be1162f711a64faa3667e421eb558309aee0980ca4845910244df49262e",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "purpose": "Prepare a survey/design evidence checklist"
+    },
+    {
+     "id": "funding-evidence",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "funding-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "a3a511de0e461d78",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+      "data_version": "5dabe1a2162e5f62",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "72ba62e46f523209",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "fb77a9101568de8edf55c7ccf3d3ac664121f4830ea18c12e7733d1989a2cdb2",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "purpose": "Prepare application/claim evidence gaps"
+    },
+    {
+     "id": "works-resident-coordination",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "works-resident-coordination",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "46d998c3de7ac61e",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+      "data_version": "3f0a66365555e8d1",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "2123c2c05cef7a89",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "866dcbfd439d9395e599b1c4ac53d250596e369cfd5252374d5f63bb27940e67",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Resident Liaison Officer",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "purpose": "Draft an update or committed-capacity option"
+    },
+    {
+     "id": "quality-evidence",
+     "version": "1.0.0",
+     "release": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "quality-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "9582b9a76f52d5ef",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+      "data_version": "b979970eefcae01d",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "03579f28ea6debec",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "6cfe405476cc2f0888cc73b765c1fda54471ded52e187a32525c45ade9bfe863",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Quality Inspector",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensor"
+     ],
+     "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+    }
+   ],
+   "registered_tasks": [
+    {
+     "id": "stock-prioritisation",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Explain stock facts and prepare a data-owner query",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Explain stock facts and prepare a data-owner query",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "stock-prioritisation",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "3768ed36e3242c28",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+      "data_version": "bd66b741abf300ac",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "b591a7fb7d211c1bb8ac4d398cea1e2ee52b6a7dbfeccc2f97de1408d420ec91",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "stock-prioritisation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "assessment-preparation",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Prepare a survey/design evidence checklist",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Prepare a survey/design evidence checklist",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "assessment-preparation",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "227fbd67300191c2",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+      "data_version": "85e08cf5af33f7cd",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "00242be1162f711a64faa3667e421eb558309aee0980ca4845910244df49262e",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "assessment-preparation",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "funding-evidence",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Prepare application/claim evidence gaps",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Prepare application/claim evidence gaps",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "funding-evidence",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "a3a511de0e461d78",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+      "data_version": "5dabe1a2162e5f62",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "72ba62e46f523209",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "fb77a9101568de8edf55c7ccf3d3ac664121f4830ea18c12e7733d1989a2cdb2",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "funding-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "works-resident-coordination",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Draft an update or committed-capacity option",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft an update or committed-capacity option",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Resident Liaison Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "works-resident-coordination",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "46d998c3de7ac61e",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+      "data_version": "3f0a66365555e8d1",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "2123c2c05cef7a89",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "866dcbfd439d9395e599b1c4ac53d250596e369cfd5252374d5f63bb27940e67",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "works-resident-coordination",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "quality-evidence",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensor"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Quality Inspector",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensor"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "quality-evidence",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "9582b9a76f52d5ef",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+      "data_version": "b979970eefcae01d",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "03579f28ea6debec",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "6cfe405476cc2f0888cc73b765c1fda54471ded52e187a32525c45ade9bfe863",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "quality-evidence",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "priority",
+     "kind": "retained-path",
+     "version": "2026-10-15.1",
+     "purpose": "Explain a suggested order of work for a person to accept or reject",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Explain a suggested order of work for a person to accept or reject",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Advisory; ranking and queue membership unchanged",
+     "inputs": [
+      "stage",
+      "safety",
+      "ranking"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "stage",
+      "safety",
+      "ranking"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "priority",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_explanations",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_explanations",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_explanations",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "2026-10-15.1",
+      "schema_version": "legacy-text-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "15ed5b165b2074a1",
+      "policy_version": "legacy-forbidden-output-filter-v1:b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+      "data_version": "2a633f68879b0315",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "87ab689eb1791440",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "495022a28ec1bd38a678ef333f0ec3c3ab9759dc016b97795576f18668c00134",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "legacy:priority",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "funding_draft",
+     "kind": "retained-path",
+     "version": "2026-10-15.1",
+     "purpose": "Draft funding application wording",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft funding application wording",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Draft wording; no submission or eligibility decision",
+     "inputs": [
+      "measures",
+      "funding"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Grants and Evidence Officer",
+     "affected": [
+      "residents",
+      "funders"
+     ],
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "measures",
+      "funding"
+     ],
+     "accountable_function": "Grants and Evidence Officer",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "funding_draft",
+      "monitoring_owner": "Grants and Evidence Officer with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Grants and Evidence Officer (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_drafts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_drafts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_drafts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "2026-10-15.1",
+      "schema_version": "legacy-text-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "05094b0e0b3c0a78",
+      "policy_version": "legacy-forbidden-output-filter-v1",
+      "data_version": "7ff8794229c8c359",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "20d72285485e2f77",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "0bc9c6e7d4b43c0eebfe66cbb8da50751b4505ddbe46e5b2f57d1070be3004da",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "legacy:funding_draft",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Grants and Evidence Officer with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Grants and Evidence Officer (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "chat-case-conversation",
+     "kind": "chat",
+     "version": "2026-10-15.1",
+     "purpose": "Answer questions about a case with cited sources; refuse approve, decide, consent, diagnose and resident-contact asks",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Answer questions about a case with cited sources; refuse approve, decide, consent, diagnose and resident-contact asks",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Cited reading aid; no write, approval or decision",
+     "inputs": [
+      "home",
+      "survey",
+      "measures",
+      "stage"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "staff",
+      "residents"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "measures",
+      "stage"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; the panel answers nothing without a model.",
+     "monitoring_declaration": {
+      "task_id": "chat-case-conversation",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_cited_answers",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_cited_answers",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": false,
+        "reason": "Stateless cited reading aid emits no persisted approval-bound proposal record subject to stale-state review; answers bind live source versions."
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_cited_answers",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "enabled": false,
+     "state": "disabled",
+     "thresholds": {
+      "status": "proposed",
+      "approved_by": null,
+      "approved_on": null,
+      "proposed": {
+       "critical_failures": 0,
+       "open_critical_gaps": 0,
+       "memory_poisoning_pass_rate": 1,
+       "prompt_injection_pass_rate": 1,
+       "permission_pass_rate": 1,
+       "out_of_scope_refusal_rate": 1
+      }
+     },
+     "demo_activation": {
+      "status": "demo-only",
+      "accountable_owner": "jmservera",
+      "decision_date": "2026-11-03",
+      "basis": "demo-only; the owner superseded DPO and Legal review for the demonstrator with a visible disclaimer",
+      "switch": "ZF_CHAT_DEMO_ACTIVATION",
+      "switch_value": "approved-2026-11-03",
+      "required_profile": "ZF_DEPLOYMENT_PROFILE=demo",
+      "outstanding": "DPO and Legal review outstanding; no Legal, DPO or RAI approval is recorded or implied",
+      "disclaimer": "Demonstration only. Answers are generated by an AI model from synthetic case facts, may be wrong, and are not reviewed or approved. No DPO, Legal or RAI approval exists. Check the sources."
+     },
+     "required_enablement_evidence": [
+      "approved thresholds",
+      "accountable individual",
+      "independently labelled held-out set",
+      "actual-model evaluation within a finite authorisation",
+      "authorised human exercises"
+     ],
+     "binding": null,
+     "release_denial": {
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "status": {
+      "task": "chat-case-conversation",
+      "state": "disabled",
+      "owner_role": "Retrofit Programme Manager",
+      "owner_individual": null,
+      "owner_gap": true,
+      "reason": "disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence"
+     },
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": false,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "aftercare-concern-pack",
+     "kind": "proposal-pack",
+     "version": "2026-10-15.1",
+     "purpose": "Draft an optional aftercare concern pack for the named owner to review; no outcome, remedy or dismissal",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft an optional aftercare concern pack for the named owner to review; no outcome, remedy or dismissal",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; the named owner accepts or rejects; a sensor reading is never a basis",
+     "inputs": [
+      "home",
+      "requests",
+      "history"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "requests",
+      "history"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the concern record and the named owner; no model call.",
+     "monitoring_declaration": {
+      "task_id": "aftercare-concern-pack",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_concern_packs",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_concern_packs",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_concern_packs",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "enabled": false,
+     "state": "disabled",
+     "binding": null,
+     "release_denial": {
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "status": {
+      "task": "aftercare-concern-pack",
+      "state": "disabled",
+      "owner_role": "Retrofit Programme Manager",
+      "owner_individual": null,
+      "owner_gap": true,
+      "reason": "disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review"
+     },
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": false,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": true
+     }
+    }
+   ],
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "proactive": false,
+   "quality_scope": {
+    "mode": "demo-homes",
+    "homes": [
+     "ZF-2025-0029",
+     "ZF-2025-0030",
+     "ZF-2025-0031",
+     "ZF-2025-0032",
+     "ZF-2025-0041"
+    ],
+    "trigger": "operator-requested-only",
+    "background_scan": "skips-quality",
+    "per_reading_calls": "none",
+    "model_call_authority_present": false
+   },
+   "principal": "service:retrofit-evidence-proposals",
+   "rule": "synthetic-gaps-2026-10-13-v1",
+   "limits": {
+    "scan_interval": 60,
+    "scan_size": 20,
+    "input_chars": 12000,
+    "output_chars": 8000,
+    "output_tokens": 600,
+    "timeout": 20,
+    "active_calls": 2,
+    "attempts": 2,
+    "backoff": 30,
+    "lease": 60
+   },
+   "manual": "Use the ordinary case controls; proposals never approve or change the case.",
+   "rai_exercise_acceptance": {
+    "section": "rai_exercise_acceptance",
+    "independent_of_real_ai_delivery_gate": true,
+    "passed": false,
+    "status": "failed",
+    "checks": {
+     "release_contract_fail_closed": {
+      "passed": true,
+      "detail": "13 registered AI tasks default to approved_for_live_use=False."
+     },
+     "oq017_live_activation_gate": {
+      "passed": true,
+      "detail": "Live AI task activation without named human approval deterministically rejects with OQ-017."
+     },
+     "challenge_and_appeal_safeguards": {
+      "passed": true,
+      "detail": "Resident and staff challenge channels preserve statutory hazard clocks without penalty."
+     },
+     "operator_suspension_and_restart_authority": {
+      "passed": true,
+      "active_governance_pauses": 0,
+      "detail": "Suspension keeps manual/hazard routes open and blocks automated or single-actor restart."
+     },
+     "monitoring_and_threshold_declarations": {
+      "passed": true,
+      "detail": "Every registered AI task carries complete offline harm and review-effort declarations."
+     },
+     "human_review_cohort_and_privacy_guards": {
+      "passed": true,
+      "detail": "Human-review defect trial, per-cohort non-fairness guard, and Art. 22 propose-only checks active."
+     },
+     "requirement_traceability_complete": {
+      "passed": false,
+      "covered_count": 15,
+      "total_required": 15,
+      "detail": "All 15 Epic #218 requirements trace to verified acceptance checks and/or explicit owner deferrals."
+     },
+     "audit_ledger_integrity": {
+      "passed": true,
+      "detail": "Tamper-evident hash-chained audit ledger verifies cleanly."
+     }
+    },
+    "traceability": {
+     "complete": false,
+     "covered_count": 15,
+     "total_required": 15,
+     "verified_by_test_ids": [
+      "FR-051",
+      "FR-052",
+      "FR-053",
+      "FR-054",
+      "NFR-014",
+      "AC-069",
+      "AC-070",
+      "AC-071",
+      "AC-072",
+      "AC-073",
+      "OQ-017",
+      "OQ-018",
+      "OQ-019",
+      "RULE-024",
+      "RULE-020"
+     ],
+     "deferred_live_ids": [
+      "FR-051",
+      "FR-053",
+      "FR-054",
+      "NFR-014",
+      "AC-070",
+      "AC-071",
+      "AC-072",
+      "AC-073",
+      "OQ-017",
+      "OQ-018",
+      "OQ-019",
+      "RULE-020"
+     ],
+     "untraced_ids": []
+    },
+    "note": "Verifies deterministic Responsible AI release, challenge, suspension, monitoring, and audit controls in exercise mode independently of live model cut-over."
+   },
+   "real_ai_delivery_gate": {
+    "section": "real_ai_delivery_gate",
+    "separated_from_rai_exercise_acceptance": true,
+    "passed": false,
+    "status": "blocked",
+    "checks": {
+     "provider_configured_and_enabled": {
+      "passed": true,
+      "workflow_only_forced": false,
+      "detail": "Live Azure OpenAI provider configured and active."
+     },
+     "durable_sql_release_store": {
+      "passed": true,
+      "detail": "Durable SQL release store connected."
+     },
+     "no_active_suspension": {
+      "passed": true,
+      "detail": "No active continuity or governance guardrail suspension."
+     },
+     "oq017_named_live_releases_recorded": {
+      "passed": false,
+      "approved_live_tasks": [],
+      "unapproved_live_tasks": [
+       "assessment-preparation",
+       "briefing",
+       "funding-evidence",
+       "funding_draft",
+       "message",
+       "priority",
+       "quality-evidence",
+       "read_document",
+       "stock-prioritisation",
+       "summary",
+       "works-resident-coordination"
+      ],
+      "detail": "Enabled AI tasks lack unexpired named-human actual release records (OQ-017)."
+     },
+     "oq017_authority_holders_appointed": {
+      "passed": false,
+      "open_question": "OQ-017",
+      "detail": "Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017)."
+     },
+     "oq018_live_fairness_and_thresholds_cleared": {
+      "passed": false,
+      "open_question": "OQ-018",
+      "detail": "Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018)."
+     },
+     "oq019_legal_dpo_automated_decision_cleared": {
+      "passed": false,
+      "open_question": "OQ-019",
+      "detail": "Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+     }
+    },
+    "blocking_reasons": [
+     "oq017_named_live_releases_recorded: Enabled AI tasks lack unexpired named-human actual release records (OQ-017).",
+     "oq017_authority_holders_appointed: Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017).",
+     "oq018_live_fairness_and_thresholds_cleared: Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018).",
+     "oq019_legal_dpo_automated_decision_cleared: Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+    ],
+    "deferred_open_questions": [
+     "OQ-017",
+     "OQ-018",
+     "OQ-019"
+    ],
+    "note": "Disabled, offline, or workflow-only assistance never satisfies the real-AI delivery gate; live cut-over requires real provider readiness plus named human OQ-017, OQ-018, and OQ-019 clearances."
+   }
+  }
+ },
+ "forecast": {
+  "status": 200,
+  "body": {
+   "period_seconds": 86400,
+   "proactive": false,
+   "rule": "synthetic-gaps-2026-10-13-v1",
+   "scan_interval": 60,
+   "scan_size": 20,
+   "cases_reachable_per_period": 28800,
+   "call_allowance": 0,
+   "assistants": [
+    {
+     "id": "stock-prioritisation",
+     "rule": "Missing/unknown home.epc, home.type or home.built; supplied survey.epc/type/built conflicts with home.",
+     "open_cases_in_scope": 443,
+     "eligible_cases": 0,
+     "new_proposals": 0,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 0,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "assessment-preparation",
+     "rule": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
+     "open_cases_in_scope": 443,
+     "eligible_cases": 443,
+     "new_proposals": 443,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 886,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "funding-evidence",
+     "rule": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
+     "open_cases_in_scope": 443,
+     "eligible_cases": 443,
+     "new_proposals": 443,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 886,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "works-resident-coordination",
+     "rule": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
+     "open_cases_in_scope": 443,
+     "eligible_cases": 104,
+     "new_proposals": 104,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 208,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    },
+    {
+     "id": "quality-evidence",
+     "rule": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+     "open_cases_in_scope": 443,
+     "eligible_cases": 443,
+     "new_proposals": 443,
+     "max_calls_per_request": 2,
+     "max_calls_this_period": 886,
+     "held": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused."
+    }
+   ],
+   "max_calls_this_period": 2866,
+   "cost": "Unknown: no price source is set (BRD OD-51).",
+   "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+   "manual": "Proactive scans stay off unless an operator enables them; use the ordinary case controls."
+  }
+ },
+ "rai_metrics": {
+  "status": 200,
+  "body": {
+   "status": "counted",
+   "metrics": {
+    "invocation": 0,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 0,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 0,
+    "latency_samples": 0,
+    "tokens": 0
+   },
+   "latency_seconds_total": 0,
+   "persisted": 2,
+   "replay": {
+    "duplicates": 0,
+    "new": 0,
+    "outside_window": 0,
+    "invalid": 0
+   }
+  }
+ },
+ "sim_quality": {
+  "status": 200,
+  "body": {
+   "label": "Public synthetic simulation. Not a real home, resident or device.",
+   "manual_route": "Use the ordinary quality check and the manual route; nothing was sent to a model.",
+   "namespace": "zf-public-simulation-quality-v1",
+   "status": "unavailable",
+   "reason": "not-configured"
+  }
+ },
+ "ok_cases": [
+  "ZF-2025-0331",
+  "ZF-2025-0150",
+  "ZF-2025-0032",
+  "ZF-2025-0389",
+  "ZF-2025-0340",
+  "ZF-2025-0364",
+  "ZF-2026-0742"
+ ],
+ "rai_metrics_after": {
+  "status": 200,
+  "body": {
+   "status": "counted",
+   "metrics": {
+    "invocation": 0,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 0,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 0,
+    "latency_samples": 0,
+    "tokens": 0
+   },
+   "latency_seconds_total": 0,
+   "persisted": 2,
+   "replay": {
+    "duplicates": 0,
+    "new": 0,
+    "outside_window": 0,
+    "invalid": 0
+   }
+  }
+ },
+ "tabs": [
+  "Overview",
+  "Blockers and safety (3)",
+  "Survey and assessment",
+  "Funding",
+  "Resident",
+  "Contractor and works",
+  "Quality and handover",
+  "Home sensors",
+  "AI assistance (count unavailable)",
+  "History"
+ ],
+ "ui_sensors_text": "Recent reading (within 15 minutes)\n\nChecked 23 Nov 2026, 07:14 (UK time)\n\nReadings are advice for a person to check. They do not change the case.\n\nAlerts for this home\n\nNo sensor alerts for this home.\n\nLatest reading\nTemperature\n6.12 degC\nRelative humidity\n92.40 %RH\nObserved\n23 Nov 2026, 07:05 (UK time), 9 minutes ago\nSensor\nSIBP5GIQWTN\nSource\nOutdoor weather. Not calibrated.\nTemperature and humidity over time\n4.5\n5\n5.5\n6\n6.5\n92\n92.5\n93\n93.5\n94\n94.5\nTemperature (degC)\nRelative humidity (%RH)\n23 Nov, 05:35\n23 Nov, 07:05\nTime (UK time)\n Temperature: solid line, circles, left axis\n Relative humidity: dashed line, squares, right axis\n\n12 readings from 23 Nov, 05:35 to 23 Nov, 07:05 (UK time). Temperature ranged 4.95 to 6.15 degC, from 4.95 to 6.12 degC. Relative humidity ranged 92.38 to 94.18 %RH, from 93.78 to 92.4 %RH. The two vertical axes have different scales, so the lines show how the values move together, not how large they are. The same readings are in the Recent readings table below.\n\nRecent readings (up to 12)\nRecent readings, newest first\nObserved (UK time)\tTemperature (degC)\tRelative humidity (%RH)\n23 Nov, 07:05\t6.12\t92.40\n23 Nov, 07:00\t6.15\t92.44\n23 Nov, 06:50\t6.03\t92.40\n23 Nov, 06:45\t5.90\t92.38\n23 Nov, 06:35\t5.63\t92.48\n23 Nov, 06:30\t5.53\t92.64\n23 Nov, 06:15\t5.40\t93.56\n23 Nov, 06:05\t5.39\t94.09\n23 Nov, 06:00\t5.39\t94.18\n23 Nov, 05:50\t5.28\t94.03\n23 Nov, 05:45\t5.17\t93.91\n23 Nov, 05:35\t4.95\t93.78\n\nSource of every row: Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.\n\nReference numbers\nAround the first quality evidence record\n\nThere is no quality evidence record yet, so there is nothing to compare around.\n\nAbout these readings",
+ "ai_tab_text": "AI assistance\nRetrofit assistants\n\nOperator authority, finite allowance and expiry are required.\n\nThese are synthetic exercise rules. Continue ordinary case work manually when assistance is disabled, failed or stale.\n\nRequest Stock facts and prioritisationRequest Assessment preparationRequest Funding evidenceRequest Works and resident coordinationRequest Quality evidenceRefresh proposalsShared role-owned review queue\n\nNo AI suggestions yet. Ordinary case work is not affected.\n\nPublic synthetic simulation (not this home)\n\nPublic synthetic simulation. Not a real home, resident or device.\n\nThe simulation is unavailable (not-configured). Use the ordinary quality check and the manual route; nothing was sent to a model. Owner: application support. Next action: refresh to try again, and use the manual route if it continues\n\nAsk the assistant about this case (optional)\n\nResident message and summary drafts stay with the resident record.Review resident drafts\n\nFunding drafts stay with the funding record.Review funding drafts"
+}
