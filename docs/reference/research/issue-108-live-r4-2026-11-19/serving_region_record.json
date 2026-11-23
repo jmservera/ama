@@ -9,11 +9,12 @@
    "model": "gpt-4.1-mini",
    "version": "2025-04-14",
    "sku": "Standard",
-   "capacity": 1,
+   "capacity": 10,
    "rate_limits": {
-    "requests_per_minute": 1,
-    "tokens_per_minute": 1000
+    "requests_per_minute": 10,
+    "tokens_per_minute": 10000
    },
+   "live_observed_on": "2026-11-23",
    "state": "Succeeded"
   },
   {

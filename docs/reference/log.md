@@ -15288,3 +15288,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 116 provider boundary aggregate image size (Refs #116)
 
 * Added [issue-116-live-r12-evidence-2026-11-23.md](research/issue-116-live-r12-evidence-2026-11-23.md): the shared provider allowlist now caps total decoded image bytes per request (previously per image only), with a failing-then-passing test. Live payloads, independent review and hosted CI stay outstanding.
+## [2026-11-23] update | Issue 108 live capacity correction (Refs #108)
+
+* Updated [issue-108-live-serving-attestation-2026-11-23.md](research/issue-108-live-serving-attestation-2026-11-23.md) and the serving record: live `resident-mini` capacity is 10 (record said 1); quota headroom still unconfirmed because no Standard row is returned; one new consistency test.
