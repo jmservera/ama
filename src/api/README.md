@@ -267,8 +267,10 @@ is the evidence for criterion 3; the offline tests are not.
 Map acceptance excludes requests initiated before filter activation, matches
 the selected flag/area and observes fit/viewport follow-ups until request/render
 settlement. It validates points/clusters/empty payloads and compares the latest
-response's actual list links/labels, marker labels/count and status. Malformed
-data, map alerts, page errors and mismatched rendering fail; HTTP 200, selected
+response's actual list links/labels, marker labels/count and status. The count
+comes from the sidebar's direct status children, excluding nested sensor
+feedback. Malformed data, map alerts, page errors and mismatched rendering fail;
+HTTP 200, selected
 state or a cleared busy indicator alone cannot pass. Temporary listeners are
 removed on success, failure and admission loss. Payloads remain in memory only.
 Cluster containment permits 1e-9 degrees of absolute centroid roundoff against
