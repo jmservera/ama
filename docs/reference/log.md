@@ -14987,3 +14987,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2237 live re-proof on revision 0000055 (Refs #2237)
 
 * Added [issue-2237-live-reproof-2026-11-23.md](research/issue-2237-live-reproof-2026-11-23.md): the deployed API contains the 503 mapping, it fired 14 times live, retention returned 200 in 56 of 56 calls, and each criterion is marked proven or unproven. No source change.
+## [2026-11-23] add | Issue 2245 chat 500 live recheck (Refs #2245)
+
+* Added [issue-2245-recheck-2026-11-23.md](research/issue-2245-recheck-2026-11-23.md): the thread creation 500 reproduced live on revision 0000055 while the SQL write lock was busy; the merged 503 fix is not deployed; the AI suspension is unchanged. Index updated.
