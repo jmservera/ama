@@ -15200,3 +15200,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2243 live re-proof of the resident AI expiry fix (Refs #2243)
 
 * Added [issue-2243-live-r4-2026-11-23.md](research/issue-2243-live-r4-2026-11-23.md): live probe on revision 0000028 returns model answers for both questions; a free-text expiry regression test was added; the image-to-commit link stays unproven (registry firewalled).
+## [2026-11-23] add | Issue 116 live round 10 (Refs #116)
+
+* Added [issue-116-live-r10-evidence-2026-11-23.md](research/issue-116-live-r10-evidence-2026-11-23.md): the shared provider-boundary allowlist now refuses non-base64 image data before any other gate; regression test fails without the fix. Live payloads stay unproven.
