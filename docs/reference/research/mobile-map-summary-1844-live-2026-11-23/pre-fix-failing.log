@@ -1,0 +1,22 @@
+PASS owned server is running and responsive on loopback
+PASS served app.js URL found
+PASS served app.js bytes match the checked-out source
+PASS served style.css URL found
+PASS served style.css bytes match the checked-out source
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/azureuser/source/ama-wt/issue-1844-live-20261123T004024Z/src/api/checks/map_fullscreen_browser_check.py", line 1403, in <module>
+    main(lambda base: run_browser(base, raw.decode("utf-8"), args.out))
+  File "/home/azureuser/source/ama-wt/issue-1844-live-20261123T004024Z/src/api/checks/design_system_browser_check.py", line 312, in main
+    browser_check(base)
+  File "/home/azureuser/source/ama-wt/issue-1844-live-20261123T004024Z/src/api/checks/map_fullscreen_browser_check.py", line 1403, in <lambda>
+    main(lambda base: run_browser(base, raw.decode("utf-8"), args.out))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1844-live-20261123T004024Z/src/api/checks/map_fullscreen_browser_check.py", line 1093, in run_browser
+    check_narrow_summary_clearance(browser, base, tiles_available=False)
+  File "/home/azureuser/source/ama-wt/issue-1844-live-20261123T004024Z/src/api/checks/map_fullscreen_browser_check.py", line 1004, in check_narrow_summary_clearance
+    check(
+  File "/home/azureuser/source/ama-wt/issue-1844-live-20261123T004024Z/src/api/checks/design_system_browser_check.py", line 34, in check
+    raise AssertionError(name)
+AssertionError: tiles unavailable 320x568: no marker or zoom control is covered ({'controls': 5, 'covered': 5})

@@ -14708,3 +14708,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1830 close-out re-verification (Refs #1830)
 
 * Added [issue-1830-live-r8-2026-11-23.md](research/issue-1830-live-r8-2026-11-23.md): no change to the preflight or timing tools since r7; selectors, unit tests and direct browser checks re-run; per-criterion table. No source change.
+## [2026-11-23] update | Issue 1844 live close-out (Refs #1844)
+
+* Added [issue-1844-live-20261123-2026-11-23.md](research/issue-1844-live-20261123-2026-11-23.md): main at 342fad401d and live API revision 0000054 re-checked. Pre-fix run fails 5 of 5 controls covered, current run passes 436 checks with 0 skips, live served app.js and style.css equal main, live summary is static and clear of the map at 320 and 390 px. Criteria 1 and 3 to 5 proven on the harness, 2 partly proven live, 6 owner-gated. No source change.
