@@ -12,10 +12,10 @@ Presenter aid for [#435](https://github.com/jmservera/ama/issues/435) criterion 
 It adds no measurement, rehearsal, deck rebuild or acceptance. Owner decision of
 2026-11-13: Slide 22 (S18) keeps Tokenomics brief on the main route, B25 and B27
 are the prepared Q&A cards, and a held-out batch of up to USD 5.00 is
-authorised. That batch has not run. The module named in the decision,
-`zava_forward.agents.heldout_batch`, is implemented on main (merged in #1525
-and #1531) but not yet run live; it awaits owner-authorised live provider
-execution.
+authorised. That batch ran live on 2026-11-18 under #432 (12 synthetic
+proposals, 2,522 tokens, USD 0.000744 at list price; usage only, no accepted
+outcomes). The module named in the decision is
+`zava_forward.agents.heldout_batch` (merged in #1525 and #1531).
 
 ## Where to Point
 
@@ -37,8 +37,8 @@ prefer the B27 wording if asked.
 "There is no verified cost per outcome yet. Three things are different. First, a
 labelled planning scenario: about USD 0.44 per home for inference only. Second,
 the live consumption ledger records usage, and cost stays Unknown until it is
-settled and approved. Third, a held-out measurement, capped at USD 5.00, is
-authorised but not run. Until it runs and Finance reconciles billing, I will not
+settled and approved. Third, a held-out measurement, capped at USD 5.00, has
+run on synthetic cases, usage only. Until accepted outcomes are counted and Finance reconciles billing, I will not
 claim a price, a saving or a payback."
 
 ## Three Things Not to Mix
@@ -47,7 +47,7 @@ claim a price, a saving or a payback."
 | --- | --- | --- |
 | Planning scenario | Labelled estimate: 6,884 historical tokens over five runs is 1,376.8 per run; assumed 10 times that per task (13,768) and 20 tasks per home (275,360 tokens) at an assumed USD 1.60 per million tokens (GPT-4.1-mini output-rate, secondary source dated 2026-10-23) gives USD 0.440576 per home and USD 6,872.9856 across 15,600 modelled homes. Doubling the workload gives USD 0.881152 per home | A verified deployment price, a measured workload, an accepted-outcome cost or the full project cost |
 | Live consumption ledger | Records calls and tokens in the core ledger; price, cost and liability are `Unknown` until the spend is settled and approved by Finance | A billing reconciliation, a currency cap on finite token allowances or evidence of saving |
-| Held-out measurement runner | Owner-authorised finite batch, at most USD 5.00, to measure tokens per proposal on held-out cases; implemented on main (`zava_forward.agents.heldout_batch`), not yet run live; awaiting owner-authorised live provider execution | A result: it has not run live, and a bounded test would not prove savings or permission |
+| Held-out measurement runner | Owner-authorised finite batch, at most USD 5.00, to measure tokens per proposal on held-out cases; implemented on main (`zava_forward.agents.heldout_batch`); ran live 2026-11-18 under #432: 12 synthetic proposals, 2,522 tokens, USD 0.000744 at list price | Usage only: no accepted-outcome count, so no cost per accepted outcome, saving or permission |
 
 ## If Pressed
 

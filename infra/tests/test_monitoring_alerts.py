@@ -173,6 +173,44 @@ class WorkbookPanelTests(unittest.TestCase):
         panel = _workbook_queries()["ai-usage-by-capability"]
         self.assertIn(parse.group(1).replace('"', "'"), panel)
 
+    def test_saved_query_groups_real_plain_and_structured_console_lines(self) -> None:
+        import logging
+        import sys
+
+        sys.path.insert(0, str(INFRA.parent / "src/core/src"))
+        from zava_forward.core import diagnostic_logging as dl
+
+        source = MODULE.read_text(encoding="utf-8")
+        parse = re.search(r"\| parse Log with \* (.+?) \| where", source)
+        assert parse is not None
+        pattern = ""
+        # Translate the KQL parse into a regex: quoted literals are literal, bare names capture.
+        parts = re.findall(r'"([^"]*)"|(\w+)(?::long)?', parse.group(1))
+        for literal, name in parts:
+            pattern += re.escape(literal) if literal else f"(?P<{name}>.*?)"
+        regex = re.compile(r"(?s).*?" + pattern + r"$")
+
+        record = logging.LogRecord(
+            "zava_forward.core.ai_consumption",
+            logging.INFO,
+            __file__,
+            0,
+            "AI_USAGE capability=%s period=%s calls=1 tokens=%d usage=%s outcome=%s",
+            ("assessment", "2026-10", 220, "known", "ok"),
+            None,
+        )
+        plain = "2026-10-01 00:00:00 zava_forward.core.ai_consumption INFO " + record.getMessage()
+        structured = dl.StructuredFormatter().format(record)
+        for label, line in (("plain", plain), ("structured", structured)):
+            with self.subTest(line=label):
+                match = regex.match(line)
+                assert match is not None
+                self.assertEqual(
+                    (match["Capability"], match["Period"], match["UsageState"]),
+                    ("assessment", "2026-10", "known"),
+                )
+                self.assertEqual((int(match["Calls"]), int(match["Tokens"])), (1, 220))
+
 
 if __name__ == "__main__":
     unittest.main()

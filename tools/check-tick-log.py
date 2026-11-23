@@ -29,6 +29,13 @@ from typing import Any
 
 SESSION_CAP = 8
 CLOSURE_BATCH_MAX = 5
+OPTIONAL_COLUMNS = (
+    "closure_batch",
+    "approvals_granted",
+    "approvals_expired",
+    "reclassified",
+    "global_stop",
+)
 
 
 @dataclass(frozen=True)
@@ -113,6 +120,19 @@ def check_ticks(rows: list[dict[str, Any]]) -> list[Violation]:
                 )
             )
         seen_items.update(batch)
+        if (
+            "closure_batch" in row
+            and not batch
+            and _count(row, "unassessed") > 0
+            and _count(row, "running") < SESSION_CAP
+        ):
+            violations.append(
+                Violation(
+                    tick,
+                    "closure-progress",
+                    "capacity is free and closure items are unassessed but none was reviewed",
+                )
+            )
 
         violations.extend(_check_approvals(row, tick))
 
@@ -164,13 +184,17 @@ def load_sqlite(path: Path) -> list[dict[str, Any]]:
         raise ValueError(f"no such file: {path}")
     try:
         with closing(sqlite3.connect(f"file:{path}?mode=ro", uri=True)) as db:
+            present = {r[1] for r in db.execute("PRAGMA table_info(tick_log)")}
+            extras = [c for c in OPTIONAL_COLUMNS if c in present]
             records = db.execute(
                 "SELECT id, ready_count, running_count, dep_blocked_count, human_blocked_count,"
-                " unknown_count, action_taken, evidence FROM tick_log ORDER BY id"
+                " unknown_count, action_taken, evidence"
+                + "".join(f", {c}" for c in extras)
+                + " FROM tick_log ORDER BY id"
             ).fetchall()
     except sqlite3.Error as error:
         raise ValueError(f"cannot read tick_log: {error}") from error
-    return [
+    rows = [
         {
             "tick": tick,
             "counts": {
@@ -183,8 +207,23 @@ def load_sqlite(path: Path) -> list[dict[str, Any]]:
             "action": action,
             "evidence": evidence,
         }
-        for tick, ready, running, dep, human, unknown, action, evidence in records
+        for tick, ready, running, dep, human, unknown, action, evidence, *_ in records
     ]
+    for row, record in zip(rows, records, strict=True):
+        for column, value in zip(extras, record[8:], strict=True):
+            row[column] = _decode_column(column, value)
+    return rows
+
+
+def _decode_column(column: str, value: object) -> object:
+    if column == "global_stop":
+        return bool(value)
+    if isinstance(value, str):
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError:
+            return [value] if value.strip() else []
+    return [] if value is None else value
 
 
 def main(argv: list[str] | None = None) -> int:

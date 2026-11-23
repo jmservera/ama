@@ -4,7 +4,9 @@ Refs #2301, Refs #440. Read-only over repository documents; it never asserts liv
 GitHub or Azure state and never promotes an epic to accepted or closed.
 """
 
+import fnmatch
 import re
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -36,6 +38,39 @@ def epic_rows(body: str) -> dict[int, list[str]]:
 class StabilizationCheckpoint2301Tests(unittest.TestCase):
     def test_source_pin_is_a_full_commit_hash(self) -> None:
         self.assertRegex(section(), r"Source commit \| `[0-9a-f]{40}`")
+
+    def test_source_pin_is_an_ancestor_of_head(self) -> None:
+        pin = re.search(r"Source commit \| `([0-9a-f]{40})`", section()).group(1)  # type: ignore[union-attr]
+        try:
+            result = subprocess.run(
+                ["git", "merge-base", "--is-ancestor", pin, "HEAD"],
+                cwd=ROOT,
+                capture_output=True,
+                check=False,
+            )
+        except OSError:
+            self.skipTest("git unavailable")
+        if result.returncode == 128:
+            self.skipTest("pinned commit not present in this clone")
+        self.assertEqual(result.returncode, 0, "pinned commit is not in HEAD history")
+
+    def test_cited_code_and_test_files_resolve_to_tracked_files(self) -> None:
+        try:
+            listing = subprocess.run(
+                ["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True
+            ).stdout.splitlines()
+        except (OSError, subprocess.CalledProcessError):
+            self.skipTest("git file listing unavailable")
+        for epic, cells in epic_rows(section()).items():
+            cited = re.findall(r"`([^`]+)`", cells[3])
+            self.assertTrue(cited, f"epic {epic} cites no code or tests")
+            for name in cited:
+                with self.subTest(epic=epic, cited=name):
+                    hit = any(
+                        fnmatch.fnmatch(path, name if "/" in name else f"*/{name}")
+                        for path in listing
+                    )
+                    self.assertTrue(hit, f"{name} matches no tracked file")
 
     def test_each_epic_has_one_row_with_class_and_recommendation(self) -> None:
         rows = epic_rows(section())

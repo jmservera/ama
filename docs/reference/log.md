@@ -15251,3 +15251,33 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-22] update | Issue 2245 thread creation 500 live check (Refs #2245)
 
 * Added [issue-2245-thread500-2026-11-22.md](research/issue-2245-thread500-2026-11-22.md): console evidence of the ProgrammingError 500, 12 of 12 live creates returning 200, a write-transaction bound regression test and a per-criterion table. The 500 stays unreproduced and its lock holder unproven.
+## [2026-11-23] update | Issue 435 stale batch wording fix (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-23c.md](research/capstone-pitch-435-live-2026-11-23c.md): spoken B25 script and Q&A brief no longer say the held-out batch has not run (it ran under #432); computed read-aloud timing; one new test. Criterion 2 unproven, criterion 3 tick unsupported. No deck or estate change.
+## [2026-11-23] add | Issue 2314 round 3 saved query live run (Refs #2314)
+
+* Added [issue-2314-alerts-runbooks-r3-2026-11-23.md](research/issue-2314-alerts-runbooks-r3-2026-11-23.md): a test applies the saved query parse to plain and structured console lines, and a read-only live run returned a metered row. No deployment.
+
+## [2026-11-23] add | Issue 108 serving deployment attestation (Refs #108)
+
+* Added a read-only attestation of the `ca-resident-demo` serving revision and a drift test tying the resident deployment name to the serving record; no criterion newly tickable. See `research/issue-108-live-serving-attestation-2026-11-23.md`.
+## [2026-11-23] add | Issue 1830 live r10, malformed receipt refusal (Refs #1830)
+
+* Added [issue-1830-live-r10-2026-11-23.md](research/issue-1830-live-r10-2026-11-23.md): `tools/rpi-gate-timing.py` refuses malformed receipt command data with exit 2, with two regression tests. No gate, runner or live Azure change.
+## [2026-11-23] add | Issue 203 sixth live run (Refs #203)
+
+* Added [issue-203-live-20261123-2026-11-23](research/issue-203-live-20261123-2026-11-23.md): checker regression from #2329 fixed by listing the rubric guard test in `GUARD_FILES`; criterion 5 still partly proven. Index row added.
+
+## [2026-11-23] add | Issue 1204 tick-log closure-progress rule (Refs #1204)
+
+* Added [issue-1204-live-r2-2026-11-23.md](research/issue-1204-live-r2-2026-11-23.md): `tools/check-tick-log.py` flags missing closure-review progress when capacity is free and reads the extended `tick_log` columns; 13 tests pass.
+## [2026-11-23] add | Issue 440 live criteria verdict (Refs #440)
+
+* Added [issue-440-live-criteria-verdict-2026-11-23.md](research/issue-440-live-criteria-verdict-2026-11-23.md): live Playwright and local re-observation at head 6815bc595d, the legacy-reference guard defect from #2329 fixed by allowlisting its regression-guard test file, criterion 7 proven except owner approval, criterion 8 unproven. No src change, no Azure change.
+
+## [2026-11-23] add | Resident showcase r10, Content-Length guard (Refs #462)
+
+* Added [resident-showcase-live-r10-2026-11-23.md](research/resident-showcase-live-r10-2026-11-23.md): 36 live checks on revision 0000028; a non-ASCII digit `Content-Length` no longer drops the connection on the resident demo (regression test); live effect awaits a redeploy.
+## [2026-11-23] add | Issue 146 ingress availability, errors and latency tile (Refs #146)
+
+* Added [issue-146-live7-monitoring-2026-11-23.md](research/issue-146-live7-monitoring-2026-11-23.md): read-only live check shows Application Insights tables empty while Container Apps ingress logs hold data; new `edge-requests` workbook tile (source only, executed live) and one test. Alerts, owners and Portal render stay unproven.

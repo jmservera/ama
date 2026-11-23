@@ -62,6 +62,27 @@
     },
     {
       "type": 1,
+      "name": "edge-caveat",
+      "content": {
+        "json": "## Ingress requests, errors and latency (Container Apps)\nCounts come from Container Apps ingress logs, which exist without Application Insights instrumentation. Server errors are responses with status 500 or above; status 0 rows are connections the client closed before a response and are shown separately. Latency is the p95 of RequestDuration in milliseconds. Only time, app name, status and duration are read; no path, user agent or client address. This is ingress outcome, not an availability test, an end-to-end scenario result or a production SLO. An empty table returns Insufficient; permission or query failures remain **Blocked**."
+      }
+    },
+    {
+      "type": 3,
+      "name": "edge-requests",
+      "content": {
+        "version": "KqlItem/1.0",
+        "title": "Ingress requests, server errors and p95 (ms), not an SLO",
+        "query": "let samples = union isfuzzy=true (datatable(TimeGenerated:datetime, ContainerAppName:string, StatusCode:int, RequestDuration:long)[]), ContainerAppHTTPLogs | project TimeGenerated, ContainerAppName, StatusCode, RequestDuration; samples | where TimeGenerated between ({TimeRange:start} .. {TimeRange:end}) | extend Valid = isnotnull(StatusCode) and StatusCode >= 0 and isnotnull(RequestDuration) and RequestDuration >= 0 | summarize ObservedRows=count(), InvalidRows=countif(not(Valid)), Apps=dcount(ContainerAppName), Requests=countif(Valid and StatusCode > 0), ClientAborted=countif(Valid and StatusCode == 0), ServerErrors=countif(Valid and StatusCode >= 500), P95Ms=todouble(percentile(iff(Valid, RequestDuration, long(null)), 95)) | extend Status=iff(Requests > 0 and InvalidRows == 0, 'Observed ingress rows; not SLO acceptance', 'Insufficient'), NonServerErrorPercent=iff(Requests > 0, 100.0 * (Requests - ServerErrors) / Requests, real(null)), ServerErrorPercent=iff(Requests > 0, 100.0 * ServerErrors / Requests, real(null)), P95Ms=iff(Requests > 0, P95Ms, real(null)), AsOfUtc=now() | project Status, AsOfUtc, ObservedRows, InvalidRows, ClientAborted, Apps, Requests, ServerErrors, ServerErrorPercent, NonServerErrorPercent, P95Ms",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "resourceIds": ["__WORKSPACE_ID__"],
+        "timeContextFromParameter": "TimeRange",
+        "visualization": "table"
+      }
+    },
+    {
+      "type": 1,
       "name": "cost-and-budget",
       "content": {
         "json": "## Cost against budget: Unknown / unreconciled\nConfigured resource-group monthly budget: **__MONTHLY_BUDGET__ in the billing currency**, resource `__BUDGET_NAME__`. This is a template setting, not an observed bill, approved new allocation or remaining headroom. The table below reconciles ingested Azure Cost Management export rows (`AzureCostExport_CL` or `FocusCost_CL`) for the same billing month and currency. When those rows are absent or do not match, actual spend and forecast are **Unknown** and variance is **Unreconciled**, never zero. Open the resource group's Cost Management > Cost analysis and Budgets in the Azure portal; record the exact same calendar month, scope, billing currency, retrieval date and billing record before any comparison.\n\nThe existing budget sends notifications above **80% actual** and **100% forecast**. Notification is **not a hard cap** and does not stop workloads, dispatch or billing. Delayed cost records do not establish headroom. [Budget response](https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#budget-actual80)."

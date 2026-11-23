@@ -87,7 +87,7 @@ by human-accepted work. A capped measurement has run on synthetic cases: usage o
 Pointer to say or show: "Cost questions: page 53. Hidden calls: page 55."
 
 Timing rule: if the cue runs past 25 s, cut the second sentence's source clause,
-not the words "labelled assumption", "not a verified price" or "not yet run".
+not the words "labelled assumption", "not a verified price" or "no accepted-outcome cost yet".
 
 ## CFO Answer Script
 
@@ -97,12 +97,28 @@ Question to rehearse (asked by a colleague after the close, about 5 s):
 | Step | Seconds | Action | Words |
 | --- | --- | --- | --- |
 | 1 | 5 | Colleague asks; presenter types or jumps from the question index (page 28) to B25 (page 53) | n/a |
-| 2 | 30 | Give the B25 answer | "There is no verified cost per outcome yet. Three things are different. A labelled planning scenario: about USD 0.44 per home, inference only. The live ledger records usage, and cost stays Unknown until Finance settles and approves it. A held-out measurement, capped at USD 5.00, is authorised but not run. Until it runs and Finance reconciles billing, I will not claim a price, a saving or a payback." |
+| 2 | 30 | Give the B25 answer | "There is no verified cost per outcome yet. Three things are different. A labelled planning scenario: about USD 0.44 per home, inference only. The live ledger records usage, and cost stays Unknown until Finance settles and approves it. A held-out measurement ran on synthetic cases: usage only, no accepted outcomes. Until accepted outcomes are counted and Finance reconciles billing, I will not claim a price, a saving or a payback." |
 | 3 | 15 | If pressed on controls, go to B27 (page 55) | "One selected skill makes one bounded call. Task, period and call-depth limits are in source; live activation and billing reconciliation are unproved. Value counts only when Finance confirms where the spend falls." |
 | 4 | 10 | Return deliberately to the interrupted page | Native buttons use fixed jumps; type the page number. B25 and B27 link back to S18 (page 22), so use the typed page |
 
 If the question interrupts the route mid-way, answer at the same length and
 return to the page you left, then restart the interrupted slot's clock.
+
+## Computed Read-Aloud Check (arithmetic, not a rehearsal)
+
+Word counts of the spoken text above, converted at 130, 150 and 160 words per
+minute. This is arithmetic on the script, not an observed time, and it does not
+complete the record below.
+
+| Text | Words | At 130 wpm | At 150 wpm | At 160 wpm |
+| --- | --- | --- | --- | --- |
+| Slide 22 cue | 54 | 24.9 s | 21.6 s | 20.2 s |
+| B25 answer | 68 | 31.4 s | 27.2 s | 25.5 s |
+| B27 follow-up | 32 | 14.8 s | 12.8 s | 12.0 s |
+
+Reading: the cue fits the 25 s limit only at 130 wpm or faster, so a slow
+presenter should drop the source clause as the timing rule says. B25 plus B27
+is 40 to 46 s of the 60 s block at these rates. Only a timed run settles this.
 
 ## Figures, Sources and Evidence Labels
 
@@ -119,8 +135,8 @@ return to the page you left, then restart the interrupted slot's clock.
 | USD 5.00 held-out batch | Owner authorisation of 2026-11-13 (up to USD 5); the batch ran live on 2026-11-18 under a USD 0.50, 12-call authorisation: 12 synthetic proposals, 2,522 tokens, USD 0.000744 at list price (measured held-out batch, usage only; see [the #432 record](../../reference/research/ai-heldout-batch-432-live-2026-11-18.md)) | [Q&A brief](../tokenomics-qa-brief.md) |
 | 20 s, 60 s, 840 s and 900 s | Planning allocations for this rehearsal, not observed timings | This file |
 
-Do not say any price, saving or payback as fact, that the batch has run, or that
-Tokenomics has been rehearsed or timed until the record below is completed.
+Do not say any price, saving or payback as fact, that the batch measured accepted
+outcomes, or that Tokenomics has been rehearsed or timed until the record below is completed.
 
 Open tension, owner decision pending on the issue text: criterion 6 asks for no
 price, saving or payback claim, and the
@@ -134,7 +150,7 @@ is met.
 | Step | What to do | Pass check |
 | --- | --- | --- |
 | 1 | Set a visible timer; run pages 1 to 27 with the table above, speaking from the cuts | Page 21 ends at 11:15 or within 15 s |
-| 2 | Speak the page 22 cue without notes | Cue finishes within 25 s and includes "labelled assumption", "not a verified price" and "not yet run" |
+| 2 | Speak the page 22 cue without notes | Cue finishes within 25 s and includes "labelled assumption", "not a verified price" and "no accepted-outcome cost yet" |
 | 3 | Take the CFO question from a colleague and answer from B25, then B27 if pressed | Block finishes inside 60 s and the gap is stated unprompted |
 | 4 | Return from B25 or B27 using the typed page number | Navigation held |
 | 5 | Record totals and cuts in the table below | Total at or under 15:00 |

@@ -42,9 +42,13 @@ def load_receipt(path: Path) -> dict[str, Any]:
         or digest.read_text().strip() != hashlib.sha256(path.read_bytes()).hexdigest()
     ):
         raise TimingError(EXIT_INPUT, f"receipt.sha256 is missing or does not match: {path}")
-    receipt = json.loads(path.read_text())
+    try:
+        receipt = json.loads(path.read_text())
+    except (json.JSONDecodeError, UnicodeDecodeError) as error:
+        raise TimingError(EXIT_INPUT, f"Receipt is not valid JSON: {path}: {error}") from error
     if (
-        receipt.get("schema") != 4
+        not isinstance(receipt, dict)
+        or receipt.get("schema") != 4
         or receipt.get("status") != "passed"
         or receipt.get("scope") != "full"
     ):
@@ -64,19 +68,33 @@ def is_setup(argv: list[str]) -> bool:
     )
 
 
+def aware_timestamp(value: Any, label: str) -> float:
+    try:
+        moment = datetime.fromisoformat(value)
+    except (TypeError, ValueError) as error:
+        raise TimingError(EXIT_INPUT, f"Unparseable command {label} time: {value!r}") from error
+    if moment.tzinfo is None:
+        raise TimingError(EXIT_INPUT, f"Command {label} time has no timezone: {value!r}")
+    return moment.timestamp()
+
+
 def commands_of(receipt: dict[str, Any]) -> list[dict[str, Any]]:
-    result = []
-    for item in receipt["commands"]:
-        result.append(
-            {
-                "group": item["group"],
-                "argv": item["argv"],
-                "start": datetime.fromisoformat(item["started"]).timestamp(),
-                "end": datetime.fromisoformat(item["finished"]).timestamp(),
-            }
-        )
-    if not result:
+    items = receipt.get("commands")
+    if not isinstance(items, list) or not items:
         raise TimingError(EXIT_INPUT, "Receipt has no commands")
+    result = []
+    for item in items:
+        if (
+            not isinstance(item, dict)
+            or not isinstance(item.get("group"), str)
+            or not isinstance(item.get("argv"), list)
+        ):
+            raise TimingError(EXIT_INPUT, "Receipt command lacks a group or argv list")
+        start = aware_timestamp(item.get("started"), "started")
+        end = aware_timestamp(item.get("finished"), "finished")
+        if end < start:
+            raise TimingError(EXIT_INPUT, f"Command finished before it started: {item['group']}")
+        result.append({"group": item["group"], "argv": item["argv"], "start": start, "end": end})
     return result
 
 

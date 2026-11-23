@@ -88,6 +88,32 @@ class TickLogTests(unittest.TestCase):
     def test_global_stop_with_remaining_work_is_flagged(self) -> None:
         self.assertEqual(rules([tick(1, global_stop=True)]), ["global-stop"])
 
+    def test_free_capacity_needs_closure_progress_only_on_extended_rows(self) -> None:
+        self.assertEqual(rules([tick(1, closure_batch=[])]), ["closure-progress"])
+        self.assertEqual(rules([tick(1, closure_batch=["188"])]), [])
+        self.assertEqual(rules([tick(1)]), [])
+        full = {"ready": 0, "running": 8, "unassessed": 3}
+        self.assertEqual(rules([tick(1, counts=full, closure_batch=[])]), [])
+
+    def test_sqlite_optional_columns_are_checked(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            db_path = Path(tmp) / "session.db"
+            with closing(sqlite3.connect(db_path)) as db:
+                db.execute(
+                    "CREATE TABLE tick_log (id INTEGER PRIMARY KEY, ready_count INT,"
+                    " running_count INT, dep_blocked_count INT, human_blocked_count INT,"
+                    " unknown_count INT, action_taken TEXT, evidence TEXT,"
+                    " closure_batch TEXT, global_stop INT)"
+                )
+                db.execute(
+                    "INSERT INTO tick_log VALUES (1, 1, 1, 0, 0, 2, 'did work', 'ev', '[]', 1)"
+                )
+                db.commit()
+            rows = checker.load_sqlite(db_path)
+            self.assertEqual(rows[0]["closure_batch"], [])
+            self.assertIs(rows[0]["global_stop"], True)
+            self.assertEqual(sorted(rules(rows)), ["closure-progress", "global-stop"])
+
     def test_cli_exit_codes_and_json_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             good = Path(tmp) / "good.jsonl"
