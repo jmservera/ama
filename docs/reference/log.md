@@ -14891,3 +14891,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Safety queue clocks on API revision 0000055 (Refs #2255)
 
 * Added [issue-2255-live-r3-2026-11-23.md](research/issue-2255-live-r3-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with a target (17 overdue, 5 open, 0 unknown) on revision 0000055; re-seed survival stays owner-gated. No source or estate change.
+## [2026-11-23] update | Roster scope re-check r5 (Refs #2164)
+
+* Extended [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md) with the r5 re-check: tests pass at HEAD 9dbfab6f56, API revision 0000055 read-only; deployed behaviour stays unproven. No criterion ticked, no source or estate change.
