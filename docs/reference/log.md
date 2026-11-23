@@ -15261,3 +15261,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 108 serving deployment attestation (Refs #108)
 
 * Added a read-only attestation of the `ca-resident-demo` serving revision and a drift test tying the resident deployment name to the serving record; no criterion newly tickable. See `research/issue-108-live-serving-attestation-2026-11-23.md`.
+## [2026-11-23] add | Issue 1830 live r10, malformed receipt refusal (Refs #1830)
+
+* Added [issue-1830-live-r10-2026-11-23.md](research/issue-1830-live-r10-2026-11-23.md): `tools/rpi-gate-timing.py` refuses malformed receipt command data with exit 2, with two regression tests. No gate, runner or live Azure change.

@@ -156,6 +156,35 @@ class ReportTests(unittest.TestCase):
             self.assertEqual(code, 2)
             self.assertIn("REFUSED", err)
 
+    def test_malformed_receipt_bodies_are_refused_not_a_traceback(self) -> None:
+        good = {"group": "g", "argv": ["python3"], "started": stamp(0), "finished": stamp(5)}
+        bodies = {
+            "missing argv": [{"group": "g", "started": stamp(0), "finished": stamp(5)}],
+            "bad time": [{**good, "started": "nope"}],
+            "naive time": [{**good, "started": "2026-11-16T10:00:00"}],
+            "reversed": [{**good, "started": stamp(5), "finished": stamp(0)}],
+            "not a list": "nope",
+        }
+        for name, commands in bodies.items():
+            with self.subTest(name):
+                path = write_receipt(self.root / name.replace(" ", "-"), [("g", 0, 5)])
+                receipt = json.loads(path.read_text())
+                receipt["commands"] = commands
+                path.write_text(json.dumps(receipt))
+                digest = hashlib.sha256(path.read_bytes()).hexdigest()
+                (path.parent / "receipt.sha256").write_text(digest + "\n")
+                code, _out, err = run("report", str(path))
+                self.assertEqual(code, 2)
+                self.assertIn("REFUSED", err)
+
+    def test_receipt_that_is_not_json_is_refused(self) -> None:
+        path = write_receipt(self.root / "a", [("g", 0, 5)])
+        path.write_text("{bad")
+        (path.parent / "receipt.sha256").write_text(hashlib.sha256(path.read_bytes()).hexdigest())
+        code, _out, err = run("report", str(path))
+        self.assertEqual(code, 2)
+        self.assertIn("not valid JSON", err)
+
     def test_setup_commands_are_separated_by_exact_tokens(self) -> None:
         self.assertTrue(timing.is_setup(["python", "-m", "pip", "install"]))
         self.assertTrue(timing.is_setup(["docker", "build", "x"]))
