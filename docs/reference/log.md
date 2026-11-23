@@ -15222,3 +15222,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 123 handoff timezone regression tests and live re-check (Refs #123)
 
 * Added [issue-123-live-handoff-regression-2026-11-23.md](research/issue-123-live-handoff-regression-2026-11-23.md): the 2026-11-21 handoff queue failure no longer reproduces on the live demo, two tests now guard the timezone-less offered time shape, and both open #123 criteria stay unproven (owner acts).
+## [2026-11-23] add | Issue 157 case scoping at thread creation (Refs #157)
+
+* Added [issue-157-case-scoping-2026-11-23.md](research/issue-157-case-scoping-2026-11-23.md): `ChatPrivacy.start_thread` did not apply the role's case visibility (only the API route did); fixed in source with a regression test. Both open epic criteria stay unproven.
