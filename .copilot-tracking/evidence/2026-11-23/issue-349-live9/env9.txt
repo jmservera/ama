@@ -1,0 +1,6 @@
+[
+  {
+    "n": "ENTRA_CLIENT_ID",
+    "v": "<GUID>"
+  }
+]

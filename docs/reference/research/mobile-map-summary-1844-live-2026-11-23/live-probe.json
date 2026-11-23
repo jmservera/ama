@@ -1,0 +1,44 @@
+{
+ "auth": "authenticated_callback",
+ "live_app.js_sha256_16": "ebb1a9f911d75141",
+ "live_style.css_sha256_16": "e85bd0ee84802c7e",
+ "1280x900": {
+  "markers": 443,
+  "card_visible": true,
+  "card_position": "absolute",
+  "uncovered": {
+   "zoom": 2,
+   "zoomCovered": 0,
+   "markersSampled": 5,
+   "markersCovered": 5,
+   "cardOverlapsMap": true
+  },
+  "overflow": false
+ },
+ "390x568": {
+  "markers": 443,
+  "card_visible": true,
+  "card_position": "static",
+  "uncovered": {
+   "zoom": 2,
+   "zoomCovered": 0,
+   "markersSampled": 5,
+   "markersCovered": 5,
+   "cardOverlapsMap": false
+  },
+  "overflow": false
+ },
+ "320x568": {
+  "markers": 443,
+  "card_visible": true,
+  "card_position": "static",
+  "uncovered": {
+   "zoom": 2,
+   "zoomCovered": 0,
+   "markersSampled": 5,
+   "markersCovered": 5,
+   "cardOverlapsMap": false
+  },
+  "overflow": false
+ }
+}

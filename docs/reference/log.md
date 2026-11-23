@@ -14704,3 +14704,19 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 198 criteria re-verification, run 20261122T235603Z (Refs #198)
 
 * Added [issue-198-rubric-live-20261122T235603Z-2026-11-22.md](research/issue-198-rubric-live-20261122T235603Z-2026-11-22.md): criteria 3 and 4 re-checked at base 10cad2e413. No mvp or prototype glob remains, score 79 (baseline 47), 84 rubric tests pass. Criterion 3 unproven, criterion 4 partly proven. No source or estate change.
+
+## [2026-11-23] update | Issue 1830 close-out re-verification (Refs #1830)
+
+* Added [issue-1830-live-r8-2026-11-23.md](research/issue-1830-live-r8-2026-11-23.md): no change to the preflight or timing tools since r7; selectors, unit tests and direct browser checks re-run; per-criterion table. No source change.
+## [2026-11-23] update | Issue 1844 live close-out (Refs #1844)
+
+* Added [issue-1844-live-20261123-2026-11-23.md](research/issue-1844-live-20261123-2026-11-23.md): main at 342fad401d and live API revision 0000054 re-checked. Pre-fix run fails 5 of 5 controls covered, current run passes 436 checks with 0 skips, live served app.js and style.css equal main, live summary is static and clear of the map at 320 and 390 px. Criteria 1 and 3 to 5 proven on the harness, 2 partly proven live, 6 owner-gated. No source change.
+## [2026-11-23] update | Issue 2008 close-out on revision 0000054 (Refs #2008)
+
+* Added [issue-2008-closeout-live-2026-11-23.md](research/issue-2008-closeout-live-2026-11-23.md): the workbook import re-proved on API revision 0000054 with the staff test sign-in; all four criteria proven, source hash unchanged. No source change.
+## [2026-11-23] update | Issue 349 live round 9 close-out (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r9-2026-11-23.md](research/issue-349-tenant-prerequisites-live-r9-2026-11-23.md): live API 0000054 and resident 0000026 re-proved; criteria 1, 2, 3, 6 proven for the demo, 4 unproven (owner roster), 5 partly proven. No source or estate change.
+## [2026-11-23] update | Issue 462 resident showcase live check r6 (Refs #462)
+
+* Added [resident-showcase-live-r6-2026-11-23.md](research/resident-showcase-live-r6-2026-11-23.md): 36-check Playwright rerun against revisions API 0000054 and resident 0000026, per-criterion table; criterion 2 stays unproven. No source or estate change.

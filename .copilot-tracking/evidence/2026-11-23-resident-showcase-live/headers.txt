@@ -1,0 +1,14 @@
+HTTP/2 200 
+server: ZavaResidentDemo Python/3.12.15
+date: Mon, 23 Nov 2026 00:42:37 GMT
+content-type: text/html; charset=utf-8
+content-length: 3954
+cache-control: no-store
+x-content-type-options: nosniff
+x-frame-options: DENY
+referrer-policy: no-referrer
+cross-origin-resource-policy: same-origin
+cross-origin-opener-policy: same-origin
+permissions-policy: camera=(), microphone=(), geolocation=()
+content-security-policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+

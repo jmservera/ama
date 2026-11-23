@@ -1,0 +1,2 @@
+ca-resident-demo	Microsoft.App/containerApps
+id-resident-demo	Microsoft.ManagedIdentity/userAssignedIdentities
