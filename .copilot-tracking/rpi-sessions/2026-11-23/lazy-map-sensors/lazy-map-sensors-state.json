@@ -1,0 +1,43 @@
+{
+  "task_id": "lazy-map-sensors",
+  "task_slug": "lazy-map-sensors",
+  "session_name": "Lazy map sensors",
+  "parent_task": null,
+  "child_tasks": [],
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-23/lazy-map-sensors-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-23/lazy-map-sensors-plan.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-23/lazy-map-sensors-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-23/lazy-map-sensors-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-23/lazy-map-sensors-review.md"
+  },
+  "documents": {
+    "research": [".copilot-tracking/research/2026-11-23/lazy-map-sensors-research.md"],
+    "plan": [".copilot-tracking/plans/2026-11-23/lazy-map-sensors-plan.md"],
+    "critique": [".copilot-tracking/reviews/plans/2026-11-23/lazy-map-sensors-plan-critique.md"],
+    "changes": [".copilot-tracking/changes/2026-11-23/lazy-map-sensors-changes.md"],
+    "review": [".copilot-tracking/reviews/logs/2026-11-23/lazy-map-sensors-review.md"]
+  },
+  "confirmed_decisions": [
+    {"decision": "Automatic session scope", "status": "current", "evidence": "User request: defer home-map sensor readings until home selection. Preserve map/list behavior and authorization. Exclude unrelated PDF and deployment."},
+    {"decision": "Automatic progression boundary", "status": "through-review", "evidence": "User selected end-to-end."},
+    {"decision": "Research decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Planning decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Review decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Follow-up decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Canvas", "status": "current", "evidence": "instanceId rpi-lazy-map-sensors; handle YS6B; extensionId plugin:hve-core:rpi-workflow."},
+    {"decision": "Bulk filter", "status": "opt-in", "evidence": "Owner selected bulk summaries only when the stale/offline checkbox is checked."},
+    {"decision": "Publication", "status": "approved", "evidence": "Owner approved pushing fix/lazy-map-sensor-readings to origin and creating a PR to main after independent exact-head review; no merge or deployment."},
+    {"decision": "Local implementation acceptance", "status": "complete", "evidence": "P01 complete; zero-eager-read API checks and six Node/Chromium cases pass within 90 focused tests; ruff, format and mypy pass; RV-001 resolved in the single Review. External review/hosted results will be recorded on the PR rather than inferred here."},
+    {"decision": "Planning critique", "status": "standard", "evidence": "First-task default."},
+    {"decision": "Review step", "status": "run", "evidence": "First-task default."},
+    {"decision": "Dirty worktree", "status": "carry", "evidence": "User approved carrying unrelated PDF onto topic branch without committing it."}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Perform independent exact-head assessment, approved origin PR publication, and observe hosted CI. Record external gate results on the PR; owner retains merge and deployment."},
+  "prioritized_follow_ups": []
+}

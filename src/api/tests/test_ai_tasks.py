@@ -531,6 +531,19 @@ class TasksMixin:
             before, json.dumps(self.store.data.get("cases"), sort_keys=True, default=str)
         )
 
+    def test_review_evidence_retains_elapsed_review_seconds(self):
+        self.out["text"] = "- ok [[Stage: Contacting resident]]"
+        r = self.store.ai_run(self.sam, "ZF-1", "summary")
+        rec = next(x for x in self.records() if x["id"] == r["record_id"])
+        rec["created"] = "2026-01-01T10:00:00"
+        with mock.patch.object(ai_tasks, "_now", return_value="2026-01-01T10:02:30"):
+            self.store.review_ai(self.sam, r["record_id"], "accept")
+        self.assertEqual(rec["review_evidence"]["review_seconds"], 150.0)
+        self.assertIsNone(ai_tasks._elapsed_seconds("not a time", "2026-01-01T10:00:00"))
+        self.assertEqual(
+            ai_tasks._elapsed_seconds("2026-01-01T10:00:05", "2026-01-01T10:00:00"), 0.0
+        )
+
     def test_changed_source_holds_instead_of_accepting(self):
         self.out["text"] = "- ok [[Stage: Contacting resident]]"
         r = self.store.ai_run(self.sam, "ZF-1", "summary")

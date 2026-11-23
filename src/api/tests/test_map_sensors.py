@@ -7,6 +7,7 @@ import json
 import time
 import unittest
 from typing import Any, cast
+from unittest.mock import patch
 
 from zava_forward.core import identity, insights, mssqlstore, sensor_map
 
@@ -28,7 +29,7 @@ class MapSensors(Seed, ta.ApiTests):
     def map_view(self) -> tuple[int, dict[str, Any]]:
         return cast(
             tuple[int, dict[str, Any]],
-            self.request("/api/map?zoom=14"),  # type: ignore[no-untyped-call]
+            self.request("/api/map?zoom=14&sensors=1"),  # type: ignore[no-untyped-call]
         )
 
     def sensor(self, case: str = "ZF-1") -> dict[str, Any]:
@@ -47,6 +48,46 @@ class MapSensors(Seed, ta.ApiTests):
         text = json.dumps(self.map_view()[1])
         for private in ("SENS-SYN-1", "R-ZF-1-", "reading_id", "sensor_id"):
             self.assertNotIn(private, text)
+
+    def test_default_map_does_not_read_sensors(self) -> None:
+        self.put(3, offset=120)
+        with patch.object(self.service, "map_sensors", side_effect=AssertionError("eager read")):
+            for query in ("", "&sensors=0", "&bbox=-90,-180,90,180"):
+                status, view = self.request(f"/api/map?zoom=14{query}")  # type: ignore[no-untyped-call]
+                self.assertEqual(status, 200)
+                self.assertTrue(view["items"])
+                self.assertTrue(
+                    all(item["sensor"]["state"] == "not-loaded" for item in view["items"])
+                )
+                self.assertNotIn("temperature_c", json.dumps(view))
+
+    def test_selected_summary_reads_only_one_home_and_preserves_projection(self) -> None:
+        self.put(3, offset=120)
+        with patch.object(self.service, "map_sensors", wraps=self.service.map_sensors) as read:
+            status, summary = self.request("/api/cases/ZF-1/sensor-summary")  # type: ignore[no-untyped-call]
+        self.assertEqual(status, 200)
+        expected = self.sensor()
+        self.assertEqual(
+            {key: value for key, value in summary.items() if key != "age_seconds"},
+            {key: value for key, value in expected.items() if key != "age_seconds"},
+        )
+        self.assertEqual(read.call_count, 1)
+        self.assertEqual(read.call_args.args[1], ["ZF-1"])
+        self.user = self.people["Resident Liaison Officer"]
+        status, summary = self.request("/api/cases/ZF-1/sensor-summary")  # type: ignore[no-untyped-call]
+        self.assertEqual(status, 200)
+        self.assertEqual(summary["state"], "restricted")
+        self.assertNotIn("temperature_c", summary)
+
+    def test_sensor_read_options_reject_invalid_or_unbounded_requests(self) -> None:
+        for path in (
+            "/api/map?sensors=invalid",
+            "/api/map?sensors=1&sensors=0",
+            f"/api/cases/{'A' * 65}/sensor-summary",
+            "/api/cases/ZF-1/sensor-summary?extra=1",
+        ):
+            status, _ = self.request(path)  # type: ignore[no-untyped-call]
+            self.assertEqual(status, 400, path)
 
     def test_old_readings_are_stale_or_offline(self) -> None:
         self.put(1, offset=3600)

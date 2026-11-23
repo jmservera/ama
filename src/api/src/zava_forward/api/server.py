@@ -30,7 +30,7 @@ from zava_forward.api import auth, build_info, plain_language, sensor_badges, si
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import AI_SUSPENDED, CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
-from zava_forward.core import sensor_review_draft, simulation_lane, telemetry
+from zava_forward.core import sensor_map, sensor_review_draft, simulation_lane, telemetry
 from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.forecast_reads import ForecastTimeout
@@ -1307,7 +1307,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if url.path == "/api/map":
                 try:
                     z = num(q, "zoom", None, 0, 20)
-                    return self._json(200, s.map_view(filt(q), bbox(q), z, lambda ids: app.assistants.map_sensors(u, ids)))
+                    sensor_arg = q.get("sensors", ["0"])
+                    if sensor_arg not in (["0"], ["1"]):
+                        raise ValueError("sensors must be 0 or 1.")
+                    sensors = (lambda ids: app.assistants.map_sensors(u, ids)) if sensor_arg == ["1"] else (
+                        lambda ids: {i: sensor_map.fixed("not-loaded") for i in ids}
+                    )
+                    return self._json(200, s.map_view(filt(q), bbox(q), z, sensors))
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
             if url.path == "/api/visits":
@@ -1418,6 +1424,14 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(502, {"error": "The document store is not available. Try again shortly."})
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/sensor-summary"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                cid = unquote(parts[2])
+                if url.query or not 1 <= len(cid) <= 64:
+                    return self._json(400, {"error": "Choose one bounded case ID without query parameters."})
+                return self._json(200, app.assistants.map_sensors(u, [cid])[cid])
             if url.path.startswith("/api/cases/") and url.path.endswith("/sensors"):
                 parts = url.path.strip("/").split("/")
                 if len(parts) != 4:
