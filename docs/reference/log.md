@@ -14801,3 +14801,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2237 cause found in Log Analytics (Refs #2237)
 
 * Added [issue-2237-live-cause-and-fix-2026-11-23.md](research/issue-2237-live-cause-and-fix-2026-11-23.md) with evidence files: eleven retention 500s of about 15 s trace to the SQL write-lock timeout (error 50002). Source fix maps it to 503 with Retry-After (not deployed); live 200 re-proved on revision 0000054 for the Programme Manager account. Marked the earlier note superseded.
+## [2026-11-23] update | Employee map failure live comparison (Refs #2257)
+
+* Added [issue-2257-live-2026-11-23.md](research/issue-2257-live-2026-11-23.md): reset recovery proven on revision 0000054, a server 500 on one of eight fresh sessions found, map sensor overlay hardened with a test; per-criterion table.
