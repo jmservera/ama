@@ -15182,3 +15182,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Epic 218 live RAI readiness recheck (Refs #218)
 
 * Added [issue-218-live-rai-readiness-recheck-2026-11-23.md](research/issue-218-live-rai-readiness-recheck-2026-11-23.md): live gate separation proven, a traceability check that failed on every deployment (no test tree in the image) fixed offline, and a per-criterion table. The live effect of the fix stays unproven until a redeploy.
+
+## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
+
+* Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.
