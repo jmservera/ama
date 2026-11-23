@@ -4076,6 +4076,7 @@ os.fstat(3)
             "root README read by tests": (("README.md",), False),
             "infra README read by tests": (("infra/README.md",), False),
             "docs data file": (("docs/architecture/x.json",), False),
+            "docs binary scanned by repo-wide checks": (("docs/presentations/x.pptx",), False),
             "unrelated project code": (("src/importer/src/zava_forward/importer/x.py",), False),
             "unrelated project tests": (("src/importer/tests/test_x.py",), False),
             "markdown under src": (("src/importer/README.md",), False),
