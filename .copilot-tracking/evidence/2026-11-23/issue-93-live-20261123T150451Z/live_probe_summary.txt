@@ -1,0 +1,12 @@
+{'/api/me': 200, '/api/finance': 200, '/api/finance/exposure': 200, '/api/funding': 200, '/api/form-schemas': 200}
+finance rows 13
+dict_keys(['case_id', 'address', 'invoice', 'supplier', 'ref', 'status', 'exceptions', 'on_hold', 'total'])
+Counter({'Received': 7, 'Exceptions': 6})
+hold 6
+exposure {'status': 'Held', 'automatic_cut': None, 'decision_owner': None}
+list 167
+schemas {'schemas': []}
+dict_keys(['id', 'resident', 'address', 'area', 'route', 'status', 'owner', 'have', 'need', 'days', 'grants'])
+status Counter({'Not started': 141, 'To prepare': 25, 'Draft ready': 1})
+grants Counter({'No grant record': 163, 'Zava Forward Exercise Fund: Not recorded': 4})
+exposure keys {'status': 'Held', 'signal': 'Pause for human decision', 'reason': 'No person-approved investment limit or tolerances are recorded.', 'findings': [], 'notice': 'Signal for a human decision only. It does not approve, resume or accelerate delivery, and it does not contain or release live activity.', 'pause_signal': {'paused': True, 'decision_required': True, 'decision_owner': None, 'automatic_cut': False, 'reason': 'No person-approved investment limit or tolerances are recorded.'}}

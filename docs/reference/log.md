@@ -15189,3 +15189,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 1837 CSRF header unit test (Refs #1837)
 
 * Added [issue-1837-csrf-header-test-2026-11-23.md](research/issue-1837-csrf-header-test-2026-11-23.md): a repeatable test that the nomination route write refuses a missing `X-ZF-CSRF` header under the trusted-proxy provider.
+## [2026-11-23] add | Epic 93 criteria re-check and eval register fix (Refs #93)
+
+* Added [issue-93-criteria-recheck-live-2026-11-23.md](research/issue-93-criteria-recheck-live-2026-11-23.md): live read-only finance probe, three unregistered #2316 eval payloads that broke a finance form review pack test registered in the provenance register, per-criterion table; C1 stays unproven.
