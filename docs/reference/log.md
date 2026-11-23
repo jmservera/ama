@@ -14755,3 +14755,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 470 criteria re-check r3 (Refs #470)
 
 * Added [issue-470-live-r3-2026-11-23.md](research/issue-470-live-r3-2026-11-23.md): 129 gate tests pass; criteria 1, 2, 3 and 5 proven, criterion 4 unproven and owner-gated (no matched full-gate pair, no PR). No source change.
+
+## [2026-11-23] update | Issue 220 live r11 (Refs #220)
+
+* Added [issue-220-live-r11-revision-0054-2026-11-23.md](research/issue-220-live-r11-revision-0054-2026-11-23.md): probe repeated on revisions 0000054 and 0000026, 30 core and 10 api tests pass, no code gap, per-criterion table.

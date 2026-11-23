@@ -483,6 +483,7 @@ The [eighth run](./research/issue-220-live-r8-oid-less-roster-2026-11-21.md) fin
 The [ninth run](./research/issue-220-live-r9-live-success-2026-11-22.md) shows the staff-recorded and digital routes succeeding live on revision 0000053 with protected state unchanged; retaliation over time stays production-only.
 
 The [tenth run](./research/issue-220-live-r10-revision-0054-2026-11-22.md) repeats the probe unchanged on revision 0000054 and gets the same results.
+The [eleventh run](./research/issue-220-live-r11-revision-0054-2026-11-23.md) repeats it on 2026-11-23 on revisions 0000054 and 0000026 with the same results and a per-criterion table.
 
 The [epic 218 selection note](./research/issue-218-first-unmet-demo-criterion-2026-11-19.md) adds an offline regression test for the signed-in staff principal and a per-criterion table for the epic.
 For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
