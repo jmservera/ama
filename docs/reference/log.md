@@ -14861,3 +14861,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2116 drill criterion classified (Refs #2116)
 
 * Added [issue-2116-drill-criterion-demo-classification-2026-11-23.md](research/issue-2116-drill-criterion-demo-classification-2026-11-23.md): the witnessed drill criterion is owner-gated and unproven for the demo; constructed suspension tests re-run (20 OK). No source change.
+
+## [2026-11-23] update | Issue 184 live re-check (Refs #184)
+
+* Added [issue-184-live-recheck-2026-11-23.md](research/issue-184-live-recheck-2026-11-23.md): per-criterion re-proof for the demo; live message-body secret absence stays unproven. No source change.
