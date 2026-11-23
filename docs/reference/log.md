@@ -14751,3 +14751,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1204 criteria re-verification (Refs #1204)
 
 * Added [issue-1204-live-2026-11-23.md](research/issue-1204-live-2026-11-23.md): instruction fields and checker tests confirmed on main, 216-tick window 0 violations, live revisions healthy. Criterion 2 unproven (no real window with the new fields). No source or estate change.
+
+## [2026-11-23] update | Issue 470 criteria re-check r3 (Refs #470)
+
+* Added [issue-470-live-r3-2026-11-23.md](research/issue-470-live-r3-2026-11-23.md): 129 gate tests pass; criteria 1, 2, 3 and 5 proven, criterion 4 unproven and owner-gated (no matched full-gate pair, no PR). No source change.
