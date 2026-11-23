@@ -248,6 +248,7 @@ class HubReceiver:
         self.activation = activation
         self.rejected: dict[str, int] = {}
         self.sql_retries = 0
+        self.callback_error_type: str | None = None
         self.sql_backoff: tuple[float, ...] = (2.0, 5.0, 15.0, 30.0)
 
     async def run(
@@ -284,6 +285,7 @@ class HubReceiver:
         admitted = 0
         self.rejected = {}
         self.sql_retries = 0
+        self.callback_error_type = None
 
         async def on_event(context: PartitionContext, event: EventData | None) -> None:
             nonlocal failure, admitted
@@ -338,7 +340,9 @@ class HubReceiver:
                     if not (bounded_window and str(error) == "IOT_OPERATION_TIMEOUT"):
                         failure = StreamError(str(error))
                     finished.set()
-                except Exception:
+                except Exception as unexpected:
+                    # Only the class name is kept: messages may carry connection detail.
+                    self.callback_error_type = type(unexpected).__name__
                     failure = StreamError("IOT_CALLBACK_FAILED")
                     finished.set()
 
