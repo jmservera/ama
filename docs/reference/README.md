@@ -2251,3 +2251,5 @@ A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md
 The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records the second live probe on revision 0000025, the diagnosable ledger refusal states added to the resident AI path and a per-criterion table.
 
 The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.
+
+The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.

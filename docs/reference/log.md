@@ -14998,3 +14998,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 1259 real-filesystem archive path regressions (Refs #1259)
 
 * Added [2026-11-23-ranking-archive-unusable-1259-live-r10.md](research/2026-11-23-ranking-archive-unusable-1259-live-r10.md): regular-file ancestor, symlink loop and unsearchable-parent scenarios in the runner tests; mutation proves they fail without the guard.
+## [2026-11-23] add | Issue 2255 live re-check, run 4 (Refs #2255)
+
+* Added [issue-2255-live-r4-2026-11-23.md](research/issue-2255-live-r4-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with a target (17 overdue, 5 open, 0 unknown) on revision 0000055; re-seed survival stays owner-gated. No source or estate change.
