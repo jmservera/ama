@@ -80,7 +80,7 @@ WORKFLOWS = (
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "26592e2db04031c64c8e162a410576f931e5105f889844dae1bd4758762b9abd",
+    "src-ci.yml": "df473e4bb97d513ff1fbeb2068089df2804d103d6343187b6d2ec649ee53ca96",
     "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "bd0b6277ce104b698110cd88a63846c36ec7be463164db327f00dd5d32489623",
@@ -2605,6 +2605,8 @@ class Runner:
     def coverage_rows(jobs: dict[str, Any]) -> list[dict[str, Any]]:
         equivalents = {
             ("src-ci.yml", "project"): "project-*; browser; image-*; logo-0600",
+            ("src-ci.yml", "unit-tests"): "project-api; project-core",
+            ("src-ci.yml", "api-browser"): "browser",
             ("src-ci.yml", "namespace"): "namespace; static; infra; migration",
             ("src-ci.yml", "no-working-data"): "static",
             ("src-ci.yml", "mssql"): "mssql",
