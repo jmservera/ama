@@ -15037,3 +15037,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2254 over-count regression and live proof, run 5 (Refs #2254)
 
 * Added [issue-2254-live-r5-2026-11-23.md](research/issue-2254-live-r5-2026-11-23.md): new test for the over-counted stored safety column fails without the repair and passes with it; live tile, map and list agree at 23 on revision 0000056. Test-only change; no estate change.
+
+## [2026-11-23] add | Issue 107 fifth pass: restart regression tests (Refs #107)
+
+* Added [issue-107-live-r5-assistants-evidence-2026-11-23.md](research/issue-107-live-r5-assistants-evidence-2026-11-23.md): two tests show an old image cannot reactivate a suspended release or revive an expired one after restart, on SQLite and actual local SQL Server. Criterion 8 stays unproven (no approved release, OQ-017).
