@@ -88,6 +88,15 @@ class CapstonePitchDocsTest(unittest.TestCase):
         self.assertLessEqual(Decimal(report["accrued_usd"]), Decimal(auth["max_budget_usd"]))
         self.assertEqual(report["calls"], len(report["rows"]))
 
+    def test_spoken_scripts_do_not_say_the_batch_has_not_run(self) -> None:
+        for doc in (
+            CAPSTONE / "tokenomics-qa-brief.md",
+            CAPSTONE / "pitch" / "tokenomics-rehearsal-notes.md",
+        ):
+            text = " ".join(doc.read_text(encoding="utf-8").split())
+            for stale in ("authorised but not run", "not yet run live", "That batch has not run"):
+                self.assertNotIn(stale, text, f"{doc.name}: {stale}")
+
 
 if __name__ == "__main__":
     unittest.main()
