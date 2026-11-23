@@ -10,8 +10,10 @@ approves no threshold. Approvals stay under #108; synthetic data is not held-out
 
 from __future__ import annotations
 
+import argparse
 import json
 import re
+import sys
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
@@ -88,6 +90,17 @@ def _versions(manifest: Mapping[str, Any]) -> dict[str, str]:
     return {key: str(versions.get(key)) for key in VERSION_KEYS}
 
 
+def _prediction_flaws(got: Any) -> str:
+    if not isinstance(got, Mapping):
+        return "expected an object"
+    if not isinstance(got.get("answer"), str):
+        return "answer must be a string"
+    named = got.get("critical_errors", [])
+    if not isinstance(named, list) or not all(isinstance(n, str) for n in named):
+        return "critical_errors must be a list of strings"
+    return ""
+
+
 def run_eval(manifest: Mapping[str, Any], predictions: Mapping[str, Any]) -> dict[str, Any]:
     """Score predictions against a frozen manifest; refuse when the manifest is not valid."""
     problems = validate_manifest(manifest)
@@ -105,10 +118,15 @@ def run_eval(manifest: Mapping[str, Any], predictions: Mapping[str, Any]) -> dic
     seen = {name: 0 for name in declared}
     for case, want in expected.items():
         got = predictions.get(case)
-        if not isinstance(got, Mapping):
+        if got is None:
+            errors.append(f"prediction for case {case} missing")
             continue
-        correct += got.get("answer") == want
-        for name in got.get("critical_errors", []):
+        flaws = _prediction_flaws(got)
+        if flaws:
+            errors.append(f"prediction for case {case} malformed: {flaws}")
+            continue
+        correct += got["answer"] == want
+        for name in sorted(set(got.get("critical_errors", []))):
             if name in seen:
                 seen[name] += 1
             else:
@@ -163,3 +181,33 @@ def verify_recorded(manifest: Mapping[str, Any], recorded: Mapping[str, Any]) ->
     if recorded.get("manifest_digest") != check_freeze(manifest)["manifest_digest"]:
         reasons.append("manifest digest changed")
     return dict(outcome="invalidated" if reasons else "valid", reasons=reasons)
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Print a sorted-JSON report; exit 0 pass or valid, 1 fail or invalidated, 2 unusable input."""
+    parser = argparse.ArgumentParser(prog="eval_harness", description=__doc__)
+    parser.add_argument("manifest", type=Path)
+    parser.add_argument("predictions", type=Path)
+    parser.add_argument("--recorded", type=Path, help="verify a recorded result instead of running")
+    args = parser.parse_args(argv)
+    try:
+        manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
+        loaded = json.loads(args.predictions.read_text(encoding="utf-8"))
+        recorded = json.loads(args.recorded.read_text(encoding="utf-8")) if args.recorded else None
+    except (OSError, ValueError) as exc:
+        print(f"unusable input: {exc}", file=sys.stderr)
+        return 2
+    if not isinstance(manifest, dict) or not isinstance(loaded, dict):
+        print("unusable input: manifest and predictions must be JSON objects", file=sys.stderr)
+        return 2
+    if recorded is not None:
+        verdict = verify_recorded(manifest, recorded)
+        print(json.dumps(verdict, indent=2, sort_keys=True))
+        return 0 if verdict["outcome"] == "valid" else 1
+    report = run_eval(manifest, loaded.get("predictions", loaded))
+    print(json.dumps(report, indent=2, sort_keys=True))
+    return 0 if report["outcome"] == "pass" else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

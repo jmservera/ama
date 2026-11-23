@@ -664,6 +664,10 @@ the manifest digest and the task, model, prompt, policy and source versions, and
 synthetic `evals/synthetic-eval-manifest.json` and
 `evals/synthetic-eval-predictions.json` are examples only. The harness makes no
 live model call and claims no approved threshold; approvals stay under #108.
+A held-out case with no prediction, or a malformed one, is an input error that
+fails the run. From `src/agents`: `python -m zava_forward.agents.eval_harness
+MANIFEST PREDICTIONS [--recorded RESULT]` prints sorted JSON; exit 0 for pass or
+a valid record, 1 for fail or an invalidated record, 2 for unusable input.
 Tests: `tests/test_eval_harness.py`.
 
 ### Held-out token measurement and cost-cap runner (#432 AC3, #435 AC4)
