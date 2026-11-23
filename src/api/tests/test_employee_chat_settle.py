@@ -7,6 +7,7 @@ from collections.abc import Callable
 from typing import Any
 
 from checks.employee_chat_browser_check import settle_route
+from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page, sync_playwright
 
 
@@ -56,7 +57,10 @@ class SettleRouteBrowserTests(unittest.TestCase):
 
     def run_route(self, wait: Callable[[Page], None]) -> str:
         with sync_playwright() as playwright:
-            browser = playwright.chromium.launch()
+            try:
+                browser = playwright.chromium.launch()
+            except PlaywrightError as error:
+                self.skipTest(f"Chromium is not installed: {error}")
             try:
                 page = browser.new_page()
                 page.set_content(DELAYED_ROUTE)
