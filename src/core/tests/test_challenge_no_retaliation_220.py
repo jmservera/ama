@@ -45,6 +45,7 @@ from zava_forward.core.challenges import (
     Node,
     assert_no_adverse_challenge_effects,
     build_non_retaliation_assurance,
+    reject_adverse_mapping,
 )
 from zava_forward.core.sqlstore import SqlStore as _SqlStore
 from zava_forward.core.store import ConflictError
@@ -298,6 +299,23 @@ class LocalAssistantProvider:
 
 
 class ChallengeRegisterNoRetaliationTests(unittest.TestCase):
+    def test_adverse_keys_are_rejected_despite_case_spacing_and_hyphen_variants(self) -> None:
+        for variant in (
+            "Retaliation_Flag",
+            " refusal",
+            "hazard-pause",
+            "HAZARD_PAUSE",
+            "priority penalty",
+        ):
+            with self.subTest(variant=variant):
+                with self.assertRaises(ChallengeSafeguardError):
+                    reject_adverse_mapping({variant: True})
+        base: dict[str, Any] = {"id": "ZF-220-KEY", "score": 50}
+        after = {**base, "Hazard-Delay": True}
+        with self.assertRaises(ChallengeSafeguardError):
+            assert_no_adverse_challenge_effects(base, after)
+        reject_adverse_mapping({"summary": "ok", "route": "phone"})
+
     def test_register_reopen_representative_channels_and_assurance_contract(self) -> None:
         self.assertIn("trusted_intermediary", NON_DIGITAL_CHANNELS)
         self.assertEqual(SUBMITTER_KINDS, ("resident", "representative", "nominee", "third_party"))

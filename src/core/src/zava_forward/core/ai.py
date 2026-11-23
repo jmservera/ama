@@ -75,6 +75,10 @@ def approved_payload(system, user):
         head, _, data = url.partition(";base64,")
         if not head.startswith("data:") or head.removeprefix("data:") not in IMAGE_TYPES:
             raise InputRefused("input-type-not-approved")
+        try:
+            base64.b64decode(data, validate=True)
+        except ValueError:
+            raise InputRefused("input-type-not-approved") from None
         if len(data) * 3 // 4 > MAX_IMAGE_BYTES:
             raise InputRefused("input-image-too-large")
     if text + len(system.encode("utf-8")) > MAX_TEXT_BYTES:

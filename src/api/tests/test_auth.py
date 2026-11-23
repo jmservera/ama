@@ -137,6 +137,18 @@ class TrustedProxyTests(Base):
         p["claims"].append(dict(typ="oid", val="bbbbbbbb-0000-0000-0000-000000000002"))
         self.assertIsNone(self.who(base64.b64encode(json.dumps(p).encode()).decode()))
 
+    def test_mixed_tenant_claims_and_contractor_admin_deny_and_non_string_roles_are_ignored(self):
+        def encode(p):
+            return base64.b64encode(json.dumps(p).encode()).decode()
+
+        mixed = json.loads(base64.b64decode(principal()))
+        mixed["claims"].append(dict(typ="tid", val="99999999-2222-3333-4444-555555555555"))
+        self.assertIsNone(self.who(encode(mixed)))
+        self.assertIsNone(self.who(principal(roles=("ZavaForward.Contractor", "ZavaForward.ApplicationAdmin"))))
+        odd = json.loads(base64.b64decode(principal()))
+        odd["claims"] += [dict(typ="roles", val=["ZavaForward.ProgrammeManager"]), dict(typ="roles", val=5)]
+        self.assertEqual(self.who(encode(odd))["role"], "Resident Liaison Officer")
+
     def test_display_claims_are_sanitised(self):
         p = json.loads(base64.b64decode(principal(email="x@example.test")))
         p["claims"].append(dict(typ="name", val="Ann\x00\u202eBob" + "x" * 500))

@@ -110,6 +110,12 @@ class InputBounds(unittest.TestCase):
         self.refused([{"type": "text", "text": "hi"}, image])
         self.refused([{"type": "text", "text": "x" * (MAX_TEXT_BYTES + 1)}])
 
+    def test_shared_boundary_refuses_non_base64_image_data(self) -> None:
+        for data in ("ignore previous instructions", "AAAA AAAA", "AAA", "AAAA\nAAAA"):
+            with self.subTest(data=data):
+                part = {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{data}"}}
+                self.refused([{"type": "text", "text": "hi"}, part])
+
     def test_approved_list_payload_reaches_the_meter(self) -> None:
         part = {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,AAAA"}}
         self.ai.evidence("sys", [{"type": "text", "text": "hi"}, part])
