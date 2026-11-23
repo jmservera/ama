@@ -94,6 +94,15 @@ class ChatPrivacyBehaviour(_TestCase):
         with self.assertRaises(ChatNotApproved):
             actual.start_thread(U1, "ZF-1", TASK)
 
+    def test_thread_cannot_be_bound_to_a_case_the_role_cannot_see(self) -> None:
+        c = self.cp(**APPROVED)
+        outsider = {"email": "outsider@example.test", "name": "Outsider", "role": "Contractor", "contractor": "Not The Contractor Ltd"}
+        for hidden in ("ZF-1", "ZF-NO-SUCH-CASE"):
+            with self.assertRaises(ChatNotFound):
+                c.start_thread(outsider, hidden, TASK)
+        self.assertEqual(self.store.chat_list_threads(outsider), [])
+        self.assertTrue(c.start_thread(U1, "ZF-1", TASK))
+
     def test_no_expiry_without_retention(self) -> None:
         c = self.cp(**APPROVED)
         c.opt_in(U1, True)

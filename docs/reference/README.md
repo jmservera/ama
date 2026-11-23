@@ -574,6 +574,8 @@ with the staff test sign-in; conflicts show only locally because the web screen 
 The [issue 144 live hosting probe](./research/issue-144-live-hosting-2026-11-22.md) records digest-pinned images, live non-root proof, a writable root file system and no pipeline run.
 The [issue 144 live hardening re-probe](./research/issue-144-live-hardening-reprobe-2026-11-23.md) adds an offline verifier and records live `NoNewPrivs` 1, empty effective capabilities, a writable root file system and no pipeline run.
 The [issue 144 hardening receipt](./research/issue-144-live-hardening-receipt-2026-11-23.md) records the guard enforced on every app and job and a live application process that is non-root with NoNewPrivs and empty capability sets; read-only root stays unproven.
+
+The [issue 144 worker image mapping note](./research/issue-144-worker-image-mapping-2026-11-23.md) records an offline test tying Bicep workloads, the pipeline image mapping and shipped worker modules together; pipeline provenance stays unproven.
 The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 The [web `.xlsx` import note](./research/issue-2008-web-xlsx-import-2026-11-22.md) records the
 local proof that the "Check a spreadsheet" screen previews the workbook with mapping and conflicts.
@@ -745,6 +747,8 @@ The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records rea
 
 The [live re-check note](./research/issue-184-live-recheck-2026-11-23.md) re-proves the three criteria for the demo (sub-issues closed, rejection tests, 0 secret patterns in 260,243 live log rows) and states live message-body secret absence as unproven (#184).
 
+The [simulator CLI leak guard note](./research/issue-184-live-cli-leak-2026-11-23.md) records a hostile-environment probe of `live_simulator.main` and its regression test (#184).
+
 The [body-read attempt](./research/issue-184-live-bodyread-2026-11-23.md) shows the Event Hubs namespace is network-private (public access disabled), so live message-body secret absence stays unproven for the demo (#184).
 
 The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-11-23.md) records the 2026-11-23 read only Hub to receiver to employee map walkthrough on revision 0000054 (fresh reading 79 s old, per message SQL hop inferred, resident view stored only) (#2118).
@@ -756,6 +760,7 @@ The [issue 2254 run 3 note](./research/issue-2254-live-r3-2026-11-23.md) records
 The [issue 2254 run 4 note](./research/issue-2254-live-r4-2026-11-23.md) reproduces the 3 versus 4 safety count on the code by reverting the stale-column repair, shows the regression test fails without it, and re-checks tile, map and list by case id on the live demo (23, 23, 23).
 
 The [issue 2254 run 5 note](./research/issue-2254-live-r5-2026-11-23.md) adds a regression test for the over-counted stored safety column (released hazard or closed case), proves it fails without the repair, and re-checks tile, map and list live on revision 0000056 (23, 23, 23).
+The [issue 2254 run 5 note](./research/issue-2254-live-r5-2026-11-23.md) closes the same stale-column class for the support, long-wait and funding filters by extending the SQL identity repair, with a regression test that fails without it.
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 
@@ -764,6 +769,7 @@ The [thread creation 500 note](./research/issue-2245-thread500-2026-11-22.md) re
 The [final live proof](./research/issue-2202-finalproof-2026-11-22.md) records a desktop check of API revision 0000053 and resident revision 0000025 (10 employee chat asks in 3.1 to 5.4 s, map, xlsx check-a-spreadsheet, resident chart, safety count, handoff waiting view, AI hold label) with a per-criterion table for issue 2202.
 
 The [2026-11-23 coverage note](./research/issue-2202-live-2026-11-23.md) measures homes with readings across the whole map (261 of 443) with `tools/demo_readings_coverage.py` and rechecks the resident consent checkbox on revision 0000028.
+The [deployed hardening check](./research/issue-2202-live2-2026-11-23.md) proves `ZF_CONTAINER_HARDENING=enforced` on the API, resident, agents apps and both live jobs, and adds the check to `tools/demo_preflight.py`.
 
 The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads API revision 0000054 and resident revision 0000026 and records the two owner gates for generative AI answers: the open suspension (scope all, 2026-11-18) and the resident ledger budget expiry.
 
@@ -1619,6 +1625,7 @@ or infra acceptance claimed.
 | [Issue 440 criteria verdict at head 0c497160e (third pass)](./research/issue-440-live-criteria-verdict-2026-11-21-r3.md) | Live and local re-observation, static re-read of the coordinator, criterion 7 evidenced for the demo, 8 unproven |
 | [Issue 89 scoped stabilization checkpoint](./research/issue-89-live-stabilization-checkpoint-2026-11-21.md) | Requirement reconciliation, 432 local tests, live read-only capacity probe, per-criterion verdict |
 | [Issue 123 criteria verdict at head 0c497160e](./research/issue-123-live-criteria-verdict-2026-11-21.md) | Both open epic criteria unproven with reasons, child states, 175-test governance run and a live unaccepted-handoff 500 finding on the demo data |
+| [Issue 123 live re-check and handoff timezone regression tests](./research/issue-123-live-handoff-regression-2026-11-23.md) | Live confirmation that the handoff queue loads, two regression tests for a timezone-less offered time, and both open epic criteria still unproven |
 | [Issue 123 D4 golden-file error and per-criterion table](./research/issue-123-live-d4-golden-error-2026-11-19.md) | Re-check of the #440 triage drafts on main, the D4 named configuration error with tests, and what stays unproven |
 | [Epic 195 demo proof, per-criterion results](./research/issue-195-live-epic-evidence-2026-11-18.md) | Proven and unproven results for the three unticked epic criteria (checkpoint, child issues, deployed image provenance) and the legacy-reference guard fix for triage draft D2, held back as FULL tier |
 | [Epic 208 demo proof, per-criterion results](./research/issue-208-live-epic-evidence-2026-11-19.md) | Per-criterion results for the regulatory assistant epic: local regression passes, children delivered out of ADR phase order, plus a child-order audit test |
@@ -1662,7 +1669,9 @@ or infra acceptance claimed.
 | [Epic 113 first unmet demo criterion recheck (#113)](./research/issue-113-first-unmet-demo-criterion-2026-11-19.md) | Live recheck of the three epic criteria on 2026-11-19: criterion 1 (#440 checkpoint) is the first unmet and is not a code item, so no source changed; 7 of 8 children open |
 | [Epic 113 child disposition audit (#113)](./research/issue-113-child-disposition-live-2026-11-20.md) | Per-criterion and per-child disposition on 2026-11-20 (four of eight children closed, three with criteria moved to deferral issues); guarded by `tools/test_epic_113_child_disposition.py`; nothing ticked |
 | [Epic 113 live recheck (#113)](./research/issue-113-epic-recheck-live-2026-11-21.md) | Per-criterion proven or unproven result for the three epic criteria on 2026-11-21, with a read-only live posture probe of resource group `ama`; no defect found, nothing ticked |
+| [Epic 113 production-claim guard (#113)](./research/issue-113-production-claim-guard-2026-11-23.md) | Regression test that fails on unqualified production-readiness wording in shipped source, plus the per-criterion result for 2026-11-23 |
 | [Epic 149 first unmet demo criterion recheck (#149)](./research/issue-149-first-unmet-demo-criterion-2026-11-19.md) | Live recheck of the four UX epic criteria on 2026-11-19: criterion 1 (#440 checkpoint) is the first unmet and is not a code item, so no source changed; #153, #154, #155 open |
+| [Epic 149 law viewer reflow defect and fix (#149)](./research/issue-149-law-viewer-reflow-2026-11-23.md) | Measured 320 px reflow failure of provision text on the law viewer (scrollWidth 2772 against 320), the scoped style fix, regression test and per-criterion status |
 | [Epic 136 Bicep infrastructure audit with live read (#136)](./research/issue-136-live-20261118T1638Z-2026-11-18.md) | Four epic criteria and six open children with proven and unproven status, plus a read-only live probe of the demo group; nothing ticked, evidence folder retained. |
 | [Key Vault lifecycle demo criteria recheck (#142)](./research/issue-142-live-20261119T1418Z-2026-11-19.md) | Read-only probe; rotation test and scheduled access review stay unproven, nothing ticked. |
 | [Epic 136 criteria audit, fresh (#136)](./research/issue-136-live-20261119T0945Z-2026-11-19.md) | Per-criterion table; first unmet criterion is the #440 checkpoint, not closable by code; read-only live probe, nothing ticked. |
@@ -1750,6 +1759,7 @@ or infra acceptance claimed.
 | [Per-user chat epic live criteria check (#157), 2026-11-19](./research/issue-157-live-criteria-2026-11-19.md) | Per-criterion verdicts for the open epic criteria, live revision state and the cut-over guard violation fixed in this index | 2026-11-19 |
 | [Per-user chat epic criteria recheck (#157), 2026-11-19](./research/issue-157-criteria-recheck-live-2026-11-19.md) | Fresh gh state and per-criterion proven or unproven table; both open criteria need owner or pull request actions |
 | [Per-user chat epic live criteria proof (#157), 2026-11-21](./research/issue-157-live-criteria-2026-11-21.md) | Fresh live chat probe, 158 focused local tests and a per-criterion table; both open criteria stay unproven |
+| [Per-user chat epic case scoping at thread creation (#157), 2026-11-23](./research/issue-157-case-scoping-2026-11-23.md) | Core start_thread now refuses hidden or missing cases alike; regression test and per-criterion verdict |
 | [Assistive-technology, consent and Fluent/WCAG acceptance live demo evidence (#619)](./research/issue-619-live-at-consent-evidence-2026-11-18.md) | Per-criterion demo record: keyboard, axe, zoom-equivalent reflow and the synthetic resident consent journey proven on the live demo; person-run screen reader, zoom and real-resident criteria stay production-only |
 | [Assistive-technology, consent and Fluent/WCAG live demo re-proof (#619, 2026-11-22)](./research/issue-619-live-at-consent-evidence-2026-11-22.md) | Re-run after the web redesigns: axe, keyboard, reflow and synthetic resident consent hold; new 200 percent text probe finds a cramped resident chat entry area; person-run criteria stay production-only |
 | [Assistive-technology, consent and Fluent/WCAG live re-proof on revisions 0000054 and 0000026 (#619, 2026-11-23)](./research/issue-619-live-at-consent-evidence-2026-11-23.md) | Main equals live for these criteria; axe, keyboard, reflow and synthetic resident consent hold; the 200 percent text observation is assessed as not a code gap; person-run criteria stay production-only |
@@ -1874,6 +1884,7 @@ or infra acceptance claimed.
 | [Issue 2187 Live, Gate Heavy Lock Scope](./research/issue-2187-live-gate-lock-2026-11-23.md) | Heavy lock only for browser, SQL and image groups already merged in #2215; #2286 did not touch it; no remainder; per-criterion table |
 | [Issue 2188 Live, Concurrent Image Builds](./research/issue-2188-live-image-concurrency-2026-11-23.md) | Image groups now build up to four at a time, mssql stays exclusive, Trivy serialised; per-criterion table |
 | [Issue 2188 Live, Wall Time in the Gate Receipt](./research/issue-2188-live-wall-time-2026-11-23.md) | Receipt records `wall_seconds`; before and after gate pair remains unproven; per-criterion table |
+| [Issue 2188 Live, Retries in the Gate Timing Report](./research/issue-2188-live-timing-retries-2026-11-23.md) | Timing report and compare show receipt retries; per-criterion table |
 | [Issue 2186 Live, Full Receipt Across Docs-only Moves](./research/issue-2186-live-full-receipt-docs-move-2026-11-21.md) | Full receipts now relax over inert main moves; code, tool and image moves still invalidate; end-to-end full receipt unproven |
 | [Issue 1830 Live Criterion 1 Measurement](./research/issue-1830-live-20261119T1346Z-2026-11-19.md) | Timing from eight retained passed full receipts, queue wait from four gate logs, critical chain, parallel-versus-summed time and setup cost; `report --log` refusal fix; criteria 1, 3 and 4 partly proven, 2 unproven (Refs #1830) |
 | [Issue 349 Tenant Prerequisites, Live Demo Re-verification](./research/issue-349-tenant-prerequisites-live-2026-11-18.md) | Issue 349: per-criterion proven/unproven status from read-only Azure checks (auth config, vault path, private endpoint) and Playwright runs with the test sign-in |
@@ -1895,6 +1906,7 @@ or infra acceptance claimed.
 | [Issue 2237 Smoke of API 0000055 and Resident 0000027](./research/issue-2237-smoke-0055-live-2026-11-23.md) | Live desktop smoke on 2026-11-23: retention 200, chat thread, employee map with sensor overlay, resident chart and start-up health, pass or fail per check for issues 2237, 2257 and 2244; nothing ticked |
 | [Issue 223 Review Effort Measurement, Run 8](./research/issue-223-live-r8-2026-11-23.md) | Issue 223: measured review time retained in AI review evidence, test results, and a per-criterion table; nothing ticked |
 | [Issue 223 Review Effort Aggregation, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: live report aggregates measured review time per task, test results, and a per-criterion table; nothing ticked |
+| [Issue 223 Review Effort Totals, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: the AI live report totals measured review seconds per task, test results and a per-criterion table; nothing ticked |
 | [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
 
 

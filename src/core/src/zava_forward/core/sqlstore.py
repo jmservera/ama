@@ -346,7 +346,7 @@ class SqlStore(Store):
         A writer that edits a body without its derived columns would otherwise leave the SQL list paths
         (own queue, counts, filters) disagreeing with the in-memory paths (exports) indefinitely.
         """
-        cols = ("stage", "area", "wave", "owner_code", "closed", "hazard", "contractor")
+        cols = ("stage", "area", "wave", "owner_code", "closed", "hazard", "contractor", "support", "days", "fstatus")
         norm = lambda v: int(v) if isinstance(v, bool | int) else str(v)  # noqa: E731 - Azure SQL returns bits as bool
         for cid, body, *have in self.db.execute("SELECT id, body, " + ", ".join(cols) + " FROM cases").fetchall():
             try:

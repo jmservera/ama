@@ -2,13 +2,21 @@
 
 from __future__ import annotations
 
+import contextlib
 import copy
+import io
 import json
+import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
 
-from zava_forward.agents.eval_harness import run_eval, validate_manifest, verify_recorded
+from zava_forward.agents.eval_harness import (
+    main,
+    run_eval,
+    validate_manifest,
+    verify_recorded,
+)
 from zava_forward.agents.heldout_freeze import VERSION_KEYS, _digest, check_freeze
 
 EVALS = Path(__file__).resolve().parents[1] / "evals"
@@ -93,6 +101,52 @@ class EvalHarnessTests(unittest.TestCase):
         self.manifest["held_out"]["seed"] = "other-seed"
         verdict = verify_recorded(reapproved(self.manifest), recorded)
         self.assertEqual(verdict["reasons"], ["manifest digest changed"])
+
+    def test_missing_and_malformed_predictions_are_input_errors(self) -> None:
+        del self.predictions["h1"]
+        self.predictions["h2"]["critical_errors"] = "unsafe advice"
+        result = run_eval(self.manifest, self.predictions)
+        self.assertEqual(result["outcome"], "fail")
+        self.assertEqual(
+            result["input_errors"],
+            [
+                "prediction for case h1 missing",
+                "prediction for case h2 malformed: critical_errors must be a list of strings",
+            ],
+        )
+
+    def test_duplicate_critical_error_counts_once_per_case(self) -> None:
+        self.predictions["h1"]["critical_errors"] = ["unsafe advice", "unsafe advice"]
+        result = run_eval(self.manifest, self.predictions)
+        observed = {c["name"]: c["observed"] for c in result["critical_errors"]}
+        self.assertEqual(observed["unsafe advice"], 1)
+
+    def test_cli_exit_codes_and_deterministic_output(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            files = dict(
+                m=self.manifest, p=dict(predictions=self.predictions), bad=["not an object"]
+            )
+            for name, body in files.items():
+                (root / f"{name}.json").write_text(json.dumps(body), encoding="utf-8")
+
+            def run(*args: str) -> tuple[int, str]:
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+                    code = main([str(root / a) if a.endswith(".json") else a for a in args])
+                return code, out.getvalue()
+
+            code, first = run("m.json", "p.json")
+            self.assertEqual((code, run("m.json", "p.json")[1]), (0, first))
+            self.assertEqual(json.loads(first)["outcome"], "pass")
+            (root / "rec.json").write_text(first, encoding="utf-8")
+            self.assertEqual(run("m.json", "p.json", "--recorded", "rec.json")[0], 0)
+            changed = copy.deepcopy(self.manifest)
+            changed["versions"]["model"] += "-next"
+            (root / "m2.json").write_text(json.dumps(reapproved(changed)), encoding="utf-8")
+            self.assertEqual(run("m2.json", "p.json", "--recorded", "rec.json")[0], 1)
+            self.assertEqual(run("m.json", "bad.json")[0], 2)
+            self.assertEqual(run("m.json", "missing.json")[0], 2)
 
 
 if __name__ == "__main__":

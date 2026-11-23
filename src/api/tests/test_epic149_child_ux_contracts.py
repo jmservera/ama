@@ -204,6 +204,84 @@ console.log(JSON.stringify({ dense: run(288, [1, 2, 3]), short: run(4, [6, 12, 2
         self.assertGreaterEqual(short["label"]["x"], short["divider"] + 4)
         self.assertEqual(short["label"]["text-anchor"], "start")
 
+    @unittest.skipUnless(shutil.which("node"), "node is required to execute the chart code")
+    def test_resident_sensor_chart_behaviour_in_node(self) -> None:
+        js: str = read(API / "resident_demo" / "web" / "demo.js")
+        helpers = js[js.index("  function el(") : js.index("  function card(")]
+        chart = js[js.index("  var sensorMetrics") : js.index("  function renderConsent(")]
+        self.assertIn("function sensorChart", chart)
+        harness = r"""
+const vm = require("vm");
+const src = JSON.parse(process.argv[1]);
+function node(tag) {
+  return { tag, attrs: {}, children: [], textContent: "", className: "",
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+    appendChild(c) { this.children.push(c); return c; },
+    removeChild(c) { this.children.splice(this.children.indexOf(c), 1); return c; },
+    insertBefore(c) { this.children.push(c); return c; }, querySelector() { return node("x"); } };
+}
+const document = { createElement: node, createElementNS: (ns, tag) => node(tag) };
+const ctx = vm.createContext({ document, Intl, Date });
+const tail = "\nthis.sensorChart = sensorChart; this.metric = sensorMetrics[0];";
+vm.runInContext(src.helpers + src.chart + tail, ctx);
+function readings(count, stepMin) {
+  const t0 = Date.parse("2026-11-20T00:00:00Z");
+  return Array.from({ length: count }, (_, i) => ({
+    observed_at: new Date(t0 + i * stepMin * 60000).toISOString(),
+    temperature_c: 18 + (i % 7), temperature_status: "ok" }));
+}
+function forecast(history) {
+  const last = Date.parse(history[history.length - 1].observed_at);
+  return { points: Array.from({ length: 6 }, (_, i) => ({
+    forecast_at: new Date(last + (i + 1) * 4 * 3600000).toISOString(), temperature_c: 20 })) };
+}
+function walk(n, out) { out.push(n); n.children.forEach((c) => walk(c, out)); return out; }
+const isDivider = (n) => n.attrs.class === "sensor-divider";
+function render(history, fc) {
+  const all = walk(ctx.sensorChart(history, ctx.metric, fc), []);
+  const label = all.find((n) => n.textContent === "Latest stored");
+  return {
+    circles: all.filter((n) => n.tag === "circle").map((n) => n.attrs.cx).map(Number),
+    squares: all.filter((n) => n.attrs.class === "sensor-forecast-point").length,
+    labelAnchor: label ? label.attrs["text-anchor"] : null,
+    labelX: label ? Number(label.attrs.x) : null,
+    divider: Number(((all.find(isDivider)) || { attrs: {} }).attrs.x1 || 0),
+    thinnedNote: all.some((n) => /Circles mark some/.test(n.textContent)),
+  };
+}
+const dense = readings(289, 5);
+const wide = readings(25, 60);
+const narrow = readings(3, 5);
+console.log(JSON.stringify({
+  dense: render(dense, forecast(dense)), wide: render(wide, forecast(wide)),
+  narrow: render(narrow, forecast(narrow)), plain: render(wide, null) }));
+"""
+        done = subprocess.run(
+            ["node", "-e", harness, json.dumps({"helpers": helpers, "chart": chart})],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        self.assertEqual(done.returncode, 0, done.stderr)
+        out = json.loads(done.stdout)
+        dense = out["dense"]
+        self.assertGreater(len(dense["circles"]), 5)
+        self.assertLess(len(dense["circles"]), 100, "dense history must be thinned")
+        gaps = [b - a for a, b in zip(dense["circles"], dense["circles"][1:], strict=False)]
+        self.assertGreaterEqual(min(gaps), 9 - 1e-9, "circles must not merge into one thick stroke")
+        self.assertAlmostEqual(dense["circles"][-1], dense["divider"], places=6)
+        self.assertTrue(dense["thinnedNote"])
+        self.assertEqual(dense["squares"], 6)
+        self.assertEqual(dense["labelAnchor"], "end")
+        self.assertLess(dense["labelX"], dense["divider"])
+        self.assertEqual(out["wide"]["labelAnchor"], "end")
+        # Near the left edge the label moves right of the divider, clear of the axis tick labels.
+        self.assertEqual(out["narrow"]["labelAnchor"], "start")
+        self.assertGreater(out["narrow"]["labelX"], out["narrow"]["divider"])
+        self.assertEqual(out["plain"]["labelAnchor"], None)
+        self.assertEqual(out["plain"]["squares"], 0)
+
 
 class HumanEvidenceNotFabricated(unittest.TestCase):
     def test_no_automated_surface_claims_human_sign_off(self) -> None:

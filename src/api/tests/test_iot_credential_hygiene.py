@@ -6,6 +6,8 @@ credential issue, storage, rotation or Hub-side telemetry.
 """
 
 import asyncio
+import contextlib
+import io
 import json
 import logging
 import re
@@ -20,6 +22,7 @@ from azure.iot.device import X509
 from zava_forward.core.synthetic import sensor_stock
 from zava_forward.core.synthetic.sensor_stream import Replay, RunBudget, StreamError, replay
 
+from zava_forward.api import live_simulator
 from zava_forward.api.iot_stream import AUTH, DEVICE, Activation, Binding, HubPublisher, decode
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -337,3 +340,53 @@ class ReceiveLeakTests(unittest.TestCase):
                 self.assertRegex(text, r"IOT_|SENSOR_|INVALID|REQUIRED|MISMATCH|NOT_")
                 self.assertNotIn(MARKER, text)
                 self.assertNotRegex(text, r"SharedAccess|HostName=")
+
+
+class CliLeakTests(unittest.TestCase):
+    """Hostile operator environment values must never reach CLI output or logs."""
+
+    SECRET = f"HostName=x.azure-devices.net;SharedAccessKey={MARKER}"
+
+    def run_cli(self, env: dict[str, str], args: tuple[str, ...], **patches: Exception) -> str:
+        err, out = io.StringIO(), io.StringIO()
+        handler_stream = io.StringIO()
+        handler = logging.StreamHandler(handler_stream)
+        logging.getLogger().addHandler(handler)
+        self.addCleanup(logging.getLogger().removeHandler, handler)
+        with (
+            contextlib.redirect_stderr(err),
+            contextlib.redirect_stdout(out),
+            patch.object(live_simulator, "store_home_ids", side_effect=patches.get("store")),
+        ):
+            code = live_simulator.main(list(args), env)
+        self.assertIn(code, (2, 4))
+        return err.getvalue() + out.getvalue() + handler_stream.getvalue()
+
+    def assert_clean(self, text: str) -> None:
+        self.assertIn("Cannot run: ", text)
+        self.assertNotIn(MARKER, text)
+        self.assertNotRegex(text, r"SharedAccess|HostName=")
+
+    def test_hostile_environment_values_are_never_echoed(self) -> None:
+        with tempfile.TemporaryDirectory() as scratch:
+            envs = (
+                {
+                    "ZF_SIM_HUB_HOSTNAME": self.SECRET,
+                    "ZF_SIM_APPROVAL": self.SECRET,
+                    "ZF_SIM_RESOURCE_GROUP": self.SECRET,
+                    "ZF_SIM_CERT_DIR": scratch,
+                    "ZF_SIM_CONTROL_FILE": scratch + "/control.json",
+                },
+                {"ZF_SIM_SEED": self.SECRET},
+                {"ZF_SIM_FAILURE_RATE": self.SECRET},
+                {"ZF_SIM_CADENCE_MINUTES": self.SECRET},
+                {"ZF_ASSIST_QUALITY_DEMO_HOMES": self.SECRET},
+            )
+            for env in envs:
+                with self.subTest(keys=sorted(env)):
+                    self.assert_clean(self.run_cli(env, ("--sink", "iothub", "--once")))
+
+    def test_unexpected_exception_with_credential_collapses_to_fixed_code(self) -> None:
+        text = self.run_cli({}, ("--once",), store=RuntimeError(self.SECRET))
+        self.assertIn("SIM_FAILED", text)
+        self.assert_clean(text)
