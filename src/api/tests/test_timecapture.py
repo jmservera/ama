@@ -106,6 +106,21 @@ class TimeTests(unittest.TestCase):
             t.mine(SAM)
         self.assertFalse(os.path.exists(self.db))
 
+    def test_status_off_does_not_read_storage_but_on_fails_closed(self):
+        def broken(sql):
+            raise sqlite3.OperationalError("no such table: time_request")
+
+        off = self.tc()
+        off._latest = broken
+        st = off.status()
+        self.assertFalse(st["enabled"])
+        self.assertEqual(st["reason"], "Time capture is switched off.")
+        on = self.tc(ZF_TIME_CAPTURE="on", DPIA_APPROVED="DPIA-1", ZF_TIME_CONSULTATION="C1",
+                     ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
+        on._latest = broken
+        with self.assertRaises(sqlite3.OperationalError):
+            on.status()
+
     def test_flag_alone_is_refused_without_dpia(self):
         t = self.tc(ZF_TIME_CAPTURE="on")
         st = t.status()
