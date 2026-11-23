@@ -14857,3 +14857,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2117 remaining criterion classified (Refs #2117)
 
 * Added [issue-2117-live-2026-11-23.md](research/issue-2117-live-2026-11-23.md): the one open criterion needs authorised representative and resident evidence, so it stays unproven and owner-gated. No source change.
+
+## [2026-11-23] update | Issue 2116 drill criterion classified (Refs #2116)
+
+* Added [issue-2116-drill-criterion-demo-classification-2026-11-23.md](research/issue-2116-drill-criterion-demo-classification-2026-11-23.md): the witnessed drill criterion is owner-gated and unproven for the demo; constructed suspension tests re-run (20 OK). No source change.
