@@ -1137,7 +1137,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(404, {"error": "Proposal not found."})
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
-                except Exception:
+                except Exception as e:
+                    if is_write_lock_busy(e):
+                        raise  # The common safe-method path answers 503 with Retry-After and logs the cause (issue #350).
+                    logging.getLogger(__name__).warning("http-error GET %s status=503 exc=%s", _printable(url.path), type(e).__name__)
                     return self._json(503, {"error": "Assistant service unavailable; continue ordinary case work manually."})
                 return self._json(404, {"error": "Not found."})
             if url.path == "/api/me":

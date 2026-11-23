@@ -15200,3 +15200,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Legal, DPO and RAI approvals are deferred to production (#2337); no named Legal contact exists yet and the demo disclaimer stays as is.
 * Person-run assistive technology testing is deferred to production (#2338); who runs it is undecided and the demo carries no statement about it.
 * CI: unit tests are sharded and Trivy and SBOM moved to the manual workflow `src-supply-chain.yml` (#2335); the longest api test shard now takes about 7 minutes against about 28 for the old job.
+## [2026-11-23] add | Issue 350 live pass 9 (Refs #350)
+
+* Added [issue-350-live-r9-2026-11-23.md](research/issue-350-live-r9-2026-11-23.md) with raw evidence: per-criterion table, no box ticked, and a GET `/api/assistants` fix so a SQL write-lock timeout answers 503 with `Retry-After` and logs its cause

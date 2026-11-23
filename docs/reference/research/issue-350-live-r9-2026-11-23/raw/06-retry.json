@@ -1,0 +1,128 @@
+[
+ {
+  "try": 0,
+  "ep": "/api/assistants",
+  "status": 200,
+  "secs": 0.8,
+  "retry_after": null
+ },
+ {
+  "try": 0,
+  "ep": "/api/briefing",
+  "status": 200,
+  "secs": 2.5,
+  "retry_after": null
+ },
+ {
+  "try": 0,
+  "ep": "/api/assistants/forecast",
+  "status": 503,
+  "secs": 13.1,
+  "retry_after": "30"
+ },
+ {
+  "try": 1,
+  "ep": "/api/assistants",
+  "status": 200,
+  "secs": 0.7,
+  "retry_after": null
+ },
+ {
+  "try": 1,
+  "ep": "/api/briefing",
+  "status": 200,
+  "secs": 2.6,
+  "retry_after": null
+ },
+ {
+  "try": 1,
+  "ep": "/api/assistants/forecast",
+  "status": 503,
+  "secs": 13.0,
+  "retry_after": "30"
+ },
+ {
+  "try": 2,
+  "ep": "/api/assistants",
+  "status": 200,
+  "secs": 0.5,
+  "retry_after": null
+ },
+ {
+  "try": 2,
+  "ep": "/api/briefing",
+  "status": 200,
+  "secs": 2.7,
+  "retry_after": null
+ },
+ {
+  "try": 2,
+  "ep": "/api/assistants/forecast",
+  "status": 503,
+  "secs": 13.2,
+  "retry_after": "30"
+ },
+ {
+  "try": 3,
+  "ep": "/api/assistants",
+  "status": 200,
+  "secs": 0.7,
+  "retry_after": null
+ },
+ {
+  "try": 3,
+  "ep": "/api/briefing",
+  "status": 200,
+  "secs": 2.9,
+  "retry_after": null
+ },
+ {
+  "try": 3,
+  "ep": "/api/assistants/forecast",
+  "status": 503,
+  "secs": 15.7,
+  "retry_after": "30"
+ },
+ {
+  "try": 4,
+  "ep": "/api/assistants",
+  "status": 200,
+  "secs": 0.7,
+  "retry_after": null
+ },
+ {
+  "try": 4,
+  "ep": "/api/briefing",
+  "status": 200,
+  "secs": 2.5,
+  "retry_after": null
+ },
+ {
+  "try": 4,
+  "ep": "/api/assistants/forecast",
+  "status": 503,
+  "secs": 13.2,
+  "retry_after": "30"
+ },
+ {
+  "try": 5,
+  "ep": "/api/assistants",
+  "status": 200,
+  "secs": 0.6,
+  "retry_after": null
+ },
+ {
+  "try": 5,
+  "ep": "/api/briefing",
+  "status": 503,
+  "secs": 20.9,
+  "retry_after": "5"
+ },
+ {
+  "try": 5,
+  "ep": "/api/assistants/forecast",
+  "status": 503,
+  "secs": 17.9,
+  "retry_after": "30"
+ }
+]

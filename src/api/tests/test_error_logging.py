@@ -167,6 +167,35 @@ class ErrorLoggingTests(Base):
         )(f"[SQL Server]{LOCK_FAILED} {SECRET}")
         return error
 
+    def test_assistants_registry_busy_lock_503_retry_after_and_other_failures_logged(self) -> None:
+        def listing(error: Exception) -> tuple[int, bytes, str | None, str]:
+            def fails(*_a: object, **_k: object) -> None:
+                raise error
+
+            req = urllib.request.Request(
+                self.base + "/api/assistants",
+                headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=OID_SAM)},  # type: ignore[no-untyped-call]
+            )
+            with (
+                patch.object(self.app.assistants, "registry", fails),
+                self.assertLogs("zava_forward.api.server", "WARNING") as logs,
+            ):
+                try:
+                    urllib.request.urlopen(req, timeout=20)
+                    self.fail("expected an HTTP error")
+                except urllib.error.HTTPError as e:
+                    return e.code, e.read(), e.headers.get("Retry-After"), "\n".join(logs.output)
+
+        code, body, retry, line = listing(self.busy_error())
+        self.assertEqual((code, retry), (503, "5"))
+        self.assertIn("cause=sql-write-lock-busy", line)
+        self.assertNotIn(SECRET, body.decode() + line)
+        code, body, retry, line = listing(RuntimeError(SECRET))
+        self.assertEqual((code, retry), (503, None))
+        self.assertIn("Assistant service unavailable", body.decode())
+        self.assertIn("http-error GET /api/assistants status=503 exc=RuntimeError", line)
+        self.assertNotIn(SECRET, body.decode() + line)
+
     def test_busy_sql_write_lock_on_chat_thread_create_answers_503_with_retry_after(self) -> None:
         busy = self.busy_error()
 
