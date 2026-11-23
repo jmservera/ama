@@ -1,0 +1,20 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "fqdn": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:3f2be6644fd4cf3e00966fda04db32183ffed76085b6aeeca166caefe7faf945",
+  "max": 4,
+  "min": 1,
+  "n": "ca-cutover-test-demo-api",
+  "ready": "ca-cutover-test-demo-api--0000054",
+  "rev": "ca-cutover-test-demo-api--0000054"
+}
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "fqdn": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:a71084bd2d4201d4fc5995fd5a1b4e9c9f03e07fe46d49168ea0d3cbb0445c5b",
+  "max": 1,
+  "min": 1,
+  "n": "ca-resident-demo",
+  "ready": "ca-resident-demo--0000026",
+  "rev": "ca-resident-demo--0000026"
+}

@@ -14717,3 +14717,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 349 live round 9 close-out (Refs #349)
 
 * Added [issue-349-tenant-prerequisites-live-r9-2026-11-23.md](research/issue-349-tenant-prerequisites-live-r9-2026-11-23.md): live API 0000054 and resident 0000026 re-proved; criteria 1, 2, 3, 6 proven for the demo, 4 unproven (owner roster), 5 partly proven. No source or estate change.
+## [2026-11-23] update | Issue 462 resident showcase live check r6 (Refs #462)
+
+* Added [resident-showcase-live-r6-2026-11-23.md](research/resident-showcase-live-r6-2026-11-23.md): 36-check Playwright rerun against revisions API 0000054 and resident 0000026, per-criterion table; criterion 2 stays unproven. No source or estate change.
