@@ -57,11 +57,11 @@ def approved_payload(system, user):
     """Type and size allowlist at the one boundary every provider family shares; raises InputRefused."""
     if not isinstance(system, str):
         raise InputRefused("input-type-not-approved")
+    text = 0
     if isinstance(user, str):
-        return
+        user = [{"type": "text", "text": user}]
     if not isinstance(user, list) or not user:
         raise InputRefused("input-type-not-approved")
-    text = 0
     for part in user:
         if not isinstance(part, dict):
             raise InputRefused("input-type-not-approved")

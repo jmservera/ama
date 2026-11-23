@@ -15003,3 +15003,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 350 edge probe tool (Refs #350)
 
 * Added [issue-350-live-r7-2026-11-23.md](research/issue-350-live-r7-2026-11-23.md): a repeatable anonymous edge probe for criterion 1; live run still shows 302 for browser-style API requests.
+## [2026-11-23] add | Issue 116 string-size boundary gap (Refs #116)
+
+* Added [issue-116-live-r9-evidence-2026-11-23.md](research/issue-116-live-r9-evidence-2026-11-23.md): the shared provider allowlist now bounds string input before the protection hold, with two tests; live payloads stay unproven.
