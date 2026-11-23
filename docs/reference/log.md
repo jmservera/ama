@@ -15267,3 +15267,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 203 sixth live run (Refs #203)
 
 * Added [issue-203-live-20261123-2026-11-23](research/issue-203-live-20261123-2026-11-23.md): checker regression from #2329 fixed by listing the rubric guard test in `GUARD_FILES`; criterion 5 still partly proven. Index row added.
+
+## [2026-11-23] add | Issue 1204 tick-log closure-progress rule (Refs #1204)
+
+* Added [issue-1204-live-r2-2026-11-23.md](research/issue-1204-live-r2-2026-11-23.md): `tools/check-tick-log.py` flags missing closure-review progress when capacity is free and reads the extended `tick_log` columns; 13 tests pass.
