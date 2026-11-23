@@ -468,6 +468,14 @@ class RetentionTests(Base):
                          [("ZF-1", doc["id"], "needs review: trigger date unreadable", None)])
         self.assertEqual(len(st.cases["ZF-1"]["documents"]), before)
 
+    def test_approving_unreadable_trigger_date_is_refused_with_a_plain_message(self):
+        st = self.make()
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
+        st.cases["ZF-1"]["retention_trigger"] = "not-a-date"
+        with self.assertRaisesRegex(ValueError, "cannot be read, so nothing was deleted"):
+            st.approve_retention_deletion(PAM, "ZF-1", doc["id"], AS_OF)
+        self.assertEqual(len(st.cases["ZF-1"]["documents"]), 1)
+
 
 class SqlRetentionTests(RetentionTests):
     sql = True

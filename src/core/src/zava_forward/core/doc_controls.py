@@ -388,7 +388,11 @@ class DocControlsMixin:
             doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
-            trig = self._trigger(c, doc)
+            try:
+                trig = self._trigger(c, doc)
+            except (ValueError, TypeError):
+                raise ValueError("The retention start date on this case cannot be read, so nothing was deleted. "
+                                 "Keep the document and correct the case closing date or retention start date.")
             if trig is None or trig + timedelta(days=365 * RETENTION_YEARS.get(doc["kind"], 1)) > today:
                 raise ValueError("This document is not due for deletion, so nothing was deleted. Its retention period "
                                  "(demonstration values, not an approved schedule) counts from the date the case closed "
