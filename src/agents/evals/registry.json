@@ -138,6 +138,33 @@
     "src/agents/tests/test_review_effectiveness.py"
    ],
    "contains_real_data": false
+  },
+  {
+   "id": "eval-manifest-schema",
+   "path": "src/agents/evals/eval-manifest.schema.json",
+   "version": "eval-manifest-schema-v1",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; no operational approval)",
+   "purpose": "JSON schema for a frozen evaluation manifest (#2312). Structure only; approves nothing.",
+   "used_by": ["src/agents/src/zava_forward/agents/eval_harness.py", "src/agents/tests/test_eval_harness.py"],
+   "contains_real_data": false
+  },
+  {
+   "id": "synthetic-eval-manifest",
+   "path": "src/agents/evals/synthetic-eval-manifest.json",
+   "version": "synthetic-eval-manifest-v1",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; no operational approval)",
+   "purpose": "Synthetic example frozen evaluation manifest for the offline harness (#2312). Not held-out evidence; no approved threshold.",
+   "used_by": ["src/agents/src/zava_forward/agents/eval_harness.py", "src/agents/tests/test_eval_harness.py"],
+   "contains_real_data": false
+  },
+  {
+   "id": "synthetic-eval-predictions",
+   "path": "src/agents/evals/synthetic-eval-predictions.json",
+   "version": "synthetic-eval-predictions-v1",
+   "owner": "Juan Manuel Servera (synthetic-demo exercise owner; no operational approval)",
+   "purpose": "Synthetic example predictions scored by the offline harness against the synthetic manifest (#2312). No live model call.",
+   "used_by": ["src/agents/src/zava_forward/agents/eval_harness.py", "src/agents/tests/test_eval_harness.py"],
+   "contains_real_data": false
   }
  ],
  "open_items": [

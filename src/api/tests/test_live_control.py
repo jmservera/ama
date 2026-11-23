@@ -272,6 +272,33 @@ class ReceiverTests(unittest.TestCase):
         )
         self.assertEqual((count, seen), (2, {"bound": 3, "seconds": 30.0}))
 
+    def test_failed_window_prints_only_error_class_fields(self) -> None:
+        class Fake:
+            callback_error_type = None
+            receive_error_type = "ConnectionError"
+
+            def __init__(self, *args: object) -> None:
+                pass
+
+            async def run(self, **kwargs: object) -> tuple[int, ...]:
+                raise StreamError("IOT_RECEIVE_FAILED")
+
+        control = lc.parse(document())
+        err = io.StringIO()
+        with patch("sys.stderr", err), self.assertRaises(StreamError):
+            asyncio.run(
+                rx.run_window(
+                    control,
+                    {},
+                    object(),  # type: ignore[arg-type]
+                    240.0,
+                    10,
+                    control.expires_at - timedelta(seconds=30),
+                    receiver_type=Fake,  # type: ignore[arg-type]
+                )
+            )
+        self.assertEqual(err.getvalue(), "receive_error_type=ConnectionError\n")
+
     def test_main_without_control_file_is_refused(self) -> None:
         self.assertEqual(rx.main([], {}), 2)
 

@@ -652,6 +652,20 @@ or threshold approval, or authority for actual calls, and constructed fixtures
 are not held-out evidence. No runner supplies a real manifest yet. Tests:
 `tests/test_heldout_freeze.py` (synthetic fixtures).
 
+### Frozen evaluation harness (#2312, 2026-11-23)
+
+`zava_forward.agents.eval_harness` runs offline over a manifest that passes
+`check_freeze` and `evals/eval-manifest.schema.json`. `run_eval(manifest,
+predictions)` scores supplied predictions and reports pass or fail per
+threshold (`max_critical_misses`, `min_accuracy`, `min_sample_per_cohort`) and
+per defined critical error; it refuses an unfrozen manifest. The result records
+the manifest digest and the task, model, prompt, policy and source versions, and
+`verify_recorded` marks it `invalidated` when any of them changes. The
+synthetic `evals/synthetic-eval-manifest.json` and
+`evals/synthetic-eval-predictions.json` are examples only. The harness makes no
+live model call and claims no approved threshold; approvals stay under #108.
+Tests: `tests/test_eval_harness.py`.
+
 ### Held-out token measurement and cost-cap runner (#432 AC3, #435 AC4)
 
 `python -m zava_forward.agents.heldout_batch` (`--authorization`, `--manifest`,

@@ -249,6 +249,7 @@ class HubReceiver:
         self.rejected: dict[str, int] = {}
         self.sql_retries = 0
         self.callback_error_type: str | None = None
+        self.receive_error_type: str | None = None
         self.sql_backoff: tuple[float, ...] = (2.0, 5.0, 15.0, 30.0)
 
     async def run(
@@ -286,6 +287,7 @@ class HubReceiver:
         self.rejected = {}
         self.sql_retries = 0
         self.callback_error_type = None
+        self.receive_error_type = None
 
         async def on_event(context: PartitionContext, event: EventData | None) -> None:
             nonlocal failure, admitted
@@ -348,6 +350,8 @@ class HubReceiver:
 
         async def on_error(context: PartitionContext | None, error: Exception) -> None:
             nonlocal failure
+            # Class name only; the first failure is the cause of any that follow.
+            self.receive_error_type = self.receive_error_type or type(error).__name__
             failure = StreamError("IOT_RECEIVE_FAILED")
             finished.set()
 
@@ -406,7 +410,8 @@ class HubReceiver:
             return tuple(receipts)
         except (StreamError, asyncio.CancelledError):
             raise
-        except Exception:
+        except Exception as error:
+            self.receive_error_type = self.receive_error_type or type(error).__name__
             raise StreamError("IOT_RECEIVE_FAILED") from None
         finally:
             finished.set()

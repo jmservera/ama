@@ -124,9 +124,10 @@ async def run_window(
                 max_seconds=window, max_events=events, stop=stop, bounded_window=True
             )
         except StreamError:
-            error_type = getattr(receiver, "callback_error_type", None)
-            if error_type:
-                print(f"callback_error_type={error_type}", file=sys.stderr, flush=True)
+            for field in ("callback_error_type", "receive_error_type"):
+                error_type = getattr(receiver, field, None)
+                if error_type:
+                    print(f"{field}={error_type}", file=sys.stderr, flush=True)
             raise
         retries = getattr(receiver, "sql_retries", 0)
         if retries:
