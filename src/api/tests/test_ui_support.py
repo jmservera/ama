@@ -218,7 +218,7 @@ class MapListAndTiles(Base):
         js = (WEB / "app.js").read_text()
         self.assertIn('tileLayer.on("tileerror"', js)
         self.assertIn("The map background could not load.", js)
-        self.assertIn("info, tileNote, listBox, open", js)
+        self.assertIn("info, retry, tileNote, listBox, open", js)
 
     def test_tile_failure_note_is_written_once_and_clears_after_a_clean_load(self):
         js = (WEB / "app.js").read_text()

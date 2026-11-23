@@ -1,10 +1,12 @@
 ---
-title: Issue 2257 live review
+title: Issue 2257 live review (run 084412Z)
 ms.date: 2026-11-23
 ---
 
-Executed once. Outcome: conformant with routed follow-ups.
+Executed once after implementation. Outcome: conformant with routed follow-ups.
 
-* The change is narrow (one try/except, class-only log, no message leak) and tested.
-* Claim limits are stated: root cause and live effect unproven; deploy needed.
-* Routed: deploy and re-probe; add SQLSTATE class logging if the 500 persists. Human review and gate remain with the coordinator.
+* The change is confined to `mapPanel` and one test; native button, hidden until failure, named in the notice, redraw bounded and cancelled on dispose and new draws.
+* Behaviour preserved: JSON 500 still shown, not auto-retried; existing pinned tests pass (67 OK).
+* Claim limits: live effect of the button is unproven until deploy; the origin of the live `ProgrammingError` stays unproven.
+* Routed follow-ups: (1) deploy and add a Playwright proof that aborts the first `/api/map` calls and clicks the button; (2) log the SQLSTATE class for `ProgrammingError` if a 500 reappears. Human review, hosted CI and the gate remain with the coordinator.
+* Reviewed also: research note `docs/reference/research/issue-2257-retry-control-2026-11-23.md`, its index row and log entry (documentation only, claims match the changes record).

@@ -1,0 +1,12 @@
+{
+ "role": "Retrofit Programme Manager",
+ "overview_tile_text": "23\nSafety issues open\nSelect filter",
+ "list_count_text": [
+  "23 cases. Ranked by policy version 1.0.0, a fixed rule order (safety first). The order is the same every time."
+ ],
+ "show_only_in_status": [
+  "Show only: hazard."
+ ],
+ "api_total": 23,
+ "api_kpi": 23
+}

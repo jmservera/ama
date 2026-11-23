@@ -1,3 +1,4 @@
+import importlib
 import re
 import threading
 import unittest
@@ -218,6 +219,52 @@ class ReadOnlyStartupTests(unittest.TestCase):
         self.assertFalse(
             store(FakeDb(set(), set(), names - {sorted(names)[0]}, set()))._indexes_current(stmts)
         )
+
+
+class LawStoreStartupRetryTests(unittest.TestCase):
+    def test_law_db_enables_start_up_retries_and_ends_them(self) -> None:
+        lawstore: Any = importlib.import_module("zava_forward.core.lawstore")
+
+        made: list[Any] = []
+
+        class StubConn:
+            startup_retries = 0
+
+            def __init__(self, *a: Any, **kw: Any) -> None:
+                made.append(self)
+
+            def execute(self, sql: str, args: Any = ()) -> Any:
+                class Row:
+                    def fetchone(self) -> tuple[int, ...]:
+                        return (0,)
+
+                    def fetchall(self) -> list[Any]:
+                        return []
+
+                return Row()
+
+        with (
+            patch.object(mssqlstore, "_Conn", StubConn),
+            patch.object(mssqlstore, "connection_string", lambda env: ""),
+        ):
+            db = lawstore.MssqlDb({})
+        self.assertEqual(made[0].startup_retries, mssqlstore.LOCK_RETRY_ATTEMPTS - 1)
+        db.end_startup()
+        self.assertEqual(made[0].startup_retries, 0)
+
+    def test_law_store_ends_start_up_retries_even_when_seeding_fails(self) -> None:
+        lawstore: Any = importlib.import_module("zava_forward.core.lawstore")
+
+        ended: list[bool] = []
+
+        class Sql:
+            def end_startup(self) -> None:
+                ended.append(True)
+
+        with patch("zava_forward.core.rulecards.RuleCardStore", side_effect=RuntimeError("boom")):
+            with self.assertRaises(RuntimeError):
+                lawstore.LawStore(db=Sql(), blobs=object())
+        self.assertEqual(ended, [True])
 
 
 if __name__ == "__main__":

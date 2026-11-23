@@ -1,28 +1,32 @@
 ---
-title: Issue 2257 live research (2026-11-23)
+title: Issue 2257 live research (2026-11-23, run 084412Z)
 ms.date: 2026-11-23
 ---
 
-Research disposition: executed (opened; findings below are completed after the live probe).
+Research disposition: executed. Planning Readiness: Ready.
 
 ## Scope
 
-Issue #2257 has no checkbox list. Its Expected section gives two criteria: the map retries or recovers without a reload, and the cause is found. A third implied criterion is that fresh sign-ins no longer fail.
+Issue #2257 has no checkbox list. Its Expected section gives two criteria: the map retries or recovers without a reload, and the cause is found. The owner goal for this run adds a bounded retry, a visible retry control and a regression test.
 
-## Prior evidence
+## Audit (main at f40302db55)
 
-* Main contains 0234e8e79d (#2261, `fetchReadRetrying`) and 10cad2e413 (#2283, map-path regression test in `test_workspace_scripts.py`).
-* Live API revision at open: `ca-cutover-test-demo-api--0000054`, Healthy, 100 percent traffic, created 2026-11-22 23:14 UTC.
-* Earlier notes: `docs/reference/research/issue-2257-mapfetch-live-2026-11-22.md` and `issue-2257-verify-live-2026-11-22.md` (revision 0000053).
+* Route `GET /api/map` (`server.py` line 1303): only `ValueError` is mapped (to 400); any other exception is a JSON 500.
+* Overlay: `AssistantService.map_sensors` already degrades to `unavailable` on a transaction failure (#2292, merged 2026-11-23 03:14 UTC).
+* Client: `api()` reads through `fetchReadRetrying`, which retries a dropped connection twice (400 and 1200 ms) and a non-JSON gateway failure three times. A JSON 500 is deliberately shown, not retried.
+* Gap 1: `mapPanel.draw` shows "Map unavailable: ..." with no control. After the bounded read retries (about 1.6 s) fail, the panel stays empty until a reload or a map move; this matches "0 markers for 90 s" in the issue.
+* Gap 2: no test pins a recovery path for the map panel after the read retries are exhausted.
 
-## Planning Readiness
+## Live evidence (revision 0000055, Healthy, 100 percent, created 2026-11-23 03:25 UTC)
 
-Ready: re-prove on revision 0000054 and decide whether any code gap remains.
+* Eight fresh sign-ins at 08:45 to 08:50 UTC: 8 of 8 loaded 443 markers, no "Map unavailable", `/api/map` 200 each time, wait 11.9 to 32.6 s (`docs/reference/research/issue-2257-retry-control-2026-11-23/probe-result-085002.json`, probe `live_probe.py`, credentials read at runtime only).
+* API console log, last 300 lines: 0 lines matching `ProgrammingError` or `map sensor summary unavailable`.
+* The earlier failures (0000054: 1 of 8, JSON 500 with `ProgrammingError`) are in `docs/reference/research/issue-2257-live-2026-11-23.md`. The Azure estate was not changed by this run.
 
-## Findings (live, revision 0000054, 2026-11-23 01:44 to 01:52 UTC)
+## Root cause status
 
-* Injected reset: first `/api/map` aborted, retried, 200, 443 markers, no error (deployed client already has #2261).
-* Eight fresh sign-ins: 7 loaded 443 markers; run 5 showed "Map unavailable" after a server `GET /api/map` 500 (JSON error, not a dropped connection). Console log: `exc=ProgrammingError` at 01:46:19 UTC, also at 00:47:00 and 00:54:52 UTC. Message text is deliberately not logged, so the exact driver error is unknown.
-* 40 sequential and 6 parallel `/api/map` calls in one warm session: all 200 (`load-probe-result.json`). The failure appears only on fresh sessions, when boot reads overlap.
-* A second failure mode therefore exists besides the dropped connection (#2261): an application 500 the client rightly does not retry (`test_workspace_scripts` pins JSON 500 as an error).
-* Code gap: `AssistantService.map_sensors` opens a SERIALIZABLE transaction on the assistant connection; only per-home reads are guarded by `sensor_map.summary`. A failure in the transaction itself (begin, authorise, commit) escapes and turns an optional sensor overlay into a whole-map 500. The origin of the live ProgrammingError is not proven to be this path.
+Two failure modes are evidenced: a dropped connection while a replica leaves the pool (retried since #2261) and a server 500 from the overlay transaction (hardened by #2292). The exact driver message of the live `ProgrammingError` was never recorded, so that origin stays unproven. After the hardening, 8 of 8 fresh sessions loaded, which is consistent with but does not prove the fix (small sample, intermittent fault).
+
+## Decision for this task
+
+Add a visible "Try the map again" control and one bounded automatic redraw for a status-less (network) failure, plus a regression test. Do not retry JSON 500 responses in the client.

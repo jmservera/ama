@@ -15,6 +15,7 @@ from collections.abc import Mapping
 from datetime import UTC, datetime
 from typing import Any
 
+from . import identity
 from .sensor_analysis import (
     REVIEW,
     SUFFICIENT,
@@ -149,12 +150,25 @@ def _gate(store: DraftStore, user: User, case_id: str, env: Mapping[str, str] | 
     _role_gate(user)
     if not enabled(env):
         return False
+    if identity.is_entra(user):
+        # The roster row found by the bound email must belong to this tenant and object id, and a
+        # view-only or tampered principal never inherits it.
+        verified = identity.verified(dict(user))
+        if verified is None or verified.get("view_only"):
+            raise PermissionError("Current staff role has changed or been revoked.")
     current = _current_staff(store, user)
     if (
         not current
         or current.get("role") != user.get("role")
         or current.get("disabled")
         or current.get("active") is False
+        or (
+            identity.is_entra(user)
+            and (
+                current.get("oid") != user.get("oid")
+                or current.get("tid") not in (None, "", user.get("tid"))
+            )
+        )
     ):
         raise PermissionError("Current staff role has changed or been revoked.")
     ids, areas = _scope(current, "case_ids"), _scope(current, "areas")

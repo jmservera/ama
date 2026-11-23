@@ -193,10 +193,12 @@ class MssqlDb:
     dialect = "mssql"
 
     def __init__(self, env=None):
-        from zava_forward.core.mssqlstore import _Conn, connection_string
+        from zava_forward.core.mssqlstore import LOCK_RETRY_ATTEMPTS, _Conn, connection_string
         env = os.environ if env is None else env
         self.lock = threading.RLock()
         self.db = _Conn(connection_string(env), env.get("ZF_SQL_TOKEN"))
+        # A long SQL writer must delay start-up, not exit the process (issue #2244); LawStore ends this once seeded.
+        self.db.startup_retries = LOCK_RETRY_ATTEMPTS - 1
         self.ledger = bool(self.db.execute("SELECT is_ledger_on FROM sys.databases WHERE name = DB_NAME()").fetchone()[0])
         self.db.execute("BEGIN IMMEDIATE")
         try:
@@ -217,6 +219,9 @@ class MssqlDb:
             self.db.execute("ROLLBACK")
             raise
         self.in_tran = False
+
+    def end_startup(self):
+        self.db.startup_retries = 0
 
     @property
     def dberror(self):
@@ -276,8 +281,13 @@ class LawStore:
         self.sql = db or SqliteDb(db_path)
         self.blobs = blobs or LocalSnapshots(blob_dir)
         from zava_forward.core.rulecards import RuleCardStore
-        self.rules = RuleCardStore(self.sql)
-        self.rules.seed()
+        try:
+            self.rules = RuleCardStore(self.sql)
+            self.rules.seed()
+        finally:
+            end_startup = getattr(self.sql, "end_startup", None)
+            if end_startup:
+                end_startup()
 
     @contextmanager
     def transaction(self):

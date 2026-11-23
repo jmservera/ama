@@ -717,6 +717,8 @@ The [issue 2255 backfill note](./research/issue-2255-backfill-2026-11-22.md) rec
 
 The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
 
+The [issue 2245 chat note](./research/issue-2245-live-2026-11-23.md) finds the live demo has no generative chat answers because a leftover AI suspension holds them (already stated in the banner), and makes a busy SQL write lock on chat thread creation answer 503 instead of 500.
+
 The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.md) records revision 0000054 healthy for 33 min with the start-up lock retry present, zero restarts and a clean second-replica start; the held-lock test stays unproven.
 
 The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records read only proof that scheduled simulator runs reach IoT Hub, the receiver and the employee map (288 `SYN-` devices, hub ingress equal to egress, fresh case readings), the clean secret scan and the unproven resident live view (#184).
@@ -726,6 +728,8 @@ The [live re-check note](./research/issue-184-live-recheck-2026-11-23.md) re-pro
 The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-11-23.md) records the 2026-11-23 read only Hub to receiver to employee map walkthrough on revision 0000054 (fresh reading 79 s old, per message SQL hop inferred, resident view stored only) (#2118).
 
 The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026-11-22.md) records a desktop Playwright check of 2255, 2253, 2254, 2256 and the map on revisions 0000051 and 0000023 (passes), and shows generative AI answers still blocked by an open suspension and the resident ledger expiry, with screenshots and a per-item table.
+
+The [issue 2254 run 3 note](./research/issue-2254-live-r3-2026-11-23.md) records a fresh live desktop check that the Overview tile, map markers, All cases list and API all show 23 safety issues, and a test that asserts the map count against the tile and list.
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 
@@ -742,6 +746,8 @@ The [issue 2243 revision 0000026 re-verification](./research/issue-2243-rev26-20
 The [issue 2243 live re-verification of 2026-11-23](./research/issue-2243-live-2026-11-23.md) repeats the resident probe on revisions 0000026 and 0000054 (still usage_limit), confirms main already derives the expiry from the environment, and keeps the model-backed answer owner-gated on the private SQL ledger.
 
 The [issue 2244 live re-verification of 2026-11-23](./research/issue-2244-live-2026-11-23.md) confirms live API revision 0000054 runs the same `mssqlstore.py` as main (start-up retry from #2273), adds read-only schema fast paths so start-up skips the write lock when nothing changes, and records C1 to C5 as proven or unproven.
+
+The [issue 2244 live re-verification, run 2](./research/issue-2244-live-r2-2026-11-23.md) confirms revision 0000055 carries the start-up fast paths, shows two scale-out replicas exiting on a lock timeout in the law store start-up (not covered by the #2273 retry), and records the fix and the per-criterion table.
 
 The [issue 2243 live re-verification, run 2](./research/issue-2243-live-r2-2026-11-23.md) repeats the probe about 1.5 hours later on the same revisions with the same `usage_limit` result and 70 passing targeted tests; only the owner-gated ledger criterion remains.
 
@@ -1636,7 +1642,7 @@ or infra acceptance claimed.
 | [Issue 2257 employee map fetch failure (#2257)](./research/issue-2257-mapfetch-live-2026-11-22.md) | Live probe, replica churn correlation and client retry proof; per-criterion table |
 | [Issue 2257 verify-fixed on revision 0000053 (#2257)](./research/issue-2257-verify-live-2026-11-22.md) | Re-verification that the deployed demo recovers from a dropped map read; per-criterion table |
 | [Issue 2257 live comparison on revision 0000054 (#2257)](./research/issue-2257-live-2026-11-23.md) | Dropped-connection recovery proven; a server 500 on fresh sessions found; sensor overlay hardening; per-criterion table |
-| [Issue 2257 live re-probe on revision 0000055 (#2257)](./research/issue-2257-live-r2-2026-11-23.md) | 8 of 8 fresh sessions load; overlay failure now degrades; reset recovery proven; per-criterion table |
+| [Issue 2257 map retry control and re-probe on revision 0000055 (#2257)](./research/issue-2257-retry-control-2026-11-23.md) | Visible retry button and bounded redraw; 8 of 8 fresh sessions loaded; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |
@@ -1728,6 +1734,7 @@ or infra acceptance claimed.
 | [Resident Synthetic Showcase Live Check r6 (Issue #462)](./research/resident-showcase-live-r6-2026-11-23.md) | Sixth live desktop pass (36 checks) on API 0000054 and resident 0000026, per-criterion table; criterion 2 unproven |
 | [Resident Showcase Criterion 2 Hosted Evidence r7 (Issue #462)](./research/resident-showcase-live-r7-2026-11-23.md) | Hosted PR #455 run history and bot-authored score commits prove criterion 2 without a push; per-criterion table |
 | [Roster Scope for Entra Staff Re-proof (Issue #2164)](./research/issue-2164-roster-scope-recheck-2026-11-22.md) | Fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table |
+| [Staff identity.verified Audit (Issue #2164)](./research/issue-2164-staff-verified-audit-2026-11-23.md) | Audit of every identity.verified caller; sensor review draft gate now matches the bound roster row and refuses view-only; per-criterion table |
 | [Resident Portal Documentation Integration Status (Issue #441)](./research/resident-portal-441-live-status-2026-11-18.md) | Live-demo assessment of the one unticked #441 criterion (FR-044/AC-084 owner disposition): evidence checked and why it stays unproven |
 | [Resident Demo Authority End Live Check (Issue #521)](./research/resident-demo-authority-live-521-2026-11-18.md) | Source tests, live app expiry setting `2028-01-01T00:00:00Z` and a Playwright sign-in on the deployed synthetic showcase, with a per-criterion table. Live SQL window unproven (private server). Refs #521. | 2026-11-18 |
 | [Resident Demo Authority End Live Check, Run 2 (Issue #521)](./research/resident-demo-authority-live-521-r2-2026-11-18.md) | Repeat with raw read-only `az` output retained, fresh Playwright sign-in and per-criterion table; SQL login refused (private-only), registry and activity log give no commit or apply time. Criterion 4 partly proven. Refs #521. | 2026-11-18 |
@@ -2223,6 +2230,7 @@ Further 2026-11-21 evidence: [issue 2206 demo preflight proof](./research/issue-
 Further 2026-11-21 evidence: [issue 2190 gate flakes](./research/issue-2190-live-20261121-2026-11-21.md), reproduction, fixes and a per-criterion verdict for three gate flakes, evidence only.
 Further 2026-11-22 evidence: [issue 2190 re-verification](./research/issue-2190-live-20261122-note.md), the three gate flake fixes re-run on current main with a per-criterion verdict, evidence only.
 Re-verification r2: [issue 2190 merged flake fixes](./research/issue-2190-live-20261123T071426Z-note.md). Further 2026-11-23 evidence: [issue 2190 regression tests](./research/issue-2190-live-20261123-note.md), a behavioural slow-server test, a deterministic settle wait for the chat check and a stricter `_region_passed`, with a per-criterion verdict.
+Browser regression test: [issue 2190 late_success browser test](./research/issue-2190-live-20261123T080144Z-browser-test-note.md), a real-browser reproduction of the gap before the list status.
 
 A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
 

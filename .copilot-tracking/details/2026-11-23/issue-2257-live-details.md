@@ -1,7 +1,8 @@
 ---
-title: Issue 2257 live details
+title: Issue 2257 live details (run 084412Z)
 ms.date: 2026-11-23
 ---
 
-Phase 1: edit `map_sensors` in `src/core/src/zava_forward/core/assistants.py`; catch `Exception` around the `with self.transaction()` block only; re-raise nothing; use module logger if present.
-Phase 2: monkeypatch `transaction` to raise in the test.
+Phase 1: edit `mapPanel` in `app.js`: `retry` button, `retryFit`, `autoRetries`, `retryTimer`; set `retry.hidden` in `draw`; schedule one redraw in the catch block when `!error.status`.
+Phase 2: add a node test in `test_workspace_scripts.py` that extracts the map draw failure branch and drives it with fake timers.
+Phase 3: run the focused tests and record evidence.

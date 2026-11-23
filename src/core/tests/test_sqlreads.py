@@ -246,6 +246,9 @@ class Migration(unittest.TestCase):
             listed = s.page_cases(pam, "all", filters=dict(flag="hazard"), limit=100)["total"]
             self.assertEqual(tile, by_body)
             self.assertEqual(listed, tile)
+            mapped = s.map_view({})
+            self.assertEqual(mapped["mode"], "points")
+            self.assertEqual(sum(1 for i in mapped["items"] if i["kind"] == "hazard"), tile)
 
     def test_repair_skips_legacy_bodies_that_lack_row_fields(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -1,5 +1,5 @@
 {
- "task_id": "issue-2257-live-20261123T071352Z",
+ "task_id": "issue-2257-live-20261123T084412Z",
  "task_slug": "issue-2257-live",
  "parent_task": null,
  "mode": "automatic",
@@ -21,7 +21,7 @@
    "evidence": ".copilot-tracking/research/2026-11-23/issue-2257-live-r2-research.md"
   },
   {
-   "decision": "critique executed once, proceed; no src change",
+   "decision": "critique executed once, proceed; JSON 500 client retry rejected",
    "status": "done",
    "evidence": ".copilot-tracking/critique/2026-11-23/issue-2257-live-r2-critique.md"
   },
@@ -34,14 +34,20 @@
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "await owner selection"
+  "action": "commit locally; coordinator gate"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "log SQLSTATE class for overlay ProgrammingError",
-   "rationale": "proves the lock cause",
-   "evidence": "docs/reference/research/issue-2257-live-r2-2026-11-23.md"
+   "task": "deploy and Playwright-prove the retry button",
+   "rationale": "live effect unproven",
+   "evidence": "changes record"
+  },
+  {
+   "rank": 2,
+   "task": "log SQLSTATE class for ProgrammingError",
+   "rationale": "origin of live 500 unknown",
+   "evidence": "research note"
   }
  ]
 }

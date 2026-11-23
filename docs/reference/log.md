@@ -14930,3 +14930,24 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Nomination test bootstrap isolation sixth re-run (Refs #1847)
 
 * Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md): both orders in source, editable and noneditable layouts with identities observed; criterion 6 (full gate receipt) stays owner-gated. No source or test change.
+
+## [2026-11-23] add | Issue 2164 audit of other identity.verified staff paths (Refs #2164)
+
+* Added [issue-2164-staff-verified-audit-2026-11-23.md](research/issue-2164-staff-verified-audit-2026-11-23.md): only sensor review drafts shared the bound-row gap; the gate now checks tenant and object id and refuses view-only principals, with tests. Live proof unproven by design.
+## [2026-11-23] add | Issue 2190 late_success browser regression test (Refs #2190)
+
+* Added [issue-2190-live-20261123T080144Z-browser-test-note.md](research/issue-2190-live-20261123T080144Z-browser-test-note.md): a Chromium test reproduces the gap before the list status and shows the settle wait closes it. Test only.
+
+## [2026-11-23] add | Issue 2254 safety count run 3 (Refs #2254)
+
+* Added [issue-2254-live-r3-2026-11-23.md](research/issue-2254-live-r3-2026-11-23.md): live tile, map, list and API agree at 23; the repair test now also asserts the map hazard count. Test-only change; no `src/` code or estate change.
+## [2026-11-23] update | Issue 2244 start-up lock, law store retry (Refs #2244)
+
+* Added [issue-2244-live-r2-2026-11-23.md](research/issue-2244-live-r2-2026-11-23.md): revision 0000055 carries the fast paths; two scale-out replicas exited on a lock timeout in the law store start-up; retry added in code, not deployed; C4 and C5 unproven.
+
+## [2026-11-23] add | Issue 2245 employee chat 500 and no generative answer (Refs #2245)
+
+* Added [issue-2245-live-2026-11-23.md](research/issue-2245-live-2026-11-23.md): the live chat has no model calls because an open all-scope AI suspension from 2026-11-18 holds them (banner already says so); the thread-create 500 was not reproduced and `POST /api/chat/threads` now answers 503 on a busy SQL write lock.
+## [2026-11-23] add | Issue 2257 map retry control (Refs #2257)
+
+* Added [issue-2257-retry-control-2026-11-23.md](research/issue-2257-retry-control-2026-11-23.md): visible map retry button, one bounded redraw and a regression test; 8 of 8 fresh sessions loaded on revision 0000055. Origin of the live ProgrammingError stays unproven.
