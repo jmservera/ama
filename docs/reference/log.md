@@ -14958,3 +14958,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2302 AI consumption economics evidence (Refs #2302)
 
 * Added [issue-2302-ai-economics-live-2026-11-23.md](research/issue-2302-ai-economics-live-2026-11-23.md): the Overview card, denominators and Unknown-not-zero behaviour observed on revision 0000055 and proven by 27 focused tests; ticking #100 stays with the owner.
+## [2026-11-23] add | Issue 2256 B2 handoff due-time seed tool (Refs #2256)
+
+* Added [issue-2256-b2-seed-2026-11-23.md](research/issue-2256-b2-seed-2026-11-23.md): a revertible demo seed tool gives timezone-aware offer and due times to pending handoffs; proven locally, not applied to live SQL.
