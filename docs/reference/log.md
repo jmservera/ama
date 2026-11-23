@@ -14976,3 +14976,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2309 seeded-defect gate harness evidence (Refs #2309)
 
 * Added [issue-2309-seeded-defect-gate-harness-2026-11-23.md](research/issue-2309-seeded-defect-gate-harness-2026-11-23.md): the existing #223 harness is proven against all five criteria by 6 passing tests; no source change.
+
+## [2026-11-23] add | Issue 2310 anonymous API 401 evidence (Refs #2310)
+
+* Added [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application and its tests already return 401 for browser-style anonymous API requests; the deployed Easy Auth edge returns 302, left for an owner decision.
