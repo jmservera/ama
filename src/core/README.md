@@ -1364,7 +1364,14 @@ python -m zava_forward.core.synthetic.device_provision --register register.csv \
 `Registry` protocol over the `azure-iot-hub` SDK. Install the `iothub` extra (the `dev`
 extra includes it so the SDK tests run in Core CI); Core imports without it and reports
 `SDK_MISSING` only at first use. Nothing is imported, read, requested or acquired at import,
-construction, dry run or close. The command line does not use it and `--apply` still refuses.
+construction, dry run or close. Only `device_provision --apply --hub-host` uses it.
+
+`device_provision --apply --hub-host <host>` builds this adapter. By default its credential
+references are in memory; add `--vault-url https://<name>.vault.azure.net` (needs the
+`keyvault` extra and `azure-identity`) to store the derived keys in Key Vault through
+`DurableSasCredentialStore`, so a later `--action teardown` process can recover and revoke
+them. The Hub-generated keys are still discarded by the adapter, so the stored secret is the
+derived key, not the Hub key. Live Key Vault use is unproven (issue 2128 research note).
 
 * Inputs are an injected token credential (or client), the exact Hub host name, and a finite
   `EnrollmentSpec` of known `SYN-` device IDs, the run ID and public X509 thumbprints.

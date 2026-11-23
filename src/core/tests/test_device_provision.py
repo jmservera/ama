@@ -8,6 +8,7 @@ from pathlib import Path
 from test_device_identity import FakeRegistry, FakeStore, sensors
 from zava_forward.core.synthetic import device_identity as di
 from zava_forward.core.synthetic import device_provision as dp
+from zava_forward.core.synthetic import live_provisioning as lp
 
 REGISTER = (
     "synthetic_home_id,building_form_osm,locality_theme,is_synthetic,monitoring_consent\n"
@@ -84,6 +85,56 @@ class DeviceProvisionTests(unittest.TestCase):
         self.assertEqual(body["residual_in_hub"], 0)
         self.assertEqual(body["device_count"], 2)
         self.assertEqual(closed, [True])
+
+    def test_vault_url_selects_durable_store_and_report_has_no_key(self) -> None:
+        registry = FakeRegistry()
+        seen: list[tuple[str, str | None]] = []
+
+        def adapters(
+            m: di.Manifest, host: str, vault: str | None = None
+        ) -> tuple[FakeRegistry, FakeStore, object]:
+            seen.append((host, vault))
+            return registry, FakeStore(), lambda: None
+
+        original = dp.hub_adapters
+        dp.hub_adapters = adapters  # type: ignore[assignment]
+        try:
+            code, out, _ = self.cli(
+                "--homes", "3", "--owner", "Named Owner", "--action", "cycle", "--apply",
+                "--hub-host", "hub-demo.azure-devices.net",
+                "--vault-url", "https://kv-demo.vault.azure.net",
+            )  # fmt: skip
+        finally:
+            dp.hub_adapters = original
+        self.assertEqual(code, 0)
+        self.assertEqual(seen, [("hub-demo.azure-devices.net", "https://kv-demo.vault.azure.net")])
+        self.assertEqual(json.loads(out)["residual_in_hub"], 0)
+
+    def test_vault_url_needs_hub_and_must_be_a_key_vault_url(self) -> None:
+        code, _, err = self.cli(
+            "--homes", "3", "--owner", "Named Owner",
+            "--vault-url", "https://kv-demo.vault.azure.net",
+        )  # fmt: skip
+        self.assertEqual((code, err.strip()), (2, "refused: VAULT_REQUIRES_HUB"))
+        with self.assertRaises(dp.ProvisionError) as ctx:
+            dp.hub_adapters(manifest(), "hub-demo.azure-devices.net", "https://evil.example/kv")
+        self.assertEqual(str(ctx.exception), "INVALID_VAULT_URL")
+
+    def test_vault_backend_failure_is_a_fixed_code_refusal(self) -> None:
+        def adapters(m: di.Manifest, host: str, vault: str | None = None) -> object:
+            raise lp.LiveProvisioningError("CREDENTIAL_BACKEND_FAILED")
+
+        original = dp.hub_adapters
+        dp.hub_adapters = adapters  # type: ignore[assignment]
+        try:
+            code, _, err = self.cli(
+                "--homes", "3", "--owner", "Named Owner", "--apply",
+                "--hub-host", "hub-demo.azure-devices.net",
+                "--vault-url", "https://kv-demo.vault.azure.net",
+            )  # fmt: skip
+        finally:
+            dp.hub_adapters = original
+        self.assertEqual((code, err.strip()), (2, "refused: CREDENTIAL_BACKEND_FAILED"))
 
     def test_hub_host_rejects_invalid_host_without_detail(self) -> None:
         code, _, err = self.cli(
