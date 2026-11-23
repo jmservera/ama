@@ -1,0 +1,20 @@
+EventProcessor instance '54d6b3b7-2437-443b-b946-e1f57c3fb330' of eventhub 'sensor-readings' consumer group '$Default'. An error occurred while load-balancing and claiming ownership. The exception is AuthenticationError('CBS Token authentication failed.\nStatus code: None\nError: client-error\nCBS Token authentication failed.\nStatus code: None'). Retrying after 30.584938201531724 seconds
+EventProcessor instance '54d6b3b7-2437-443b-b946-e1f57c3fb330' of eventhub 'sensor-readings' consumer group '$Default'. An error occurred while load-balancing and claiming ownership. The exception is AuthenticationError('CBS Token authentication failed.\nStatus code: None\nError: client-error\nCBS Token authentication failed.\nStatus code: None'). Retrying after 31.877685919643223 seconds
+{
+ "events": 0,
+ "bytes": 0,
+ "matches": {
+  "SharedAccessKey=": 0,
+  "SAS_sr": 0,
+  "conn_string": 0,
+  "private_key": 0,
+  "AccountKey": 0,
+  "bearer": 0,
+  "password_kw": 0
+ },
+ "keys": {},
+ "partitions": {},
+ "distinct_devices": 0,
+ "non_syn_devices": 0,
+ "sample_devices": []
+}
