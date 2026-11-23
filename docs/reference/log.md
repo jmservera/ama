@@ -14984,3 +14984,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2311 per-task data contracts evidence (Refs #2311)
 
 * Added [issue-2311-task-contracts-2026-11-23.md](research/issue-2311-task-contracts-2026-11-23.md): a data contract for each of 13 AI tasks enforced in prompt rendering, proven by 8 focused tests; DPO and Legal approval is not claimed and stays under #121.
+## [2026-11-23] add | Issue 2237 live re-proof on revision 0000055 (Refs #2237)
+
+* Added [issue-2237-live-reproof-2026-11-23.md](research/issue-2237-live-reproof-2026-11-23.md): the deployed API contains the 503 mapping, it fired 14 times live, retention returned 200 in 56 of 56 calls, and each criterion is marked proven or unproven. No source change.
