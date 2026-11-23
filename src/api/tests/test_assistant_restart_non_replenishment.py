@@ -140,6 +140,39 @@ class RevocationAndSuspension(Restart):
         self.assertEqual(self.worker().invoke(self.pm, CAP, "ZF-1")["state"], "disabled")
         self.assertEqual(self.provider.calls, 0)
 
+    def test_old_image_cannot_reactivate_a_suspended_release_through_the_change_path(self) -> None:
+        queued = self.service.invoke(self.pm, CAP, "ZF-1")
+        self.approver().change_release(self.pm, f"fx-{CAP}", "suspended", "paused")
+        domain = self.domain()
+        old_image = self.approver(**LARGER)
+        with self.assertRaises(ValueError):
+            old_image.change_release(self.pm, f"fx-{CAP}", "active", "stale registry default")
+        self.assertEqual(self.statuses(self.worker()), ["suspended"])
+        self.assertFalse(old_image.execute(queued["id"]))
+        self.assertEqual(old_image.invoke(self.pm, CAP, "ZF-1")["state"], "disabled")
+        self.assertEqual((self.provider.calls, self.domain()), (0, domain))
+
+    def test_expired_release_stays_denied_for_an_old_image_with_a_later_configured_expiry(
+        self,
+    ) -> None:
+        queued = self.service.invoke(self.pm, CAP, "ZF-1")
+        with self.service.transaction() as db:
+            lapsed = dict(rel.releases(db, CAP)[0], expires=self.service.now(db) - 1)
+            db.execute(
+                "UPDATE assistant_releases SET body=? WHERE id=?",
+                (rel.canonical(lapsed), f"fx-{CAP}"),
+            )
+        pool, domain = self.pool(self.service), self.domain()
+
+        for generation in range(2):
+            restarted = self.worker(**(LARGER if generation else {}))
+            with self.subTest(generation=generation):
+                self.assertFalse(restarted.execute(queued["id"]))
+                self.assertIsNone(restarted.claim(queued["id"], "old-image"))
+                self.assertEqual(restarted.invoke(self.pm, CAP, "ZF-1")["state"], "disabled")
+                self.assertEqual(self.pool(restarted), pool)
+        self.assertEqual((self.provider.calls, self.domain()), (0, domain))
+
     def test_only_a_new_release_record_reenables_and_never_revives_the_old_task(self) -> None:
         old = self.service.invoke(self.pm, CAP, "ZF-1")
         self.approver().change_release(self.pm, f"fx-{CAP}", "revoked", "withdrawn")

@@ -420,6 +420,27 @@ class ProxyHttpTests(Base):
             opener.open(urllib.request.Request(self.base + "/app", headers={**browser, "Accept": "text/html"}))
         self.assertEqual((error.exception.code, error.exception.headers["Location"]), (302, "/sign-in"))
 
+    def test_anonymous_api_never_redirects_for_any_method_accept_or_unknown_path(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        opener = urllib.request.build_opener(NoRedirect())
+        agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Edg/126.0"
+        accepts = ("application/json", "text/html,application/xhtml+xml,*/*;q=0.8", "*/*")
+        for path in ("/api/me", "/api/cases", "/api/does-not-exist"):
+            for accept in accepts:
+                for method, data in (("GET", None), ("HEAD", None), ("POST", b"{}")):
+                    headers = {"User-Agent": agent, "Accept": accept, "Cookie": "AppServiceAuthSession=x",
+                               "X-ZF-CSRF": "1", "Content-Type": "application/json"}
+                    with self.assertRaises(urllib.error.HTTPError, msg=(method, path, accept)) as error:
+                        opener.open(urllib.request.Request(self.base + path, data, headers, method=method))
+                    self.assertEqual(error.exception.code, 401, (method, path, accept))
+                    self.assertIsNone(error.exception.headers["Location"], (method, path, accept))
+        with self.assertRaises(urllib.error.HTTPError) as page:
+            opener.open(urllib.request.Request(self.base + "/sign-in", headers={"User-Agent": agent, "Accept": "text/html"}))
+        self.assertEqual((page.exception.code, page.exception.headers["Location"]),
+                         (302, "/.auth/login/aad?post_login_redirect_uri=%2Fapp"))
+
     def test_employee_scripts_remain_protected_and_load_for_valid_principal(self):
         class NoRedirect(urllib.request.HTTPRedirectHandler):
             def redirect_request(self, *args, **kwargs):

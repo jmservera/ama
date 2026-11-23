@@ -109,6 +109,42 @@ class ErrorLoggingTests(Base):
             self.assertIn(part, line)
         self.assertNotIn(SECRET, line)
 
+    def test_retention_listing_recovers_with_200_on_the_request_after_a_busy_lock_503(self) -> None:
+        busy = self.busy_error()
+        real_audit = self.store.audit
+        calls: list[int] = []
+
+        def audit_busy_once(*a: Any, **k: Any) -> Any:
+            calls.append(1)
+            if len(calls) == 1:
+                raise busy
+            return real_audit(*a, **k)
+
+        def retention() -> tuple[int, bytes, str | None]:
+            req = urllib.request.Request(
+                self.base + "/api/retention",
+                headers={
+                    "X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.ProgrammeManager",))  # type: ignore[no-untyped-call]
+                },
+            )
+            try:
+                with urllib.request.urlopen(req, timeout=20) as r:
+                    return r.status, r.read(), None
+            except urllib.error.HTTPError as e:
+                return e.code, e.read(), e.headers.get("Retry-After")
+
+        with (
+            patch.object(self.store, "audit", audit_busy_once),
+            self.assertLogs("zava_forward.api.server", "WARNING"),
+        ):
+            first = retention()
+            second = retention()
+        self.assertEqual((first[0], first[2]), (503, "5"))
+        self.assertNotIn(SECRET, first[1].decode())
+        self.assertEqual(second[0], 200)
+        self.assertIn("records", json.loads(second[1]))
+        self.assertEqual(len(calls), 2)
+
     def post(self, path: str, body: dict[str, Any]) -> tuple[int, bytes, str | None]:
         req = urllib.request.Request(
             self.base + path,

@@ -571,6 +571,7 @@ For #2008, the [synthetic demo workbook and import evidence](./research/issue-20
 adds a generated `.xlsx` (generator in `tools/`), its local row-level preview and a run of the deployed CSV check
 with the staff test sign-in; conflicts show only locally because the web screen reads CSV only. No source change.
 The [issue 144 live hosting probe](./research/issue-144-live-hosting-2026-11-22.md) records digest-pinned images, live non-root proof, a writable root file system and no pipeline run.
+The [issue 144 live hardening re-probe](./research/issue-144-live-hardening-reprobe-2026-11-23.md) adds an offline verifier and records live `NoNewPrivs` 1, empty effective capabilities, a writable root file system and no pipeline run.
 The [issue 144 hardening receipt](./research/issue-144-live-hardening-receipt-2026-11-23.md) records the guard enforced on every app and job and a live application process that is non-root with NoNewPrivs and empty capability sets; read-only root stays unproven.
 The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 The [web `.xlsx` import note](./research/issue-2008-web-xlsx-import-2026-11-22.md) records the
@@ -587,6 +588,8 @@ A [2026-11-22 pass](./research/issue-146-live5-monitoring-2026-11-22.md) adds so
 A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) adds an offline classifier for the live alert inventory (job, poison, ledger digest, IoT) with regression tests; coverage stays partial.
 
 A [2026-11-23 pass](./research/issue-2314-alerts-runbooks-2026-11-23.md) adds a saved search for AI usage by capability and period with unreconciled variance, and a per-criterion result.
+
+A [round 2 note](./research/issue-2314-alerts-runbooks-r2-2026-11-23.md) records a test tying the saved query to the emitted usage line.
 A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) executes the workbook queries live now that workspace query access is open, fixes a failing AI variance query and records what stays unproven.
 
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
@@ -748,6 +751,8 @@ The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026
 The [issue 2254 run 3 note](./research/issue-2254-live-r3-2026-11-23.md) records a fresh live desktop check that the Overview tile, map markers, All cases list and API all show 23 safety issues, and a test that asserts the map count against the tile and list.
 
 The [issue 2254 run 4 note](./research/issue-2254-live-r4-2026-11-23.md) reproduces the 3 versus 4 safety count on the code by reverting the stale-column repair, shows the regression test fails without it, and re-checks tile, map and list by case id on the live demo (23, 23, 23).
+
+The [issue 2254 run 5 note](./research/issue-2254-live-r5-2026-11-23.md) adds a regression test for the over-counted stored safety column (released hazard or closed case), proves it fails without the repair, and re-checks tile, map and list live on revision 0000056 (23, 23, 23).
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 
@@ -1631,6 +1636,7 @@ or infra acceptance claimed.
 | [Five assistants live demo evidence (#107)](./research/issue-107-live-assistants-evidence-2026-11-18.md) | Two unticked criteria: independent-worker revocation, restart and allowance races proven on local disposable SQL Server 2022 (7 tests) plus SQLite proxies; live demo denies all five assistants with no provider call, approved-release and delivered-build criterion unproven (OQ-017 approver gap) |
 | [Five assistants live demo re-verification (#107)](./research/issue-107-live-r2-assistants-evidence-2026-11-18.md) | Second pass with raw output: 7 MSSQL 2022 race and revocation tests, 80 SQLite proxy tests, read-only live probe showing default-off and no tokens; approved-release and delivered-build criterion still unproven |
 | [Five assistants live demo re-verification, third pass (#107)](./research/issue-107-live-r3-assistants-evidence-2026-11-18.md) | ACR is private so no older image can be pulled; same-image restart (revision 0000032) kept denial and the SUS-1 suspension with zero tokens; SUS-1 origin traced; both criteria stay unticked. Docs only. |
+| [Five assistants live demo re-verification, fifth pass (#107)](./research/issue-107-live-r5-assistants-evidence-2026-11-23.md) | Regression tests: old image cannot reactivate a suspended release; expired release stays denied after restart; actual SQL Server run |
 | [Five assistants live demo re-verification, fourth pass (#107)](./research/issue-107-live-r4-assistants-evidence-2026-11-23.md) | Actual SQL Server 2022 run of the release, restart and old-image tests: 95 OK, 0 skipped; live revision 0000055 read-only; approved-release criterion stays unproven |
 | [Five assistants first unmet criterion, actual SQL coverage (#107)](./research/issue-107-live-r4-criteria-2026-11-19.md) | Mismatch and allowance race tests now run on actual SQL Server; composite old-image-after-mismatch test added; second criterion unproven. |
 | [Five assistants sixth pass, per-criterion table (#107)](./research/issue-107-live-r6-criteria-2026-11-19.md) | Fresh targeted run (95 tests OK on SQLite); criterion 1 proven for the demo, criterion 2 needs a human release record. |
@@ -1660,6 +1666,7 @@ or infra acceptance claimed.
 | [Epic 93 criteria re-check at head 9c3fe9dcb (#93)](./research/issue-93-criteria-recheck-live-2026-11-21.md) | Fresh 270-test offline run, signed-in read-only finance probe and issue states; C2 and C3 proven, C1 unproven for owner and review reasons; no source change |
 | [Epic 104 criteria re-check at head 981aa6aaf (#104)](./research/issue-104-criteria-recheck-live-2026-11-21.md) | #164 and #216 now closed; #108 quota headroom still empty; 59 offline tests, read-only Azure deployment check and per-criterion table; C1 and C2 unproven; no source change |
 | [Epic 100 criteria re-check at head c703a24a1 (#100)](./research/issue-100-live-criteria-recheck-2026-11-21.md) | Signed-in read-only probe of the live AI consumption economics card (denominators, Unknown costs) plus 301 focused tests; C2 proven, #440 criterion unproven; no source change |
+| [Nine-epic stabilization checkpoint evidence (#2301)](./research/issue-2301-stabilization-checkpoint-live-2026-11-23.md) | Read-only live demo probe, 34 epic audit tests and 464 focused tests behind the 2026-11-23 evidence-pack checkpoint; epic links, ticks and closures unproven |
 | [Issue 2192 sensor consent checkbox (#2192)](./research/issue-2192-live-2026-11-21.md) | Resident grant and withdraw checkbox, audit row, employee withheld state; proven locally with Playwright, live deploy unproven |
 | [Issue 2192 live proof round 2 (#2192)](./research/issue-2192-live-r2-2026-11-21.md) | Live resident checkbox proof, home key mismatch with the employee view, fix and per-criterion table |
 | [Issue 2192 live proof round 3 (#2192)](./research/issue-2192-live-r3-2026-11-22.md) | Resident image rolled to revision 0000021; employee state follows the resident consent choice live; per-criterion table |
@@ -1670,7 +1677,9 @@ or infra acceptance claimed.
 | [Issue 2257 map retry control and re-probe on revision 0000055 (#2257)](./research/issue-2257-retry-control-2026-11-23.md) | Visible retry button and bounded redraw; 8 of 8 fresh sessions loaded; per-criterion table |
 | [Issue 2302 AI consumption economics in the management view (#2302)](./research/issue-2302-ai-economics-live-2026-11-23.md) | Live Overview card on revision 0000055, focused Unknown-not-zero tests, per-criterion table |
 | [Issue 2303 chat golden file in the API image (#2303)](./research/issue-2303-chat-golden-image-2026-11-23.md) | Local container reproduction and fix, contract test, per-criterion table |
+| [Issue 2303 live rerun (#2303)](./research/issue-2303-live-2026-11-23/README.md) | Live 500 on revision 0000057, per-criterion table |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
+| [Issue 2257 SQLSTATE in the map overlay warning (#2257)](./research/issue-2257-live-r5-2026-11-23.md) | Overlay warning records the driver SQLSTATE for non-lock failures; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
 | [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
@@ -1774,6 +1783,7 @@ or infra acceptance claimed.
 | [Roster Scope for Entra Staff Re-proof (Issue #2164)](./research/issue-2164-roster-scope-recheck-2026-11-22.md) | Fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table |
 | [Staff identity.verified Audit (Issue #2164)](./research/issue-2164-staff-verified-audit-2026-11-23.md) | Audit of every identity.verified caller; sensor review draft gate now matches the bound roster row and refuses view-only; per-criterion table |
 | [Deployed Code Proof (Issue #2164)](./research/issue-2164-deployed-code-proof-2026-11-23.md) | Read-only marker grep shows the demo API carries the assistants roster-scope fix; sensor draft fix not yet deployed; per-criterion table |
+| [Bound Tenant Binding (Issue #2164)](./research/issue-2164-bound-tenant-binding-2026-11-23.md) | Assistants and sensor draft gates apply the legacy-tenant rule to bound Entra staff rows; regression test added; live restricted-row proof unproven for the demo |
 | [Resident Portal Documentation Integration Status (Issue #441)](./research/resident-portal-441-live-status-2026-11-18.md) | Live-demo assessment of the one unticked #441 criterion (FR-044/AC-084 owner disposition): evidence checked and why it stays unproven |
 | [Resident Demo Authority End Live Check (Issue #521)](./research/resident-demo-authority-live-521-2026-11-18.md) | Source tests, live app expiry setting `2028-01-01T00:00:00Z` and a Playwright sign-in on the deployed synthetic showcase, with a per-criterion table. Live SQL window unproven (private server). Refs #521. | 2026-11-18 |
 | [Resident Demo Authority End Live Check, Run 2 (Issue #521)](./research/resident-demo-authority-live-521-r2-2026-11-18.md) | Repeat with raw read-only `az` output retained, fresh Playwright sign-in and per-criterion table; SQL login refused (private-only), registry and activity log give no commit or apply time. Criterion 4 partly proven. Refs #521. | 2026-11-18 |
@@ -1849,6 +1859,7 @@ or infra acceptance claimed.
 | [Issue 1830 Live r6, Preflight Rerun (#1830)](./research/issue-1830-live-r6-2026-11-22.md) | Sixth re-check at head 8bc751023f: preflight reruns, 320px negative control, map check, timing from four new full receipts; no source change |
 | [Issue 1830 Live r7, Original #1297 Defect Replay (#1830)](./research/issue-1830-live-r7-2026-11-22.md) | Replay of the original #1297 320px defect at its parent commit, preflight tests and selectors, map check |
 | [Issue 1830 Live r8, Close-out at 342fad401d (#1830)](./research/issue-1830-live-r8-2026-11-23.md) | No tooling drift since r7; preflight selectors, 56 unit tests and direct map and 320px browser checks re-run; criteria 1, 3 partly and 4 owner-gated, 2 proven for the demo |
+| [Issue 1830 Live r9, Explicit Queue-Wait Reporting (#1830)](./research/issue-1830-live-r9-2026-11-23.md) | Timing report marks an unmeasured queue wait as null and refuses malformed or reversed lock lines; 59 tests OK; criteria 1, 3 partly, 4 owner-gated |
 | [Issue 2188 Live, Gate Speed-up Criteria](./research/issue-2188-live-gate-speed-2026-11-21.md) | Per-criterion evidence: layer cache 80.7 s to 1.3 s on one image, retry not implemented, tamper rejection tests pass |
 | [Issue 2188 Live, Gate Speed-up Criteria Refresh](./research/issue-2188-live-gate-speed-2026-11-22.md) | Supersedes the retry finding: shard retry and receipt retries implemented, image build 70.5 s to 7.2 s, images still serial, gate-level pair unproven |
 | [Issue 2187 Live, Gate Heavy Lock Scope](./research/issue-2187-live-gate-lock-2026-11-23.md) | Heavy lock only for browser, SQL and image groups already merged in #2215; #2286 did not touch it; no remainder; per-criterion table |
@@ -1874,6 +1885,7 @@ or infra acceptance claimed.
 | [Issue 2237 Cause and Fix](./research/issue-2237-live-cause-and-fix-2026-11-23.md) | Issue 2237: the retention 500 traced to the 15 s SQL write-lock timeout from Log Analytics, the 503 mapping that fixes it, and a per-criterion table with the live re-proof on revision 0000054 |
 | [Issue 2237 Smoke of API 0000055 and Resident 0000027](./research/issue-2237-smoke-0055-live-2026-11-23.md) | Live desktop smoke on 2026-11-23: retention 200, chat thread, employee map with sensor overlay, resident chart and start-up health, pass or fail per check for issues 2237, 2257 and 2244; nothing ticked |
 | [Issue 223 Review Effort Measurement, Run 8](./research/issue-223-live-r8-2026-11-23.md) | Issue 223: measured review time retained in AI review evidence, test results, and a per-criterion table; nothing ticked |
+| [Issue 223 Review Effort Aggregation, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: live report aggregates measured review time per task, test results, and a per-criterion table; nothing ticked |
 | [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
 
 

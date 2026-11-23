@@ -15071,6 +15071,26 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2256 live verification after the handoff seed (Refs #2256)
 
 * Added [issue-2256-live-2026-11-23d.md](research/issue-2256-live-2026-11-23d.md): on API revision 0000055 the waiting screen lists all 4 seeded handoffs with due time and chase owner, and the case card agrees; criteria A, B1, B2 and C are proven for the demo and no view code change was needed.
+## [2026-11-23] add | Issue 2257 SQLSTATE in the map overlay warning (Refs #2257)
+
+* Added [issue-2257-live-r5-2026-11-23.md](research/issue-2257-live-r5-2026-11-23.md): the overlay warning now records the five-character driver SQLSTATE for non-lock failures, with a regression test; per-criterion table.
+## [2026-11-23] add | Issue 2254 over-count regression and live proof, run 5 (Refs #2254)
+
+* Added [issue-2254-live-r5-2026-11-23.md](research/issue-2254-live-r5-2026-11-23.md): new test for the over-counted stored safety column fails without the repair and passes with it; live tile, map and list agree at 23 on revision 0000056. Test-only change; no estate change.
+
+## [2026-11-23] add | Issue 107 fifth pass: restart regression tests (Refs #107)
+
+* Added [issue-107-live-r5-assistants-evidence-2026-11-23.md](research/issue-107-live-r5-assistants-evidence-2026-11-23.md): two tests show an old image cannot reactivate a suspended release or revive an expired one after restart, on SQLite and actual local SQL Server. Criterion 8 stays unproven (no approved release, OQ-017).
+
+## [2026-11-23] add | Issue 2164 tenant binding of roster rows (Refs #2164)
+
+* Added [issue-2164-bound-tenant-binding-2026-11-23.md](research/issue-2164-bound-tenant-binding-2026-11-23.md): bound Entra staff rows now follow the legacy-tenant rule in assistants and sensor drafts; live restricted-row proof stays unproven for the demo.
+## [2026-11-23] add | Issue 223 review effort aggregation, run 9 (Refs #223)
+
+* Added [issue-223-live-r9-2026-11-23.md](research/issue-223-live-r9-2026-11-23.md): `live_report()` now reports per-task review effort from retained `review_seconds`; unit-tested, not deployed; no box ticked.
+## [2026-11-23] add | Issue 144 live hardening re-probe (Refs #144)
+
+* Added [issue-144-live-hardening-reprobe-2026-11-23.md](research/issue-144-live-hardening-reprobe-2026-11-23.md) and `infra/scripts/deployed_hardening.py` with tests: live replica shows non-root, `NoNewPrivs` 1 and empty effective capabilities; root file system stays writable; no pipeline run. No estate change.
 ## [2026-11-23] add | Issue 116 live round 10 (Refs #116)
 
 * Added [issue-116-live-r10-evidence-2026-11-23.md](research/issue-116-live-r10-evidence-2026-11-23.md): the shared provider-boundary allowlist now refuses non-base64 image data before any other gate; regression test fails without the fix. Live payloads stay unproven.
@@ -15095,3 +15115,22 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2245 demo AI override gap on the SQL store (Refs #2245)
 
 * Added [issue-2245-override-sqlstore-2026-11-23.md](research/issue-2245-override-sqlstore-2026-11-23.md): the owner-directed AI suspension override did not apply to `SqlStore`; fixed in source with a regression test. A live free-form ask on revision 0000057 returned 500 after 30.5 s; "Model calls: 1" stays unproven until a fixed revision is deployed.
+## [2026-11-23] update | Issue 2310 regression test for anonymous API 401 (Refs #2310)
+
+* Updated [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md) and added a wider anonymous-API regression test to `src/api/tests/test_auth.py`; no source or estate change.
+
+## [2026-11-23] add | Issue 2314 round 2 saved query contract (Refs #2314)
+
+* Added [issue-2314-alerts-runbooks-r2-2026-11-23.md](research/issue-2314-alerts-runbooks-r2-2026-11-23.md): infra test ties the saved query to the emitted AI_USAGE line; saved search confirmed not deployed. No Azure change.
+
+## [2026-11-23] update | Issue 1830 queue-wait reporting (Refs #1830)
+
+* Added [issue-1830-live-r9-2026-11-23.md](research/issue-1830-live-r9-2026-11-23.md): `rpi-gate-timing.py report --log` reports an unmeasured queue wait as null and refuses malformed or reversed lock lines, with two tests.
+
+## [2026-11-23] add | Nine-epic demo stabilization checkpoint (Refs #2301 #440)
+
+* Added [issue-2301-stabilization-checkpoint-live-2026-11-23.md](research/issue-2301-stabilization-checkpoint-live-2026-11-23.md) and a dated section in the cut-over evidence pack covering Epics 73, 81, 89, 93, 100, 109, 149, 157 and 208, with `tools/test_stabilization_checkpoint_2301.py`. Epic links, ticks and closures stay owner or remote actions.
+
+## [2026-11-23] add | Issue 2303 live rerun on revision 0000057 (Refs #2303)
+
+* Added [issue-2303-live-2026-11-23](research/issue-2303-live-2026-11-23/README.md): read-only Playwright probe shows `GET /api/ai/report` still returns 500 (FileNotFoundError) on the running revision; the head fix and contract test pass; deployment stays owner-gated. No source or estate change.

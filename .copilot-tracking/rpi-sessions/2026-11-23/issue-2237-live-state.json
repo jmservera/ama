@@ -1,34 +1,34 @@
 {
- "task_id": "issue-2237-live-20261123T142906Z",
- "task_slug": "issue-2237-live2",
+ "task_id": "issue-2237-live-20261123T172446Z",
+ "task_slug": "issue-2237-live3",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-23/issue-2237-live2-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-23/issue-2237-live2-plan.md",
-  "details": ".copilot-tracking/details/2026-11-23/issue-2237-live2-details.md",
-  "critique": ".copilot-tracking/plans/2026-11-23/issue-2237-live2-plan.md",
-  "changes": ".copilot-tracking/changes/2026-11-23/issue-2237-live2-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-23/issue-2237-live2-review.md"
+  "research": ".copilot-tracking/research/2026-11-23/issue-2237-live3-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-23/issue-2237-live3-plan.md",
+  "details": ".copilot-tracking/details/2026-11-23/issue-2237-live3-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-23/issue-2237-live3-plan.md",
+  "changes": ".copilot-tracking/changes/2026-11-23/issue-2237-live3-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-23/issue-2237-live3-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Owner 2026-11-18: synthetic demo, desktop only, live Azure authorised, no drills; tier focused unless src changes",
+   "decision": "Owner 2026-11-18: synthetic demo, desktop only, live Azure authorised, no drills; focused tier unless src code changes (test-only change here)",
    "status": "confirmed",
    "evidence": "task brief"
   },
   {
-   "decision": "critique executed once, proceed",
+   "decision": "critique executed once, verdict proceed",
    "status": "done",
-   "evidence": ".copilot-tracking/plans/2026-11-23/issue-2237-live2-plan.md"
+   "evidence": ".copilot-tracking/plans/2026-11-23/issue-2237-live3-plan.md"
   },
   {
    "decision": "review executed once, conformant",
    "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-23/issue-2237-live2-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-23/issue-2237-live3-review.md"
   }
  ],
  "blockers": [],
@@ -41,7 +41,7 @@
    "rank": 1,
    "task": "Reduce SQL write-lock hold time",
    "rationale": "503s continue",
-   "evidence": "docs/reference/research/issue-2237-live-reproof-2026-11-23.md"
+   "evidence": "docs/reference/research/issue-2237-live3-2026-11-23.md"
   }
  ]
 }

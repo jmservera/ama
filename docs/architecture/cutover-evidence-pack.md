@@ -8710,3 +8710,67 @@ Verification class summary for Epic `#100`:
 * Bug and refactoring disposition: No new functional defect, export integrity flaw, silent zero-cost fallback, or necessary refactoring is confirmed across the Epic `#100` integration surfaces in `src/core` or `src/api`. The four `BRD` versus `PRD` `FR-*` numbering collisions (`FR-020..024`, `FR-030`, `FR-035`, `FR-052`/`FR-061`) remain explicitly mapped above for requirements governance, and the pre-existing `#201`/`#203` `GUARD_FILES` allowlist gap in `tools/check-legacy-references.py` remains routed to repository tooling hygiene outside Epic `#100`.
 * Authorized Azure-only and human residuals: Provisional AI tariff schedules, spend limits, and alert owners remain open, unapproved, and deferred under `#432` (`BRD::OD-51`, `PRD::OQ-027`), with runtime projections failing closed to `"Unknown"` (`UNPRICED_PROVISIONAL_TARIFF`); Azure Blob WORM retention locks, live Application Insights and Azure SQL telemetry, synthetic needs-inventory owner approval (`#165`), human UX acceptance (`#155`, `#215`), parent PR `#1641` rebase onto latest `origin/main`, hosted CI, and independent exact-head review remain tracked on their respective governance and release issues.
 * Recommendation: `continue`. All three Epic `#100` child issues (`#101`, `#102`, `#103`) are closed on `main` and management AI consumption economics (`PR #1792`) are verified on parent branch `PR #1641` with passing focused local regression and integration checks. Keep Epic `#100` open until PR `#1641` and this `#440` checkpoint merge to `main`, exact-head hosted CI and independent review complete, and the owner ticks the final `#100` stabilization criterion.
+
+## Demo-scope stabilization checkpoint for nine delivered epics (2026-11-23, Refs #2301 #440)
+
+Refs #2301 and #440. Bounded, demo-scope, desktop-only checkpoint on the head below, covering Epics #73, #81, #89, #93, #100, #109, #149, #157 and #208. It supersedes the 2026-10-23 and 2026-11-01 checkpoints for these epics, which assess older heads and stay historical. It changes no `src/` file, creates no Azure resource and ticks or closes nothing. Evidence note: [issue-2301-stabilization-checkpoint-live-2026-11-23.md](../reference/research/issue-2301-stabilization-checkpoint-live-2026-11-23.md).
+
+### Source pin and documents
+
+| Item | Value |
+| --- | --- |
+| Source commit | `2c06796f5f5d097d214e22d630ce5f638f2b2a19` (PR 2325, `origin/main` when the worktree was cut on 2026-11-23) |
+| Merged PRs on the surface since the 2026-11-15 checkpoints | 2328 (employee map count status), 2327 (lazy map sensor readings), 2326 (demo override of AI suspensions), 2323 (Quality AI review sensor values), 2322 (AI task, ingestion and eval regressions), 2321 (ranking archive regressions), 2318 (per-task data contracts) |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | 0.21.0, `draft`, blob `fe5320f9b5b0958e39dbbb56f3e83c18d4c5c2e5` |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | 0.21.0, `in-review`, blob `d1d2c569c51e700940af95e7a82ced4ce4b5e8c5` |
+| [ADR 0004](../adrs/0004-per-user-agent-chat-and-memory.md) and [ADR 0005](../adrs/0005-regulatory-compliance-assistant.md) | ms.date 2026-10-15 and 2026-10-16; blobs `9406c2e747ced91e5ba7be4072f9482293c0c38f` and `4d610335a5a18bb282e29c6cb3053404beda995d` |
+| Other ADRs read | 0001, 0002, 0003, 0006 and 0008 (ms.date 2026-10-24 to 2026-11-20) |
+
+Draft and in-review documents are not approved by this record.
+
+### Actual commands and outcomes
+
+| Command | Observed result | Exit |
+| --- | --- | --- |
+| `python3 -m unittest tools/test_epic_73_child_disposition.py tools/test_epic_73_requirement_trace.py tools/test_epic_81_child_disposition.py tools/test_epic_93_child_disposition.py tools/test_epic_113_child_disposition.py tools/test_epic_208_child_order.py tools/test_epic_child_disposition_audit.py` (one run each) | 4, 4, 4, 5, 7, 6 and 8 tests, all OK | 0 |
+| `PYTHONPATH=src/core/src:src/agents/src:src/api/src:src/api:src/core/tests:src/agents/tests:src/api/tests python3 -m unittest` over `test_gates`, `test_safety_consent_exercise_scenarios_81`, `test_quality_procurement`, `test_grant_lifecycle_controls`, `test_funding_automation_boundary`, `test_coordinator`, `test_sensor_non_authority`, `test_sensor_analysis`, `test_chat_isolation_single_model_route`, `test_chat_memory`, `test_rule_engine`, `test_regulatory_chat`, `test_ranking_tiebreak_audit` (core) and `test_accessibility_baseline`, `test_content_standard` (api) | 464 tests, OK, 26 skipped, 1 expected failure, 283 s | 0 |
+| `az containerapp revision list -n ca-cutover-test-demo-api -g ama` | Active revision `ca-cutover-test-demo-api--0000057`, `Healthy`, traffic 100 | 0 |
+| `curl` `/healthz` on the demo API host | HTTP 200 | 0 |
+| Signed-in Playwright desktop probe (`live_probe.py`, GET only, sign-in values read at runtime and not printed) | 15 of 16 read endpoints return 200 (`/api/me`, `/api/cases`, `/api/packages`, `/api/workorders`, `/api/funding`, `/api/progress`, `/api/stats`, `/api/ranking/policy`, `/api/exceptions`, `/api/law/cards`, `/api/law/alerts`, `/api/chat/threads`, `/api/resident/choice-queue`, `/api/asset/stock-queue`, `/api/checklists`); `/api/coordinator` returns 400 without its query parameters | 0 |
+
+Not run: `rpi-checks.py`, SQL Server variants, hosted CI, any write path on the demo, person-run assistive-technology testing.
+
+### Traceability per epic
+
+Classes: `local observed`, `Azure observed`, `implemented-unverified`, `deferred`, `blocked`.
+
+| Epic | Requirement | Children (all closed) | Code and tests | Observed demo journey | Classification | Recommendation |
+| --- | --- | --- | --- | --- | --- | --- |
+| #73 | Home case, role queues, controlled edits, versioned ranking, Excel transition, steward queue | #74, #76, #78, #79, #80, #135 | `home_case.py`, `ranking.py`, `test_ranking_tiebreak_audit.py`, `tools/test_epic_73_*` | `/api/cases`, `/api/ranking/policy`, `/api/exceptions`, `/api/checklists` return 200 | local observed and Azure observed (read-only) | continue |
+| #81 | Deterministic gates, resident agreement, holds, offers, remedy closure | #82 to #88, #130, #131 | `gates.py`, `test_gates.py`, `test_safety_consent_exercise_scenarios_81.py`, `tools/test_epic_81_*` | `/api/resident/choice-queue` returns 200; no write journey re-run | local observed; Azure observed for the read only | continue |
+| #89 | Provider packages, work orders, quality acceptance, consultation, aftercare | #90, #91, #92, #132, #133 | `procurement.py`, `quality.py`, `test_quality_procurement.py` | `/api/packages` (1) and `/api/workorders` (601) return 200 | local observed and Azure observed (read-only) | continue |
+| #93 | Budgets, grants, assisted forms, no automated bid, claim or cash step | #94, #95, #96, #99 | `grants.py`, `test_grant_lifecycle_controls.py`, `test_funding_automation_boundary.py`, `tools/test_epic_93_*` | `/api/funding` returns 200 (167 rows) | local observed and Azure observed (read-only) | continue |
+| #100 | Coordinator heatmap, forecasts, evidence export, AI economics | #101, #102, #103, #134 | `coordinator.py`, `test_coordinator.py` | `/api/progress` and `/api/stats` 200; AI economics card proven in the 2026-11-21 note | local observed; Azure observed (2026-11-21 note and this probe) | continue |
+| #109 | IoT ingestion, versioned sensor analysis, no sensor authority | #110, #111, #112 | `sensor_analysis.py`, `test_sensor_non_authority.py`, `test_sensor_analysis.py` | No sensor endpoint probed here; sensor journeys are in earlier dated notes | local observed; Azure ingestion implemented-unverified for this head | continue |
+| #149 | Design system, WCAG baseline, role screens, usability | #150 to #156, #225 to #233 | `test_accessibility_baseline.py`, `test_content_standard.py` | Workbench home rendered (screenshot in the evidence directory) | local observed; person-run assistive-technology and usability testing deferred to #1907 | continue |
+| #157 | Per-user chat and memory, isolation, grounding, bounded consumption | #158 to #164 | `chatthreads.py`, `test_chat_isolation_single_model_route.py`, `test_chat_memory.py` | `/api/chat/threads` returns 200 (164 entries) | local observed and Azure observed (read-only); DPO approval deferred to #1906 | continue |
+| #208 | Law store, rule cards and engine, cited chat, change monitoring | #209 to #217 | `lawstore.py`, `rulecards.py`, `rule_engine.py`, `test_rule_engine.py`, `test_regulatory_chat.py`, `tools/test_epic_208_*` | `/api/law/cards` and `/api/law/alerts` return 200 | local observed and Azure observed (read-only); Legal approval deferred to #1905 | continue |
+
+### Production-only items
+
+Legal review and approvals stay deferred to #1905, DPO approval to #1906 and person-run assistive-technology testing to #1907 (all open, read 2026-11-23). No agent output in this checkpoint states a duty is satisfied or approves a rule card.
+
+### Remaining epic criteria as exact gaps
+
+| Epic | Remaining unticked criterion | Gap and owner |
+| --- | --- | --- |
+| All nine | Complete the #440 checkpoint | Owner ticks after reviewing this record; #440 itself is open |
+| #73 | Each requirement traces to a passing acceptance check or a recorded deferral | Trace rows above cover the epic; owner ticks after review |
+| #100 | AI economics views with denominators | Proven in the 2026-11-21 note; owner ticks |
+| #149 | Child features are accepted | Owner acceptance; usability and assistive-technology evidence deferred to #1907 |
+| #157 | If accepted, child features are accepted | Owner acceptance; privacy sign-off deferred to #1906 |
+| #208 | Decision feature accepted or closed; child features accepted in ADR phase order | Owner decision; Legal and DPO approval deferred to #1905 and #1906 |
+
+### Bugs, refactoring and recommendation
+
+No new functional defect was observed, so no bug or refactor issue is opened by this checkpoint. The `/api/coordinator` 400 without parameters is input validation, not a confirmed defect. Recommendation for every epic: `continue`; keep the epic open until the owner reviews this record, ticks the criteria above and decides closure. The owner-only action of linking this section from each epic is not performed here.

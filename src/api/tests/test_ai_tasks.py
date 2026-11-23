@@ -544,6 +544,20 @@ class TasksMixin:
             ai_tasks._elapsed_seconds("2026-01-01T10:00:05", "2026-01-01T10:00:00"), 0.0
         )
 
+    def test_live_report_aggregates_review_effort(self):
+        self.out["text"] = "- ok [[Stage: Contacting resident]]"
+        ids = [self.store.ai_run(self.sam, "ZF-1", "summary")["record_id"] for _ in range(4)]
+        recs = {x["id"]: x for x in self.records()}
+        for rid, secs in zip(ids, (30, 90, None, True)):
+            recs[rid]["review_evidence"] = {"review_seconds": secs}
+        eff = self.store.ai_live_report()["review_effort"]["summary"]
+        self.assertEqual(
+            eff, dict(reviewed=4, timed=2, total_seconds=120.0, mean_seconds=60.0)
+        )
+        for rid in ids:
+            recs[rid].pop("review_evidence")
+        self.assertEqual(self.store.ai_live_report()["review_effort"], {})
+
     def test_changed_source_holds_instead_of_accepting(self):
         self.out["text"] = "- ok [[Stage: Contacting resident]]"
         r = self.store.ai_run(self.sam, "ZF-1", "summary")
