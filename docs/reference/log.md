@@ -15101,3 +15101,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Nine-epic demo stabilization checkpoint (Refs #2301 #440)
 
 * Added [issue-2301-stabilization-checkpoint-live-2026-11-23.md](research/issue-2301-stabilization-checkpoint-live-2026-11-23.md) and a dated section in the cut-over evidence pack covering Epics 73, 81, 89, 93, 100, 109, 149, 157 and 208, with `tools/test_stabilization_checkpoint_2301.py`. Epic links, ticks and closures stay owner or remote actions.
+
+## [2026-11-23] add | Issue 2303 live rerun on revision 0000057 (Refs #2303)
+
+* Added [issue-2303-live-2026-11-23](research/issue-2303-live-2026-11-23/README.md): read-only Playwright probe shows `GET /api/ai/report` still returns 500 (FileNotFoundError) on the running revision; the head fix and contract test pass; deployment stays owner-gated. No source or estate change.

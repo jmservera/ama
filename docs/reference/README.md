@@ -1672,6 +1672,7 @@ or infra acceptance claimed.
 | [Issue 2257 map retry control and re-probe on revision 0000055 (#2257)](./research/issue-2257-retry-control-2026-11-23.md) | Visible retry button and bounded redraw; 8 of 8 fresh sessions loaded; per-criterion table |
 | [Issue 2302 AI consumption economics in the management view (#2302)](./research/issue-2302-ai-economics-live-2026-11-23.md) | Live Overview card on revision 0000055, focused Unknown-not-zero tests, per-criterion table |
 | [Issue 2303 chat golden file in the API image (#2303)](./research/issue-2303-chat-golden-image-2026-11-23.md) | Local container reproduction and fix, contract test, per-criterion table |
+| [Issue 2303 live rerun (#2303)](./research/issue-2303-live-2026-11-23/README.md) | Live 500 on revision 0000057, per-criterion table |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
