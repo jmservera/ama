@@ -238,6 +238,7 @@
     var previous = null;
     var markerGap = 9;
     var lastMarkerX = -markerGap;
+    var lastMarker = null;
     var latestIndex = history.length - 1;
     while (latestIndex > 0 && history[latestIndex][metric.key] === null) latestIndex--;
     var thinned = false;
@@ -253,7 +254,12 @@
       var y = 150 - (reading[metric.key] - metric.min) / (metric.max - metric.min) * 140;
       points.push(x + "," + y);
       if (x - lastMarkerX >= markerGap || reading === history[latestIndex]) {
-        svg.appendChild(svgEl("circle", { cx: x, cy: y, r: 2.5, class: "sensor-point" }));
+        if (lastMarker && x - lastMarkerX < markerGap) {
+          svg.removeChild(lastMarker);
+          thinned = true;
+        }
+        lastMarker = svgEl("circle", { cx: x, cy: y, r: 2.5, class: "sensor-point" });
+        svg.appendChild(lastMarker);
         lastMarkerX = x;
       } else {
         thinned = true;
@@ -266,7 +272,8 @@
       for (var i = history.length - 1; i >= 0 && lastValue === null; i--) if (history[i][metric.key] !== null) lastValue = history[i];
       var anchorX = 56 + (latestAt - start) / (end - start) * 414;
       svg.appendChild(svgEl("line", { x1: anchorX, y1: 10, x2: anchorX, y2: 150, class: "sensor-divider" }));
-      svg.appendChild(svgEl("text", { x: anchorX - 4, y: 26, "text-anchor": "end" }, "Latest stored"));
+      var roomLeft = anchorX - 4 - 56 >= 90;
+      svg.appendChild(svgEl("text", { x: roomLeft ? anchorX - 4 : anchorX + 4, y: 26, "text-anchor": roomLeft ? "end" : "start" }, "Latest stored"));
       var line = [];
       if (lastValue && history[history.length - 1][metric.key] !== null) {
         line.push(anchorX + "," + (150 - (lastValue[metric.key] - metric.min) / (metric.max - metric.min) * 140));
