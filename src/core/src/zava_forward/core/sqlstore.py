@@ -896,6 +896,9 @@ class SqlStore(Store):
 
     def _seed(self, data_path):
         with self.dblock:
+            # Read-only fast path (issue #2244): a populated database needs no write lock at start-up.
+            if self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]:
+                return
             self.db.execute("BEGIN IMMEDIATE")
             try:
                 if self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0] == 0:

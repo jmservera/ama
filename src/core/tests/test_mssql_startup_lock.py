@@ -211,6 +211,29 @@ class ReadOnlyStartupTests(unittest.TestCase):
         store(db)._migrate_queues()
         self.assertFalse(any("BEGIN" in q for q in db.sql))
 
+    def test_populated_cases_skip_the_seed_lock(self) -> None:
+        class Db:
+            def __init__(self, count: int) -> None:
+                self.count = count
+                self.sql: list[str] = []
+
+            def execute(self, sql: str, args: Any = ()) -> Any:
+                self.sql.append(sql)
+                cur: Any = type("Cur", (), {})()
+                cur.fetchone = lambda: (self.count,)
+                return cur
+
+        populated, empty = Db(3), Db(0)
+        for db in (populated, empty):
+            s: Any = store(db)  # type: ignore[arg-type]
+            try:
+                s._seed("/nonexistent/seed.json")
+            except FileNotFoundError:
+                pass
+        self.assertFalse(any("BEGIN" in q for q in populated.sql))
+        self.assertIn("BEGIN IMMEDIATE", empty.sql)
+        self.assertIn("ROLLBACK", empty.sql)
+
     def test_all_indexes_present_skip_the_lock_and_one_missing_does_not(self) -> None:
         stmts: list[str] = mssql_any._indexes() + [mssql_any.CHAT_INDEX]
         names = {m.group(1) for m in (re.search(r"CREATE INDEX (\w+)", st) for st in stmts) if m}
