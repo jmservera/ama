@@ -573,7 +573,7 @@ The [issue 144 live hosting probe](./research/issue-144-live-hosting-2026-11-22.
 The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 The [web `.xlsx` import note](./research/issue-2008-web-xlsx-import-2026-11-22.md) records the
 local proof that the "Check a spreadsheet" screen previews the workbook with mapping and conflicts.
-The [deployed `.xlsx` proof](./research/issue-2008-live-xlsx-deployed-2026-11-22.md) shows the same screen on the demo with the staff sign-in. The [close-out re-proof](./research/issue-2008-closeout-live-2026-11-23.md) repeats it on API revision 0000054.
+The [deployed `.xlsx` proof](./research/issue-2008-live-xlsx-deployed-2026-11-22.md) shows the same screen on the demo with the staff sign-in. The [close-out re-proof](./research/issue-2008-closeout-live-2026-11-23.md) repeats it on API revision 0000054. The [r3 re-proof](./research/issue-2008-live-reproof-r3-2026-11-23.md) repeats it on API revision 0000055.
 For #146, the [live monitoring evidence](./research/issue-146-live-monitoring-evidence-2026-11-18.md)
 records a 2026-11-18 demo run: installed alert inventory, a fired test alert, throwaway job-failure,
 IoT and workbook deployments, and the private-link limit that blocks workbook rendering and the poison-queue proof.
@@ -593,6 +593,7 @@ A [fourth run](./research/issue-1258-live-r4-2026-11-19.md) repeats the ext4 sys
 A [fifth run](./research/issue-1258-live-r5-2026-11-19.md) records the per-criterion table at 309635e29; criterion 5 stays unproven.
 A [sixth run](./research/issue-1258-live-r6-2026-11-21.md) adds a mutation check that shows the ancestor regression failing without the parent sync; criterion 5 stays unproven.
 An [eighth run](./research/issue-1258-live-r8-2026-11-23.md) repeats the mutation check at head 342fad401d and confirms live revisions 0000054 and 0000026; criterion 5 stays unproven.
+A [ninth run](./research/issue-1258-1259-live-r9-2026-11-23.md) covers #1258 and #1259 at head 9dbfab6f56 with a mutation check for each fix; the process criteria stay unproven.
 
 For #2116, the [drill criterion classification](./research/issue-2116-drill-criterion-demo-classification-2026-11-23.md) records the witnessed suspension drill as owner-gated and unproven for the demo.
 
@@ -1816,6 +1817,7 @@ or infra acceptance claimed.
 | [Issue 2135 Owner-Gated Criterion](./research/issue-2135-live-owner-gated-2026-11-23.md) | Issue 2135: the one remaining criterion (atlas owner confirms the bundle to opportunity mapping) is owner-gated and unproven for the demo, with the owner action to close it |
 | [Issue 2237 Cause and Fix](./research/issue-2237-live-cause-and-fix-2026-11-23.md) | Issue 2237: the retention 500 traced to the 15 s SQL write-lock timeout from Log Analytics, the 503 mapping that fixes it, and a per-criterion table with the live re-proof on revision 0000054 |
 | [Issue 2237 Smoke of API 0000055 and Resident 0000027](./research/issue-2237-smoke-0055-live-2026-11-23.md) | Live desktop smoke on 2026-11-23: retention 200, chat thread, employee map with sensor overlay, resident chart and start-up health, pass or fail per check for issues 2237, 2257 and 2244; nothing ticked |
+| [Issue 2253 Live r3 Chart Re-verification](./research/issue-2253-live-r3-2026-11-23.md) | Desktop probe of resident revision 0000027 on 2026-11-23: labels 16.8 px against 16 px, 0 overlaps, 18 circles; legend and narrow screen unproven. No source change. |
 | [WCAG 2.2 Automated Evidence on the Live Demo Workbench](./research/issue-151-live-wcag-axe-evidence-2026-11-18.md) | Issue 151: axe-core 4.10.3 and keyboard scans of 13 workbench screens on the demo as the Programme Manager role, per-criterion status, limits and follow-ups |
 | [WCAG 2.2 Automated Evidence on the Live Demo, Round 2](./research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md) | Issue 151: second axe-core 4.10.3 and keyboard scan of the employee workbench and resident demo app with raw axe output retained, contrast incompletes sampled, adverse results kept and a per-criterion table |
 | [WCAG 2.2 Live Audit Round 3 for the Demo](./research/issue-151-live-r3-wcag-evidence-2026-11-18.md) | Issue 151: resident app axe and keyboard states, contrast heuristic (disabled controls only), single page title finding and keyboard case open; criterion 4 stays unticked |
@@ -2302,3 +2304,5 @@ Further 2026-11-23 evidence: [issue 2190 regression tests](./research/issue-2190
 A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
 
 The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records the second live probe on revision 0000025, the diagnosable ledger refusal states added to the resident AI path and a per-criterion table.
+
+The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.

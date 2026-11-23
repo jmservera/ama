@@ -14884,3 +14884,19 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Live smoke of API 0000055 and resident 0000027 (Refs #2237)
 
 * Added [issue-2237-smoke-0055-live-2026-11-23.md](research/issue-2237-smoke-0055-live-2026-11-23.md): retention 200 (16 of 16), chat thread 200, map with 443 markers and sensor states, resident chart drawn from stale readings; start-up is partly proven because readiness probes timed out for three minutes. No criterion ticked, no source or estate change.
+
+## [2026-11-23] add | Issue 2253 live r3 chart re-verification (Refs #2253)
+
+* Added [issue-2253-live-r3-2026-11-23.md](research/issue-2253-live-r3-2026-11-23.md): resident revision 0000027 chart has 16.8 px labels, 0 text overlaps and 18 circle markers; the legend and narrow-screen rule stay unproven. No source or estate change.
+## [2026-11-23] add | Safety queue clocks on API revision 0000055 (Refs #2255)
+
+* Added [issue-2255-live-r3-2026-11-23.md](research/issue-2255-live-r3-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with a target (17 overdue, 5 open, 0 unknown) on revision 0000055; re-seed survival stays owner-gated. No source or estate change.
+## [2026-11-23] update | Roster scope re-check r5 (Refs #2164)
+
+* Extended [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md) with the r5 re-check: tests pass at HEAD 9dbfab6f56, API revision 0000055 read-only; deployed behaviour stays unproven. No criterion ticked, no source or estate change.
+## [2026-11-23] add | Issue 2008 live re-proof r3 on revision 0000055 (Refs #2008)
+
+* Added [issue-2008-live-reproof-r3-2026-11-23.md](research/issue-2008-live-reproof-r3-2026-11-23.md): the synthetic .xlsx import shows mapping, the DEMO-002 duplicate conflict and row preview on the deployed demo; source file hashes unchanged; all four criteria proven for the demo. No source or estate change.
+## [2026-11-23] add | Ranking archive criteria check r9 (Refs #1258, Refs #1259)
+
+* Added [issue-1258-1259-live-r9-2026-11-23.md](research/issue-1258-1259-live-r9-2026-11-23.md): 146 tests pass, parent-sync mutation fails 12 tests, unusable-path mutation fails 5 tests. Process criteria unproven and owner-gated. No source or estate change.

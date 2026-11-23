@@ -29,3 +29,9 @@ Scope: synthetic demo, desktop only. Source reads and unit tests only; no creden
 * Timing argument, circumstantial only: 6a03928ccb merged at 2026-11-22T21:26:50Z, the last later `src/api` or `src/core` commit before the revision is a6ba1956db (23:05:25Z), and the revision was created at 23:14Z. A build from main at that point would contain the fix, but no build record was available to confirm it.
 * Tests re-run: `src/api` two #2164 tests OK; `src/core` `test_assistants_identity` 5 tests OK. No source change.
 * A live behavioural proof needs a roster-bound Entra principal with a restricted `case_ids` list, which means editing a roster row on live data. The owner decisions of 2026-11-18 exclude production changes, so this stays unproven; the issue does not require it.
+
+## Re-check r5 on 2026-11-23 (HEAD 9dbfab6f56)
+
+* 6a03928ccb remains an ancestor of HEAD. The same two `src/api` tests and the five `src/core` `test_assistants_identity` tests pass.
+* Read-only `az containerapp` in resource group `ama`: `ca-cutover-test-demo-api--0000055` (created 2026-11-23T03:25Z, 100% traffic, digest `sha256:b628e067...`) and `ca-resident-demo--0000027`. The registry is network-restricted, so the digest still cannot be mapped to a commit; the revision post-dates the fix, which is circumstantial only.
+* Criteria table above is unchanged: three proven, the deployed-image item unproven and not required. No source or estate change.
