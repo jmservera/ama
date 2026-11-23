@@ -15089,3 +15089,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2310 regression test for anonymous API 401 (Refs #2310)
 
 * Updated [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md) and added a wider anonymous-API regression test to `src/api/tests/test_auth.py`; no source or estate change.
+
+## [2026-11-23] add | Issue 2314 round 2 saved query contract (Refs #2314)
+
+* Added [issue-2314-alerts-runbooks-r2-2026-11-23.md](research/issue-2314-alerts-runbooks-r2-2026-11-23.md): infra test ties the saved query to the emitted AI_USAGE line; saved search confirmed not deployed. No Azure change.
