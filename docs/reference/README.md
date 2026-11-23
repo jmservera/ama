@@ -727,6 +727,8 @@ The [issue 2243 revision 0000026 re-verification](./research/issue-2243-rev26-20
 
 The [issue 2243 live re-verification of 2026-11-23](./research/issue-2243-live-2026-11-23.md) repeats the resident probe on revisions 0000026 and 0000054 (still usage_limit), confirms main already derives the expiry from the environment, and keeps the model-backed answer owner-gated on the private SQL ledger.
 
+The [issue 2244 live re-verification of 2026-11-23](./research/issue-2244-live-2026-11-23.md) confirms live API revision 0000054 runs the same `mssqlstore.py` as main (start-up retry from #2273), adds read-only schema fast paths so start-up skips the write lock when nothing changes, and records C1 to C5 as proven or unproven.
+
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
 The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.
@@ -1609,6 +1611,7 @@ or infra acceptance claimed.
 | [Issue 2192 live proof round 4 (#2192)](./research/issue-2192-live-r4-2026-11-22.md) | Resident revision 0000024: employee sensor state follows the resident consent choice live; map and AI chat label recheck; per-criterion table |
 | [Issue 2257 employee map fetch failure (#2257)](./research/issue-2257-mapfetch-live-2026-11-22.md) | Live probe, replica churn correlation and client retry proof; per-criterion table |
 | [Issue 2257 verify-fixed on revision 0000053 (#2257)](./research/issue-2257-verify-live-2026-11-22.md) | Re-verification that the deployed demo recovers from a dropped map read; per-criterion table |
+| [Issue 2257 live comparison on revision 0000054 (#2257)](./research/issue-2257-live-2026-11-23.md) | Dropped-connection recovery proven; a server 500 on fresh sessions found; sensor overlay hardening; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |

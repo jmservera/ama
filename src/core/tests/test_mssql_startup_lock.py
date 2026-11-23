@@ -1,3 +1,5 @@
+import re
+import threading
 import unittest
 from typing import Any
 from unittest.mock import patch
@@ -131,6 +133,91 @@ class WriteLockBusyHelperTests(unittest.TestCase):
         ):
             self.assertFalse(mssqlstore.is_write_lock_busy(err))
         self.assertFalse(mssqlstore.is_write_lock_busy(None))
+
+
+class FakeDb:
+    """Answers the read-only catalog queries from sets; records every statement."""
+
+    def __init__(
+        self,
+        tables: set[str],
+        triggers: set[str],
+        indexes: set[str],
+        columns: set[str],
+        ledger: int = 0,
+    ) -> None:
+        self.tables, self.triggers, self.indexes, self.columns, self.ledger = (
+            tables,
+            triggers,
+            indexes,
+            columns,
+            ledger,
+        )
+        self.sql: list[str] = []
+
+    def execute(self, sql: str, args: Any = ()) -> Any:
+        self.sql.append(sql)
+        rows: list[Any] = []
+        if sql.startswith("SELECT name FROM sys.tables"):
+            rows = [(t,) for t in self.tables]
+        elif sql.startswith("SELECT name FROM sys.triggers"):
+            rows = [(t,) for t in self.triggers]
+        elif sql.startswith("SELECT name FROM sys.indexes"):
+            rows = [(i,) for i in self.indexes]
+        elif sql.startswith("SELECT is_ledger_on"):
+            rows = [(self.ledger,)]
+        elif sql.startswith("SELECT COL_LENGTH"):
+            rows = [(10 if args[1] in self.columns else None,)]
+        elif sql.startswith("SELECT name FROM sys.columns"):
+            rows = [(c,) for c in self.columns]
+        cur: Any = type("Cur", (), {})()
+        cur.fetchall, cur.fetchone = lambda: list(rows), lambda: rows[0] if rows else None
+        return cur
+
+
+def store(db: FakeDb) -> Any:
+    s: Any = MssqlStore.__new__(MssqlStore)
+    s.db, s.dblock = db, threading.RLock()
+    return s
+
+
+GUARDS = {"audit_append_only", "continuity_gate_no_delete", "continuity_gate_monotonic"}
+
+
+mssql_any: Any = mssqlstore
+
+
+class ReadOnlyStartupTests(unittest.TestCase):
+    def test_current_schema_takes_no_write_lock(self) -> None:
+        db = FakeDb(set(mssqlstore.TABLES), GUARDS, set(), set())
+        store(db)._create_schema()
+        self.assertFalse(any("BEGIN" in q for q in db.sql))
+
+    def test_missing_table_takes_the_locked_path(self) -> None:
+        db = FakeDb(set(mssqlstore.TABLES) - {"audit"}, GUARDS, set(), set())
+        self.assertFalse(store(db)._schema_current())
+
+    def test_missing_guard_trigger_takes_the_locked_path(self) -> None:
+        db = FakeDb(set(mssqlstore.TABLES), GUARDS - {"continuity_gate_monotonic"}, set(), set())
+        self.assertFalse(store(db)._schema_current())
+
+    def test_wrong_ledger_kind_is_left_to_the_locked_path(self) -> None:
+        db = FakeDb(set(mssqlstore.TABLES), set(), set(), set(), ledger=1)
+        self.assertFalse(store(db)._schema_current())
+
+    def test_queue_columns_present_skip_the_lock(self) -> None:
+        db = FakeDb(set(), set(), set(), set(sqlstore.QUEUE_COLS))
+        store(db)._migrate_queues()
+        self.assertFalse(any("BEGIN" in q for q in db.sql))
+
+    def test_all_indexes_present_skip_the_lock_and_one_missing_does_not(self) -> None:
+        stmts: list[str] = mssql_any._indexes() + [mssql_any.CHAT_INDEX]
+        names = {m.group(1) for m in (re.search(r"CREATE INDEX (\w+)", st) for st in stmts) if m}
+        self.assertTrue(names)
+        self.assertTrue(store(FakeDb(set(), set(), names, set()))._indexes_current(stmts))
+        self.assertFalse(
+            store(FakeDb(set(), set(), names - {sorted(names)[0]}, set()))._indexes_current(stmts)
+        )
 
 
 if __name__ == "__main__":

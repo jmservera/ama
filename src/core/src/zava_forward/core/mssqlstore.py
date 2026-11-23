@@ -21,7 +21,7 @@ import threading
 import time
 
 from .chatthreads import MEMORY_ADDED as CHAT_MEMORY_ADDED, MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX
-from .sqlstore import INDEXES, SqlStore
+from .sqlstore import INDEXES, QUEUE_COLS, SqlStore
 
 COLLATE = "COLLATE Latin1_General_100_BIN2"
 
@@ -347,8 +347,21 @@ class MssqlStore(SqlStore):
         self.db.execute(f"ALTER TABLE {table} ADD CONSTRAINT ck_{table}_{col}_nn CHECK ({col} IS NOT NULL)")
         self.db.execute(f"ALTER TABLE {table} ADD CONSTRAINT {constraint or f'df_{table}_{col}'} DEFAULT {default} FOR {col}")
 
+    def _chat_memory_current(self):
+        """Read-only: every column the chat memory migration would add already exists (no write lock needed)."""
+        cols = [("chat_memory", c) for c, _ in CHAT_MEMORY_ADDED] + [("chat_message", "actor_role")]
+        return all(self.db.execute("SELECT COL_LENGTH(?, ?)", (t, c)).fetchone()[0] is not None for t, c in cols)
+
+    def _migrate_queues(self):
+        # Read-only fast path (issue #2244): nothing to add, so do not queue for the global write lock.
+        if set(QUEUE_COLS) <= self._columns():
+            return
+        super()._migrate_queues()
+
     def _migrate_chat_memory(self):
         with self.dblock:
+            if self._chat_memory_current():
+                return
             self.db.execute("BEGIN IMMEDIATE")
             try:
                 for col, default in CHAT_MEMORY_ADDED:
@@ -364,8 +377,23 @@ class MssqlStore(SqlStore):
     def assistant_connection(self):
         return _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
 
+    def _schema_current(self):
+        """Read-only: every table exists and the append-only guard is in place, so start-up needs no write lock (issue #2244).
+
+        Anything unusual returns False and takes the locked path, which also owns the explicit ledger error."""
+        have = {r[0] for r in self.db.execute("SELECT name FROM sys.tables").fetchall()}
+        if not set(TABLES) <= have:
+            return False
+        if self.db.execute("SELECT is_ledger_on FROM sys.databases WHERE name = DB_NAME()").fetchone()[0]:
+            row = self.db.execute("SELECT ledger_type_desc FROM sys.tables WHERE name = N'audit'").fetchone()
+            return bool(row) and row[0] == "APPEND_ONLY_LEDGER_TABLE"
+        triggers = {r[0] for r in self.db.execute("SELECT name FROM sys.triggers").fetchall()}
+        return {"audit_append_only", "continuity_gate_no_delete", "continuity_gate_monotonic"} <= triggers
+
     def _create_schema(self):
         with self.dblock:
+            if self._schema_current():
+                return
             self.db.execute("BEGIN IMMEDIATE")
             try:
                 self._create_schema_serialized()
@@ -399,13 +427,21 @@ class MssqlStore(SqlStore):
         self.db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_recs_user_ord' AND object_id = OBJECT_ID(N'recommendations')) "
                         "CREATE INDEX ix_recs_user_ord ON recommendations ([user], created_ord)")
 
+    def _indexes_current(self, statements):
+        """Read-only: every index the script would create already exists."""
+        have = {r[0] for r in self.db.execute("SELECT name FROM sys.indexes WHERE name IS NOT NULL").fetchall()}
+        return all(m.group(1) in have for m in (re.search(r"CREATE INDEX (\w+)", st) for st in statements) if m)
+
     def _create_indexes(self):
         with self.dblock:
             self._migrate_chat_memory()
+            statements = _indexes() + [CHAT_INDEX]
+            if self._indexes_current(statements):
+                return
             # check-then-create is not atomic across connections; the write lock serializes concurrent first opens
             self.db.execute("BEGIN IMMEDIATE")
             try:
-                for stmt in _indexes() + [CHAT_INDEX]:
+                for stmt in statements:
                     self.db.execute(stmt)
                 self.db.execute("COMMIT")
             except BaseException:

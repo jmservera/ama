@@ -2390,16 +2390,21 @@ class Assistants:
         if not self.sql:
             return {i: sensor_map.fixed("not-connected") for i in ids}
         out = {}
-        with self.transaction() as db:
-            now = self.now(db)
-            allowed = []
-            for i in ids[: sensor_map.HOME_CAP]:
-                try:
-                    self.authorize(db, user, "quality-evidence", i)
-                    allowed.append(i)
-                except (PermissionError, KeyError):
-                    out[i] = sensor_map.fixed("restricted")
-            out.update(sensor_map.summaries(db, allowed, now, self.mssql))
+        try:
+            with self.transaction() as db:
+                now = self.now(db)
+                allowed = []
+                for i in ids[: sensor_map.HOME_CAP]:
+                    try:
+                        self.authorize(db, user, "quality-evidence", i)
+                        allowed.append(i)
+                    except (PermissionError, KeyError):
+                        out[i] = sensor_map.fixed("restricted")
+                out.update(sensor_map.summaries(db, allowed, now, self.mssql))
+        except Exception as exc:
+            # The sensor overlay is optional: a database failure here must not fail the whole map (issue 2257).
+            LOG.warning("map sensor summary unavailable exc=%s", type(exc).__name__)
+            out = {i: sensor_map.fixed("unavailable") for i in ids[: sensor_map.HOME_CAP]}
         out.update({i: sensor_map.fixed("not-loaded") for i in ids[sensor_map.HOME_CAP :]})
         return out
 

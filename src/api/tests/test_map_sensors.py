@@ -95,6 +95,22 @@ class MapSensors(Seed, ta.ApiTests):
         view = insights.map_view(self.store.cases.values(), {})
         self.assertTrue(all(i["sensor"]["state"] == "not-connected" for i in view["items"]))
 
+    def test_a_failing_sensor_transaction_keeps_the_map_available(self) -> None:
+        self.put(3, offset=120)
+        self.service.transaction = self.fail_transaction
+        with self.assertLogs("zava_forward.core.assistants", "WARNING") as logs:
+            s = self.sensor()
+        self.assertEqual(s["state"], "unavailable")
+        self.assertNotIn("temperature_c", s)
+        self.assertIn("exc=ProgrammingError", logs.output[0])
+
+    @staticmethod
+    def fail_transaction() -> Any:
+        class ProgrammingError(Exception):
+            pass
+
+        raise ProgrammingError("driver detail that must not be logged")
+
     TID = "11111111-1111-4111-8111-111111111111"
     OID = "22222222-2222-4222-8222-222222222222"
 
