@@ -15086,3 +15086,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2245 demo AI override gap on the SQL store (Refs #2245)
 
 * Added [issue-2245-override-sqlstore-2026-11-23.md](research/issue-2245-override-sqlstore-2026-11-23.md): the owner-directed AI suspension override did not apply to `SqlStore`; fixed in source with a regression test. A live free-form ask on revision 0000057 returned 500 after 30.5 s; "Model calls: 1" stays unproven until a fixed revision is deployed.
+## [2026-11-23] update | Issue 2310 regression test for anonymous API 401 (Refs #2310)
+
+* Updated [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md) and added a wider anonymous-API regression test to `src/api/tests/test_auth.py`; no source or estate change.
