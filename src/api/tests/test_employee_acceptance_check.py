@@ -331,6 +331,40 @@ class AcceptanceTests(unittest.TestCase):
                             check.map_projection(dict(template, bounds=bounds, items=[item]))
                         )
 
+    def test_map_rendered_ignores_nested_sensor_status(self) -> None:
+        with sync_playwright() as driver:
+            try:
+                browser = driver.chromium.launch()
+            except BrowserError as error:
+                if "Executable doesn't exist" in str(error):
+                    self.skipTest("Chromium is installed by the later browser-check step")
+                raise
+            try:
+                page = browser.new_page()
+                page.set_content("""
+                    <dialog class="map-dialog" open>
+                      <section class="map-panel">
+                        <div id="leaflet" aria-busy="false"></div>
+                        <aside class="map-info">
+                          <section hidden><p role="status">Loading sensor readings</p></section>
+                          <p role="status">0 homes shown</p>
+                          <div class="maplist"><ul></ul></div>
+                        </aside>
+                      </section>
+                    </dialog>
+                """)
+                expected = check.map_projection(EMPTY)
+                self.assertTrue(page.evaluate(check.MAP_RENDERED, expected))
+                page.locator(".map-info > [role=status]").evaluate(
+                    "e => e.textContent = '1 home shown'"
+                )
+                page.locator(".map-info section [role=status]").evaluate(
+                    "e => e.textContent = '0 homes shown'"
+                )
+                self.assertFalse(page.evaluate(check.MAP_RENDERED, expected))
+            finally:
+                browser.close()
+
     def chromium(self, oid: str, admitted: bool, map_contract: bool = False) -> None:
         privacy = patch.dict(
             os.environ,
