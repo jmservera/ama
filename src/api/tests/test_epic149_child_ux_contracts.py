@@ -1,6 +1,9 @@
 """Epic #149 child UX surfaces are wired and intact; automated wiring only, never human sign-off."""
 
+import json
 import re
+import shutil
+import subprocess
 import unittest
 from pathlib import Path
 
@@ -146,6 +149,60 @@ class ApprovalAndConsentBoundaries(unittest.TestCase):
         # "Latest stored" flips to the divider's right when 90 units of room are missing.
         self.assertIn("anchorX - 4 - 56 >= 90", js)
         self.assertIn('"text-anchor": roomLeft ? "end" : "start"', js)
+
+    @unittest.skipUnless(shutil.which("node"), "node is required")
+    def test_resident_sensor_chart_geometry_with_dense_history(self) -> None:
+        js: str = read(API / "resident_demo" / "web" / "demo.js")
+        helpers = re.search(r"  function el\(tag.*?\n  }\n", js, re.S)
+        chart = re.search(r"  var sensorMetrics = \[.*?(?=\n  function renderConsent)", js, re.S)
+        assert helpers and chart
+        script = (
+            "const document = { createElement: t => mk(t), createElementNS: (n, t) => mk(t) };\n"
+            "function mk(tag) { return { tag, attrs: {}, children: [], className: '',"
+            " setAttribute(k, v) { this.attrs[k] = v; },"
+            " appendChild(c) { this.children.push(c); return c; },"
+            " removeChild(c) { this.children.splice(this.children.indexOf(c), 1); } }; }\n"
+            + helpers.group(0)
+            + chart.group(0)
+            + """
+function run(count, hours) {
+const history = [];
+for (let i = 0; i < count; i++) {
+  const at = new Date(Date.UTC(2026, 10, 22, 0, 0) + i * 300000).toISOString();
+  history.push({ observed_at: at, temperature_c: 44 - (i % 3) * 0.1,
+    temperature_status: "ok", humidity_pct: 50, humidity_status: "ok" });
+}
+const last = Date.parse(history[count - 1].observed_at);
+const at = h => new Date(last + h * 3600000).toISOString();
+const points = hours.map(h => ({ forecast_at: at(h), temperature_c: 44, humidity_pct: 50 }));
+const forecast = { points };
+const svg = sensorChart(history, sensorMetrics[0], forecast).children[1];
+const circles = svg.children.filter(c => c.tag === "circle").map(c => c.attrs);
+const label = svg.children.find(c => c.textContent === "Latest stored");
+const line = svg.children.find(c => c.tag === "line" && c.attrs.class === "sensor-divider");
+return { xs: circles.map(c => c.cx), label: label.attrs, divider: line.attrs.x1,
+  squares: svg.children.filter(c => c.tag === "rect").length };
+}
+console.log(JSON.stringify({ dense: run(288, [1, 2, 3]), short: run(4, [6, 12, 24]) }));
+"""
+        )
+        out = json.loads(
+            subprocess.run(
+                ["node", "-e", script], capture_output=True, text=True, check=True
+            ).stdout
+        )
+        dense, short = out["dense"], out["short"]
+        xs = dense["xs"]
+        self.assertGreater(len(xs), 10)
+        self.assertTrue(
+            all(b - a >= 8.99 for a, b in zip(xs, xs[1:], strict=False)), "circles must not touch"
+        )
+        self.assertAlmostEqual(xs[-1], dense["divider"], places=6)  # latest reading is drawn
+        self.assertEqual(dense["squares"], 3)
+        self.assertLessEqual(dense["label"]["x"], dense["divider"] - 4)
+        self.assertEqual(dense["label"]["text-anchor"], "end")
+        self.assertGreaterEqual(short["label"]["x"], short["divider"] + 4)
+        self.assertEqual(short["label"]["text-anchor"], "start")
 
 
 class HumanEvidenceNotFabricated(unittest.TestCase):

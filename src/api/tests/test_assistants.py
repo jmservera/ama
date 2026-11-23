@@ -991,6 +991,51 @@ class ReviewTests(Base):
             with self.assertRaises(PermissionError):
                 self.service.authorize(db, user, "stock-prioritisation")
 
+    def test_bound_entra_forged_pointer_tenant_and_area_scope(self):
+        user = self.bound_entra()
+        other = "33333333-3333-4333-8333-333333333333"
+        other_row = dict(code="ROLE-OTHER", name="Other PM", email="other-pm@example.test",
+                         role="Retrofit Programme Manager", oid=other, tid=user["tid"])
+        legacy_key = identity.LEGACY_TENANT_KEY
+
+        def authorized(candidate, case_id="ZF-1"):
+            with self.service.transaction() as db:
+                try:
+                    return self.service.authorize(db, candidate, "stock-prioritisation", case_id)["id"]
+                except PermissionError:
+                    return None
+
+        def set_row(**change):
+            with self.service.transaction() as db:
+                row = json.loads(db.execute("SELECT body FROM staff WHERE email=?", (user["email"],)).fetchone()[0])
+                row = {k: v for k, v in dict(row, **change).items() if v is not None}
+                db.execute("UPDATE staff SET body=? WHERE email=?", (canonical(row), user["email"]))
+
+        with self.service.transaction() as db:
+            db.execute("INSERT INTO staff (email, body) VALUES (?,?)", (other_row["email"], canonical(other_row)))
+        forged = dict(user, bound=dict(code="ROLE-OTHER", email=other_row["email"]),
+                      code="ROLE-OTHER", email=other_row["email"])
+        self.assertIsNone(authorized(forged))
+        self.assertEqual(authorized(user), "ZF-1")
+
+        set_row(tid=other)
+        self.assertIsNone(authorized(user))
+        set_row(tid=None)
+        self.assertIsNone(authorized(user))
+        with self.service.transaction() as db:
+            db.execute("INSERT INTO meta (key, value) VALUES (?,?)", (legacy_key, json.dumps(other)))
+        self.assertIsNone(authorized(user))
+        with self.service.transaction() as db:
+            db.execute("UPDATE meta SET value=? WHERE key=?", (json.dumps(user["tid"]), legacy_key))
+        self.assertEqual(authorized(user), "ZF-1")
+
+        with self.service.transaction() as db:
+            area = json.loads(db.execute("SELECT body FROM cases WHERE id='ZF-1'").fetchone()[0])["home"]["area"]
+        set_row(areas=[area])
+        self.assertEqual(authorized(user), "ZF-1")
+        set_row(areas=[area + "-other"])
+        self.assertIsNone(authorized(user))
+
     def test_unbound_and_view_only_entra_principals(self):
         user = identity.principal("11111111-1111-4111-8111-111111111111",
                                   "33333333-3333-4333-8333-333333333333", "Retrofit Programme Manager")

@@ -105,6 +105,22 @@ def is_write_lock_busy(exc: BaseException | None) -> bool:
     return False
 
 
+_SQLSTATE = re.compile(r"[0-9A-Z]{5}")
+
+
+def driver_sqlstate(exc: BaseException | None) -> str:
+    """The five-character SQLSTATE the driver reports for exc or its chain, or "" when none; never the message text."""
+    seen: set[int] = set()
+    while exc is not None and id(exc) not in seen:
+        seen.add(id(exc))
+        if type(exc).__module__.split(".")[0] in _DRIVER_MODULES and exc.args:
+            code = exc.args[0]
+            if isinstance(code, str) and _SQLSTATE.fullmatch(code):
+                return code
+        exc = exc.__cause__ or exc.__context__
+    return ""
+
+
 LOCK_RETRY_ATTEMPTS = 8
 LOCK_RETRY_BASE = 1.0
 LOCK_RETRY_CAP = 30.0

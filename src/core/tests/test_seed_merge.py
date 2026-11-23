@@ -131,6 +131,26 @@ class SeedMergeTests(SeedMergeBase):
         self.assertEqual(caught.exception.report["conflicts"], 1)
         self.assertEqual(self.state(), before)
 
+    def test_stale_seed_cannot_erase_a_seeded_hazard_clock(self) -> None:
+        case_id = next(c["id"] for c in dataset.DATA["cases"] if c["hazards"])
+        with self.store.lock:
+            hazard = self.store._case(case_id)["hazards"][0]
+            hazard["aware_at"] = "2026-10-17T09:00:00Z"
+            hazard["response_due_at"] = "2026-10-20T04:00:00Z"
+            self.store.save()
+        before = self.state()
+        with self.assertRaises(SeedMergeError) as caught:
+            self.store.merge_seed(self.seed, apply=True)
+        self.assertEqual(caught.exception.report["conflicts"], 1)
+        self.assertEqual(self.state(), before)
+        stored = json.loads(
+            self.store.db.execute("SELECT body FROM cases WHERE id=?", (case_id,)).fetchone()[0]
+        )["hazards"][0]
+        self.assertEqual(
+            (stored["aware_at"], stored["response_due_at"]),
+            ("2026-10-17T09:00:00Z", "2026-10-20T04:00:00Z"),
+        )
+
     def test_differing_document_aborts_but_continuity_is_preserved(self) -> None:
         self.store.merge_seed(self.seed, apply=True)
         data = json.loads(self.seed.read_text())
