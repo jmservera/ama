@@ -15237,3 +15237,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2253 chart out-of-range clamp (Refs #2253)
 
 * Added [issue-2253-live-r7-2026-11-23.md](research/issue-2253-live-r7-2026-11-23.md): resident chart marks for out-of-range values are clamped into the plot area, with a node-run regression test. No estate change.
+## [2026-11-23] add | Issue 116 live round 11 provider boundary text (Refs #116)
+
+* Added [issue-116-live-r11-evidence-2026-11-23.md](research/issue-116-live-r11-evidence-2026-11-23.md): unencodable text now refused as `input-refused` at the shared allowlist, with a failing-then-passing test. Live payloads, independent review and hosted CI stay unproven.

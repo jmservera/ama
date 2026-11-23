@@ -116,6 +116,16 @@ class InputBounds(unittest.TestCase):
                 part = {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{data}"}}
                 self.refused([{"type": "text", "text": "hi"}, part])
 
+    def test_shared_boundary_refuses_unencodable_text_visibly(self) -> None:
+        text = {"type": "text", "text": "a\ud800"}
+        for system, user in (("sys", "a\ud800"), ("a\udc00", "hi"), ("sys", [text])):
+            with self.subTest(system=system, user=user):
+                result = self.ai.evidence(system, user)
+                self.assertEqual(result["outcome"], "input-refused")
+                self.assertEqual(result["reason"], "input-type-not-approved")
+        self.assertEqual(self.meter.reserved, 0)
+        self.urlopen.assert_not_called()
+
     def test_approved_list_payload_reaches_the_meter(self) -> None:
         part = {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,AAAA"}}
         self.ai.evidence("sys", [{"type": "text", "text": "hi"}, part])
