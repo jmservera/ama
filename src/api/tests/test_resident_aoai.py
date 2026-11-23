@@ -2,6 +2,8 @@
 
 import json
 import unittest
+import urllib.error
+from email.message import Message
 from typing import Any
 from unittest.mock import Mock, patch
 
@@ -118,6 +120,25 @@ class AzureAdvisorTests(unittest.TestCase):
                 self.assertNotIn("DO-NOT-LOG", str(captured.output))
                 failing.side_effect = None
                 failing.return_value = reply() if failing is self.transport else "ticket"
+
+    def test_provider_throttle_and_outage_are_named_not_unverified(self) -> None:
+        cases = (
+            (urllib.error.HTTPError("u", 429, "DO-NOT-LOG", Message(), None), "busy, so try again"),
+            (urllib.error.HTTPError("u", 503, "DO-NOT-LOG", Message(), None), "did not respond"),
+            (TimeoutError("DO-NOT-LOG"), "did not respond"),
+        )
+        base = chat.answer("repair", {})
+        for error, expected in cases:
+            with self.subTest(error=error):
+                self.transport.side_effect = error
+                with self.assertLogs("zava_forward.api.resident_demo.aoai") as captured:
+                    result = self.advisor.answer_question(
+                        "How is my case going?", CASE, resident_key("C-1"), base
+                    )
+                self.assertIn(expected, result.label)
+                self.assertNotIn("verified reply", result.label)
+                self.assertIn(f"error={type(error).__name__}", str(captured.output))
+                self.assertNotIn("DO-NOT-LOG", str(captured.output))
 
     def test_output_injection_and_unrelated_ids_are_never_rendered(self) -> None:
         for raw in (

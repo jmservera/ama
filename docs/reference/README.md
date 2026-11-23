@@ -751,6 +751,8 @@ The [issue 2244 live re-verification, run 2](./research/issue-2244-live-r2-2026-
 
 The [issue 2243 live re-verification, run 2](./research/issue-2243-live-r2-2026-11-23.md) repeats the probe about 1.5 hours later on the same revisions with the same `usage_limit` result and 70 passing targeted tests; only the owner-gated ledger criterion remains.
 
+The [issue 2243 unverified AI reply diagnosis](./research/issue-2243-live-r3-2026-11-23.md) traces the generic label to the resident-mini deployment limit of 1 request a minute (HTTP 429) and adds named fallback reasons with a test.
+
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
 The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.
@@ -1643,6 +1645,7 @@ or infra acceptance claimed.
 | [Issue 2257 verify-fixed on revision 0000053 (#2257)](./research/issue-2257-verify-live-2026-11-22.md) | Re-verification that the deployed demo recovers from a dropped map read; per-criterion table |
 | [Issue 2257 live comparison on revision 0000054 (#2257)](./research/issue-2257-live-2026-11-23.md) | Dropped-connection recovery proven; a server 500 on fresh sessions found; sensor overlay hardening; per-criterion table |
 | [Issue 2257 map retry control and re-probe on revision 0000055 (#2257)](./research/issue-2257-retry-control-2026-11-23.md) | Visible retry button and bounded redraw; 8 of 8 fresh sessions loaded; per-criterion table |
+| [Issue 2302 AI consumption economics in the management view (#2302)](./research/issue-2302-ai-economics-live-2026-11-23.md) | Live Overview card on revision 0000055, focused Unknown-not-zero tests, per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |
