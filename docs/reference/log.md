@@ -14987,3 +14987,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 184 live body-read attempt (Refs #184)
 
 * Added [issue-184-live-bodyread-2026-11-23.md](research/issue-184-live-bodyread-2026-11-23.md): a bounded Event Hubs read returned 0 events because the namespace is network-private; live message-body secret absence stays unproven. A temporary role assignment was created and deleted. No source change.
+## [2026-11-23] add | Issue 2164 deployed code proof (Refs #2164)
+
+* Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
