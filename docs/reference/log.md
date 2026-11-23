@@ -14981,6 +14981,18 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application and its tests already return 401 for browser-style anonymous API requests; the deployed Easy Auth edge returns 302, left for an owner decision.
 
+## [2026-11-23] add | Issue 2311 per-task data contracts evidence (Refs #2311)
+
+* Added [issue-2311-task-contracts-2026-11-23.md](research/issue-2311-task-contracts-2026-11-23.md): a data contract for each of 13 AI tasks enforced in prompt rendering, proven by 8 focused tests; DPO and Legal approval is not claimed and stays under #121.
+## [2026-11-23] add | Issue 2237 live re-proof on revision 0000055 (Refs #2237)
+
+* Added [issue-2237-live-reproof-2026-11-23.md](research/issue-2237-live-reproof-2026-11-23.md): the deployed API contains the 503 mapping, it fired 14 times live, retention returned 200 in 56 of 56 calls, and each criterion is marked proven or unproven. No source change.
+## [2026-11-23] add | Issue 2245 chat 500 live recheck (Refs #2245)
+
+* Added [issue-2245-recheck-2026-11-23.md](research/issue-2245-recheck-2026-11-23.md): the thread creation 500 reproduced live on revision 0000055 while the SQL write lock was busy; the merged 503 fix is not deployed; the AI suspension is unchanged. Index updated.
+## [2026-11-23] add | Issue 2254 safety count run 4 (Refs #2254)
+
+* Added [issue-2254-live-r4-2026-11-23.md](research/issue-2254-live-r4-2026-11-23.md): reverting the stale hazard-column repair makes the regression test fail (3 != 4); live tile, map markers and list agree at 23 by case id. No source change.
 ## [2026-11-23] add | Issue 2304 assistants forecast statement count (Refs #2304)
 
 * Added [issue-2304-forecast-live-2026-11-23.md](research/issue-2304-forecast-live-2026-11-23.md): the forecast hang reproduced live, cut from about 80 statements per open case to a flat 20 by a read-through view, with a 10 s named unavailable state; the live re-check is unproven because the registry is private.
@@ -15006,3 +15018,16 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 116 string-size boundary gap (Refs #116)
 
 * Added [issue-116-live-r9-evidence-2026-11-23.md](research/issue-116-live-r9-evidence-2026-11-23.md): the shared provider allowlist now bounds string input before the protection hold, with two tests; live payloads stay unproven.
+## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
+
+* Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.
+
+## [2026-11-23] add | Issue 1259 real-filesystem archive path regressions (Refs #1259)
+
+* Added [2026-11-23-ranking-archive-unusable-1259-live-r10.md](research/2026-11-23-ranking-archive-unusable-1259-live-r10.md): regular-file ancestor, symlink loop and unsearchable-parent scenarios in the runner tests; mutation proves they fail without the guard.
+## [2026-11-23] add | Issue 2255 live re-check, run 4 (Refs #2255)
+
+* Added [issue-2255-live-r4-2026-11-23.md](research/issue-2255-live-r4-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with a target (17 overdue, 5 open, 0 unknown) on revision 0000055; re-seed survival stays owner-gated. No source or estate change.
+## [2026-11-23] add | Issue 2256 live verification after the handoff seed (Refs #2256)
+
+* Added [issue-2256-live-2026-11-23d.md](research/issue-2256-live-2026-11-23d.md): on API revision 0000055 the waiting screen lists all 4 seeded handoffs with due time and chase owner, and the case card agrees; criteria A, B1, B2 and C are proven for the demo and no view code change was needed.

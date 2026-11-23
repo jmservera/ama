@@ -26,7 +26,11 @@
    "evidence": ".copilot-tracking/research/2026-11-23-issue-1259-live-r8-research.md"
   },
   {
+<<<<<<< HEAD
    "decision": "Critique executed once, verdict proceed",
+=======
+   "decision": "Review executed once, conformant for test-only scope",
+>>>>>>> dbce2d6de5 (test(core): add real-filesystem unusable archive path regressions)
    "status": "confirmed",
    "evidence": ".copilot-tracking/plans/2026-11-23-issue-1259-live-r8-critique.md"
   },

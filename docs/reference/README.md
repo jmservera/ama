@@ -594,6 +594,7 @@ A [fifth run](./research/issue-1258-live-r5-2026-11-19.md) records the per-crite
 A [sixth run](./research/issue-1258-live-r6-2026-11-21.md) adds a mutation check that shows the ancestor regression failing without the parent sync; criterion 5 stays unproven.
 An [eighth run](./research/issue-1258-live-r8-2026-11-23.md) repeats the mutation check at head 342fad401d and confirms live revisions 0000054 and 0000026; criterion 5 stays unproven.
 A [ninth run](./research/issue-1258-1259-live-r9-2026-11-23.md) covers #1258 and #1259 at head 9dbfab6f56 with a mutation check for each fix; the process criteria stay unproven.
+A [tenth run](./research/issue-1258-live-r10-2026-11-23.md) adds a real-process race test for first publication into a missing nested archive; criterion 5 stays unproven.
 
 For #2116, the [drill criterion classification](./research/issue-2116-drill-criterion-demo-classification-2026-11-23.md) records the witnessed suspension drill as owner-gated and unproven for the demo.
 
@@ -719,6 +720,8 @@ The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a d
 
 The [issue 2245 chat note](./research/issue-2245-live-2026-11-23.md) finds the live demo has no generative chat answers because a leftover AI suspension holds them (already stated in the banner), and makes a busy SQL write lock on chat thread creation answer 503 instead of 500.
 
+The [issue 2245 recheck](./research/issue-2245-recheck-2026-11-23.md) reproduces the thread creation 500 live on revision 0000055 under a busy SQL write lock, with the fix not yet deployed and the AI suspension unchanged, plus a per-criterion table.
+
 The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.md) records revision 0000054 healthy for 33 min with the start-up lock retry present, zero restarts and a clean second-replica start; the held-lock test stays unproven.
 
 The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records read only proof that scheduled simulator runs reach IoT Hub, the receiver and the employee map (288 `SYN-` devices, hub ingress equal to egress, fresh case readings), the clean secret scan and the unproven resident live view (#184).
@@ -732,6 +735,8 @@ The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-
 The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026-11-22.md) records a desktop Playwright check of 2255, 2253, 2254, 2256 and the map on revisions 0000051 and 0000023 (passes), and shows generative AI answers still blocked by an open suspension and the resident ledger expiry, with screenshots and a per-item table.
 
 The [issue 2254 run 3 note](./research/issue-2254-live-r3-2026-11-23.md) records a fresh live desktop check that the Overview tile, map markers, All cases list and API all show 23 safety issues, and a test that asserts the map count against the tile and list.
+
+The [issue 2254 run 4 note](./research/issue-2254-live-r4-2026-11-23.md) reproduces the 3 versus 4 safety count on the code by reverting the stale-column repair, shows the regression test fails without it, and re-checks tile, map and list by case id on the live demo (23, 23, 23).
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 
@@ -1573,6 +1578,7 @@ or infra acceptance claimed.
 | [Issue 1259 archive path regressions, run 6 (#1259)](./research/2026-11-22-ranking-archive-unusable-1259-live-r6.md) | Seven failures before the fix and 110 passing tests on main 10cad2e413; mocked stat failure noted; hosted checks and independent assessment unproven | 2026-11-22 |
 | [Issue 1259 archive path regressions, run 7 (#1259)](./research/2026-11-23-ranking-archive-unusable-1259-live-r7.md) | Seven failures before the fix and 110 passing tests on main 342fad401d; live revisions 0000054 and 0000026 do not host the ranking runner; FULL receipt, hosted checks and independent assessment unproven |
 | [Issue 1259 archive path regressions, run 8 (#1259)](./research/2026-11-23-ranking-archive-unusable-1259-live-r8.md) | Real mode-0 parent regression fails before the fix and 111 tests pass; FULL receipt, hosted checks and independent assessment unproven |
+| [Issue 1259 real-filesystem regressions, run 10 (#1259)](./research/2026-11-23-ranking-archive-unusable-1259-live-r10.md) | ENOTDIR, ELOOP and EACCES archive paths added to the runner tests; mutation red; FULL receipt, hosted checks and independent assessment unproven |
 | [Coordinator contract criteria (#1204)](./research/coordinator-contract-criteria-1204-live-2026-11-18.md) | Per-sub-claim proven or unproven record for the unticked liveness criterion: instruction text and guard tests proven on main, runtime liveness over all ticks unproven for the demo |
 | [Coordinator tick liveness, real window (#1204)](./research/coordinator-tick-log-real-window-1204-live-2026-11-19.md) | `tools/check-tick-log.py` on 216 real coordinator ticks: 0 violations; closure-batch and approval sub-claims unproven because the schema lacks those fields |
 | [Issue 1204 criteria re-verification (2026-11-23)](./research/issue-1204-live-2026-11-23.md) | Main 461ac3e804 and live revisions 0000054 and 0000026 checked; 11 checker tests pass; criterion 2 stays unproven until a real window uses the new tick fields |
@@ -1653,6 +1659,7 @@ or infra acceptance claimed.
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
+| [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
 | [Issue 2304 assistants forecast did not answer on live data (#2304)](./research/issue-2304-forecast-live-2026-11-23.md) | Live 200 s hang reproduced, statement-count profile, bulk-read fix with a 10 s named state; live re-check blocked by the private registry; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
@@ -1847,6 +1854,7 @@ or infra acceptance claimed.
 | [Issue 2237 Cause and Fix](./research/issue-2237-live-cause-and-fix-2026-11-23.md) | Issue 2237: the retention 500 traced to the 15 s SQL write-lock timeout from Log Analytics, the 503 mapping that fixes it, and a per-criterion table with the live re-proof on revision 0000054 |
 | [Issue 2237 Smoke of API 0000055 and Resident 0000027](./research/issue-2237-smoke-0055-live-2026-11-23.md) | Live desktop smoke on 2026-11-23: retention 200, chat thread, employee map with sensor overlay, resident chart and start-up health, pass or fail per check for issues 2237, 2257 and 2244; nothing ticked |
 | [Issue 223 Review Effort Measurement, Run 8](./research/issue-223-live-r8-2026-11-23.md) | Issue 223: measured review time retained in AI review evidence, test results, and a per-criterion table; nothing ticked |
+| [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
 
 
 
@@ -2253,3 +2261,5 @@ A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md
 The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records the second live probe on revision 0000025, the diagnosable ledger refusal states added to the resident AI path and a per-criterion table.
 
 The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.
+
+The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.

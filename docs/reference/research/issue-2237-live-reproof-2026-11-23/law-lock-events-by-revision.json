@@ -1,0 +1,74 @@
+[
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000055",
+    "TableName": "PrimaryResult",
+    "busy503": "True",
+    "firstSeen": "2026-11-23T07:09:06.2140683Z",
+    "lastSeen": "2026-11-23T13:39:42.9563766Z",
+    "n": "14"
+  },
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000055",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-23T07:09:10.4645047Z",
+    "lastSeen": "2026-11-23T07:18:02.0480514Z",
+    "n": "6"
+  },
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000054",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-23T01:47:42.4042642Z",
+    "lastSeen": "2026-11-23T01:47:42.4042642Z",
+    "n": "1"
+  },
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000047",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-22T10:34:48.1250587Z",
+    "lastSeen": "2026-11-22T13:49:11.1341727Z",
+    "n": "10"
+  },
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000048",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-22T13:42:28.4608955Z",
+    "lastSeen": "2026-11-22T13:46:16.5220859Z",
+    "n": "5"
+  },
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000049",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-22T13:51:33.6366916Z",
+    "lastSeen": "2026-11-22T13:53:33.1300059Z",
+    "n": "4"
+  },
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000050",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-22T13:55:45.5001722Z",
+    "lastSeen": "2026-11-22T13:55:45.5001722Z",
+    "n": "1"
+  },
+  {
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-21T23:56:02.9277872Z",
+    "lastSeen": "2026-11-21T23:57:48.0152066Z",
+    "n": "2"
+  },
+  {
+    "RevisionName": "",
+    "TableName": "PrimaryResult",
+    "busy503": "False",
+    "firstSeen": "2026-11-22T05:35:33.0070659Z",
+    "lastSeen": "2026-11-22T05:35:33.0070659Z",
+    "n": "1"
+  }
+]

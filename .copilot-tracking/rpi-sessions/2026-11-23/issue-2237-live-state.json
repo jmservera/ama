@@ -1,1 +1,47 @@
-{"task_id": "issue-2237-live-20261123T035245Z", "task_slug": "issue-2237-smoke-0055", "parent_task": null, "mode": "automatic", "active_phase": "Follow-up", "status": "completed", "session_status": "running", "artifact_paths": {"research": ".copilot-tracking/research/2026-11-23/issue-2237-smoke0055-research.md", "plan": ".copilot-tracking/plans/2026-11-23/issue-2237-smoke0055-plan.md", "details": ".copilot-tracking/details/2026-11-23/issue-2237-smoke0055-details.md", "critique": ".copilot-tracking/plans/2026-11-23/issue-2237-smoke0055-plan.md", "changes": ".copilot-tracking/changes/2026-11-23/issue-2237-smoke0055-changes.md", "review": ".copilot-tracking/reviews/2026-11-23/issue-2237-smoke0055-review.md"}, "confirmed_decisions": [{"decision": "Owner 2026-11-18: synthetic demo, desktop only, live Azure authorised, no src change so tier focused", "status": "confirmed", "evidence": "task brief"}, {"decision": "critique executed once, proceed with applied amendments", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-23/issue-2237-smoke0055-plan.md"}, {"decision": "review executed once, conformant", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-23/issue-2237-smoke0055-review.md"}], "blockers": [], "next_action": {"phase": "Follow-up", "action": "owner selects follow-up"}, "prioritized_follow_ups": [{"rank": 1, "task": "Trace readiness probe timeouts on 0000055 (Log Analytics)", "rationale": "start-up health only partly proven", "evidence": "docs/reference/research/issue-2237-smoke-0055-live-2026-11-23.md"}, {"rank": 2, "task": "Confirm 0000055 contains the 503 mapping", "rationale": "fix was local only", "evidence": "cause-and-fix note"}]}
+{
+ "task_id": "issue-2237-live-20261123T142906Z",
+ "task_slug": "issue-2237-live2",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-23/issue-2237-live2-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-23/issue-2237-live2-plan.md",
+  "details": ".copilot-tracking/details/2026-11-23/issue-2237-live2-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-23/issue-2237-live2-plan.md",
+  "changes": ".copilot-tracking/changes/2026-11-23/issue-2237-live2-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-23/issue-2237-live2-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Owner 2026-11-18: synthetic demo, desktop only, live Azure authorised, no drills; tier focused unless src changes",
+   "status": "confirmed",
+   "evidence": "task brief"
+  },
+  {
+   "decision": "critique executed once, proceed",
+   "status": "done",
+   "evidence": ".copilot-tracking/plans/2026-11-23/issue-2237-live2-plan.md"
+  },
+  {
+   "decision": "review executed once, conformant",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-23/issue-2237-live2-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "owner selects follow-up"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Reduce SQL write-lock hold time",
+   "rationale": "503s continue",
+   "evidence": "docs/reference/research/issue-2237-live-reproof-2026-11-23.md"
+  }
+ ]
+}

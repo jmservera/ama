@@ -1,5 +1,5 @@
 {
- "task_id": "1258-live-20261123T070856Z",
+ "task_id": "issue-1258-live-20261123T133754Z",
  "task_slug": "issue-1258-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,41 +7,41 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-23/issue-1258-live-20261123T070856Z-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-23/issue-1258-live-20261123T070856Z-plan.md",
-  "details": ".copilot-tracking/details/2026-11-23/issue-1258-live-20261123T070856Z-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-23/issue-1258-live-20261123T070856Z-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-23/issue-1258-live-20261123T070856Z-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-23/issue-1258-live-20261123T070856Z-review.md"
+  "research": ".copilot-tracking/research/2026-11-23/issue-1258-live-20261123T133754Z-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-23/issue-1258-live-20261123T133754Z-plan.md",
+  "details": ".copilot-tracking/details/2026-11-23/issue-1258-live-20261123T133754Z-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-23/issue-1258-live-20261123T133754Z-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-23/issue-1258-live-20261123T133754Z-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-23/issue-1258-live-20261123T133754Z-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Tier FOCUSED unless src changes; no push",
+   "decision": "Tier FOCUSED (test-only unless src changes); no push",
    "status": "confirmed",
    "evidence": "coordinator brief"
   },
   {
    "decision": "critique executed once, compatible",
    "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-23/issue-1258-live-20261123T070856Z-critique.md"
+   "evidence": "critique artifact"
   },
   {
    "decision": "review executed once, conformant",
    "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-23/issue-1258-live-20261123T070856Z-review.md"
+   "evidence": "review artifact"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "coordinator publishes; owner runs FULL gate"
+  "action": "coordinator publishes; owner runs gates"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Push, hosted CI and independent review for both process criteria",
-   "rationale": "only unproven criteria",
-   "evidence": "issues 1258, 1259"
+   "task": "Criterion 5: FULL receipt, independent exact-head review, hosted CI",
+   "rationale": "owner-gated",
+   "evidence": "changes record table"
   }
  ]
 }
