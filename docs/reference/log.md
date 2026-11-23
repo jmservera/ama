@@ -14961,3 +14961,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2256 B2 handoff due-time seed tool (Refs #2256)
 
 * Added [issue-2256-b2-seed-2026-11-23.md](research/issue-2256-b2-seed-2026-11-23.md): a revertible demo seed tool gives timezone-aware offer and due times to pending handoffs; proven locally, not applied to live SQL.
+## [2026-11-23] update | Issue 1259 archive path regressions, run 8 (Refs #1259)
+
+* Added [2026-11-23-ranking-archive-unusable-1259-live-r8.md](research/2026-11-23-ranking-archive-unusable-1259-live-r8.md): real permission-denied archive regression, red-before and green-after (111 tests). Test-only source change.

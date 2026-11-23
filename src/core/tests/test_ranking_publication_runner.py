@@ -747,6 +747,22 @@ class UnusableArchivePathTests(RunnerBase):
         self.assertEqual((code, self.codes(res)), (2, ["archive_unreadable"]))
         self.assertEqual(self.archive.read_text(), "not a folder")
 
+    @unittest.skipIf(os.geteuid() == 0, "root bypasses directory permissions")
+    def test_real_permission_denied_parent_is_unknown_not_creatable(self) -> None:
+        locked = self.root / "locked"
+        locked.mkdir()
+        self.archive = locked / "archive"
+        locked.chmod(0)
+        self.addCleanup(locked.chmod, 0o700)
+        ver = self.go("verify")
+        sched = self.go("schedule")
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((ver["status"], ver["latest"]), ("problem", None))
+        self.assertEqual((sched["status"], sched["due"]), ("problem", None))
+        self.assertEqual((pub["status"], self.codes(pub)), ("refused", ["archive_unreadable"]))
+        for res in (ver, sched, pub):
+            self.assertNotIn(str(self.root), json.dumps(res))
+
     def test_oserror_without_a_reason_is_reported_without_the_path(self) -> None:
         self.archive.mkdir()
         with patch.object(rp, "verify", side_effect=OSError(str(self.archive))):
