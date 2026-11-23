@@ -15044,3 +15044,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Resident showcase r9, Server header fix (Refs #462)
 
 * Added [resident-showcase-live-r9-2026-11-23.md](research/resident-showcase-live-r9-2026-11-23.md): 36 live checks on revision 0000028; the resident demo no longer sends the Python version in `Server` (regression test); live effect and HSTS await a redeploy.
+
+## [2026-11-23] add | Capstone pitch Tokenomics seventh pass with regression tests (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-23b.md](research/capstone-pitch-435-live-2026-11-23b.md): criteria 1 and 4 proven for the demo, criterion 2 unproven; two tests in tools/test_capstone_pitch_docs.py bind the recorded decisions to the deck and the #432 batch record. No deck or estate change.
