@@ -15006,3 +15006,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2244 StartUp probe vs retry budget (Refs #2244)
 
 * Added [issue-2244-live-r3-2026-11-23.md](research/issue-2244-live-r3-2026-11-23.md): live StartUp window 121 s against a 211 s retry budget; Bicep window raised to 241 s and test-pinned; not deployed.
+
+## [2026-11-23] add | Issue 144 hardening receipt (Refs #144)
+
+* Added [issue-144-live-hardening-receipt-2026-11-23.md](research/issue-144-live-hardening-receipt-2026-11-23.md) and `infra/scripts/deployed_hardening.py` with tests: guard enforced live, PID 1 non-root with NoNewPrivs and empty capability sets; read-only root and pipeline-built images stay unproven. No Azure change.
