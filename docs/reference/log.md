@@ -15193,3 +15193,10 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2257 map redraw after a gateway failure (Refs #2257)
 
 * Added [issue-2257-live-r6-2026-11-23.md](research/issue-2257-live-r6-2026-11-23.md): a non-JSON gateway failure now gets the map's one automatic redraw, with a regression test; per-criterion table.
+## [2026-11-23] update | Owner decisions: demo scope, SUS-1, production-only approvals
+
+* Owner decision (Juan Manuel Servera, 2026-11-23): the demo needs no live-Azure human sign-off; AI is the main demo topic. A demo-only AI suspension override (`ZF_DEMO_AI_SUSPENSION_OVERRIDE`, `ZF_ENV` not production) went live in #2326 and #2331.
+* SUS-1: the owner decided to lift it formally and named himself the restart authority. The guarded restart flow needs a second person and an OID-bound `ai_restart` capability (OD-35), so the formal lift is deferred to production in #2336.
+* Legal, DPO and RAI approvals are deferred to production (#2337); no named Legal contact exists yet and the demo disclaimer stays as is.
+* Person-run assistive technology testing is deferred to production (#2338); who runs it is undecided and the demo carries no statement about it.
+* CI: unit tests are sharded and Trivy and SBOM moved to the manual workflow `src-supply-chain.yml` (#2335); the longest api test shard now takes about 7 minutes against about 28 for the old job.

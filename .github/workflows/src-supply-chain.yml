@@ -1,0 +1,89 @@
+name: Source supply-chain scans (production)
+
+# Production-only checks: Trivy vulnerability gate, full unfixed report and SPDX SBOM.
+# Owner decision 2026-11-23: not run for the demo. Manual dispatch only; to enable for
+# production add a `pull_request` or `schedule` trigger here.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: src-supply-chain-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: supply-chain-${{ matrix.project }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [api, agents, orchestrator, importer]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+      - name: Build image
+        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
+        with:
+          context: src
+          file: src/${{ matrix.project }}/Dockerfile
+          tags: zava-forward-${{ matrix.project }}:ci
+          load: true
+          cache-from: type=gha,scope=${{ matrix.project }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.project }}
+      - name: Gate fixable high and critical vulnerabilities
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          version: v0.76.0
+          image-ref: zava-forward-${{ matrix.project }}:ci
+          trivy-config: src/trivy.yaml
+          severity: HIGH,CRITICAL
+          exit-code: "1"
+          vuln-type: os,library
+          ignore-unfixed: true
+          format: json
+          output: trivy-${{ matrix.project }}.json
+      - name: Report all high and critical vulnerabilities including unfixed
+        if: ${{ !cancelled() }}
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: zava-forward-${{ matrix.project }}:ci
+          trivy-config: src/trivy.yaml
+          severity: HIGH,CRITICAL
+          exit-code: "0"
+          vuln-type: os,library
+          ignore-unfixed: false
+          format: json
+          output: trivy-${{ matrix.project }}-all.json
+          skip-setup-trivy: true
+      - name: Retain fixable gate and full unfixed-inclusive scan evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: trivy-${{ matrix.project }}
+          path: |
+            trivy-${{ matrix.project }}.json
+            trivy-${{ matrix.project }}-all.json
+          if-no-files-found: error
+      - name: Generate SBOM (SPDX)
+        if: ${{ !cancelled() }}
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8 # v0.36.0
+        with:
+          image-ref: zava-forward-${{ matrix.project }}:ci
+          trivy-config: src/trivy.yaml
+          format: spdx-json
+          output: zava-forward-${{ matrix.project }}.spdx.json
+          scan-type: image
+          skip-setup-trivy: true
+      - name: Retain SPDX evidence
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: zava-forward-${{ matrix.project }}-sbom
+          path: zava-forward-${{ matrix.project }}.spdx.json
+          if-no-files-found: error
