@@ -222,6 +222,28 @@ class DeployedImageAndProbeInvariants(unittest.TestCase):
         self.assertGreaterEqual(budget, 60)
         self.assertLessEqual(budget, 300)
 
+    def test_startup_window_outlasts_the_sql_lock_retry_budget(self) -> None:
+        store = (ROOT / "src/core/src/zava_forward/core/mssqlstore.py").read_text()
+
+        def constant(name: str) -> float:
+            return float(re.search(rf"^{name} = ([\d.]+)", store, re.MULTILINE).group(1))
+
+        attempts = int(constant("LOCK_RETRY_ATTEMPTS"))
+        lock_timeout = int(re.search(r"@LockTimeout = (\d+)", store).group(1)) / 1000
+        sleeps = sum(
+            min(constant("LOCK_RETRY_CAP"), constant("LOCK_RETRY_BASE") * 2**i)
+            for i in range(attempts - 1)
+        )
+        worst_case = attempts * lock_timeout + sleeps
+        text = (INFRA / "modules/containerapps.bicep").read_text()
+        api = text.split("resource api ", 1)[1].split("resource apiAuth ", 1)[0]
+        startup = re.search(r"type: 'Startup', httpGet: \{[^}]*\}, ([^}\n]+) \}", api).group(1)
+        values = {k: int(v) for k, v in re.findall(r"(\w+): (\d+)", startup)}
+        window = (
+            values["initialDelaySeconds"] + values["periodSeconds"] * values["failureThreshold"]
+        )
+        self.assertGreater(window, worst_case)
+
     def test_queue_workers_scale_from_zero_with_a_finite_cap(self) -> None:
         text = (INFRA / "modules/containerapps.bicep").read_text()
         agents = text.split("resource agents ", 1)[1].split("resource orchestrator ", 1)[0]

@@ -827,7 +827,7 @@ class BicepPolicyTests(unittest.TestCase):
                     "initialDelaySeconds": 1,
                     "periodSeconds": 3,
                     "timeoutSeconds": 3,
-                    "failureThreshold": 40,
+                    "failureThreshold": 80,
                 },
                 {
                     "type": "Readiness",

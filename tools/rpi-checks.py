@@ -368,6 +368,15 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
+def wall_seconds(rows: list[dict[str, Any]]) -> float | None:
+    """Seconds from the earliest command start to the latest finish, retries included."""
+    starts = [datetime.fromisoformat(r["started"]) for r in rows if r.get("started")]
+    ends = [datetime.fromisoformat(r["finished"]) for r in rows if r.get("finished")]
+    if not starts or not ends:
+        return None
+    return round((max(ends) - min(starts)).total_seconds(), 1)
+
+
 def git(root: Path, *args: str) -> str:
     return subprocess.check_output(
         ["git", "-C", str(root), *args], text=True, stderr=subprocess.PIPE
@@ -3300,6 +3309,7 @@ class Runner:
             "test_shards": self.test_shards,
             "shard_helpers": self.shard_helpers,
             "retries": self.retries,
+            "wall_seconds": wall_seconds([*self.rows, *self.retries]),
             "stack": self.stack,
             "skipped": self.selection.get("skipped", {}),
             "extras": self.extras,
