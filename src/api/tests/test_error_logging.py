@@ -2,6 +2,7 @@
 
 import http.client
 import json
+import os
 import threading
 import unittest
 import urllib.error
@@ -18,6 +19,11 @@ from zava_forward.api import auth
 from zava_forward.api.server import App, _Server, make_handler
 
 SECRET = "tok-SECRET-value"
+CHAT_APPROVED = {
+    "CHAT_DPIA_REF": "SYNTH-DPIA-1",
+    "CHAT_LAWFUL_BASIS_REF": "SYNTH-LB-1",
+    "CHAT_NOTICE_REF": "SYNTH-NOTICE-1",
+}
 
 
 class ErrorLoggingTests(Base):
@@ -102,6 +108,65 @@ class ErrorLoggingTests(Base):
         ):
             self.assertIn(part, line)
         self.assertNotIn(SECRET, line)
+
+    def post(self, path: str, body: dict[str, Any]) -> tuple[int, bytes, str | None]:
+        req = urllib.request.Request(
+            self.base + path,
+            data=json.dumps(body).encode(),
+            headers={
+                "X-MS-CLIENT-PRINCIPAL": principal(oid=OID_SAM),  # type: ignore[no-untyped-call]
+                "X-ZF-CSRF": "1",
+                "Content-Type": "application/json",
+            },
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=20) as r:
+                return r.status, r.read(), None
+        except urllib.error.HTTPError as e:
+            return e.code, e.read(), e.headers.get("Retry-After")
+
+    def busy_error(self) -> Exception:
+        error: Exception = type(
+            "ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"}
+        )(f"[SQL Server]{LOCK_FAILED} {SECRET}")
+        return error
+
+    def test_busy_sql_write_lock_on_chat_thread_create_answers_503_with_retry_after(self) -> None:
+        busy = self.busy_error()
+
+        def create_fails(*_a: object, **_k: object) -> None:
+            raise busy
+
+        with (
+            patch.dict(os.environ, CHAT_APPROVED),
+            patch.object(self.store, "chat_create_thread", create_fails),
+            self.assertLogs("zava_forward.api.server", "WARNING") as logs,
+        ):
+            code, body, retry = self.post("/api/chat/threads", {})
+        self.assertEqual((code, retry), (503, "5"))
+        self.assertNotIn(SECRET, body.decode())
+        line = "\n".join(logs.output)
+        for part in (
+            "http-error POST /api/chat/threads status=503",
+            "cause=sql-write-lock-busy",
+        ):
+            self.assertIn(part, line)
+        self.assertNotIn(SECRET, line)
+
+    def test_busy_sql_write_lock_on_other_post_still_answers_500(self) -> None:
+        busy = self.busy_error()
+
+        def add_fails(*_a: object, **_k: object) -> None:
+            raise busy
+
+        with (
+            patch.dict(os.environ, CHAT_APPROVED),
+            patch.object(self.store, "chat_resume", add_fails),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
+        ):
+            code, _, retry = self.post("/api/chat/threads/CT-x/ask", {"content": "hello"})
+        self.assertEqual((code, retry), (500, None))
+        self.assertIn("status=500", "\n".join(logs.output))
 
     def test_other_driver_error_on_retention_still_answers_500(self) -> None:
         other = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(

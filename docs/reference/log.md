@@ -14944,3 +14944,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2244 start-up lock, law store retry (Refs #2244)
 
 * Added [issue-2244-live-r2-2026-11-23.md](research/issue-2244-live-r2-2026-11-23.md): revision 0000055 carries the fast paths; two scale-out replicas exited on a lock timeout in the law store start-up; retry added in code, not deployed; C4 and C5 unproven.
+
+## [2026-11-23] add | Issue 2245 employee chat 500 and no generative answer (Refs #2245)
+
+* Added [issue-2245-live-2026-11-23.md](research/issue-2245-live-2026-11-23.md): the live chat has no model calls because an open all-scope AI suspension from 2026-11-18 holds them (banner already says so); the thread-create 500 was not reproduced and `POST /api/chat/threads` now answers 503 on a busy SQL write lock.

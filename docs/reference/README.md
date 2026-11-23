@@ -717,6 +717,8 @@ The [issue 2255 backfill note](./research/issue-2255-backfill-2026-11-22.md) rec
 
 The [live demo smoke](./research/issue-2202-demosmoke-2026-11-22.md) records a desktop Playwright run on the deployed demo API and resident app with screenshots, three defects (2243, 2244, 2245) and a per-criterion table for issue 2202.
 
+The [issue 2245 chat note](./research/issue-2245-live-2026-11-23.md) finds the live demo has no generative chat answers because a leftover AI suspension holds them (already stated in the banner), and makes a busy SQL write lock on chat thread creation answer 503 instead of 500.
+
 The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.md) records revision 0000054 healthy for 33 min with the start-up lock retry present, zero restarts and a clean second-replica start; the held-lock test stays unproven.
 
 The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records read only proof that scheduled simulator runs reach IoT Hub, the receiver and the employee map (288 `SYN-` devices, hub ingress equal to egress, fresh case readings), the clean secret scan and the unproven resident live view (#184).

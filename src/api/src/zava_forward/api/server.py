@@ -824,8 +824,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return
             frame = traceback.extract_tb(exc.__traceback__)[-1:] or [None]
             where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame[0] else "unknown"
-            if not sent and method in ("GET", "HEAD") and is_write_lock_busy(exc):
-                # Another writer held the SQL write lock for the 15 s timeout (issue #2237). Only safe methods: a failed POST may follow a committed step, so it keeps the 500 path.
+            retry_safe = method in ("GET", "HEAD") or (method == "POST" and path == "/api/chat/threads")
+            if not sent and retry_safe and is_write_lock_busy(exc):
+                # Another writer held the SQL write lock for the 15 s timeout (issues #2237 and #2245). Safe methods, and chat thread creation (one insert and commit, so a lock timeout leaves nothing to repeat). Any other failed POST may follow a committed step, so it keeps the 500 path.
                 logging.getLogger(__name__).warning("http-error %s %s status=503 exc=%s cause=sql-write-lock-busy at=%s", method, _printable(path), name, where)
                 self._headers_buffer = []
                 try:
