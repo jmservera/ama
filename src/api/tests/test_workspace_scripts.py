@@ -212,6 +212,61 @@ const ok = {status: 200, ok: true, headers: {get: () => "application/json"},
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_map_failure_offers_a_visible_retry_and_one_bounded_redraw(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const start = source.indexOf("retryFit = fit;");
+const end = source.indexOf("return;", start);
+assert.ok(start > 0 && end > start, "map failure branch missing");
+const branch = source.slice(start, end);
+assert.match(
+  source,
+  /h\("button", \{ type: "button", class: "alt", hidden: true,[\s\S]*?"Try the map again"/,
+  "a native retry button is hidden until a failure");
+assert.match(source, /sensorFilter, info, retry, tileNote/,
+  "the retry button sits beside the notice");
+assert.match(source, /const my = \+\+seq;\s*clearTimeout\(retryTimer\);\s*retry\.hidden = true;/,
+  "a new draw clears the pending redraw and hides the control");
+assert.match(source, /clearTimeout\(retryTimer\);\s*dialog\.remove\(\);/,
+  "dispose cancels the redraw");
+const run = (error) => {
+  const timers = [];
+  const ctx = vm.createContext({
+    fit: true, error, autoRetries: 0, retryTimer: null, retryFit: false,
+    retry: {hidden: true}, MAP_AUTO_RETRY_DELAYS: [4000], draws: [],
+    draw: fit => ctx.draws.push(fit),
+    setTimeout: (fn, ms) => { timers.push(ms); ctx.fire = fn; return 1; },
+  });
+  vm.runInContext(branch, ctx);
+  return {ctx, timers};
+};
+const dropped = run(new TypeError("Failed to fetch"));
+assert.equal(dropped.ctx.retry.hidden, false, "the retry control is visible after a failure");
+assert.deepEqual(dropped.timers, [4000], "one automatic redraw is scheduled");
+dropped.ctx.fire();
+assert.deepEqual(dropped.ctx.draws, [true], "the redraw keeps the fit flag");
+vm.runInContext("retryTimer = null; error = new TypeError('x'); " + branch, dropped.ctx);
+assert.deepEqual(dropped.timers, [4000], "no second automatic redraw");
+const server = Object.assign(new Error("boom"), {status: 500});
+const shown = run(server);
+assert.equal(shown.ctx.retry.hidden, false, "a server error still offers the control");
+assert.deepEqual(shown.timers, [], "an HTTP error is shown, never retried automatically");
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_law_helper_failure_renders_native_reload_before_reads(self) -> None:
         result = subprocess.run(
             [

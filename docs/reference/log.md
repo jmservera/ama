@@ -14948,3 +14948,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2245 employee chat 500 and no generative answer (Refs #2245)
 
 * Added [issue-2245-live-2026-11-23.md](research/issue-2245-live-2026-11-23.md): the live chat has no model calls because an open all-scope AI suspension from 2026-11-18 holds them (banner already says so); the thread-create 500 was not reproduced and `POST /api/chat/threads` now answers 503 on a busy SQL write lock.
+## [2026-11-23] add | Issue 2257 map retry control (Refs #2257)
+
+* Added [issue-2257-retry-control-2026-11-23.md](research/issue-2257-retry-control-2026-11-23.md): visible map retry button, one bounded redraw and a regression test; 8 of 8 fresh sessions loaded on revision 0000055. Origin of the live ProgrammingError stays unproven.

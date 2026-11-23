@@ -311,6 +311,7 @@ document.addEventListener("visibilitychange", () => {
 
 const STARTUP_RETRY_DELAYS = [500, 1500, 3000];
 const NETWORK_RETRY_DELAYS = [400, 1200];
+const MAP_AUTO_RETRY_DELAYS = [4000];
 const SCRIPT_RETRY_DELAYS = [250, 500, 1500];
 const STARTUP_RETRY_MESSAGE = "The service is still starting. Trying again, this can take a few seconds.";
 const NETWORK_RETRY_MESSAGE = "The connection dropped. Trying again.";
@@ -3049,6 +3050,11 @@ function mapPanel(coordinator = null, filters = null) {
   const el = h("div", { id: "leaflet", class: "leafmap", role: "region", tabindex: "0", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
   const info = h("p", { class: "muted", role: "status", "aria-live": "polite" });
   const tileNote = h("p", { class: "muted", role: "status", "aria-live": "polite" });
+  let retryFit = false, autoRetries = 0, retryTimer = null;
+  const retry = h("button", { type: "button", class: "alt", hidden: true, onclick: () => {
+    autoRetries = 0;
+    draw(retryFit);
+  } }, "Try the map again");
   const open = coordinator
     ? h("button", { type: "button", class: "alt", onclick: () => {
       collapse(false);
@@ -3122,7 +3128,7 @@ function mapPanel(coordinator = null, filters = null) {
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
-    sensorFilter, info, tileNote, listBox, open);
+    sensorFilter, info, retry, tileNote, listBox, open);
   const mapStage = h("div", { class: "map-stage" }, el, homeCard);
   const filterSlot = filters ? h("div", { class: "map-filter-slot" }, filters) : null;
   const dialog = h("dialog", { class: "map-dialog", "aria-labelledby": "map-title",
@@ -3171,6 +3177,7 @@ function mapPanel(coordinator = null, filters = null) {
     toggle.disabled = true;
     collapse(false);
     seq++;
+    clearTimeout(retryTimer);
     dialog.remove();
     slot.remove();
     map?.remove();
@@ -3246,6 +3253,8 @@ function mapPanel(coordinator = null, filters = null) {
   const draw = async (fit) => {
     if (signal.aborted) return;
     const my = ++seq;
+    clearTimeout(retryTimer);
+    retry.hidden = true;
     info.setAttribute("role", "status");
     info.textContent = "Loading map records. The case list remains available.";
     el.setAttribute("aria-busy", "true");
@@ -3302,13 +3311,20 @@ function mapPanel(coordinator = null, filters = null) {
       if (restore) el.focus({ preventScroll: true });
       listUl.replaceChildren();
       info.setAttribute("role", "alert");
-      info.textContent = ownedNotice(`Map unavailable: ${error.message}`, "use the case list or change the map filter, then contact application support if it continues.");
+      info.textContent = ownedNotice(`Map unavailable: ${error.message}`, "choose Try the map again, or use the case list, then contact application support if it continues.");
+      retryFit = fit;
+      retry.hidden = false;
+      // A dropped connection can outlast the read retries while a replica restarts; one later redraw is bounded.
+      if (!error.status && autoRetries < MAP_AUTO_RETRY_DELAYS.length) {
+        retryTimer = setTimeout(() => draw(retryFit), MAP_AUTO_RETRY_DELAYS[autoRetries++]);
+      }
       return;
     } finally {
       progress.finish();
       if (my === seq) el.removeAttribute("aria-busy");
     }
     if (signal.aborted || my !== seq) return;
+    autoRetries = 0;
     lastView = d;
     renderView(d);
     if (fit && d.bounds) {
