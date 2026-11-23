@@ -15,11 +15,12 @@ import unittest
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock, patch
 
+from azure.eventhub import EventData
 from azure.iot.device import X509
 from zava_forward.core.synthetic import sensor_stock
 from zava_forward.core.synthetic.sensor_stream import Replay, RunBudget, StreamError, replay
 
-from zava_forward.api.iot_stream import Activation, Binding, HubPublisher
+from zava_forward.api.iot_stream import AUTH, DEVICE, Activation, Binding, HubPublisher, decode
 
 ROOT = Path(__file__).resolve().parents[3]
 SCANNED = ("src", "infra", "docs", ".github")
@@ -288,3 +289,39 @@ class RuntimeLeakTests(unittest.IsolatedAsyncioTestCase):
                 await self.publisher.run(self.frames, self.budget, truth=self.truth.append)
         formatted = "".join(traceback.format_exception(caught.exception))
         self.assert_clean(repr(caught.exception) + formatted)
+
+
+class ReceiveLeakTests(unittest.TestCase):
+    """Hostile inbound bodies may carry a credential; refusals must not echo them."""
+
+    BINDING = Binding("SYN-SENS-SYN-1", "SENS-SYN-1", "ZF-1")
+
+    def decode(self, body: bytes) -> str:
+        message = EventData(body)
+        message.properties = {
+            DEVICE: self.BINDING.device_id.encode(),
+            AUTH: b'{"scope":"device","type":"x509"}',
+        }
+        with self.assertRaises(StreamError) as caught:
+            decode(message, {self.BINDING.device_id: self.BINDING})
+        return (
+            str(caught.exception)
+            + repr(caught.exception)
+            + "".join(traceback.format_exception(caught.exception))
+        )
+
+    def test_refusals_never_echo_body_content(self) -> None:
+        secret = f"HostName=x.azure-devices.net;SharedAccessKey={MARKER}"
+        bodies = (
+            f'{{"note":"{secret}"'.encode(),
+            f'{{"sensor_id":"{secret}","sensor_id":"B"}}'.encode(),
+            f'{{"sensor_id":"{secret}","home_id":"ZF-1"}}'.encode(),
+            secret.encode() + b" " * 4096,
+            b"[" * 5000 + secret.encode(),
+        )
+        for body in bodies:
+            with self.subTest(size=len(body)):
+                text = self.decode(body)
+                self.assertRegex(text, r"IOT_|SENSOR_|INVALID|REQUIRED|MISMATCH|NOT_")
+                self.assertNotIn(MARKER, text)
+                self.assertNotRegex(text, r"SharedAccess|HostName=")
