@@ -100,5 +100,38 @@ class StartupLockRetryTests(unittest.TestCase):
         self.assertEqual(store.db.startup_retries, 0)
 
 
+class WriteLockBusyHelperTests(unittest.TestCase):
+    @staticmethod
+    def driver_error(name: str, message: str, module: str = "mssql_python.exceptions") -> Exception:
+        error: Exception = type(name, (Exception,), {"__module__": module})(message)
+        return error
+
+    def test_driver_programming_error_with_the_lock_text_is_busy(self) -> None:
+        err = self.driver_error(
+            "ProgrammingError", f"Driver Error; DDBC Error: [SQL Server]{LOCK_FAILED}"
+        )
+        self.assertTrue(mssqlstore.is_write_lock_busy(err))
+
+    def test_busy_error_is_found_through_the_exception_chain(self) -> None:
+        inner = self.driver_error("ProgrammingError", LOCK_FAILED)
+        try:
+            try:
+                raise inner
+            except Exception as e:
+                raise RuntimeError("wrapped") from e
+        except RuntimeError as outer:
+            self.assertTrue(mssqlstore.is_write_lock_busy(outer))
+
+    def test_other_errors_are_not_busy(self) -> None:
+        for err in (
+            self.driver_error("ProgrammingError", "Invalid object name 'cases'."),
+            self.driver_error("OperationalError", LOCK_FAILED),
+            RuntimeError(LOCK_FAILED),
+            self.driver_error("ProgrammingError", LOCK_FAILED, "other.module"),
+        ):
+            self.assertFalse(mssqlstore.is_write_lock_busy(err))
+        self.assertFalse(mssqlstore.is_write_lock_busy(None))
+
+
 if __name__ == "__main__":
     unittest.main()

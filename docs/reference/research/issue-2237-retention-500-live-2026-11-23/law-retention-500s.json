@@ -1,0 +1,68 @@
+[
+  {
+    "Log": "2026-11-21 06:12:36,099 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T06:12:36.1004615Z"
+  },
+  {
+    "Log": "2026-11-21 08:10:02,959 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T08:10:02.9593332Z"
+  },
+  {
+    "Log": "2026-11-21 13:27:09,406 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T13:27:09.4067208Z"
+  },
+  {
+    "Log": "2026-11-21 14:27:40,717 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T14:27:40.7174928Z"
+  },
+  {
+    "Log": "2026-11-21 14:28:53,099 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T14:28:53.1001716Z"
+  },
+  {
+    "Log": "2026-11-21 14:30:03,595 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T14:30:03.5959639Z"
+  },
+  {
+    "Log": "2026-11-21 22:56:11,161 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T22:56:11.1622498Z"
+  },
+  {
+    "Log": "2026-11-22 01:13:55,698 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T01:13:55.6982959Z"
+  },
+  {
+    "Log": "2026-11-22 01:15:41,260 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T01:15:41.2610786Z"
+  },
+  {
+    "Log": "2026-11-22 01:34:17,253 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T01:34:17.2537466Z"
+  },
+  {
+    "Log": "2026-11-22 10:34:49,321 zava_forward.api.server ERROR http-error GET /api/retention status=500 exc=ProgrammingError at=exceptions.py:583:raise_exception response_started=False",
+    "RevisionName": "ca-cutover-test-demo-api--0000046",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T10:34:49.3221643Z"
+  }
+]

@@ -49,6 +49,7 @@ from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
 from zava_forward.core.ranking_publication import ArchiveStorageError
 from zava_forward.core.factory import open_store
+from zava_forward.core.mssqlstore import is_write_lock_busy
 from zava_forward.api.timecapture import TimeCapture
 from zava_forward.api.static_assets import StaticAssets
 from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError, Store
@@ -823,6 +824,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return
             frame = traceback.extract_tb(exc.__traceback__)[-1:] or [None]
             where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame[0] else "unknown"
+            if not sent and method in ("GET", "HEAD") and is_write_lock_busy(exc):
+                # Another writer held the SQL write lock for the 15 s timeout (issue #2237). Only safe methods: a failed POST may follow a committed step, so it keeps the 500 path.
+                logging.getLogger(__name__).warning("http-error %s %s status=503 exc=%s cause=sql-write-lock-busy at=%s", method, _printable(path), name, where)
+                self._headers_buffer = []
+                try:
+                    self._json(503, {"error": "The service is busy saving other work. Owner: application support. Next action: wait a few seconds and try again, and if it continues report the time of the failure to application support."}, extra={"Retry-After": "5"})
+                except Exception:
+                    logging.getLogger(__name__).warning("http-error %s %s 503 response not delivered", method, _printable(path))
+                return
             logging.getLogger(__name__).error("http-error %s %s status=500 exc=%s at=%s response_started=%s", method, _printable(path), name, where, sent)
             if not sent:
                 self._headers_buffer = []

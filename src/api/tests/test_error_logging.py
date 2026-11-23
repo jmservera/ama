@@ -11,6 +11,8 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 from unittest.mock import patch
 
+from zava_forward.core.mssqlstore import LOCK_FAILED
+
 from test_auth import ENV, OID_SAM, Base, principal
 from zava_forward.api import auth
 from zava_forward.api.server import App, _Server, make_handler
@@ -66,6 +68,56 @@ class ErrorLoggingTests(Base):
             self.assertIn(part, line)
         self.assertNotIn(SECRET, line)
         self.assertNotIn("Traceback", line)
+
+    def test_busy_sql_write_lock_answers_503_with_retry_after_and_names_the_cause(self) -> None:
+        busy = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
+            f"[SQL Server]{LOCK_FAILED} {SECRET}"
+        )
+
+        def audit_fails(*_a: object, **_k: object) -> None:
+            raise busy
+
+        req = urllib.request.Request(
+            self.base + "/api/retention",
+            headers={
+                "X-MS-CLIENT-PRINCIPAL": principal(roles=("ZavaForward.ProgrammeManager",))  # type: ignore[no-untyped-call]
+            },
+        )
+        with (
+            patch.object(self.store, "audit", audit_fails),
+            self.assertLogs("zava_forward.api.server", "WARNING") as logs,
+        ):
+            try:
+                urllib.request.urlopen(req, timeout=20)
+                self.fail("expected an HTTP error")
+            except urllib.error.HTTPError as e:
+                code, body, retry = e.code, e.read(), e.headers.get("Retry-After")
+        self.assertEqual((code, retry), (503, "5"))
+        self.assertNotIn(SECRET, body.decode())
+        line = "\n".join(logs.output)
+        for part in (
+            "http-error GET /api/retention status=503",
+            "cause=sql-write-lock-busy",
+            "exc=ProgrammingError",
+        ):
+            self.assertIn(part, line)
+        self.assertNotIn(SECRET, line)
+
+    def test_other_driver_error_on_retention_still_answers_500(self) -> None:
+        other = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
+            "Invalid object name"
+        )
+
+        def boom(*_a: object, **_k: object) -> None:
+            raise other
+
+        with (
+            patch.object(self.store, "retention_due", boom),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
+        ):
+            code, _ = self.get("/api/retention")
+        self.assertEqual(code, 500)
+        self.assertIn("status=500", "\n".join(logs.output))
 
     def test_failure_between_send_response_and_end_headers_still_yields_plain_500(self) -> None:
         from http.server import BaseHTTPRequestHandler

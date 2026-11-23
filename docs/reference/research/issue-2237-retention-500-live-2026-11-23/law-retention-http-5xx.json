@@ -1,0 +1,101 @@
+[
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15042",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T06:12:21.058801Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15044",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T08:09:47.9153Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15063",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T13:26:54.344031Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15097",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T14:27:25.621213Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15046",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T14:28:38.054416Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15047",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T14:29:48.55004Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15391",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-21T22:55:55.771793Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15044",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T01:13:40.655684Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15038",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T01:15:26.223862Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15085",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T01:34:02.169463Z"
+  },
+  {
+    "ContainerAppName": "ca-cutover-test-demo-api",
+    "RequestDuration": "15170",
+    "ResponseCodeDetails": "via_upstream",
+    "RevisionName": "ca-cutover-test-demo-api--0000046",
+    "StatusCode": "500",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T10:34:34.153097Z"
+  }
+]
