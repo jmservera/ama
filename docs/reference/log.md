@@ -15234,3 +15234,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2257 map redraw after a gateway failure (Refs #2257)
 
 * Added [issue-2257-live-r6-2026-11-23.md](research/issue-2257-live-r6-2026-11-23.md): a non-JSON gateway failure now gets the map's one automatic redraw, with a regression test; per-criterion table.
+## [2026-11-23] add | Issue 2253 chart out-of-range clamp (Refs #2253)
+
+* Added [issue-2253-live-r7-2026-11-23.md](research/issue-2253-live-r7-2026-11-23.md): resident chart marks for out-of-range values are clamped into the plot area, with a node-run regression test. No estate change.

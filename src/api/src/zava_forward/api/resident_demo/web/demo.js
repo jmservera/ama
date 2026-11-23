@@ -227,6 +227,9 @@
     svg.appendChild(svgEl("title", { id: id + "-title" }, "Synthetic " + metric.name.toLowerCase() + " history" + (future.length ? " with a 24-hour estimate" : "")));
     svg.appendChild(svgEl("desc", { id: id + "-desc" }, summary + " Gaps mean readings are missing or unavailable. The table below gives every value and status."));
     svg.appendChild(svgEl("path", { d: "M56 10V150H470", class: "sensor-axis" }));
+    function yFor(value) {
+      return 150 - Math.min(Math.max((value - metric.min) / (metric.max - metric.min), 0), 1) * 140;
+    }
     [metric.min, (metric.min + metric.max) / 2, metric.max].forEach(function (value) {
       var y = 150 - (value - metric.min) / (metric.max - metric.min) * 140;
       svg.appendChild(svgEl("text", { x: 50, y: y + 6, "text-anchor": "end" }, sensorNumber.format(value)));
@@ -251,7 +254,7 @@
       if (reading[metric.key] === null) { segment(); previous = null; return; }
       if (previous !== null && stamp - previous > 90 * 60 * 1000) segment();
       var x = end === start ? 263 : 56 + (stamp - start) / (end - start) * 414;
-      var y = 150 - (reading[metric.key] - metric.min) / (metric.max - metric.min) * 140;
+      var y = yFor(reading[metric.key]);
       points.push(x + "," + y);
       if (x - lastMarkerX >= markerGap || reading === history[latestIndex]) {
         if (lastMarker && x - lastMarkerX < markerGap) {
@@ -276,11 +279,11 @@
       svg.appendChild(svgEl("text", { x: roomLeft ? anchorX - 4 : anchorX + 4, y: 26, "text-anchor": roomLeft ? "end" : "start" }, "Latest stored"));
       var line = [];
       if (lastValue && history[history.length - 1][metric.key] !== null) {
-        line.push(anchorX + "," + (150 - (lastValue[metric.key] - metric.min) / (metric.max - metric.min) * 140));
+        line.push(anchorX + "," + yFor(lastValue[metric.key]));
       }
       future.forEach(function (point) {
         var fx = 56 + (Date.parse(point.forecast_at) - start) / (end - start) * 414;
-        var fy = 150 - (point[metric.key] - metric.min) / (metric.max - metric.min) * 140;
+        var fy = yFor(point[metric.key]);
         line.push(fx + "," + fy);
         svg.appendChild(svgEl("rect", { x: fx - 3.5, y: fy - 3.5, width: 7, height: 7, class: "sensor-forecast-point" }));
       });
