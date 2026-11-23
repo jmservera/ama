@@ -2305,3 +2305,5 @@ The [issue 2244 StartUp probe note, run 3](./research/issue-2244-live-r3-2026-11
 
 The [issue 2244 law store note, run 4](./research/issue-2244-live-r4-2026-11-23.md) shows the law store start-up took the SQL write lock on every boot, adds a read-only schema check with regression tests, and gives the per-criterion table.
 The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.
+
+The [issue 2255 live re-check, run 6](./research/issue-2255-live-r6-2026-11-23.md) repeats the safety queue probe on revision 0000058 (22 of 22 clocks, 0 unknown; read-only) and fixes the demo seeder `revert` so it removes a `noticed` date the seeder invented.

@@ -115,6 +115,15 @@ class SeedDemoHazardClock(unittest.TestCase):
             self.assertEqual(cases[case_id]["hazards"][0], hazard(priority="Emergency"))
         self.assertEqual(SEED.revert(store)["applied"], False)
 
+    def test_revert_removes_a_noticed_date_the_seeder_invented(self):
+        original = hazard(priority="Significant", recorded_at="2026-10-01T09:00:00Z")
+        del original["noticed"]
+        store = FakeStore({"C0": {"hazards": [dict(original)]}})
+        SEED.run(store, apply=True, running=1, now=NOW)
+        self.assertIn("noticed", store.cases["C0"]["hazards"][0])
+        SEED.revert(store)
+        self.assertEqual(store.cases["C0"]["hazards"][0], original)
+
 
 if __name__ == "__main__":
     unittest.main()

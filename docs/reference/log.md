@@ -15147,3 +15147,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2245 browser gateway error handling (Refs #2245)
 
 * Added [issue-2245-browser-gateway-error-2026-11-23.md](research/issue-2245-browser-gateway-error-2026-11-23.md): a non-JSON ingress failure on a change request now shows the plain generic message instead of a parser error; regression test added. No live change.
+## [2026-11-23] add | Issue 2255 live re-check on revision 0000058, run 6 (Refs #2255)
+
+* Added [issue-2255-live-r6-2026-11-23.md](research/issue-2255-live-r6-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with elapsed time and target, 0 unknown. The demo seeder `revert` now removes a `noticed` date it invented, with a regression test.
