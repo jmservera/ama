@@ -14997,3 +14997,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 114 ledger re-verification (Refs #114)
 
 * Added [issue-114-live-reverify-2026-11-23.md](research/issue-114-live-reverify-2026-11-23.md): read-only live probe of the demo ledger (intact, one year), reliance gate absent from the orchestrator image, one added test. No ticks changed.
+## [2026-11-23] add | Issue 2202 deployment receipt (Refs #2202)
+
+* Added [issue-2202-live-receipt-2026-11-23.md](research/issue-2202-live-receipt-2026-11-23.md): read-only live digests, hardening and health from the extended demo preflight; image source commit and half-of-homes readings remain unproven.
