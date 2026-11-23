@@ -249,6 +249,18 @@ class AiEvalTests(unittest.TestCase):
                      pin("infra/resident-assistant.bicep", "modelName", "modelVersion")):
             self.assertIn(pair, recorded)
 
+    def test_resident_deployment_names_match_serving_record(self):
+        import re
+        root = Path(__file__).resolve().parents[3]
+        record = json.loads((root / "docs/reference/research/issue-108-live-r4-2026-11-19/serving_region_record.json").read_text())
+        names = {d["name"] for d in record["deployments"]}
+        code = (root / "src/api/src/zava_forward/api/resident_demo/aoai.py").read_text()
+        bicep = (root / "infra/resident-assistant.bicep").read_text()
+        in_code = re.search(r'^DEPLOYMENT = "([^"]+)"', code, re.M).group(1)
+        in_bicep = re.search(r"resource model '[^']+' = if \(active\) \{\s+parent: account\s+name: '([^']+)'", bicep).group(1)
+        self.assertEqual(in_code, in_bicep)
+        self.assertIn(in_code, names)
+
     def test_gate_keeps_region_open_item_until_headroom_is_confirmed(self):
         record = json.loads((Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-r4-2026-11-19/serving_region_record.json").read_text())
         ev = ai_eval.run_eval(serving_region=record)["evidence"]

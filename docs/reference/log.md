@@ -15257,3 +15257,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2314 round 3 saved query live run (Refs #2314)
 
 * Added [issue-2314-alerts-runbooks-r3-2026-11-23.md](research/issue-2314-alerts-runbooks-r3-2026-11-23.md): a test applies the saved query parse to plain and structured console lines, and a read-only live run returned a metered row. No deployment.
+
+## [2026-11-23] add | Issue 108 serving deployment attestation (Refs #108)
+
+* Added a read-only attestation of the `ca-resident-demo` serving revision and a drift test tying the resident deployment name to the serving record; no criterion newly tickable. See `research/issue-108-live-serving-attestation-2026-11-23.md`.
