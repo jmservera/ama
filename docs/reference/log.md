@@ -14973,3 +14973,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Epic 218 live RAI readiness recheck (Refs #218)
 
 * Added [issue-218-live-rai-readiness-recheck-2026-11-23.md](research/issue-218-live-rai-readiness-recheck-2026-11-23.md): live gate separation proven, a traceability check that failed on every deployment (no test tree in the image) fixed offline, and a per-criterion table. The live effect of the fix stays unproven until a redeploy.
+## [2026-11-23] add | Issue 2309 seeded-defect gate harness evidence (Refs #2309)
+
+* Added [issue-2309-seeded-defect-gate-harness-2026-11-23.md](research/issue-2309-seeded-defect-gate-harness-2026-11-23.md): the existing #223 harness is proven against all five criteria by 6 passing tests; no source change.
