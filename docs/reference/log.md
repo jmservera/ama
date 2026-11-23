@@ -15014,3 +15014,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2188 wall time in the gate receipt (Refs #2188)
 
 * Added [issue-2188-live-wall-time-2026-11-23.md](research/issue-2188-live-wall-time-2026-11-23.md): the gate receipt records `wall_seconds`; the before and after wall-time pair stays unproven because it needs two full gates.
+
+## [2026-11-23] add | Issue 470 r4 re-check and timing table option (Refs #470)
+
+* Added [issue-470-live-r4-2026-11-23.md](research/issue-470-live-r4-2026-11-23.md): 129 gate tests pass for criteria 1, 2, 3 and 5; `tools/rpi-gate-timing.py compare` gained `--markdown`; criterion 4 stays unproven.

@@ -206,6 +206,30 @@ class CompareTests(unittest.TestCase):
         self.assertEqual(report["after"]["span_median"], 80)
         self.assertEqual(report["span_median_delta"], -30)
 
+    def test_markdown_renders_a_table_or_the_refusal_reasons(self) -> None:
+        def markdown(before: Any, after: Any) -> tuple[int, str]:
+            code, out, _ = run(
+                "compare",
+                "--before", *before[0],
+                "--after", *after[0],
+                "--host-manifest-before", str(before[1]),
+                "--host-manifest-after", str(after[1]),
+                "--verification-before", str(before[2]),
+                "--verification-after", str(after[2]),
+                "--markdown",
+            )  # fmt: skip
+            return code, out
+
+        code, out = markdown(self.arm("b", [100, 120]), self.arm("a", [80, 90]))
+        self.assertEqual(code, 0)
+        self.assertIn("| before | 2 | 110.0 | 100.0 | 120.0 |", out)
+        self.assertIn("| after | 2 | 85.0 | 80.0 | 90.0 |", out)
+        self.assertIn("delta (after minus before): -25.0 s", out)
+        code, out = markdown(self.arm("b", [100]), self.arm("a", [80, 90]))
+        self.assertEqual(code, 3)
+        self.assertIn("Verdict: NONCOMPARABLE", out)
+        self.assertIn("* before: at least two distinct receipts per arm are required", out)
+
     def test_single_receipt_arm_unlike_jobs_hosts_and_missing_records_are_refused(
         self,
     ) -> None:
