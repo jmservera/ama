@@ -1,0 +1,14 @@
+.....http-response GET /api/assistants/proposals status=503
+..............http-response GET /api/assistants/proposals status=503
+................http-response GET /api/assistants/proposals status=503
+.......http-response GET /api/assistants/proposals status=503
+..........http-response GET /api/assistants/proposals status=503
+.....sssssssss....http-response GET /api/assistants/proposals status=503
+.........http-response GET /api/assistants/proposals status=503
+........http-response GET /api/assistants/proposals status=503
+.....
+----------------------------------------------------------------------
+Ran 92 tests in 139.036s
+
+OK (skipped=9)
+done

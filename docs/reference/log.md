@@ -14781,3 +14781,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Nomination test bootstrap isolation fourth re-run (Refs #1847)
 
 * Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23.md): source, editable and noneditable layouts in both orders, identities observed, no code gap; criterion 6 (full gate receipt) stays owner-gated.
+
+## [2026-11-23] update | Issue 1288 quality sensor evidence, tenth live audit (Refs #1288)
+
+* Added [issue-1288-live-r10-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r10-quality-sensor-evidence-2026-11-23.md): revisions 0000054 and 0000026, 92 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
