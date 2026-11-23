@@ -38,3 +38,15 @@ Main holds the fix (`a6c0910c97`, #2258). The live `ca-resident-demo` revision `
 | Stored readings no longer one thick stroke | 1 of 8 circle pairs touches (the always-drawn latest marker); the line is thin | Proven, with the touching pair noted |
 
 The earlier "not proven live" limit is closed. The 30rem narrow-screen rule stays untested because the demo is desktop only.
+
+## Live verification 2026-11-22 (third run, revision 0000026)
+
+Revision `ca-resident-demo--0000026` (created 2026-11-22T23:14:37Z, Healthy, 100% traffic, image digest `sha256:a71084bd...`) is the only active revision. The web sources last changed 2026-11-22T17:31Z, before the revision was created. The unchanged `probe_chart.py` ran against the live app, signed in as the synthetic resident (credentials read at runtime, not printed), desktop 1440x900 ([json](issue-2253-resident-chart-2026-11-22/reverify-live-0000026.json), [png](issue-2253-resident-chart-2026-11-22/reverify-live-0000026.png)). No source or Azure change was made.
+
+| Criterion (issue "Expected") | Live result | Status |
+| --- | --- | --- |
+| Axis and marker labels sized like body text | 16.8 px (-10, 17.5, 45, Latest stored) against 16 px body text | Proven |
+| No overlap of 'Latest stored' and the 45 tick | 0 text overlaps; the screenshot shows separate labels | Proven |
+| Circle markers on stored readings as the legend states | 8 circles on the stored line; legend reads "Circles mark some of the stored readings; the table lists every reading." | Proven |
+| Stored readings not one thick stroke | thin line; 1 of 8 circle pairs touches (the always-drawn latest marker) | Proven, touching pair noted |
+| Narrow-screen rule | not browser-tested | Unproven, out of scope (desktop-only demo) |

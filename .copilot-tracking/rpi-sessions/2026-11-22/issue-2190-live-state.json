@@ -1,5 +1,5 @@
 {
- "task_id": "2190-live-20261122T134028Z",
+ "task_id": "2190-live-20261122T231555Z",
  "task_slug": "issue-2190-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,28 +7,28 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-22/issue-2190-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-22/issue-2190-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-22/issue-2190-live-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-22/issue-2190-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-22/issue-2190-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-22/issue-2190-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-22/issue-2190-live-20261122T231555Z-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-22/issue-2190-live-20261122T231555Z-plan.md",
+  "details": ".copilot-tracking/details/2026-11-22/issue-2190-live-20261122T231555Z-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-22/issue-2190-live-20261122T231555Z-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-22/issue-2190-live-20261122T231555Z-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-22/issue-2190-live-20261122T231555Z-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Synthetic demo, desktop only; no Azure change needed",
+   "decision": "Synthetic demo, desktop only; no Azure change",
    "status": "confirmed",
-   "evidence": "owner decisions 2026-11-18 and brief"
+   "evidence": "brief"
   },
   {
    "decision": "critique executed once",
-   "status": "approve with direct dispositions",
-   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2190-live-critique.md"
+   "status": "approve with dispositions",
+   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2190-live-20261122T231555Z-critique.md"
   },
   {
    "decision": "review executed once",
-   "status": "conformant with routed open work",
-   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2190-live-review.md"
+   "status": "conformant",
+   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2190-live-20261122T231555Z-review.md"
   }
  ],
  "blockers": [],
@@ -36,12 +36,5 @@
   "phase": "Follow-up",
   "action": "Owner selects follow-up"
  },
- "prioritized_follow_ups": [
-  {
-   "rank": 1,
-   "task": "Deterministic regression test for late_success case list race",
-   "rationale": "only unproven criterion",
-   "evidence": "research note"
-  }
- ]
+ "prioritized_follow_ups": []
 }

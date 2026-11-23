@@ -14599,6 +14599,10 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 435 fifth per-criterion pass (Refs #435)
 
 * Added [capstone-pitch-435-live-2026-11-22.md](research/capstone-pitch-435-live-2026-11-22.md): fresh deck read (slide 16 is S14, Tokenomics is slide 22) and read-only demo API check; placement decision and #432 spend authority proven for the synthetic demo, mentor confirmation unproven. No source, deck or estate change.
+## [2026-11-22] update | Issue 2253 chart labels live re-verify on revision 0000026 (Refs #2253)
+
+* Added a third live-verification section to [issue-2253-resident-chart-2026-11-22.md](research/issue-2253-resident-chart-2026-11-22.md): labels 16.8 px against 16 px body text, 0 overlaps, 8 circles on revision `ca-resident-demo--0000026`; narrow-screen rule unproven (desktop-only demo). No source or estate change.
+
 ## [2026-11-22] update | Issue 462 resident showcase live run 5 (Refs #462)
 
 * Added [resident-showcase-live-r5-2026-11-22.md](research/resident-showcase-live-r5-2026-11-22.md): 36-check Playwright rerun against the live demo, new image digest and minReplicas 1 noted, per-criterion table; criterion 2 stays unproven. No source or estate change.
@@ -14633,3 +14637,24 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 350 live pass 5 (Refs #350)
 
 * Added [issue-350-live-r5-2026-11-22.md](research/issue-350-live-r5-2026-11-22.md): fifth read-only live re-measurement of the ten unticked criteria. Law store is configured but unseeded, digest blobs are listable, jobs succeed; edge 302, photo, release authority and second-role results stay unproven. No source or estate change.
+## [2026-11-22] update | Issue 2188 gate speed-up criteria refresh (Refs #2188)
+
+* Added [issue-2188-live-gate-speed-2026-11-22.md](research/issue-2188-live-gate-speed-2026-11-22.md): retry and receipt retries now implemented (#2272), images still serialised by `docker_lock`, image build 70.5 s to 7.2 s, 144 tooling tests pass; gate-level before and after unproven. No source change.
+## [2026-11-22] update | Issue 344 public browser access live run 9 (Refs #344)
+
+* Added [public-browser-access-live-r9-2026-11-22.md](research/public-browser-access-live-r9-2026-11-22.md): the anonymous 401 versus redirect split is traced to the browser User-Agent under `RedirectToLoginPage`; 13 workbench destinations walked signed in; SQL still private; criteria 1 partly proven and 5 unproven with reasons. No source or estate change.
+## [2026-11-22] update | Issue 619 live re-proof (Refs #619)
+
+* Added [issue-619-live-at-consent-evidence-2026-11-22.md](research/issue-619-live-at-consent-evidence-2026-11-22.md): Playwright rerun of axe, keyboard, reflow and the synthetic resident consent journey after the web redesigns, plus a 200 percent text probe; person-run criteria stay unproven. No source or estate change.
+## [2026-11-22] update | Issue 349 tenant prerequisites live run 8 (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r8-2026-11-22.md](research/issue-349-tenant-prerequisites-live-r8-2026-11-22.md): Graph reads now succeed, proving the single-tenant registration, 13 roles, valid credential and preserved callbacks; criteria 4 and 5 stay open; no source or estate change
+## [2026-11-22] update | Issue 1274 live re-proof run 2 (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-22-run2.md](research/issue-1274-live-evidence-2026-11-22-run2.md): retained job logs re-read, actionlint 1.7.7 checksum and tests repeated, per-criterion table; AWF and #1273 residue stays unproven. No source or estate change.
+## [2026-11-22] update | Human-review effectiveness live run 6 (Refs #223)
+
+* Added [issue-223-live-r6-2026-11-22.md](research/issue-223-live-r6-2026-11-22.md): gate and focused tests re-run, live retention of reviewer, reason and source hashes shown again, per-criterion table; no criterion is newly ticked. No source change.
+## [2026-11-22] update | Issue 1288 ninth live audit (Refs #1288)
+
+* Added [issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md](research/issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md): main confirmed current, 92 focused tests OK, seven homes with fresh live readings and a Home sensors screenshot, Quality model still blocked at release admission, forecast endpoint 503/504 recorded as an anomaly. Criteria 4 and 8 stay unproven. No source or estate change.

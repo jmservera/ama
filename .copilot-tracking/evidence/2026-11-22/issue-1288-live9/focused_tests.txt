@@ -1,0 +1,13 @@
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+http-response GET /api/assistants/proposals status=503
+----------------------------------------------------------------------
+Ran 92 tests in 110.773s
+
+OK (skipped=9)
+rc=0

@@ -1,53 +1,53 @@
 {
-  "task_id": "2026-11-22-issue-2188-live",
-  "task_slug": "issue-2188-live",
+  "task_id": "2026-11-22-issue-2188-live-evidence",
+  "task_slug": "issue-2188-live-evidence",
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
   "session_status": "running",
   "artifact_paths": {
-    "research": ".copilot-tracking/research/2026-11-22/issue-2188-gate-speedups-research.md",
-    "plan": ".copilot-tracking/plans/2026-11-22/issue-2188-gate-speedups-plan.md",
-    "details": ".copilot-tracking/details/2026-11-22/issue-2188-gate-speedups-details.md",
-    "critique": ".copilot-tracking/critique/2026-11-22/issue-2188-gate-speedups-critique.md",
-    "changes": ".copilot-tracking/changes/2026-11-22/issue-2188-gate-speedups-changes.md",
-    "review": ".copilot-tracking/reviews/2026-11-22/issue-2188-gate-speedups-review.md"
+    "research": ".copilot-tracking/research/2026-11-22/issue-2188-live-evidence-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-22/issue-2188-live-evidence-plan.md",
+    "details": ".copilot-tracking/details/2026-11-22/issue-2188-live-evidence-details.md",
+    "critique": ".copilot-tracking/critique/2026-11-22/issue-2188-live-evidence-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-22/issue-2188-live-evidence-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-22/issue-2188-live-evidence-review.md"
   },
   "confirmed_decisions": [
     {
-      "decision": "Research disposition: executed",
+      "decision": "Research disposition executed; Planning Readiness Ready",
       "status": "recorded",
-      "evidence": ".copilot-tracking/research/2026-11-22/issue-2188-gate-speedups-research.md"
+      "evidence": ".copilot-tracking/research/2026-11-22/issue-2188-live-evidence-research.md"
     },
     {
-      "decision": "Critique executed once: Proceed with changes; C1-C5 applied",
+      "decision": "Critique executed once, verdict proceed, C1-C4 applied",
       "status": "recorded",
-      "evidence": ".copilot-tracking/critique/2026-11-22/issue-2188-gate-speedups-critique.md"
+      "evidence": ".copilot-tracking/critique/2026-11-22/issue-2188-live-evidence-critique.md"
     },
     {
-      "decision": "Review executed once: Conformant with findings RV-001..003",
+      "decision": "Review executed once, conformant",
       "status": "recorded",
-      "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2188-gate-speedups-review.md"
+      "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2188-live-evidence-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator runs full gate; owner picks follow-up"
+    "action": "Owner picks follow-up"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Run full gate on the stack tip",
-      "rationale": "Gate semantics changed",
+      "task": "Before and after full gate on one tree",
+      "rationale": "criterion 1 gate-level",
       "evidence": "RV-001"
     },
     {
       "rank": 2,
-      "task": "Parallel image builds and before/after timing",
-      "rationale": "Open #2188 criteria",
-      "evidence": "RV-003"
+      "task": "Decide on concurrent image builds",
+      "rationale": "docker_lock serialises",
+      "evidence": "research note"
     }
   ]
 }

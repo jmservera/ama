@@ -1,0 +1,4 @@
+{
+  "assignmentRequired": true,
+  "enabled": true
+}

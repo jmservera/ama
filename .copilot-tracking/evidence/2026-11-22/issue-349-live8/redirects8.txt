@@ -1,0 +1,3 @@
+https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/.auth/login/aad/callback
+https://ep-cutover-test-esdrcphsarcahhde.b01.azurefd.net/.auth/login/aad/callback
+https://ca-cutover-test-api.jollytree-20e6e99e.uksouth.azurecontainerapps.io/.auth/login/aad/callback

@@ -307,6 +307,34 @@ class GateTests(unittest.TestCase):
             ],
         )
 
+    def test_late_success_settles_case_list_before_baseline_snapshot(self) -> None:
+        source = (
+            Path(__file__).resolve().parents[1] / "src/api/checks/employee_chat_browser_check.py"
+        ).read_text(encoding="utf-8")
+        func = next(
+            n
+            for n in ast.walk(ast.parse(source))
+            if isinstance(n, ast.FunctionDef) and n.name == "late_success"
+        )
+        settle = [
+            c.lineno
+            for c in ast.walk(func)
+            if isinstance(c, ast.Call)
+            and isinstance(c.func, ast.Attribute)
+            and c.func.attr == "wait_for_load_state"
+            and [a.value for a in c.args if isinstance(a, ast.Constant)] == ["networkidle"]
+        ]
+        baseline = [
+            c.lineno
+            for c in ast.walk(func)
+            if isinstance(c, ast.Constant)
+            and isinstance(c.value, str)
+            and "state.snapshot = " in c.value
+        ]
+        self.assertEqual(len(settle), 1)
+        self.assertEqual(len(baseline), 1)
+        self.assertLess(settle[0], baseline[0])
+
     def test_employee_chat_checker_is_linted_in_planned_and_executed_browser_contracts(
         self,
     ) -> None:
