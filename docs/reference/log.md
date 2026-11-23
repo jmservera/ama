@@ -14849,3 +14849,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2129 break-glass criterion re-check (Refs #2129)
 
 * Added [issue-2129-live-2026-11-23.md](research/issue-2129-live-2026-11-23.md) with raw evidence: 35 isolation tests OK, live API has no break-glass settings, no code criterion remains buildable without owner policy decisions. Criterion stays unticked.
+
+## [2026-11-23] update | Case chat refusal and citation gates re-check (Refs #2124)
+
+* Added [issue-2124-live-2026-11-23.md](research/issue-2124-live-2026-11-23.md) with evidence: live refusals 10 of 10 with zero model calls, 111 local gate tests OK, per-criterion status. No source change; production ownership and independent grading stay owner-gated.
