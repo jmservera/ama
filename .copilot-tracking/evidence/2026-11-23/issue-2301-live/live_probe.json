@@ -1,0 +1,182 @@
+{
+ "/api/me": {
+  "status": 200,
+  "type": "dict",
+  "len": 9,
+  "keys": [
+   "user",
+   "counts",
+   "staff",
+   "account",
+   "services",
+   "map",
+   "navigation",
+   "work_queues",
+   "regulatory_output_guard"
+  ]
+ },
+ "/api/cases": {
+  "status": 200,
+  "type": "dict",
+  "len": 10,
+  "keys": [
+   "items",
+   "total",
+   "limit",
+   "offset",
+   "sort",
+   "policy_version",
+   "policy_hash",
+   "as_of",
+   "ranked_total",
+   "next_cursor"
+  ]
+ },
+ "/api/packages": {
+  "status": 200,
+  "type": "list",
+  "len": 1,
+  "keys": null
+ },
+ "/api/workorders": {
+  "status": 200,
+  "type": "list",
+  "len": 601,
+  "keys": null
+ },
+ "/api/funding": {
+  "status": 200,
+  "type": "list",
+  "len": 167,
+  "keys": null
+ },
+ "/api/coordinator": {
+  "status": 400,
+  "type": "dict",
+  "len": 1,
+  "keys": [
+   "error"
+  ]
+ },
+ "/api/progress": {
+  "status": 200,
+  "type": "dict",
+  "len": 11,
+  "keys": [
+   "label",
+   "start",
+   "end",
+   "as_of",
+   "coverage",
+   "daily",
+   "weekly",
+   "time_to_close",
+   "current",
+   "ai",
+   "ai_consumption_economics"
+  ]
+ },
+ "/api/stats": {
+  "status": 200,
+  "type": "dict",
+  "len": 9,
+  "keys": [
+   "kpis",
+   "stages",
+   "areas",
+   "waves",
+   "ages",
+   "funding",
+   "contractors",
+   "team",
+   "ai_consumption_economics"
+  ]
+ },
+ "/api/ranking/policy": {
+  "status": 200,
+  "type": "dict",
+  "len": 8,
+  "keys": [
+   "policy_id",
+   "version",
+   "owner",
+   "status",
+   "effective_date",
+   "content_hash",
+   "rules",
+   "versions"
+  ]
+ },
+ "/api/exceptions": {
+  "status": 200,
+  "type": "dict",
+  "len": 7,
+  "keys": [
+   "state",
+   "items",
+   "unrouted",
+   "sources",
+   "banner",
+   "access",
+   "note"
+  ]
+ },
+ "/api/law/cards": {
+  "status": 200,
+  "type": "dict",
+  "len": 2,
+  "keys": [
+   "cards",
+   "output_guard"
+  ]
+ },
+ "/api/law/alerts": {
+  "status": 200,
+  "type": "dict",
+  "len": 4,
+  "keys": [
+   "coverage_status",
+   "homes",
+   "precision",
+   "output_guard"
+  ]
+ },
+ "/api/chat/threads": {
+  "status": 200,
+  "type": "list",
+  "len": 164,
+  "keys": null
+ },
+ "/api/resident/choice-queue": {
+  "status": 200,
+  "type": "dict",
+  "len": 4,
+  "keys": [
+   "items",
+   "total",
+   "limit",
+   "offset"
+  ]
+ },
+ "/api/asset/stock-queue": {
+  "status": 200,
+  "type": "dict",
+  "len": 2,
+  "keys": [
+   "items",
+   "total"
+  ]
+ },
+ "/api/checklists": {
+  "status": 200,
+  "type": "dict",
+  "len": 5,
+  "keys": [
+   "Loft insulation",
+   "Wall insulation",
+   "Heat pump",
+   "Solar panels",
+   "General"
+  ]
+ }
+}

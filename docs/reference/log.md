@@ -15097,3 +15097,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1830 queue-wait reporting (Refs #1830)
 
 * Added [issue-1830-live-r9-2026-11-23.md](research/issue-1830-live-r9-2026-11-23.md): `rpi-gate-timing.py report --log` reports an unmeasured queue wait as null and refuses malformed or reversed lock lines, with two tests.
+
+## [2026-11-23] add | Nine-epic demo stabilization checkpoint (Refs #2301 #440)
+
+* Added [issue-2301-stabilization-checkpoint-live-2026-11-23.md](research/issue-2301-stabilization-checkpoint-live-2026-11-23.md) and a dated section in the cut-over evidence pack covering Epics 73, 81, 89, 93, 100, 109, 149, 157 and 208, with `tools/test_stabilization_checkpoint_2301.py`. Epic links, ticks and closures stay owner or remote actions.
