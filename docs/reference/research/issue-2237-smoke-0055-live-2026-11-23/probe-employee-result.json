@@ -1,0 +1,54 @@
+{
+ "health_unauth": 200,
+ "me_status": 200,
+ "role": "Retrofit Programme Manager",
+ "retention": {
+  "status": 200,
+  "burst_15_sequential": {
+   "200": 15
+  },
+  "records": 0,
+  "keys": [
+   "as_of",
+   "label",
+   "records"
+  ]
+ },
+ "chat_thread": {
+  "cases_status": 200,
+  "case_found": true,
+  "status": 200,
+  "keys": [
+   "id"
+  ],
+  "error": ""
+ },
+ "chat_ask": {
+  "status": 200,
+  "keys": [
+   "answer_origin",
+   "answer_source",
+   "answer_source_label",
+   "citations",
+   "consumption",
+   "context",
+   "kind",
+   "label"
+  ],
+  "error": ""
+ },
+ "map": {
+  "status": 200,
+  "homes": 443,
+  "sensor_states": {
+   "consent-withheld": 22,
+   "fresh": 57,
+   "no-readings": 19,
+   "stale": 2,
+   "not-loaded": 343
+  },
+  "markers_in_dom": 443,
+  "unavailable_text": 0
+ },
+ "requestfailed": []
+}

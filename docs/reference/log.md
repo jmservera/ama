@@ -14880,3 +14880,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 116 provider-boundary round 8 (Refs #116)
 
 * Added [issue-116-live-r8-evidence-2026-11-23.md](research/issue-116-live-r8-evidence-2026-11-23.md): 125 boundary tests pass at head ac58e5c451, a read-only unauthenticated live probe returns 401, and live payload contents stay unproven. No source or estate change.
+
+## [2026-11-23] add | Live smoke of API 0000055 and resident 0000027 (Refs #2237)
+
+* Added [issue-2237-smoke-0055-live-2026-11-23.md](research/issue-2237-smoke-0055-live-2026-11-23.md): retention 200 (16 of 16), chat thread 200, map with 443 markers and sensor states, resident chart drawn from stale readings; start-up is partly proven because readiness probes timed out for three minutes. No criterion ticked, no source or estate change.
