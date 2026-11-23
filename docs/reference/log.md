@@ -14826,3 +14826,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Mobile map summary live r2 (Refs #1844)
 
 * Added [issue-1844-live-r2-2026-11-23.md](research/issue-1844-live-r2-2026-11-23.md): only the owner-gated criterion 6 (independent review and hosted CI) remains. No source change.
+## [2026-11-23] update | Resident showcase criterion 2 hosted evidence r7 (Refs #462)
+
+* Added [resident-showcase-live-r7-2026-11-23.md](research/resident-showcase-live-r7-2026-11-23.md): read-only `gh` history of PR #455 shows one failed rubric run, bot-authored score commits and later runs on changed head SHAs; criterion 2 proven for the demo apart from the local-preview clause. No source or Azure change.
