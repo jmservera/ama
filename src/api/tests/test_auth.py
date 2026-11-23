@@ -441,6 +441,23 @@ class ProxyHttpTests(Base):
         self.assertEqual((page.exception.code, page.exception.headers["Location"]),
                          (302, "/.auth/login/aad?post_login_redirect_uri=%2Fapp"))
 
+    def test_anonymous_api_put_patch_delete_return_401_not_501(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        opener = urllib.request.build_opener(NoRedirect())
+        agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Edg/126.0"
+        for path in ("/api/me", "/api/cases", "/api/does-not-exist"):
+            for method in ("PUT", "PATCH", "DELETE"):
+                headers = {"User-Agent": agent, "Accept": "application/json", "X-ZF-CSRF": "1"}
+                with self.assertRaises(urllib.error.HTTPError, msg=(method, path)) as error:
+                    opener.open(urllib.request.Request(self.base + path, b"{}", headers, method=method))
+                self.assertEqual(error.exception.code, 401, (method, path))
+                self.assertIsNone(error.exception.headers["Location"])
+        with self.assertRaises(urllib.error.HTTPError) as signed_in:
+            opener.open(urllib.request.Request(self.base + "/api/cases", b"{}", {"X-MS-CLIENT-PRINCIPAL": principal()}, method="PUT"))
+        self.assertEqual(signed_in.exception.code, 501)
+
     def test_employee_scripts_remain_protected_and_load_for_valid_principal(self):
         class NoRedirect(urllib.request.HTTPRedirectHandler):
             def redirect_request(self, *args, **kwargs):
