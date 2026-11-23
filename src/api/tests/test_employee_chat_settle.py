@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import unittest
+from collections.abc import Callable
 from typing import Any
 
 from checks.employee_chat_browser_check import settle_route
+from playwright.sync_api import Page, sync_playwright
 
 
 class RecordingPage:
@@ -34,6 +36,43 @@ class SettleRouteTests(unittest.TestCase):
                 page: Any = RecordingPage()
                 settle_route(page, destination)
                 self.assertEqual(page.calls, [("load", "networkidle")])
+
+
+DELAYED_ROUTE = """
+<p id="workspace-status"></p>
+<script>
+  window.addEventListener('hashchange', () => {
+    // Longer than the 500 ms networkidle window, with no request in flight.
+    setTimeout(() => {
+      document.getElementById('workspace-status').textContent = 'Perspective: tester.';
+    }, 1200);
+  });
+</script>
+"""
+
+
+class SettleRouteBrowserTests(unittest.TestCase):
+    """Reproduce the gap between the facets read and the cases read with a real browser."""
+
+    def run_route(self, wait: Callable[[Page], None]) -> str:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch()
+            try:
+                page = browser.new_page()
+                page.set_content(DELAYED_ROUTE)
+                page.evaluate("() => { location.hash = '#/'; }")
+                wait(page)
+                return str(page.locator("#workspace-status").text_content())
+            finally:
+                browser.close()
+
+    def test_network_idle_alone_returns_before_the_list_status(self) -> None:
+        status = self.run_route(lambda page: page.wait_for_load_state("networkidle"))
+        self.assertEqual(status, "")
+
+    def test_settle_route_returns_after_the_list_status(self) -> None:
+        status = self.run_route(lambda page: settle_route(page, "#/"))
+        self.assertTrue(status.startswith("Perspective:"), status)
 
 
 if __name__ == "__main__":

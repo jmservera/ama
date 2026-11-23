@@ -14934,3 +14934,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2164 audit of other identity.verified staff paths (Refs #2164)
 
 * Added [issue-2164-staff-verified-audit-2026-11-23.md](research/issue-2164-staff-verified-audit-2026-11-23.md): only sensor review drafts shared the bound-row gap; the gate now checks tenant and object id and refuses view-only principals, with tests. Live proof unproven by design.
+## [2026-11-23] add | Issue 2190 late_success browser regression test (Refs #2190)
+
+* Added [issue-2190-live-20261123T080144Z-browser-test-note.md](research/issue-2190-live-20261123T080144Z-browser-test-note.md): a Chromium test reproduces the gap before the list status and shows the settle wait closes it. Test only.
