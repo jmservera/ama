@@ -33,6 +33,7 @@ from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core import sensor_review_draft, simulation_lane, telemetry
 from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
+from zava_forward.core.forecast_reads import ForecastTimeout
 from zava_forward.core.chat_isolation import DEMO_DISCLAIMER, ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
 from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
@@ -1121,6 +1122,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, app.assistants.detail(u, parts[3], num(q, "history_offset", 0, 0, 1000000)))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+                except ForecastTimeout:
+                    return self._json(503, {"state": "unavailable", "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, or continue ordinary case work manually."}, extra={"Retry-After": "30"})
                 except KeyError:
                     return self._json(404, {"error": "Proposal not found."})
                 except ValueError as e:

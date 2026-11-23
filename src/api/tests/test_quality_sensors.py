@@ -1486,7 +1486,7 @@ class Http(Seed, ta.ApiTests):
         scans = [
             x
             for x in seen
-            if "FROM assistant_tasks" in x and "WHERE id=" not in x and "state IN" not in x
+            if "FROM assistant_tasks" in x and "WHERE id=" not in x and "WHERE id IN" not in x and "state IN" not in x
         ]
         self.assertEqual(scans, [])
         self.assertEqual(self.quality_task().count(first), 1)

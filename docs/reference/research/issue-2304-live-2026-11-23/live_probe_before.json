@@ -1,0 +1,18 @@
+{
+ "label": "before",
+ "timeout_seconds": 200.0,
+ "role": null,
+ "/api/assistants": {
+  "status": 200,
+  "elapsed_s": 0.7
+ },
+ "/api/exceptions": {
+  "status": 200,
+  "elapsed_s": 0.2
+ },
+ "/api/assistants/forecast": {
+  "status": null,
+  "elapsed_s": 200.01,
+  "error": "TimeoutError"
+ }
+}

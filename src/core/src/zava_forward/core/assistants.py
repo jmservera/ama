@@ -21,6 +21,7 @@ from contextlib import contextmanager
 from typing import Any
 
 from . import assistant_release as rel
+from .forecast_reads import ForecastReads
 from .ai import may_carry_captured_readings
 from .doc_controls import is_available_case_document
 from .mssqlstore import is_write_lock_busy
@@ -2508,6 +2509,8 @@ class Assistants:
             persisted, window_start=window_start, window_end=window_end, replay=replay
         )
 
+    FORECAST_BUDGET_SECONDS = 10.0
+
     def forecast(self, user, period_seconds=86400):
         """Read-only per-period call forecast for each proactive predicate; enqueues nothing and holds no case content."""
         if not isinstance(period_seconds, int) or not 60 <= period_seconds <= 2592000:
@@ -2520,7 +2523,8 @@ class Assistants:
             )
         bounds = model_bounds(self.limits)
         cycles = period_seconds // self.limits.scan_interval
-        with self._read_connection() as db, rel.read_only():
+        with self._read_connection() as raw, rel.read_only():
+            db = ForecastReads(raw, self.mssql, self.FORECAST_BUDGET_SECONDS)
             allowed = [k for k, v in REGISTRY.items() if user.get("role") in v["roles"]]
             if not allowed:
                 raise PermissionError("Staff assistance only.")
@@ -2540,8 +2544,19 @@ class Assistants:
                 ]
                 held = self.suspended(db, cap)
                 eligible_now = new = 0
+                snapshots = []
                 for c in scoped:
-                    s = self.snapshot(db, cap, c)
+                    db.check()
+                    snapshots.append((c, self.snapshot(db, cap, c)))
+                db.load_tasks(
+                    db.slot_task_ids()
+                    | {self._task_id(db, cap, c, signature(s)) for c, s in snapshots}
+                )
+                db.prefetch_adoptions(
+                    [c["id"] for c, _ in snapshots if not db.has_slot(cap, c["id"])],
+                    self.ADOPT_ROWS * self.ADOPT_PAGES,
+                )
+                for c, s in snapshots:
                     if self._due(db, cap, c, s, today, observe=False):
                         eligible_now += 1
                         found = db.execute(
