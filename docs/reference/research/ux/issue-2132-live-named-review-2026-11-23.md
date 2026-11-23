@@ -7,7 +7,7 @@ ms.topic: reference
 
 ## Scope
 
-Demo only, desktop only, under the owner decisions of 2026-11-18. Issue #2132 holds one unticked criterion, split from #153. No source, Azure or browser action applies to it, so none was run.
+Demo only, desktop only, under the owner decisions of 2026-11-18. Issue #2132 holds one unticked criterion, split from #153. It traces to PRD NFR-001 and the reviewer and staff journey in `customer-journeys/reviewer.md`. No source, Azure or browser action applies to it, so none was run.
 
 ## Per-criterion status
 
