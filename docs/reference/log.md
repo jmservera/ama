@@ -14877,3 +14877,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 107 assistants criteria re-verified, fourth pass (Refs #107)
 
 * Added [issue-107-live-r4-assistants-evidence-2026-11-23.md](research/issue-107-live-r4-assistants-evidence-2026-11-23.md): independent SQL race, restart and old-image criterion proven on actual local SQL Server 2022 (95 tests OK); approved-release delivered-build criterion stays unproven. No source change.
+## [2026-11-23] update | Issue 116 provider-boundary round 8 (Refs #116)
+
+* Added [issue-116-live-r8-evidence-2026-11-23.md](research/issue-116-live-r8-evidence-2026-11-23.md): 125 boundary tests pass at head ac58e5c451, a read-only unauthenticated live probe returns 401, and live payload contents stay unproven. No source or estate change.
