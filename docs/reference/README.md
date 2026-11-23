@@ -418,6 +418,9 @@ immutability stay unproven.
 A second run, [live ranking proof with retained evidence](./research/issue-79-live-ranking-2026-11-18.md),
 keeps the raw outputs; it repeats the proof of the two ticked criteria and leaves the
 owner signature, schedule and retention unproven.
+For #2138, the [live comparison of the two remaining ranking criteria](./research/issue-2138-live-2026-11-23.md)
+records that live still serves the unsigned draft policy, no ranking job is deployed and the
+deployed orchestrator image lacks the publish module. Both criteria stay open.
 For #76, the [live task queue evidence](./research/issue-76-live-task-queue-evidence-2026-11-18.md)
 records the hazard clock and named owner on the live demo case card. The clock reads
 unknown because the record has no timestamp, and no demo case has a safeguarding item.

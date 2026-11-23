@@ -14817,3 +14817,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Simulator run controls main versus live (Refs #2127)
 
 * Added [issue-2127-run-controls-live-2026-11-23.md](research/issue-2127-run-controls-live-2026-11-23.md): 11 focused tests pass, live budgets, owner tags and 270 second replica timeout recorded, bicep 240 versus live 270 drift noted, no source change
+## [2026-11-23] update | Ranking remaining criteria live comparison (Refs #2138)
+
+* Added [issue-2138-live-2026-11-23.md](research/issue-2138-live-2026-11-23.md): main and live compared, 170 targeted tests pass, live policy unsigned, no ranking job deployed, deployed orchestrator image lacks `ranking_publish`. Neither criterion is newly proven. No source change.
