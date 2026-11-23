@@ -14841,3 +14841,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2133 manual screen-reader and keyboard criterion classified (Refs #2133)
 
 * Added [issue-2133-live-manual-checks-2026-11-23.md](research/issue-2133-live-manual-checks-2026-11-23.md): the one remaining criterion needs a named person with a screen reader per role, excluded for the demo by the owner decision of 2026-11-18; classified owner-gated and unproven. Baseline status line updated. No source change.
+
+## [2026-11-23] update | Issue 2132 named wording review re-check (Refs #2132)
+
+* Added [issue-2132-live-named-review-2026-11-23.md](research/ux/issue-2132-live-named-review-2026-11-23.md): the single remaining criterion is a named human review recorded as Not run in the content standard; owner-gated, not waived for the demo. No criterion is newly ticked and no source changed.
