@@ -52,5 +52,53 @@ class InfraImageBuildTests(unittest.TestCase):
         self.assertIsNone(re.search(r"(?m)^\s+(deploy|publish):", text))
 
 
+PLAN_PATH = ROOT / ".github/workflows/infra-plan.yml"
+
+
+def plan_contract_errors(document):
+    errors = []
+    jobs = document["jobs"]
+    job = jobs["what-if"]
+    if job.get("needs") != "changes" or "infra == 'true'" not in job.get("if", ""):
+        errors.append("what-if must be gated on the infra path check")
+    uploads = [s for s in job["steps"] if s.get("uses", "").startswith("actions/upload-artifact@")]
+    if len(uploads) != 1:
+        errors.append("what-if must upload exactly one result artifact")
+    for step in uploads:
+        if not re.fullmatch(r"[\w./-]+@[0-9a-f]{40}( # .*)?", step["uses"]):
+            errors.append("upload-artifact must be pinned to a SHA")
+        if step["with"].get("if-no-files-found") != "error":
+            errors.append("a missing what-if summary must fail the job")
+        if not step["with"]["path"].endswith("what-if-summary.json"):
+            errors.append("upload must carry the what-if summary")
+        if step.get("if") != "${{ !cancelled() }}":
+            errors.append("upload must run after a failed what-if")
+    for name, other in jobs.items():
+        if name != "what-if" and "id-token" in other.get("permissions", {}):
+            errors.append(f"{name} must not request id-token")
+    text = "\n".join(s.get("run", "") for s in job["steps"])
+    for forbidden in ("apply", "deployment group create", "docker push", "secrets."):
+        if forbidden in text or forbidden in PLAN_PATH.read_text():
+            errors.append(f"read-only workflow must not contain {forbidden}")
+    return errors
+
+
+class InfraPlanWorkflowContractTests(unittest.TestCase):
+    def test_what_if_uploads_result_and_stays_read_only(self):
+        document = yaml.load(PLAN_PATH.read_text(), Loader=yaml.BaseLoader)
+        self.assertEqual(plan_contract_errors(document), [])
+
+    def test_contract_rejects_missing_upload_and_extra_id_token(self):
+        document = yaml.load(PLAN_PATH.read_text(), Loader=yaml.BaseLoader)
+        steps = document["jobs"]["what-if"]["steps"]
+        document["jobs"]["what-if"]["steps"] = [
+            s for s in steps if "upload-artifact" not in s.get("uses", "")
+        ]
+        document["jobs"]["changes"]["permissions"] = {"id-token": "write"}
+        errors = plan_contract_errors(document)
+        self.assertIn("what-if must upload exactly one result artifact", errors)
+        self.assertIn("changes must not request id-token", errors)
+
+
 if __name__ == "__main__":
     unittest.main()
