@@ -4162,11 +4162,27 @@ os.fstat(3)
         try:
             self.commit("add", "support/a.md", "src/importer/src/zava_forward/importer/x.py")
             self.git("rm", "-q", "src/importer/src/zava_forward/importer/x.py")
-            self.git("commit", "-qm", "drop code")
+            self.git(
+                "-c",
+                "user.name=Fixture",
+                "-c",
+                "user.email=fixture@example.test",
+                "commit",
+                "-qm",
+                "drop code",
+            )
             nets_inert = self.git("rev-parse", "HEAD")
             (self.root / "src/importer/src/zava_forward/importer").mkdir(parents=True)
             self.git("mv", "support/a.md", "src/importer/src/zava_forward/importer/y.py")
-            self.git("commit", "-qm", "rename into code")
+            self.git(
+                "-c",
+                "user.name=Fixture",
+                "-c",
+                "user.email=fixture@example.test",
+                "commit",
+                "-qm",
+                "rename into code",
+            )
             renamed = self.git("rev-parse", "HEAD")
             self.git("switch", "-q", pr)
             self.git("update-ref", "refs/remotes/origin/main", nets_inert)
