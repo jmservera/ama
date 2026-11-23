@@ -15231,3 +15231,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2244 populated-database seed skips the write lock (Refs #2244)
 
 * Added [issue-2244-live-r4-2026-11-23.md](research/issue-2244-live-r4-2026-11-23.md): `SqlStore._seed` no longer takes the SQL write lock on a populated database; regression test added; C3 to C5 stay unproven for the demo.
+## [2026-11-23] add | Issue 2257 map redraw after a gateway failure (Refs #2257)
+
+* Added [issue-2257-live-r6-2026-11-23.md](research/issue-2257-live-r6-2026-11-23.md): a non-JSON gateway failure now gets the map's one automatic redraw, with a regression test; per-criterion table.

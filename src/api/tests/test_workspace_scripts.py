@@ -258,6 +258,10 @@ const server = Object.assign(new Error("boom"), {status: 500});
 const shown = run(server);
 assert.equal(shown.ctx.retry.hidden, false, "a server error still offers the control");
 assert.deepEqual(shown.timers, [], "an HTTP error is shown, never retried automatically");
+const gateway = run(Object.assign(new Error("boom"), {status: 503, gateway: true}));
+assert.deepEqual(gateway.timers, [4000], "a gateway page after the read retries gets one redraw");
+assert.match(source, /e\.gateway = body === undefined && startupFailure\(res\)/,
+  "only a non-JSON gateway read failure is marked");
 """,
                 str(WEB),
             ],
