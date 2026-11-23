@@ -15206,3 +15206,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Issue 2310 anonymous PUT, PATCH and DELETE on protected API return 401 (Refs #2310)
 
 * Extended [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application answered 501 to anonymous PUT, PATCH and DELETE on `/api/` paths; it now answers 401 with a regression test. Live edge 302 stays an owner decision.
+## [2026-11-23] add | Issue 116 live round 11 provider boundary text (Refs #116)
+
+* Added [issue-116-live-r11-evidence-2026-11-23.md](research/issue-116-live-r11-evidence-2026-11-23.md): unencodable text now refused as `input-refused` at the shared allowlist, with a failing-then-passing test. Live payloads, independent review and hosted CI stay unproven.

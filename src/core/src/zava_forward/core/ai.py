@@ -53,6 +53,13 @@ class InputRefused(ValueError):
     """The request is outside the approved input bounds; no provider call is made."""
 
 
+def _utf8_size(text):
+    try:
+        return len(text.encode("utf-8"))
+    except UnicodeEncodeError:
+        raise InputRefused("input-type-not-approved") from None
+
+
 def approved_payload(system, user):
     """Type and size allowlist at the one boundary every provider family shares; raises InputRefused."""
     if not isinstance(system, str):
@@ -66,7 +73,7 @@ def approved_payload(system, user):
         if not isinstance(part, dict):
             raise InputRefused("input-type-not-approved")
         if part.keys() == {"type", "text"} and part["type"] == "text" and isinstance(part["text"], str):
-            text += len(part["text"].encode("utf-8"))
+            text += _utf8_size(part["text"])
             continue
         image = part.get("image_url")
         url = image.get("url") if isinstance(image, dict) and image.keys() == {"url"} else None
@@ -81,7 +88,7 @@ def approved_payload(system, user):
             raise InputRefused("input-type-not-approved") from None
         if len(data) * 3 // 4 > MAX_IMAGE_BYTES:
             raise InputRefused("input-image-too-large")
-    if text + len(system.encode("utf-8")) > MAX_TEXT_BYTES:
+    if text + _utf8_size(system) > MAX_TEXT_BYTES:
         raise InputRefused("input-too-large")
 
 
