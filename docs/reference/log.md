@@ -15110,3 +15110,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2202 deployed hardening check (Refs #2202)
 
 * Added [issue-2202-live2-2026-11-23.md](research/issue-2202-live2-2026-11-23.md): read-only proof of enforced hardening on every demo app and live job, agents app difference explained, and a tested `check_hardening` in `tools/demo_preflight.py`.
+## [2026-11-23] add | Epic 113 production-claim guard (Refs #113)
+
+* Added [issue-113-production-claim-guard-2026-11-23.md](research/issue-113-production-claim-guard-2026-11-23.md): a test-only guard against unqualified production claims in shipped source; criteria 1 and 2 stay owner-gated.
