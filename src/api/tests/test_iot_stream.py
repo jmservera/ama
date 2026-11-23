@@ -274,6 +274,15 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
                     with patch("zava_forward.api.iot_stream.datetime", FixtureClock):
                         await self.receiver.run(max_seconds=2, max_events=5, bounded_window=True)
 
+    async def test_unexpected_callback_failure_records_only_the_exception_class(self) -> None:
+        self.events = [("0", event(observations()[0]))]
+        with patch.object(
+            self.receiver.ingestion, "consume", side_effect=KeyError("constructed SECRET")
+        ):
+            with self.assertRaisesRegex(StreamError, "^IOT_CALLBACK_FAILED$"):
+                await self.run_receiver(2, bounded=True)
+        self.assertEqual(self.receiver.callback_error_type, "KeyError")
+
     async def test_bounded_window_keeps_sql_failure_fatal(self) -> None:
         self.events = [("0", event(observations()[0]))]
         self.receiver.sql_backoff = (0.0, 0.0)

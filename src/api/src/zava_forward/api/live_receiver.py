@@ -119,9 +119,15 @@ async def run_window(
     stop = asyncio.Event()
     watcher = asyncio.create_task(_watch(control, reload, clock, stop, poll)) if reload else None
     try:
-        receipts = await receiver.run(
-            max_seconds=window, max_events=events, stop=stop, bounded_window=True
-        )
+        try:
+            receipts = await receiver.run(
+                max_seconds=window, max_events=events, stop=stop, bounded_window=True
+            )
+        except StreamError:
+            error_type = getattr(receiver, "callback_error_type", None)
+            if error_type:
+                print(f"callback_error_type={error_type}", file=sys.stderr, flush=True)
+            raise
         retries = getattr(receiver, "sql_retries", 0)
         if retries:
             print(f"sql_retries={retries}", file=sys.stderr, flush=True)
