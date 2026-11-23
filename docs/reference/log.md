@@ -14874,3 +14874,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Nomination test bootstrap isolation fifth re-run (Refs #1847)
 
 * Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23-fifth.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-fifth.md): both orders in source, editable and noneditable layouts with identities observed; criterion 6 (full gate receipt) stays owner-gated. No source or test change.
+## [2026-11-23] update | Issue 107 assistants criteria re-verified, fourth pass (Refs #107)
+
+* Added [issue-107-live-r4-assistants-evidence-2026-11-23.md](research/issue-107-live-r4-assistants-evidence-2026-11-23.md): independent SQL race, restart and old-image criterion proven on actual local SQL Server 2022 (95 tests OK); approved-release delivered-build criterion stays unproven. No source change.
