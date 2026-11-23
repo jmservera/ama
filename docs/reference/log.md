@@ -14871,3 +14871,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1837 live re-verification r2 (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-23-r2.md](research/issue-1837-live-demo-evidence-2026-11-23-r2.md): fix still on main; 66 unit tests, three axe journeys (nomination on third run) and a live refusal probe re-run. Live write and independent review stay unproven. No source change.
+## [2026-11-23] add | Nomination test bootstrap isolation fifth re-run (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23-fifth.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-fifth.md): both orders in source, editable and noneditable layouts with identities observed; criterion 6 (full gate receipt) stays owner-gated. No source or test change.

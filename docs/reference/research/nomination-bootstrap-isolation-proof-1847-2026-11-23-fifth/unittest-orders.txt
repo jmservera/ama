@@ -1,0 +1,30 @@
+## test_bulk_edits test_nomination_route editable
+Ran 55 tests in 19.220s
+
+OK
+## test_bulk_edits test_nomination_route source
+Ran 55 tests in 16.342s
+
+OK
+## test_bulk_edits test_nomination_route noneditable
+----------------------------------------------------------------------
+Ran 40 tests in 10.614s
+
+FAILED (errors=1)
+## test_nomination_route test_bulk_edits editable
+Ran 55 tests in 13.410s
+
+OK
+## test_nomination_route test_bulk_edits source
+Ran 55 tests in 12.170s
+
+OK
+## test_nomination_route test_bulk_edits noneditable
+----------------------------------------------------------------------
+Ran 55 tests in 16.256s
+
+OK
+## bootstrap test
+Ran 3 tests in 0.634s
+
+OK
