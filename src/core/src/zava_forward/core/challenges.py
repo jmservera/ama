@@ -9,6 +9,8 @@ routes hazard concerns immediately without waiting for challenge review, and fai
 adverse mutation.
 """
 
+import re
+import unicodedata
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from dataclasses import dataclass, field
@@ -85,8 +87,16 @@ FORBIDDEN_ADVERSE_FIELDS = frozenset(
 )
 
 
+_CAMEL_BOUNDARY = re.compile(r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])")
+_SEPARATOR_RUN = re.compile(r"[^0-9a-z]+")
+
+
 def _normalise_key(key: Any) -> str:
-    return str(key).strip().lower().replace("-", "_").replace(" ", "_")
+    """Canonical key form: NFKC, no format characters, camelCase split, one underscore per gap."""
+    text = unicodedata.normalize("NFKC", str(key))
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Cf")
+    text = _CAMEL_BOUNDARY.sub("_", text).lower()
+    return _SEPARATOR_RUN.sub("_", text).strip("_")
 
 
 _FORBIDDEN_NORMALISED = frozenset(_normalise_key(k) for k in FORBIDDEN_ADVERSE_FIELDS)

@@ -15243,3 +15243,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Issue 2310 anonymous PUT, PATCH and DELETE on protected API return 401 (Refs #2310)
 
 * Extended [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application answered 501 to anonymous PUT, PATCH and DELETE on `/api/` paths; it now answers 401 with a regression test. Live edge 302 stays an owner decision.
+## [2026-11-23] add | Issue 220 guard key variants (Refs #220)
+
+* Added [issue-220-live-r13-key-variants-2026-11-23.md](research/issue-220-live-r13-key-variants-2026-11-23.md): the non-retaliation guard now rejects camelCase, punctuation and Unicode variants of forbidden keys, with a regression test. Not deployed.

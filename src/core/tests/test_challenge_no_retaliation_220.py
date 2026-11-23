@@ -316,6 +316,26 @@ class ChallengeRegisterNoRetaliationTests(unittest.TestCase):
             assert_no_adverse_challenge_effects(base, after)
         reject_adverse_mapping({"summary": "ok", "route": "phone"})
 
+    def test_adverse_keys_are_rejected_despite_camel_case_punctuation_and_unicode_variants(
+        self,
+    ) -> None:
+        for variant in (
+            "hazardPause",
+            "RetaliationFlag",
+            "inferredRefusal",
+            "noAccess",
+            "hazard.pause",
+            "hazard/pause",
+            "hazard__pause",
+            "Hazard\u2013Pause",
+            "\uff52\uff45\uff54\uff41\uff4c\uff49\uff41\uff54\uff49\uff4f\uff4e",
+            "retaliation\u200b",
+        ):
+            with self.subTest(variant=variant):
+                with self.assertRaises(ChallengeSafeguardError):
+                    reject_adverse_mapping({variant: True})
+        reject_adverse_mapping({"consentGiven": True, "route": "phone", "hazardNote": "damp"})
+
     def test_register_reopen_representative_channels_and_assurance_contract(self) -> None:
         self.assertIn("trusted_intermediary", NON_DIGITAL_CHANNELS)
         self.assertEqual(SUBMITTER_KINDS, ("resident", "representative", "nominee", "third_party"))
