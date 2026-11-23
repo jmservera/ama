@@ -1,9 +1,16 @@
 {
-  "default_cap": 8,
-  "max_launches_per_issue": 3,
+  "default_cap": 12,
   "min_free_gb": 60,
   "project_owner": "jmservera",
   "project_number": 7,
-  "priority": [2191, 2192, 2193, 2194, 2195, 2201, 2202, 2203, 2204, 2205, 2206, 2186, 2187, 2188, 2189, 2190],
-  "skip": [2061, 2186, 2187, 2188, 2189, 2190, 2191, 2192, 2193, 2195, 2201, 2202, 2206]
+  "priority": [],
+  "skip": [
+    2061,
+    2128,
+    2189
+  ],
+  "relaunch_cooldown_hours": 3,
+  "project_id": "PVT_kwHOAHqgCM4BnJ3N",
+  "status_field_id": "PVTSSF_lAHOAHqgCM4BnJ3Nzhlvxx8",
+  "in_progress_option_id": "47fc9ee4"
 }

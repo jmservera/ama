@@ -27,7 +27,10 @@ CAP_FILE = os.environ.get("AMA_REFILL_MAX", "/tmp/refill.max")
 STOP_FILE = "/tmp/refill.stop"
 SKIP = set(CONFIG["skip"])
 PRIORITY = set(CONFIG["priority"])
-MAX_LAUNCHES = CONFIG["max_launches_per_issue"]
+COOLDOWN_HOURS = CONFIG.get("relaunch_cooldown_hours", 3)
+PROJECT_ID = CONFIG["project_id"]
+STATUS_FIELD = CONFIG["status_field_id"]
+IN_PROGRESS_OPTION = CONFIG["in_progress_option_id"]
 MIN_FREE_GB = CONFIG["min_free_gb"]
 PROJECT_OWNER = CONFIG["project_owner"]
 PROJECT_NUMBER = CONFIG["project_number"]
@@ -92,9 +95,32 @@ def launch_counts() -> dict[int, int]:
     return counts
 
 
+def cooled_down(n: int, times: dict[int, str]) -> bool:
+    """An issue relaunches once its last worker is older than the cooldown (epics wait longer)."""
+    last = times.get(n)
+    if not last:
+        return True
+    try:
+        t = datetime.datetime.strptime(last[:15], "%Y%m%dT%H%M%S").replace(tzinfo=datetime.UTC)
+    except ValueError:
+        return True
+    return (datetime.datetime.now(datetime.UTC) - t).total_seconds() > COOLDOWN_HOURS * 3600
+
+
+def mark_in_progress(n: int) -> None:
+    try:
+        items = json.load(open(os.path.join(STATE, "board-cache.json")))["items"]
+        item = next(i for i in items if (i.get("content") or {}).get("number") == n)
+        sh(
+            f"gh project item-edit --project-id {PROJECT_ID} --id {item['id']} "
+            f"--field-id {STATUS_FIELD} --single-select-option-id {IN_PROGRESS_OPTION}"
+        )
+    except Exception:
+        log(f"board status not updated for {n}")
+
+
 def candidates(lv: set[int]) -> list[tuple[int, str, int, str]]:
     times = issue_times()
-    counts = launch_counts()
     bl = board()
     try:
         op = json.loads(
@@ -110,8 +136,9 @@ def candidates(lv: set[int]) -> list[tuple[int, str, int, str]]:
     cands = [
         (0 if n in PRIORITY else 1, times.get(n, ""), n, t)
         for n, t in bl
-        if n not in lv and n not in SKIP and (n in PRIORITY or counts.get(n, 0) < MAX_LAUNCHES)
+        if n not in lv and n not in SKIP and cooled_down(n, times)
     ]
+    cands = [(0 if "Epic" not in t else 2, a, n, t) for _, a, n, t in cands]
     cands.sort()
     return cands
 
@@ -119,7 +146,7 @@ def candidates(lv: set[int]) -> list[tuple[int, str, int, str]]:
 def main() -> None:
     while True:
         if os.path.exists(STOP_FILE):
-            log("stop file present")
+            log("stop file present; exiting (the wrapper stops too)")
             break
         try:
             cap = int(open(CAP_FILE).read().strip())
@@ -144,6 +171,7 @@ def main() -> None:
                 log(f"launch {n} (live={len(lv)} max={cap})")
                 out = sh(f"bash {HERE}/mk-live.sh {n} code {json.dumps(goal)} 2>&1 | tail -3")
                 log(out.strip().replace("\n", " | ")[:300])
+                mark_in_progress(n)
                 time.sleep(20)
                 continue
             log("no candidates")
