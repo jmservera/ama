@@ -320,6 +320,23 @@ def test_given_src_project_file_when_computed_then_solution_code_opens(tmp_path,
     assert state["artifacts"]["solution-code"]["files"] == [path]
 
 
+def test_given_registry_when_loaded_then_no_mvp_or_prototype_glob():
+    # Arrange
+    registry = json.loads((RUBRIC_DIR / "artifacts.json").read_text(encoding="utf-8"))
+
+    # Act
+    globs = [
+        glob
+        for artifact in registry["artifacts"]
+        for glob in (*artifact["include"], *artifact["exclude"])
+    ]
+
+    # Assert
+    assert [g for g in globs if g.startswith(("mvp/", "prototype/"))] == []
+    solution = next(a for a in registry["artifacts"] if a["id"] == "solution-code")
+    assert "src/**/*" in solution["include"]
+
+
 @pytest.mark.parametrize(
     "path",
     [
