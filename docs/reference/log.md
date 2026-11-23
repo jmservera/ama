@@ -15037,3 +15037,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 146 live alert inventory classifier (Refs #146)
 
 * Added [issue-146-live6-monitoring-2026-11-23.md](research/issue-146-live6-monitoring-2026-11-23.md): read-only live inventory and `infra/scripts/monitoring_live_inventory.py` with tests; ledger digest enabled, job, poison and IoT rules installed but disabled; no criterion ticked.
+## [2026-11-23] add | Issue 350 criterion 1 re-probe and Easy Auth guard (Refs #350)
+
+* Added [issue-350-live-r8-2026-11-23.md](research/issue-350-live-r8-2026-11-23.md): live probe still shows 302 for browser-style API requests; added an infra test forbidding any `/api` Easy Auth exemption. No `src/` change.
