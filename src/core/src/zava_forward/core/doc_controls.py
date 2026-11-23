@@ -351,17 +351,23 @@ class DocControlsMixin:
                 for d in c["documents"]:
                     if d.get("generated"):
                         continue
-                    trig = self._trigger(c, d)
+                    held = bool((c.get("legal_hold") or {}).get("active"))
+                    try:
+                        trig = self._trigger(c, d)
+                    except (ValueError, TypeError):
+                        # One unreadable date must not hide every other due record; list it for a person to fix.
+                        rows.append(dict(case_id=c["id"], doc_id=d["id"], kind=d["kind"], trigger=None, due=None,
+                                         status="blocked: legal hold" if held else "needs review: trigger date unreadable"))
+                        continue
                     if trig is None:
                         continue
                     due = trig + timedelta(days=365 * RETENTION_YEARS.get(d["kind"], RETENTION_YEARS["Other"]))
                     if due > today:
                         continue
-                    held = bool((c.get("legal_hold") or {}).get("active"))
                     rows.append(dict(case_id=c["id"], doc_id=d["id"], kind=d["kind"], trigger=trig.isoformat(), due=due.isoformat(),
                                      status="blocked: legal hold" if held else "awaiting owner approval"))
             self.audit(user["email"], "retention_job_listed", "-", f"{len(rows)} due, {sum(r['status'].startswith('blocked') for r in rows)} held")
-        rows.sort(key=lambda r: (r["due"], r["case_id"], r["doc_id"]))
+        rows.sort(key=lambda r: (r["due"] or "", r["case_id"], r["doc_id"]))
         return dict(label=RETENTION_LABEL, as_of=today.isoformat(), records=rows)
 
     def approve_retention_deletion(self, user, case_id, doc_id, today=None):
