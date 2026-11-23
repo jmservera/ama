@@ -1,18 +1,18 @@
 {
- "task_id": "issue-2164-live-20261122T231111Z",
- "task_slug": "issue-2164-live-recheck",
+ "task_id": "issue-2164-live-20261122T235537Z",
+ "task_slug": "issue-2164-live-r3",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-22/issue-2164-live-20261122T231111Z-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-22/issue-2164-live-20261122T231111Z-plan.md",
-  "details": ".copilot-tracking/details/2026-11-22/issue-2164-live-20261122T231111Z-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-22/issue-2164-live-20261122T231111Z-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-22/issue-2164-live-20261122T231111Z-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-22/issue-2164-live-20261122T231111Z-review.md"
+  "research": ".copilot-tracking/research/2026-11-22/issue-2164-live-20261122T235537Z-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-22/issue-2164-live-20261122T235537Z-plan.md",
+  "details": ".copilot-tracking/details/2026-11-22/issue-2164-live-20261122T235537Z-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-22/issue-2164-live-20261122T235537Z-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-22/issue-2164-live-20261122T235537Z-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-22/issue-2164-live-20261122T235537Z-review.md"
  },
  "confirmed_decisions": [
   {
@@ -21,19 +21,14 @@
    "evidence": "owner brief 2026-11-22"
   },
   {
-   "decision": "research reused/re-verified, Ready",
+   "decision": "research reused and re-verified, Ready; critique executed once, proceed, no src change",
    "status": "done",
-   "evidence": ".copilot-tracking/research/2026-11-22/issue-2164-live-20261122T231111Z-research.md"
-  },
-  {
-   "decision": "critique executed once, proceed; no src change, focused tier",
-   "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2164-live-20261122T231111Z-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-22/issue-2164-live-20261122T235537Z-critique.md"
   },
   {
    "decision": "review executed once, conformant (focused)",
    "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2164-live-20261122T231111Z-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-22/issue-2164-live-20261122T235537Z-review.md"
   }
  ],
  "blockers": [],
@@ -41,12 +36,5 @@
   "phase": "Follow-up",
   "action": "owner selects follow-up"
  },
- "prioritized_follow_ups": [
-  {
-   "rank": 1,
-   "task": "Audit other identity.verified staff paths for bound-row scope",
-   "rationale": "same gap class",
-   "evidence": "grep identity.verified"
-  }
- ]
+ "prioritized_follow_ups": [{"rank": 1, "task": "Audit other identity.verified staff paths for bound-row scope", "rationale": "same gap class", "evidence": "grep identity.verified"}]
 }

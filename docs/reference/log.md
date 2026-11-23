@@ -14658,3 +14658,49 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-22] update | Issue 1288 ninth live audit (Refs #1288)
 
 * Added [issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md](research/issue-1288-live-r9-quality-sensor-evidence-2026-11-22.md): main confirmed current, 92 focused tests OK, seven homes with fresh live readings and a Home sensors screenshot, Quality model still blocked at release admission, forecast endpoint 503/504 recorded as an anomaly. Criteria 4 and 8 stay unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 1258 live evidence r7 (Refs #1258)
+
+* Added [ranking-archive-ancestor-durability-live-r7-2026-11-22.md](research/ranking-archive-ancestor-durability-live-r7-2026-11-22.md): 110 tests OK at head equal to main, real strace of first publication into a nested archive; FULL receipt, independent review and hosted checks stay unproven. No source change.
+
+## [2026-11-22] update | Issue 1259 live run 6 (Refs #1259)
+
+* Added [2026-11-22-ranking-archive-unusable-1259-live-r6.md](research/2026-11-22-ranking-archive-unusable-1259-live-r6.md): red-before (7 failures) and green-after (110 tests) for unusable ranking archive paths, with per-criterion status. No source change.
+
+## [2026-11-22] update | Issue 2202 gates recheck on API 0000054 and resident 0000026 (Refs #2202)
+
+* Added [issue-2202-gates-recheck-2026-11-22.md](research/issue-2202-gates-recheck-2026-11-22.md): read-only recheck of the revisions (Running, Healthy, hardening enforced on api and agents) and the two owner gates, the open suspension (scope all, recorded 2026-11-18) and the resident ledger budget expiry (not directly readable, SQL public access disabled). Generative AI answers stay unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 2244 live re-verification on revision 0000054 (Refs #2244)
+
+* Added [issue-2244-live-r54-2026-11-22.md](research/issue-2244-live-r54-2026-11-22.md): revision 0000054 healthy, fix present in the container, zero restarts, clean scale-out start; held-lock live test, lock holder and read-only schema check stay unproven. No source change.
+
+## [2026-11-22] update | Issue 2255 clocks re-verified on 0000054 (Refs #2255)
+
+* Added [issue-2255-reverify-2026-11-22.md](research/issue-2255-reverify-2026-11-22.md): read-only live re-check on revision 0000054: 22 of 22 hazard clocks with a target, 0 unknown, 17 overdue, 5 running, owner on 23 rows. Re-seed survival stays unproven. No source change.
+## [2026-11-22] update | Issue 2061 live evidence pass (Refs #2061)
+
+* Added [issue-2061-live-evidence-2026-11-22.md](research/issue-2061-live-evidence-2026-11-22.md): single environment and ingress re-read, Entra redirect URI table (two stale URIs), employee and resident sign-in, negative access probe for `id-resident-demo`, simulator to receiver telemetry; import flow, before role inventory and stale URI removal remain unproven. No source or estate change; one throwaway job created and deleted.
+## [2026-11-22] update | Issue 2243 resident AI re-verification on revision 0000026 (Refs #2243)
+
+* Added [issue-2243-rev26-2026-11-22.md](research/issue-2243-rev26-2026-11-22.md): live probe of resident revision 0000026 (both model-eligible questions still `usage_limit`), API 0000054 employee chat rules-only, ledger-expiry and SUS-1 owner gates, per-criterion table; model-backed answer stays unproven. No source or estate change.
+
+## [2026-11-22] update | Issue 1204 tick criterion second re-check (Refs #1204)
+
+* Added [issue-1204-tick-criterion-live-r2-2026-11-22.md](research/issue-1204-tick-criterion-live-r2-2026-11-22.md): rescan finds no tick_log with the new fields; handoff checker passes and 22 tests pass; the unticked criterion stays unticked. No source change.
+
+## [2026-11-22] update | Issue 470 live re-check r2 (Refs #470)
+
+* Added [issue-470-live-r2-2026-11-22.md](research/issue-470-live-r2-2026-11-22.md): 128 gate tests pass; criteria 1, 2, 3 and 5 proven, criterion 4 unproven (no matched full-gate pair; PR 2272 now merged). No source change.
+
+## [2026-11-22] update | Issue 2164 live re-check r3 (Refs #2164)
+
+* Updated [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix 6a03928ccb still on main, the scope-bypass and view-only tests pass; the API app moved to revision 0000054 and its digest still cannot be traced to a commit. No source or estate change.
+
+## [2026-11-22] update | Issue 220 live run 10 (Refs #220)
+
+* Added [issue-220-live-r10-revision-0054-2026-11-22.md](research/issue-220-live-r10-revision-0054-2026-11-22.md): the run 9 probe repeated on revision 0000054; record and correction succeed, protected case state is unchanged, guard fields are refused; 40 offline tests pass. Retaliation over time stays production-only. No source change.
+
+## [2026-11-22] update | Issue 198 criteria re-verification, run 20261122T235603Z (Refs #198)
+
+* Added [issue-198-rubric-live-20261122T235603Z-2026-11-22.md](research/issue-198-rubric-live-20261122T235603Z-2026-11-22.md): criteria 3 and 4 re-checked at base 10cad2e413. No mvp or prototype glob remains, score 79 (baseline 47), 84 rubric tests pass. Criterion 3 unproven, criterion 4 partly proven. No source or estate change.

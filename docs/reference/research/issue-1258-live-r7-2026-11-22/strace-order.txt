@@ -1,0 +1,12 @@
+mkdir("<tmp>/a", 0777) = 0
+mkdir("<tmp>/a/b", 0777) = 0
+mkdir("<tmp>/a/b/archive", 0777) = 0
+fsync(4<<tmp>/a/b/archive/.ranking-1.0.0-2026-10-09-7502f1822e79.json.43e6fa7459a78f36.tmp>) = 0
+linkat(3<<tmp>/a/b/archive>, ".ranking-1.0.0-2026-10-09-7502f1822e79.json.43e6fa7459a78f36.tmp", 3<<tmp>/a/b/archive>, "ranking-1.0.0-2026-10-09-7502f1822e79.json", AT_SYMLINK_FOLLOW) = 0
+fsync(3<<tmp>/a/b/archive>) = 0
+fsync(4<<tmp>/a/b>) = 0
+fsync(5<<tmp>/a>) = 0
+fsync(6<<tmp>>) = 0
+fsync(7</var/tmp>)              = 0
+fsync(8</var>)                  = 0
+fsync(9</>)                     = 0

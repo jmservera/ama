@@ -1,0 +1,48 @@
+2026-11-22T23:46:20Z
+200 0.106011s
+200 0.102230s
+200 0.159858s
+200 6.190468s
+200 7.493706s
+[
+  {
+    "created": "2026-11-22T23:46:34Z",
+    "replica": "ca-cutover-test-demo-api--0000054-5b49f9c9b9-cbbkb",
+    "restartCount": 0,
+    "state": "NotRunning"
+  },
+  {
+    "created": "2026-11-22T23:14:24Z",
+    "replica": "ca-cutover-test-demo-api--0000054-5b49f9c9b9-n6nnr",
+    "restartCount": 0,
+    "state": "Running"
+  }
+]
+{
+  "latest": "ca-cutover-test-demo-api--0000054",
+  "provisioning": "Succeeded",
+  "ready": "ca-cutover-test-demo-api--0000054"
+}
+[
+  {
+    "created": "2026-11-22T23:14:23+00:00",
+    "health": "Healthy",
+    "name": "ca-cutover-test-demo-api--0000054",
+    "running": "Running"
+  }
+]
+2nd probe 2026-11-22T23:47:54Z
+[
+  {
+    "created": "2026-11-22T23:46:34Z",
+    "replica": "ca-cutover-test-demo-api--0000054-5b49f9c9b9-cbbkb",
+    "restartCount": 0,
+    "state": "Running"
+  },
+  {
+    "created": "2026-11-22T23:14:24Z",
+    "replica": "ca-cutover-test-demo-api--0000054-5b49f9c9b9-n6nnr",
+    "restartCount": 0,
+    "state": "Running"
+  }
+]
