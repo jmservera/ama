@@ -10,12 +10,13 @@ CHECKS = Path(__file__).resolve().parents[1] / "checks"
 
 
 class FakeLocator:
-    def __init__(self, selector: str, has_text: object = None) -> None:
+    def __init__(self, selector: str, has_text: object = None, has_not_text: object = None) -> None:
         self.selector = selector
         self.has_text = has_text
+        self.has_not_text = has_not_text
 
-    def filter(self, *, has_text: object) -> "FakeLocator":
-        return FakeLocator(self.selector, has_text)
+    def filter(self, *, has_text: object = None, has_not_text: object = None) -> "FakeLocator":
+        return FakeLocator(self.selector, has_text, has_not_text)
 
 
 class FakePage:
@@ -29,6 +30,13 @@ class MapStatusLocatorTests(unittest.TestCase):
         locator: Any = check_module.count_notice(page)
         self.assertEqual(locator.selector, check_module.MAP_STATUSES)
         self.assertIs(locator.has_text, check_module.COUNT_NOTICE)
+
+    def test_tile_notice_excludes_the_count_and_does_not_rely_on_sibling_order(self) -> None:
+        page: Any = FakePage()
+        locator: Any = check_module.tile_notice(page)
+        self.assertEqual(locator.selector, check_module.MAP_STATUSES)
+        self.assertIs(locator.has_not_text, check_module.COUNT_NOTICE)
+        self.assertNotIn("+", locator.selector)
 
     def test_count_pattern_matches_the_count_and_not_the_other_map_statuses(self) -> None:
         pattern = check_module.COUNT_NOTICE

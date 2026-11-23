@@ -15294,3 +15294,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 440 criteria verdict, second pass (Refs #440)
 
 * Added [issue-440-live-criteria-verdict-2026-11-23b.md](research/issue-440-live-criteria-verdict-2026-11-23b.md): guard re-observed at head 2e968a6583, duplicate allowlist entry removed; criterion 7 proven except owner approval, criterion 8 unproven.
+
+## [2026-11-23] add | Issue 149 map tile-note check locator fix (Refs #149)
+
+* Added [issue-149-map-check-locator-2026-11-23.md](research/issue-149-map-check-locator-2026-11-23.md): the map tile status browser check used a stale adjacent-sibling selector; fixed with a unit assertion, live desktop render of both demo apps and a per-criterion table.
