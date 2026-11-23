@@ -14897,3 +14897,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2008 live re-proof r3 on revision 0000055 (Refs #2008)
 
 * Added [issue-2008-live-reproof-r3-2026-11-23.md](research/issue-2008-live-reproof-r3-2026-11-23.md): the synthetic .xlsx import shows mapping, the DEMO-002 duplicate conflict and row preview on the deployed demo; source file hashes unchanged; all four criteria proven for the demo. No source or estate change.
+## [2026-11-23] add | Ranking archive criteria check r9 (Refs #1258, Refs #1259)
+
+* Added [issue-1258-1259-live-r9-2026-11-23.md](research/issue-1258-1259-live-r9-2026-11-23.md): 146 tests pass, parent-sync mutation fails 12 tests, unusable-path mutation fails 5 tests. Process criteria unproven and owner-gated. No source or estate change.

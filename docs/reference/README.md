@@ -593,6 +593,7 @@ A [fourth run](./research/issue-1258-live-r4-2026-11-19.md) repeats the ext4 sys
 A [fifth run](./research/issue-1258-live-r5-2026-11-19.md) records the per-criterion table at 309635e29; criterion 5 stays unproven.
 A [sixth run](./research/issue-1258-live-r6-2026-11-21.md) adds a mutation check that shows the ancestor regression failing without the parent sync; criterion 5 stays unproven.
 An [eighth run](./research/issue-1258-live-r8-2026-11-23.md) repeats the mutation check at head 342fad401d and confirms live revisions 0000054 and 0000026; criterion 5 stays unproven.
+A [ninth run](./research/issue-1258-1259-live-r9-2026-11-23.md) covers #1258 and #1259 at head 9dbfab6f56 with a mutation check for each fix; the process criteria stay unproven.
 
 For #2116, the [drill criterion classification](./research/issue-2116-drill-criterion-demo-classification-2026-11-23.md) records the witnessed suspension drill as owner-gated and unproven for the demo.
 
