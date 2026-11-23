@@ -14726,3 +14726,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1274 criteria re-verification run 3 (Refs #1274)
 
 * Added [issue-1274-live-evidence-2026-11-23.md](research/issue-1274-live-evidence-2026-11-23.md): actionlint 1.7.7 checksum verification and 12 and 129 regression tests repeated at main 342fad401d; AWF 0.28.23 and hosted CI on a new reviewed head remain unproven.
+## [2026-11-23] update | Issue 2243 live re-verification (Refs #2243)
+
+* Added [issue-2243-live-2026-11-23.md](research/issue-2243-live-2026-11-23.md): fresh desktop probe of resident revision 0000026 (both questions `usage_limit`), API 0000054 Healthy, main already honours `ZF_DEMO_EXPIRES_AT`, 70 targeted tests pass, per-criterion table; model-backed answer stays owner-gated on the private SQL ledger. No source or estate change.
