@@ -231,6 +231,30 @@ def test_given_cowork_registry_when_matching_then_only_current_deck_selected(pat
 
     assert matched is expected
 
+RETIRED_ROOTS = ("mvp/", "prototype/", "prototypes/")
+
+
+def test_given_registry_when_scanned_then_no_pattern_targets_retired_roots():
+    registry = json.loads((RUBRIC_DIR / "artifacts.json").read_text(encoding="utf-8"))
+    patterns = [pattern for entry in registry["artifacts"] for pattern in (*entry["include"], *entry["exclude"])]
+
+    retired = [p for p in patterns if p.lstrip("*/").startswith(RETIRED_ROOTS)]
+
+    assert retired == []
+
+
+@pytest.mark.parametrize("artifact_id", ["solution-code", "infrastructure"])
+def test_given_current_checkout_when_matching_then_code_artifacts_have_files(artifact_id):
+    root = RUBRIC_DIR.parent.parent
+    registry = json.loads((RUBRIC_DIR / "artifacts.json").read_text(encoding="utf-8"))
+    entry = next(item for item in registry["artifacts"] if item["id"] == artifact_id)
+
+    files, _skipped = prepare.match_files(root, entry["include"], entry["exclude"], registry["max_file_bytes"])
+
+    assert files
+    assert not any(f.startswith(RETIRED_ROOTS) for f in files)
+
+
 @pytest.mark.parametrize(
     ("artifact_max_bytes", "file_size", "expected"),
     [
