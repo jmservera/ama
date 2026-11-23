@@ -14990,3 +14990,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2164 deployed code proof (Refs #2164)
 
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
+## [2026-11-23] add | Issue 2313 what-if workflow and PR image build (Refs #2313)
+
+* Added [issue-2313-what-if-live-2026-11-23.md](research/issue-2313-what-if-live-2026-11-23.md): `infra-plan.yml` already covers the what-if criteria; a new credential-free workflow builds a versioned image without deploying.
