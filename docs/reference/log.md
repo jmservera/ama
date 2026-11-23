@@ -14900,3 +14900,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Ranking archive criteria check r9 (Refs #1258, Refs #1259)
 
 * Added [issue-1258-1259-live-r9-2026-11-23.md](research/issue-1258-1259-live-r9-2026-11-23.md): 146 tests pass, parent-sync mutation fails 12 tests, unusable-path mutation fails 5 tests. Process criteria unproven and owner-gated. No source or estate change.
+## [2026-11-23] add | Issue 1844 live r3 re-verification (Refs #1844)
+
+* Added [issue-1844-live-r3-2026-11-23.md](research/issue-1844-live-r3-2026-11-23.md): 436 harness passes with 0 skips on head 9dbfab6f56, live probe on API revision 0000055 shows 0 of 2 zoom controls covered at 320 and 390 px, and criterion 6 stays owner-gated. No source or estate change.
