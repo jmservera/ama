@@ -15274,3 +15274,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 440 live criteria verdict (Refs #440)
 
 * Added [issue-440-live-criteria-verdict-2026-11-23.md](research/issue-440-live-criteria-verdict-2026-11-23.md): live Playwright and local re-observation at head 6815bc595d, the legacy-reference guard defect from #2329 fixed by allowlisting its regression-guard test file, criterion 7 proven except owner approval, criterion 8 unproven. No src change, no Azure change.
+
+## [2026-11-23] add | Resident showcase r10, Content-Length guard (Refs #462)
+
+* Added [resident-showcase-live-r10-2026-11-23.md](research/resident-showcase-live-r10-2026-11-23.md): 36 live checks on revision 0000028; a non-ASCII digit `Content-Length` no longer drops the connection on the resident demo (regression test); live effect awaits a redeploy.

@@ -397,6 +397,15 @@ class SignInTests(DemoTestCase):
         self.assertEqual(c.call("POST", "/demo/login", raw=big)[0], 401)
         self.assertNotIn(demo.SESSION_COOKIE, c.cookies)
 
+    def test_non_ascii_digit_content_length_is_a_generic_denial(self) -> None:
+        c = self.client()
+        c.prime()
+        status, payload, _ = c.call(
+            "POST", "/demo/login", raw=b"{}", headers={"Content-Length": "\u00b2"}
+        )
+        self.assertEqual((status, payload["error"]), (401, demo.GENERIC_DENIAL))
+        self.assertEqual(c.login("one@example.com"), 200)
+
 
 class SessionTests(DemoTestCase):
     def test_no_cookie_and_forged_cookies_are_401(self) -> None:

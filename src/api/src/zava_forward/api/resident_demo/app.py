@@ -444,7 +444,11 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
         def _body(self) -> dict[str, Any] | None:
             ctype = (self.headers.get("Content-Type") or "").split(";")[0].strip().lower()
             length = self.headers.get("Content-Length", "")
-            if ctype != "application/json" or not length.isdigit() or int(length) > MAX_BODY:
+            if (
+                ctype != "application/json"
+                or not (length.isascii() and length.isdigit())
+                or int(length) > MAX_BODY
+            ):
                 return None
             try:
                 parsed = json.loads(self.rfile.read(int(length)))
