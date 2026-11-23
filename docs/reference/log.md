@@ -14738,3 +14738,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1259 archive path regressions, run 7 (Refs #1259)
 
 * Added [2026-11-23-ranking-archive-unusable-1259-live-r7.md](research/2026-11-23-ranking-archive-unusable-1259-live-r7.md): red-before (7 failures) and green-after (110 tests), plus a read-only check that the live revisions do not host the ranking runner. No source change.
+## [2026-11-23] update | Issue 1258 criteria re-verification r8 (Refs #1258)
+
+* Added [issue-1258-live-r8-2026-11-23.md](research/issue-1258-live-r8-2026-11-23.md): 146 tests pass, the parent-sync mutation fails 12 tests, live revisions 0000054 and 0000026 confirmed. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. No source or estate change.

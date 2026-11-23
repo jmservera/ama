@@ -588,6 +588,7 @@ A [third run](./research/issue-1258-live-r3-2026-11-18.md) repeats both proofs o
 A [fourth run](./research/issue-1258-live-r4-2026-11-19.md) repeats the ext4 syscall order and local checks at 910adb0a1; criterion 5 stays unproven.
 A [fifth run](./research/issue-1258-live-r5-2026-11-19.md) records the per-criterion table at 309635e29; criterion 5 stays unproven.
 A [sixth run](./research/issue-1258-live-r6-2026-11-21.md) adds a mutation check that shows the ancestor regression failing without the parent sync; criterion 5 stays unproven.
+An [eighth run](./research/issue-1258-live-r8-2026-11-23.md) repeats the mutation check at head 342fad401d and confirms live revisions 0000054 and 0000026; criterion 5 stays unproven.
 
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
