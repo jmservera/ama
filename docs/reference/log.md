@@ -15228,3 +15228,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 121 assistant task contract enforcement (Refs #121)
 
 * Added [issue-121-assistant-contract-enforcement-2026-11-23.md](research/issue-121-assistant-contract-enforcement-2026-11-23.md): the declared data contract is enforced for the five assistant tasks before provider text is built; regression tests in core and agents; a telephone-pattern false positive on hexadecimal digests fixed. DPO and Legal approvals remain production-only.
+
+## [2026-11-23] add | Issue 114 ledger re-verification (Refs #114)
+
+* Added [issue-114-live-reverify-2026-11-23.md](research/issue-114-live-reverify-2026-11-23.md): read-only live probe of the demo ledger (intact, one year), reliance gate absent from the orchestrator image, one added test. No ticks changed.
