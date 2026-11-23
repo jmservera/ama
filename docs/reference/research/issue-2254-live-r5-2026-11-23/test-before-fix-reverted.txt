@@ -1,0 +1,4 @@
+FAIL: test_stale_support_long_wait_and_funding_columns_are_repaired_issue_2254 (tests.test_sqlreads.Migration.test_stale_support_long_wait_and_funding_columns_are_repaired_issue_2254)
+AssertionError: 0 != 21 : long
+Ran 19 tests in 63.499s
+FAILED (failures=1)

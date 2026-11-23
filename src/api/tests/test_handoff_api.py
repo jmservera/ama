@@ -168,6 +168,22 @@ class HandoffApi(unittest.TestCase):
         self.assertEqual(self.store.cases["ZF-1"]["owner_code"], owner_before)
         self.assertEqual(self.store.cases["ZF-1"]["handoff"]["state"], "Offered")
 
+    def test_timezone_less_offered_time_keeps_waiting_queue_and_download_readable(self) -> None:
+        self.assertEqual(self.post("sam", "offer-handoff", dict(to="rae@example.test"))[0], 200)
+        self.store.cases["ZF-1"]["handoff"]["offered_at"] = "2026-11-18T09:30"
+        for path in ("/api/handoffs/unaccepted", "/api/handoffs/unowned"):
+            code, rows = self.call("sam", path)
+            self.assertEqual(code, 200, path)
+            self.assertEqual(rows[0]["case_id"], "ZF-1")
+            self.assertIsNone(rows[0].get("age_hours", None), path)
+            self.assertFalse(rows[0].get("needs_escalation", False), path)
+        request = urllib.request.Request(
+            self.base + "/api/handoffs/unaccepted.csv", headers={"Cookie": self.cookies["sam"]}
+        )
+        with urllib.request.urlopen(request) as response:
+            self.assertEqual(response.status, 200)
+            self.assertIn("ZF-1", response.read().decode())
+
     def test_synthetic_app_states_sender_receiver_manager_views(self) -> None:
         with urllib.request.urlopen(self.base + "/") as response:
             self.assertEqual(response.status, 200)

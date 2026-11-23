@@ -4,10 +4,12 @@ Reads the Bicep sources as text, so it needs no Azure access and no change to th
 It is a source contract, not evidence of a deployed scale rule, probe or revision rollback.
 """
 
+import importlib.util
 import json
 import re
 import unittest
 from pathlib import Path
+from typing import ClassVar
 
 ROOT = Path(__file__).resolve().parents[2]
 INFRA = ROOT / "infra"
@@ -253,6 +255,71 @@ class DeployedImageAndProbeInvariants(unittest.TestCase):
         importer = text.split("resource importJob ", 1)[1]
         self.assertRegex(importer, r"maxExecutions: [1-9]\d?\n")
         self.assertIn("type: 'azure-queue'", importer)
+
+
+class WorkerImageMapping(unittest.TestCase):
+    """Each worker receives the image of the project that ships its module (issue 144)."""
+
+    SYMBOLS: ClassVar[dict[str, str]] = {
+        "api": "api",
+        "agents": "agents",
+        "orchestrator": "orchestrator",
+        "tokenRenewal": "auth-renewal",
+        "ledgerVerify": "ledger-verify",
+        "rankingPublish": "rank-publish",
+        "importJob": "import",
+    }
+    OWNER: ClassVar[dict[str, str]] = {
+        "apiImage": "api",
+        "agentImage": "agents",
+        "orchestratorImage": "orchestrator",
+        "importImage": "importer",
+    }
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        spec = importlib.util.spec_from_file_location(
+            "pipeline_for_mapping", INFRA / "scripts/pipeline.py"
+        )
+        assert spec and spec.loader
+        cls.pipeline = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.pipeline)
+        text = (INFRA / "modules/containerapps.bicep").read_text()
+        matches = list(RESOURCE.finditer(text))
+        cls.blocks = {
+            m.group(1): text[
+                m.start() : matches[i + 1].start() if i + 1 < len(matches) else len(text)
+            ]
+            for i, m in enumerate(matches)
+        }
+
+    def test_every_bicep_workload_has_a_pipeline_image_mapping(self) -> None:
+        self.assertEqual(set(self.blocks), set(self.SYMBOLS))
+        self.assertEqual(set(self.SYMBOLS.values()), set(self.pipeline.WORKLOAD_IMAGE_PARAMETERS))
+
+    def test_bicep_image_parameter_matches_the_pipeline_deployed_digest(self) -> None:
+        for symbol, key in self.SYMBOLS.items():
+            with self.subTest(workload=symbol):
+                images = re.findall(r"^\s+image: (\w+)$", self.blocks[symbol], re.MULTILINE)
+                self.assertEqual(images, [self.pipeline.WORKLOAD_IMAGE_PARAMETERS[key]])
+
+    def test_worker_command_module_ships_in_the_image_project(self) -> None:
+        checked = 0
+        for symbol in self.SYMBOLS:
+            block = self.blocks[symbol]
+            command = re.search(r"command: \['python', '-m', '([\w.]+)'", block)
+            if not command:
+                continue
+            image = re.search(r"^\s+image: (\w+)$", block, re.MULTILINE).group(1)
+            module = Path(command.group(1).replace(".", "/"))
+            base = ROOT / "src" / self.OWNER[image] / "src" / module
+            with self.subTest(workload=symbol, module=command.group(1)):
+                self.assertTrue(
+                    base.with_suffix(".py").is_file() or (base / "__main__.py").is_file(),
+                    f"{command.group(1)} is not shipped by the {self.OWNER[image]} image",
+                )
+            checked += 1
+        self.assertEqual(checked, 6)
 
 
 if __name__ == "__main__":

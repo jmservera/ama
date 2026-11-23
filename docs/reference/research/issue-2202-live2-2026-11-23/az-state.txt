@@ -1,0 +1,68 @@
+== ca-cutover-test-demo-api
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "env": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:4121f3b9538909cde6f438987afbd8656284395c2a5a767e8002b1edadfcdea8",
+  "rev": "ca-cutover-test-demo-api--0000058",
+  "vol": [
+    "tmp",
+    "state"
+  ]
+}
+[
+  {
+    "a": true,
+    "c": "2026-11-23T19:20:29+00:00",
+    "h": "Healthy",
+    "n": "ca-cutover-test-demo-api--0000058",
+    "t": 100
+  }
+]
+== ca-resident-demo
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "env": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:e6c7e755343a02efdc594aa10c2af66dd1818ea9a6ce06c806ae4ae59adf1054",
+  "rev": "ca-resident-demo--0000028",
+  "vol": null
+}
+[
+  {
+    "a": true,
+    "c": "2026-11-23T12:31:09+00:00",
+    "h": "Healthy",
+    "n": "ca-resident-demo--0000028",
+    "t": 100
+  }
+]
+== job-live-simulator
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "env": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:295164ca739d5602ca323c65c305cff9d76a3e72faa4623e0dfa931363fd4f72"
+}
+== job-live-receiver
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "env": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:541068a62d81ab518bdd132a2e0d5eda6513bcc6c3d0c9903184ba5fcea62c38"
+}
+== ca-cutover-test-demo-agents
+{
+  "env": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-agents@sha256:59ea12f41b7ce30cbe36488b16d6dc61d08c30558dfb683cf1b2ac430a41c695",
+  "ing": null,
+  "minr": 0,
+  "mode": "Single",
+  "rev": "ca-cutover-test-demo-agents--0000003",
+  "run": "Running"
+}
+Single
+[
+  {
+    "a": true,
+    "h": "Healthy",
+    "n": "ca-cutover-test-demo-agents--0000003",
+    "r": "ScaledToZero"
+  }
+]

@@ -106,7 +106,9 @@ def _indoor_series(rows: Sequence[Mapping[str, str]]) -> list[tuple[datetime, Ma
             raise ValueError("INVALID_HANDOVER_OBSERVATION")
         try:
             moment = utc(row["observed_at"])
-        except (KeyError, ValueError):
+            if not all(Decimal(row[channel]).is_finite() for channel in CHANNELS):
+                raise ValueError("non-finite channel value")
+        except (KeyError, ValueError, ArithmeticError, TypeError):
             raise ValueError("INVALID_HANDOVER_OBSERVATION") from None
         if moment in slots:
             raise ValueError("INVALID_HANDOVER_OBSERVATION")

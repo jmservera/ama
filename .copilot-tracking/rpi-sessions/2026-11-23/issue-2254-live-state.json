@@ -16,12 +16,12 @@
  },
  "confirmed_decisions": [
   {
-   "decision": "Research executed; Ready",
+   "decision": "Research r5 executed; Ready",
    "status": "done",
    "evidence": ".copilot-tracking/research/2026-11-23-issue-2254-live-r5-research.md"
   },
   {
-   "decision": "Critique executed once; proceed, amendments applied",
+   "decision": "Critique executed once; proceed, decision column excluded",
    "status": "done",
    "evidence": ".copilot-tracking/critique/2026-11-23-issue-2254-live-r5-critique.md"
   },
@@ -36,5 +36,12 @@
   "phase": "Follow-up",
   "action": "await owner; local commit only, no push"
  },
- "prioritized_follow_ups": []
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Deploy and live-probe sibling-column repair",
+   "rationale": "only live proof missing",
+   "evidence": ".copilot-tracking/changes/2026-11-23-issue-2254-live-r5-changes.md"
+  }
+ ]
 }

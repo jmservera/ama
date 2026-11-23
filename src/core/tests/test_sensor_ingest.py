@@ -157,6 +157,21 @@ class IngestTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_CONFIGURATION"):
             check(rows, (2.0, 5.0))  # type: ignore[arg-type]
 
+    def test_non_finite_channel_value_is_refused(self) -> None:
+        ingest_window(self.consumer, observations() + indoor_live(), RECEIVED)
+        rows = home_series(self.consumer, "ZF-1")
+        for bad in ("NaN", "Infinity", "-Infinity", "abc"):
+            for channel in ("temperature_c", "humidity_pct"):
+                with self.subTest(bad=bad, channel=channel):
+                    with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
+                        handover_continuity(
+                            [rows[0], {**rows[1], channel: bad}],
+                            handover=HANDOVER,
+                            window_minutes=120,
+                            temperature=LOOSE,
+                            humidity=LOOSE,
+                        )
+
     def test_window_validates_receipt_time_and_batch(self) -> None:
         with self.assertRaises(ValueError):
             ingest_window(self.consumer, [], "not-a-time")

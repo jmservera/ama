@@ -15115,6 +15115,37 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2245 demo AI override gap on the SQL store (Refs #2245)
 
 * Added [issue-2245-override-sqlstore-2026-11-23.md](research/issue-2245-override-sqlstore-2026-11-23.md): the owner-directed AI suspension override did not apply to `SqlStore`; fixed in source with a regression test. A live free-form ask on revision 0000057 returned 500 after 30.5 s; "Model calls: 1" stays unproven until a fixed revision is deployed.
+
+## [2026-11-23] add | Issue 2202 deployed hardening check (Refs #2202)
+
+* Added [issue-2202-live2-2026-11-23.md](research/issue-2202-live2-2026-11-23.md): read-only proof of enforced hardening on every demo app and live job, agents app difference explained, and a tested `check_hardening` in `tools/demo_preflight.py`.
+## [2026-11-23] add | Epic 113 production-claim guard (Refs #113)
+
+* Added [issue-113-production-claim-guard-2026-11-23.md](research/issue-113-production-claim-guard-2026-11-23.md): a test-only guard against unqualified production claims in shipped source; criteria 1 and 2 stay owner-gated.
+## [2026-11-23] add | Issue 2188 retries in the gate timing report (Refs #2188)
+
+* Added [issue-2188-live-timing-retries-2026-11-23.md](research/issue-2188-live-timing-retries-2026-11-23.md): `rpi-gate-timing.py` now reports receipt retries per receipt and per arm, with a regression test. Wall-time pair still unproven.
+## [2026-11-23] add | Issue 144 worker image mapping contract test (Refs #144)
+
+* Added [issue-144-worker-image-mapping-2026-11-23.md](research/issue-144-worker-image-mapping-2026-11-23.md) and `WorkerImageMapping` tests: each Bicep workload image parameter matches the pipeline mapping and each worker module ships in its image project. Pipeline provenance and read-only root stay unproven. No Azure change.
+## [2026-11-23] add | Review effort totals in the AI live report (Refs #223)
+
+* Added [issue-223-live-r9-2026-11-23.md](research/issue-223-live-r9-2026-11-23.md): `ai_tasks.live_report` now totals measured review seconds per task, with a regression test; per-criterion table, nothing ticked.
+## 2026-11-23 issue 184 CLI credential leak guard
+
+Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-environment leak probe and regression test). Refs #184.
+## [2026-11-23] add | Issue 2254 stale support, long-wait and funding filter columns (Refs #2254)
+
+* Added [issue-2254-live-r5-2026-11-23.md](research/issue-2254-live-r5-2026-11-23.md): the SQL identity repair now rebuilds `support`, `days` and `fstatus` as well as `hazard`; the new regression test fails without it. Not deployed, so no live proof.
+## [2026-11-23] add | Issue 157 case scoping at thread creation (Refs #157)
+
+* Added [issue-157-case-scoping-2026-11-23.md](research/issue-157-case-scoping-2026-11-23.md): `ChatPrivacy.start_thread` did not apply the role's case visibility (only the API route did); fixed in source with a regression test. Both open epic criteria stay unproven.
+## [2026-11-23] add | Issue 123 handoff timezone regression tests and live re-check (Refs #123)
+
+* Added [issue-123-live-handoff-regression-2026-11-23.md](research/issue-123-live-handoff-regression-2026-11-23.md): the 2026-11-21 handoff queue failure no longer reproduces on the live demo, two tests now guard the timezone-less offered time shape, and both open #123 criteria stay unproven (owner acts).
+## [2026-11-23] add | Issue 149 law viewer reflow fix (Refs #149)
+
+* Added [issue-149-law-viewer-reflow-2026-11-23.md](research/issue-149-law-viewer-reflow-2026-11-23.md): provision text on the law viewer overflowed a 320 px viewport (scrollWidth 2772); a scoped `#law-out pre` wrap rule and regression test fix it. Both open epic criteria stay unproven and owner-gated.
 ## [2026-11-23] update | Issue 2310 regression test for anonymous API 401 (Refs #2310)
 
 * Updated [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md) and added a wider anonymous-API regression test to `src/api/tests/test_auth.py`; no source or estate change.

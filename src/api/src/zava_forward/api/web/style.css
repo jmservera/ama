@@ -412,7 +412,7 @@ dt{color:var(--muted)}dd{margin:0}
 .case-tab-panel .grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,17.5rem),1fr))}
 .case-section-title{margin-top:0;scroll-margin-top:var(--sp-4)}
 .case-tab-panel fieldset{min-width:0;border:1px solid var(--line);border-radius:var(--radius);padding:var(--sp-3)}
-.case-tab-panel pre{white-space:pre-wrap;overflow-wrap:anywhere}
+.case-tab-panel pre,#law-out pre{white-space:pre-wrap;overflow-wrap:anywhere}
 .case-tab-panel .field-error:empty{display:none}
 /* ux-batch:quality-decisions */
 .decision-item{border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-4);margin-bottom:var(--sp-4);background:var(--surface);min-width:0;overflow-wrap:anywhere}
