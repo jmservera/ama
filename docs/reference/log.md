@@ -15045,3 +15045,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2164 tenant binding of roster rows (Refs #2164)
 
 * Added [issue-2164-bound-tenant-binding-2026-11-23.md](research/issue-2164-bound-tenant-binding-2026-11-23.md): bound Entra staff rows now follow the legacy-tenant rule in assistants and sensor drafts; live restricted-row proof stays unproven for the demo.
+## [2026-11-23] add | Issue 223 review effort aggregation, run 9 (Refs #223)
+
+* Added [issue-223-live-r9-2026-11-23.md](research/issue-223-live-r9-2026-11-23.md): `live_report()` now reports per-task review effort from retained `review_seconds`; unit-tested, not deployed; no box ticked.
