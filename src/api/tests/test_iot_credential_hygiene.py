@@ -270,6 +270,18 @@ class RuntimeLeakTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.sent)
         self.assert_clean(captured)
 
+    async def test_wire_bodies_hold_only_plain_fields_and_match_no_secret_pattern(self) -> None:
+        await self.run_publisher()
+        self.assertTrue(self.sent)
+        secret_key = re.compile(r"key|secret|token|password|credential|connection|sig", re.I)
+        for sent in self.sent:
+            body = json.loads(sent.split("\n", 1)[0])
+            self.assertIsInstance(body, dict)
+            for name, value in body.items():
+                self.assertIsNone(secret_key.search(name), name)
+                for pattern in PATTERNS.values():
+                    self.assertIsNone(pattern.search(f"{name}={value}"))
+
     async def test_failure_text_with_credential_is_replaced_by_stable_code(self) -> None:
         captured = await self.run_publisher(RuntimeError(f"HostName=x;SharedAccessKey={MARKER}"))
         self.assertIn("IOT_PUBLISH_FAILED", captured)
