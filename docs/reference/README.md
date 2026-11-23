@@ -727,6 +727,8 @@ The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-
 
 The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026-11-22.md) records a desktop Playwright check of 2255, 2253, 2254, 2256 and the map on revisions 0000051 and 0000023 (passes), and shows generative AI answers still blocked by an open suspension and the resident ledger expiry, with screenshots and a per-item table.
 
+The [issue 2254 run 3 note](./research/issue-2254-live-r3-2026-11-23.md) records a fresh live desktop check that the Overview tile, map markers, All cases list and API all show 23 safety issues, and a test that asserts the map count against the tile and list.
+
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 
 The [thread creation 500 note](./research/issue-2245-thread500-2026-11-22.md) records the console evidence of the `ProgrammingError` 500, a 12-create live probe with no 500, one regression test and a per-criterion table for issue 2245.

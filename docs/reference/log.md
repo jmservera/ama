@@ -14937,3 +14937,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2190 late_success browser regression test (Refs #2190)
 
 * Added [issue-2190-live-20261123T080144Z-browser-test-note.md](research/issue-2190-live-20261123T080144Z-browser-test-note.md): a Chromium test reproduces the gap before the list status and shows the settle wait closes it. Test only.
+
+## [2026-11-23] add | Issue 2254 safety count run 3 (Refs #2254)
+
+* Added [issue-2254-live-r3-2026-11-23.md](research/issue-2254-live-r3-2026-11-23.md): live tile, map, list and API agree at 23; the repair test now also asserts the map hazard count. Test-only change; no `src/` code or estate change.
