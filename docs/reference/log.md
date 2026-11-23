@@ -15004,6 +15004,15 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
 ## [2026-11-23] add | Issue 2313 what-if workflow and PR image build (Refs #2313)
 
+## [2026-11-23] add | Issue 117 tag reader tests (Refs #117)
+
+* Added [issue-117-live-r8-2026-11-23.md](research/issue-117-live-r8-2026-11-23.md): tests for the Defender tag reader and scanner factory fail-closed edges; the live Defender path stays unproven.
+## [2026-11-23] add | Issue 114 ledger re-verification (Refs #114)
+
+* Added [issue-114-live-reverify-2026-11-23.md](research/issue-114-live-reverify-2026-11-23.md): read-only live probe of the demo ledger (intact, one year), reliance gate absent from the orchestrator image, one added test. No ticks changed.
+## [2026-11-23] add | Issue 2202 deployment receipt (Refs #2202)
+
+* Added [issue-2202-live-receipt-2026-11-23.md](research/issue-2202-live-receipt-2026-11-23.md): read-only live digests, hardening and health from the extended demo preflight; image source commit and half-of-homes readings remain unproven.
 * Added [issue-2313-what-if-live-2026-11-23.md](research/issue-2313-what-if-live-2026-11-23.md): `infra-plan.yml` already covers the what-if criteria; a new credential-free workflow builds a versioned image without deploying.
 ## [2026-11-23] add | Issue 2314 alert rules, runbooks and AI usage saved query (Refs #2314)
 

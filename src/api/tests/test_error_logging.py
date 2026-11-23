@@ -189,6 +189,26 @@ class ErrorLoggingTests(Base):
             self.assertIn(part, line)
         self.assertNotIn(SECRET, line)
 
+    def test_non_lock_driver_error_on_chat_thread_create_still_answers_500(self) -> None:
+        other = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
+            f"Invalid object name {SECRET}"
+        )
+
+        def create_fails(*_a: object, **_k: object) -> None:
+            raise other
+
+        with (
+            patch.dict(os.environ, CHAT_APPROVED),
+            patch.object(self.store, "chat_create_thread", create_fails),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
+        ):
+            code, body, retry = self.post("/api/chat/threads", {})
+        self.assertEqual((code, retry), (500, None))
+        self.assertNotIn(SECRET, body.decode())
+        line = "\n".join(logs.output)
+        self.assertIn("http-error POST /api/chat/threads status=500", line)
+        self.assertNotIn(SECRET, line)
+
     def test_busy_sql_write_lock_on_other_post_still_answers_500(self) -> None:
         busy = self.busy_error()
 
