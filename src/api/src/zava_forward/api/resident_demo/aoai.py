@@ -26,7 +26,7 @@ from zava_forward.core.resident_assistant import (
     guidance,
 )
 
-from .assistant import RequestEnvelope, _post, expires_at
+from .assistant import RequestEnvelope, _post, expires_at, expiry_configured
 from .ledger_meter import AdvisorLedger, advisor_meters
 
 LOG = logging.getLogger(__name__)
@@ -44,6 +44,7 @@ LEDGER_REFUSALS = ("ledger_expired", "budget_spent", "resident_rate_limit")
 
 FALLBACK_REASONS = {
     "expired": "the AI exercise has ended",
+    "expiry_not_set": "the AI end date is not set or is invalid, so ask the owner to set it",
     "data_protection_hold": "data protection approvals are not recorded",
     "question_limit": "the question is too long or empty",
     "request_limit": "the question and supporting information exceed the AI request limit",
@@ -205,7 +206,7 @@ class AzureAdvisor:
         if data_protection.dispatch_hold("tenant_identity", os.environ):
             raise AssistantUnavailable("data_protection_hold")
         if self.clock() >= expires_at():
-            raise AssistantUnavailable("expired")
+            raise AssistantUnavailable("expired" if expiry_configured() else "expiry_not_set")
         if not isinstance(question, str) or not 1 <= len(question.strip()) <= 500:
             raise AssistantUnavailable("question_limit")
         sources = {
@@ -305,7 +306,7 @@ class AzureAdvisor:
         if data_protection.dispatch_hold("tenant_identity", os.environ):
             raise AssistantUnavailable("data_protection_hold")
         if self.clock() >= expires_at():
-            raise AssistantUnavailable("expired")
+            raise AssistantUnavailable("expired" if expiry_configured() else "expiry_not_set")
         options = guidance(topic, case)
         schema = {
             "type": "object",

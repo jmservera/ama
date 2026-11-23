@@ -22,14 +22,23 @@ TIMEOUT_SECONDS = 5
 
 def expires_at(env: Mapping[str, str] | None = None) -> float:
     """Expiry from ZF_DEMO_EXPIRES_AT (explicit UTC); unset or invalid keeps the closed default."""
+    return _configured_expiry(env) or EXPIRES
+
+
+def expiry_configured(env: Mapping[str, str] | None = None) -> bool:
+    """True when ZF_DEMO_EXPIRES_AT holds a valid explicit UTC timestamp."""
+    return _configured_expiry(env) is not None
+
+
+def _configured_expiry(env: Mapping[str, str] | None) -> float | None:
     raw = (os.environ if env is None else env).get(EXPIRY_ENV, "").strip()
     try:
         moment = datetime.fromisoformat(raw.replace("Z", "+00:00"))
     except ValueError:
-        return EXPIRES
+        return None
     offset = moment.utcoffset()
     if offset is None or offset.total_seconds() != 0:
-        return EXPIRES
+        return None
     return moment.timestamp()
 
 

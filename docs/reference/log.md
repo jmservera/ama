@@ -15138,3 +15138,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2202 readings coverage measure (Refs #2202)
 
 * Added [issue-2202-live-2026-11-23.md](research/issue-2202-live-2026-11-23.md), `tools/demo_readings_coverage.py` and its test: tiled live map shows 261 of 443 homes (58.9%) with readings on API 0000058, and the resident consent checkbox works on 0000028. Map gauges, rollback and generative answers stay unproven.
+## [2026-11-23] add | Issue 2243 missing expiry setting named (Refs #2243)
+
+* Added [issue-2243-live-r4-2026-11-23.md](research/issue-2243-live-r4-2026-11-23.md): an unset or invalid `ZF_DEMO_EXPIRES_AT` now shows an `expiry_not_set` reason instead of "the AI exercise has ended"; test added; live setting verified valid.
