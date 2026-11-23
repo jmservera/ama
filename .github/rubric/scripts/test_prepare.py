@@ -361,6 +361,24 @@ def test_given_registry_when_loaded_then_no_mvp_or_prototype_glob():
     assert "src/**/*" in solution["include"]
 
 
+@pytest.mark.parametrize("artifact_id", ["solution-code", "infrastructure"])
+def test_given_registry_when_resolved_then_code_artifacts_have_files(artifact_id):
+    # Arrange
+    repo_root = RUBRIC_DIR.parent.parent
+    registry = json.loads((RUBRIC_DIR / "artifacts.json").read_text(encoding="utf-8"))
+    artifact = next(a for a in registry["artifacts"] if a["id"] == artifact_id)
+    max_bytes = artifact.get("max_file_bytes", registry["max_file_bytes"])
+
+    # Act
+    matched, oversize = prepare.match_files(
+        repo_root, artifact["include"], artifact["exclude"], max_bytes
+    )
+
+    # Assert
+    assert matched
+    assert oversize == []
+
+
 @pytest.mark.parametrize(
     "path",
     [
