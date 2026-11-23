@@ -19,3 +19,7 @@ Scope: synthetic demo, desktop only, FOCUSED tier (test-only change, no `src` co
 * SQLite run, from `src/api`: `python3 -m unittest tests.test_assistant_restart_non_replenishment` gave 34 tests OK (17 SQL Server cases skipped); ruff and mypy clean.
 * Actual SQL Server run (throwaway local container, random password never printed, container removed): 34 tests OK, no skips. Output with the password masked: [mssql-restart-tests-20261123T172611Z.txt](../../../.copilot-tracking/evidence/107-live/mssql-restart-tests-20261123T172611Z.txt).
 * No Azure resource was created or changed; the live revision observation of the fourth pass was not repeated.
+
+## Sixth pass: concurrent token-allowance race (run 20261123T210546Z)
+
+Prior passes raced the call allowance only. A new regression test, `test_concurrent_connections_never_reserve_more_than_the_token_allowance`, starts three independent workers behind a barrier on a pool that fits exactly one token reservation (call allowance 1000, so the token pool is the limiter). Result on SQLite and on a throwaway SQL Server 2022 container (removed afterwards): sorted results `[False, False, True]`, one provider call, one used call. The full module ran 36 tests, 0 skipped, on SQL Server. Evidence: [mssql-token-race-20261123T210546Z.txt](../../../.copilot-tracking/evidence/107-live/mssql-token-race-20261123T210546Z.txt) (no credentials). Criterion 8 stays unproven for the demo: no approved exercise record on the deployed build (OQ-017, owner-gated).

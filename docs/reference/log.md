@@ -15246,3 +15246,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 220 guard key variants (Refs #220)
 
 * Added [issue-220-live-r13-key-variants-2026-11-23.md](research/issue-220-live-r13-key-variants-2026-11-23.md): the non-retaliation guard now rejects camelCase, punctuation and Unicode variants of forbidden keys, with a regression test. Not deployed.
+## [2026-11-23] update | Issue 107 token-allowance race test (Refs #107)
+
+* Extended [issue-107-live-r5-assistants-evidence-2026-11-23.md](research/issue-107-live-r5-assistants-evidence-2026-11-23.md) with a concurrent token-allowance race test, run on SQLite and a disposable SQL Server. No estate change.

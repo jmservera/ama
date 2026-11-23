@@ -250,6 +250,28 @@ class Allowance(Restart):
         row = self.pool(self.worker(**LARGER))
         self.assertEqual((row[0], row[2]), (1, 1))
 
+    def test_concurrent_connections_never_reserve_more_than_the_token_allowance(self) -> None:
+        reservation = assistants.Limits(config()).reservation
+        cfg = dict(call_allowance=1000, token_allowance=reservation + 10)
+        seed = self.worker(**cfg)
+        tasks = [seed.invoke(self.pm, cap, "ZF-1")["id"] for cap in list(assistants.REGISTRY)[:3]]
+        results, barrier = [], threading.Barrier(len(tasks))
+
+        def run(tid: str) -> None:
+            service = self.worker(**cfg)
+            barrier.wait(10)
+            results.append(service.execute(tid))
+
+        threads = [threading.Thread(target=run, args=(tid,)) for tid in tasks]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join(60)
+        self.assertEqual(sorted(results), [False, False, True])
+        self.assertEqual(self.provider.calls, 1)
+        row = self.pool(self.worker(**cfg))
+        self.assertEqual(row[2], 1)
+
     def test_revoked_release_keeps_its_consumed_allowance_and_a_new_record_does_not_refund_it(
         self,
     ) -> None:
