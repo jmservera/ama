@@ -1530,7 +1530,7 @@ class Assistants:
                     staff
                     if staff
                     and staff.get("oid") == user.get("oid")
-                    and staff.get("tid") in (None, "", user.get("tid"))
+                    and identity.row_tenant_ok(self.store, staff, user.get("tid"))
                     else None
                 )
         else:

@@ -166,7 +166,7 @@ def _gate(store: DraftStore, user: User, case_id: str, env: Mapping[str, str] | 
             identity.is_entra(user)
             and (
                 current.get("oid") != user.get("oid")
-                or current.get("tid") not in (None, "", user.get("tid"))
+                or not identity.row_tenant_ok(store, current, user.get("tid"))
             )
         )
     ):

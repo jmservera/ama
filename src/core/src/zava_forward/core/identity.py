@@ -135,6 +135,15 @@ def legacy_tenant(store: Any) -> str | None:
     return canonical_guid(value)
 
 
+def row_tenant_ok(store: Any, row: dict[str, Any], tid: Any) -> bool:
+    """Whether a roster row may stand for a principal of this tenant: the same rule `matches`
+    applies when binding (a tenant-less row belongs only to the store's legacy tenant)."""
+    row_tid = row.get("tid")
+    if row_tid in (None, ""):
+        return canonical_guid(tid) is not None and legacy_tenant(store) == canonical_guid(tid)
+    return bool(row_tid == tid)
+
+
 def key_of(tid: str, oid: str) -> str:
     return f"{tid}:{oid}"
 

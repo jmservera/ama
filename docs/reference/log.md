@@ -15041,3 +15041,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 107 fifth pass: restart regression tests (Refs #107)
 
 * Added [issue-107-live-r5-assistants-evidence-2026-11-23.md](research/issue-107-live-r5-assistants-evidence-2026-11-23.md): two tests show an old image cannot reactivate a suspended release or revive an expired one after restart, on SQLite and actual local SQL Server. Criterion 8 stays unproven (no approved release, OQ-017).
+
+## [2026-11-23] add | Issue 2164 tenant binding of roster rows (Refs #2164)
+
+* Added [issue-2164-bound-tenant-binding-2026-11-23.md](research/issue-2164-bound-tenant-binding-2026-11-23.md): bound Entra staff rows now follow the legacy-tenant rule in assistants and sensor drafts; live restricted-row proof stays unproven for the demo.
