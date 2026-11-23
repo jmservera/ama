@@ -1036,6 +1036,32 @@ class ReviewTests(Base):
         set_row(areas=[area + "-other"])
         self.assertIsNone(authorized(user))
 
+    def test_challenge_staff_gate_bound_entra_row(self):
+        user = self.bound_entra()
+        other = "33333333-3333-4333-8333-333333333333"
+
+        def allowed(candidate):
+            with self.service.transaction() as db:
+                try:
+                    self.service._authorize_challenge_staff(db, candidate, "ZF-1")
+                    return True
+                except PermissionError:
+                    return False
+
+        def set_row(**change):
+            with self.service.transaction() as db:
+                row = json.loads(db.execute("SELECT body FROM staff WHERE email=?", (user["email"],)).fetchone()[0])
+                db.execute("UPDATE staff SET body=? WHERE email=?", (canonical(dict(row, **change)), user["email"]))
+
+        self.assertTrue(allowed(user), "baseline bound principal must reach the challenge route")
+        self.assertFalse(allowed(dict(user, view_only=True)))
+        self.assertFalse(allowed(dict(user, oid=other)))
+        self.assertFalse(allowed(dict(user, bound=dict(code="OTHER", email=user["email"]))))
+        set_row(oid=other)
+        self.assertFalse(allowed(user))
+        set_row(oid=user["oid"], tid=other)
+        self.assertFalse(allowed(user))
+
     def test_unbound_and_view_only_entra_principals(self):
         user = identity.principal("11111111-1111-4111-8111-111111111111",
                                   "33333333-3333-4333-8333-333333333333", "Retrofit Programme Manager")
