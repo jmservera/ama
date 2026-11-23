@@ -15212,3 +15212,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2253 chart out-of-range clamp (Refs #2253)
 
 * Added [issue-2253-live-r7-2026-11-23.md](research/issue-2253-live-r7-2026-11-23.md): resident chart marks for out-of-range values are clamped into the plot area, with a node-run regression test. No estate change.
+## [2026-11-23] add | Epic 113 production-claim guard (Refs #113)
+
+* Added [issue-113-production-claim-guard-2026-11-23.md](research/issue-113-production-claim-guard-2026-11-23.md): a test-only guard against unqualified production claims in shipped source; criteria 1 and 2 stay owner-gated.
