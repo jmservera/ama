@@ -234,6 +234,14 @@ def _now():
     return datetime.now().isoformat(timespec="seconds")
 
 
+def _elapsed_seconds(start, end):
+    try:
+        delta = datetime.fromisoformat(str(end)) - datetime.fromisoformat(str(start))
+    except ValueError:
+        return None
+    return max(0.0, round(delta.total_seconds(), 1))
+
+
 def add_record(store, user, **fields):
     with store.lock:
         rec = dict(id=uuid.uuid4().hex[:12], kind="ai_task", user=user["email"], created=_now(), status=NOT_REVIEWED,
@@ -566,6 +574,7 @@ def review(store, user, rec_id, action, reason="", text=None):
         rec["review_evidence"] = dict(reviewer=user["email"], disposition=action, reason=reason,
                                       compared=dict(ai=rec.get("ai_output"), workflow=rec.get("workflow_output")),
                                       source_hashes=now_hashes, case_version=store.version,
+                                      review_seconds=_elapsed_seconds(rec.get("created"), rec["resolved_at"]),
                                       effect="Not an instruction; records the review only; any task or draft is created separately by the person")
         store.audit(user["email"], f"ai_review_{action}", rec["case_ids"][0] if len(rec["case_ids"]) == 1 else "-",
                     f"{rec['task']} {rec_id} {reason}".strip())

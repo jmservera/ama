@@ -3063,6 +3063,7 @@ function mapPanel(coordinator = null, filters = null) {
     : h("a", { href: "#/all" }, "Show these as a list");
   let map = null, layer = null;
   let selectedId = null;
+  let sensorRequest = null, sensorSeq = 0;
   const markers = new Map();
   const title = h("h3", { id: "map-home-title", tabindex: "-1" });
   const address = h("p");
@@ -3073,11 +3074,51 @@ function mapPanel(coordinator = null, filters = null) {
   const sensorValues = h("dd");
   const sensorWhen = h("dd");
   const sensorSource = h("dd");
+  const sensorFeedback = h("p", { class: "muted", role: "status", "aria-live": "polite" });
   const sensorGaugeBox = h("div", { class: "map-gauge-box" });
   const sensorBox = h("div", { class: "map-sensor-box" }, h("h4", {}, "Indoor sensor"),
     h("dl", { class: "map-sensor-list" }, h("dt", {}, "Sensor status"), sensorState, h("dt", {}, "Latest reading"), sensorValues),
     sensorGaugeBox,
-    h("dl", { class: "map-sensor-list" }, h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource));
+    h("dl", { class: "map-sensor-list" }, h("dt", {}, "Last reading time"), sensorWhen, h("dt", {}, "Source"), sensorSource),
+    sensorFeedback);
+  const cancelSensor = () => {
+    sensorSeq++;
+    sensorRequest?.abort();
+    sensorRequest = null;
+  };
+  const renderSensor = (sensor) => {
+    sensorBox.hidden = false;
+    sensorState.replaceChildren(sensorBadge({ sensor }), h("span", { class: "sr-only" }, `. ${sensor?.label || ""}`));
+    sensorValues.textContent = sensorReading(sensor) || "No values shown";
+    sensorWhen.textContent = sensorTimeText(sensor);
+    sensorGaugeBox.replaceChildren(sensorGauges(sensor));
+    sensorSource.textContent = sensor?.source || "No synthetic reading shown for this home.";
+    sensorFeedback.textContent = sensor?.state === "unavailable"
+      ? ownedNotice("Sensor readings unavailable", "select this home again to retry, or open the home and use the ordinary quality check.") : "";
+  };
+  const loadSensor = async (point) => {
+    cancelSensor();
+    const my = sensorSeq;
+    const request = sensorRequest = new AbortController();
+    renderSensor(null);
+    sensorState.textContent = "Loading sensor readings\u2026";
+    sensorBox.setAttribute("aria-busy", "true");
+    sensorFeedback.textContent = "Loading sensor readings\u2026";
+    try {
+      const sensor = await api(`/api/cases/${encodeURIComponent(point.id)}/sensor-summary`, undefined, request.signal);
+      if (signal.aborted || request.signal.aborted || my !== sensorSeq || selectedId !== point.id) return;
+      if (!sensor || !Object.hasOwn(SENSOR_STATES, sensor.state)) throw new Error("Invalid sensor summary.");
+      renderSensor(sensor);
+    } catch (error) {
+      if (signal.aborted || request.signal.aborted || my !== sensorSeq || selectedId !== point.id) return;
+      renderSensor({ state: error.status === 403 ? "restricted" : "unavailable" });
+    } finally {
+      if (my === sensorSeq) {
+        sensorRequest = null;
+        sensorBox.removeAttribute("aria-busy");
+      }
+    }
+  };
   const navigate = h("a", { class: "btn" }, "Open home");
   const restoreMarker = (id) => {
     const target = markers.get(id)?.getElement();
@@ -3087,6 +3128,8 @@ function mapPanel(coordinator = null, filters = null) {
     if (selectedId === null) return;
     const id = selectedId;
     selectedId = null;
+    cancelSensor();
+    sensorBox.removeAttribute("aria-busy");
     homeCard.hidden = true;
     if (restore) restoreMarker(id);
   };
@@ -3098,18 +3141,20 @@ function mapPanel(coordinator = null, filters = null) {
       h("dt", {}, "Map status"), status),
     sensorBox, navigate);
   const showHome = (point, focus = true) => {
+    const changed = selectedId !== point.id;
     selectedId = point.id;
     title.textContent = point.name || point.id;
     address.textContent = point.address || "Address not included in this map. Open home for permitted details.";
     caseId.textContent = point.id;
     stage.textContent = point.stage || "Unknown";
     status.replaceChildren(mapSymbol(point.kind), MAP_SIGNALS[point.kind].label);
-    sensorBox.hidden = !point.sensor;
-    sensorState.replaceChildren(sensorBadge(point), h("span", { class: "sr-only" }, `. ${point.sensor?.label || ""}`));
-    sensorValues.textContent = sensorReading(point.sensor) || "No values shown";
-    sensorWhen.textContent = sensorTimeText(point.sensor);
-    sensorGaugeBox.replaceChildren(sensorGauges(point.sensor));
-    sensorSource.textContent = point.sensor?.source || "No synthetic reading shown for this home.";
+    if (changed || focus || alertsOnly) {
+      if (alertsOnly && point.sensor && !["not-loaded", "unavailable"].includes(point.sensor.state)) {
+        cancelSensor();
+        sensorBox.removeAttribute("aria-busy");
+        renderSensor(point.sensor);
+      } else loadSensor(point);
+    }
     navigate.href = `#/case/${encodeURIComponent(point.id)}`;
     homeCard.hidden = false;
     if (focus) title.focus();
@@ -3118,9 +3163,9 @@ function mapPanel(coordinator = null, filters = null) {
   const listEmpty = h("p", { class: "muted", "data-maplist-empty": "", hidden: true }, "No mapped homes in this view. Choose Show these as a list for all selected cases.");
   const listUl = h("ul", { "aria-labelledby": "maplist-h", class: "plainlist" });
   const listBox = h("details", { class: "maplist" }, listHead, listEmpty, listUl);
-  let alertsOnly = false, lastView = null;
+  let alertsOnly = false;
   const sensorFilterInput = h("input", { type: "checkbox", id: "map-sensor-alerts",
-    onchange: () => { alertsOnly = sensorFilterInput.checked; if (lastView) renderView(lastView, false); } });
+    onchange: () => { alertsOnly = sensorFilterInput.checked; draw(false); } });
   const sensorFilterNote = h("p", { class: "muted", "aria-live": "polite" });
   const sensorFilterRow = Fields.checkRow({ id: "map-sensor-alerts", label: "Show only homes with stale or offline sensors",
     hint: "Applies to individual homes. Zoom in until homes are shown one by one.", control: sensorFilterInput });
@@ -3177,6 +3222,7 @@ function mapPanel(coordinator = null, filters = null) {
     toggle.disabled = true;
     collapse(false);
     seq++;
+    cancelSensor();
     clearTimeout(retryTimer);
     dialog.remove();
     slot.remove();
@@ -3299,7 +3345,7 @@ function mapPanel(coordinator = null, filters = null) {
     try {
       const response = await api(coordinator
         ? `/api/coordinator?${qs(coordinator.state)}&zoom=${map.getZoom()}${view}`
-        : `/api/map?${qs(ovState)}&zoom=${map.getZoom()}${view}`, undefined, signal);
+        : `/api/map?${qs(ovState)}&zoom=${map.getZoom()}${view}${alertsOnly ? "&sensors=1" : ""}`, undefined, signal);
       d = coordinator ? response.map : response;
     }
     catch (error) {
@@ -3325,7 +3371,6 @@ function mapPanel(coordinator = null, filters = null) {
     }
     if (signal.aborted || my !== seq) return;
     autoRetries = 0;
-    lastView = d;
     renderView(d);
     if (fit && d.bounds) {
       fitting = true;

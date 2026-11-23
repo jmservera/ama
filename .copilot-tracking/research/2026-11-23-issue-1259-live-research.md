@@ -1,13 +1,20 @@
 ---
-title: Research, issue 1259 live run 7
+title: Research, issue 1259 live run 8 (real-filesystem angle)
 ms.date: 2026-11-23
 ---
 
-Disposition: executed. Scope: unticked AC4 (regressions plus failing-first) and AC5 (process gate). Fix and regressions are on main (head 342fad401d).
+Disposition: executed. Scope: unticked AC4 (regressions, failing-first) and AC5 (process gate).
 
-Findings:
+Prior workers (git log origin/main --grep 1259: #1461, #2006, #2066, #2148, #2151, #2177, #2278, #2285, #2288, #2296) re-ran the existing `UnusableArchivePathTests`. Those cover a regular file, a dangling link, a dangling ancestor and a stat failure that is mocked with `patch("os.stat")`.
 
-* Red at `cd687abadd^` with current tests: 6 tests, 7 failures. Green on main: 110 tests OK.
-* Live: `ca-cutover-test-demo-api` active revision 0000054 and `ca-resident-demo` 0000026 are image-based apps; no `rankingPublish` job exists among the Container Apps jobs (load, audit, orch, live-simulator, live-receiver). The ranking runner is an operator CLI, so no live behaviour can prove or disprove the criteria; local filesystem tests are the right mechanism.
+New angle: classifications that only a real filesystem produces and no test exercises.
+
+* Archive below a regular file (lstat raises ENOTDIR, not FileNotFoundError).
+* Symlink loop as archive and as ancestor (ELOOP, errno 40).
+* Real EACCES on an unsearchable parent (chmod 0 as a non-root user), replacing the mock.
+
+Probe on head 5c08bedd8f through `runner.run` for verify, schedule and publish: every case returns `problem`/`problem`/`refused archive_unreadable`, `due` null and no temp-root path in the JSON. Behaviour is already correct, so no src change; gap is test coverage only.
+
+Live: apps are image-based and no ranking job is deployed, so Azure cannot prove this; no Azure change.
 
 Planning Readiness: Ready.
