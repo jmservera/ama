@@ -14741,3 +14741,25 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1258 criteria re-verification r8 (Refs #1258)
 
 * Added [issue-1258-live-r8-2026-11-23.md](research/issue-1258-live-r8-2026-11-23.md): 146 tests pass, the parent-sync mutation fails 12 tests, live revisions 0000054 and 0000026 confirmed. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. No source or estate change.
+## [2026-11-23] update | Issue 2061 live re-verification (Refs #2061)
+
+* Added [issue-2061-live-evidence-2026-11-23.md](research/issue-2061-live-evidence-2026-11-23.md): criteria re-checked on revisions 0000054 and 0000026. Import workbook check and map with fresh simulator readings proven, both sign-ins pass, 759 infra tests pass. Stale Entra URI removal, a fresh what-if, the full gate receipt and the resident app identity drift (live sensor-consent wiring absent from Bicep) remain open.
+
+## [2026-11-23] update | Issue 344 public browser access live check r10 (Refs #344)
+
+* Added [public-browser-access-live-r10-2026-11-23.md](research/public-browser-access-live-r10-2026-11-23.md): probes rerun against API revision 0000054 and resident revision 0000026; anonymous 401, `/healthz`, landing, Entra sign-in, 13-destination walk and private SQL reproduced; criterion 1 browser-redirect gap and criterion 5 stay unproven. No source or estate change.
+## [2026-11-23] update | Issue 1204 criteria re-verification (Refs #1204)
+
+* Added [issue-1204-live-2026-11-23.md](research/issue-1204-live-2026-11-23.md): instruction fields and checker tests confirmed on main, 216-tick window 0 violations, live revisions healthy. Criterion 2 unproven (no real window with the new fields). No source or estate change.
+
+## [2026-11-23] update | Issue 470 criteria re-check r3 (Refs #470)
+
+* Added [issue-470-live-r3-2026-11-23.md](research/issue-470-live-r3-2026-11-23.md): 129 gate tests pass; criteria 1, 2, 3 and 5 proven, criterion 4 unproven and owner-gated (no matched full-gate pair, no PR). No source change.
+
+## [2026-11-23] update | Issue 220 live r11 (Refs #220)
+
+* Added [issue-220-live-r11-revision-0054-2026-11-23.md](research/issue-220-live-r11-revision-0054-2026-11-23.md): probe repeated on revisions 0000054 and 0000026, 30 core and 10 api tests pass, no code gap, per-criterion table.
+
+## [2026-11-23] update | Issue 198 criteria re-verification, run 20261123T010043Z (Refs #198)
+
+* Added [issue-198-rubric-live-20261123T010043Z-2026-11-23.md](research/issue-198-rubric-live-20261123T010043Z-2026-11-23.md): registry has no mvp or prototype glob, score 79, 84 rubric tests pass, live revisions 0000054 and 0000026 confirmed. Criterion 3 unproven, criterion 4 end state proven only; owner-gated. No source or estate change.

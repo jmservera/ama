@@ -1,0 +1,309 @@
+{
+ "t0": "2026-11-23T00:56:23Z",
+ "anon": {
+  "/healthz": 200,
+  "/readyz": 404,
+  "/": 200,
+  "/welcome.html": 200,
+  "/sign-in": "302 -> /.auth/login/aad?post_login_redirect_uri=%2Fapp",
+  "/api/me": 401,
+  "/api/cases": 401,
+  "/api/time/status": 401,
+  "/app": 401,
+  "/index.html": 401,
+  "/law.html": 401
+ },
+ "anon_json": {
+  "/api/me": 401,
+  "/api/cases": 401,
+  "/app": 401
+ },
+ "anon_xhr": {
+  "/api/me": 403,
+  "/api/cases": 403
+ },
+ "landing": {
+  "status": 200,
+  "title": "Welcome to Zava Forward | Zava North Homes",
+  "signin_href": "/sign-in"
+ },
+ "browser_fetch_anon": {
+  "default_manual": "redirect",
+  "default_follow": "error:TypeError",
+  "json_manual": "redirect",
+  "json_follow": "error:TypeError",
+  "xhr_manual": 403,
+  "xhr_follow": 403
+ },
+ "signin_reaches_entra": true,
+ "after_signin": {
+  "path": "/app",
+  "title": "My cases today | Zava Forward"
+ },
+ "nav_items": [
+  {
+   "t": "My cases",
+   "h": "#/"
+  },
+  {
+   "t": "All cases",
+   "h": "#/all"
+  },
+  {
+   "t": "Overview",
+   "h": "#/overview"
+  },
+  {
+   "t": "Progress dashboard",
+   "h": "#/progress"
+  },
+  {
+   "t": "Visits",
+   "h": "#/visits"
+  },
+  {
+   "t": "Funding",
+   "h": "#/funding"
+  },
+  {
+   "t": "Finance",
+   "h": "#/finance"
+  },
+  {
+   "t": "Capacity and work orders",
+   "h": "#/capacity"
+  },
+  {
+   "t": "Closed cases",
+   "h": "#/closed"
+  },
+  {
+   "t": "Assistant proposals",
+   "h": "#/assistants"
+  },
+  {
+   "t": "Time capture",
+   "h": "#/time"
+  },
+  {
+   "t": "Aftercare concerns",
+   "h": "#/aftercare"
+  },
+  {
+   "t": "Specialist screens",
+   "h": "#/screens"
+  }
+ ],
+ "walk": [
+  {
+   "item": "My cases",
+   "heading": "My cases today",
+   "app_text_len": 43579,
+   "new_http_errors": []
+  },
+  {
+   "item": "All cases",
+   "heading": "All open cases",
+   "app_text_len": 52709,
+   "new_http_errors": []
+  },
+  {
+   "item": "Overview",
+   "heading": "Overview",
+   "app_text_len": 3170,
+   "new_http_errors": []
+  },
+  {
+   "item": "Progress dashboard",
+   "heading": "Progress dashboard",
+   "app_text_len": 2154,
+   "new_http_errors": []
+  },
+  {
+   "item": "Visits",
+   "heading": "Visits coming up",
+   "app_text_len": 5804,
+   "new_http_errors": []
+  },
+  {
+   "item": "Funding",
+   "heading": "Funding applications",
+   "app_text_len": 11566,
+   "new_http_errors": []
+  },
+  {
+   "item": "Finance",
+   "heading": "Finance queue",
+   "app_text_len": 2093,
+   "new_http_errors": []
+  },
+  {
+   "item": "Capacity and work orders",
+   "heading": "Capacity and work orders",
+   "app_text_len": 34626,
+   "new_http_errors": []
+  },
+  {
+   "item": "Closed cases",
+   "heading": "Closed cases",
+   "app_text_len": 3538,
+   "new_http_errors": []
+  },
+  {
+   "item": "Assistant proposals",
+   "heading": "Closed cases",
+   "app_text_len": 3538,
+   "new_http_errors": []
+  },
+  {
+   "item": "Time capture",
+   "heading": "Staff time capture",
+   "app_text_len": 454,
+   "new_http_errors": []
+  },
+  {
+   "item": "Aftercare concerns",
+   "heading": "Aftercare concerns",
+   "app_text_len": 2374,
+   "new_http_errors": [
+    "403 /api/aftercare/form"
+   ]
+  },
+  {
+   "item": "Specialist screens",
+   "heading": "Specialist screens",
+   "app_text_len": 422,
+   "new_http_errors": []
+  }
+ ],
+ "console_errors": [
+  "Connecting to 'https://login.microsoftonline.com/bccd6ad2-b77b-461c-bbc5-5b032e7930ba/oauth2/v2.0/authorize?response_type=code+id_token&redi",
+  "Failed to load resource: the server responded with a status of 403 ()"
+ ],
+ "http_errors_seen": [
+  "403 /api/aftercare/form",
+  "403 /api/me"
+ ],
+ "signed_in_asset_hash": {
+  "aftercare.js": [
+   200,
+   "match"
+  ],
+  "app.js": [
+   200,
+   "match"
+  ],
+  "assistants.js": [
+   200,
+   "match"
+  ],
+  "async-action.js": [
+   200,
+   "match"
+  ],
+  "case-workspace.js": [
+   200,
+   "match"
+  ],
+  "chat-widget.css": [
+   200,
+   "match"
+  ],
+  "chat-widget.js": [
+   200,
+   "match"
+  ],
+  "chat.js": [
+   200,
+   "match"
+  ],
+  "fields.js": [
+   200,
+   "match"
+  ],
+  "index.html": [
+   200,
+   "differs"
+  ],
+  "law.html": [
+   200,
+   "differs"
+  ],
+  "law.js": [
+   200,
+   "match"
+  ],
+  "nomination-routes.js": [
+   200,
+   "match"
+  ],
+  "ops.js": [
+   200,
+   "match"
+  ],
+  "panels.js": [
+   200,
+   "match"
+  ],
+  "progress.css": [
+   200,
+   "match"
+  ],
+  "progress.js": [
+   200,
+   "match"
+  ],
+  "role-screens.js": [
+   200,
+   "match"
+  ],
+  "simulator-control.js": [
+   200,
+   "match"
+  ],
+  "staff-intake.js": [
+   200,
+   "match"
+  ],
+  "style.css": [
+   200,
+   "match"
+  ],
+  "timecapture.js": [
+   200,
+   "match"
+  ],
+  "welcome-dusk.webp": [
+   200,
+   "match"
+  ],
+  "welcome-estate.webp": [
+   200,
+   "match"
+  ],
+  "welcome-icons.svg": [
+   200,
+   "match"
+  ],
+  "welcome-shield.webp": [
+   200,
+   "match"
+  ],
+  "welcome-street.webp": [
+   200,
+   "match"
+  ],
+  "welcome.html": [
+   200,
+   "differs"
+  ],
+  "workspace-shell.js": [
+   200,
+   "match"
+  ],
+  "zava-logo.png": [
+   200,
+   "match"
+  ]
+ }
+}

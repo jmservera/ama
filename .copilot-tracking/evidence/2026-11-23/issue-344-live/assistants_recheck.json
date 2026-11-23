@@ -1,0 +1,12 @@
+{
+ "rendered_after_s": 8.0,
+ "headings": [
+  "Role-owned assistant proposals"
+ ],
+ "text_len": 7936,
+ "http_errors": [],
+ "requests": [
+  "/assistants.js?v=c326c71fb7009995bba189b7e1d8f596987450147a29b6c3f9e66349696a571",
+  "/api/assistants/proposals"
+ ]
+}

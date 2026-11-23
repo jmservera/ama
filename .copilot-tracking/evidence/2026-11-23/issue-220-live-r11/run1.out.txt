@@ -1,0 +1,143 @@
+{
+ "case": "ZF-2025-0331",
+ "before": {
+  "hashes": {
+   "stage": "41e1fb32b626",
+   "days_in_stage": "e5b861a6d8a9",
+   "closed": "fcbcf165908d",
+   "resident": "0abbd77566ff",
+   "hazards": "997f8d557d39",
+   "measure_decisions": "4c80358ff229"
+  },
+  "stage": "Waiting for block programme",
+  "days_in_stage": 116,
+  "hazard_state": [
+   [
+    "Repair evidenced, hold active",
+    "2025-12-21",
+    {
+     "scope": "Home",
+     "case_id": "ZF-2025-0331",
+     "status": "Active",
+     "accountable_role": null,
+     "legacy": true
+    }
+   ]
+  ],
+  "awaiting_hazard_action": null,
+  "n_nominations": 2
+ },
+ "owner_options": 1,
+ "record": {
+  "status": 200,
+  "err": null
+ },
+ "after_record": {
+  "hashes_equal": true,
+  "n_nominations": 3
+ },
+ "record_view": {
+  "id": "NOM-fe642190fc2a498681722c85786edc00",
+  "version": 1,
+  "owner": {
+   "email": "[email]",
+   "code": "E-431883ca6856",
+   "name": "Aadi Kapoor",
+   "role": "Retrofit Programme Manager",
+   "oid": null
+  },
+  "next_update": "2026-12-02",
+  "non_digital_route": "Housing office phone line, staffed weekdays",
+  "review_status": "Human identity and eligibility review required",
+  "channel": "staff_recorded_non_digital",
+  "route_mode": "staff_recorded_non_digital"
+ },
+ "correct": {
+  "status": 200,
+  "err": null
+ },
+ "after_correct": {
+  "hashes_equal_to_before": true,
+  "assurance": {
+   "no_retaliation": true,
+   "inferred_refusal": false,
+   "hazard_response_delayed": false,
+   "text": "Raising this challenge or correction will not be held against you. We have not recorded you as refusing, and no safety or hazard response has been paused or delayed."
+  },
+  "review_status": "Re-review required; no priority or consent change",
+  "re_review": {
+   "required": true,
+   "automatic_acceptance": false,
+   "automatic_sanction": false,
+   "dependent_review_versions": []
+  },
+  "stage": "Waiting for block programme",
+  "days_in_stage": 116,
+  "hazards_state": [
+   [
+    "Repair evidenced, hold active",
+    "Active"
+   ]
+  ]
+ },
+ "guarantees": [
+  "A challenge or correction never lowers your priority, eligibility or place in the queue.",
+  "It never records you as refusing or withdrawing, or changes your consent.",
+  "It never pauses, holds or extends the clock on any hazard or safeguarding response."
+ ],
+ "assurance_block": {
+  "no_retaliation": true,
+  "inferred_refusal": false,
+  "hazard_response_delayed": false,
+  "text": "Raising this challenge or correction will not be held against you. We have not recorded you as refusing, and no safety or hazard response has been paused or delayed."
+ },
+ "hazard_true": {
+  "status": 400,
+  "keys": [
+   "action",
+   "endpoint",
+   "error",
+   "immediate",
+   "issue",
+   "message",
+   "queue_item_created",
+   "route"
+  ],
+  "route": {
+   "action": "/api/cases/ZF-2025-0331/hazard-raise",
+   "endpoint": "/api/cases/{case_id}/hazard-raise",
+   "message": "Use the independent hazard intake now (/api/cases/{case_id}/hazard-raise), not the nomination queue. Existing hazard service owns emergency response and clocks. Nothing was saved here."
+  }
+ },
+ "after_hazard_true": {
+  "hashes_equal": true,
+  "n_nominations": 3
+ },
+ "forbidden_fields": {
+  "retaliation_flag": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: retaliation_flag."
+  },
+  "refusal": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: refusal."
+  },
+  "hazard_pause": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: hazard_pause."
+  },
+  "priority_penalty": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: priority_penalty."
+  }
+ },
+ "hazard_missing": {
+  "status": 400,
+  "keys": [
+   "error"
+  ]
+ },
+ "final_hashes_equal": true,
+ "final_n_nominations": 3,
+ "html_has_protection": true
+}
