@@ -1,0 +1,5 @@
+# registry grep
+grep exit 1
+ls-files mvp prototype: 0
+total 79 rubric_version 2
+registry last change a81329ef91 Tue Nov 3 11:40:06 2026 +0100
