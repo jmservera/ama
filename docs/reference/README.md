@@ -1764,6 +1764,7 @@ or infra acceptance claimed.
 | [Issue 1830 Live r8, Close-out at 342fad401d (#1830)](./research/issue-1830-live-r8-2026-11-23.md) | No tooling drift since r7; preflight selectors, 56 unit tests and direct map and 320px browser checks re-run; criteria 1, 3 partly and 4 owner-gated, 2 proven for the demo |
 | [Issue 2188 Live, Gate Speed-up Criteria](./research/issue-2188-live-gate-speed-2026-11-21.md) | Per-criterion evidence: layer cache 80.7 s to 1.3 s on one image, retry not implemented, tamper rejection tests pass |
 | [Issue 2188 Live, Gate Speed-up Criteria Refresh](./research/issue-2188-live-gate-speed-2026-11-22.md) | Supersedes the retry finding: shard retry and receipt retries implemented, image build 70.5 s to 7.2 s, images still serial, gate-level pair unproven |
+| [Issue 2188 Live, Concurrent Image Builds](./research/issue-2188-live-image-concurrency-2026-11-23.md) | Image groups now build up to four at a time, mssql stays exclusive, Trivy serialised; per-criterion table |
 | [Issue 2186 Live, Full Receipt Across Docs-only Moves](./research/issue-2186-live-full-receipt-docs-move-2026-11-21.md) | Full receipts now relax over inert main moves; code, tool and image moves still invalidate; end-to-end full receipt unproven |
 | [Issue 1830 Live Criterion 1 Measurement](./research/issue-1830-live-20261119T1346Z-2026-11-19.md) | Timing from eight retained passed full receipts, queue wait from four gate logs, critical chain, parallel-versus-summed time and setup cost; `report --log` refusal fix; criteria 1, 3 and 4 partly proven, 2 unproven (Refs #1830) |
 | [Issue 349 Tenant Prerequisites, Live Demo Re-verification](./research/issue-349-tenant-prerequisites-live-2026-11-18.md) | Issue 349: per-criterion proven/unproven status from read-only Azure checks (auth config, vault path, private endpoint) and Playwright runs with the test sign-in |
@@ -2255,6 +2256,7 @@ Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./rese
 Further 2026-11-21 evidence: [issue 2206 demo preflight proof](./research/issue-2206-demo-preflight-2026-11-21.md), the read-only preflight script with a live run, evidence only.
 Further 2026-11-21 evidence: [issue 2190 gate flakes](./research/issue-2190-live-20261121-2026-11-21.md), reproduction, fixes and a per-criterion verdict for three gate flakes, evidence only.
 Further 2026-11-22 evidence: [issue 2190 re-verification](./research/issue-2190-live-20261122-note.md), the three gate flake fixes re-run on current main with a per-criterion verdict, evidence only.
+Further 2026-11-23 evidence: [issue 2190 regression tests](./research/issue-2190-live-20261123-note.md), a behavioural slow-server test, a deterministic settle wait for the chat check and a stricter `_region_passed`, with a per-criterion verdict.
 
 A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
 

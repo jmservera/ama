@@ -27,8 +27,11 @@ from typing import Any
 from urllib.request import urlopen
 
 PROJECTS = ("core", "agents", "api", "orchestrator", "importer")
+IMAGE_CONCURRENCY = 4
 IMAGES = ("api", "agents", "orchestrator", "importer")
 INERT_PREFIXES = ("docs/", ".copilot-tracking/", "support/")
+# Paths no test reads (the link test skips both); markdown elsewhere, docs/ included, is test input.
+RECEIPT_INERT_PREFIXES = (".copilot-tracking/", "support/")
 # Projects whose unit suite may be split across worker processes, with the maximum shard count.
 SHARDED_PROJECTS = {"api": 3}
 # Unit suite ceiling in seconds; core ran 1535 s on a loaded host (issue #470), so it gets double.
@@ -441,11 +444,11 @@ def moved_path_blocker(
     path: str, pr_paths: set[str], pr_groups: set[str], extras: list[str]
 ) -> str:
     """Reason a main-side path invalidates a partial receipt, or an empty string."""
+    if path in pr_paths:
+        return "also changed by the candidate"
     if inert_path(path):
         # Tests read markdown under src/, so only other inert paths are provably irrelevant.
         return "markdown under src/ may be read by tests" if path.startswith("src/") else ""
-    if path in pr_paths:
-        return "also changed by the candidate"
     if path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py"):
         return "changes the gate matrix itself"
     mapped = set(changed_groups([path], extras))
@@ -506,8 +509,8 @@ def base_relaxation(
     pr_groups = set(changed_groups(pr_paths, extras))
     for path in moved:
         reason = moved_path_blocker(path, set(pr_paths), pr_groups, extras)
-        if inert_only and not (inert_path(path) and not reason):
-            reason = reason or "a full receipt covers every group, so only inert paths qualify"
+        if inert_only and not (receipt_inert_path(path) and not reason):
+            reason = reason or "a full receipt covers every group, so only unread paths qualify"
         if reason:
             raise GateError(f"Base moved on {path}: {reason}; rerun the gate on the current base")
     return {
@@ -692,6 +695,10 @@ def required_groups(extras: list[str]) -> list[str]:
 
 def inert_path(path: str) -> bool:
     return path.endswith(".md") or path.startswith(INERT_PREFIXES)
+
+
+def receipt_inert_path(path: str) -> bool:
+    return path.startswith(RECEIPT_INERT_PREFIXES)
 
 
 def suite_timeout(project: str) -> int:
@@ -1732,8 +1739,10 @@ def _region_passed(region: list[str]) -> bool:
     failing = re.compile(
         r"((?<![A-Za-z])(FAIL|ERROR|skipped\b.*)|expected failure|unexpected success)$"
     )
-    # Thread logs may land after the result line and before the next header.
-    return any(re.search(r"(?<![A-Za-z])ok$", line) for line in region) and not any(
+    # Thread logs may land after the result line and before the next header. The result is a
+    # line that is exactly "ok" or "ok" glued to an unterminated log fragment ("status=503ok");
+    # a log line that merely ends in a separate word or value "ok" is not a result.
+    return any(re.search(r"(?<![\sA-Za-z=:])ok$|^ok$", line) for line in region) and not any(
         failing.search(line) for line in region
     )
 
@@ -1988,7 +1997,9 @@ class Runner:
         self.local = threading.local()
         self.row_lock = threading.Lock()
         self.install_lock = threading.Lock()
-        self.docker_lock = threading.Lock()
+        self.docker_gate = threading.Lock()
+        self.docker_slots = threading.BoundedSemaphore(IMAGE_CONCURRENCY)
+        self.trivy_lock = threading.Lock()
         self.cancelled = threading.Event()
         self.active: dict[int, subprocess.Popen[str]] = {}
         self.token = secrets.token_hex(12)
@@ -2923,48 +2934,49 @@ class Runner:
                 "--severity",
                 "HIGH,CRITICAL",
             ]
-            self.command(
-                [
-                    *args,
-                    "--ignore-unfixed",
-                    "--exit-code",
-                    "1",
-                    "--format",
-                    "json",
-                    "--output",
-                    str(self.out / f"{project}-gate.json"),
-                    image_id,
-                ],
-                timeout=900,
-                retry=True,
-            )
-            gate_row = self.local.last_entry
-            gate_row.pop("expected_probe_failure", None)
-            self.command(
-                [
-                    *args,
-                    "--ignore-unfixed=false",
-                    "--exit-code",
-                    "0",
-                    "--format",
-                    "json",
-                    "--output",
-                    str(self.out / f"{project}-all.json"),
-                    image_id,
-                ],
-                timeout=900,
-            )
-            self.command(
-                [
-                    *args,
-                    "--format",
-                    "spdx-json",
-                    "--output",
-                    str(self.out / f"{project}.spdx.json"),
-                    image_id,
-                ],
-                timeout=900,
-            )
+            with self.trivy_lock:
+                self.command(
+                    [
+                        *args,
+                        "--ignore-unfixed",
+                        "--exit-code",
+                        "1",
+                        "--format",
+                        "json",
+                        "--output",
+                        str(self.out / f"{project}-gate.json"),
+                        image_id,
+                    ],
+                    timeout=900,
+                    retry=True,
+                )
+                gate_row = self.local.last_entry
+                gate_row.pop("expected_probe_failure", None)
+                self.command(
+                    [
+                        *args,
+                        "--ignore-unfixed=false",
+                        "--exit-code",
+                        "0",
+                        "--format",
+                        "json",
+                        "--output",
+                        str(self.out / f"{project}-all.json"),
+                        image_id,
+                    ],
+                    timeout=900,
+                )
+                self.command(
+                    [
+                        *args,
+                        "--format",
+                        "spdx-json",
+                        "--output",
+                        str(self.out / f"{project}.spdx.json"),
+                        image_id,
+                    ],
+                    timeout=900,
+                )
             for suffix in ("gate.json", "all.json", "spdx.json"):
                 report = json.loads(
                     (
@@ -3021,6 +3033,20 @@ class Runner:
                 capture_output=True,
             )
 
+    @contextlib.contextmanager
+    def docker_capacity(self, slots: int) -> Iterator[None]:
+        # Image groups share the slots; mssql takes all of them to run alone.
+        held = 0
+        try:
+            with self.docker_gate:
+                for _ in range(slots):
+                    self.docker_slots.acquire()
+                    held += 1
+            yield
+        finally:
+            for _ in range(held):
+                self.docker_slots.release()
+
     def dispatch(self, group: str) -> None:
         if group.startswith("project-"):
             self.projects((group.removeprefix("project-"),), install=False)
@@ -3029,7 +3055,7 @@ class Runner:
         elif group == "browser":
             self.browser()
         elif group == "mssql" or group.startswith("image-") or group == "logo-0600":
-            with self.docker_lock:
+            with self.docker_capacity(IMAGE_CONCURRENCY if group == "mssql" else 1):
                 if group == "mssql":
                     self.sql()
                 else:

@@ -320,9 +320,8 @@ class GateTests(unittest.TestCase):
             c.lineno
             for c in ast.walk(func)
             if isinstance(c, ast.Call)
-            and isinstance(c.func, ast.Attribute)
-            and c.func.attr == "wait_for_load_state"
-            and [a.value for a in c.args if isinstance(a, ast.Constant)] == ["networkidle"]
+            and isinstance(c.func, ast.Name)
+            and c.func.id == "settle_route"
         ]
         baseline = [
             c.lineno
@@ -669,6 +668,9 @@ class GateTests(unittest.TestCase):
             f"{header} ... skipped 'x'\n{log} ok\n{tail.replace('OK', 'OK (skipped=1)')}",
             f"{header} ... expected failure\n{log} ok\n{tail}",
             f"{header} ... {log}\n{log}\nwaiting ... retry\n{tail}",
+            f"{header} ... {log}\nhttp-response status ok\n{tail}",
+            f"{header} ... {log} ok\n{log}\n{tail}",
+            f"{header} ... {log}\nstate=ok\n{tail}",
         )
         for text in rejected:
             with self.subTest(text=text), self.assertRaises(gate.GateError):
@@ -2885,33 +2887,51 @@ os.fstat(3)
         self.assertEqual({row["group"] for row in runner.rows}, {"project-core", "project-agents"})
         self.assertFalse(runner.active)
 
-    def test_sql_and_image_resources_are_serial(self) -> None:
+    def test_images_build_concurrently_and_mssql_runs_alone(self) -> None:
         runner = self.runner()
-        runner.jobs = 3
+        runner.jobs = 6
         runner.groups = ["namespace", "project-api"]
-        active = 0
-        peak = 0
         mutex = threading.Lock()
+        active: dict[str, int] = {"image": 0, "mssql": 0}
+        peaks = {"image": 0, "overlap": 0}
+        barrier = threading.Barrier(4, timeout=10)
+        use_barrier = True
 
-        def work(*args: Any, **kwargs: Any) -> None:
-            nonlocal active, peak
+        def enter(kind: str) -> None:
             with mutex:
-                active += 1
-                peak = max(active, peak)
+                active[kind] += 1
+                peaks["image"] = max(peaks["image"], active["image"])
+                if active["mssql"] and active["image"]:
+                    peaks["overlap"] += 1
+
+        def leave(kind: str) -> None:
+            with mutex:
+                active[kind] -= 1
+
+        def sql() -> None:
+            enter("mssql")
+            threading.Event().wait(0.05)
+            leave("mssql")
+            runner.groups.append("mssql")
+
+        def image(project: str, *, stress: bool = False) -> None:
+            enter("image")
+            if use_barrier:
+                barrier.wait()
             threading.Event().wait(0.02)
-            with mutex:
-                active -= 1
-            group = (
-                "mssql" if not args else "logo-0600" if kwargs.get("stress") else f"image-{args[0]}"
-            )
-            runner.groups.append(group)
+            leave("image")
+            runner.groups.append("logo-0600" if stress else f"image-{project}")
 
         with (
-            patch.object(runner, "sql", side_effect=work),
-            patch.object(runner, "image", side_effect=work),
+            patch.object(runner, "sql", side_effect=sql),
+            patch.object(runner, "image", side_effect=image),
         ):
-            runner.schedule(["mssql", "image-api", "image-agents", "logo-0600"])
-        self.assertEqual(peak, 1)
+            runner.schedule(["image-api", "image-agents", "image-orchestrator", "logo-0600"])
+            self.assertEqual(peaks["image"], 4)
+            runner.groups = ["namespace", "project-api"]
+            use_barrier = False
+            runner.schedule(["mssql", "image-api", "image-agents", "image-importer"])
+        self.assertEqual(peaks["overlap"], 0)
 
     def test_worker_limit_respects_cpu_memory_and_invalid_jobs(self) -> None:
         real_read = Path.read_text
@@ -3942,6 +3962,10 @@ os.fstat(3)
         docs_only = set(gate.changed_groups(["docs/pr.md"], []))
         self.assertEqual(docs_only, {"preflight", "namespace", "static"})
         self.assertEqual(gate.moved_path_blocker("docs/x.md", pr_paths, api, []), "")
+        self.assertIn(
+            "also changed",
+            gate.moved_path_blocker("docs/pr.md", pr_paths | {"docs/pr.md"}, api, []),
+        )
         for path in (
             "src/README.md",
             "src/api/tests/README.md",
@@ -4047,7 +4071,11 @@ os.fstat(3)
         self.commit("pr", "src/api/src/zava_forward/api/server.py")
         full = self.relaxed_receipt("full")
         cases = {
-            "docs": (("docs/other.md", ".copilot-tracking/x.json"), True),
+            "unread paths": (("support/x.md", ".copilot-tracking/x.json"), True),
+            "docs markdown read by link test": (("docs/other.md",), False),
+            "root README read by tests": (("README.md",), False),
+            "infra README read by tests": (("infra/README.md",), False),
+            "docs data file": (("docs/architecture/x.json",), False),
             "unrelated project code": (("src/importer/src/zava_forward/importer/x.py",), False),
             "unrelated project tests": (("src/importer/tests/test_x.py",), False),
             "markdown under src": (("src/importer/README.md",), False),
@@ -4082,7 +4110,7 @@ os.fstat(3)
 
     def test_verify_reports_docs_only_relaxation_for_full_receipt(self) -> None:
         self.commit("pr", "src/api/src/zava_forward/api/server.py")
-        moved = self.move_main("docs/other.md")
+        moved = self.move_main("support/other.md")
         proof = gate.base_relaxation(self.root, self.base, moved, [], inert_only=True)
         receipt = {
             "scope": "full",

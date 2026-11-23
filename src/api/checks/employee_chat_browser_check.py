@@ -25,6 +25,19 @@ def scan(page: Page, axe: str, state: str) -> dict[str, Any]:
     return {"state": state, "violations": result["violations"], "passes": len(result["passes"])}
 
 
+def settle_route(page: Page, destination: str | None) -> None:
+    """Wait for the route render to finish so the snapshot compares only the late success effect.
+
+    The list route reads facets and then its cases; networkidle alone passes in the gap between
+    the two reads under load, so wait for the status the list view writes when its read ends.
+    """
+    if destination == "#/":
+        page.wait_for_function(
+            "() => document.getElementById('workspace-status').textContent.startsWith('Perspective:')"
+        )
+    page.wait_for_load_state("networkidle")
+
+
 def late_success(page: Page, pending: str, transition: str) -> None:
     """Settle an actual successful API promise independently of transport abort."""
     page.evaluate(
@@ -99,9 +112,7 @@ def late_success(page: Page, pending: str, transition: str) -> None:
             expect(page.locator("#employee-chat")).to_have_count(0)
             page.get_by_label("Work email", exact=True).focus()
 
-        # The route render fetches its case list asynchronously and rewrites the workspace status
-        # when that read ends; settle it so the snapshot compares only the late success effect.
-        page.wait_for_load_state("networkidle")
+        settle_route(page, destination if transition == "route" else None)
         before = page.evaluate("""() => {
           const state = window.employeeLate;
           state.focus = document.activeElement;
