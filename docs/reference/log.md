@@ -15125,3 +15125,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## 2026-11-23 issue 184 CLI credential leak guard
 
 Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-environment leak probe and regression test). Refs #184.
+## [2026-11-23] add | Issue 2254 stale support, long-wait and funding filter columns (Refs #2254)
+
+* Added [issue-2254-live-r5-2026-11-23.md](research/issue-2254-live-r5-2026-11-23.md): the SQL identity repair now rebuilds `support`, `days` and `fstatus` as well as `hazard`; the new regression test fails without it. Not deployed, so no live proof.

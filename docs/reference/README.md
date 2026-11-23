@@ -754,6 +754,7 @@ The [issue 2254 run 3 note](./research/issue-2254-live-r3-2026-11-23.md) records
 The [issue 2254 run 4 note](./research/issue-2254-live-r4-2026-11-23.md) reproduces the 3 versus 4 safety count on the code by reverting the stale-column repair, shows the regression test fails without it, and re-checks tile, map and list by case id on the live demo (23, 23, 23).
 
 The [issue 2254 run 5 note](./research/issue-2254-live-r5-2026-11-23.md) adds a regression test for the over-counted stored safety column (released hazard or closed case), proves it fails without the repair, and re-checks tile, map and list live on revision 0000056 (23, 23, 23).
+The [issue 2254 run 5 note](./research/issue-2254-live-r5-2026-11-23.md) closes the same stale-column class for the support, long-wait and funding filters by extending the SQL identity repair, with a regression test that fails without it.
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 

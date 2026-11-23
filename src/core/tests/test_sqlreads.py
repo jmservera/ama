@@ -12,7 +12,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import dataset as fixtures
-from zava_forward.core import ranking
+from zava_forward.core import insights, ranking
 from zava_forward.core.insights import STAGE_ORDER
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -251,6 +251,7 @@ class Migration(unittest.TestCase):
             self.assertEqual(sum(1 for i in mapped["items"] if i["kind"] == "hazard"), tile)
 
     def test_overcounted_safety_column_is_repaired_when_hazard_is_released_or_case_closed_issue_2254(self):
+    def test_stale_support_long_wait_and_funding_columns_are_repaired_issue_2254(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "zavaforward.json"
             p.write_text(json.dumps(dataset(make_cases(60))))
@@ -268,6 +269,7 @@ class Migration(unittest.TestCase):
                 body = json.loads(raw.execute("SELECT body FROM cases WHERE id=?", (cid,)).fetchone()[0])
                 edit(body)
                 raw.execute("UPDATE cases SET body=?, hazard=1 WHERE id=?", (json.dumps(body), cid))
+            raw.execute("UPDATE cases SET support=1 - support, days=0, fstatus='Confirmed'")
             raw.commit()
             raw.close()
             s = SqlStore(str(p), db)
@@ -279,6 +281,15 @@ class Migration(unittest.TestCase):
             self.assertEqual(listed["total"], tile)
             self.assertNotIn(released, [i["id"] for i in listed["items"]])
             self.assertNotIn(closed, [i["id"] for i in listed["items"]])
+            open_ = [c for c in s.cases.values() if not c["closed"]]
+            want = dict(
+                support=sum(1 for c in open_ if ranking._support(c)),
+                long=sum(1 for c in open_ if c["days_in_stage"] >= insights.LONG_WAIT),
+                funding=sum(1 for c in open_ if c["funding"]["status"] != "Confirmed"),
+            )
+            self.assertTrue(all(want.values()), want)
+            for flag, total in want.items():
+                self.assertEqual(s.page_cases(pam, "all", filters=dict(flag=flag), limit=100)["total"], total, flag)
 
     def test_repair_skips_legacy_bodies_that_lack_row_fields(self):
         with tempfile.TemporaryDirectory() as tmp:
