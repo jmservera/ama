@@ -14999,3 +14999,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 146 workbook query execution (Refs #146)
 
 * Added [issue-146-live6-monitoring-2026-11-23.md](research/issue-146-live6-monitoring-2026-11-23.md): live execution of the workbook queries, one failing query fixed in source, and a per-criterion table. Throwaway storage account created and deleted; no estate change.
+## [2026-11-23] add | Issue 2303 chat golden file in the API image (Refs #2303)
+
+* Added [issue-2303-chat-golden-image-2026-11-23.md](research/issue-2303-chat-golden-image-2026-11-23.md): the image lacked `chat_golden.json`, its variable and the dockerignore allowance; fixed and proven in a local container; deployment proof stays unproven.
