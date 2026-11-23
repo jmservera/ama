@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "version": "eval-manifest-schema-v1",
+  "$comment": "Schema for constructed synthetic evaluation manifests; no real data.",
   "title": "Frozen evaluation manifest (#2312, refs #108)",
   "type": "object",
   "required": [
