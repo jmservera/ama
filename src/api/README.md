@@ -5490,7 +5490,7 @@ records the tested/deployed image and identity initialization.
 
 ## Container hardening checks in CI
 
-The `image` job in `.github/workflows/mvp-ci.yml` builds the image and checks:
+The retired `image` job (removed with `mvp-ci.yml`, issue #202) built the image and checked:
 
 * it runs as UID 10001 and contains no working data;
 * it starts and answers `/healthz` with `--read-only --cap-drop ALL

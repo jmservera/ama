@@ -1234,9 +1234,8 @@ Run from the repository root before a pull request. These checks compile locally
 and need no Azure login, subscription access or deployment. Install the source
 packages first, preferably in a disposable virtual environment (pip only).
 Source CI runs the gates within the existing `namespace` / `src-namespace` job
-in `.github/workflows/src-ci.yml`, including on `infra/**` changes. The legacy
-`.github/workflows/mvp-validation.yml` also runs full infra discovery. Both
-infra-test steps install the test-only `PyYAML==6.0.3` pin and the hashed
+in `.github/workflows/src-ci.yml`, including on `infra/**` changes. The retired `mvp-validation.yml` workflow was removed under issue #202. The
+infra-test step installs the test-only `PyYAML==6.0.3` pin and the hashed
 operator/runtime dependencies from `src/api/requirements.txt` before discovery.
 The latter supplies real cryptography for encrypted staff-job transport tests;
 do not rely on incidental transitive dependencies. PyYAML is not a production
@@ -4555,7 +4554,7 @@ cannot enforce the aggregate cap.
 
 ### Acceptance and validation boundary
 
-Build/lint are wired through the existing `mvp-validation.yml` check;
+Build/lint are wired through the `src-ci.yml` `namespace` job;
 `infra/tests/test_iothub_module.py` now examines compiled resources, both
 activation states and rejection mutations. The existing
 `Infrastructure PR what-if` workflow checks trusted candidate Bicep through

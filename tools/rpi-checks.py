@@ -72,17 +72,13 @@ RUFF_GROUPS = (
 )
 WORKFLOWS = (
     "src-ci.yml",
-    "mvp-ci.yml",
-    "mvp-validation.yml",
     "src-deploy.yml",
     "infra-plan.yml",
     "infra-image-build.yml",
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "df473e4bb97d513ff1fbeb2068089df2804d103d6343187b6d2ec649ee53ca96",
-    "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
-    "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
+    "src-ci.yml": "dc9abfa7e34603626c4320b48b9b05a049a9117b355916db71ef6cf19ce5a487",
     "src-deploy.yml": "bd0b6277ce104b698110cd88a63846c36ec7be463164db327f00dd5d32489623",
     "infra-plan.yml": "4240d803e33e68e63e03d201f241fa21101e2e260848c276b32817624cca6056",
     "infra-image-build.yml": "71b87637f524ac394e77d0b2619f4ccc5aaa299a539b5f0d8ff104904755c3ee",
@@ -2614,14 +2610,10 @@ class Runner:
             ("src-ci.yml", "namespace"): "namespace; static; infra; migration",
             ("src-ci.yml", "no-working-data"): "static",
             ("src-ci.yml", "mssql"): "mssql",
-            ("mvp-ci.yml", "test"): "project-api; project-orchestrator; static",
-            ("mvp-ci.yml", "image"): "image-api; logo-0600",
-            ("mvp-ci.yml", "mssql"): "mssql",
             (
                 "infra-image-build.yml",
                 "build",
             ): "image-*; hosted-only PR image tag, no push or deploy",
-            ("mvp-validation.yml", "validate"): "project-api; static; infra; migration",
         }
         rows = []
         for workflow, document in jobs.items():

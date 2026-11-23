@@ -126,13 +126,13 @@ def infra_test_dependency_errors(document):
 
 class WorkflowTests(unittest.TestCase):
     def test_each_infra_ci_step_installs_pinned_test_dependency_before_discovery(self):
-        for name in ("src-ci.yml", "mvp-validation.yml"):
+        for name in ("src-ci.yml",):
             with self.subTest(name=name):
                 self.assertEqual(infra_test_dependency_errors(workflow(name)), [])
 
     def test_reject_missing_or_late_infra_test_dependency(self):
         install = "pip install 'PyYAML==6.0.3'"
-        for name in ("src-ci.yml", "mvp-validation.yml"):
+        for name in ("src-ci.yml",):
             for replacement in ("", "pip install PyYAML"):
                 with self.subTest(name=name, replacement=replacement):
                     document = deepcopy(workflow(name))
@@ -151,7 +151,7 @@ class WorkflowTests(unittest.TestCase):
 
     def test_reject_missing_unhashed_or_late_operator_dependencies(self):
         install = "pip install --require-hashes -r src/api/requirements.txt"
-        for name in ("src-ci.yml", "mvp-validation.yml"):
+        for name in ("src-ci.yml",):
             for replacement, suffix in (
                 ("", ""),
                 ("pip install -r src/api/requirements.txt", ""),
@@ -356,13 +356,7 @@ class WorkflowTests(unittest.TestCase):
         self.assertIn("image-paths.outputs.images", build["if"])
         self.assertEqual(set(document["on"]), {"pull_request", "workflow_dispatch"})
         for name in ("mvp-ci.yml", "mvp-validation.yml"):
-            self.assertEqual(set(workflow(name)["on"]), {"workflow_dispatch"})
-        mssql = {
-            key: value
-            for key, value in document["jobs"]["mssql"].items()
-            if key not in ("needs", "if")
-        }
-        self.assertEqual(mssql, workflow("mvp-ci.yml")["jobs"]["mssql"])
+            self.assertFalse((ROOT / ".github/workflows" / name).exists(), name)
         self.assertEqual(document["jobs"]["mssql"]["needs"], "changes")
         self.assertEqual(
             document["jobs"]["mssql"]["if"],
