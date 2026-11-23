@@ -182,6 +182,8 @@ at 320, 390 and 1280 px and 200% text size.
 
 Status 2026-11-19 (#151, demo): all eight rows stay `Not run`. A real screen-reader record needs a named person with NVDA or VoiceOver, and the owner decision of 2026-11-18 excludes person-run assistive-technology testing for the demonstrator. The merged automated keyboard walks are DOM evidence, not assistive-technology output, so no row is filled and no conformance is claimed.
 
+Status 2026-11-23 (#2133, demo): re-checked, all eight rows stay `Not run`; the criterion is owner-gated and unproven ([note](issue-2133-live-manual-checks-2026-11-23.md)).
+
 Release rule (proposed, O-3): a release that changes a screen needs the
 affected rows re-run and any new failure recorded or fixed.
 
