@@ -14990,3 +14990,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2164 deployed code proof (Refs #2164)
 
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
+
+## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
+
+* Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.
