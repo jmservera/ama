@@ -1,0 +1,22 @@
+{
+ "now": "2026-11-23T01:46:23.671Z",
+ "provenance": null,
+ "freshness_text": null,
+ "age_seconds": null,
+ "latest": null,
+ "reading_ids": [],
+ "reading_keys": [],
+ "map_sensor": [
+  {
+   "state": "fresh",
+   "label": "Recent reading (within 15 minutes)",
+   "alert": false,
+   "calibrated": false,
+   "observed_at": "2026-11-23T01:45:00Z",
+   "age_seconds": 79,
+   "source": "Synthetic simulator reading. Not calibrated, so not a verified indoor measurement.",
+   "temperature_c": 5.4,
+   "humidity_pct": 96.3
+  }
+ ]
+}

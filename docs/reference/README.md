@@ -711,6 +711,8 @@ The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.
 
 The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records read only proof that scheduled simulator runs reach IoT Hub, the receiver and the employee map (288 `SYN-` devices, hub ingress equal to egress, fresh case readings), the clean secret scan and the unproven resident live view (#184).
 
+The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-11-23.md) records the 2026-11-23 read only Hub to receiver to employee map walkthrough on revision 0000054 (fresh reading 79 s old, per message SQL hop inferred, resident view stored only) (#2118).
+
 The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026-11-22.md) records a desktop Playwright check of 2255, 2253, 2254, 2256 and the map on revisions 0000051 and 0000023 (passes), and shows generative AI answers still blocked by an open suspension and the resident ledger expiry, with screenshots and a per-item table.
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.

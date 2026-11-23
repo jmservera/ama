@@ -1,0 +1,14 @@
+[
+  {
+    "m": "d2c.telemetry.ingress.success",
+    "t": [
+      2095.0
+    ]
+  },
+  {
+    "m": "d2c.endpoints.egress.eventHubs",
+    "t": [
+      2095.0
+    ]
+  }
+]

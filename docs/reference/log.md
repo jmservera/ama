@@ -14808,3 +14808,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2244 start-up write-lock re-verification (Refs #2244)
 
 * Added [issue-2244-live-2026-11-23.md](research/issue-2244-live-2026-11-23.md): live API revision 0000054 has the #2273 retry (file hash equals main); added read-only schema fast paths for start-up; stress under contention and probe budget unproven.
+## [2026-11-23] update | Issue 2118 live Hub to SQL to map walkthrough (Refs #2118)
+
+* Added [issue-2118-live-iot-map-walkthrough-2026-11-23.md](research/issue-2118-live-iot-map-walkthrough-2026-11-23.md): read only hop-by-hop walkthrough ending in a fresh employee map reading, with the per message SQL hop and the resident live view marked unproven. No source change.
