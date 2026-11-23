@@ -1,0 +1,6 @@
+2026-11-23 03:54:16 2026-11-23 03:57:16 6 ('0055', 'Warning', 'ProbeFailed', 'Probe of Readiness failed with timeout in 3 seconds.')
+2026-11-23 03:54:18 2026-11-23 03:54:38 3 ('0055', 'Warning', 'ProbeFailed', 'Probe of Liveness failed with timeout in 5 seconds.')
+2026-11-23 03:54:46 2026-11-23 03:54:46 1 ('0055', 'Warning', 'ProbeFailed', 'Container api failed readiness probe')
+2026-11-23 03:54:46 2026-11-23 03:54:46 1 ('0055', 'Warning', 'ProbeFailed', 'Readiness Probe of Readiness reached failure threshold 3, ch')
+2026-11-23T03:58:37 2026-11-23T03:58:37 1 ('', 'Normal', 'StartingGettingEvents', 'Connecting to the events collector...')
+2026-11-23T03:58:37 2026-11-23T03:58:37 1 ('', 'Normal', 'ConnectedToEventsServer', 'Successfully connected to events server')

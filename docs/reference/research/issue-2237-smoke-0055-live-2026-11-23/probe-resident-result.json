@@ -1,0 +1,15 @@
+{
+ "session_status": 200,
+ "login_status": 200,
+ "chart": {
+  "fig": false,
+  "svgs": 46,
+  "circles": 0,
+  "caption": "Temperature history (\u00b0C)",
+  "notice": [
+   "Synthetic sensor history for your home. These are stored demo readings, not live measurements or safety advice.",
+   "Stored history is not recent. Last reading: 22 Nov 2026, 03:30 (UK time).",
+   "No 24-hour forecast is shown because the latest stored reading is more than 24 hours old."
+  ]
+ }
+}
