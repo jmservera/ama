@@ -35,6 +35,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from zava_forward.core import task_contracts
 from zava_forward.core.ai_consumption import CallContext, call_context, reference, usage
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core.chat_case_answers import AI_CONSENT, RULES_FIRST
@@ -967,6 +968,11 @@ class ChatPanel:
                     "General work guidance" if skill == GENERAL else REGISTRY[skill]["purpose"]
                 )
                 system += f" Selected advisory skill: {skill}. Purpose: {purpose}. {BOUNDARY}"
+            try:
+                task_contracts.enforce(TASK, {"question": masked, "case_facts": source_json})
+            except task_contracts.ContractRefusal:
+                receipt["model_calls"] = 0
+                return finish("fallback", FALLBACK, [], model_name)
             receipt.update(context_chars=len(system) + len(prompt), history_chars=len(history))
             if len(system) + len(prompt) > MAX_INPUT_CHARS:
                 return finish("fallback", LIMIT_REACHED, [], model_name)

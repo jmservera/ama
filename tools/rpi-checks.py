@@ -76,6 +76,7 @@ WORKFLOWS = (
     "mvp-validation.yml",
     "src-deploy.yml",
     "infra-plan.yml",
+    "infra-image-build.yml",
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
@@ -84,6 +85,7 @@ WORKFLOW_HASHES = {
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "bd0b6277ce104b698110cd88a63846c36ec7be463164db327f00dd5d32489623",
     "infra-plan.yml": "4240d803e33e68e63e03d201f241fa21101e2e260848c276b32817624cca6056",
+    "infra-image-build.yml": "71b87637f524ac394e77d0b2619f4ccc5aaa299a539b5f0d8ff104904755c3ee",
 }
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 TOOLS = (
@@ -2609,6 +2611,10 @@ class Runner:
             ("mvp-ci.yml", "test"): "project-api; project-orchestrator; static",
             ("mvp-ci.yml", "image"): "image-api; logo-0600",
             ("mvp-ci.yml", "mssql"): "mssql",
+            (
+                "infra-image-build.yml",
+                "build",
+            ): "image-*; hosted-only PR image tag, no push or deploy",
             ("mvp-validation.yml", "validate"): "project-api; static; infra; migration",
         }
         rows = []

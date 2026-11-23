@@ -149,6 +149,30 @@ class WorkbookPanelTests(unittest.TestCase):
         self.assertIn("Unreconciled, not zero", source)
         self.assertIn("ai-usage-saved-query", _anchors(RUNBOOK.read_text(encoding="utf-8")))
 
+    def test_saved_query_parse_pattern_matches_emitted_usage_line(self) -> None:
+        source = MODULE.read_text(encoding="utf-8")
+        query = re.search(r"query: '(ContainerAppConsoleLogs[^']*AI_USAGE[^']*)'", source)
+        assert query is not None
+        parse = re.search(r"parse Log with \* (.+?) \| where", query.group(1))
+        assert parse is not None
+        emitter = (INFRA.parent / "src/core/src/zava_forward/core/ai_consumption.py").read_text(
+            encoding="utf-8"
+        )
+        fmt = re.search(r'"(AI_USAGE capability=%s[^"]*)"', emitter)
+        assert fmt is not None
+        literals = re.findall(r'"([^"]*)"', parse.group(1))
+        columns = re.findall(r"(\w+)(?::long)?(?= \"|$)", parse.group(1))
+        self.assertEqual(
+            [lit.strip().rstrip("=") for lit in literals],
+            re.findall(r"(?:AI_USAGE capability|period|calls|tokens|usage|outcome)", fmt.group(1)),
+        )
+        self.assertEqual(
+            columns, ["Capability", "Period", "Calls", "Tokens", "UsageState", "Outcome"]
+        )
+        # The workbook panel must parse the same line shape as the saved query.
+        panel = _workbook_queries()["ai-usage-by-capability"]
+        self.assertIn(parse.group(1).replace('"', "'"), panel)
+
 
 if __name__ == "__main__":
     unittest.main()

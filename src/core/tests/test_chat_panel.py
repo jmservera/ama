@@ -377,6 +377,19 @@ class StoredQuestionTests(unittest.TestCase):
                     self.assertEqual([m["role"] for m in messages], ["user", "assistant"])
                 self.assertTrue(self.store.verify_audit())
 
+    def test_contract_refusal_stops_the_prompt_before_the_model(self) -> None:
+        from unittest.mock import patch
+
+        from zava_forward.core import chat_panel, task_contracts
+
+        refusal = task_contracts.ContractRefusal("refused")
+        with patch.object(task_contracts, "enforce", side_effect=refusal) as enforce:
+            reply = self.panel.ask(self.user, self.tid, "What stage is it?", skill="general")
+        self.assertEqual(self.prompts, [])
+        self.assertEqual(reply["kind"], "fallback")
+        self.assertEqual(enforce.call_args.args[0], chat_panel.TASK)
+        self.assertEqual(set(enforce.call_args.args[1]), {"question", "case_facts"})
+
     def test_inference_does_not_hold_store_lock(self) -> None:
         def ordinary_write() -> None:
             with self.store.lock:

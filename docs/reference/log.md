@@ -15137,3 +15137,22 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 149 law viewer reflow fix (Refs #149)
 
 * Added [issue-149-law-viewer-reflow-2026-11-23.md](research/issue-149-law-viewer-reflow-2026-11-23.md): provision text on the law viewer overflowed a 320 px viewport (scrollWidth 2772); a scoped `#law-out pre` wrap rule and regression test fix it. Both open epic criteria stay unproven and owner-gated.
+## [2026-11-23] update | Issue 2310 regression test for anonymous API 401 (Refs #2310)
+
+* Updated [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md) and added a wider anonymous-API regression test to `src/api/tests/test_auth.py`; no source or estate change.
+
+## [2026-11-23] add | Issue 2314 round 2 saved query contract (Refs #2314)
+
+* Added [issue-2314-alerts-runbooks-r2-2026-11-23.md](research/issue-2314-alerts-runbooks-r2-2026-11-23.md): infra test ties the saved query to the emitted AI_USAGE line; saved search confirmed not deployed. No Azure change.
+
+## [2026-11-23] update | Issue 1830 queue-wait reporting (Refs #1830)
+
+* Added [issue-1830-live-r9-2026-11-23.md](research/issue-1830-live-r9-2026-11-23.md): `rpi-gate-timing.py report --log` reports an unmeasured queue wait as null and refuses malformed or reversed lock lines, with two tests.
+
+## [2026-11-23] add | Nine-epic demo stabilization checkpoint (Refs #2301 #440)
+
+* Added [issue-2301-stabilization-checkpoint-live-2026-11-23.md](research/issue-2301-stabilization-checkpoint-live-2026-11-23.md) and a dated section in the cut-over evidence pack covering Epics 73, 81, 89, 93, 100, 109, 149, 157 and 208, with `tools/test_stabilization_checkpoint_2301.py`. Epic links, ticks and closures stay owner or remote actions.
+
+## [2026-11-23] add | Issue 2303 live rerun on revision 0000057 (Refs #2303)
+
+* Added [issue-2303-live-2026-11-23](research/issue-2303-live-2026-11-23/README.md): read-only Playwright probe shows `GET /api/ai/report` still returns 500 (FileNotFoundError) on the running revision; the head fix and contract test pass; deployment stays owner-gated. No source or estate change.
