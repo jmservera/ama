@@ -14884,3 +14884,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Live smoke of API 0000055 and resident 0000027 (Refs #2237)
 
 * Added [issue-2237-smoke-0055-live-2026-11-23.md](research/issue-2237-smoke-0055-live-2026-11-23.md): retention 200 (16 of 16), chat thread 200, map with 443 markers and sensor states, resident chart drawn from stale readings; start-up is partly proven because readiness probes timed out for three minutes. No criterion ticked, no source or estate change.
+
+## [2026-11-23] add | Issue 2253 live r3 chart re-verification (Refs #2253)
+
+* Added [issue-2253-live-r3-2026-11-23.md](research/issue-2253-live-r3-2026-11-23.md): resident revision 0000027 chart has 16.8 px labels, 0 text overlaps and 18 circle markers; the legend and narrow-screen rule stay unproven. No source or estate change.
