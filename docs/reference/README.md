@@ -573,6 +573,8 @@ with the staff test sign-in; conflicts show only locally because the web screen 
 The [issue 144 live hosting probe](./research/issue-144-live-hosting-2026-11-22.md) records digest-pinned images, live non-root proof, a writable root file system and no pipeline run.
 The [issue 144 live hardening re-probe](./research/issue-144-live-hardening-reprobe-2026-11-23.md) adds an offline verifier and records live `NoNewPrivs` 1, empty effective capabilities, a writable root file system and no pipeline run.
 The [issue 144 hardening receipt](./research/issue-144-live-hardening-receipt-2026-11-23.md) records the guard enforced on every app and job and a live application process that is non-root with NoNewPrivs and empty capability sets; read-only root stays unproven.
+
+The [issue 144 worker image mapping note](./research/issue-144-worker-image-mapping-2026-11-23.md) records an offline test tying Bicep workloads, the pipeline image mapping and shipped worker modules together; pipeline provenance stays unproven.
 The [2026-11-22 re-verification](./research/issue-2008-live-rerun-2026-11-22.md) repeats the local preview and the deployed run with a per-criterion table.
 The [web `.xlsx` import note](./research/issue-2008-web-xlsx-import-2026-11-22.md) records the
 local proof that the "Check a spreadsheet" screen previews the workbook with mapping and conflicts.
