@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -12,12 +13,35 @@ class CutoverAuditTests(unittest.TestCase):
         self.assertIn("**/evals", lines)
         self.assertEqual(
             [line for line in lines if line.startswith("!agents/evals")],
-            ["!agents/evals", "!agents/evals/ai_priority_golden.json"],
+            [
+                "!agents/evals",
+                "!agents/evals/ai_priority_golden.json",
+                "!agents/evals/chat_golden.json",
+            ],
         )
         self.assertLess(lines.index("!agents/evals"), lines.index("agents/evals/*"))
         self.assertLess(
             lines.index("agents/evals/*"), lines.index("!agents/evals/ai_priority_golden.json")
         )
+        self.assertLess(
+            lines.index("agents/evals/*"), lines.index("!agents/evals/chat_golden.json")
+        )
+
+    def test_api_image_provides_every_runtime_golden_file(self) -> None:
+        dockerfile = (ROOT / "src/api/Dockerfile").read_text(encoding="utf-8")
+        ignores = [
+            (ROOT / name).read_text(encoding="utf-8").splitlines()
+            for name in ("src/.dockerignore", "src/api/Dockerfile.dockerignore")
+        ]
+        envs = dict(re.findall(r"\b(ZF_\w+_GOLDEN)=/app/evals/(\S+\.json)", dockerfile))
+        self.assertEqual(
+            envs, {"ZF_AI_GOLDEN": "ai_priority_golden.json", "ZF_CHAT_GOLDEN": "chat_golden.json"}
+        )
+        for name in envs.values():
+            self.assertTrue((ROOT / "src/agents/evals" / name).is_file(), name)
+            self.assertIn(f"COPY agents/evals/{name} ./evals/{name}", dockerfile)
+            for lines in ignores:
+                self.assertIn(f"!agents/evals/{name}", lines)
 
     def test_real_matrix_has_no_missing_destinations(self) -> None:
         import subprocess

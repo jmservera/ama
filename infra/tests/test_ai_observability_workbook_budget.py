@@ -41,6 +41,14 @@ class AiObservabilityWorkbookBudgetTests(unittest.TestCase):
         self.assertIn("AzureActualCost='Unknown'", budget)
         self.assertIn("VarianceAgainstBudget='Unreconciled'", budget)
 
+    def test_variance_extend_does_not_reference_its_own_columns(self) -> None:
+        # Log Analytics rejects (SEM0100) a column used in the same extend that defines it.
+        variance = self.items["ai-variance-by-period"]["query"]
+        for clause in variance.split(" | extend "):
+            if "AzureCostRows=long(0)" in clause:
+                self.assertNotIn("AzureCostRows ==", clause)
+        self.assertIn("AzureCostRows == 0", variance)
+
     def test_disabled_task_status_is_blocked_not_assumed_healthy(self) -> None:
         text = self.items["ai-usage-and-harm"]["json"]
         self.assertRegex(text, r"Disabled task monitoring \|[^|]*\| Blocked")

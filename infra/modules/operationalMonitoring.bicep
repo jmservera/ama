@@ -164,4 +164,19 @@ resource workbook 'Microsoft.Insights/workbooks@2023-06-01' = {
   }
 }
 
+resource workspace 'Microsoft.OperationalInsights/workspaces@2022-10-01' existing = {
+  name: last(split(workspaceId, '/'))
+}
+
+resource aiUsageSavedQuery 'Microsoft.OperationalInsights/workspaces/savedSearches@2020-08-01' = {
+  parent: workspace
+  name: 'zava-ai-usage-by-capability-and-period'
+  properties: {
+    category: 'Zava Forward operations'
+    displayName: 'AI usage by capability and period with unreconciled variance'
+    version: 2
+    query: 'ContainerAppConsoleLogs | where TimeGenerated > ago(90d) and Log has "AI_USAGE" | parse Log with * "AI_USAGE capability=" Capability " period=" Period " calls=" Calls:long " tokens=" Tokens:long " usage=" UsageState " outcome=" Outcome | where isnotempty(Capability) and isnotempty(Period) | summarize MeteredCalls=sum(Calls), MeteredTokens=sumif(Tokens, UsageState == "known"), CallsWithUnknownUsage=sumif(Calls, UsageState != "known") by Capability, Period | extend AzureCostRecord="Unknown (billing record not connected)", UnreconciledVariance="Unreconciled, not zero", Basis="Non-authoritative console aggregate; the assistant ledger and Azure billing record are the sources" | order by Period asc, Capability asc'
+  }
+}
+
 output workbookId string = workbook.id

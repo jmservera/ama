@@ -59,7 +59,7 @@ class RuntimeBicepSignalContractTests(unittest.TestCase):
 
     def test_ai_limit_marker_matches_core_emitter(self) -> None:
         queried = set().union(*(_markers(q) for q in _queries(MODULE)))
-        self.assertEqual(queried, {"AI_LIMIT_BREACH"})
+        self.assertEqual(queried, {"AI_LIMIT_BREACH", "AI_USAGE"})
         self.assertIn('LOG.warning("AI_LIMIT_BREACH reason=%s route=%s"', AI_SOURCE)
 
     def test_runbook_ai_reason_codes_match_emitted_reasons(self) -> None:
