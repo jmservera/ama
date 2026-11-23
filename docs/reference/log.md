@@ -14906,3 +14906,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2254 map markers on screen (Refs #2254)
 
 * Added [issue-2254-map-markers-live-2026-11-23.md](research/issue-2254-map-markers-live-2026-11-23.md): tile 23, 23 of 443 markers titled Safety issue open, API map, cases and KPI all 23. No source or estate change.
+## [2026-11-23] update | Issue 1274 criteria re-verification run 4 (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-23-run4.md](research/issue-1274-live-evidence-2026-11-23-run4.md): retained log lines for the actionlint 504, checksum verification and 12 and 129 regression tests repeated at main 5c08bedd8f; AWF 0.28.23 and hosted CI on a new reviewed head remain unproven.
