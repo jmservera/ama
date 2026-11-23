@@ -15216,3 +15216,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2201 receiver streak and map probe (Refs #2201)
 
 * Added [issue-2201-live-receiver-streak-map-2026-11-23.md](research/issue-2201-live-receiver-streak-map-2026-11-23.md): 14 consecutive scheduled receiver runs Succeeded, fresh readings on the map, and the earlier failures logged no error class; the receiver now logs the class for unexpected failures.
+## [2026-11-23] add | Issue 149 law viewer reflow fix (Refs #149)
+
+* Added [issue-149-law-viewer-reflow-2026-11-23.md](research/issue-149-law-viewer-reflow-2026-11-23.md): provision text on the law viewer overflowed a 320 px viewport (scrollWidth 2772); a scoped `#law-out pre` wrap rule and regression test fix it. Both open epic criteria stay unproven and owner-gated.
