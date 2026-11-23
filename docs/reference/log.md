@@ -14720,3 +14720,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 462 resident showcase live check r6 (Refs #462)
 
 * Added [resident-showcase-live-r6-2026-11-23.md](research/resident-showcase-live-r6-2026-11-23.md): 36-check Playwright rerun against revisions API 0000054 and resident 0000026, per-criterion table; criterion 2 stays unproven. No source or estate change.
+## [2026-11-23] update | Issue 1837 live close-out (Refs #1837)
+
+* Added [issue-1837-live-demo-evidence-2026-11-23.md](research/issue-1837-live-demo-evidence-2026-11-23.md): main still carries the fix; revision 0000054 probes show JSON with CSRF header and field validation; unit tests and axe journeys pass (nomination after two load-induced timeouts); live write and independent review remain unproven or owner-gated.
