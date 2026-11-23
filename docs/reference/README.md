@@ -727,6 +727,8 @@ The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records rea
 
 The [live re-check note](./research/issue-184-live-recheck-2026-11-23.md) re-proves the three criteria for the demo (sub-issues closed, rejection tests, 0 secret patterns in 260,243 live log rows) and states live message-body secret absence as unproven (#184).
 
+The [body-read attempt](./research/issue-184-live-bodyread-2026-11-23.md) shows the Event Hubs namespace is network-private (public access disabled), so live message-body secret absence stays unproven for the demo (#184).
+
 The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-11-23.md) records the 2026-11-23 read only Hub to receiver to employee map walkthrough on revision 0000054 (fresh reading 79 s old, per message SQL hop inferred, resident view stored only) (#2118).
 
 The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026-11-22.md) records a desktop Playwright check of 2255, 2253, 2254, 2256 and the map on revisions 0000051 and 0000023 (passes), and shows generative AI answers still blocked by an open suspension and the resident ledger expiry, with screenshots and a per-item table.
@@ -1655,6 +1657,7 @@ or infra acceptance claimed.
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
 | [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
+| [Issue 2304 assistants forecast did not answer on live data (#2304)](./research/issue-2304-forecast-live-2026-11-23.md) | Live 200 s hang reproduced, statement-count profile, bulk-read fix with a 10 s named state; live re-check blocked by the private registry; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
 | [Issue 2205 live Quality scope proof (#2205)](./research/issue-2205-live-2026-11-22.md) | Effective five-home scope read back from the live registry on revision 0000045; operator-only trigger; model-call authority absent (OQ-017) |
 | [Epic 81 safety, consent and lifecycle audit with live form retest (#81)](./research/issue-81-epic-audit-live-2026-11-18.md) | Per-criterion table for the four epic criteria (two unproven), live retest showing form-encoded nomination submissions still return 400 on the deployed image (#1837), and the FULL-tier need for the fix; nothing ticked | 2026-11-18 |
@@ -1748,6 +1751,7 @@ or infra acceptance claimed.
 | [Resident Showcase HSTS Header and Live Recheck r8 (Issue #462)](./research/resident-showcase-live-r8-2026-11-23.md) | 36 live checks on revision 0000027, missing HSTS header fixed in source with tests (not redeployed), per-criterion table |
 | [Roster Scope for Entra Staff Re-proof (Issue #2164)](./research/issue-2164-roster-scope-recheck-2026-11-22.md) | Fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table |
 | [Staff identity.verified Audit (Issue #2164)](./research/issue-2164-staff-verified-audit-2026-11-23.md) | Audit of every identity.verified caller; sensor review draft gate now matches the bound roster row and refuses view-only; per-criterion table |
+| [Deployed Code Proof (Issue #2164)](./research/issue-2164-deployed-code-proof-2026-11-23.md) | Read-only marker grep shows the demo API carries the assistants roster-scope fix; sensor draft fix not yet deployed; per-criterion table |
 | [Resident Portal Documentation Integration Status (Issue #441)](./research/resident-portal-441-live-status-2026-11-18.md) | Live-demo assessment of the one unticked #441 criterion (FR-044/AC-084 owner disposition): evidence checked and why it stays unproven |
 | [Resident Demo Authority End Live Check (Issue #521)](./research/resident-demo-authority-live-521-2026-11-18.md) | Source tests, live app expiry setting `2028-01-01T00:00:00Z` and a Playwright sign-in on the deployed synthetic showcase, with a per-criterion table. Live SQL window unproven (private server). Refs #521. | 2026-11-18 |
 | [Resident Demo Authority End Live Check, Run 2 (Issue #521)](./research/resident-demo-authority-live-521-r2-2026-11-18.md) | Repeat with raw read-only `az` output retained, fresh Playwright sign-in and per-criterion table; SQL login refused (private-only), registry and activity log give no commit or apply time. Criterion 4 partly proven. Refs #521. | 2026-11-18 |

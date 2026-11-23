@@ -26,6 +26,7 @@ from zava_forward.core.assistants import (
     Assistants, Limits, MSSQL_DDL, PURPOSE, REGISTRY, RULES, VERSION, canonical, capture, digest, eligible,
 )
 from zava_forward.api.server import App, make_handler
+from zava_forward.core.forecast_reads import ForecastTimeout
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError
 
@@ -338,6 +339,61 @@ class QualityDemoScope(Base):
         service.execute(tid)
         self.assertEqual(self.provider.calls, 1)
         self.assertEqual(self.row(service, tid)["dispatch"]["trigger"], "requested")
+
+
+class ForecastStatements(Base):
+    """Issue #2304: the forecast once issued several statements per open case and never answered on live SQL."""
+
+    def counted(self, extra):
+        data = json.loads(self.seed.read_text())
+        template = data["cases"][0]
+        for i in range(extra):
+            clone = copy.deepcopy(template)
+            clone["id"] = f"ZF-BULK-{i}"
+            data["cases"].append(clone)
+        root = Path(tempfile.mkdtemp(prefix="forecast-count-"))
+        self.addCleanup(shutil.rmtree, root, ignore_errors=True)
+        seed = root / "seed.json"
+        seed.write_text(json.dumps(data))
+        store = SqlStore(str(seed), str(root / "cases.sqlite"))
+        store.ai = self.provider
+        service = Assistants(store, config())
+        self.addCleanup(store.db.close)
+        self.addCleanup(service.stop)
+        release_support.install(store)
+        seen = []
+        real = store.assistant_connection
+
+        class Counting:
+            def __init__(self, db):
+                self.db = db
+
+            def execute(self, *args):
+                seen.append(args[0])
+                return self.db.execute(*args)
+
+            def __getattr__(self, name):
+                return getattr(self.db, name)
+
+        store.assistant_connection = lambda: Counting(real())
+        return service, seen
+
+    def test_statement_count_does_not_grow_with_open_cases(self):
+        small_service, small = self.counted(0)
+        large_service, large = self.counted(40)
+        a = small_service.forecast(self.pm)
+        b = large_service.forecast(self.pm)
+        open_small = {x["id"]: x["open_cases_in_scope"] for x in a["assistants"]}
+        open_large = {x["id"]: x["open_cases_in_scope"] for x in b["assistants"]}
+        for cap, count in open_small.items():
+            self.assertEqual(open_large[cap], count + 40, cap)
+        self.assertGreater(b["max_calls_this_period"], a["max_calls_this_period"])
+        self.assertEqual(len(large), len(small), "statements must not scale with open cases")
+
+    def test_forecast_names_an_unavailable_state_when_the_budget_is_spent(self):
+        with patch.object(Assistants, "FORECAST_BUDGET_SECONDS", -1.0):
+            with self.assertRaises(ForecastTimeout):
+                self.service.forecast(self.pm)
 
 
 class WorkerFailureReporting(unittest.TestCase):
