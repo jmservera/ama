@@ -15040,3 +15040,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 350 criterion 1 re-probe and Easy Auth guard (Refs #350)
 
 * Added [issue-350-live-r8-2026-11-23.md](research/issue-350-live-r8-2026-11-23.md): live probe still shows 302 for browser-style API requests; added an infra test forbidding any `/api` Easy Auth exemption. No `src/` change.
+
+## [2026-11-23] add | Resident showcase r9, Server header fix (Refs #462)
+
+* Added [resident-showcase-live-r9-2026-11-23.md](research/resident-showcase-live-r9-2026-11-23.md): 36 live checks on revision 0000028; the resident demo no longer sends the Python version in `Server` (regression test); live effect and HSTS await a redeploy.
