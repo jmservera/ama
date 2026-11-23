@@ -235,6 +235,20 @@ class AiEvalTests(unittest.TestCase):
         self.assertEqual(bad["status"], "incomplete")
         self.assertIn("version", bad["missing"][0])
 
+    def test_serving_region_record_matches_infra_model_pins(self):
+        import re
+        root = Path(__file__).resolve().parents[3]
+        record = json.loads((root / "docs/reference/research/issue-108-live-r4-2026-11-19/serving_region_record.json").read_text())
+        recorded = {(d["model"], d["version"]) for d in record["deployments"]}
+
+        def pin(path, name_param, version_param):
+            text = (root / path).read_text()
+            return tuple(re.search(rf"param {p} string = '([^']+)'", text).group(1) for p in (name_param, version_param))
+
+        for pair in (pin("infra/main.bicep", "chatModelName", "chatModelVersion"),
+                     pin("infra/resident-assistant.bicep", "modelName", "modelVersion")):
+            self.assertIn(pair, recorded)
+
     def test_gate_keeps_region_open_item_until_headroom_is_confirmed(self):
         record = json.loads((Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-r4-2026-11-19/serving_region_record.json").read_text())
         ev = ai_eval.run_eval(serving_region=record)["evidence"]
