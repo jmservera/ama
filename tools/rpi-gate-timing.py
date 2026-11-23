@@ -146,6 +146,7 @@ def repeated_commands(commands: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def analyse(receipt: dict[str, Any], log: Path | None, gap: float) -> dict[str, Any]:
     commands = commands_of(receipt)
+    retries = receipt.get("retries") or []
     origin = min(c["start"] for c in commands)
     finish = max(c["end"] for c in commands)
     groups: dict[str, dict[str, Any]] = {}
@@ -172,6 +173,8 @@ def analyse(receipt: dict[str, Any], log: Path | None, gap: float) -> dict[str, 
         "jobs": receipt["jobs"],
         "image_cache": receipt["image_cache"],
         "commands": len(commands),
+        "retries": len(retries),
+        "retried_groups": sorted({str(row.get("group")) for row in retries}),
         "span_seconds": round(finish - origin, 1),
         "summed_command_seconds": round(total, 1),
         "setup_command_seconds": round(setup, 1),
@@ -437,6 +440,7 @@ def compare(args: argparse.Namespace) -> dict[str, Any]:
         report[arm] = {
             "receipts": [str(p) for p in paths],
             "spans": spans,
+            "retries": sum(a["retries"] for a in analyses),
             "span_median": statistics.median(spans),
             "span_min": min(spans),
             "span_max": max(spans),
@@ -456,14 +460,14 @@ def render_markdown(report: dict[str, Any]) -> str:
         lines += [f"* {reason}" for reason in report["reasons"]]
         return "\n".join(lines)
     lines += [
-        "| Arm | Receipts | Span median (s) | Min (s) | Max (s) |",
-        "| --- | --- | --- | --- | --- |",
+        "| Arm | Receipts | Span median (s) | Min (s) | Max (s) | Retries |",
+        "| --- | --- | --- | --- | --- | --- |",
     ]
     for arm in ("before", "after"):
         item = report[arm]
         lines.append(
             f"| {arm} | {len(item['receipts'])} | {item['span_median']} | "
-            f"{item['span_min']} | {item['span_max']} |"
+            f"{item['span_min']} | {item['span_max']} | {item['retries']} |"
         )
     lines += [
         "",

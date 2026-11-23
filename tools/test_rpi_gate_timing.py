@@ -206,6 +206,19 @@ class CompareTests(unittest.TestCase):
         self.assertEqual(report["after"]["span_median"], 80)
         self.assertEqual(report["span_median_delta"], -30)
 
+    def test_retried_shards_are_visible_in_report_and_compare(self) -> None:
+        retry = {"group": "api-shard-2", "log": "l", "sha256": "0" * 64, "exit_code": 1, "argv": []}
+        clean = write_receipt(self.root / "clean", CHAIN)
+        self.assertEqual(json.loads(run("report", str(clean))[1])["retries"], 0)
+        retried = write_receipt(self.root / "retried", CHAIN, retries=[retry, retry])
+        report = json.loads(run("report", str(retried))[1])
+        self.assertEqual((report["retries"], report["retried_groups"]), (2, ["api-shard-2"]))
+        code, compared = self.compare(
+            self.arm("b2", [100, 120], retries=[retry]), self.arm("a2", [80, 90])
+        )
+        self.assertEqual(code, 0)
+        self.assertEqual((compared["before"]["retries"], compared["after"]["retries"]), (2, 0))
+
     def test_markdown_renders_a_table_or_the_refusal_reasons(self) -> None:
         def markdown(before: Any, after: Any) -> tuple[int, str]:
             code, out, _ = run(
@@ -222,8 +235,8 @@ class CompareTests(unittest.TestCase):
 
         code, out = markdown(self.arm("b", [100, 120]), self.arm("a", [80, 90]))
         self.assertEqual(code, 0)
-        self.assertIn("| before | 2 | 110.0 | 100.0 | 120.0 |", out)
-        self.assertIn("| after | 2 | 85.0 | 80.0 | 90.0 |", out)
+        self.assertIn("| before | 2 | 110.0 | 100.0 | 120.0 | 0 |", out)
+        self.assertIn("| after | 2 | 85.0 | 80.0 | 90.0 | 0 |", out)
         self.assertIn("delta (after minus before): -25.0 s", out)
         code, out = markdown(self.arm("b", [100]), self.arm("a", [80, 90]))
         self.assertEqual(code, 3)

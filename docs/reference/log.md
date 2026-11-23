@@ -15113,3 +15113,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Epic 113 production-claim guard (Refs #113)
 
 * Added [issue-113-production-claim-guard-2026-11-23.md](research/issue-113-production-claim-guard-2026-11-23.md): a test-only guard against unqualified production claims in shipped source; criteria 1 and 2 stay owner-gated.
+## [2026-11-23] add | Issue 2188 retries in the gate timing report (Refs #2188)
+
+* Added [issue-2188-live-timing-retries-2026-11-23.md](research/issue-2188-live-timing-retries-2026-11-23.md): `rpi-gate-timing.py` now reports receipt retries per receipt and per arm, with a regression test. Wall-time pair still unproven.
