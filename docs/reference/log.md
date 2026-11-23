@@ -15271,3 +15271,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 1204 tick-log closure-progress rule (Refs #1204)
 
 * Added [issue-1204-live-r2-2026-11-23.md](research/issue-1204-live-r2-2026-11-23.md): `tools/check-tick-log.py` flags missing closure-review progress when capacity is free and reads the extended `tick_log` columns; 13 tests pass.
+## [2026-11-23] add | Issue 440 live criteria verdict (Refs #440)
+
+* Added [issue-440-live-criteria-verdict-2026-11-23.md](research/issue-440-live-criteria-verdict-2026-11-23.md): live Playwright and local re-observation at head 6815bc595d, the legacy-reference guard defect from #2329 fixed by allowlisting its regression-guard test file, criterion 7 proven except owner approval, criterion 8 unproven. No src change, no Azure change.
