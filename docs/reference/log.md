@@ -14833,3 +14833,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2137 R1 to R3 gate evidence (Refs #2137)
 
 * Added [issue-2137-live-2026-11-23.md](research/issue-2137-live-2026-11-23.md): the code guard that refuses a sourced threshold without R1 to R3 references is re-tested; R1 source review, R2 sign-off and R3 agreed limits remain unproven and owner-gated. No source change.
+
+## [2026-11-23] update | Issue 2135 remaining criterion is owner-gated (Refs #2135)
+
+* Added [issue-2135-live-owner-gated-2026-11-23.md](research/issue-2135-live-owner-gated-2026-11-23.md): the single criterion (atlas owner confirms the bundle to opportunity mapping) stays unproven for the demo because it is a named human decision; no source change.
