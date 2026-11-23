@@ -1,0 +1,3 @@
+.github/rubric/scripts/test_prepare.py:335: retired path without archive tag v0.21.0
+references: 1 violation(s); links: 0 violation(s) in 1 document(s)
+exit=1

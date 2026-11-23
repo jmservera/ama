@@ -15264,3 +15264,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 1830 live r10, malformed receipt refusal (Refs #1830)
 
 * Added [issue-1830-live-r10-2026-11-23.md](research/issue-1830-live-r10-2026-11-23.md): `tools/rpi-gate-timing.py` refuses malformed receipt command data with exit 2, with two regression tests. No gate, runner or live Azure change.
+## [2026-11-23] add | Issue 203 sixth live run (Refs #203)
+
+* Added [issue-203-live-20261123-2026-11-23](research/issue-203-live-20261123-2026-11-23.md): checker regression from #2329 fixed by listing the rubric guard test in `GUARD_FILES`; criterion 5 still partly proven. Index row added.

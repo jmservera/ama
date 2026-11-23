@@ -54,6 +54,7 @@ GUARD_FILES = (
     ".github/workflows/mvp-validation.yml",
     ".github/workflows/src-ci.yml",
     ".github/rubric/scripts/test_safe_output_runtime.py",
+    ".github/rubric/scripts/test_prepare.py",
     "docs/architecture/update-architecture.mjs",
 )
 
