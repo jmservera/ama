@@ -15203,3 +15203,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 350 live pass 9 (Refs #350)
 
 * Added [issue-350-live-r9-2026-11-23.md](research/issue-350-live-r9-2026-11-23.md) with raw evidence: per-criterion table, no box ticked, and a GET `/api/assistants` fix so a SQL write-lock timeout answers 503 with `Retry-After` and logs its cause
+## [2026-11-23] update | Issue 2310 anonymous PUT, PATCH and DELETE on protected API return 401 (Refs #2310)
+
+* Extended [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application answered 501 to anonymous PUT, PATCH and DELETE on `/api/` paths; it now answers 401 with a regression test. Live edge 302 stays an owner decision.

@@ -911,6 +911,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
         def do_HEAD(self):
             self.do_GET()
 
+        def _unsupported_method(self):
+            if urlparse(self.path).path.startswith("/api/") and not self._user():
+                return self._json(401, {"error": "Please sign in."})
+            return self.send_error(501, f"Unsupported method ({self.command!r})")
+
+        do_PUT = do_PATCH = do_DELETE = _unsupported_method
+
         def do_GET(self):
             url = urlparse(self.path)
             if url.path == "/healthz":
