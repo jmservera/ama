@@ -3442,6 +3442,21 @@ os.fstat(3)
             all(r["workflow_sha256"] == gate.WORKFLOW_HASHES["src-ci.yml"] for r in rows)
         )
 
+    def test_infra_image_build_workflow_is_in_matrix_and_classified(self) -> None:
+        self.assertIn("infra-image-build.yml", gate.WORKFLOWS)
+        rows = gate.Runner.coverage_rows(
+            {
+                "infra-image-build.yml": {
+                    "build": {"steps": [{"uses": "actions/checkout@x"}, {"name": "Build"}]}
+                }
+            }
+        )
+        self.assertEqual(len(rows), 2)
+        self.assertTrue(all(r["coverage"] for r in rows))
+        self.assertTrue(
+            all(r["workflow_sha256"] == gate.WORKFLOW_HASHES["infra-image-build.yml"] for r in rows)
+        )
+
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
         self.assertEqual(gate.SQL_SELECTORS[0], "test_mssqlstore")
