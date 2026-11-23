@@ -14903,3 +14903,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 1844 live r3 re-verification (Refs #1844)
 
 * Added [issue-1844-live-r3-2026-11-23.md](research/issue-1844-live-r3-2026-11-23.md): 436 harness passes with 0 skips on head 9dbfab6f56, live probe on API revision 0000055 shows 0 of 2 zoom controls covered at 320 and 390 px, and criterion 6 stays owner-gated. No source or estate change.
+## [2026-11-23] add | Issue 2254 map markers on screen (Refs #2254)
+
+* Added [issue-2254-map-markers-live-2026-11-23.md](research/issue-2254-map-markers-live-2026-11-23.md): tile 23, 23 of 443 markers titled Safety issue open, API map, cases and KPI all 23. No source or estate change.

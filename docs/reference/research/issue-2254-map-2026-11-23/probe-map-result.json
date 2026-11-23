@@ -1,0 +1,22 @@
+{
+ "role": "Retrofit Programme Manager",
+ "tile": "23\nSafety issues open\nSelect filter",
+ "map_info": [],
+ "markers_total": 443,
+ "markers_safety_title": 23,
+ "clusters": 0,
+ "cluster_titles": [],
+ "api_map_keys": [
+  "mode",
+  "total",
+  "shown",
+  "cap",
+  "bounds",
+  "items"
+ ],
+ "api_map_mode": "points",
+ "api_map_total": 443,
+ "api_map_item_hazards": 23,
+ "api_cases_hazard_total": 23,
+ "api_kpi_hazards": 23
+}
