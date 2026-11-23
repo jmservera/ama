@@ -14829,3 +14829,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Resident showcase criterion 2 hosted evidence r7 (Refs #462)
 
 * Added [resident-showcase-live-r7-2026-11-23.md](research/resident-showcase-live-r7-2026-11-23.md): read-only `gh` history of PR #455 shows one failed rubric run, bot-authored score commits and later runs on changed head SHAs; criterion 2 proven for the demo apart from the local-preview clause. No source or Azure change.
+
+## [2026-11-23] update | Issue 2137 R1 to R3 gate evidence (Refs #2137)
+
+* Added [issue-2137-live-2026-11-23.md](research/issue-2137-live-2026-11-23.md): the code guard that refuses a sourced threshold without R1 to R3 references is re-tested; R1 source review, R2 sign-off and R3 agreed limits remain unproven and owner-gated. No source change.
