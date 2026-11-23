@@ -354,6 +354,33 @@
       "personal_data": "none; wholly fictional paired scenarios, agent-authored proposals, not approved labels or fairness evidence"
     },
     {
+      "id": "DS-FROZEN-EVAL-HARNESS",
+      "name": "Frozen evaluation harness synthetic manifest and predictions (offline, unapproved thresholds)",
+      "visibility": "public",
+      "location": "src/agents/evals/",
+      "files_glob": "synthetic-eval-*.json",
+      "validation": {
+        "marker_field": "version",
+        "exemption": "Constructed example containers named synthetic in their version field; all text remains pattern-scanned."
+      },
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; constructed held-out case identifiers and scripted predictions, no approved thresholds"
+    },
+    {
+      "id": "DS-FROZEN-EVAL-SCHEMA",
+      "name": "Frozen evaluation manifest JSON schema",
+      "visibility": "public",
+      "location": "src/agents/evals/eval-manifest.schema.json",
+      "validation": {
+        "marker_field": "description",
+        "exemption": "Schema document, not records; its description declares the synthetic scope."
+      },
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; structure only"
+    },
+    {
       "id": "DS-EVAL-REGISTRY",
       "name": "Evaluation dataset metadata registry",
       "visibility": "public",
