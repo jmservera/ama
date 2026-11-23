@@ -14820,3 +14820,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Ranking remaining criteria live comparison (Refs #2138)
 
 * Added [issue-2138-live-2026-11-23.md](research/issue-2138-live-2026-11-23.md): main and live compared, 170 targeted tests pass, live policy unsigned, no ranking job deployed, deployed orchestrator image lacks `ranking_publish`. Neither criterion is newly proven. No source change.
+## [2026-11-23] update | Resident AI chat live re-verification run 2 (Refs #2243)
+
+* Added [issue-2243-live-r2-2026-11-23.md](research/issue-2243-live-r2-2026-11-23.md): repeat desktop probe of resident revision 0000026 (both questions `usage_limit`), 70 targeted tests pass, per-criterion table; the model-backed answer stays owner-gated on the private SQL ledger. No source change.
