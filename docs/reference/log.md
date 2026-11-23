@@ -14980,3 +14980,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2310 anonymous API 401 evidence (Refs #2310)
 
 * Added [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application and its tests already return 401 for browser-style anonymous API requests; the deployed Easy Auth edge returns 302, left for an owner decision.
+
+## [2026-11-23] add | Issue 2311 per-task data contracts evidence (Refs #2311)
+
+* Added [issue-2311-task-contracts-2026-11-23.md](research/issue-2311-task-contracts-2026-11-23.md): a data contract for each of 13 AI tasks enforced in prompt rendering, proven by 8 focused tests; DPO and Legal approval is not claimed and stays under #121.

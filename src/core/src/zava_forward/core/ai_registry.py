@@ -10,7 +10,7 @@ is not registered gets no model call.
 import hashlib
 import json
 import os
-from . import ai_prompts, rai_release, ranking
+from . import ai_prompts, rai_release, ranking, task_contracts
 
 from .assistants import REGISTRY as ASSISTANTS, VERSION as ASSISTANT_VERSION
 
@@ -200,6 +200,11 @@ def missing_fields(entry):
 
 def get(task_id):
     return tasks().get(task_id)
+
+
+def data_contract(task_id):
+    """The task's data contract (permitted fields, prohibited content, rationale); None when unregistered."""
+    return task_contracts.get(task_id) if is_registered(task_id) else None
 
 
 def is_registered(task_id):
