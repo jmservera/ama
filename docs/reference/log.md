@@ -14922,3 +14922,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2257 live re-probe r2 on revision 0000055 (Refs #2257)
 
 * Added [issue-2257-live-r2-2026-11-23.md](research/issue-2257-live-r2-2026-11-23.md): 8 of 8 fresh sessions loaded 443 markers, reset recovery proven, two overlay failures logged while the map still returned 200. Lock cause inferred, not proven. No source or estate change.
+
+## [2026-11-23] add | Nomination test bootstrap isolation sixth re-run (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md): both orders in source, editable and noneditable layouts with identities observed; criterion 6 (full gate receipt) stays owner-gated. No source or test change.
