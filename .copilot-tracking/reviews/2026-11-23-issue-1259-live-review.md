@@ -1,6 +1,6 @@
 ---
-title: Review, issue 1259 live run 7
+title: Review, issue 1259 live run 8
 ms.date: 2026-11-23
 ---
 
-Executed once. Outcome: conformant for documentation scope. Evidence matches recorded command output; no secrets; per-criterion table states AC5 as unproven; no src change. Routed work: none for this task; AC5 process gates belong to the coordinator and owner.
+Executed once. Outcome: conformant for the test-only scope. Tests restore directory permissions, skip under root, reuse the existing check, and fail under mutation. No open findings. AC5 remains process-gated.

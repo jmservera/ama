@@ -594,6 +594,7 @@ A [fifth run](./research/issue-1258-live-r5-2026-11-19.md) records the per-crite
 A [sixth run](./research/issue-1258-live-r6-2026-11-21.md) adds a mutation check that shows the ancestor regression failing without the parent sync; criterion 5 stays unproven.
 An [eighth run](./research/issue-1258-live-r8-2026-11-23.md) repeats the mutation check at head 342fad401d and confirms live revisions 0000054 and 0000026; criterion 5 stays unproven.
 A [ninth run](./research/issue-1258-1259-live-r9-2026-11-23.md) covers #1258 and #1259 at head 9dbfab6f56 with a mutation check for each fix; the process criteria stay unproven.
+A [tenth run](./research/issue-1258-live-r10-2026-11-23.md) adds a real-process race test for first publication into a missing nested archive; criterion 5 stays unproven.
 
 For #2116, the [drill criterion classification](./research/issue-2116-drill-criterion-demo-classification-2026-11-23.md) records the witnessed suspension drill as owner-gated and unproven for the demo.
 
@@ -1577,6 +1578,7 @@ or infra acceptance claimed.
 | [Issue 1259 archive path regressions, run 6 (#1259)](./research/2026-11-22-ranking-archive-unusable-1259-live-r6.md) | Seven failures before the fix and 110 passing tests on main 10cad2e413; mocked stat failure noted; hosted checks and independent assessment unproven | 2026-11-22 |
 | [Issue 1259 archive path regressions, run 7 (#1259)](./research/2026-11-23-ranking-archive-unusable-1259-live-r7.md) | Seven failures before the fix and 110 passing tests on main 342fad401d; live revisions 0000054 and 0000026 do not host the ranking runner; FULL receipt, hosted checks and independent assessment unproven |
 | [Issue 1259 archive path regressions, run 8 (#1259)](./research/2026-11-23-ranking-archive-unusable-1259-live-r8.md) | Real mode-0 parent regression fails before the fix and 111 tests pass; FULL receipt, hosted checks and independent assessment unproven |
+| [Issue 1259 real-filesystem regressions, run 10 (#1259)](./research/2026-11-23-ranking-archive-unusable-1259-live-r10.md) | ENOTDIR, ELOOP and EACCES archive paths added to the runner tests; mutation red; FULL receipt, hosted checks and independent assessment unproven |
 | [Coordinator contract criteria (#1204)](./research/coordinator-contract-criteria-1204-live-2026-11-18.md) | Per-sub-claim proven or unproven record for the unticked liveness criterion: instruction text and guard tests proven on main, runtime liveness over all ticks unproven for the demo |
 | [Coordinator tick liveness, real window (#1204)](./research/coordinator-tick-log-real-window-1204-live-2026-11-19.md) | `tools/check-tick-log.py` on 216 real coordinator ticks: 0 violations; closure-batch and approval sub-claims unproven because the schema lacks those fields |
 | [Issue 1204 criteria re-verification (2026-11-23)](./research/issue-1204-live-2026-11-23.md) | Main 461ac3e804 and live revisions 0000054 and 0000026 checked; 11 checker tests pass; criterion 2 stays unproven until a real window uses the new tick fields |
@@ -2255,3 +2257,5 @@ A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md
 The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records the second live probe on revision 0000025, the diagnosable ledger refusal states added to the resident AI path and a per-criterion table.
 
 The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.
+
+The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.

@@ -698,8 +698,43 @@ class UnusableArchivePathTests(RunnerBase):
         self.enterContext(patch("os.stat", failing))
         return self.archive
 
+    def ancestor_regular_file(self) -> Path:
+        (self.root / "file").write_text("not a folder")
+        self.archive = self.root / "file" / "archive"
+        return self.root / "file"
+
+    def symlink_loop(self) -> Path:
+        os.symlink(self.root / "loop_b", self.root / "loop_a")
+        os.symlink(self.root / "loop_a", self.root / "loop_b")
+        self.archive = self.root / "loop_a"
+        return self.archive
+
+    def symlink_loop_ancestor(self) -> Path:
+        self.symlink_loop()
+        self.archive = self.root / "loop_a" / "archive"
+        return self.root / "loop_a"
+
+    def unsearchable_parent(self) -> Path:
+        if os.geteuid() == 0:
+            self.skipTest("root bypasses directory permissions")
+        locked = self.root / "locked"
+        locked.mkdir()
+        locked.chmod(0)
+        self.addCleanup(locked.chmod, 0o700)
+        self.archive = locked / "archive"
+        return locked
+
     def scenarios(self) -> list[Any]:
-        return [self.regular_file, self.dangling_link, self.dangling_ancestor, self.stat_failure]
+        return [
+            self.regular_file,
+            self.dangling_link,
+            self.dangling_ancestor,
+            self.stat_failure,
+            self.ancestor_regular_file,
+            self.symlink_loop,
+            self.symlink_loop_ancestor,
+            self.unsearchable_parent,
+        ]
 
     def check_unknown(self, make: Any) -> None:
         sentinel = make()

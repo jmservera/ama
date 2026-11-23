@@ -15002,3 +15002,17 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2164 deployed code proof (Refs #2164)
 
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
+
+## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
+
+* Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.
+
+## [2026-11-23] add | Issue 1259 real-filesystem archive path regressions (Refs #1259)
+
+* Added [2026-11-23-ranking-archive-unusable-1259-live-r10.md](research/2026-11-23-ranking-archive-unusable-1259-live-r10.md): regular-file ancestor, symlink loop and unsearchable-parent scenarios in the runner tests; mutation proves they fail without the guard.
+## [2026-11-23] add | Issue 2255 live re-check, run 4 (Refs #2255)
+
+* Added [issue-2255-live-r4-2026-11-23.md](research/issue-2255-live-r4-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with a target (17 overdue, 5 open, 0 unknown) on revision 0000055; re-seed survival stays owner-gated. No source or estate change.
+## [2026-11-23] add | Issue 2256 live verification after the handoff seed (Refs #2256)
+
+* Added [issue-2256-live-2026-11-23d.md](research/issue-2256-live-2026-11-23d.md): on API revision 0000055 the waiting screen lists all 4 seeded handoffs with due time and chase owner, and the case card agrees; criteria A, B1, B2 and C are proven for the demo and no view code change was needed.
