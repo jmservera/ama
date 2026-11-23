@@ -15206,3 +15206,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 220 guard key normalisation (Refs #220)
 
 * Added [issue-220-live-r12-key-normalisation-2026-11-23.md](research/issue-220-live-r12-key-normalisation-2026-11-23.md): the adverse-field guard now rejects case, spacing and hyphen variants of forbidden keys; regression test added; not deployed to the live demo.
+## [2026-11-23] update | Issue 2310 regression test for anonymous API 401 (Refs #2310)
+
+* Updated [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md) and added a wider anonymous-API regression test to `src/api/tests/test_auth.py`; no source or estate change.
