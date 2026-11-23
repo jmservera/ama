@@ -14723,3 +14723,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1837 live close-out (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-23.md](research/issue-1837-live-demo-evidence-2026-11-23.md): main still carries the fix; revision 0000054 probes show JSON with CSRF header and field validation; unit tests and axe journeys pass (nomination after two load-induced timeouts); live write and independent review remain unproven or owner-gated.
+## [2026-11-23] update | Issue 1274 criteria re-verification run 3 (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-23.md](research/issue-1274-live-evidence-2026-11-23.md): actionlint 1.7.7 checksum verification and 12 and 129 regression tests repeated at main 342fad401d; AWF 0.28.23 and hosted CI on a new reviewed head remain unproven.
