@@ -15128,3 +15128,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 2254 stale support, long-wait and funding filter columns (Refs #2254)
 
 * Added [issue-2254-live-r5-2026-11-23.md](research/issue-2254-live-r5-2026-11-23.md): the SQL identity repair now rebuilds `support`, `days` and `fstatus` as well as `hazard`; the new regression test fails without it. Not deployed, so no live proof.
+## [2026-11-23] add | Issue 157 case scoping at thread creation (Refs #157)
+
+* Added [issue-157-case-scoping-2026-11-23.md](research/issue-157-case-scoping-2026-11-23.md): `ChatPrivacy.start_thread` did not apply the role's case visibility (only the API route did); fixed in source with a regression test. Both open epic criteria stay unproven.

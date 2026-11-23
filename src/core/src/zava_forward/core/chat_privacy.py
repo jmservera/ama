@@ -217,6 +217,10 @@ class ChatPrivacy:
 
     def start_thread(self, user: dict[str, Any], case_id: str = "", task: str = "") -> str:
         self._require()
+        if case_id and self.store.detail(case_id, user) is None:
+            from zava_forward.core.chatthreads import ChatNotFound
+
+            raise ChatNotFound("case")
         return str(self.store.chat_create_thread(user, case_id=case_id, task=task)["id"])
 
     def add_message(self, user: dict[str, Any], thread_id: str, role: str, content: str) -> list[str]:
