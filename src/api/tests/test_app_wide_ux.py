@@ -821,6 +821,24 @@ return {messages, first, mid, second};
         for outcome in ("first", "mid", "second"):
             self.assertEqual(out[outcome], [401, ended], "the thrown error is unchanged")
 
+    def test_a_non_json_gateway_failure_on_a_change_shows_the_generic_message(self) -> None:
+        out = run(
+            """
+const unreadable = async () => { throw new SyntaxError("Unexpected token <"); };
+const reply = (status, ok) => async () => ({status, ok, json: unreadable});
+const outcome = async (status, ok) => {
+  globalThis.fetch = reply(status, ok);
+  try { await api("/api/chat/threads/T/ask", {content: "q"}); } catch (error) {
+    return [error.status, error.message, error.generic === true];
+  }
+};
+return {gateway: await outcome(504, false), okButUnreadable: await outcome(200, true)};
+""",
+            api_stubs(),
+        )
+        self.assertEqual(out["gateway"], [504, "change", True])
+        self.assertEqual(out["okButUnreadable"][1], "Unexpected token <")
+
     def test_signing_in_marks_that_a_session_existed(self) -> None:
         start = shipped("start")
         self.assertIn("signedInBefore = true;", start)

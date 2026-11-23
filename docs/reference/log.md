@@ -15144,3 +15144,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2244 law store read-only start-up check (Refs #2244)
 
 * Added [issue-2244-live-r4-2026-11-23.md](research/issue-2244-live-r4-2026-11-23.md): `lawstore.MssqlDb` skips the SQL write lock when its schema is current; regression tests added; not deployed.
+## [2026-11-23] add | Issue 2245 browser gateway error handling (Refs #2245)
+
+* Added [issue-2245-browser-gateway-error-2026-11-23.md](research/issue-2245-browser-gateway-error-2026-11-23.md): a non-JSON ingress failure on a change request now shows the plain generic message instead of a parser error; regression test added. No live change.
