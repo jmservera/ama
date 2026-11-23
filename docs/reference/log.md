@@ -14732,3 +14732,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 350 live pass 6 (Refs #350)
 
 * Added [issue-350-live-r6-2026-11-23.md](research/issue-350-live-r6-2026-11-23.md): sixth read-only live re-measurement of the ten unticked criteria on revisions 0000054 and 0000026. Behaviour unchanged; the audit job log shows `LEDGER_DIGEST_OK` over 4 digests, explaining `digests_checked` 0 on the API. Criteria 1 (live edge), 6 and 10 unproven, 9 proven for the demo, the rest partly proven. No source or estate change.
+## [2026-11-23] update | Issue 435 live pass 6 (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-23.md](research/capstone-pitch-435-live-2026-11-23.md): criteria 1 and 4 proven for the demo, criterion 2 unproven (mentor statement needed); main 342fad401d, live revisions 0000054 and 0000026 healthy, 56 held-out batch adapter tests pass. No source, deck or estate change.
