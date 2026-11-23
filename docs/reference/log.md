@@ -14811,3 +14811,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2118 live Hub to SQL to map walkthrough (Refs #2118)
 
 * Added [issue-2118-live-iot-map-walkthrough-2026-11-23.md](research/issue-2118-live-iot-map-walkthrough-2026-11-23.md): read only hop-by-hop walkthrough ending in a fresh employee map reading, with the per message SQL hop and the resident live view marked unproven. No source change.
+## [2026-11-23] update | Issue 2121 live recheck on revision 0000054 (Refs #2121)
+
+* Added [issue-2121-live-2026-11-23.md](research/issue-2121-live-2026-11-23.md): direct HTTPS, anonymous denial, browser sign-in, role and persistence proven again; AI call unproven because of an AI suspension; c and e owner-gated. No source change.
