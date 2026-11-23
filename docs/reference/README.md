@@ -717,6 +717,8 @@ The [twelfth audit](./research/issue-1288-live-r12-quality-sensor-evidence-2026-
 
 The [thirteenth audit](./research/issue-1288-live-r13-quality-sensor-evidence-2026-11-23.md) closes a code gap: physically impossible retained readings now carry an `implausible_readings` marker into the Quality model snapshot and block the proactive request and the autonomous flag. Criteria 4 and 8 stay unproven.
 
+The [fourteenth audit](./research/issue-1288-live-r14-quality-sensor-evidence-2026-11-23.md) downgrades an autonomous flag when a cited reading is corrected to an impossible value after capture. Criteria 4 and 8 stay unproven.
+
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
@@ -1751,6 +1753,7 @@ or infra acceptance claimed.
 | [Provider boundary string-size gap, round 9 (#116)](./research/issue-116-live-r9-evidence-2026-11-23.md) | A protection hold masked the size refusal for string input; the shared allowlist now bounds it, with tests. |
 | [Provider boundary image data gap, round 10 (#116)](./research/issue-116-live-r10-evidence-2026-11-23.md) | Free text could pass as image data at the shared allowlist; strict base64 now refuses it, with tests. |
 | [Provider boundary unencodable text, round 11 (#116)](./research/issue-116-live-r11-evidence-2026-11-23.md) | Lone-surrogate text raised an unlabelled error at the shared allowlist; it is now refused as an input refusal, with tests. |
+| [Provider boundary aggregate image size, round 12 (#116)](./research/issue-116-live-r12-evidence-2026-11-23.md) | Many under-cap images passed the shared allowlist with unbounded total size; the decoded total is now capped, with tests. |
 | [Data protection, retention and rights live demo evidence (#121)](./research/issue-121-live-data-protection-evidence-2026-11-18.md) | Per-criterion demo record for the eight unticked criteria: live register, model location and retention settings read; deployed register older than source; approvals deferred to #1906 to #1908 |
 | [Data protection criteria re-observation (#121, 2026-11-19)](./research/issue-121-live-20261119-2026-11-19.md) | Re-check of the six unticked criteria: no source gap; deployed image still predates the register fields; owners and approvals production-only |
 | [Data protection criteria live re-check (#121, 2026-11-22)](./research/issue-121-live-recheck-2026-11-22.md) | Re-check of the six unticked criteria on revision 0000053: deployed-parity gap closed, live document hold and unknown-task refusal shown, criteria 4 and owners production-only |

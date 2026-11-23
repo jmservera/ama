@@ -214,6 +214,23 @@ class Grounding(qs.Seed, ta.ApiTests):
         self.assertEqual((flag["status"], flag["autonomous"]), ("implausible-readings", False))
         self.assertIn("outside the possible range", flag["effect"])
 
+    def test_cited_reading_corrected_to_impossible_after_capture_downgrades_the_flag(self) -> None:
+        self.ready()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        self.assertTrue(self.service.execute(tid))
+        before = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual((before["status"], before["autonomous"]), ("review-suggested", True))
+        cited = before["readings"][0]["reading_id"]
+        with self.service.transaction() as db:
+            db.execute(
+                "UPDATE sensor_reading SET humidity_pct='250.0' WHERE reading_id=?", (cited,)
+            )
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual((flag["status"], flag["autonomous"]), ("implausible-readings", False))
+        self.assertEqual(flag["implausible_readings"][0]["citation_key"], before["cited_ids"][0])
+        self.assertIn("outside the possible range", flag["effect"])
+
     def test_quality_review_flag_carries_cited_values_and_generative_origin(self) -> None:
         self.ready()
         self.service.scan()
