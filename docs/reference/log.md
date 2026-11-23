@@ -15093,3 +15093,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2314 round 2 saved query contract (Refs #2314)
 
 * Added [issue-2314-alerts-runbooks-r2-2026-11-23.md](research/issue-2314-alerts-runbooks-r2-2026-11-23.md): infra test ties the saved query to the emitted AI_USAGE line; saved search confirmed not deployed. No Azure change.
+
+## [2026-11-23] update | Issue 1830 queue-wait reporting (Refs #1830)
+
+* Added [issue-1830-live-r9-2026-11-23.md](research/issue-1830-live-r9-2026-11-23.md): `rpi-gate-timing.py report --log` reports an unmeasured queue wait as null and refuses malformed or reversed lock lines, with two tests.

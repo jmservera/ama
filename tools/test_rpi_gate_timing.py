@@ -135,6 +135,27 @@ class ReportTests(unittest.TestCase):
             self.assertEqual(code, 2)
             self.assertIn("REFUSED", err)
 
+    def test_log_without_a_lock_line_reports_queue_wait_as_unmeasured(self) -> None:
+        path = write_receipt(self.root / "a", [("g", 0, 10)])
+        log = self.root / "run.log"
+        log.write_text("jobs=2\n")
+        report = json.loads(run("report", str(path), "--log", str(log))[1])
+        self.assertIsNone(report["queue_wait_seconds"])
+        self.assertIn("queue_wait_unavailable", report)
+        self.assertNotIn("lock_to_seal_seconds", report)
+
+    def test_malformed_or_negative_lock_line_is_refused(self) -> None:
+        path = write_receipt(self.root / "a", [("g", 0, 10)])
+        log = self.root / "run.log"
+        for line in (
+            "Lock queued not-a-time; acquired also-not; jobs=2",
+            f"Lock queued {stamp(-2)}; acquired {stamp(-5)}; jobs=2",
+        ):
+            log.write_text(line + "\n")
+            code, _out, err = run("report", str(path), "--log", str(log))
+            self.assertEqual(code, 2)
+            self.assertIn("REFUSED", err)
+
     def test_setup_commands_are_separated_by_exact_tokens(self) -> None:
         self.assertTrue(timing.is_setup(["python", "-m", "pip", "install"]))
         self.assertTrue(timing.is_setup(["docker", "build", "x"]))
