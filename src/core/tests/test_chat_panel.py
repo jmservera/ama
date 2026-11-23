@@ -23,6 +23,7 @@ from zava_forward.core.chat_panel import (
     MAX_QUESTION_CHARS,
     WITHHELD,
     ChatPanel,
+    ChatTurnNotStored,
     ModelUnavailable,
     normalise_policy_text,
     out_of_scope,
@@ -252,6 +253,39 @@ class StoredQuestionTests(unittest.TestCase):
 
         self.panel = ChatPanel(iso, model)
         self.tid = self.store.chat_create_thread(self.user)["id"]
+
+    def busy_error(self) -> Exception:
+        error: Exception = type(
+            "ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"}
+        )("[SQL Server]could not take the write lock")
+        return error
+
+    def test_busy_lock_before_question_is_stored_is_marked_retry_safe_even_if_audit_fails(
+        self,
+    ) -> None:
+        busy = self.busy_error()
+        with (
+            patch.object(self.store, "chat_resume", side_effect=busy),
+            patch.object(self.store, "audit", side_effect=busy),
+            self.assertRaises(ChatTurnNotStored),
+        ):
+            self.panel.ask(self.user, self.tid, "why is this case blocked?", skill="general")
+
+    def test_busy_lock_after_question_is_stored_is_not_marked_retry_safe(self) -> None:
+        busy = self.busy_error()
+        real = self.store.chat_add_message
+
+        def assistant_fails(user: Any, tid: str, role: str, *a: Any, **k: Any) -> Any:
+            if role == "assistant":
+                raise busy
+            return real(user, tid, role, *a, **k)
+
+        with (
+            patch.object(self.store, "chat_add_message", assistant_fails),
+            self.assertRaises(Exception) as caught,
+        ):
+            self.panel.ask(self.user, self.tid, "hello", skill="general")
+        self.assertIs(caught.exception, busy)
 
     def ask(self, question: str) -> str:
         self.panel.ask(self.user, self.tid, question, skill="general")

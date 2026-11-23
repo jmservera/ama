@@ -51,6 +51,7 @@ from zava_forward.core.chat_isolation import (
 from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
 from zava_forward.core.chat_routing import route_question
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
+from zava_forward.core.mssqlstore import is_write_lock_busy
 from zava_forward.core.regulatory_output_guard import GuardTelemetry, inspect_regulatory_output
 
 LABEL = "AI suggestion, not approved"
@@ -571,6 +572,10 @@ def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | N
     return answer, kept
 
 
+class ChatTurnNotStored(RuntimeError):
+    """A busy SQL write lock stopped a turn before its question was stored; retry is safe."""
+
+
 class ChatPanel:
     def __init__(
         self,
@@ -726,11 +731,21 @@ class ChatPanel:
         except (PermissionError, LookupError):
             receipt["outcome"] = "access-rejected"
             raise
+        except Exception as error:
+            if not receipt.get("question_stored") and is_write_lock_busy(error):
+                raise ChatTurnNotStored("Chat turn not stored.") from error
+            raise
         finally:
-            with self.iso.store.lock:
-                self.iso.store.audit(
-                    user_key(user), "chat.turn", "", json.dumps(receipt, sort_keys=True)
-                )
+            stored = receipt.pop("question_stored", False)
+            try:
+                with self.iso.store.lock:
+                    self.iso.store.audit(
+                        user_key(user), "chat.turn", "", json.dumps(receipt, sort_keys=True)
+                    )
+            except Exception as audit_error:
+                if not stored and is_write_lock_busy(audit_error):
+                    raise ChatTurnNotStored("Chat turn not stored.") from audit_error
+                raise
 
     def ask_unstored(
         self, user: dict[str, Any], case_id: str, question: object, *, skill: object = None
@@ -834,6 +849,7 @@ class ChatPanel:
             current_thread = store.chat_resume(user, tid)
             prior_turns = sum(1 for m in current_thread["messages"] if m["role"] == "user")
             question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
+            receipt["question_stored"] = True
         receipt["thread_turns_used"] = min(prior_turns + 1, limits["turns_per_thread"])
         over_limit = limits["calls_per_request"] < 1 or prior_turns >= limits["turns_per_thread"]
 
