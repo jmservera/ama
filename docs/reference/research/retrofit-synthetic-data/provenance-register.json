@@ -301,6 +301,33 @@
       "personal_data": "Scripted questions, replies, citations and expected outcomes; not real conversations."
     },
     {
+      "id": "DS-EVAL-HARNESS-FIXTURES",
+      "name": "Frozen evaluation harness synthetic manifest and scripted predictions (#2312)",
+      "visibility": "public",
+      "location": "src/agents/evals/",
+      "files_glob": "synthetic-eval-*.json",
+      "validation": {
+        "marker_field": "version",
+        "exemption": "Constructed manifest and prediction containers; the version names them synthetic and all text remains pattern-scanned."
+      },
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; constructed identifiers and scripted answers"
+    },
+    {
+      "id": "DS-EVAL-MANIFEST-SCHEMA",
+      "name": "Frozen evaluation manifest JSON schema (#2312)",
+      "visibility": "public",
+      "location": "src/agents/evals/eval-manifest.schema.json",
+      "validation": {
+        "marker_field": "$comment",
+        "exemption": "Schema only; carries no records, and its text is pattern-scanned."
+      },
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none"
+    },
+    {
       "id": "DS-REGULATORY-EVALS",
       "name": "Regulatory chat development cases and measured offline reports",
       "visibility": "public",
