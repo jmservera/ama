@@ -3,13 +3,15 @@
 The default action only maps each consenting stock home to one `SYN-` device ID and prints
 non-secret references. A live run needs a named credential owner and a Registry and
 CredentialStore: trusted code may inject them, or `--apply --hub-host` builds the keyless Hub
-adapters (SAS enrolment, Hub-generated keys discarded, in-memory references). The `cycle` action
+adapters (SAS enrolment, Hub-generated keys discarded, in-memory references, or Key Vault-backed
+durable references with `--vault-url`). The `cycle` action
 provisions then tears down in one process and reports the residual count. The report never
 prints credential material.
 """
 
 import argparse
 import json
+import re
 import sys
 from collections.abc import Callable, Sequence
 from pathlib import Path
@@ -25,6 +27,7 @@ CREDENTIAL_OWNER_ROLE = di.CREDENTIAL_OWNER_ROLE
 DEFAULT_CREDENTIAL_OWNER = CREDENTIAL_OWNER_ROLE
 teardown_simulated_identities = lp.teardown_simulated_identities
 deprovision_simulated_devices = lp.deprovision_simulated_devices
+_VAULT_URL = re.compile(r"https://[a-z0-9][a-z0-9-]{1,22}[a-z0-9]\.vault\.azure\.net/?")
 _PLACEHOLDERS = frozenset({"tbc", "tbd", "todo", "n/a", "na", "none", "unknown", "unassigned"})
 ACTIONS = ("provision", "teardown", "cycle")
 _CREDENTIALS = {
@@ -110,25 +113,39 @@ def run(
 
 
 def hub_adapters(
-    manifest: di.Manifest, hostname: str
+    manifest: di.Manifest, hostname: str, vault_url: str | None = None
 ) -> tuple[di.Registry, di.CredentialStore, Callable[[], None]]:
-    """Keyless Hub registry (SAS enrolment, Hub keys discarded) plus an in-memory reference vault.
+    """Keyless Hub registry (SAS enrolment, Hub keys discarded) plus a credential store.
 
-    Needs `azure-identity` and the `iothub` extra installed; neither is declared by this project.
+    The store is an in-memory reference vault, or with `vault_url` a Key Vault-backed durable
+    store that a later teardown process can recover. Needs `azure-identity` and the `iothub`
+    extra (and `keyvault` for a vault); `azure-identity` is not declared by this project.
     """
+    if vault_url is not None and not _VAULT_URL.fullmatch(vault_url):
+        raise ProvisionError("INVALID_VAULT_URL")
     try:
         from azure.identity import DefaultAzureCredential  # type: ignore[import-untyped]
     except ImportError:
         raise ProvisionError("ADAPTER_UNAVAILABLE") from None
+    credential = DefaultAzureCredential()
+    store: lp.SymmetricSasCredentialStore = lp.SymmetricSasCredentialStore()
+    if vault_url is not None:
+        try:
+            from azure.keyvault.secrets import SecretClient  # type: ignore[import-untyped]
+        except ImportError:
+            raise ProvisionError("ADAPTER_UNAVAILABLE") from None
+        store = lp.DurableSasCredentialStore(
+            lp.KeyVaultSecretBackend(SecretClient(vault_url, credential))
+        )
     spec = dra.EnrollmentSpec(
         manifest.run_id,
         tuple(dra.SasEnrollment(i.device_id) for i in manifest.identities),
     )
     try:
-        registry = dra.AzureIotHubRegistry(hostname, spec, credential=DefaultAzureCredential())
+        registry = dra.AzureIotHubRegistry(hostname, spec, credential=credential)
     except dra.RegistryError as error:
         raise ProvisionError(str(error)) from None
-    return registry, lp.SymmetricSasCredentialStore(), registry.close
+    return registry, store, registry.close
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -141,11 +158,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--action", choices=ACTIONS, default="provision")
     parser.add_argument("--apply", action="store_true", help="live run; refused without adapters")
     parser.add_argument("--hub-host", help="IoT Hub host name; with --apply uses the Hub registry")
+    parser.add_argument(
+        "--vault-url",
+        help="Key Vault URL for durable credential storage; needs --apply and --hub-host",
+    )
     args = parser.parse_args(argv)
     try:
+        if args.vault_url and not (args.apply and args.hub_host):
+            raise ProvisionError("VAULT_REQUIRES_HUB")
         manifest = build_manifest(args.register, args.homes, args.run_id, args.owner, args.seed)
         if args.apply and args.hub_host:
-            registry, store, close = hub_adapters(manifest, args.hub_host)
+            registry, store, close = (
+                hub_adapters(manifest, args.hub_host, args.vault_url)
+                if args.vault_url
+                else hub_adapters(manifest, args.hub_host)
+            )
             try:
                 body = run(manifest, args.action, True, registry, store)
                 body["residual_in_hub"] = len(registry.list_run(manifest.run_id))
@@ -157,12 +184,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         ProvisionError,
         di.DeviceIdentityError,
         dra.RegistryError,
+        lp.LiveProvisioningError,
         ValueError,
         OSError,
     ) as error:
         code = (
             str(error)
-            if isinstance(error, (ProvisionError, di.DeviceIdentityError, dra.RegistryError))
+            if isinstance(
+                error,
+                (
+                    ProvisionError,
+                    di.DeviceIdentityError,
+                    dra.RegistryError,
+                    lp.LiveProvisioningError,
+                ),
+            )
             else "INVALID_INPUT"
         )
         print(f"refused: {code}", file=sys.stderr)

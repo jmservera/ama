@@ -15200,3 +15200,54 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Legal, DPO and RAI approvals are deferred to production (#2337); no named Legal contact exists yet and the demo disclaimer stays as is.
 * Person-run assistive technology testing is deferred to production (#2338); who runs it is undecided and the demo carries no statement about it.
 * CI: unit tests are sharded and Trivy and SBOM moved to the manual workflow `src-supply-chain.yml` (#2335); the longest api test shard now takes about 7 minutes against about 28 for the old job.
+## [2026-11-23] add | Issue 350 live pass 9 (Refs #350)
+
+* Added [issue-350-live-r9-2026-11-23.md](research/issue-350-live-r9-2026-11-23.md) with raw evidence: per-criterion table, no box ticked, and a GET `/api/assistants` fix so a SQL write-lock timeout answers 503 with `Retry-After` and logs its cause
+## [2026-11-23] update | Issue 2310 anonymous PUT, PATCH and DELETE on protected API return 401 (Refs #2310)
+
+* Extended [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application answered 501 to anonymous PUT, PATCH and DELETE on `/api/` paths; it now answers 401 with a regression test. Live edge 302 stays an owner decision.
+## [2026-11-23] add | Issue 116 live round 11 provider boundary text (Refs #116)
+
+* Added [issue-116-live-r11-evidence-2026-11-23.md](research/issue-116-live-r11-evidence-2026-11-23.md): unencodable text now refused as `input-refused` at the shared allowlist, with a failing-then-passing test. Live payloads, independent review and hosted CI stay unproven.
+## [2026-11-23] add | Issue 2253 chart out-of-range clamp (Refs #2253)
+
+* Added [issue-2253-live-r7-2026-11-23.md](research/issue-2253-live-r7-2026-11-23.md): resident chart marks for out-of-range values are clamped into the plot area, with a node-run regression test. No estate change.
+## [2026-11-23] add | Epic 113 production-claim guard (Refs #113)
+
+* Added [issue-113-production-claim-guard-2026-11-23.md](research/issue-113-production-claim-guard-2026-11-23.md): a test-only guard against unqualified production claims in shipped source; criteria 1 and 2 stay owner-gated.
+## [2026-11-23] add | Issue 157 case scoping at thread creation (Refs #157)
+
+* Added [issue-157-case-scoping-2026-11-23.md](research/issue-157-case-scoping-2026-11-23.md): `ChatPrivacy.start_thread` did not apply the role's case visibility (only the API route did); fixed in source with a regression test. Both open epic criteria stay unproven.
+## [2026-11-23] add | Issue 123 handoff timezone regression tests and live re-check (Refs #123)
+
+* Added [issue-123-live-handoff-regression-2026-11-23.md](research/issue-123-live-handoff-regression-2026-11-23.md): the 2026-11-21 handoff queue failure no longer reproduces on the live demo, two tests now guard the timezone-less offered time shape, and both open #123 criteria stay unproven (owner acts).
+## [2026-11-23] add | Issue 149 law viewer reflow fix (Refs #149)
+
+* Added [issue-149-law-viewer-reflow-2026-11-23.md](research/issue-149-law-viewer-reflow-2026-11-23.md): provision text on the law viewer overflowed a 320 px viewport (scrollWidth 2772); a scoped `#law-out pre` wrap rule and regression test fix it. Both open epic criteria stay unproven and owner-gated.
+
+## [2026-11-23] add | Issue 121 assistant task contract enforcement (Refs #121)
+
+* Added [issue-121-assistant-contract-enforcement-2026-11-23.md](research/issue-121-assistant-contract-enforcement-2026-11-23.md): the declared data contract is enforced for the five assistant tasks before provider text is built; regression tests in core and agents; a telephone-pattern false positive on hexadecimal digests fixed. DPO and Legal approvals remain production-only.
+
+## [2026-11-23] add | Issue 114 ledger re-verification (Refs #114)
+
+* Added [issue-114-live-reverify-2026-11-23.md](research/issue-114-live-reverify-2026-11-23.md): read-only live probe of the demo ledger (intact, one year), reliance gate absent from the orchestrator image, one added test. No ticks changed.
+## [2026-11-23] add | Epic 93 criteria re-check and eval register fix (Refs #93)
+
+* Added [issue-93-criteria-recheck-live-2026-11-23.md](research/issue-93-criteria-recheck-live-2026-11-23.md): live read-only finance probe, three unregistered #2316 eval payloads that broke a finance form review pack test registered in the provenance register, per-criterion table; C1 stays unproven.
+## [2026-11-23] add | Issue 1837 CSRF header unit test (Refs #1837)
+
+* Added [issue-1837-csrf-header-test-2026-11-23.md](research/issue-1837-csrf-header-test-2026-11-23.md): a repeatable test that the nomination route write refuses a missing `X-ZF-CSRF` header under the trusted-proxy provider.
+
+## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
+
+* Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.
+## [2026-11-23] add | Epic 218 live RAI readiness recheck (Refs #218)
+
+* Added [issue-218-live-rai-readiness-recheck-2026-11-23.md](research/issue-218-live-rai-readiness-recheck-2026-11-23.md): live gate separation proven, a traceability check that failed on every deployment (no test tree in the image) fixed offline, and a per-criterion table. The live effect of the fix stays unproven until a redeploy.
+## [2026-11-23] update | Issue 2128 credential storage and teardown proof (Refs #2128)
+
+* Added [issue-2128-live-credential-storage-2026-11-23.md](research/issue-2128-live-credential-storage-2026-11-23.md): 24-hour live log scan clean, throwaway-hub provision and teardown with a restarted durable store, per-criterion table. Source change: opt-in `--vault-url` Key Vault store in `device_provision`. A real Key Vault write stays unproven.
+## [2026-11-22] update | Issue 2245 thread creation 500 live check (Refs #2245)
+
+* Added [issue-2245-thread500-2026-11-22.md](research/issue-2245-thread500-2026-11-22.md): console evidence of the ProgrammingError 500, 12 of 12 live creates returning 200, a write-transaction bound regression test and a per-criterion table. The 500 stays unreproduced and its lock holder unproven.

@@ -1,0 +1,23 @@
+....................sssssssssssssssssss..........................................................................ssssssssssssssssssssssssss...................................................................................................F...............................
+======================================================================
+FAIL: test_public_payload_is_registered_and_passes_privacy_checks (test_form_review_pack.FictionalFormReviewPack.test_public_payload_is_registered_and_passes_privacy_checks)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-93-live-20261123T150451Z/src/core/tests/test_form_review_pack.py", line 206, in test_public_payload_is_registered_and_passes_privacy_checks
+    self.assertEqual(privacy.public_issues(ROOT), [])
+AssertionError: Lists differ: ['src/agents/evals/eval-manifest.schema.js[184 chars]oad'] != []
+
+First list contains 3 additional elements.
+First extra element 0:
+'src/agents/evals/eval-manifest.schema.json:unregistered_public_payload'
+
++ []
+- ['src/agents/evals/eval-manifest.schema.json:unregistered_public_payload',
+-  'src/agents/evals/synthetic-eval-manifest.json:unregistered_public_payload',
+-  'src/agents/evals/synthetic-eval-predictions.json:unregistered_public_payload']
+
+----------------------------------------------------------------------
+Ran 270 tests in 110.991s
+
+FAILED (failures=1, skipped=45)
+exit 1

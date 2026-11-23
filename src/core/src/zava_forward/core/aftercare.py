@@ -15,7 +15,7 @@ from datetime import date
 from functools import lru_cache
 from typing import Any, cast
 
-from . import ai_registry
+from . import ai_registry, task_contracts
 
 Record = dict[str, Any]
 _registry_get = cast(Callable[[str], dict[str, Any] | None], ai_registry.get)
@@ -817,6 +817,7 @@ class AftercareRegister:
             f"Investigation: {rec['investigation']}.",
             f"Remedy status: {rec['remedy']['status']}.",
         ]
+        task_contracts.enforce(PACK_TASK, {"concern_id": cid, "facts": "\n".join(facts)})
         questions = list(PACK_QUESTIONS)
         summary = None if ai_summary is None else neutral_text(_text(ai_summary, "AI summary"))
         task_entry = _registry_get(PACK_TASK) or {}

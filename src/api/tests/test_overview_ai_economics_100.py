@@ -56,6 +56,45 @@ class OverviewAiEconomicsTests(unittest.TestCase):
                 self.assertEqual(costs["Token cost"], "Unknown")
                 self.assertEqual(costs["Booked value"], "GBP 12.50")
 
+    def test_per_outcome_costs_are_unknown_without_an_accepted_outcome_count(self) -> None:
+        per_outcome = {
+            "token_cost_per_accepted_outcome": "0.5",
+            "cost_per_accepted_outcome": "1.5",
+            "quality_qualified_cost_per_accepted_outcome": "2.5",
+        }
+        for denominators in ({"accepted_outcome_count": 0}, {}, {"accepted_outcome_count": None}):
+            with self.subTest(denominators=denominators):
+                rows = _rows(
+                    {
+                        "currency": "GBP",
+                        "token_cost": "9.00",
+                        **per_outcome,
+                        "denominators": denominators,
+                    }
+                )
+                costs = dict(rows["costs"])
+                self.assertEqual(costs["Token cost"], "GBP 9.00")
+                for label in (
+                    "Token cost per accepted outcome",
+                    "Cost per accepted outcome",
+                    "Quality-qualified cost per accepted outcome",
+                ):
+                    self.assertEqual(costs[label], "Unknown")
+
+    def test_every_cost_is_unknown_when_no_price_source_is_configured(self) -> None:
+        rows = _rows(
+            {
+                "currency": "GBP",
+                "price_source_configured": False,
+                "token_cost": "9.00",
+                "total_cost_of_ai": "9.00",
+                "cost_per_accepted_outcome": "3.00",
+                "booked_value": "20.00",
+                "denominators": {"accepted_outcome_count": 3},
+            }
+        )
+        self.assertEqual({value for _, value in rows["costs"]}, {"Unknown"})
+
     def test_priced_values_show_currency_and_zero_cost_is_not_displayed_as_a_number(self) -> None:
         rows = _rows(
             {

@@ -183,7 +183,24 @@ const line = svg.children.find(c => c.tag === "line" && c.attrs.class === "senso
 return { xs: circles.map(c => c.cx), label: label.attrs, divider: line.attrs.x1,
   squares: svg.children.filter(c => c.tag === "rect").length };
 }
-console.log(JSON.stringify({ dense: run(288, [1, 2, 3]), short: run(4, [6, 12, 24]) }));
+function outOfRange() {
+const history = [{ observed_at: "2026-11-22T00:00:00Z", temperature_c: 60,
+  temperature_status: "ok", humidity_pct: 50, humidity_status: "ok" },
+  { observed_at: "2026-11-22T00:05:00Z", temperature_c: -30,
+  temperature_status: "ok", humidity_pct: 50, humidity_status: "ok" }];
+const forecast = { points: [{ forecast_at: "2026-11-22T06:00:00Z", temperature_c: 99,
+  humidity_pct: 50 }] };
+const svg = sensorChart(history, sensorMetrics[0], forecast).children[1];
+const ys = [];
+svg.children.forEach(c => {
+  if (c.tag === "circle") ys.push(c.attrs.cy);
+  if (c.tag === "rect") ys.push(c.attrs.y + 3.5);
+  if (c.tag === "polyline") c.attrs.points.split(" ").forEach(p => ys.push(+p.split(",")[1]));
+});
+return ys;
+}
+console.log(JSON.stringify({ dense: run(288, [1, 2, 3]), short: run(4, [6, 12, 24]),
+  out: outOfRange() }));
 """
         )
         out = json.loads(
@@ -203,6 +220,9 @@ console.log(JSON.stringify({ dense: run(288, [1, 2, 3]), short: run(4, [6, 12, 2
         self.assertEqual(dense["label"]["text-anchor"], "end")
         self.assertGreaterEqual(short["label"]["x"], short["divider"] + 4)
         self.assertEqual(short["label"]["text-anchor"], "start")
+        # Values outside the fixed axis stay inside the plot area instead of covering the ticks.
+        self.assertGreaterEqual(len(out["out"]), 4)
+        self.assertTrue(all(10 <= y <= 150 for y in out["out"]), out["out"])
 
     @unittest.skipUnless(shutil.which("node"), "node is required to execute the chart code")
     def test_resident_sensor_chart_behaviour_in_node(self) -> None:

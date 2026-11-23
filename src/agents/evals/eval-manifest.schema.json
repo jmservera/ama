@@ -3,6 +3,7 @@
   "version": "eval-manifest-schema-v1",
   "$comment": "Schema for constructed synthetic evaluation manifests; no real data.",
   "title": "Frozen evaluation manifest (#2312, refs #108)",
+  "description": "Schema for synthetic frozen evaluation manifests; no real resident data.",
   "type": "object",
   "required": [
     "versions",

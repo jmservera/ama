@@ -1,0 +1,19 @@
+{
+ "backend": "memory-backend",
+ "vault_before": 0,
+ "hub_after_provision": [
+  "SYN-S5XEVNABG5B",
+  "SYN-SCMXRPALU52",
+  "SYN-SDBUQXVANHC"
+ ],
+ "vault_after_provision": 3,
+ "vault_names_free_of_device_ids": true,
+ "stored_value_lengths_ok": true,
+ "manifest_has_no_key": true,
+ "restart_recovered_refs": 3,
+ "receipt_zero_residual": true,
+ "hub_after_teardown": [],
+ "vault_after_teardown": 0,
+ "log_bytes": 10819,
+ "log_has_stored_value": false
+}

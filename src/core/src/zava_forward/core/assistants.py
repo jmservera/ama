@@ -39,6 +39,7 @@ from . import (
     rai_release,
     sensor_map,
     sensor_view,
+    task_contracts,
     telemetry,
 )
 from zava_forward.core.ai import FORBIDDEN, Ai
@@ -1003,8 +1004,25 @@ def runtime_binding(capability, ai):
     )
 
 
+def contract_refusal(task):
+    """The plain refusal when the task's evidence breaks its declared data contract, else None."""
+    try:
+        enforce_contract(task)
+    except task_contracts.ContractRefusal as refusal:
+        return str(refusal)
+    return None
+
+
+def enforce_contract(task):
+    task_contracts.enforce(
+        task["capability"],
+        dict(case_id=str(task.get("case_id", "")), source_snapshot=canonical(task["snapshot"])),
+    )
+
+
 def build_request(task):
     """The system and user text sent to the provider; shared by the API and the agents worker."""
+    enforce_contract(task)
     evidence, as_of = task["snapshot"], (task.get("dispatch") or {}).get("as_of")
     sensors = evidence.get("sources", {}).get("sensors")
     if sensors is not None and isinstance(as_of, (int, float)):
@@ -3314,6 +3332,8 @@ class Assistants:
             return "source-changed"
         if not self._sensors_granted(db, task):
             return "consent-not-granted"
+        if contract_refusal(task):
+            return "data-contract"
         if self._captured_sensors(task):
             # A queued worker is not the in-process carrier, so no existing contract lets it carry captured readings.
             return "captured-readings"
@@ -3670,6 +3690,16 @@ class Assistants:
             return self._execute_claimed(task, observation)
 
     def _execute_claimed(self, task, observation):
+        refusal = contract_refusal(task)
+        if refusal:
+            observation.fail("rejected")
+            self.call_slots.release()
+            return self.complete(
+                task,
+                dict(outcome="data-contract-refused", usage=None, source="unverified"),
+                None,
+                refusal + " Manual review required.",
+            )
         system, prompt = build_request(task)
         if len(system) + len(prompt) > self.limits.input_chars:
             observation.fail("rejected")
@@ -3931,9 +3961,16 @@ class Assistants:
         return self.detail(user, tid)
 
     def _authorize_challenge_staff(self, db, user, case_id):
+        entra = identity.is_entra(user)
+        if entra:
+            verified = identity.verified(user)
+            if verified is None or verified.get("view_only"):
+                raise PermissionError("Current staff role has changed or been revoked.")
         row = db.execute("SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)).fetchone()
         current = json.loads(row[0]) if row else None
         if (not current or current.get("role") != user.get("role") or current.get("disabled")
+                or (entra and (current.get("oid") != user.get("oid")
+                               or not identity.row_tenant_ok(self.store, current, user.get("tid"))))
                 or current.get("active") is False
                 or current.get("email", "").lower() != user.get("email", "").lower()):
             raise PermissionError("Current staff role has changed or been revoked.")
