@@ -2404,8 +2404,8 @@ class Assistants:
                 out.update(sensor_map.summaries(db, allowed, now, self.mssql))
         except Exception as exc:
             # The sensor overlay is optional: a database failure here must not fail the whole map (issue 2257).
-            cause = " cause=sql-write-lock-busy" if is_write_lock_busy(exc) else ""
-            LOG.warning("map sensor summary unavailable exc=%s%s", type(exc).__name__, cause)
+            cause = "sql-write-lock-busy" if is_write_lock_busy(exc) else "other"
+            LOG.warning("map sensor summary unavailable exc=%s cause=%s", type(exc).__name__, cause)
             out = {i: sensor_map.fixed("unavailable") for i in ids[: sensor_map.HOME_CAP]}
         out.update({i: sensor_map.fixed("not-loaded") for i in ids[sensor_map.HOME_CAP :]})
         return out
