@@ -14909,3 +14909,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1274 criteria re-verification run 4 (Refs #1274)
 
 * Added [issue-1274-live-evidence-2026-11-23-run4.md](research/issue-1274-live-evidence-2026-11-23-run4.md): retained log lines for the actionlint 504, checksum verification and 12 and 129 regression tests repeated at main 5c08bedd8f; AWF 0.28.23 and hosted CI on a new reviewed head remain unproven.
+
+## [2026-11-23] add | Gate heavy lock scope check (Refs #2187)
+
+* Added [issue-2187-live-gate-lock-2026-11-23.md](research/issue-2187-live-gate-lock-2026-11-23.md): the heavy lock is already limited to browser, SQL and image groups (#2215), #2286 did not change it, 129 tools tests pass. No source change.
