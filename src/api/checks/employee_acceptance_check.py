@@ -280,7 +280,7 @@ MAP_RENDERED = """expected => {
   // Home labels may be followed by ". <sensor status>"; clusters never are.
   const base = (text, known) => known.filter(k => text === k || text.startsWith(k + '. '))
     .sort((a, b) => b.length - a.length)[0] ?? text;
-  return panel.querySelector('.map-info [role=status]')?.textContent === expected.status
+  return panel.querySelector('.map-info > [role=status]')?.textContent === expected.status
     && same(list.map(e => base(e.textContent, expected.labels)), expected.labels)
     && same(list.flatMap(e => [...e.querySelectorAll('a')].map(a => a.getAttribute('href'))),
             expected.links)
