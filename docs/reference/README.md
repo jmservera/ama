@@ -1822,4 +1822,406 @@ or infra acceptance claimed.
 | [Issue 2237 Smoke of API 0000055 and Resident 0000027](./research/issue-2237-smoke-0055-live-2026-11-23.md) | Live desktop smoke on 2026-11-23: retention 200, chat thread, employee map with sensor overlay, resident chart and start-up health, pass or fail per check for issues 2237, 2257 and 2244; nothing ticked |
 
 
-| [Issue 2254 Safety Count, Map Markers, Live](./research/issue-2254-map-markers-live-2026-11-23.md) | Live desktop proof on 2026-11-23 that the Overview tile, 23 map markers, All cases filter and APIs all read 23 safety issues open; image digest and stored-column cause unproven |
+
+
+### Regulatory Sources
+
+The [Regulatory Source Register](./regulatory/README.md) holds the authority
+hierarchy, current-use status, change likelihood, monitoring cadence and
+official links for every snapshot. Check it before relying on any file below.
+
+| Topic folder | Snapshots | Use status summary |
+| --- | --- | --- |
+| [energy-efficiency/](./regulatory/energy-efficiency/) | Net Zero 2050 Target Order 2019; social rented sector MEES consultation and impact assessment 2025; government response and final impact assessment 2026 | 2026 government response and final impact assessment are the final policy position, not a commenced landlord duty; 2025 material is historical |
+| [social-housing-regulation/](./regulatory/social-housing-regulation/) | Social Housing (Regulation) Act 2023; Safety and Quality Standard 2024; Awaab's Law regulations 2025 and Phase 1 and Phase 2 guidance | Phase 1 in force from 27 October 2025; Phase 2 planned from 30 November 2026 |
+| [data-protection/](./regulatory/data-protection/) | UK GDPR current consolidated text; UK GDPR adopted text; Data Protection Act 2018 | Use the current consolidated UK GDPR text; the adopted text is historical |
+| [retrofit-standards-and-funding/](./regulatory/retrofit-standards-and-funding/) | PAS 2035:2023 BSI overview; Warm Homes: Social Housing Fund Wave 3 technical annex | Overview and allocation method only; the licensed standard and grant agreement govern |
+
+### Resources
+
+| Document | Summary | Updated |
+| --- | --- | --- |
+| [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Zava Forward agent, customer evidence and lessons | 2026-09-25 |
+| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed. Includes the dated configured demo-model, limits and evidence-gap record for #108 (configuration only, no serving, region or evaluation proof) and its [2026-11-10 regional metadata pass](./resources/ai-tokenomics.md#regional-metadata-observation-2026-11-10-refs-108) (live app settings and deployment re-read; regional quota limit and unit unknown, even for the catalog-resolved usage name `OpenAI.GlobalStandard.gpt4.1-nano`); and a [current-main metering inventory](./resources/ai-tokenomics.md#current-main-metering-inventory-2026-11-17-refs-432) mapping #432 criteria to code and tests, with open criteria 5 and 8 and the smallest next step (Refs #432, no cost or acceptance claimed) | 2026-11-17 |
+
+### Method and Memory
+
+| Document | Summary |
+| --- | --- |
+| [Project Memory](./memory.md) | AMA programme process, capstone rubric review requirement, customer-first presentation and demo guidance, and owner preferences |
+| [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) | Complete FY27 participant rubric for technical excellence, communication and executive presence, consultative and stakeholder skills, and the thought leadership artifact |
+| [Scientific Paper Writing and Review](./method/scientific-paper-writing-and-review.md) | Genre-sensitive writing techniques, evidence and venue-policy qualifications, and a dated four-source register |
+| [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | Coaching prompt that turns a recurring task into a Goal Card for an agent working in an assess, act, check and adjust loop |
+| [Operator Suspension Drill Protocol](./method/operator-suspension-drill-protocol.md) | Witnessed suspension and manual fallback drill steps and blank record; no drill run or authority appointed (Refs #221) |
+| [RPI Gate Preflight and Timing Method](./method/rpi-gate-preflight.md) | Non-receipt change-specific preflight (refuses all selected execution, exit 5), read-only full-gate timing analysis and benchmark protocol; partial delivery of issue #1830 (Refs #1830) |
+| [Knowledge Base Log](./log.md) | Chronological record of knowledge base changes |
+
+### Agents
+
+| Agents | Purpose |
+| --- | --- |
+| `company-*` in [.github/agents/](../../.github/agents/) | Zava North Homes role agents for interrogating the problem. Grounded in [Company Profile Research](./research/company/company-profile-research.md) |
+| [company-executive-reviewer.agent.md](../../.github/agents/company-executive-reviewer.agent.md) | Owner-delegated, draft-only target ratification or changes-requested decision; not company approval or operational authority |
+| `ama-*` in [.github/agents/](../../.github/agents/) | AMA helper agents for solution orchestration, presentation communications and backlog delivery coordination |
+| [AMA Scientific Paper Writer and Reviewer](../../.github/agents/ama-scientific-paper-writer-reviewer.agent.md) | Scoped write, revise and read-only assisted review modes with explicit evidence limits and human intellectual ownership |
+
+## Maintenance
+
+### Ingest a New Source
+
+1. Classify the source using the categories in the repository instructions.
+2. Place an official regulatory, funding or standards snapshot in the matching
+   [regulatory/](./regulatory/) topic folder and add it to the
+   [Regulatory Source Register](./regulatory/README.md). Record other sources
+   in the synthesis that uses them.
+3. Integrate the findings into the existing synthesis or project document.
+   Create a new synthesis page only when no existing page can hold the topic.
+4. Flag contradictions with existing pages rather than overwriting them.
+5. Update this index and append an `ingest` entry to the
+   [Knowledge Base Log](./log.md).
+
+### File Back a Durable Answer
+
+When a question produces a comparison, analysis or finding worth keeping,
+save it into the relevant synthesis or project document with its evidence,
+update this index when a page is added, and log it as a `query` entry.
+
+### Lint the Knowledge Base
+
+Run a lint pass before a major deliverable, submission or regulatory
+commencement date. Check for:
+
+* Broken relative links and files missing from this index. Run
+  `python3 tools/check-legacy-references.py` to check changed Markdown links and
+  that retired `mvp/` and `prototype/` paths name archive `v0.21.0` (Refs #203)
+* Contradictions between syntheses, project documents and sources
+* Stale claims superseded by a newer source or a regulatory change
+* Snapshots past their monitoring cadence in the register
+* Orphan pages with no inbound link from this index or another page
+
+Record the result as a `lint` entry in the log.
+
+### Placement Rules
+
+| Material | Location |
+| --- | --- |
+| Official legislation, standards, policy, guidance or funding material | `regulatory/{topic}/` |
+| Sector research and benchmarks | `research/sector/` |
+| Research about Zava North Homes and its roles | `research/company/` |
+| AMA training material and reusable prompts | `method/` |
+| Internal or external resource pointers and their retrieved findings | `resources/` |
+| Owner notes and preferences | `memory.md`, only when the owner asks |
+| Problem specification, BRDs, ideas and presentations | Existing folders under `docs/` |
+| Private owner material, such as the cohort map | `support/`, outside the knowledge base |
+
+## Prospective Progress Capture Routing (2026-10-17, #102)
+
+This is the current continuation of the earlier merged-#390 route above.
+Start with the [core event/writer contract](../../src/core/README.md#historical-progress-evidence-and-declared-forecasts-102),
+then the [prospective programme evidence boundary](./research/ux/customer-journeys/programme.md#prospective-progress-capture-continuation-2026-10-17-102)
+and [unchanged report/export API](../../src/api/README.md#historical-progress-report-and-export-102).
+Existing controlled stage, handoff and per-measure quality writers now append
+precise versioned events. Actual-domain JSON/SQLite/task-owned local SQL Server
+evidence covers rollback, failed recovery and post-COMMIT exact-once behavior.
+Past gaps, legacy precision, nonexistent general forward/closure writers and
+whole-home accepted-handover actuals remain unknown. Forecast/export criteria
+and the original adverse #390 Review are unchanged. quality.py overlap with
+parallel #88 is declared; independent final-head acceptance remains separate.
+The single original Review completed with two Medium findings. Correction ONE
+retains that adverse verdict, fails closed on later contradictory handoff
+states, and explicitly proves event/audit counts after SQL committed refresh
+failure/retry/restart. Final-head coordinator judgment is not self-awarded.
+Authorized integration of merged sensor #393 onto main943febc2 retains its
+closed exports/current-generator admission and prospective event recovery.
+Combined301 checks ran:274 pass,27 explicit skips; original Review/correction
+ONE unchanged. Independent PR #394 final-head gate remains outstanding.
+Correction TWO addresses the independent Medium failure-audit regression:
+truthful sanitized operational failure/rejection after rollback, original-error
+and prior-prefix retention, no false success or committed rejection.
+Original adverse Review/critique/correction ONE remain unchanged; final gate
+still separate from engineering evidence.
+Final correction TWO integrates resident #392 on mainbcb4871b, retaining both
+SQL recovery scopes and sensor boundaries. Full core942 run/847 pass/95 skips,
+actual integrated MSSQL35 pass and combined/image/static checks provide
+engineering evidence; PR #394 independent exact-head gate remains outstanding.
+
+The 2026-11-08 ranking publication current-main stabilization checkpoint for #440
+(Refs #79 #1231) is appended to the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#ranking-publication-current-main-stabilization-checkpoint-2026-11-08-refs-440-79-1231).
+It pins merged main source `a80acada` with the BRD, PRD and ADR identities,
+records installed-package ranking publication, API boundary and cohort
+selectors (core 76, API 53, agents 20, no skips) as local observations, and
+keeps the pre-merge full receipt at `ac0f29f9` historical and source-qualified.
+Recommendation is continue; #1258 and #1259 stay open owners. Whole #79, #1231
+and #440 closure, policy sign-off, retention, deployed scheduling, live model
+and Azure behaviour remain unproven.
+
+The 2026-11-08 AI and employee chat current-main stabilization checkpoint for #440
+(Refs #157 #159 #104 #107) is appended to the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#ai-and-employee-chat-current-main-stabilization-checkpoint-2026-11-08-refs-440-157-159-104-107).
+It pins main `608c98e6` after #1275, #1271 and #1273, records the #157 and #159
+status-drift correction without any new adoption, maps where AI is invoked for the
+five assistants and employee chat, and records focused SQLite and fixture selectors
+(SQL Server and Chromium skipped) with historical SQL and browser evidence kept
+source-qualified. Recommendation is continue; real-provider behaviour, human and
+named approvals, tokenomics and whole-epic closure remain unproven.
+
+Correction 1 to that checkpoint (2026-11-08, after independent assessment) is the
+[Correction 1 and currency](../architecture/cutover-evidence-pack.md#correction-1-and-currency-observed-2026-11-08t1155z-after-independent-assessment-review-440-c96a)
+subsection. It records current main, #1278 on main, #1243 on its parent branch and
+PR 1240 still open, scopes the earlier exclusions to the 608c pin, separates the
+historical AWF 504 (recovered by the rootless installer in #1275) from the
+unimplemented #1274 resilience, qualifies the assistant review wording and marks the
+unused chat clean-up as pending triage, not deferred.
+
+The [visible-demo integration checkpoint](../architecture/cutover-evidence-pack.md#visible-demo-integration-checkpoint-2026-11-08-refs-440-149-229-891)
+(2026-11-08, base `6354b13f`) records PR 1286 and PR 1290 on main, the source
+movement since the previous pin, where AI is invoked and the proposal-only ceiling,
+and one historical generic employee model answer on the deployed demo as Azure
+observed for that source only. Five-agent, case-grounded, sensor-grounded,
+current-main deployment, cost, privacy and approval acceptance remain unproven, and
+unmerged #184 and #1288 work is excluded. The recommendation is bounded continue.
+
+The [demo stabilization current-main checkpoint](../architecture/cutover-evidence-pack.md#demo-stabilization-current-main-checkpoint-2026-11-09-refs-440-123-184-136)
+(2026-11-09, `main` `df8e858b`, draft, not approved) pins main after PR 1222 and PR 1304,
+qualifies BRD and PRD identifiers and decision record status, reads the simulator to
+persistence to UI to Quality model to flag path from source, and records three tiny
+local test observations plus the 184 results as historical observed with Git source
+equivalence. No retained-value employee view or sensor-attributed flag was identified in
+the inspected paths (a differently named path remains unverified); the registered
+quality-evidence snapshot has permitted document metadata, Quality records and
+checklists but no dedicated retained-sensor fields; the selected tests did not exercise
+the full sensor-to-Quality-model journey (dated Qualification C1, 2026-11-09). Unmerged
+#1288, #1292, #144, #189, #1295 and #1296 work is excluded. No new defect, closure or
+approval is claimed; the recommendation is bounded continue with closure held.
+
+The [SQL feature-recovery wave checkpoint](../architecture/cutover-evidence-pack.md#sql-feature-recovery-wave-current-main-checkpoint-2026-11-09-refs-440)
+(2026-11-09, `main` `8d6f029c`, the PR 1308 squash, draft, not approved) proves by Git and
+hash that the retained real-SQL results (priority 142, resident 91) imported the same
+SQL implementation files as main, keeps them as historical observed, separates 18 hosted
+check runs plus one status on the PR head, and records fresh targeted local unit results
+at the current tree with one retained load-sensitive SQLite failure. No hosted check
+executing the priority suite on SQL Server was identified. Source SQL merge is not full
+demo acceptance; #1292, #81, #1240 and #440 criteria stay unclosed and the recommendation
+is bounded continue with closure held. A dated C2 qualification in the same section
+narrows the committed-versus-uncertain creation wording, restates the SQLite failure as
+one in five executions then four passes (cause unknown, no waiver), and cross-references
+a later #1292 diagnosis with 0 of 6 reproductions and an unconfirmed timing hypothesis.
+A dated current-main preparation note in the same section records that `main` `3a9767d5`
+now includes the merged #1240 lifecycle integration, which this historical SQL-wave record
+(observed source `8d6f029c`) did not retest or accept, and holds the next lifecycle-wave
+checkpoint trigger and closure hold.
+A dated #1292 original-load note in the same pack records a second unchanged-source
+diagnosis: 0 of 2 paired selections reproduced the failure, cause unknown, with four
+bounded qualifications (recorder limits, unittest versus process timings, a 26-member
+log manifest, and the observer-pair design). Counts are not aggregated with the earlier
+0 of 6 or the original single failure; all #1292 criteria stay open and E5 is not authorized.
+A further dated #1292 current-main note in the same pack records one bounded
+validation on a disposable SQL Server: the priority module (142 tests) plus the two original
+resident-control methods and their SQLite and in-memory parity, 148 tests, 67 on SQL Server,
+0 skips and 0 failures at main `ba71894bb`. It does not retire the unknown startup cause,
+accept SQL as a whole, waive a gate or tick any criterion; E5 stays unspent.
+A dated qualification (Q1) in that subsection corrects the attribution of cleanup checks
+(separately observed, not enforced by the verifier) and states the timeout-bound and local
+image or endpoint limits of the run, without rewriting the original claims.
+A dated #1292 before-fix subsection in the same pack records one paired run of unchanged
+regression methods on a disposable SQL Server: the original source failed 4 of 5 selected methods
+with the wrong-newest recommendation, and the current head passed 14 of 14 with 0 skips. It maps
+the five literal criteria with open items, keeps the startup cause unknown, and ticks or closes nothing.
+
+A dated #1314 comparison-count qualification in the same pack restates, from pinned Git
+ranges, the final C2 comparison (17 paths, 700 additions, 0 deletions against `ef28d4da4`,
+the 15-path figure being an intermediate tree) and the composition of the current-main
+preparation additions (incoming main plus the new note, or inherited content plus the new
+note), without a source change or any closure.
+
+The [lifecycle and simulator controls checkpoint](../architecture/cutover-evidence-pack.md#lifecycle-and-simulator-controls-current-main-checkpoint-2026-11-09-refs-440-81-189-954-1292)
+(2026-11-09, `main` `48350983`, draft, not approved) pins the merged PRs 1240, 1313, 1315,
+1317 and 1318, proves by Git and a 642-file manifest that main's runtime source is the source
+the retained 189 (13 states, 13 axe scans, 0 violations) and 954 (83 PASS plus one expected
+negative control) browser runs exercised, and compares the BRD, PRD and ADR identities. It
+confirms no new defect or refactoring, excludes the open chat receipts PR 1320 and #159, does
+not satisfy the earlier lifecycle-wave trigger, and keeps closure holds, the live budget alert
+and the whole #440 behavior validation obligation open.
+
+The [integrated current-main journey checkpoint](../architecture/cutover-evidence-pack.md#integrated-current-main-journey-checkpoint-2026-11-09-refs-440-81-123-184-136)
+(2026-11-09, `main` `2be660e9`, draft, not approved) pins the document identities and the
+merged PRs through 1326 (now including the queue adapter 1141 and the chat receipts 1320),
+records four final test processes A1, A2b, A3 and S1 (1205 discovered, 171 skipped; S1 is one nonqueued
+disposable SQL Server run of the resident-decision class, 108 discovered, one by-design skip; the first failed A2
+is separate), reuses the #1326 priority SQL campaign by source
+identity with its limits, and maps each gap to its existing owner. It confirms no defect,
+excludes #1288 and the #1258, #1259 and #136 Blob work, and keeps every closure hold. A same-day Q1 qualification appended to the pack states that S1 was selected without a prospective amendment, that S1 raw retention is unverified, that absence statements are bounded to inspected paths, and that PRD FR-016 and FR-017 are not resident or complaints IDs.
+
+The [parent-topic Blob and Quality checkpoint](../architecture/cutover-evidence-pack.md#parent-topic-blob-and-quality-checkpoint-2026-11-09-refs-440-1288-1258-1259-136)
+(2026-11-09, draft, local only) separates merged-main Blob observations at `main` `a04668ae` from
+parent-topic Quality observations at local head `34838154` (PR 1331 unmerged, E8 unpublished),
+reuses retained logs as historical (761 discovered, 100 skipped, the 861 figure is not
+reproducible), and records one adverse local browser run of the Quality retained-sensor journey
+(a stale check after the real-provider route was made unavailable in code). Quality is not merged-main
+functionality; closure holds and the later merged-main requalification requirement stand.
+
+A separate [merged-main qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136)
+(2026-11-09, draft, local only) records `main` `1b7a1719b` (PR 1331 squash; tree equal to its final head
+`f995774`), the five-file source delta since the parent topic, and one new local browser observation of the
+corrected Quality check with its axe stage (exit 0, 30 checks, 0 axe violations, serious contrast
+incompletes remain). The original red observation is preserved. Closure, live, model, assistive-technology
+and human acceptance holds stand.
+
+A further [Quality M2 qualification](../architecture/cutover-evidence-pack.md#quality-m2-current-main-qualification-2026-11-10-refs-440-1288-891-184)
+(2026-11-10, draft, documentation only) records `main` `32221a845` after PRs 1331, 1339 (#891 accounting),
+1341 (importer, unrelated, excluded) and 1342 (tracking-only evidence). It classifies the executed H2 SQL
+observation as a dated local observation of the identical Core, API and Agents source, carries the errata
+(#891 is included, no H2 peer or bytes, 29 passes plus one skip), keeps the adverse H0 and H1 results, and
+holds closure, actual-model, Azure, human and release-authority gates open.
+
+A [merged-wave checkpoint](../architecture/cutover-evidence-pack.md#merged-wave-checkpoint-2026-11-10-refs-440-149-153-1238-93-96-148)
+(2026-11-10, draft, local) observes pinned `main` `da4f52abb` after PRs 1343 (staff-time copy), 1346 (resident
+default-deny approval binding), 1345 (finance retained history and dependencies) and 1348 (four-image rebuild
+adapter, fake builder): 699 targeted tests run, 562 pass, 137 skip executions (5 browser skips later run, 129 SQL Server opt-in, 1 Azure SQL opt-in, 2 backend exclusions; no external SQL service ran; counts corrected in C3, no unique total), none fail. A C3 addendum observes the later-merged PR 1351 empty-queue explanation. It
+joins them to document-qualified BRD and PRD rows and keeps SQL Server, live rebuild, trusted resident binding,
+actual-model and human approval gates unproven. Closure and approval holds stand.
+
+A [discovery CLI checkpoint](../architecture/cutover-evidence-pack.md#discovery-cli-feature-increment-checkpoint-2026-11-10-refs-440-125)
+(2026-11-10, draft, local) observes pinned `main` `0d262beee` after PR 1355 (#125 read-only synthetic
+`discovery-demo` command): 65 focused Core tests pass, the command's JSON readback shows `NOT_READY`, company
+connection `DENY`, `model_used` false and an empty human comparison, and no connect call or write-mode open was
+traced. It is constructed-fixture evidence only; whole #125, Phase 0, actual comparison, model and human approval
+gates stay unmet, and #440 and #125 stay open.
+
+A [parent 149 coverage integration checkpoint](../architecture/cutover-evidence-pack.md#parent-149-coverage-integration-checkpoint-2026-11-10-refs-149-440-153-156-230-231-233-96)
+(2026-11-10, draft, local) records a normal merge of `main` `d52f20a51` into the reviewed parent `ae4b20007`
+with no conflict, and focused local API, Core, importer, static and Chromium checks that pass on the combined
+source. It is constructed-fixture engineering evidence only; whole UX, WCAG, assistive-technology, human and
+design acceptance, #156 M1, #1362 and PR 1371 stay with their owners, and #149 and #440 stay open.
+
+A [served import-refusal post-integration checkpoint](../architecture/cutover-evidence-pack.md#served-import-refusal-and-exception-register-post-integration-checkpoint-2026-11-10-refs-440-73-135-1360)
+(2026-11-10, draft, local) observes pinned `main` `1ee56da3a` after PR 1361: 172 focused Core, Importer and API
+cases run (165 pass, 7 opt-in SQL Server skips), clean static checks and a constructed served story in which a
+refused file transfers once, reaches only the configured steward and is counted but not shown to the operator. Earlier
+af7b, 27dab and 1fab observations stay historical, the non-blocking #1360 stays unreproduced, and SQL Server,
+served-browser, named-role, hosted exact-commit and human approval gates stay unmet; #73, #135 and #440 stay open.
+An independent-review qualification (C5, 2026-11-10) states that only Importer typing ran (Core typing was not run) and
+that the retained `E0` is a tailed summary with an author-attributed cause.
+
+A nomination and UX integration wave checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#nomination-and-ux-integration-wave-checkpoint-2026-11-10-refs-440-130-149-153-156-1360-1362).
+It pins `main` `65c2ab9d9` after PR 1381 and PR 1376, consumes two Root local runs on source-equal predicted trees
+(tree differences only in the rubric score file), and traces the read-only nomination view against BRD, PRD and ADR
+statuses without approving any. Azure observed is none; hosted exact-commit CI, assistive-technology, human, HVE and
+whole-epic gates stay unmet. It is separate from the CSV-learning record; #130, #149, #440, #1360, #1362, #1383 and
+#1384 stay open.
+
+A Bicep public-simulation current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#bicep-public-simulation-current-main-checkpoint-2026-11-10-refs-440-136-1288).
+It pins `main` `0a6dc0b3f` after PR 1380, consumes Root local runs and a later image admission on a source-equal
+auxiliary composition (tree difference only in the rubric score file), and traces the default-off, guarded,
+one-replica, volatile opt-in lane against document statuses without approving any. Azure observed is none; the three
+baseline policy typing errors stay unwaived; whole #136, #1288 and #440, live SQL, authentication, resident, model,
+human and HVE gates stay unmet. The nomination and UX section stays historical and unchanged.
+
+A Registry wave current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#registry-wave-current-main-checkpoint-2026-11-10-refs-440-185-110-109-184-111-1288).
+It pins `main` `6cc59776` (tree `eaf44bcd`) after PR 1393, reads the bounded keyless Azure IoT Hub identity-registry
+adapter by read-only git at that pin, and carries forward the Root local runs on the reviewed candidate with
+component-subtree equivalence only. Azure observed is none; actual device issuance, credential owner, secure storage,
+teardown and live Hub, SQL, UI and model acceptance stay unproved; no Draft, in-review or proposed document, human or
+HVE gate is approved. The declared parent (PR 1396) has since merged as `main` `eff05737`; this record keeps `6cc59776` as its
+historical pin, notes equal `src`, `infra` and `tools` subtree ids on `eff05737`, and is a main-target candidate after an ordinary
+merge. It is separate from the nomination and UX, Bicep and CSV-learning records;
+#185, #110, #109, #184, #111 and #1288 stay open.
+
+A sensor-review wave actual-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#sensor-review-wave-actual-main-checkpoint-2026-11-10-refs-440-109-111-184-1288).
+It pins `main` `4c1b4099` (tree `75158203`) after PR 1404, which carried the #111 child (PR 1395, merged into the declared
+parent, not main) into main, and traces the default-off, proposed-only, role- and consent-bounded sensor-review drafts
+against document statuses without approving any. Root local runs executed on a staged tree, not a post-commit checkout or
+main; `src`, `infra` and `tools` ids are equal and the only other difference is main's rubric score file. Azure, provider,
+model and resident observed is none; whole #109 and #111 stay open, #132, #144 and inherited #1401 and #1402 are excluded,
+and the recommendation is to continue. The aftercare checkpoint in PR 1405 is separate and was not on main when read (the original snapshot statement; PR 1405 merged as `ac962fe6` at 16:44:27Z, and its own section follows). A dated qualification in the pack section records the later ordinary merge of `main` `d79180309`, equal `src`, `infra` and `tools` ids, no fresh runtime claim and the preserved first witness `verify` exit 1. The publication hold stays: both witness chains (original `80643f6b`, `verify` exit 1; qualification `c21849e0`, `verify` exit 1 for a refused `research-open`) are QUALIFIED, as the dated publication qualification (C2) in the pack records with its external locators.
+
+An aftercare integration current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#aftercare-integration-current-main-checkpoint-2026-11-10-refs-440-89-133-134-1401-1402).
+It observes PR 1400 merged as `main` `64c3f9191` (tree `8fbdaec7`), proves by direct tree comparison that the `src`, `infra`
+and dependency inputs equal the tested candidate `b7e46b3be` while `.github` and main-only documents stay as on main, and
+attributes the retained Core, API, SQL, static and browser results to the author's original commands, not to new runs on
+main. The 77 authored paths are qualified against the 98-path review superset. Two inherited Mediums stay open, unfixed and
+unwaived as #1401 and #1402; whole #89, #133 and #134 stay open and #132 is excluded. The recommendation is a bounded
+CONTINUE for local #134 screen walkthroughs of the implemented staff-assisted surface only; it is not an approval, a tick or
+live, model, resident, professional or release proof.
+
+An aftercare numeric-order integrated-main checkpoint (2026-11-11) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#aftercare-numeric-order-integrated-main-checkpoint-2026-11-11-refs-440-1401-1402-134).
+It observes merged PR 1456 (#1401, `a3862eed4`) on `main` `077ad5ad2` (`src` equal to the merged source), with 110 focused
+core and API tests executed and 15 SQL Server variants skipped (not passes), and traces document-qualified BRD, PRD and ADR
+rows for numeric restore order, intake persistence, manual path and human boundaries. The blank-document gap of #1402 is read
+from source only, is not repaired on `main` and is owned by the unmerged PR 1458; whole #133, #134, #89 and #440 stay open.
+The recommendation is a bounded CONTINUE; it is not an approval, a tick or SQL Server, HTTP-volume, live or release proof.
+A dated follow-up in that section observes PR 1458 (#1402, `bc123235`) after merge on an exported `src` equal to current main
+`97ec3f3c8` (91 focused JSON and SQLite tests, 15 SQL Server skips, 0 failures); the blank-document boundary is now observed
+on main for constructed data, while the earlier pin text stays unchanged and whole #133, #134, #89 and #440 stay open.
+
+A demo wave integrated-main checkpoint (2026-11-12) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#demo-wave-integrated-main-checkpoint-2026-11-12-refs-440-99-116-80-432-184).
+It observes merged PRs 1465 to 1469 and 1473 (pin `bbb1d20cc`, `src` equal to fresh `main` `5ee8ac14c`) with 281 focused core
+and API tests executed, 0 skipped and 0 failures after retained environment and invocation failures, records that the task
+labels of the PRs do not match their actual content, keeps the 1465 proposal as draft candidate policy, and confirms no
+defect. The recommendation is a bounded CONTINUE; it is not an approval, a tick or browser, Azure, live or release proof.
+
+A post-153 integration checkpoint (2026-11-12) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#post-153-integration-checkpoint-2026-11-12-refs-440-153-134-184).
+It covers merged PR 1470 (proposal cards) and PR 1475 (five-home runbook) on `main` `4074b44f3`, which the previous checkpoint's 281 tests excluded
+(both merged after its tested pin and before its publication, see the accuracy note in the section): 145 focused tests executed, 92 SQL Server skips (not passes), a string-level runbook link check, no confirmed defect,
+one static accessibility concern and two omissions routed to existing owners, and a bounded CONTINUE. It is local only and is
+not browser, live, resident or approval evidence.
+
+An [AC-034 to AC-043 disposition reconciliation](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134)
+(2026-11-12) gives the ten document-qualified PRD criteria of #134 criterion 2 one table with the register status, qualified
+existing evidence, the unproven remainder, the work owner and a resume check. No criterion passes: six are partial and four
+deferred, the register source is unchanged, and the record is not an owner-approved deferral, human or assistive-technology
+acceptance, or a tick.
+
+A post-fix-wave checkpoint (2026-11-12) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115).
+It covers merged PRs 1481 (#128 paired source-completeness), 1483 (#115 ledger verifier failure marker) and 1482 (#98 held-export
+open-issue freshness) on `main` `e155c88ed`: 90 focused unit and local HTTP tests plus the 61-test infra policy module executed,
+0 skipped, lint and configured mypy clean, an invocation error retained, the original adverse qualifications preserved, no
+confirmed defect, remaining risks routed to existing owners, and a bounded CONTINUE. It is local and synthetic only and is not
+SQL Server, browser, hosted, Azure, retention-lock or approval evidence.
+
+Scoped `#440` stabilization checkpoints (2026-11-15) for
+[Epic #89](../architecture/cutover-evidence-pack.md#epic-89-scoped-stabilization-checkpoint-2026-11-15-refs-89-440)
+(provider capacity, work orders, leaseholder Section 20 consultation guard, staff-mediated job packs, per-measure quality
+acceptance, aftercare concern routing and lived-performance review, and bounded workspace script retry across closed children
+`#90`, `#91`, `#92`, `#132`, `#133`, `#1384`, and `#1402`) and
+[Epic #100](../architecture/cutover-evidence-pack.md#epic-100-scoped-stabilization-checkpoint-2026-11-15-refs-100-440)
+(coordinator heatmap and funnel, prospective event progression, declared scenario forecasts, constructed-scenario manifest
+integrity, management AI consumption economics, and AI-independent one-way evidence export packs across closed children
+`#101`, `#102`, and `#103` plus stacked `PR #1641` tokenomics increments) are recorded at parent-topic pin
+`74273202817f9068f9c55cb325b39df7879cba7b` (`origin/main` `5e0c7f74432ffce73cfeaa672e4e40a605ca6274`, merge-base
+`61e1917dd075a8307f0fd436c42cc41f47906846`). They reconcile document-qualified `BRD`, `PRD`, and `ADR` requirements, verify
+cross-cutting boundaries across 1,499 focused local unit and API test runs (recording opt-in SQL Server and Chromium skips
+explicitly), confirm no new defect or refactoring need on either epic surface, record authorized Azure, human, and deferred
+`#432` commercial tariff residuals, and recommend `continue` while keeping `#89` and `#100` open pending merge, hosted CI,
+independent review, and owner closure.
+For #144, the [deployed image audit](./research/issue-144-live-deployed-images-2026-11-19.md)
+records 12 live containers as real digest-pinned references; pipeline provenance, tags and deployed hardening remain unproven.
+
+The [old-image incomplete completion note](./research/old-image-incomplete-completion-1840.md) records per-criterion fixture evidence for issue 1840 (2026-11-18).
+
+For #1274, the [release-download criteria proof](./research/issue-1274-live-release-download-criteria-2026-11-19.md) records the retained 504 log, real checksum verification and the unproven AWF and hosted-CI criteria.
+
+Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./research/issue-108-live-r2-20261119-2026-11-19.md), [issue 120 time capture r2](./research/issue-120-live-2026-11-19-r2.md), [issue 126 protocol and benefits gates r3](./research/issue-126-live-r3-2026-11-19.md), [issue 146 monitoring status](./research/issue-146-live-20261119T154738Z-2026-11-19.md) (refreshed in [r6](./research/issue-146-live-20261119T160746Z-2026-11-19.md)) and [issue 440 criteria verdict](./research/issue-440-live-criteria-verdict-2026-11-19.md).
+Further 2026-11-19 live notes, all evidence only: [issue 108 re-check r2](./research/issue-108-live-r2-20261119-2026-11-19.md), [issue 108 re-check 20261119T1621](./research/issue-108-live-20261119T1621-2026-11-19.md), [issue 120 time capture r2](./research/issue-120-live-2026-11-19-r2.md), [issue 126 protocol and benefits gates r3](./research/issue-126-live-r3-2026-11-19.md), [issue 146 monitoring status](./research/issue-146-live-20261119T154738Z-2026-11-19.md) and [issue 440 criteria verdict](./research/issue-440-live-criteria-verdict-2026-11-19.md).
+
+* [Employee sensor charts demo evidence (issue 2193)](./research/demo-employee-charts/employee-sensor-charts-2193.md): dual-axis chart and map card gauges, local and live proof, 2026-11-21 wave 2.
+Further 2026-11-21 evidence: [issue 2206 demo preflight proof](./research/issue-2206-demo-preflight-2026-11-21.md), the read-only preflight script with a live run, evidence only.
+Further 2026-11-21 evidence: [issue 2190 gate flakes](./research/issue-2190-live-20261121-2026-11-21.md), reproduction, fixes and a per-criterion verdict for three gate flakes, evidence only.
+Further 2026-11-22 evidence: [issue 2190 re-verification](./research/issue-2190-live-20261122-note.md), the three gate flake fixes re-run on current main with a per-criterion verdict, evidence only.
+Re-verification r2: [issue 2190 merged flake fixes](./research/issue-2190-live-20261123T071426Z-note.md). Further 2026-11-23 evidence: [issue 2190 regression tests](./research/issue-2190-live-20261123-note.md), a behavioural slow-server test, a deterministic settle wait for the chat check and a stricter `_region_passed`, with a per-criterion verdict.
+
+A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
+
+The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records the second live probe on revision 0000025, the diagnosable ledger refusal states added to the resident AI path and a per-criterion table.
+
+The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.

@@ -14913,3 +14913,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Gate heavy lock scope check (Refs #2187)
 
 * Added [issue-2187-live-gate-lock-2026-11-23.md](research/issue-2187-live-gate-lock-2026-11-23.md): the heavy lock is already limited to browser, SQL and image groups (#2215), #2286 did not change it, 129 tools tests pass. No source change.
+## [2026-11-23] add | Issue 2190 gate flakes re-verification r2 (Refs #2190)
+
+* Added [issue-2190-live-20261123T071426Z-note.md](research/issue-2190-live-20261123T071426Z-note.md): the merged fixes pass (129 gate tests, 7 API tests); flake 2 race reproduction stays unproven by design. No source or estate change.

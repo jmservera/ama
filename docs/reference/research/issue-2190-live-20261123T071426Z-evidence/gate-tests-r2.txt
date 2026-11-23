@@ -1,0 +1,64 @@
+............FAILED required group: browser: fixture stops after exact dispatch
+......browser: /usr/bin/python3 -c print('test_browser_warning_failure_keyboard_refusal_and_live_log (test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log) ... ok\nRan 1 test in 0.1s\n\nOK\n') test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log
+test_browser_warning_failure_keyboard_refusal_and_live_log (test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log) ... ok
+Ran 1 test in 0.1s
+
+OK
+
+browser: /usr/bin/python3 -c print('test_browser_warning_failure_keyboard_refusal_and_live_log (test_chat_panel.OtherTests.test_browser_warning_failure_keyboard_refusal_and_live_log) ... ok\nRan 1 test in 0.1s\n\nOK\n') test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log
+test_browser_warning_failure_keyboard_refusal_and_live_log (test_chat_panel.OtherTests.test_browser_warning_failure_keyboard_refusal_and_live_log) ... ok
+Ran 1 test in 0.1s
+
+OK
+
+............FAILED required group: browser: fixture stops after employee acceptance dispatch
+...FAILED required group: browser: Required group browser has no execution evidence
+.FAILED required group: browser: Required group browser has no execution evidence
+.................mssql: fixture-child
+owned child stopped
+
+Required command interrupted: KeyboardInterrupt
+mssql: fixture-child
+owned child stopped
+
+Required command interrupted: KeyboardInterrupt
+....preflight: /usr/bin/python3 -c import os; print(os.environ['DOCKER_HOST']); assert 'DOCKER_CONTEXT' not in os.environ; assert 'AZURE_TOKEN' not in os.environ
+unix:///var/run/docker.sock
+preflight: /usr/bin/python3 -c import os; print(os.environ['DOCKER_HOST']); assert 'DOCKER_CONTEXT' not in os.environ; assert 'AZURE_TOKEN' not in os.environ
+unix:///run/user/1000/docker.sock
+..Lock queued 2026-11-23T07:16:58.778759+00:00; acquired 2026-11-23T07:16:58.778810+00:00; jobs=1; groups=project-core
+....Receipt: /tmp/rpi-contract-e4cqj9bz/out/new-gate/receipt.json
+FAILED required group: preflight: Workflow matrix drift: src-ci.yml
+FAILED required group: preflight: Workflow matrix drift: mvp-ci.yml
+FAILED required group: preflight: Workflow matrix drift: mvp-validation.yml
+FAILED required group: preflight: Workflow matrix drift: src-deploy.yml
+FAILED required group: preflight: Workflow matrix drift: infra-plan.yml
+.FAILED required group: preflight: Missing required tool: shellcheck
+preflight: /nonexistent/rpi-binary
+Missing tool/dependency: /nonexistent/rpi-binary
+preflight: /usr/bin/python3 -c import absent_rpi_package
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+ModuleNotFoundError: No module named 'absent_rpi_package'
+...preflight: /usr/bin/python3 -c raise SystemExit(7)
+
+...project-agents: /usr/bin/python3 -c print('parallel')
+project-core: /usr/bin/python3 -c print('parallel')
+parallel
+parallel
+............................................VERIFIED partial local gate: h base b
+VERIFIED partial local gate: aee9b80cb957808411d23d8b9574d35561465dcb base aee9b80cb957808411d23d8b9574d35561465dcb
+VERIFIED partial local gate: fb0c8ad489c326b8fd6bb2a4e4219ec70ee7c632 base fb0c8ad489c326b8fd6bb2a4e4219ec70ee7c632
+VERIFIED full local gate: 8b47d0585fa513b6dcd0d4ed4abac8adacd9f281 base 8b47d0585fa513b6dcd0d4ed4abac8adacd9f281
+VERIFIED full local gate: 8b47d0585fa513b6dcd0d4ed4abac8adacd9f281 base 8b47d0585fa513b6dcd0d4ed4abac8adacd9f281
+preflight: /usr/bin/python3 -c import time; time.sleep(20)
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+KeyboardInterrupt
+
+Required command interrupted: TimeoutExpired
+.................
+----------------------------------------------------------------------
+Ran 129 tests in 32.192s
+
+OK
