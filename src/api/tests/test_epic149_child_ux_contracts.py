@@ -141,6 +141,11 @@ class ApprovalAndConsentBoundaries(unittest.TestCase):
         self.assertRegex(css, r"\.sensor-chart svg\{[^}]*max-width:\d+rem")
         self.assertIn("markerGap", js)
         self.assertIn("Circles mark some of the stored readings", js)
+        # The forced latest marker replaces a too-close neighbour instead of touching it.
+        self.assertIn("svg.removeChild(lastMarker)", js)
+        # "Latest stored" flips to the divider's right when 90 units of room are missing.
+        self.assertIn("anchorX - 4 - 56 >= 90", js)
+        self.assertIn('"text-anchor": roomLeft ? "end" : "start"', js)
 
 
 class HumanEvidenceNotFabricated(unittest.TestCase):
