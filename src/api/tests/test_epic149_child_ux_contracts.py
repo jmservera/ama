@@ -203,6 +203,7 @@ console.log(JSON.stringify({ dense: run(288, [1, 2, 3]), short: run(4, [6, 12, 2
         self.assertEqual(dense["label"]["text-anchor"], "end")
         self.assertGreaterEqual(short["label"]["x"], short["divider"] + 4)
         self.assertEqual(short["label"]["text-anchor"], "start")
+
     @unittest.skipUnless(shutil.which("node"), "node is required to execute the chart code")
     def test_resident_sensor_chart_behaviour_in_node(self) -> None:
         js: str = read(API / "resident_demo" / "web" / "demo.js")
