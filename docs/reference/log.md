@@ -14993,3 +14993,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2313 what-if workflow and PR image build (Refs #2313)
 
 * Added [issue-2313-what-if-live-2026-11-23.md](research/issue-2313-what-if-live-2026-11-23.md): `infra-plan.yml` already covers the what-if criteria; a new credential-free workflow builds a versioned image without deploying.
+## [2026-11-23] add | Issue 2314 alert rules, runbooks and AI usage saved query (Refs #2314)
+
+* Added [issue-2314-alerts-runbooks-2026-11-23.md](research/issue-2314-alerts-runbooks-2026-11-23.md): per-criterion proof; adds a workspace saved search for AI usage by capability and period with unreconciled variance. No Azure change.
