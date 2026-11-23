@@ -3,7 +3,9 @@
   "task_slug": "lazy-map-sensors",
   "session_name": "Lazy map sensors",
   "parent_task": null,
-  "child_tasks": [],
+  "child_tasks": [
+    {"task_id": "map-sensor-browser-regression", "task_slug": "map-sensor-browser-regression", "state_path": ".copilot-tracking/rpi-sessions/2026-11-23/lazy-map-sensors/map-sensor-browser-regression-state.json"}
+  ],
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
@@ -38,6 +40,8 @@
     {"decision": "Dirty worktree", "status": "carry", "evidence": "User approved carrying unrelated PDF onto topic branch without committing it."}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "Perform independent exact-head assessment, approved origin PR publication, and observe hosted CI. Record external gate results on the PR; owner retains merge and deployment."},
-  "prioritized_follow_ups": []
+  "next_action": {"phase": "Follow-up", "action": "Corrective child map-sensor-browser-regression published as PR 2328. Await independent exact-head review and hosted CI; no merge or deployment authorized."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "map-sensor-browser-regression", "rationale": "Required correction: hosted employee browser acceptance failed after lazy-loading change introduced a nested status region.", "evidence": "GitHub Actions run 45216338816 job 137838807298; owner request 2026-11-23."}
+  ]
 }
