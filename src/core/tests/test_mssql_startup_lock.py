@@ -134,6 +134,7 @@ class WriteLockBusyHelperTests(unittest.TestCase):
             self.assertFalse(mssqlstore.is_write_lock_busy(err))
         self.assertFalse(mssqlstore.is_write_lock_busy(None))
 
+
 class FakeDb:
     """Answers the read-only catalog queries from sets; records every statement."""
 
