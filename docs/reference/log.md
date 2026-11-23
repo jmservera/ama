@@ -14961,3 +14961,15 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2256 B2 handoff due-time seed tool (Refs #2256)
 
 * Added [issue-2256-b2-seed-2026-11-23.md](research/issue-2256-b2-seed-2026-11-23.md): a revertible demo seed tool gives timezone-aware offer and due times to pending handoffs; proven locally, not applied to live SQL.
+## [2026-11-23] update | Issue 1259 archive path regressions, run 8 (Refs #1259)
+
+* Added [2026-11-23-ranking-archive-unusable-1259-live-r8.md](research/2026-11-23-ranking-archive-unusable-1259-live-r8.md): real permission-denied archive regression, red-before and green-after (111 tests). Test-only source change.
+## [2026-11-23] add | Issue 2257 third live re-probe and overlay cause tag (Refs #2257)
+
+* Added [issue-2257-live-r3-2026-11-23.md](research/issue-2257-live-r3-2026-11-23.md): 10 of 10 fresh sessions loaded on revision 0000055; the sensor overlay warning now carries the lock cause tag. Not live until the next deployment.
+## [2026-11-23] add | Resident showcase HSTS header and live recheck r8 (Refs #462)
+
+* Added [resident-showcase-live-r8-2026-11-23.md](research/resident-showcase-live-r8-2026-11-23.md): 36 live checks on resident revision 0000027, missing Strict-Transport-Security added to the resident demo app with a test (not redeployed), per-criterion table.
+## [2026-11-23] add | Epic 218 live RAI readiness recheck (Refs #218)
+
+* Added [issue-218-live-rai-readiness-recheck-2026-11-23.md](research/issue-218-live-rai-readiness-recheck-2026-11-23.md): live gate separation proven, a traceability check that failed on every deployment (no test tree in the image) fixed offline, and a per-criterion table. The live effect of the fix stays unproven until a redeploy.

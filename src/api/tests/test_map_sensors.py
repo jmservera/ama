@@ -8,7 +8,7 @@ import time
 import unittest
 from typing import Any, cast
 
-from zava_forward.core import identity, insights, sensor_map
+from zava_forward.core import identity, insights, mssqlstore, sensor_map
 
 import test_assistants as ta
 from test_quality_sensors import Seed
@@ -103,6 +103,23 @@ class MapSensors(Seed, ta.ApiTests):
         self.assertEqual(s["state"], "unavailable")
         self.assertNotIn("temperature_c", s)
         self.assertIn("exc=ProgrammingError", logs.output[0])
+
+    def test_a_write_lock_timeout_in_the_overlay_is_logged_with_its_cause(self) -> None:
+        self.put(3, offset=120)
+        self.service.transaction = self.lock_transaction
+        with self.assertLogs("zava_forward.core.assistants", "WARNING") as logs:
+            s = self.sensor()
+        self.assertEqual(s["state"], "unavailable")
+        self.assertIn("cause=sql-write-lock-busy", logs.output[0])
+        self.assertNotIn("driver detail", logs.output[0])
+
+    @staticmethod
+    def lock_transaction() -> Any:
+        class ProgrammingError(Exception):
+            pass
+
+        ProgrammingError.__module__ = "pyodbc"
+        raise ProgrammingError(f"driver detail: {mssqlstore.LOCK_FAILED}")
 
     @staticmethod
     def fail_transaction() -> Any:

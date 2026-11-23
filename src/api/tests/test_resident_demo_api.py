@@ -721,6 +721,7 @@ class AbuseAndHardeningTests(DemoTestCase):
         _, _, page = c.call("GET", "/")
         html = page.headers
         self.assertIn("script-src 'self'", html["Content-Security-Policy"])
+        self.assertEqual(html["Strict-Transport-Security"], "max-age=31536000")
         text = (demo.WEB / "index.html").read_text()
         self.assertNotIn("onclick", text)
         self.assertNotIn("<script>", text)
