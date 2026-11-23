@@ -1,0 +1,90 @@
+[
+  {
+    "Message": "could not take the write lock",
+    "TableName": "PrimaryResult",
+    "error_number_d": "50002",
+    "n": "1059",
+    "t0": "2026-11-21T00:18:03.8289301Z",
+    "t1": "2026-11-23T00:54:52.4560969Z"
+  },
+  {
+    "Message": "Invalid object name 'assistant_continuity'.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "208",
+    "n": "761",
+    "t0": "2026-11-20T21:57:26.7654363Z",
+    "t1": "2026-11-23T01:13:58.1700547Z"
+  },
+  {
+    "Message": "Only nullable columns without a default value WITH VALUES can be added to ledger tables.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "37387",
+    "n": "21",
+    "t0": "2026-11-19T03:57:59.1919161Z",
+    "t1": "2026-11-20T07:32:07.6984304Z"
+  },
+  {
+    "Message": "Invalid object name 'sensor_readings'.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "208",
+    "n": "2",
+    "t0": "2026-11-20T23:46:49.8017819Z",
+    "t1": "2026-11-20T23:46:49.8076914Z"
+  },
+  {
+    "Message": "Invalid column name 'home_id'.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "207",
+    "n": "2",
+    "t0": "2026-11-22T13:43:04.677787Z",
+    "t1": "2026-11-22T14:01:00.821Z"
+  },
+  {
+    "Message": "Invalid column name 'consent'.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "207",
+    "n": "2",
+    "t0": "2026-11-22T05:15:32.8437986Z",
+    "t1": "2026-11-22T05:15:32.843832Z"
+  },
+  {
+    "Message": "The user does not have permission to perform this action.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "297",
+    "n": "1",
+    "t0": "2026-11-21T06:23:55.4075985Z",
+    "t1": "2026-11-21T06:23:55.4075985Z"
+  },
+  {
+    "Message": "Invalid object name 'readings'.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "208",
+    "n": "1",
+    "t0": "2026-11-20T23:46:49.8049108Z",
+    "t1": "2026-11-20T23:46:49.8049108Z"
+  },
+  {
+    "Message": "Argument data type datetime2 is invalid for argument 1 of substring function.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "8116",
+    "n": "1",
+    "t0": "2026-11-22T00:48:13.3741459Z",
+    "t1": "2026-11-22T00:48:13.3741459Z"
+  },
+  {
+    "Message": "Invalid object name 'workorders'.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "208",
+    "n": "1",
+    "t0": "2026-11-21T11:54:17.2616711Z",
+    "t1": "2026-11-21T11:54:17.2616711Z"
+  },
+  {
+    "Message": "Invalid object name 'exception_queue'.",
+    "TableName": "PrimaryResult",
+    "error_number_d": "208",
+    "n": "1",
+    "t0": "2026-11-21T18:12:34.2269532Z",
+    "t1": "2026-11-21T18:12:34.2269532Z"
+  }
+]

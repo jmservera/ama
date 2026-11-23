@@ -1,0 +1,442 @@
+[
+  {
+    "Column1": "GET /api/time/status",
+    "RevisionName": "ca-cutover-test-demo-api--0000033",
+    "TableName": "PrimaryResult",
+    "n": "12",
+    "t0": "2026-11-19T03:57:59.2058686Z",
+    "t1": "2026-11-20T07:32:07.7096496Z"
+  },
+  {
+    "Column1": "GET /api/time/mine",
+    "RevisionName": "ca-cutover-test-demo-api--0000033",
+    "TableName": "PrimaryResult",
+    "n": "4",
+    "t0": "2026-11-20T00:50:34.8051872Z",
+    "t1": "2026-11-20T07:21:58.1897342Z"
+  },
+  {
+    "Column1": "GET /api/time/report",
+    "RevisionName": "ca-cutover-test-demo-api--0000033",
+    "TableName": "PrimaryResult",
+    "n": "4",
+    "t0": "2026-11-20T00:50:34.8880925Z",
+    "t1": "2026-11-20T07:21:58.2740147Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "TableName": "PrimaryResult",
+    "n": "8",
+    "t0": "2026-11-21T00:18:03.8390506Z",
+    "t1": "2026-11-21T08:14:34.4622312Z"
+  },
+  {
+    "Column1": "GET /api/ai/report",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "TableName": "PrimaryResult",
+    "n": "3",
+    "t0": "2026-11-21T00:18:19.4144153Z",
+    "t1": "2026-11-21T08:10:52.8153631Z"
+  },
+  {
+    "Column1": "GET /api/map",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "TableName": "PrimaryResult",
+    "n": "4",
+    "t0": "2026-11-21T06:12:19.8652179Z",
+    "t1": "2026-11-21T08:14:56.6836626Z"
+  },
+  {
+    "Column1": "GET /api/retention",
+    "RevisionName": "ca-cutover-test-demo-api--0000038",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-21T06:12:36.1004615Z",
+    "t1": "2026-11-21T08:10:02.9593332Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000039",
+    "TableName": "PrimaryResult",
+    "n": "10",
+    "t0": "2026-11-21T10:33:11.1474371Z",
+    "t1": "2026-11-21T12:33:53.1441904Z"
+  },
+  {
+    "Column1": "GET /api/map",
+    "RevisionName": "ca-cutover-test-demo-api--0000039",
+    "TableName": "PrimaryResult",
+    "n": "4",
+    "t0": "2026-11-21T10:33:26.9195952Z",
+    "t1": "2026-11-21T12:08:52.8749977Z"
+  },
+  {
+    "Column1": "POST /api/chat/breakglass",
+    "RevisionName": "ca-cutover-test-demo-api--0000039",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T11:36:45.5753262Z",
+    "t1": "2026-11-21T11:36:45.5753262Z"
+  },
+  {
+    "Column1": "GET /api/exceptions",
+    "RevisionName": "ca-cutover-test-demo-api--0000039",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-21T11:49:29.6939904Z",
+    "t1": "2026-11-21T12:10:02.8065163Z"
+  },
+  {
+    "Column1": "GET /api/ai/report",
+    "RevisionName": "ca-cutover-test-demo-api--0000039",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T12:09:27.9871453Z",
+    "t1": "2026-11-21T12:09:27.9871453Z"
+  },
+  {
+    "Column1": "GET /api/continuity/export",
+    "RevisionName": "ca-cutover-test-demo-api--0000039",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T12:09:47.7302849Z",
+    "t1": "2026-11-21T12:09:47.7302849Z"
+  },
+  {
+    "Column1": "POST /api/cases/ZF-2025-0331/upload",
+    "RevisionName": "ca-cutover-test-demo-api--0000039",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-21T12:52:26.7531273Z",
+    "t1": "2026-11-21T12:52:51.1622827Z"
+  },
+  {
+    "Column1": "POST /api/ai/review/0701fc7c3662/reject",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T13:03:52.1194291Z",
+    "t1": "2026-11-21T13:03:52.1194291Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "28",
+    "t0": "2026-11-21T13:14:27.4959181Z",
+    "t1": "2026-11-21T20:56:22.7724323Z"
+  },
+  {
+    "Column1": "GET /api/retention",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "4",
+    "t0": "2026-11-21T13:27:09.4067208Z",
+    "t1": "2026-11-21T14:30:03.5959639Z"
+  },
+  {
+    "Column1": "GET /api/exceptions",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "14",
+    "t0": "2026-11-21T13:27:24.6253238Z",
+    "t1": "2026-11-21T20:55:29.6281343Z"
+  },
+  {
+    "Column1": "GET /api/ai/report",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-21T13:28:14.4519764Z",
+    "t1": "2026-11-21T14:26:50.2855354Z"
+  },
+  {
+    "Column1": "GET /api/continuity/export",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-21T13:28:30.2826928Z",
+    "t1": "2026-11-21T14:27:10.5168564Z"
+  },
+  {
+    "Column1": "GET /api/map",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "9",
+    "t0": "2026-11-21T14:26:09.9224792Z",
+    "t1": "2026-11-21T20:56:44.9859284Z"
+  },
+  {
+    "Column1": "POST /api/cases/ZF-2025-0331/upload",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T14:28:14.0040799Z",
+    "t1": "2026-11-21T14:28:14.0040799Z"
+  },
+  {
+    "Column1": "POST /api/chat/breakglass",
+    "RevisionName": "ca-cutover-test-demo-api--0000040",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T14:33:51.8727756Z",
+    "t1": "2026-11-21T14:33:51.8727756Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-f5d134503d1b411f/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T21:33:37.225606Z",
+    "t1": "2026-11-21T21:33:37.225606Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "16",
+    "t0": "2026-11-21T21:34:38.8780474Z",
+    "t1": "2026-11-21T22:55:01.8659803Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-9a9246617133496e/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T21:35:23.630148Z",
+    "t1": "2026-11-21T21:35:23.630148Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "3",
+    "t0": "2026-11-21T21:36:42.6162021Z",
+    "t1": "2026-11-21T22:00:53.5357394Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-145c9cc65b2a4f8a/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T21:39:49.3158129Z",
+    "t1": "2026-11-21T21:39:49.3158129Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-fde646e801f84268/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T21:40:46.8279674Z",
+    "t1": "2026-11-21T21:40:46.8279674Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-e2487ef89f1b4be9/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T21:49:11.7974629Z",
+    "t1": "2026-11-21T21:49:11.7974629Z"
+  },
+  {
+    "Column1": "GET /api/map",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-21T22:00:39.3440456Z",
+    "t1": "2026-11-21T22:00:50.4324883Z"
+  },
+  {
+    "Column1": "GET /api/retention",
+    "RevisionName": "ca-cutover-test-demo-api--0000042",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T22:56:11.1622498Z",
+    "t1": "2026-11-21T22:56:11.1622498Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "27",
+    "t0": "2026-11-21T23:06:19.6948964Z",
+    "t1": "2026-11-22T01:45:48.9519003Z"
+  },
+  {
+    "Column1": "GET /api/map",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "17",
+    "t0": "2026-11-21T23:06:35.451028Z",
+    "t1": "2026-11-22T01:48:35.8895473Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "12",
+    "t0": "2026-11-21T23:10:15.213792Z",
+    "t1": "2026-11-22T01:40:26.1068241Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-11eb889e94454701/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-21T23:50:55.5902112Z",
+    "t1": "2026-11-21T23:52:02.5265777Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-85188f2087cd47cc/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T23:55:06.7664682Z",
+    "t1": "2026-11-21T23:55:06.7664682Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-65cb23fbda2b4cfd/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-21T23:57:23.0882456Z",
+    "t1": "2026-11-21T23:57:23.0882456Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-6b3624ef044f4c92/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "3",
+    "t0": "2026-11-22T00:48:58.0104094Z",
+    "t1": "2026-11-22T00:51:50.227856Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-f223fbe0ddc64a11/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T01:01:42.5269544Z",
+    "t1": "2026-11-22T01:01:42.5269544Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-6b35abfcb20c41cd/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "4",
+    "t0": "2026-11-22T01:01:53.2876494Z",
+    "t1": "2026-11-22T01:06:08.2292123Z"
+  },
+  {
+    "Column1": "GET /api/retention",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "3",
+    "t0": "2026-11-22T01:13:55.6982959Z",
+    "t1": "2026-11-22T01:34:17.2537466Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-5f8084ae03b648b4/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000043",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-22T01:14:02.8609862Z",
+    "t1": "2026-11-22T01:15:25.53919Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000045",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-22T05:25:20.422835Z",
+    "t1": "2026-11-22T09:51:00.4250107Z"
+  },
+  {
+    "Column1": "GET /api/retention",
+    "RevisionName": "ca-cutover-test-demo-api--0000046",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T10:34:49.3221643Z",
+    "t1": "2026-11-22T10:34:49.3221643Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000046",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T10:35:08.5819375Z",
+    "t1": "2026-11-22T10:35:08.5819375Z"
+  },
+  {
+    "Column1": "GET /api/briefing",
+    "RevisionName": "ca-cutover-test-demo-api--0000047",
+    "TableName": "PrimaryResult",
+    "n": "37",
+    "t0": "2026-11-22T10:36:57.9493003Z",
+    "t1": "2026-11-22T12:27:07.6815177Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads",
+    "RevisionName": "ca-cutover-test-demo-api--0000049",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T13:55:53.0227014Z",
+    "t1": "2026-11-22T13:55:53.0227014Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads",
+    "RevisionName": "ca-cutover-test-demo-api--0000050",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T14:50:04.3257776Z",
+    "t1": "2026-11-22T14:50:04.3257776Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-4bee235d56f149fc/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000050",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T14:52:40.3624352Z",
+    "t1": "2026-11-22T14:52:40.3624352Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads",
+    "RevisionName": "ca-cutover-test-demo-api--0000051",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-22T17:51:51.4006688Z",
+    "t1": "2026-11-22T18:01:33.8404338Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads/CT-01bcbdb612e24bac/ask",
+    "RevisionName": "ca-cutover-test-demo-api--0000052",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T18:48:23.5601056Z",
+    "t1": "2026-11-22T18:48:23.5601056Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads",
+    "RevisionName": "ca-cutover-test-demo-api--0000053",
+    "TableName": "PrimaryResult",
+    "n": "1",
+    "t0": "2026-11-22T19:44:05.842696Z",
+    "t1": "2026-11-22T19:44:05.842696Z"
+  },
+  {
+    "Column1": "POST /api/chat/threads",
+    "RevisionName": "ca-cutover-test-demo-api--0000054",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-22T23:35:34.811412Z",
+    "t1": "2026-11-22T23:47:18.4841249Z"
+  },
+  {
+    "Column1": "GET /api/map",
+    "RevisionName": "ca-cutover-test-demo-api--0000054",
+    "TableName": "PrimaryResult",
+    "n": "2",
+    "t0": "2026-11-23T00:47:00.0558402Z",
+    "t1": "2026-11-23T00:54:52.4720367Z"
+  }
+]

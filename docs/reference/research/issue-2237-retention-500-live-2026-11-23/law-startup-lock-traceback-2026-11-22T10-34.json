@@ -1,0 +1,8 @@
+[
+  {
+    "Log": "mssql_python.exceptions.ProgrammingError: Driver Error: Syntax error or access violation; DDBC Error: [Microsoft][SQL Server]could not take the write lock",
+    "RevisionName": "ca-cutover-test-demo-api--0000047",
+    "TableName": "PrimaryResult",
+    "TimeGenerated": "2026-11-22T10:34:48.1250587Z"
+  }
+]

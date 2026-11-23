@@ -87,6 +87,24 @@ BEGIN = ("BEGIN TRAN; DECLARE @r INT; EXEC @r = sp_getapplock @Resource = N'zava
          "@LockOwner = N'Transaction', @LockTimeout = 15000; IF @r < 0 THROW 50002, 'could not take the write lock', 1;")
 
 LOCK_FAILED = "could not take the write lock"
+_DRIVER_MODULES = ("mssql_python", "pyodbc")
+_DRIVER_ERRORS = ("ProgrammingError", "DatabaseError")
+
+
+def is_write_lock_busy(exc: BaseException | None) -> bool:
+    """True when exc, or an exception it chains from, is the driver error for a timed-out write lock (SQL error 50002).
+
+    The driver is recognised by class and module name so this needs no optional import."""
+    seen: set[int] = set()
+    while exc is not None and id(exc) not in seen:
+        seen.add(id(exc))
+        kind = type(exc)
+        if kind.__module__.split(".")[0] in _DRIVER_MODULES and kind.__name__ in _DRIVER_ERRORS and LOCK_FAILED in str(exc):
+            return True
+        exc = exc.__cause__ or exc.__context__
+    return False
+
+
 LOCK_RETRY_ATTEMPTS = 8
 LOCK_RETRY_BASE = 1.0
 LOCK_RETRY_CAP = 30.0
