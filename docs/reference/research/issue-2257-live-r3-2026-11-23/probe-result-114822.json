@@ -1,0 +1,142 @@
+[
+ {
+  "run": 1,
+  "start_utc": "11:45:33",
+  "map_wait_s": 5.4,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 13.67,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 2,
+  "start_utc": "11:45:47",
+  "map_wait_s": 7.4,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 15.73,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 3,
+  "start_utc": "11:46:03",
+  "map_wait_s": 5.0,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 13.37,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 4,
+  "start_utc": "11:46:17",
+  "map_wait_s": 6.3,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 14.76,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 5,
+  "start_utc": "11:46:32",
+  "map_wait_s": 7.0,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 17.24,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 6,
+  "start_utc": "11:46:49",
+  "map_wait_s": 7.7,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 15.87,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 7,
+  "start_utc": "11:47:06",
+  "map_wait_s": 4.8,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 13.77,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 8,
+  "start_utc": "11:47:20",
+  "map_wait_s": 9.7,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 18.77,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 9,
+  "start_utc": "11:47:39",
+  "map_wait_s": 6.9,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 15.18,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ },
+ {
+  "run": 10,
+  "start_utc": "11:47:54",
+  "map_wait_s": 19.3,
+  "markers": 443,
+  "unavailable": false,
+  "events": [
+   {
+    "t": 27.6,
+    "url": "/api/map",
+    "status": 200
+   }
+  ]
+ }
+]

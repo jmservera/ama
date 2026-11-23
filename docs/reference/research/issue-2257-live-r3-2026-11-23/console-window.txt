@@ -1,0 +1,3 @@
+2026-11-23 11:48:22,127 zava_forward.api.server WARNING http-response GET /api/cases/ZF-2025-0031/sensors status=503
+
+Filtered console window 11:45 to 11:49 UTC, revision 0000055: warning and error lines only, e-mail addresses masked. No `/api/map` error, no map sensor overlay warning, in the ten probe runs. The 503 is a separate sensors-endpoint response outside the probe's requests (no cause tag on this line).

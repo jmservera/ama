@@ -14964,3 +14964,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1259 archive path regressions, run 8 (Refs #1259)
 
 * Added [2026-11-23-ranking-archive-unusable-1259-live-r8.md](research/2026-11-23-ranking-archive-unusable-1259-live-r8.md): real permission-denied archive regression, red-before and green-after (111 tests). Test-only source change.
+## [2026-11-23] add | Issue 2257 third live re-probe and overlay cause tag (Refs #2257)
+
+* Added [issue-2257-live-r3-2026-11-23.md](research/issue-2257-live-r3-2026-11-23.md): 10 of 10 fresh sessions loaded on revision 0000055; the sensor overlay warning now carries the lock cause tag. Not live until the next deployment.
