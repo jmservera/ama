@@ -14990,3 +14990,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2245 chat 500 live recheck (Refs #2245)
 
 * Added [issue-2245-recheck-2026-11-23.md](research/issue-2245-recheck-2026-11-23.md): the thread creation 500 reproduced live on revision 0000055 while the SQL write lock was busy; the merged 503 fix is not deployed; the AI suspension is unchanged. Index updated.
+## [2026-11-23] add | Issue 2254 safety count run 4 (Refs #2254)
+
+* Added [issue-2254-live-r4-2026-11-23.md](research/issue-2254-live-r4-2026-11-23.md): reverting the stale hazard-column repair makes the regression test fail (3 != 4); live tile, map markers and list agree at 23 by case id. No source change.

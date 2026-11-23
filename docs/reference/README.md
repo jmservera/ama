@@ -733,6 +733,8 @@ The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026
 
 The [issue 2254 run 3 note](./research/issue-2254-live-r3-2026-11-23.md) records a fresh live desktop check that the Overview tile, map markers, All cases list and API all show 23 safety issues, and a test that asserts the map count against the tile and list.
 
+The [issue 2254 run 4 note](./research/issue-2254-live-r4-2026-11-23.md) reproduces the 3 versus 4 safety count on the code by reverting the stale-column repair, shows the regression test fails without it, and re-checks tile, map and list by case id on the live demo (23, 23, 23).
+
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
 
 The [thread creation 500 note](./research/issue-2245-thread500-2026-11-22.md) records the console evidence of the `ProgrammingError` 500, a 12-create live probe with no 500, one regression test and a per-criterion table for issue 2245.
