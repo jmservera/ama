@@ -3550,6 +3550,7 @@ const AI_COST_ROWS = [
   ["Quality-qualified cost per accepted outcome", "quality_qualified_cost_per_accepted_outcome"],
   ["Booked value", "booked_value"],
 ];
+const AI_PER_OUTCOME_KEYS = new Set(["token_cost_per_accepted_outcome", "cost_per_accepted_outcome", "quality_qualified_cost_per_accepted_outcome"]);
 const AI_DENOMINATOR_ROWS = [
   ["AI proposals", "proposal_count"],
   ["Accepted outcomes", "accepted_outcome_count"],
@@ -3568,10 +3569,13 @@ function aiEconomicsRows(econ) {
     if (typeof value === "string" && /^[-+]?0*\.?0*$/.test(value.trim())) return "Unknown";
     return currency ? `${currency} ${value}` : String(value);
   };
+  const unpriced = available && econ.price_source_configured === false;
+  const noOutcomes = !(Number.isFinite(denominators.accepted_outcome_count) && denominators.accepted_outcome_count > 0);
   return {
     available: Boolean(available),
     denominators: AI_DENOMINATOR_ROWS.map(([label, key]) => [label, count(denominators[key])]),
-    costs: AI_COST_ROWS.map(([label, key]) => [label, cost(available ? econ[key] : null)]),
+    costs: AI_COST_ROWS.map(([label, key]) => [label,
+      unpriced || (noOutcomes && AI_PER_OUTCOME_KEYS.has(key)) ? "Unknown" : cost(available ? econ[key] : null)]),
     priceSource: available && econ.price_source ? String(econ.price_source) : "Unknown",
     notice: (available && econ.non_benefit_notice) || "",
   };
