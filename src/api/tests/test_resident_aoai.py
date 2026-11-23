@@ -200,6 +200,26 @@ class AzureAdvisorTests(unittest.TestCase):
             "Summary by rules", self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1")).label
         )
 
+    def test_question_path_follows_zf_demo_expires_at(self) -> None:
+        later = "2028-01-01T00:00:00Z"
+        base = chat.answer("repair", {})
+        self.transport.side_effect = None
+        self.transport.return_value = question_reply()
+        self.advisor.clock = lambda: EXPIRES + 86400
+        resident = resident_key("C-1")
+        with patch.dict("os.environ", {"ZF_DEMO_EXPIRES_AT": later}):
+            result = self.advisor.answer_question("A smell", CASE, resident, base)
+            self.assertEqual(result.label, "AI-generated")
+            self.assertEqual(self.transport.call_count, 1)
+            self.advisor.clock = lambda: expires_at({"ZF_DEMO_EXPIRES_AT": later})
+            closed = self.advisor.answer_question("A smell", CASE, resident, base)
+            self.assertIn("Summary by rules", closed.label)
+            self.assertEqual(self.transport.call_count, 1)
+        self.advisor.clock = lambda: EXPIRES + 86400
+        unset = self.advisor.answer_question("A smell", CASE, resident, base)
+        self.assertIn("Summary by rules", unset.label)
+        self.assertEqual(self.transport.call_count, 1)
+
     def test_expiry_before_reservation_and_during_credentials_and_response(self) -> None:
         for times, calls in (
             ([EXPIRES], 0),

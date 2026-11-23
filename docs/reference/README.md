@@ -784,6 +784,8 @@ The [issue 2243 live re-verification, run 2](./research/issue-2243-live-r2-2026-
 
 The [issue 2243 unverified AI reply diagnosis](./research/issue-2243-live-r3-2026-11-23.md) traces the generic label to the resident-mini deployment limit of 1 request a minute (HTTP 429) and adds named fallback reasons with a test.
 
+The [issue 2243 live re-proof](./research/issue-2243-live-r4-2026-11-23.md) shows both resident free-text questions answered by the model on revision 0000028 with capacity 10, and adds a free-text expiry regression test.
+
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
 The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.

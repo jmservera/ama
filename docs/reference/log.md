@@ -15196,3 +15196,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 114 ledger re-verification (Refs #114)
 
 * Added [issue-114-live-reverify-2026-11-23.md](research/issue-114-live-reverify-2026-11-23.md): read-only live probe of the demo ledger (intact, one year), reliance gate absent from the orchestrator image, one added test. No ticks changed.
+
+## [2026-11-23] add | Issue 2243 live re-proof of the resident AI expiry fix (Refs #2243)
+
+* Added [issue-2243-live-r4-2026-11-23.md](research/issue-2243-live-r4-2026-11-23.md): live probe on revision 0000028 returns model answers for both questions; a free-text expiry regression test was added; the image-to-commit link stays unproven (registry firewalled).

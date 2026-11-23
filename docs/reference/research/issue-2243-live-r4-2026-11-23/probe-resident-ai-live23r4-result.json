@@ -1,0 +1,27 @@
+{
+ "login_status": 200,
+ "chat": [
+  {
+   "question": "Which documents are missing from my case?",
+   "http": 200,
+   "label": "AI suggestion, not approved",
+   "routing": {
+    "agent": "Documents helper",
+    "routed": true,
+    "text": "Routed to the Documents helper: your question is about documents for your case."
+   },
+   "answer": "This view does not show which documents have been requested for your case. It cannot tell you what to send. Document D1, EPC: a generated placeholder, not a presented document. The file check result is unknown in this view. Ask staff to check it. The resident-facing warning and error list is not recorded. Document D2, Survey: a generated placeholder, not a presented document. The file check result"
+  },
+  {
+   "question": "How is my case going?",
+   "http": 200,
+   "label": "AI-generated",
+   "routing": {
+    "agent": "Case progress helper",
+    "routed": true,
+    "text": "Routed to the Case progress helper: your question is about how your case is going."
+   },
+   "answer": "Your case is currently paused, so there is no ongoing contact or updates at the moment. You will not be contacted until the pause is lifted. If you need help or have questions, you can reach out to your housing officer for assistance. Chat cannot lift a pause, restart contact or change your case. Only a person can do that. Speak to your housing officer, or write to or visit your local Zava North H"
+  }
+ ]
+}
