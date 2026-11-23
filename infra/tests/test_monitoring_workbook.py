@@ -60,6 +60,26 @@ class MonitoringWorkbookTests(unittest.TestCase):
                 for column in columns:
                     self.assertIn(column, query)
 
+    def test_ingress_tile_reads_only_non_personal_columns_and_stays_insufficient_when_empty(
+        self,
+    ) -> None:
+        query = self._items()["edge-requests"]["content"]["query"]
+        self.assertTrue(
+            query.startswith(
+                "let samples = union isfuzzy=true (datatable(TimeGenerated:datetime, "
+                "ContainerAppName:string, StatusCode:int, RequestDuration:long)[]), "
+                "ContainerAppHTTPLogs | project TimeGenerated, ContainerAppName, "
+                "StatusCode, RequestDuration;"
+            )
+        )
+        for column in ("ServerErrorPercent", "NonServerErrorPercent", "P95Ms", "ClientAborted"):
+            self.assertIn(column, query)
+        self.assertIn("'Insufficient'", query)
+        self.assertIn("not SLO acceptance", query)
+        for column in ("Path", "UserAgent", "XForwardedFor", "Authority", "RequestId"):
+            self.assertNotIn(column, query)
+        self.assertIn("edge-caveat", self._items())
+
     def test_budget_is_notification_not_cap(self) -> None:
         text = self._items()["cost-and-budget"]["content"]["json"]
         for phrase in ("80% actual", "100% forecast", "not a hard cap"):

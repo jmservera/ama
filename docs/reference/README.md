@@ -599,6 +599,8 @@ A [round 3 note](./research/issue-2314-alerts-runbooks-r3-2026-11-23.md) records
 
 A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) executes the workbook queries live now that workspace query access is open, fixes a failing AI variance query and records what stays unproven.
 
+A [2026-11-23 ingress pass](./research/issue-146-live7-monitoring-2026-11-23.md) finds the availability, errors and latency tiles read empty Application Insights tables, adds a workbook tile on Container Apps ingress logs that returns live data, and records what stays unproven.
+
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
 

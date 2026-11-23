@@ -15278,3 +15278,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Resident showcase r10, Content-Length guard (Refs #462)
 
 * Added [resident-showcase-live-r10-2026-11-23.md](research/resident-showcase-live-r10-2026-11-23.md): 36 live checks on revision 0000028; a non-ASCII digit `Content-Length` no longer drops the connection on the resident demo (regression test); live effect awaits a redeploy.
+## [2026-11-23] add | Issue 146 ingress availability, errors and latency tile (Refs #146)
+
+* Added [issue-146-live7-monitoring-2026-11-23.md](research/issue-146-live7-monitoring-2026-11-23.md): read-only live check shows Application Insights tables empty while Container Apps ingress logs hold data; new `edge-requests` workbook tile (source only, executed live) and one test. Alerts, owners and Portal render stay unproven.
