@@ -47,6 +47,15 @@ class OverviewAiEconomicsTests(unittest.TestCase):
                 self.assertEqual({value for _, value in rows["denominators"]}, {"Unknown"})
         self.assertFalse(_rows(None)["available"])
 
+    def test_zero_valued_decimal_strings_render_unknown_not_zero(self) -> None:
+        zeros = ["0", "0.0", "0.000000", " 0.00 ", "-0", ".0"]
+        for zero in zeros:
+            with self.subTest(zero=zero):
+                rows = _rows({"currency": "GBP", "token_cost": zero, "booked_value": "12.50"})
+                costs = dict(rows["costs"])
+                self.assertEqual(costs["Token cost"], "Unknown")
+                self.assertEqual(costs["Booked value"], "GBP 12.50")
+
     def test_priced_values_show_currency_and_zero_cost_is_not_displayed_as_a_number(self) -> None:
         rows = _rows(
             {

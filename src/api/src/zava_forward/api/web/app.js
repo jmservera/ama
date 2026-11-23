@@ -3565,6 +3565,7 @@ function aiEconomicsRows(econ) {
   const count = (value) => (Number.isFinite(value) ? new Intl.NumberFormat("en-GB").format(value) : "Unknown");
   const cost = (value) => {
     if (value === null || value === undefined || value === "" || value === "Unknown" || value === 0) return "Unknown";
+    if (typeof value === "string" && /^[-+]?0*\.?0*$/.test(value.trim())) return "Unknown";
     return currency ? `${currency} ${value}` : String(value);
   };
   return {
