@@ -991,6 +991,32 @@ class ReviewTests(Base):
             with self.assertRaises(PermissionError):
                 self.service.authorize(db, user, "stock-prioritisation")
 
+    def test_bound_entra_forged_pointer_tenant_and_area_scope(self):
+        user = self.bound_entra()
+        other = dict(code="ROLE-OTHER", name="Other PM", email="other-pm@example.test",
+                     role="Retrofit Programme Manager", oid="44444444-4444-4444-8444-444444444444",
+                     tid=user["tid"])
+        with self.service.transaction() as db:
+            db.execute("INSERT INTO staff (email, body) VALUES (?,?)", (other["email"], canonical(other)))
+            forged = dict(user, code=other["code"], email=other["email"],
+                          bound=dict(code=other["code"], email=other["email"]))
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, forged, "stock-prioritisation", "ZF-1")
+            row = json.loads(db.execute("SELECT body FROM staff WHERE email=?", (user["email"],)).fetchone()[0])
+            db.execute("UPDATE staff SET body=? WHERE email=?",
+                       (canonical(dict(row, tid="55555555-5555-4555-8555-555555555555")), user["email"]))
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, user, "stock-prioritisation", "ZF-1")
+            area = json.loads(db.execute("SELECT body FROM cases WHERE id='ZF-1'").fetchone()[0])["home"]["area"]
+            for areas, allowed in (([area], True), ([area + "-other"], False)):
+                db.execute("UPDATE staff SET body=? WHERE email=?",
+                           (canonical(dict(row, areas=areas)), user["email"]))
+                if allowed:
+                    self.assertEqual(self.service.authorize(db, user, "stock-prioritisation", "ZF-1")["id"], "ZF-1")
+                else:
+                    with self.assertRaises(PermissionError):
+                        self.service.authorize(db, user, "stock-prioritisation", "ZF-1")
+
     def test_unbound_and_view_only_entra_principals(self):
         user = identity.principal("11111111-1111-4111-8111-111111111111",
                                   "33333333-3333-4333-8333-333333333333", "Retrofit Programme Manager")
