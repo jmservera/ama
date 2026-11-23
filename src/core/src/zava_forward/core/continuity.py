@@ -572,6 +572,20 @@ def _incident_action(method):
     return call
 
 
+DEMO_OWNER_OVERRIDE_ENV = "ZF_DEMO_AI_SUSPENSION_OVERRIDE"
+
+
+def demo_owner_override(env=None):
+    """Demo-only: the owner directed (2026-11-23) that open AI suspensions do not hold the demo.
+
+    The suspension records stay open and visible; only the AI hold is skipped, and only when the
+    deployment sets this variable. It is never set for production.
+    """
+    env = os.environ if env is None else env
+    directed = env.get(DEMO_OWNER_OVERRIDE_ENV) == "owner-directed-2026-11-23"
+    return directed and env.get("ZF_ENV") != "production"
+
+
 class ContinuityMixin:
     def _cont(self):
         c = self.data.setdefault("continuity", blank())
@@ -609,6 +623,8 @@ class ContinuityMixin:
                     raise
 
     def continuity_suspension(self, task):
+        if demo_owner_override():
+            return None
         return active(self._cont(), task)
 
     def continuity_block(self, task):
