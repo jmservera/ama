@@ -65,6 +65,7 @@ def approved_payload(system, user):
     if not isinstance(system, str):
         raise InputRefused("input-type-not-approved")
     text = 0
+    images = 0
     if isinstance(user, str):
         user = [{"type": "text", "text": user}]
     if not isinstance(user, list) or not user:
@@ -86,7 +87,8 @@ def approved_payload(system, user):
             base64.b64decode(data, validate=True)
         except ValueError:
             raise InputRefused("input-type-not-approved") from None
-        if len(data) * 3 // 4 > MAX_IMAGE_BYTES:
+        images += len(data) * 3 // 4
+        if images > MAX_IMAGE_BYTES:
             raise InputRefused("input-image-too-large")
     if text + _utf8_size(system) > MAX_TEXT_BYTES:
         raise InputRefused("input-too-large")

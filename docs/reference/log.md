@@ -15285,3 +15285,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 1288 fourteenth audit and post-capture implausible guard (Refs #1288)
 
 * Added [issue-1288-live-r14-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r14-quality-sensor-evidence-2026-11-23.md): an autonomous flag is downgraded when a cited reading is corrected to an impossible value after capture (test written first); per-criterion table, criteria 4 and 8 stay unproven.
+## [2026-11-23] add | Issue 116 provider boundary aggregate image size (Refs #116)
+
+* Added [issue-116-live-r12-evidence-2026-11-23.md](research/issue-116-live-r12-evidence-2026-11-23.md): the shared provider allowlist now caps total decoded image bytes per request (previously per image only), with a failing-then-passing test. Live payloads, independent review and hosted CI stay outstanding.
