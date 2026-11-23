@@ -1,0 +1,282 @@
+Ranking archive could not be written: ranking archive write refused (HTTP 403)
+http-response POST /api/ranking/publish status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/cases/ZF-1/quality-accept status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Ranking archive could not be written: ranking archive configuration is invalid
+http-response POST /api/ranking/publish status=503
+http-response POST /api/ranking/publish status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/cases/ZF-1/quality-accept status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Ranking archive temporary file .ranking-1.0.0-2026-11-23-975953242994.json.764bd7697cf70fb5.tmp was not removed
+Ranking archive temporary file .ranking-1.0.0-2026-11-23-975953242994.json.326f6971aa3d948e.tmp was not removed
+Ranking archive could not be written: [Errno 1] hard links unsupported
+http-response POST /api/ranking/publish status=503
+Ranking archive could not be written: [Errno 95] hard links unsupported
+http-response POST /api/ranking/publish status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/cases/ZF-1/quality-accept status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 186, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-2138-live-20261123T014429Z/src/api/src/zava_forward/api/server.py", line 177, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+----------------------------------------------------------------------
+Ran 49 tests in 36.308s
+
+OK

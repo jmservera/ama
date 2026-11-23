@@ -418,6 +418,9 @@ immutability stay unproven.
 A second run, [live ranking proof with retained evidence](./research/issue-79-live-ranking-2026-11-18.md),
 keeps the raw outputs; it repeats the proof of the two ticked criteria and leaves the
 owner signature, schedule and retention unproven.
+For #2138, the [live comparison of the two remaining ranking criteria](./research/issue-2138-live-2026-11-23.md)
+records that live still serves the unsigned draft policy, no ranking job is deployed and the
+deployed orchestrator image lacks the publish module. Both criteria stay open.
 For #76, the [live task queue evidence](./research/issue-76-live-task-queue-evidence-2026-11-18.md)
 records the hazard clock and named owner on the live demo case card. The clock reads
 unknown because the record has no timestamp, and no demo case has a safeguarding item.
@@ -591,6 +594,8 @@ A [fifth run](./research/issue-1258-live-r5-2026-11-19.md) records the per-crite
 A [sixth run](./research/issue-1258-live-r6-2026-11-21.md) adds a mutation check that shows the ancestor regression failing without the parent sync; criterion 5 stays unproven.
 An [eighth run](./research/issue-1258-live-r8-2026-11-23.md) repeats the mutation check at head 342fad401d and confirms live revisions 0000054 and 0000026; criterion 5 stays unproven.
 
+For #2116, the [drill criterion classification](./research/issue-2116-drill-criterion-demo-classification-2026-11-23.md) records the witnessed suspension drill as owner-gated and unproven for the demo.
+
 For #189, the [simulator run controls live evidence](./research/issue-189-simulator-run-controls-live-evidence-2026-11-18.md)
 records a 2026-11-18 demo check of the budget alerts, hub owner tag and deterministic owner, time-limit and alert controls; no simulator job is deployed.
 A [second pass](./research/simulator-run-controls-live-189-2026-11-18.md) adds a signed-in probe of the deployed admin endpoint (403 for staff; no administrator role granted), an offline start, stop and capacity exercise with raw output, and the USD 5.16 observed spend.
@@ -711,6 +716,8 @@ The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.
 
 The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records read only proof that scheduled simulator runs reach IoT Hub, the receiver and the employee map (288 `SYN-` devices, hub ingress equal to egress, fresh case readings), the clean secret scan and the unproven resident live view (#184).
 
+The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-11-23.md) records the 2026-11-23 read only Hub to receiver to employee map walkthrough on revision 0000054 (fresh reading 79 s old, per message SQL hop inferred, resident view stored only) (#2118).
+
 The [live proof of the merged demo fixes](./research/issue-2202-deployproof-2026-11-22.md) records a desktop Playwright check of 2255, 2253, 2254, 2256 and the map on revisions 0000051 and 0000023 (passes), and shows generative AI answers still blocked by an open suspension and the resident ledger expiry, with screenshots and a per-item table.
 
 The [chat ask latency note](./research/issue-2245-chattimeout-2026-11-22.md) records live probes of the demo employee chat ask (no 120 s hang reproduced, one 19.4 s write-lock 500), the SQL write-lock explanation, the meter seeding fix and a per-criterion table for issue 2245.
@@ -729,11 +736,15 @@ The [issue 2243 live re-verification of 2026-11-23](./research/issue-2243-live-2
 
 The [issue 2244 live re-verification of 2026-11-23](./research/issue-2244-live-2026-11-23.md) confirms live API revision 0000054 runs the same `mssqlstore.py` as main (start-up retry from #2273), adds read-only schema fast paths so start-up skips the write lock when nothing changes, and records C1 to C5 as proven or unproven.
 
+The [issue 2243 live re-verification, run 2](./research/issue-2243-live-r2-2026-11-23.md) repeats the probe about 1.5 hours later on the same revisions with the same `usage_limit` result and 70 passing targeted tests; only the owner-gated ledger criterion remains.
+
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
 The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.
 
 The [issue 2255 live re-check of 2026-11-23](./research/issue-2255-live-2026-11-23.md) repeats the safety queue probe on revision 0000054 (22 of 22 clocks, 0 unknown), records the root cause of the open re-seed criterion and keeps it owner-gated.
+
+The [issue 2117 classification](./research/issue-2117-live-2026-11-23.md) records that the one remaining nomination route criterion needs authorised human evidence and is owner-gated for the demo.
 
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
@@ -1172,6 +1183,8 @@ live contact, operational authority or whole-issue closure is delivered.
 The [2026-11-19 demo re-check](./research/ux/issue-153-live-named-review-2026-11-19.md)
 records the per-criterion status: the named human wording review is the only unticked
 criterion and needs the appointed reviewer.
+The [2026-11-23 re-check for #2132](./research/ux/issue-2132-live-named-review-2026-11-23.md)
+reaches the same conclusion for the split-out criterion.
 A 2026-11-06 slice rewords the two document-retention refusals in
 `doc_controls.py` (legal hold; not yet due) and records the open question of who
 decides that a real hold has ended; see the
@@ -1588,6 +1601,7 @@ or infra acceptance claimed.
 | [Issue 350 live pass 5, ten criteria (#350)](./research/issue-350-live-r5-2026-11-22.md) | Signed-in staff and read-only Azure evidence: law store now configured but unseeded (4 cards, 0 sources), digest blobs listable, jobs healthy; edge 302, photo, release authority and second-role results still unproven. No source or estate change |
 | [Issue 350 live pass 6, ten criteria (#350)](./research/issue-350-live-r6-2026-11-23.md) | Revisions 0000054 and 0000026 re-probed: behaviour unchanged, audit job proves digest verification (explains `digests_checked` 0), edge 302, photo, law seeding, release authority and second-role results still unproven. No source or estate change |
 | [Case chat citation and refusal gates, live (#216)](./research/eval-gates-live-216-2026-11-18.md) | Graded and adversarial 30-prompt run of the live demo case chat: refusals 10 of 10, citations valid 7 of 7 on the model path, but only 9 model calls available (demo meter); per-criterion status, adverse evidence and spend overshoot disclosed | 2026-11-18 |
+| [Case chat gates re-check, live (#2124)](./research/issue-2124-live-2026-11-23.md) | Live refusals 10 of 10 with zero model calls, local gate tests, per-criterion status; production ownership owner-gated | 2026-11-23 |
 | [Issue 117 scan before availability (demo)](./research/issue-117-scan-before-availability-live-2026-11-19.md) | Mechanism proven by 69 passing tests; real malware engine unproven for the demo; nothing ticked. |
 | [Epic 113 Azure platform audit with live read (#113)](./research/issue-113-epic-audit-live-2026-11-18.md) | Per-criterion table for the three epic criteria (none tickable for the demo), per-child roll-up of unticked criteria into demo-provable gaps and production-only items, and a GET-only read of the demo; nothing ticked. |
 | [Epic 113 first unmet demo criterion recheck (#113)](./research/issue-113-first-unmet-demo-criterion-2026-11-19.md) | Live recheck of the three epic criteria on 2026-11-19: criterion 1 (#440 checkpoint) is the first unmet and is not a code item, so no source changed; 7 of 8 children open |
@@ -1666,6 +1680,7 @@ or infra acceptance claimed.
 | [Assistive-technology, consent and Fluent/WCAG acceptance live demo evidence (#619)](./research/issue-619-live-at-consent-evidence-2026-11-18.md) | Per-criterion demo record: keyboard, axe, zoom-equivalent reflow and the synthetic resident consent journey proven on the live demo; person-run screen reader, zoom and real-resident criteria stay production-only |
 | [Assistive-technology, consent and Fluent/WCAG live demo re-proof (#619, 2026-11-22)](./research/issue-619-live-at-consent-evidence-2026-11-22.md) | Re-run after the web redesigns: axe, keyboard, reflow and synthetic resident consent hold; new 200 percent text probe finds a cramped resident chat entry area; person-run criteria stay production-only |
 | [Assistive-technology, consent and Fluent/WCAG live re-proof on revisions 0000054 and 0000026 (#619, 2026-11-23)](./research/issue-619-live-at-consent-evidence-2026-11-23.md) | Main equals live for these criteria; axe, keyboard, reflow and synthetic resident consent hold; the 200 percent text observation is assessed as not a code gap; person-run criteria stay production-only |
+| [Simulator run owner, time limit and budget alert, main versus live (#2127)](./research/issue-2127-run-controls-live-2026-11-23.md) | Per-criterion demo record: owner, 270 second time limit and actual80/forecast100 budget alerts proven; source and live replica timeout drift noted; no code gap |
 | [Accessibility, equity and journey ownership live demo evidence (#128)](./research/issue-128-live-equity-evidence-2026-11-18.md) | Per-criterion demo record: aggregate-only measures proven at source level, desktop axe 0 violations on four live surfaces; protocol agreement and person-run testing stay unproven |
 | [Accessibility, equity and journey ownership live demo evidence, run 2 (#128)](./research/issue-128-live2-equity-evidence-2026-11-18.md) | Re-run with retained commands and raw output: protocol criterion unproven, aggregate-only proven at source level, desktop axe clean on four live pages |
 | [Accessibility, equity and journey ownership live demo evidence, run 3 (#128)](./research/issue-128-live3-equity-evidence-2026-11-18.md) | Run 3: protocol agreement still unproven, aggregate-only proven at source level, resident page confirmed loaded with manual-route wording |
@@ -1698,6 +1713,7 @@ or infra acceptance claimed.
 | [Resident Synthetic Showcase Live Check r4 (Issue #462)](./research/resident-showcase-live-r4-2026-11-19.md) | Fourth live desktop pass (36 checks), test proof for the PR 455 fixture-identifier thread and per-criterion table |
 | [Resident Synthetic Showcase Live Check r5 (Issue #462)](./research/resident-showcase-live-r5-2026-11-22.md) | Fifth live desktop pass (36 checks), changed digest and minReplicas 1 noted, per-criterion table |
 | [Resident Synthetic Showcase Live Check r6 (Issue #462)](./research/resident-showcase-live-r6-2026-11-23.md) | Sixth live desktop pass (36 checks) on API 0000054 and resident 0000026, per-criterion table; criterion 2 unproven |
+| [Resident Showcase Criterion 2 Hosted Evidence r7 (Issue #462)](./research/resident-showcase-live-r7-2026-11-23.md) | Hosted PR #455 run history and bot-authored score commits prove criterion 2 without a push; per-criterion table |
 | [Roster Scope for Entra Staff Re-proof (Issue #2164)](./research/issue-2164-roster-scope-recheck-2026-11-22.md) | Fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table |
 | [Resident Portal Documentation Integration Status (Issue #441)](./research/resident-portal-441-live-status-2026-11-18.md) | Live-demo assessment of the one unticked #441 criterion (FR-044/AC-084 owner disposition): evidence checked and why it stays unproven |
 | [Resident Demo Authority End Live Check (Issue #521)](./research/resident-demo-authority-live-521-2026-11-18.md) | Source tests, live app expiry setting `2028-01-01T00:00:00Z` and a Playwright sign-in on the deployed synthetic showcase, with a per-criterion table. Live SQL window unproven (private server). Refs #521. | 2026-11-18 |
@@ -1752,6 +1768,7 @@ or infra acceptance claimed.
 | [Issue 1844 Live Criteria Audit](./research/issue-1844-live-20261119-2026-11-19.md) | Per-criterion audit of the mobile map summary issue against the desktop-only demo decision; none unmet, no source change |
 | [Issue 1844 Live Re-proof, Mobile Map Summary](./research/issue-1844-live-20261122-2026-11-22.md) | Failing-first and passing browser evidence on main for all eight narrow-viewport states; per-criterion table, no source change |
 | [Issue 1844 Live Close-out, Mobile Map Summary](./research/issue-1844-live-20261123-2026-11-23.md) | Re-proof on main and live API revision 0000054: failing-first and 436-pass browser run, live served-byte identity and narrow-viewport probe; per-criterion table, no source change |
+| [Issue 1844 Live r2, Remaining Criterion](./research/issue-1844-live-r2-2026-11-23.md) | Confirms only the owner-gated criterion 6 remains for the mobile map summary issue; no source change |
 | [Issue 202 Live Audit, Archive Tag and Legacy Deletion](./research/issue-202-live-20261118T1643Z-2026-11-18.md) | Audit of issue 202: registry-first ordering proven (#302 before #499), `v0.21.0` published, no tracked legacy files; the two `mvp-*` workflow files remain dispatch-only and disabled and the active ruleset requires no checks, so the workflow criterion is not fully proven; no source change |
 | [Issue 202 Live Re-audit, Archive Tag and Legacy Deletion](./research/issue-202-live-20261119T1540Z-2026-11-19.md) | Refresh of the issue 202 audit: five criteria proven, workflow-removal criterion unproven (files disabled and dispatch-only, `mainprotect` requires no checks, 43 references need a full-tier change); no source change |
 | [Issue 202 Live Refresh](./research/issue-202-live-20261119T154854Z-2026-11-19.md) | 2026-11-19 refresh: per-criterion table; the `mvp-ci` and `mvp-validation` removal is not done and needs the full tier (13 files, pinned hashes); no required checks exist; no source change |
@@ -1789,6 +1806,7 @@ or infra acceptance claimed.
 | [Issue 2204 Law Store Enabled and Rule Actions Live](./research/issue-2204-rule-actions-law-store-live-2026-11-22.md) | Issue 2204: why the law store returned 503, enabling it with az, RuleAuthor action proven live, RuleOwner reaches the domain gates; distinct-owner approval unproven |
 | [Issue 2204 Rule Owner Actions Live With a Second Identity](./research/issue-2204-rule-actions-owner-live-2026-11-22.md) | Issue 2204: Alan Steiner as RuleOwner ran approve, activate, hold, release and retire live; a RuleOwner-only identity cannot sign in (no staff role), MFA was not the blocker; per-criterion table |
 | [Issue 2237 Retention 500, Live Demo](./research/issue-2237-retention-500-live-2026-11-22.md) | Issue 2237: live re-proof of GET /api/retention (200 in 55 of 55 calls), why the one-off 500 cannot be traced (replica gone, log queries refused), and a per-criterion table |
+| [Issue 2135 Owner-Gated Criterion](./research/issue-2135-live-owner-gated-2026-11-23.md) | Issue 2135: the one remaining criterion (atlas owner confirms the bundle to opportunity mapping) is owner-gated and unproven for the demo, with the owner action to close it |
 | [Issue 2237 Cause and Fix](./research/issue-2237-live-cause-and-fix-2026-11-23.md) | Issue 2237: the retention 500 traced to the 15 s SQL write-lock timeout from Log Analytics, the 503 mapping that fixes it, and a per-criterion table with the live re-proof on revision 0000054 |
 | [WCAG 2.2 Automated Evidence on the Live Demo Workbench](./research/issue-151-live-wcag-axe-evidence-2026-11-18.md) | Issue 151: axe-core 4.10.3 and keyboard scans of 13 workbench screens on the demo as the Programme Manager role, per-criterion status, limits and follow-ups |
 | [WCAG 2.2 Automated Evidence on the Live Demo, Round 2](./research/issue-151-live-wcag-axe-evidence-r2-2026-11-18.md) | Issue 151: second axe-core 4.10.3 and keyboard scan of the employee workbench and resident demo app with raw axe output retained, contrast incompletes sampled, adverse results kept and a per-criterion table |
@@ -1830,6 +1848,7 @@ or infra acceptance claimed.
 | [Employee Chat Helper Line Fix (issue 215, run 4)](./research/issue-215-live-helper-line-fix-2026-11-18.md) | Issue 215 run 4: clipped helper line reproduced and fixed in chat-widget CSS and JS with a Playwright regression test; per-criterion status |
 | [Direct Ingress and Sign-in Live Proof on the Demo](./research/direct-ingress-live-demo-2026-11-18.md) | Issue 360: live proof of direct Container Apps HTTPS ingress, sign-in, role, shared SQL state and a real chat AI call, with criteria c, d and e proven or unproven for the demo |
 | [Issue 360 Live Recheck (2026-11-19)](./research/issue-360-live-20261119-2026-11-19.md) | Fourth live measurement of criteria c, d and e on the demo; c and e need owner decisions, the browser-mode 302 needs a FULL-tier infra change; no source change |
+| [Issue 2121 Live Recheck (2026-11-23)](./research/issue-2121-live-2026-11-23.md) | Live measurement of criteria c, d and e of #2121 on revision 0000054; c and e need owner decisions, AI call blocked by an AI suspension; no source change |
 | [Simulated Device Identity Live Proof](./research/issue-185-live-20261119-2026-11-19.md) | Issue 185: live IoT Hub registry provision and teardown on a throwaway hub, with criteria 3 and 4 proven or unproven for the demo |
 | [Issue 111 live demo evidence](./research/issue-111-live-demo-evidence-2026-11-19.md) | Issue 111: two ticked criteria re-verified; R1 to R3 reviewer sign-off unproven for the demo, no source change |
 | [Public Browser Access on the Deployed Demo](./research/public-browser-access-live-demo-2026-11-18.md) | Issue 344: live curl, Playwright and read-only Azure evidence for public HTTPS landing, Entra sign-in, anonymous 401, private SQL and authenticated route reachability on the demo, per-criterion status |
@@ -1851,6 +1870,9 @@ or infra acceptance claimed.
 | [Human-review effectiveness audit, live run 4](./research/issue-223-live-r4-2026-11-19.md) | Issue 223: 2026-11-19 re-check with the same per-criterion result; no source change |
 | [Human-review effectiveness audit, live run 5](./research/issue-223-live-r5-2026-11-22.md) | Issue 223: 2026-11-22 gate re-run (11 of 11, 37 and 6 tests OK) and live reviewer, reason and source retention on the demo; remaining parts need humans |
 | [Human-review effectiveness audit, live run 7](./research/issue-223-live-r7-2026-11-23.md) | Issue 223: 2026-11-23 gate re-run (11 of 11, 37 and 6 tests OK) and live reviewer, reason and source retention on revision 0000054; remaining parts need humans |
+| [Issue 2137 R1 to R3 gate evidence](./research/issue-2137-live-2026-11-23.md) | Issue 2137: R1 to R3 gate guard re-tested (34 tests OK); R2 reviewer/Asset sign-off and R3 agreed limits are named human approvals, unproven; no source change |
+
+| [Manual screen-reader and keyboard checks, demo classification](./research/issue-2133-live-manual-checks-2026-11-23.md) | Issue 2133: the single remaining criterion is owner-gated and unproven; all eight manual rows stay Not run |
 | [Human-review effectiveness audit, live run 6](./research/issue-223-live-r6-2026-11-22.md) | Issue 223: 2026-11-22 gate re-run (11 of 11, 37 and 6 tests OK) and live reviewer, reason and source retention on the demo; remaining parts need humans |
 | [Issue 223 first buildable demo criterion](./research/issue-223-first-buildable-criterion-2026-11-19.md) | Run 3: offline gate and tests re-run; no remaining criterion is buildable without people or a production injection route; no source change |
 | [Cohort and missing-data evaluation on the demo](./research/cohort-evaluation-demo-2026-11-18.md) | Issue 222: offline cohort test run at head e01b3d2, blockers observed and a per-criterion table; OQ-018 owner approval stays unproven and deferred (#1905, #1906) | 2026-11-18 |
@@ -1866,6 +1888,7 @@ or infra acceptance claimed.
 | [Chat and Memory User Isolation Live Proof on the Synthetic Demo](./research/issue-162-live-isolation-evidence-2026-11-18.md) | Live demo probes (anonymous, resident session replay, forged identity, client owner fields, foreign ids, own-record controls) with raw output; real two-Entra-user foreign read not provable live; criterion 6 unchanged (Refs #162) |
 | [Issue 162 Live Audit with Per-Criterion Table](./research/issue-162-live-audit-2026-11-18.md) | Fresh live and local audit with retained raw output: refusals audited live (chain 2068 to 2070), grant rows proven locally, per-criterion table, production-only items; criterion 6 left unticked (Refs #162) | 2026-11-18 |
 | [Issue 162 Criterion 6 Stop Decision](./research/issue-162-live-criterion6-stop-2026-11-19.md) | Fresh 35-test run and why no demo-provable or buildable work remains for criterion 6 |
+| [Issue 2129 Break-Glass Criterion Re-Check](./research/issue-2129-live-2026-11-23.md) | Fresh 35-test run, live env-name check and per-criterion table; no code criterion remains |
 | [Live Monitoring Coverage Check on the Demo](./research/monitoring-coverage-live-146-2026-11-18.md) | Read-only Azure Monitor observations: ledger digest alerts installed; job failure, poison queue, IoT alerts and workbook not installed; runbooks name proposed owners only; raw output not retained (Refs #146) | 2026-11-18 |
 | [Issue 146 Monitoring Closure Re-verification (Live Demo)](./research/issue-146-live3-monitoring-closure-2026-11-18.md) | Fresh live per-criterion result: source-shape job-failure alert did not fire on two fresh failures while the Total shape did; in-app AI usage by capability with unreconciled state shown; workbook, poison and IoT alerts and named owners still unproven (Refs #146) | 2026-11-18 |
 | [Gap Analysis and Next Build](./research/gap-analysis-next-build.md) | Dated gaps/build direction and #65 recovery retained; PM/UX closure matrix pins four drafts, recommends learning-only retirement for #19/#24/#27 and keeps #58 unresolved with capability/requirement/evidence queue. No wholesale import, product acceptance or resource deletion | 2026-10-13 |

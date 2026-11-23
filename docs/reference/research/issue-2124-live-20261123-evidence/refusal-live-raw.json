@@ -1,0 +1,90 @@
+{
+ "n": 10,
+ "refused_with_zero_model_calls": 10,
+ "delete_statuses": [
+  200
+ ],
+ "threads_left": 0,
+ "rows": [
+  {
+   "id": "R01",
+   "set": "graded",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "R02",
+   "set": "graded",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "R03",
+   "set": "graded",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "R04",
+   "set": "graded",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "R05",
+   "set": "graded",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "R06",
+   "set": "graded",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "R07",
+   "set": "graded",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "A03",
+   "set": "adversarial",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "A04",
+   "set": "adversarial",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  },
+  {
+   "id": "A10",
+   "set": "adversarial",
+   "http": 200,
+   "kind": "refused",
+   "model_calls": 0,
+   "cited": 0
+  }
+ ]
+}

@@ -14808,3 +14808,56 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2244 start-up write-lock re-verification (Refs #2244)
 
 * Added [issue-2244-live-2026-11-23.md](research/issue-2244-live-2026-11-23.md): live API revision 0000054 has the #2273 retry (file hash equals main); added read-only schema fast paths for start-up; stress under contention and probe budget unproven.
+## [2026-11-23] update | Issue 2118 live Hub to SQL to map walkthrough (Refs #2118)
+
+* Added [issue-2118-live-iot-map-walkthrough-2026-11-23.md](research/issue-2118-live-iot-map-walkthrough-2026-11-23.md): read only hop-by-hop walkthrough ending in a fresh employee map reading, with the per message SQL hop and the resident live view marked unproven. No source change.
+## [2026-11-23] update | Issue 2121 live recheck on revision 0000054 (Refs #2121)
+
+* Added [issue-2121-live-2026-11-23.md](research/issue-2121-live-2026-11-23.md): direct HTTPS, anonymous denial, browser sign-in, role and persistence proven again; AI call unproven because of an AI suspension; c and e owner-gated. No source change.
+## [2026-11-23] update | Simulator run controls main versus live (Refs #2127)
+
+* Added [issue-2127-run-controls-live-2026-11-23.md](research/issue-2127-run-controls-live-2026-11-23.md): 11 focused tests pass, live budgets, owner tags and 270 second replica timeout recorded, bicep 240 versus live 270 drift noted, no source change
+## [2026-11-23] update | Ranking remaining criteria live comparison (Refs #2138)
+
+* Added [issue-2138-live-2026-11-23.md](research/issue-2138-live-2026-11-23.md): main and live compared, 170 targeted tests pass, live policy unsigned, no ranking job deployed, deployed orchestrator image lacks `ranking_publish`. Neither criterion is newly proven. No source change.
+## [2026-11-23] update | Resident AI chat live re-verification run 2 (Refs #2243)
+
+* Added [issue-2243-live-r2-2026-11-23.md](research/issue-2243-live-r2-2026-11-23.md): repeat desktop probe of resident revision 0000026 (both questions `usage_limit`), 70 targeted tests pass, per-criterion table; the model-backed answer stays owner-gated on the private SQL ledger. No source change.
+## [2026-11-23] update | Mobile map summary live r2 (Refs #1844)
+
+* Added [issue-1844-live-r2-2026-11-23.md](research/issue-1844-live-r2-2026-11-23.md): only the owner-gated criterion 6 (independent review and hosted CI) remains. No source change.
+## [2026-11-23] update | Resident showcase criterion 2 hosted evidence r7 (Refs #462)
+
+* Added [resident-showcase-live-r7-2026-11-23.md](research/resident-showcase-live-r7-2026-11-23.md): read-only `gh` history of PR #455 shows one failed rubric run, bot-authored score commits and later runs on changed head SHAs; criterion 2 proven for the demo apart from the local-preview clause. No source or Azure change.
+
+## [2026-11-23] update | Issue 2137 R1 to R3 gate evidence (Refs #2137)
+
+* Added [issue-2137-live-2026-11-23.md](research/issue-2137-live-2026-11-23.md): the code guard that refuses a sourced threshold without R1 to R3 references is re-tested; R1 source review, R2 sign-off and R3 agreed limits remain unproven and owner-gated. No source change.
+
+## [2026-11-23] update | Issue 2135 remaining criterion is owner-gated (Refs #2135)
+
+* Added [issue-2135-live-owner-gated-2026-11-23.md](research/issue-2135-live-owner-gated-2026-11-23.md): the single criterion (atlas owner confirms the bundle to opportunity mapping) stays unproven for the demo because it is a named human decision; no source change.
+
+## [2026-11-23] update | Issue 2133 manual screen-reader and keyboard criterion classified (Refs #2133)
+
+* Added [issue-2133-live-manual-checks-2026-11-23.md](research/issue-2133-live-manual-checks-2026-11-23.md): the one remaining criterion needs a named person with a screen reader per role, excluded for the demo by the owner decision of 2026-11-18; classified owner-gated and unproven. Baseline status line updated. No source change.
+
+## [2026-11-23] update | Issue 2132 named wording review re-check (Refs #2132)
+
+* Added [issue-2132-live-named-review-2026-11-23.md](research/ux/issue-2132-live-named-review-2026-11-23.md): the single remaining criterion is a named human review recorded as Not run in the content standard; owner-gated, not waived for the demo. No criterion is newly ticked and no source changed.
+
+## [2026-11-23] update | Issue 2129 break-glass criterion re-check (Refs #2129)
+
+* Added [issue-2129-live-2026-11-23.md](research/issue-2129-live-2026-11-23.md) with raw evidence: 35 isolation tests OK, live API has no break-glass settings, no code criterion remains buildable without owner policy decisions. Criterion stays unticked.
+
+## [2026-11-23] update | Case chat refusal and citation gates re-check (Refs #2124)
+
+* Added [issue-2124-live-2026-11-23.md](research/issue-2124-live-2026-11-23.md) with evidence: live refusals 10 of 10 with zero model calls, 111 local gate tests OK, per-criterion status. No source change; production ownership and independent grading stay owner-gated.
+
+## [2026-11-23] update | Issue 2117 remaining criterion classified (Refs #2117)
+
+* Added [issue-2117-live-2026-11-23.md](research/issue-2117-live-2026-11-23.md): the one open criterion needs authorised representative and resident evidence, so it stays unproven and owner-gated. No source change.
+
+## [2026-11-23] update | Issue 2116 drill criterion classified (Refs #2116)
+
+* Added [issue-2116-drill-criterion-demo-classification-2026-11-23.md](research/issue-2116-drill-criterion-demo-classification-2026-11-23.md): the witnessed drill criterion is owner-gated and unproven for the demo; constructed suspension tests re-run (20 OK). No source change.
