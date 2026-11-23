@@ -150,6 +150,12 @@ class HandoffSlaHelpersTests(unittest.TestCase):
         self.assertIsNone(row["age_hours"])
         self.assertFalse(row["needs_escalation"])
 
+    def test_timezone_less_minute_precision_offered_at_reports_unknown_age(self) -> None:
+        seeded = self._case_with_handoff(offered_at="2026-10-15T08:00", urgency="Routine")
+        row = WORKFLOWS.handoff_ageing(seeded, "2026-10-30T00:00:00+00:00", policy=APPROVED_POLICY)
+        self.assertIsNone(row["age_hours"])
+        self.assertFalse(row["needs_escalation"])
+
 
 class JsonHandoffEscalation83Tests(unittest.TestCase):
     sql = False

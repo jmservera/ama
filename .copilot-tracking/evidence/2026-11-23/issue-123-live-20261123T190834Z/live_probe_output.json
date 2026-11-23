@@ -1,0 +1,43 @@
+{
+ "healthz": 200,
+ "after_signin_title": "My cases today | Zava Forward",
+ "api": {
+  "/api/me": 200,
+  "/api/continuity": 200,
+  "/api/assistants/releases": 404,
+  "/api/handoffs/unaccepted.csv": 200,
+  "/api/handoffs/unaccepted": 200,
+  "/api/handoffs/unowned": 200
+ },
+ "releases_body": [
+  "error"
+ ],
+ "me_role": "Retrofit Programme Manager",
+ "screen_text": [
+  "Skip to main content",
+  "Zava Forward",
+  "Zava North Homes",
+  "My cases",
+  "All cases",
+  "Overview",
+  "Progress dashboard",
+  "Visits",
+  "Funding",
+  "Finance",
+  "Capacity and work orders",
+  "Closed cases",
+  "Assistant proposals",
+  "Time capture",
+  "Aftercare concerns",
+  "Specialist screens",
+  "AK",
+  "Aadi",
+  "Retrofit Programme Manager. Handoff waiting times.",
+  "Back to the list",
+  "Handoff waiting times",
+  "This screen lists every handoff that has not been accepted yet and that your role can see. It is not the list called Handoffs waiting for yo",
+  "No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and not",
+  "For conflicting source values, failed imports, failed model calls and stranded tasks, open the data steward and operator exception queue.",
+  "Recorded as of 23 Nov 2026, 19:11 UTC. Longest wait first."
+ ]
+}
