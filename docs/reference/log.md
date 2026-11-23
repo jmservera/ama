@@ -15000,3 +15000,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 1274 workflow wiring regression (Refs #1274)
 
 * Added [issue-1274-live-evidence-2026-11-23-run5.md](research/issue-1274-live-evidence-2026-11-23-run5.md) and two tests in `tools/test_install_actionlint.py` pinning the Source CI actionlint bootstrap to the verified installer. AWF 0.28.23 and new-head hosted CI stay unproven.
+## [2026-11-23] add | Issue 350 edge probe tool (Refs #350)
+
+* Added [issue-350-live-r7-2026-11-23.md](research/issue-350-live-r7-2026-11-23.md): a repeatable anonymous edge probe for criterion 1; live run still shows 302 for browser-style API requests.
