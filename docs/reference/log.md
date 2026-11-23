@@ -15034,3 +15034,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 116 live round 10 (Refs #116)
 
 * Added [issue-116-live-r10-evidence-2026-11-23.md](research/issue-116-live-r10-evidence-2026-11-23.md): the shared provider-boundary allowlist now refuses non-base64 image data before any other gate; regression test fails without the fix. Live payloads stay unproven.
+## [2026-11-23] add | Issue 146 live alert inventory classifier (Refs #146)
+
+* Added [issue-146-live6-monitoring-2026-11-23.md](research/issue-146-live6-monitoring-2026-11-23.md): read-only live inventory and `infra/scripts/monitoring_live_inventory.py` with tests; ledger digest enabled, job, poison and IoT rules installed but disabled; no criterion ticked.

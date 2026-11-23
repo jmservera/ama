@@ -582,6 +582,7 @@ A [second pass](./research/issue-146-live2-monitoring-evidence-2026-11-18.md) re
 A [2026-11-19 triage](./research/issue-146-live-triage-2026-11-19.md) records a fresh read-only inventory and states that the only buildable item is an `infra/` change needing the full tier.
 A [2026-11-19 re-check](./research/issue-146-live4-monitoring-2026-11-19.md) confirms the same installed inventory and classifies every unticked criterion as infrastructure-scope, private-link-blocked or human-owned.
 A [2026-11-22 pass](./research/issue-146-live5-monitoring-2026-11-22.md) adds source for a SQL DTU alert and a receiver job failure alert, with a live read-only inventory and a per-criterion result.
+A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) adds an offline classifier for the live alert inventory (job, poison, ledger digest, IoT) with regression tests; coverage stays partial.
 
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
