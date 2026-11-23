@@ -1845,7 +1845,11 @@ def _classes_executed(text: str, classes: tuple[str, ...]) -> bool:
 
 def merge_docstring_headers(text: str) -> str:
     """Verbose unittest prints a test with a docstring as its id line, then the docstring result."""
-    return re.sub(r"(?m)^(\w+ \([\w.]+\))\n(?=.+ \.\.\. )", r"\1 ", text)
+    text = re.sub(r"(?m)^(\w+ \([\w.]+\))\n(?=.+ \.\.\. )", r"\1 ", text)
+    # A thread log without a newline can end right before the next header ("status=503test_b (...)").
+    return re.sub(
+        r"(?m)^(?!\w+ \([\w.]+\) )(.*\S)(?=test_\w* \([\w.]+\.\w+\) .*\.\.\. )", r"\1\n", text
+    )
 
 
 def skip_class(test: str) -> str:

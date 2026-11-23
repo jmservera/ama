@@ -1269,6 +1269,23 @@ class GateTests(unittest.TestCase):
             with self.subTest(output=output), self.assertRaises(gate.GateError):
                 gate.check_skips(output, integration=True, group="browser", expected_test=test)
 
+    def test_log_fragment_glued_before_next_header_keeps_each_result_separate(self) -> None:
+        cls = "checks.mod.Cls"
+        names = (f"test_a ({cls}.test_a)", f"test_b ({cls}.test_b)")
+        tail = "\n" + "-" * 70 + "\nRan 2 tests in 1s\n\nOK\n"
+        noise = "http-response GET /x status=503"
+        good = f"{names[0]} ... ok\n{noise}{names[1]} ... ok" + tail
+        self.assertTrue(gate._required_tests_passed(good, names))
+        self.assertTrue(gate._classes_executed(good, (cls,)))
+        for result in ("FAIL", "ERROR", "skipped 'x'"):
+            bad = f"{names[0]} ... ok\n{noise}{names[1]} ... {result}" + tail
+            with self.subTest(result=result):
+                self.assertFalse(gate._required_tests_passed(bad, names))
+                self.assertFalse(gate._classes_executed(bad, (cls,)))
+        self.assertFalse(
+            gate._classes_executed(f"{names[0]} ... ok\n{noise}{names[1]} ... " + tail, (cls,))
+        )
+
     def test_chat_panel_runtime_requires_exact_success_evidence(self) -> None:
         runner = self.runner()
         runner.snapshot = self.root

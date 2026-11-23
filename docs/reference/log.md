@@ -15129,3 +15129,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 107 ninth live pass (Refs #107)
 
 * Added [issue-107-live-r9-criteria-2026-11-23.md](research/issue-107-live-r9-criteria-2026-11-23.md): read-only observation of revision 0000058 and a rerun of the release and restart tests (99 OK on SQLite). The approved-release criterion stays unproven (no named approver). No source or estate change.
+## [2026-11-23] add | Issue 2190 glued test header parser fix (Refs #2190)
+
+* Added [issue-2190-live-20261123T202218Z-glued-header-note.md](research/issue-2190-live-20261123T202218Z-glued-header-note.md): a log fragment glued before the next unittest header is now split in `merge_docstring_headers`, with a regression test. No check relaxed.
