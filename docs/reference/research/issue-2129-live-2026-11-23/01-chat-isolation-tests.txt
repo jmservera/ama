@@ -1,0 +1,6 @@
+ValueError: The law store is not loaded; rule checks are unknown.
+.....
+----------------------------------------------------------------------
+Ran 35 tests in 21.483s
+
+OK

@@ -14845,3 +14845,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2132 named wording review re-check (Refs #2132)
 
 * Added [issue-2132-live-named-review-2026-11-23.md](research/ux/issue-2132-live-named-review-2026-11-23.md): the single remaining criterion is a named human review recorded as Not run in the content standard; owner-gated, not waived for the demo. No criterion is newly ticked and no source changed.
+
+## [2026-11-23] update | Issue 2129 break-glass criterion re-check (Refs #2129)
+
+* Added [issue-2129-live-2026-11-23.md](research/issue-2129-live-2026-11-23.md) with raw evidence: 35 isolation tests OK, live API has no break-glass settings, no code criterion remains buildable without owner policy decisions. Criterion stays unticked.

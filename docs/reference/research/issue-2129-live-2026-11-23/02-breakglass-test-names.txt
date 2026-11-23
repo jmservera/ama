@@ -1,0 +1,24 @@
+102:                     ("/api/chat/memory/erase", {}), ("/api/chat/memory/opt-in", {}), ("/api/chat/memory/MEM-x/delete", {}), ("/api/chat
+103:                     ("/api/chat/breakglass/notices", None), ("/api/chat/nothing", None)]
+111:                    if path.endswith("breakglass"):
+245:    def test_break_glass_is_default_deny_audited_and_metadata_only(self):
+251:        self.assertEqual(self.api(admin, "/api/chat/breakglass", body)[0], 403)
+254:            self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, purpose="short"))[0], 403)
+255:            self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, target=self.email(admin)))[0], 403)
+256:            self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, target=self.email(admin), purpose="Check mail from synth
+257:            self.assertEqual(self.api("Quality Inspector", "/api/chat/breakglass", dict(body, target=self.email(admin)))[0], 403)
+258:            code, d = self.api(admin, "/api/chat/breakglass", body)
+263:            self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, minutes=9999))[0], 200)
+267:        log = [e for e in self.store.audit_entries() if e["action"].startswith("chat.breakglass")]
+268:        self.assertEqual([e["action"] for e in log].count("chat.breakglass.granted"), 2)
+269:        self.assertGreaterEqual([e["action"] for e in log].count("chat.breakglass.refused"), 4)
+274:        self.assertEqual(masked[0]["action"], "chat.breakglass.refused")
+314:    def test_user_sees_break_glass_grants_about_own_data_only(self):
+318:            self.api(admin, "/api/chat/breakglass", dict(target=self.email(target), purpose="Investigating a reported misuse, ticket 42"
+319:            self.api(admin, "/api/chat/breakglass", dict(target=self.email(target), purpose="short"))
+323:        code, d = self.api(target, "/api/chat/breakglass/notices")
+325:        self.assertEqual(len(d["notices"]), 1)
+326:        self.assertEqual(d["notices"][0]["by"], self.email(admin))
+327:        self.assertIn("ticket 42", d["notices"][0]["purpose"])
+329:        self.assertEqual(self.api(other, "/api/chat/breakglass/notices")[1]["notices"], [])
+330:        self.assertEqual(self.api(admin, "/api/chat/breakglass/notices")[1]["notices"], [])
