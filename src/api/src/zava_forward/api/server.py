@@ -36,7 +36,7 @@ from zava_forward.core.assistants import Assistants
 from zava_forward.core.forecast_reads import ForecastTimeout
 from zava_forward.core.chat_isolation import DEMO_DISCLAIMER, ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
-from zava_forward.core.chat_panel import ChatPanel, ChatTurnNotStored, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
+from zava_forward.core.chat_panel import ChatPanel, chat_skills, TASK as CHAT_TASK, MAX_INPUT_CHARS, MAX_HISTORY_CHARS, MAX_THREAD_TURNS, all_role_limits, role_limits, AGENT_DEPTH, MEMORY_CAPS, CALLS_PER_REQUEST_BASIS
 from zava_forward.core.regulatory_chat import RegulatoryChat, TASK as REGULATORY_TASK
 from zava_forward.core.regulatory_output_guard import (
     ADVISORY_REVIEW_TEXT,
@@ -834,9 +834,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return
             frame = traceback.extract_tb(exc.__traceback__)[-1:] or [None]
             where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame[0] else "unknown"
-            retry_safe = method in ("GET", "HEAD") or (method == "POST" and path == "/api/chat/threads") or isinstance(exc, ChatTurnNotStored)
+            retry_safe = method in ("GET", "HEAD") or (method == "POST" and path == "/api/chat/threads")
             if not sent and retry_safe and is_write_lock_busy(exc):
-                # Another writer held the SQL write lock for the 15 s timeout (issues #2237 and #2245). Safe methods, chat thread creation (one insert and commit, so a lock timeout leaves nothing to repeat) and a chat turn stopped before its question was stored. Any other failed POST may follow a committed step, so it keeps the 500 path.
+                # Another writer held the SQL write lock for the 15 s timeout (issues #2237 and #2245). Safe methods, and chat thread creation (one insert and commit, so a lock timeout leaves nothing to repeat). Any other failed POST may follow a committed step, so it keeps the 500 path.
                 logging.getLogger(__name__).warning("http-error %s %s status=503 exc=%s cause=sql-write-lock-busy at=%s", method, _printable(path), name, where)
                 self._headers_buffer = []
                 try:
@@ -1751,10 +1751,6 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     except (PermissionError, LookupError):
                         if parts[2] in ("messages", "ask"):
                             app.panel.record_rejected(user, tid)
-                        raise
-                    except Exception as busy:
-                        if parts[2] in ("messages", "ask") and is_write_lock_busy(busy):
-                            raise ChatTurnNotStored("Chat turn not stored.") from busy
                         raise
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
                         try:

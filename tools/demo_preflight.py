@@ -30,9 +30,7 @@ JOBS = [
     "job-live-simulator",
     "job-live-receiver",
 ]
-HARDENING_APPS = [*APPS, "ca-cutover-test-demo-agents"]
-HARDENING_JOBS = ["job-live-simulator", "job-live-receiver"]
-HARDENING_ENV = "ZF_CONTAINER_HARDENING"
+AGENTS_APP = "ca-cutover-test-demo-agents"
 SQL_SERVER = "sql-cutover-test-rzsrg.database.windows.net"
 SQL_DATABASE = "retrofit"
 READ_ONLY_VERBS = {"list", "show", "get-access-token"}
@@ -87,16 +85,24 @@ def check_revisions(runner: Runner, group: str, app: str) -> Result:
     return Result(name, "PASS" if ok else "FAIL", "; ".join(parts))
 
 
-def check_hardening(runner: Runner, group: str, name: str, job: bool = False) -> Result:
-    label = f"hardening {name}"
-    argv = ["containerapp", "job", "show"] if job else ["containerapp", "show"]
-    query = f"properties.template.containers[0].env[?name=='{HARDENING_ENV}'].value | [0]"
+def check_deployment(runner: Runner, group: str, kind: str, name: str) -> Result:
+    """Report the image digest and the hardening switch; no other environment value is read."""
+    label = f"deployment {name}"
+    argv = ["containerapp", "job", "show"] if kind == "job" else ["containerapp", "show"]
+    query = (
+        "{image: properties.template.containers[0].image, hardening: "
+        "properties.template.containers[0].env[?name=='ZF_CONTAINER_HARDENING'].value | [0]}"
+    )
     try:
-        value = runner([*argv, "-g", group, "-n", name, "--query", query, "-o", "tsv"]).strip()
+        body = _json(runner, [*argv, "-g", group, "-n", name, "--query", query, "-o", "json"])
     except Exception as exc:  # noqa: BLE001 - any failure is reported
         return Result(label, "FAIL", str(exc))
-    shown = value if value and value != "None" else "not set"
-    return Result(label, "PASS" if value == "enforced" else "FAIL", f"{HARDENING_ENV} {shown}")
+    body = body if isinstance(body, dict) else {}
+    image = str(body.get("image") or "")
+    digest = image.partition("@sha256:")[2][:12]
+    hardening = body.get("hardening")
+    detail = f"digest {digest or 'none'}; ZF_CONTAINER_HARDENING={hardening}"
+    return Result(label, "PASS" if hardening == "enforced" and digest else "FAIL", detail)
 
 
 def check_job(runner: Runner, group: str, job: str) -> Result:
@@ -192,13 +198,11 @@ def collect(
     for app in apps or APPS:
         results.append(check_revisions(runner, group, app))
         results.append(check_health(runner, getter, group, app))
+    results.extend(
+        check_deployment(runner, group, "app", app) for app in apps or [*APPS, AGENTS_APP]
+    )
+    results.extend(check_deployment(runner, group, "job", job) for job in jobs or JOBS)
     results.extend(check_job(runner, group, job) for job in jobs or JOBS)
-    results.extend(
-        check_hardening(runner, group, app) for app in (apps if apps else HARDENING_APPS)
-    )
-    results.extend(
-        check_hardening(runner, group, job, job=True) for job in (jobs if jobs else HARDENING_JOBS)
-    )
     results.append(check_counts(reader))
     return results
 

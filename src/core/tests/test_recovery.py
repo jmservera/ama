@@ -138,6 +138,23 @@ class YearLedgerTests(unittest.TestCase):
             self.assertEqual(rolled["sealed_years"], ["2024", "2025", "2026"])
             self.assertTrue(rolled["years"]["2026"]["sealed"])
 
+    def test_unsealed_single_year_run_writes_no_digest_and_report_carries_no_entry_content(self):
+        prev, entries = ledger.GENESIS, []
+        for i in range(40):
+            e = ledger.make_entry("alice-private-actor", "private-action", "ZF-PRIVATE", f"n{i}", prev, at(2026))
+            entries.append(e)
+            prev = e["hash"]
+        with tempfile.TemporaryDirectory() as tmp:
+            s = self._seed_file_store(tmp, entries)
+            rep = s.verify_ledger_before_reliance(current_year=2026, seal_past_years=False)
+            self.assertTrue(rep["reliance_allowed"])
+            self.assertEqual(rep["entries"], 40)
+            self.assertEqual(rep["sealed_digest_files"], [])
+            self.assertEqual(list(Path(s.digest_dir).glob("year-*.json")) if Path(s.digest_dir).is_dir() else [], [])
+            text = json.dumps(rep)
+            for private in ("alice-private-actor", "private-action", "ZF-PRIVATE"):
+                self.assertNotIn(private, text)
+
     def test_pre_reliance_refuses_to_seal_tampered_chain_and_blocks_reliance(self):
         with tempfile.TemporaryDirectory() as tmp:
             bad = chain([2024, 2025, 2026])

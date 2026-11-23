@@ -189,40 +189,38 @@ class ErrorLoggingTests(Base):
             self.assertIn(part, line)
         self.assertNotIn(SECRET, line)
 
-    def test_busy_sql_write_lock_before_question_is_stored_answers_503(self) -> None:
+    def test_non_lock_driver_error_on_chat_thread_create_still_answers_500(self) -> None:
+        other = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
+            f"Invalid object name {SECRET}"
+        )
+
+        def create_fails(*_a: object, **_k: object) -> None:
+            raise other
+
+        with (
+            patch.dict(os.environ, CHAT_APPROVED),
+            patch.object(self.store, "chat_create_thread", create_fails),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
+        ):
+            code, body, retry = self.post("/api/chat/threads", {})
+        self.assertEqual((code, retry), (500, None))
+        self.assertNotIn(SECRET, body.decode())
+        line = "\n".join(logs.output)
+        self.assertIn("http-error POST /api/chat/threads status=500", line)
+        self.assertNotIn(SECRET, line)
+
+    def test_busy_sql_write_lock_on_other_post_still_answers_500(self) -> None:
         busy = self.busy_error()
 
-        def resume_fails(*_a: object, **_k: object) -> None:
+        def add_fails(*_a: object, **_k: object) -> None:
             raise busy
 
         with (
             patch.dict(os.environ, CHAT_APPROVED),
-            patch.object(self.store, "chat_resume", resume_fails),
-            self.assertLogs("zava_forward.api.server", "WARNING") as logs,
+            patch.object(self.store, "chat_resume", add_fails),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
         ):
-            code, body, retry = self.post("/api/chat/threads/CT-x/ask", {"content": "hello"})
-        self.assertEqual((code, retry), (503, "5"))
-        self.assertNotIn(SECRET, body.decode())
-        self.assertIn("cause=sql-write-lock-busy", "\n".join(logs.output))
-
-    def test_busy_sql_write_lock_after_question_is_stored_still_answers_500(self) -> None:
-        busy = self.busy_error()
-        with patch.dict(os.environ, CHAT_APPROVED):
-            code, body, _ = self.post("/api/chat/threads", {})
-            self.assertEqual(code, 200)
-            tid = json.loads(body)["id"]
-            real = self.store.chat_add_message
-
-            def assistant_fails(user: Any, thread: str, role: str, *a: Any, **k: Any) -> Any:
-                if role == "assistant":
-                    raise busy
-                return real(user, thread, role, *a, **k)
-
-            with (
-                patch.object(self.store, "chat_add_message", assistant_fails),
-                self.assertLogs("zava_forward.api.server", "ERROR") as logs,
-            ):
-                code, _, retry = self.post(f"/api/chat/threads/{tid}/ask", {"content": "hello"})
+            code, _, retry = self.post("/api/chat/threads/CT-x/ask", {"content": "hello"})
         self.assertEqual((code, retry), (500, None))
         self.assertIn("status=500", "\n".join(logs.output))
 

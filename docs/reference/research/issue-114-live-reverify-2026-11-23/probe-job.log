@@ -1,0 +1,4 @@
+{"step": "store", "cls": "MssqlStore", "has_reliance": false, "has_require": false}
+{"step": "entries", "count": 7022, "head": "cd9d9bcf159d9774ab88d1ad0b75a221b9de7de405c7753307e4ad17c9dfafd9"}
+{"step": "verify_ledger", "intact": true, "entries": 7022, "digests": 0}
+{"step": "verify_years", "intact": true, "years": {"2026": {"entries": 7022, "intact": true}}}
