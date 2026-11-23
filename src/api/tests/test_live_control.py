@@ -794,6 +794,24 @@ class ReceiverStartupTests(unittest.TestCase):
                 rx.persistence, rx.SensorIngestion, rx.run_window = saved  # type: ignore[attr-defined]
         return code, built
 
+    def test_unexpected_failure_prints_only_the_exception_class(self) -> None:
+        future = (datetime.now(UTC) + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        err = io.StringIO()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            path.write_text(json.dumps(document(expires_at=future)), encoding="utf-8")
+
+            def persistence(_env: Any) -> object:
+                raise RuntimeError("secret-host.example")
+
+            with (
+                patch.object(rx, "persistence", persistence),
+                patch("sys.stderr", err),
+            ):
+                code = rx.main(["--control-file", str(path)], {})
+        self.assertEqual(code, 4)
+        self.assertEqual(err.getvalue(), "Cannot run: RECEIVER_FAILED error_type=RuntimeError\n")
+
     def test_stopped_expired_and_invalid_control_never_reach_persistence(self) -> None:
         cases: list[dict[str, Any] | str] = [
             {"enabled": False},

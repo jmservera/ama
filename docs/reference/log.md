@@ -15213,3 +15213,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 121 assistant task contract enforcement (Refs #121)
 
 * Added [issue-121-assistant-contract-enforcement-2026-11-23.md](research/issue-121-assistant-contract-enforcement-2026-11-23.md): the declared data contract is enforced for the five assistant tasks before provider text is built; regression tests in core and agents; a telephone-pattern false positive on hexadecimal digests fixed. DPO and Legal approvals remain production-only.
+## [2026-11-23] add | Issue 2201 receiver streak and map probe (Refs #2201)
+
+* Added [issue-2201-live-receiver-streak-map-2026-11-23.md](research/issue-2201-live-receiver-streak-map-2026-11-23.md): 14 consecutive scheduled receiver runs Succeeded, fresh readings on the map, and the earlier failures logged no error class; the receiver now logs the class for unexpected failures.

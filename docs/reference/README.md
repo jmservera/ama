@@ -716,6 +716,7 @@ The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-202
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
 
 The [three-run proof](./research/issue-2201-live-three-runs-2026-11-22.md) records three consecutive scheduled Succeeded runs of the receiver on the current image (#2201).
+The [streak and map note](./research/issue-2201-live-receiver-streak-map-2026-11-23.md) records 14 consecutive scheduled Succeeded runs and fresh readings on the map (#2201).
 
 The [receiver recheck](./research/issue-2201-live-receiver-recheck-2026-11-22.md) lists every scheduled run since the 2234 merge with who started it: 12:00, 12:30 and 13:00 UTC Succeeded, 13:30 Failed, failure logs unreachable, map 200 with 443 items (#2201).
 
