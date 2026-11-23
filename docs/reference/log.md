@@ -15062,3 +15062,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2256 live verification after the handoff seed (Refs #2256)
 
 * Added [issue-2256-live-2026-11-23d.md](research/issue-2256-live-2026-11-23d.md): on API revision 0000055 the waiting screen lists all 4 seeded handoffs with due time and chase owner, and the case card agrees; criteria A, B1, B2 and C are proven for the demo and no view code change was needed.
+
+## [2026-11-23] add | Issue 2245 demo AI override gap on the SQL store (Refs #2245)
+
+* Added [issue-2245-override-sqlstore-2026-11-23.md](research/issue-2245-override-sqlstore-2026-11-23.md): the owner-directed AI suspension override did not apply to `SqlStore`; fixed in source with a regression test. A live free-form ask on revision 0000057 returned 500 after 30.5 s; "Model calls: 1" stays unproven until a fixed revision is deployed.

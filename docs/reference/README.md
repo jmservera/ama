@@ -728,6 +728,8 @@ The [issue 2245 chat note](./research/issue-2245-live-2026-11-23.md) finds the l
 
 The [issue 2245 recheck](./research/issue-2245-recheck-2026-11-23.md) reproduces the thread creation 500 live on revision 0000055 under a busy SQL write lock, with the fix not yet deployed and the AI suspension unchanged, plus a per-criterion table.
 
+The [issue 2245 SQL store override note](./research/issue-2245-override-sqlstore-2026-11-23.md) records that the owner-directed AI suspension override did not reach the SQL store, the local fix, and a live probe on revision 0000057 with a per-criterion table.
+
 The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.md) records revision 0000054 healthy for 33 min with the start-up lock retry present, zero restarts and a clean second-replica start; the held-lock test stays unproven.
 
 The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records read only proof that scheduled simulator runs reach IoT Hub, the receiver and the employee map (288 `SYN-` devices, hub ingress equal to egress, fresh case readings), the clean secret scan and the unproven resident live view (#184).
