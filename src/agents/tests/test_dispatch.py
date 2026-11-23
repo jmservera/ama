@@ -140,6 +140,22 @@ class WorkerTests(unittest.TestCase):
         self.handle(provider)
         self.assertEqual(seen[0], assistants.build_request(make_task()))
 
+    def test_contract_breaking_evidence_is_refused_without_a_provider_call(self) -> None:
+        calls: list[str] = []
+        task = make_task()
+        task["snapshot"] = dict(note="Email jo@example.org")
+
+        def provider(*a: Any) -> dict[str, Any]:
+            calls.append("sent")
+            return returned(good_text())
+
+        r = self.handle(provider, task)
+        self.assertEqual(calls, [])
+        self.assertIsNone(r.output)
+        self.assertEqual(r.envelope["outcome"], "data-contract-refused")
+        self.assertIn("email address", r.failure or "")
+        self.assertNotIn("jo@example.org", r.to_json())
+
     def test_failures_keep_no_text_or_exception_detail(self) -> None:
         def boom(*a: Any) -> dict[str, Any]:
             raise RuntimeError("secret-token-123")

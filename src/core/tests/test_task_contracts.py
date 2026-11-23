@@ -3,7 +3,7 @@
 import string
 import unittest
 
-from zava_forward.core import ai_prompts, ai_registry, task_contracts
+from zava_forward.core import ai_prompts, ai_registry, assistants, task_contracts
 
 
 class TaskContractTests(unittest.TestCase):
@@ -61,6 +61,28 @@ class TaskContractTests(unittest.TestCase):
         system, prompt = ai_prompts.render("priority", n=3, facts="CASE-1: Stage: Survey booked")
         self.assertIn("top 3", prompt)
         self.assertTrue(system)
+
+    def assistant_task(self, **snapshot: str) -> dict[str, object]:
+        return dict(capability="stock-prioritisation", case_id="ZF-1", snapshot=snapshot)
+
+    def test_assistant_request_is_refused_before_a_prompt_when_evidence_breaks_the_contract(
+        self,
+    ) -> None:
+        task = self.assistant_task(note="Ring the resident on 07700 900123")
+        refusal = assistants.contract_refusal(task)  # type: ignore[no-untyped-call]
+        self.assertIn("telephone number", refusal or "")
+        self.assertNotIn("900123", refusal or "")
+        with self.assertRaises(task_contracts.ContractRefusal):
+            assistants.build_request(task)  # type: ignore[no-untyped-call]
+        oversize = self.assistant_task(note="x" * 40001)
+        self.assertIn("longer than", assistants.contract_refusal(oversize) or "")  # type: ignore[no-untyped-call]
+
+    def test_assistant_request_with_clean_evidence_and_digit_only_hash_is_built(self) -> None:
+        task = self.assistant_task(stage="Survey booked", digest="c0512699516aa2523426ec42")
+        self.assertIsNone(assistants.contract_refusal(task))  # type: ignore[no-untyped-call]
+        system, prompt = assistants.build_request(task)  # type: ignore[no-untyped-call]
+        self.assertTrue(system)
+        self.assertIn("Survey booked", prompt)
 
     def test_contract_does_not_claim_approval(self) -> None:
         for contract in task_contracts.CONTRACTS.values():
