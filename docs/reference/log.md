@@ -15249,3 +15249,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Issue 107 token-allowance race test (Refs #107)
 
 * Extended [issue-107-live-r5-assistants-evidence-2026-11-23.md](research/issue-107-live-r5-assistants-evidence-2026-11-23.md) with a concurrent token-allowance race test, run on SQLite and a disposable SQL Server. No estate change.
+## [2026-11-23] add | Issue 350 live pass 9 (Refs #350)
+
+* Added [issue-350-live-r9-2026-11-23.md](research/issue-350-live-r9-2026-11-23.md) with raw evidence: per-criterion table, no box ticked, and a GET `/api/assistants` fix so a SQL write-lock timeout answers 503 with `Retry-After` and logs its cause
