@@ -11,6 +11,7 @@ from collections.abc import Awaitable, Callable, Mapping
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Any
 from unittest.mock import AsyncMock, Mock, patch
 
 import test_sensor_handover as handover_fixture
@@ -282,6 +283,34 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaisesRegex(StreamError, "^IOT_CALLBACK_FAILED$"):
                 await self.run_receiver(2, bounded=True)
         self.assertEqual(self.receiver.callback_error_type, "KeyError")
+        self.assertIsNone(self.receiver.receive_error_type)
+
+    async def test_sdk_receive_error_records_only_the_first_exception_class(self) -> None:
+        async def failing(on_event: object, on_error: Any, **kwargs: object) -> None:
+            await on_error(None, ConnectionError("constructed SECRET"))
+            await on_error(None, ValueError("later"))
+            await asyncio.Event().wait()
+
+        self.client.receive = failing
+        with (
+            patch(
+                "zava_forward.api.iot_stream.ManagedIdentityCredential",
+                return_value=self.credentials,
+            ),
+            patch("zava_forward.api.iot_stream.EventHubConsumerClient", return_value=self.client),
+        ):
+            with self.assertRaisesRegex(StreamError, "^IOT_RECEIVE_FAILED$"):
+                await self.receiver.run(max_seconds=2, max_events=1, bounded_window=True)
+        self.assertEqual(self.receiver.receive_error_type, "ConnectionError")
+
+    async def test_setup_failure_records_the_exception_class(self) -> None:
+        with patch(
+            "zava_forward.api.iot_stream.ManagedIdentityCredential",
+            side_effect=RuntimeError("constructed SECRET"),
+        ):
+            with self.assertRaisesRegex(StreamError, "^IOT_RECEIVE_FAILED$"):
+                await self.receiver.run(max_seconds=2, max_events=1)
+        self.assertEqual(self.receiver.receive_error_type, "RuntimeError")
 
     async def test_bounded_window_keeps_sql_failure_fatal(self) -> None:
         self.events = [("0", event(observations()[0]))]
