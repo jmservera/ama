@@ -15238,3 +15238,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 1837 CSRF header unit test (Refs #1837)
 
 * Added [issue-1837-csrf-header-test-2026-11-23.md](research/issue-1837-csrf-header-test-2026-11-23.md): a repeatable test that the nomination route write refuses a missing `X-ZF-CSRF` header under the trusted-proxy provider.
+
+## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
+
+* Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.
