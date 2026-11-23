@@ -1,5 +1,5 @@
 {
- "task_id": "issue-220-live-20261123T172556Z",
+ "task_id": "issue-220-live-20261123T202618Z",
  "task_slug": "issue-220-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,29 +7,17 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-23-issue-220-live-r12-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-23-issue-220-live-r12-plan.md",
-  "details": ".copilot-tracking/details/2026-11-23-issue-220-live-r12-details.md",
-  "critique": ".copilot-tracking/plans/2026-11-23-issue-220-live-r12-plan.md",
-  "changes": ".copilot-tracking/changes/2026-11-23-issue-220-live-r12-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-23-issue-220-live-r12-review.md"
+  "research": ".copilot-tracking/research/2026-11-23-issue-220-live-r13-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-23-issue-220-live-r13-plan.md",
+  "details": ".copilot-tracking/details/2026-11-23-issue-220-live-r13-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-23-issue-220-live-r13-plan.md",
+  "changes": ".copilot-tracking/changes/2026-11-23-issue-220-live-r13-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-23-issue-220-live-r13-review.md"
  },
  "confirmed_decisions": [
-  {
-   "decision": "research executed, Ready",
-   "status": "done",
-   "evidence": "research file"
-  },
-  {
-   "decision": "critique executed once, proceed",
-   "status": "done",
-   "evidence": "plan file"
-  },
-  {
-   "decision": "review executed once, conformant",
-   "status": "done",
-   "evidence": "review file"
-  }
+  {"decision": "research executed, Ready", "status": "done", "evidence": ".copilot-tracking/research/2026-11-23-issue-220-live-r13-research.md"},
+  {"decision": "critique executed once, proceed; no deploy, no src change", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-23-issue-220-live-r13-plan.md"},
+  {"decision": "review executed once, conformant", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-23-issue-220-live-r13-review.md"}
  ],
  "blockers": [],
  "next_action": {
@@ -37,11 +25,6 @@
   "action": "owner decision"
  },
  "prioritized_follow_ups": [
-  {
-   "rank": 1,
-   "task": "Deploy guard fix to demo API",
-   "rationale": "live app lacks it",
-   "evidence": "r12 note"
-  }
+  {"rank": 1, "task": "Roll the r12 guard image to the demo API (owner-gated)", "rationale": "defence in depth; live route already rejects variants", "evidence": "docs/reference/research/issue-220-live-r13-key-variants-live-2026-11-23.md"}
  ]
 }

@@ -15132,3 +15132,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2190 glued test header parser fix (Refs #2190)
 
 * Added [issue-2190-live-20261123T202218Z-glued-header-note.md](research/issue-2190-live-20261123T202218Z-glued-header-note.md): a log fragment glued before the next unittest header is now split in `merge_docstring_headers`, with a regression test. No check relaxed.
+## [2026-11-23] add | Issue 220 live key-variant probe (Refs #220)
+
+* Added [issue-220-live-r13-key-variants-live-2026-11-23.md](research/issue-220-live-r13-key-variants-live-2026-11-23.md): the live API on revision 0000058 returns 400 for case, spacing and hyphen variants of forbidden challenge fields and leaves protected hashes unchanged; no source or estate change.
