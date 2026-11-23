@@ -14823,3 +14823,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Resident AI chat live re-verification run 2 (Refs #2243)
 
 * Added [issue-2243-live-r2-2026-11-23.md](research/issue-2243-live-r2-2026-11-23.md): repeat desktop probe of resident revision 0000026 (both questions `usage_limit`), 70 targeted tests pass, per-criterion table; the model-backed answer stays owner-gated on the private SQL ledger. No source change.
+## [2026-11-23] update | Mobile map summary live r2 (Refs #1844)
+
+* Added [issue-1844-live-r2-2026-11-23.md](research/issue-1844-live-r2-2026-11-23.md): only the owner-gated criterion 6 (independent review and hosted CI) remains. No source change.
