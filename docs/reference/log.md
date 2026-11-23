@@ -15119,3 +15119,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 144 worker image mapping contract test (Refs #144)
 
 * Added [issue-144-worker-image-mapping-2026-11-23.md](research/issue-144-worker-image-mapping-2026-11-23.md) and `WorkerImageMapping` tests: each Bicep workload image parameter matches the pipeline mapping and each worker module ships in its image project. Pipeline provenance and read-only root stay unproven. No Azure change.
+## [2026-11-23] add | Review effort totals in the AI live report (Refs #223)
+
+* Added [issue-223-live-r9-2026-11-23.md](research/issue-223-live-r9-2026-11-23.md): `ai_tasks.live_report` now totals measured review seconds per task, with a regression test; per-criterion table, nothing ticked.

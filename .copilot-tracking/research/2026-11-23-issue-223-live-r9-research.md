@@ -10,3 +10,6 @@ Refs #223. Disposition: executed (reuses r8 research note and r8 follow-up #1).
 
 ## Planning Readiness
 Ready: add per-task `review_effort` to `live_report()` with a regression test in `src/api/tests/test_ai_tasks.py`.
+Refs #223. Disposition: executed. Planning Readiness: Ready.
+
+Read r7 research, r8 changes and the code. Issue body via gh api (GraphQL rate limited); criteria all unticked. r8 follow-up 1: retained `review_evidence.review_seconds` is not aggregated anywhere; `ai_tasks.live_report` reports reviewer outcomes per task only. Angle: add measured `review_effort` (reviewed count, total, mean seconds per task) to `live_report`, so criterion 3 (total review effort) has a live measured source. Owner-only items skipped: OQ-017 holders, human panel.

@@ -600,8 +600,14 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None, assistant
     )
     tasks, reasons, fallbacks = {}, [], {}
     effort: dict[str, dict[str, Any]] = {}
+    tasks, reasons, fallbacks, effort = {}, [], {}, {}
     for r in recs:
         task = "priority" if r.get("kind") != "ai_task" else r["task"]
+        secs = (r.get("review_evidence") or {}).get("review_seconds")
+        if isinstance(secs, (int, float)) and not isinstance(secs, bool):
+            e = effort.setdefault(task, dict(timed_reviews=0, total_seconds=0.0))
+            e["timed_reviews"] += 1
+            e["total_seconds"] = round(e["total_seconds"] + secs, 1)
         status = NOT_REVIEWED if r["status"] == "Proposed" else r["status"]
         t = tasks.setdefault(task, dict(total=0, ai=0, workflow=0, unverified=0, **{s: 0 for s in (NOT_REVIEWED, "Accepted", "Edited", "Rejected", HOLD, QUARANTINED)}))
         t["total"] += 1
@@ -644,6 +650,10 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None, assistant
         },
         fallback_reasons=fallbacks,
         reviewer_reasons=reasons[-50:],
+        review_effort={
+            k: dict(v, mean_seconds=round(v["total_seconds"] / v["timed_reviews"], 1))
+            for k, v in effort.items()
+        },
         ai_consumption_economics=econ,
         **readiness,
     )

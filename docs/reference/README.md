@@ -1885,6 +1885,7 @@ or infra acceptance claimed.
 | [Issue 2237 Smoke of API 0000055 and Resident 0000027](./research/issue-2237-smoke-0055-live-2026-11-23.md) | Live desktop smoke on 2026-11-23: retention 200, chat thread, employee map with sensor overlay, resident chart and start-up health, pass or fail per check for issues 2237, 2257 and 2244; nothing ticked |
 | [Issue 223 Review Effort Measurement, Run 8](./research/issue-223-live-r8-2026-11-23.md) | Issue 223: measured review time retained in AI review evidence, test results, and a per-criterion table; nothing ticked |
 | [Issue 223 Review Effort Aggregation, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: live report aggregates measured review time per task, test results, and a per-criterion table; nothing ticked |
+| [Issue 223 Review Effort Totals, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: the AI live report totals measured review seconds per task, test results and a per-criterion table; nothing ticked |
 | [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
 
 

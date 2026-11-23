@@ -557,6 +557,19 @@ class TasksMixin:
         for rid in ids:
             recs[rid].pop("review_evidence")
         self.assertEqual(self.store.ai_live_report()["review_effort"], {})
+    def test_live_report_totals_measured_review_effort(self):
+        self.out["text"] = "- ok [[Stage: Contacting resident]]"
+        first = self.store.ai_run(self.sam, "ZF-1", "summary")
+        second = self.store.ai_run(self.sam, "ZF-1", "summary")
+        self.store.ai_run(self.sam, "ZF-1", "summary")
+        for rid, end in ((first["record_id"], "10:01:00"), (second["record_id"], "10:03:00")):
+            next(x for x in self.records() if x["id"] == rid)["created"] = "2026-01-01T10:00:00"
+            with mock.patch.object(ai_tasks, "_now", return_value=f"2026-01-01T{end}"):
+                self.store.review_ai(self.sam, rid, "accept")
+        effort = self.store.ai_live_report()["review_effort"]
+        self.assertEqual(
+            effort["summary"], dict(timed_reviews=2, total_seconds=240.0, mean_seconds=120.0)
+        )
 
     def test_changed_source_holds_instead_of_accepting(self):
         self.out["text"] = "- ok [[Stage: Contacting resident]]"
