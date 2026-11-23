@@ -14930,3 +14930,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Nomination test bootstrap isolation sixth re-run (Refs #1847)
 
 * Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-sixth.md): both orders in source, editable and noneditable layouts with identities observed; criterion 6 (full gate receipt) stays owner-gated. No source or test change.
+
+## [2026-11-23] add | Issue 2164 audit of other identity.verified staff paths (Refs #2164)
+
+* Added [issue-2164-staff-verified-audit-2026-11-23.md](research/issue-2164-staff-verified-audit-2026-11-23.md): only sensor review drafts shared the bound-row gap; the gate now checks tenant and object id and refuses view-only principals, with tests. Live proof unproven by design.

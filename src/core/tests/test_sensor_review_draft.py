@@ -19,7 +19,7 @@ from unittest import mock
 
 import dataset
 from sensor_consumer_fixture import CONTROL, POLICY, SENSOR_STATE_TABLES
-from zava_forward.core import projection
+from zava_forward.core import identity, projection
 from zava_forward.core import sensor_analysis as sa
 from zava_forward.core import sensor_review_draft as srd
 from zava_forward.core.assistants import REGISTRY
@@ -181,6 +181,37 @@ class DraftCases(_Base):
         self.assertEqual(self.audits(), 0)
         with self.assertRaises(KeyError):
             srd.read_drafts(self.store, QI, "ZF-MISSING")
+
+    def test_bound_entra_staff_inherit_the_roster_row(self) -> None:
+        tid, oid = "11111111-1111-4111-8111-111111111111", "22222222-2222-4222-8222-222222222222"
+        bound = dict(code=QI["code"], email=QI["email"])
+        user = dict(
+            identity.principal(tid, oid, "Quality Inspector"),
+            name=QI["name"],
+            bound=bound,
+            **bound,
+        )
+        row = dict(oid=oid, tid=tid)
+        self.set_staff(QI, **row)
+        self.assertEqual(srd.read_drafts(self.store, user, CID)["case_id"], CID)
+        refused: tuple[tuple[str, Json, Json], ...] = (
+            ("case scope", user, dict(case_ids=["ZF-2"], **row)),
+            ("area scope", user, dict(areas=["Nowhere"], **row)),
+            ("row rebound to another object id", user, dict(oid=tid, tid=tid)),
+            ("row owned by another tenant", user, dict(oid=oid, tid=oid)),
+            ("row without an object id", user, dict()),
+            ("disabled row", user, dict(disabled=True, **row)),
+            ("view-only", dict(user, view_only=True), row),
+            ("tampered binding", dict(user, code="OTHER"), row),
+        )
+        for name, principal, change in refused:
+            with self.subTest(name):
+                self.set_staff(QI, **change)
+                with self.assertRaises(PermissionError):
+                    srd.read_drafts(self.store, principal, CID)
+                with self.assertRaises(PermissionError):
+                    srd._record_draft_synthetic(self.store, principal, CID, signal(), APPROVED)
+        self.assertEqual(self.audits(), 0)
 
     def test_default_denial_without_an_approved_rule(self) -> None:
         wrong = replace(SYNTHETIC_APPROVAL, rule_id="OTHER")
