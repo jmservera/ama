@@ -78,7 +78,7 @@ are unchanged.
 | Changed Python ruff check/format | P02-T02 | Passed | Both files pass. |
 | Prose detector | Authored Markdown | Unavailable | Installed sloptrim detector not found; manual prose review used. |
 | Independent exact-head assessment | Publication | Unavailable | Awaiting an independent reviewer; not claimed by implementation checks. |
-| Hosted exact-head CI | Publication | Unavailable | New branch not yet pushed; original failed run is not passing evidence. |
+| Hosted exact-head CI | Publication | Unavailable | Corrective PR 2328 published; new hosted results awaited. Original failed run is not passing evidence. |
 | Complete local gate and image/security stages | Broader integration | Not run | Bounded focused-tier observer repair; no release/deploy or security/gate-criteria change. |
 
 ## Pre-Review Reconciliation
@@ -109,3 +109,10 @@ Child changes are validated but have not had an independent review.
 Owner authorized publication. Independent exact-head review and hosted checks
 remain; later status will be recorded on the PR without rewriting original
 evidence or claiming pending checks passed.
+
+## Publication
+
+Corrective PR: https://github.com/jmservera/ama/pull/2328, targeting `main`.
+The shared GraphQL quota prevented `gh pr create`; REST creation succeeded
+after confirming no duplicate PR existed. Subsequent exact-head hosted status
+and independent review belong on that PR. No merge or deployment performed.

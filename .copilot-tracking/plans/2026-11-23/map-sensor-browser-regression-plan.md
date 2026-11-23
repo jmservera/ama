@@ -90,8 +90,8 @@ Dependencies: `P02-T01`.
 
 | Group | Status | Owner | Decision or feedback item | Impact |
 | --- | --- | --- | --- | --- |
-| D3 count targeting | Settled | Agent | Direct children exclude hidden card status; source DOM and local failure confirm cause. | P02-T01 preserves exact count equality. |
-| D4 validation tier | Focused | Agent | Selector repair preserves existing acceptance semantics and strengthens targeting; no workflow, permissions, packages, infrastructure, SQL or security-control change. Positive/negative controls must confirm it. | P02-T02 focused local checks plus exact-head independent review and hosted CI. |
+| D3 | Settled | Agent | Count targeting: direct children exclude hidden card status; source DOM and local failure confirm cause. | P02-T01 preserves exact count equality. |
+| D4 | Settled | Agent | Focused tier: selector repair preserves existing acceptance semantics and strengthens targeting; no workflow, permissions, packages, infrastructure, SQL or security-control change. Positive/negative controls confirm it. | P02-T02 focused local checks plus exact-head independent review and hosted CI. |
 
 No unresolved material decision. No user walkthrough required.
 
