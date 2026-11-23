@@ -1,0 +1,12 @@
+======================================================================
+FAIL: test_stale_safety_column_is_repaired_so_list_matches_tile_and_map_issue_2254 (tests.test_sqlreads.Migration.test_stale_safety_column_is_repaired_so_list_matches_tile_and_map_issue_2254)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-2254-live-20261123T142852Z/src/core/tests/test_sqlreads.py", line 248, in test_stale_safety_column_is_repaired_so_list_matches_tile_and_map_issue_2254
+    self.assertEqual(listed, tile)
+AssertionError: 3 != 4
+
+----------------------------------------------------------------------
+Ran 1 test in 1.398s
+
+FAILED (failures=1)

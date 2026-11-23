@@ -6,6 +6,19 @@ ms.date: 2026-11-21
 ms.topic: reference
 ---
 
+## Map sensor loading
+
+Ordinary map loads and viewport changes do not read sensor values. Selecting
+a home loads only its latest summary through
+`GET /api/cases/{id}/sensor-summary`, using the existing role, case-scope and
+monitoring-consent projection. The card shows loading and unavailable states;
+select the home again to retry a failed read.
+
+The stale/offline-sensor checkbox explicitly opts into bounded bulk summaries
+with `GET /api/map?sensors=1`. Unchecking it returns to lightweight map reads.
+The map summary cap remains 100 homes per request; sensor history stays on the
+Home sensors tab. Synthetic readings are not calibrated indoor measurements.
+
 ## Regulatory plain-language explanations
 
 The checkbox shows or hides extra explanatory notes, including when alerts are

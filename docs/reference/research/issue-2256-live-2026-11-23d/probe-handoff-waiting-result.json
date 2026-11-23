@@ -1,0 +1,115 @@
+{
+  "role": "Retrofit Programme Manager",
+  "handoffs": {
+    "status": 200,
+    "count": 4,
+    "case_ids": [
+      "ZF-2025-0029",
+      "ZF-2025-0030",
+      "ZF-2025-0031",
+      "ZF-2025-0032"
+    ]
+  },
+  "handoffs/unaccepted": {
+    "status": 200,
+    "count": 4,
+    "case_ids": [
+      "ZF-2025-0029",
+      "ZF-2025-0030",
+      "ZF-2025-0031",
+      "ZF-2025-0032"
+    ]
+  },
+  "handoffs/unowned": {
+    "status": 200,
+    "count": 4,
+    "case_ids": [
+      "ZF-2025-0029",
+      "ZF-2025-0030",
+      "ZF-2025-0031",
+      "ZF-2025-0032"
+    ]
+  },
+  "handoffs/escalated": {
+    "status": 200,
+    "count": 4,
+    "case_ids": [
+      "ZF-2025-0029",
+      "ZF-2025-0030",
+      "ZF-2025-0031",
+      "ZF-2025-0032"
+    ]
+  },
+  "cases_count": 50,
+  "list_open_offers": [],
+  "ZF-2025-0030": {
+    "closed": false,
+    "handoff": {
+      "state": "Offered",
+      "from_code": "E-431883ca6856",
+      "to_code": "E-52744c178b82",
+      "offered_at": "2026-10-13T09:00+01:00",
+      "due_at": "2026-10-16T08:00+00:00",
+      "chase_owner": "Aadi Kapoor"
+    }
+  },
+  "case_card_lines": [
+    "Ask the proposed receiver to accept or decline; the sender must keep chasing.",
+    "Aadi Kapoor, Retrofit Programme Manager. Offered to Miguel Garcia, not yet confirmed",
+    "Next action: Ask the proposed receiver to accept or decline; the sender must keep chasing.",
+    "Destination: Unknown; proposed receiver: Miguel Garcia; confirmed receiver: Unknown; chase owner: Aadi Kapoor; resident-update owner: Unknown."
+  ],
+  "screen_text": "Back to the list\nHandoff waiting times\n\nThis screen lists every handoff that has not been accepted yet and that your role can see. It is not the list called Handoffs waiting for you. It is read-only: nothing here changes a handoff.\n\nNo approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw.\n\nFor conflicting source values, failed imports, failed model calls ",
+  "table_rows": [
+    [
+      "Case",
+      "State",
+      "Status",
+      "Waiting",
+      "Due",
+      "Chase owner",
+      "Proposed receiver",
+      "Escalation"
+    ],
+    [
+      "ZF-2025-0029",
+      "Action needed",
+      "Sent",
+      "990.75 hours",
+      "16 Oct 2026, 08:00 UTC",
+      "Daisy Phillips",
+      "Miguel Garcia",
+      "Needs escalation. Reason: Handoff due time has passed."
+    ],
+    [
+      "ZF-2025-0030",
+      "Action needed",
+      "Sent",
+      "990.75 hours",
+      "16 Oct 2026, 08:00 UTC",
+      "Aadi Kapoor",
+      "Miguel Garcia",
+      "Needs escalation. Reason: Handoff due time has passed."
+    ],
+    [
+      "ZF-2025-0031",
+      "Action needed",
+      "Sent",
+      "990.75 hours",
+      "16 Oct 2026, 08:00 UTC",
+      "Aadi Kapoor",
+      "Miguel Garcia",
+      "Needs escalation. Reason: Handoff due time has passed."
+    ],
+    [
+      "ZF-2025-0032",
+      "Action needed",
+      "Sent",
+      "990.75 hours",
+      "16 Oct 2026, 08:00 UTC",
+      "Aadi Kapoor",
+      "Miguel Garcia",
+      "Needs escalation. Reason: Handoff due time has passed."
+    ]
+  ]
+}

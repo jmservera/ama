@@ -802,6 +802,38 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertEqual(json.loads(refused.exception.read())["error"], "Could not read that.")
         self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
+    def test_trusted_proxy_route_write_requires_csrf_header_and_writes_nothing_without_it(
+        self,
+    ) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        nom_id = before["nomination_records"][0]["id"]
+        payload = json.dumps(self._ack_payload(nom_id, acknowledgement_ref="SYN-CSRF")).encode()
+
+        def post(extra: dict[str, str]) -> tuple[int, Any]:
+            req = Request(
+                self.base + "/api/cases/ZF-1/resident",
+                payload,
+                headers={
+                    "Cookie": self._login_cookie("sam"),
+                    "Content-Type": "application/json",
+                    **extra,
+                },
+            )
+            try:
+                with urlopen(req, timeout=10) as response:
+                    return response.status, json.loads(response.read())
+            except HTTPError as err:
+                return err.code, json.loads(err.read())
+
+        with patch.object(self.app.provider, "name", "trusted-proxy"):
+            status, body = post({})
+            self.assertEqual((status, body["error"]), (403, "Missing request header."))
+            self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+            self.assertEqual(post({"X-ZF-CSRF": "1"})[0], 200)
+
     def test_route_form_script_posts_json_with_csrf_header_and_page_loads_it(self) -> None:
         self.assertEqual(
             self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200

@@ -30,7 +30,7 @@ class MapFullscreen(unittest.TestCase):
         self.assertIn("Address not included in this map", MAP)
         self.assertIn('stage.textContent = point.stage || "Unknown"', MAP)
         self.assertNotIn("innerHTML", MAP)
-        self.assertNotIn("api(`/api/cases/", MAP)
+        self.assertIn("api(`/api/cases/${encodeURIComponent(point.id)}/sensor-summary`", MAP)
         self.assertNotIn("bindTooltip", MAP)
         self.assertIn("mapAction(m, () => showHome(p))", MAP)
 

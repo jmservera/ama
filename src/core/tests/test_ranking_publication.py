@@ -916,6 +916,27 @@ class ConcurrentWriterTests(unittest.TestCase):
         self.assertEqual(len(list(self.dir.iterdir())), 1)
         self.assertEqual(rp.verify(self.dir)["problems"], [])
 
+    def test_separate_processes_first_publish_into_missing_nested_archive(self):
+        nested = Path(self.tmp.name) / "a" / "b" / "archive"
+        ctx = multiprocessing.get_context("spawn")
+        dates = ["2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13"]
+        barrier, out = ctx.Barrier(len(dates)), ctx.Queue()
+        procs = [
+            ctx.Process(target=_publish_in_process, args=(str(nested), d, barrier, out))
+            for d in dates
+        ]
+        for proc in procs:
+            proc.start()
+        results = [out.get(timeout=60) for _ in procs]
+        for proc in procs:
+            proc.join(60)
+            self.assertEqual(proc.exitcode, 0)
+        self.assertTrue(all(isinstance(r, dict) for r in results), results)
+        self.assertEqual(sum(r["written"] for r in results), 1)
+        self.assertEqual(len({r["published_on"] for r in results}), 1)
+        self.assertEqual(len(list(nested.iterdir())), 1)
+        self.assertEqual(rp.verify(nested)["problems"], [])
+
 
 if __name__ == "__main__":
     unittest.main()
