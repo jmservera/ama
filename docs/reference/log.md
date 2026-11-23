@@ -15135,3 +15135,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 220 live key-variant probe (Refs #220)
 
 * Added [issue-220-live-r13-key-variants-live-2026-11-23.md](research/issue-220-live-r13-key-variants-live-2026-11-23.md): the live API on revision 0000058 returns 400 for case, spacing and hyphen variants of forbidden challenge fields and leaves protected hashes unchanged; no source or estate change.
+## [2026-11-23] add | Issue 2202 readings coverage measure (Refs #2202)
+
+* Added [issue-2202-live-2026-11-23.md](research/issue-2202-live-2026-11-23.md), `tools/demo_readings_coverage.py` and its test: tiled live map shows 261 of 443 homes (58.9%) with readings on API 0000058, and the resident consent checkbox works on 0000028. Map gauges, rollback and generative answers stay unproven.
