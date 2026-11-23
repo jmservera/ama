@@ -14994,3 +14994,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 223 review effort measurement (Refs #223)
 
 * Added [issue-223-live-r8-2026-11-23.md](research/issue-223-live-r8-2026-11-23.md): `review_seconds` is now retained in AI review evidence; per-criterion table, nothing ticked.
+## [2026-11-23] add | Issue 1837 CSRF header unit test (Refs #1837)
+
+* Added [issue-1837-csrf-header-test-2026-11-23.md](research/issue-1837-csrf-header-test-2026-11-23.md): a repeatable test that the nomination route write refuses a missing `X-ZF-CSRF` header under the trusted-proxy provider.
