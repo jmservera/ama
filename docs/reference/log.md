@@ -15150,3 +15150,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2255 live re-check on revision 0000058, run 6 (Refs #2255)
 
 * Added [issue-2255-live-r6-2026-11-23.md](research/issue-2255-live-r6-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with elapsed time and target, 0 unknown. The demo seeder `revert` now removes a `noticed` date it invented, with a regression test.
+## [2026-11-23] add | Issue 2257 map redraw after a gateway failure (Refs #2257)
+
+* Added [issue-2257-live-r6-2026-11-23.md](research/issue-2257-live-r6-2026-11-23.md): a non-JSON gateway failure now gets the map's one automatic redraw, with a regression test; per-criterion table.
