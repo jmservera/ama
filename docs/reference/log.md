@@ -14865,3 +14865,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 184 live re-check (Refs #184)
 
 * Added [issue-184-live-recheck-2026-11-23.md](research/issue-184-live-recheck-2026-11-23.md): per-criterion re-proof for the demo; live message-body secret absence stays unproven. No source change.
+## [2026-11-23] update | Issue 1288 eleventh live audit (Refs #1288)
+
+* Added [issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md): revisions 0000055 and 0000027, 272 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
