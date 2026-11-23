@@ -14994,3 +14994,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
 
 * Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.
+
+## [2026-11-23] add | Issue 1259 real-filesystem archive path regressions (Refs #1259)
+
+* Added [2026-11-23-ranking-archive-unusable-1259-live-r10.md](research/2026-11-23-ranking-archive-unusable-1259-live-r10.md): regular-file ancestor, symlink loop and unsearchable-parent scenarios in the runner tests; mutation proves they fail without the guard.
