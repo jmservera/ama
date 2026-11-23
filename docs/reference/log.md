@@ -15215,3 +15215,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Epic 113 production-claim guard (Refs #113)
 
 * Added [issue-113-production-claim-guard-2026-11-23.md](research/issue-113-production-claim-guard-2026-11-23.md): a test-only guard against unqualified production claims in shipped source; criteria 1 and 2 stay owner-gated.
+## [2026-11-23] add | Issue 157 case scoping at thread creation (Refs #157)
+
+* Added [issue-157-case-scoping-2026-11-23.md](research/issue-157-case-scoping-2026-11-23.md): `ChatPrivacy.start_thread` did not apply the role's case visibility (only the API route did); fixed in source with a regression test. Both open epic criteria stay unproven.
