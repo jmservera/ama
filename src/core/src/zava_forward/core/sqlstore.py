@@ -292,6 +292,8 @@ class SqlStore(Store):
             hold = continuity.gate_hold(self.db, mssql=hasattr(self, "_env"))
             if hold is not None:
                 return hold
+            if continuity.demo_owner_override():
+                return None
             row = self.db.execute("SELECT value FROM meta WHERE key='continuity'").fetchone()
         return continuity.active(continuity.load(row[0] if row else None), task)
 
