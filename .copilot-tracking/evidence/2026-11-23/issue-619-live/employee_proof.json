@@ -1,0 +1,237 @@
+{
+ "steps": [
+  {
+   "step": "cases_available",
+   "count": 50
+  },
+  {
+   "step": "case_structure",
+   "tablist": [
+    "Case sections"
+   ],
+   "tabs": [
+    {
+     "n": "Overview",
+     "sel": "true",
+     "ctl": true
+    },
+    {
+     "n": "Blockers and safety (3)",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "Survey and assessment",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "Funding",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "Resident",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "Contractor and works",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "Quality and handover",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "Home sensors",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "AI assistance (loading)",
+     "sel": "false",
+     "ctl": true
+    },
+    {
+     "n": "History",
+     "sel": "false",
+     "ctl": true
+    }
+   ],
+   "panels": [
+    {
+     "label": "case-tab-overview"
+    },
+    {
+     "label": "case-tab-blockers"
+    },
+    {
+     "label": "case-tab-survey"
+    },
+    {
+     "label": "case-tab-funding"
+    },
+    {
+     "label": "case-tab-resident"
+    },
+    {
+     "label": "case-tab-contractor"
+    },
+    {
+     "label": "case-tab-quality"
+    },
+    {
+     "label": "case-tab-sensors"
+    },
+    {
+     "label": "case-tab-ai"
+    },
+    {
+     "label": "case-tab-history"
+    }
+   ],
+   "blockers": [
+    "Funding has not been confirmed."
+   ],
+   "blockerButtons": [
+    "Case: why blocked. Funding has not been confirmed. Details",
+    "Funding: why blocked. Funding has not been confirmed. Detail",
+    "Resident agreement: why blocked. Resident decision or author"
+   ]
+  },
+  {
+   "step": "axe_case_view_1366",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 30
+  },
+  {
+   "step": "tab_arrow_keys",
+   "sequence": [
+    "Overview",
+    "Blockers and safety (3)",
+    "Survey and assessment",
+    "Funding",
+    "Resident",
+    "Contractor and works",
+    "Quality and handover",
+    "Home sensors",
+    "AI assistance (count unavailable)",
+    "History",
+    "Overview"
+   ],
+   "end": "History",
+   "home": "Overview",
+   "selected_after": "Overview"
+  },
+  {
+   "step": "tab_moves_to_panel",
+   "focus": {
+    "tag": "SECTION",
+    "id": "case-panel-overview",
+    "role": "tabpanel",
+    "name": "OverviewCurrent owner: Aadi Kapoor. Reason: to tak"
+   }
+  },
+  {
+   "step": "tab_walk_focus_indicators",
+   "stops": 80,
+   "without_indicator": [
+    "Skip to main content\n\n\n\n  Zava ForwardZava North H",
+    "Skip to main content\n\n\n\n  Zava ForwardZava North H",
+    "Skip to main content\n\n\n\n  Zava ForwardZava North H"
+   ],
+   "without_indicator_count": 3
+  },
+  {
+   "step": "blocker_keyboard",
+   "opened_by_enter": 1,
+   "closed_by_escape": true,
+   "focus_back_on_trigger": true
+  },
+  {
+   "step": "reflow_200pct_zoom_equiv_683x450",
+   "no_horizontal_scroll": true,
+   "tabs_visible": 10
+  },
+  {
+   "step": "reflow_400pct_zoom_equiv_320x256",
+   "no_horizontal_scroll": true,
+   "tabs_visible": 10
+  },
+  {
+   "step": "reduced_motion_case_view",
+   "running_long_animations": 0
+  },
+  {
+   "step": "chat_launcher_keyboard",
+   "focused": true,
+   "name": "Chat",
+   "focus_indicator": true
+  },
+  {
+   "step": "chat_space_opens",
+   "role": "dialog",
+   "expanded": "true",
+   "focus": {
+    "tag": "H2",
+    "id": "employee-chat-title",
+    "role": null,
+    "name": "Employee assistant"
+   }
+  },
+  {
+   "step": "chat_axe_open",
+   "version": "4.10.3",
+   "violations": [],
+   "passes": 20
+  },
+  {
+   "step": "chat_tab_cycle",
+   "sequence": [
+    "Close chat",
+    "About this chat",
+    "Chat size",
+    "Employee assistant conversation",
+    "employee-chat-question",
+    "employee-chat-skill",
+    "Send",
+    "Skip to main content\n\n\n\n  Zava ForwardZava North H",
+    "Skip to main content",
+    "home",
+    "My cases",
+    "All cases"
+   ],
+   "stops_outside_panel_or_launcher": 5
+  },
+  {
+   "step": "chat_reflow_200pct_zoom_equiv_683x450",
+   "no_horizontal_scroll": true,
+   "input_in_view": false,
+   "send_in_view": true
+  },
+  {
+   "step": "chat_reflow_400pct_zoom_equiv_320x256",
+   "no_horizontal_scroll": true,
+   "input_in_view": false,
+   "send_in_view": false
+  },
+  {
+   "step": "reduced_motion_chat",
+   "running_long_animations": 0
+  },
+  {
+   "step": "chat_escape",
+   "hidden": true,
+   "focus": {
+    "tag": "BUTTON",
+    "id": "employee-chat-launcher",
+    "role": null,
+    "name": "Chat"
+   }
+  }
+ ]
+}

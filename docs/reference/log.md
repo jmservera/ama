@@ -14789,3 +14789,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2164 roster scope re-check, run 20261123T010755Z (Refs #2164)
 
 * Extended [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix in main, tests pass, live revisions 0000054 and 0000026 confirmed read-only; the deployed digest still cannot be tied to a commit.
+
+## [2026-11-23] update | Issue 619 live re-proof on revisions 0000054 and 0000026 (Refs #619)
+
+* Added [issue-619-live-at-consent-evidence-2026-11-23.md](research/issue-619-live-at-consent-evidence-2026-11-23.md): main equals live, 127 targeted tests pass, axe 0 violations, consent refusal holds, 200 percent text finding assessed as not a code gap. Person-run AT, real resident journey and Fluent 2 re-audit stay unproven and owner-gated. No source or estate change.
