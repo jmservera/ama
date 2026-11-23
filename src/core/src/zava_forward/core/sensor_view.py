@@ -372,6 +372,27 @@ def conflicts(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
     ]
 
 
+def implausible(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Retained readings with a missing, non-finite or physically impossible value."""
+    low_h, high_h = PLAUSIBLE_HUMIDITY_PCT
+    low_t, high_t = PLAUSIBLE_TEMPERATURE_C
+    out = []
+    for r in rows:
+        try:
+            humidity, temperature = float(r["humidity_pct"]), float(r["temperature_c"])
+            ok = (
+                isfinite(humidity)
+                and isfinite(temperature)
+                and low_h <= humidity <= high_h
+                and low_t <= temperature <= high_t
+            )
+        except (KeyError, TypeError, ValueError):
+            ok = False
+        if not ok:
+            out.append(dict(sensor_id=r["sensor_id"], citation_key=key_of(r)))
+    return sorted(out, key=lambda e: e["citation_key"])
+
+
 def citations(source: Mapping[str, Any]) -> dict[str, Any]:
     """Stable citation keys for every captured reading; each names the exact retained row."""
     rows = [r for key in ("readings", "before", "after") for r in source.get(key, [])]
@@ -492,6 +513,13 @@ def capture_source(
         out["conflict_notice"] = (
             "Retained readings disagree for the same sensor and time. Do not pick one; "
             "route to a person."
+        )
+    impossible = implausible(rows)
+    if impossible:
+        out["implausible_readings"] = impossible
+        out["implausible_notice"] = (
+            "A retained reading is missing a value or outside the possible range. "
+            "Do not rely on it; use the ordinary quality check."
         )
     return {k: v for k, v in out.items() if v is not None or k == "latest"}
 

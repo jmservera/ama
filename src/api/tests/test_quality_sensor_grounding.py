@@ -6,6 +6,7 @@ exact retained values, `[sensor:...]` citations and Origin labels, not real mode
 
 import json
 import re
+import time
 import unittest
 from collections.abc import Callable
 from pathlib import Path
@@ -173,6 +174,30 @@ class Grounding(qs.Seed, ta.ApiTests):
                 f"INSERT INTO sensor_reading VALUES ({','.join('?' * len(READING_COLUMNS))})",
                 tuple(row[c] for c in READING_COLUMNS),
             )
+
+    def test_implausible_latest_reading_is_marked_in_the_snapshot_and_blocks_the_flag(self) -> None:
+        self.ready()
+        self._insert_conflict_at(
+            qs.stamp(int(time.time()) - 60),
+            reading_id="R-IMPOSSIBLE",
+            temp="24.8",
+            humidity="250.0",
+        )
+        api = self.request("/api/cases/ZF-1/sensors")[1]
+        self.assertEqual(api["health"]["state"], "out_of_range")
+        self.assertTrue(api["implausible_readings"])
+        self.assertIn("Do not rely", api["implausible_notice"])
+        self.service.scan()
+        self.assertEqual(self.quality_task(), [])
+
+        # A manual proposal still reaches the model with the same marker and is never an autonomous flag.
+        tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+        self.assertTrue(self.service.execute(tid))
+        sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]
+        self.assertEqual(sent["implausible_readings"], api["implausible_readings"])
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual((flag["status"], flag["autonomous"]), ("implausible-readings", False))
+        self.assertIn("outside the possible range", flag["effect"])
 
     def test_quality_review_flag_carries_cited_values_and_generative_origin(self) -> None:
         self.ready()
