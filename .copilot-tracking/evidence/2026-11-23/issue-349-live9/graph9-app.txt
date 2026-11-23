@@ -1,0 +1,14 @@
+[
+  {
+    "aud": "AzureADMyOrg",
+    "creds": [
+      "2027-04-22T13:47:34Z"
+    ],
+    "roles": 13,
+    "uris": [
+      "https://<host>/.auth/login/aad/callback",
+      "https://<host>/.auth/login/aad/callback",
+      "https://<host>/.auth/login/aad/callback"
+    ]
+  }
+]

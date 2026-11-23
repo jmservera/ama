@@ -14714,3 +14714,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2008 close-out on revision 0000054 (Refs #2008)
 
 * Added [issue-2008-closeout-live-2026-11-23.md](research/issue-2008-closeout-live-2026-11-23.md): the workbook import re-proved on API revision 0000054 with the staff test sign-in; all four criteria proven, source hash unchanged. No source change.
+## [2026-11-23] update | Issue 349 live round 9 close-out (Refs #349)
+
+* Added [issue-349-tenant-prerequisites-live-r9-2026-11-23.md](research/issue-349-tenant-prerequisites-live-r9-2026-11-23.md): live API 0000054 and resident 0000026 re-proved; criteria 1, 2, 3, 6 proven for the demo, 4 unproven (owner roster), 5 partly proven. No source or estate change.
