@@ -15010,3 +15010,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 144 hardening receipt (Refs #144)
 
 * Added [issue-144-live-hardening-receipt-2026-11-23.md](research/issue-144-live-hardening-receipt-2026-11-23.md) and `infra/scripts/deployed_hardening.py` with tests: guard enforced live, PID 1 non-root with NoNewPrivs and empty capability sets; read-only root and pipeline-built images stay unproven. No Azure change.
+
+## [2026-11-23] add | Issue 2188 wall time in the gate receipt (Refs #2188)
+
+* Added [issue-2188-live-wall-time-2026-11-23.md](research/issue-2188-live-wall-time-2026-11-23.md): the gate receipt records `wall_seconds`; the before and after wall-time pair stays unproven because it needs two full gates.
