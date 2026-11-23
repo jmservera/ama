@@ -15254,3 +15254,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Issue 435 stale batch wording fix (Refs #435)
 
 * Added [capstone-pitch-435-live-2026-11-23c.md](research/capstone-pitch-435-live-2026-11-23c.md): spoken B25 script and Q&A brief no longer say the held-out batch has not run (it ran under #432); computed read-aloud timing; one new test. Criterion 2 unproven, criterion 3 tick unsupported. No deck or estate change.
+## [2026-11-23] add | Issue 2314 round 3 saved query live run (Refs #2314)
+
+* Added [issue-2314-alerts-runbooks-r3-2026-11-23.md](research/issue-2314-alerts-runbooks-r3-2026-11-23.md): a test applies the saved query parse to plain and structured console lines, and a read-only live run returned a metered row. No deployment.

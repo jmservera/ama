@@ -594,6 +594,9 @@ A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) adds an
 A [2026-11-23 pass](./research/issue-2314-alerts-runbooks-2026-11-23.md) adds a saved search for AI usage by capability and period with unreconciled variance, and a per-criterion result.
 
 A [round 2 note](./research/issue-2314-alerts-runbooks-r2-2026-11-23.md) records a test tying the saved query to the emitted usage line.
+
+A [round 3 note](./research/issue-2314-alerts-runbooks-r3-2026-11-23.md) records a structured-log regression test and a read-only live run of the saved query.
+
 A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) executes the workbook queries live now that workspace query access is open, fixes a failing AI variance query and records what stays unproven.
 
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
