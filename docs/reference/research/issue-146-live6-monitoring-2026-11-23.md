@@ -1,10 +1,34 @@
 ---
+title: Issue 146 live alert inventory classifier (2026-11-23)
+description: Read-only live inventory of the demo alerts, a repeatable offline classifier for criterion 1, and a proven or unproven result per unticked criterion
 title: Issue 146 monitoring coverage, live workbook query execution (2026-11-23)
 description: Live execution of the operations workbook queries now that workspace query access is open, one real workbook query defect fixed, and a proven or unproven result per unticked criterion
 ms.date: 2026-11-23
 ms.topic: reference
 ---
 
+Refs #146. Scope: synthetic demo, resource group `ama`, desktop only, existing Azure CLI login, 2026-11-23 about 17:45 UTC. All Azure calls were read-only; nothing was created, so nothing needed deleting. No drill, no Key Vault rotation, no deployment. Earlier pass: [2026-11-22 note](./issue-146-live5-monitoring-2026-11-22.md).
+
+## Live observations
+
+| Command (all `-g ama`) | Result |
+| --- | --- |
+| `az monitor metrics alert list` | 13 rules. Enabled: Foundry throttle, SQL CPU, API 5xx and restarts for both prefixes. Disabled: job failed for `demo-audit`, `demo-orch`, `demo-load`; IoT ingress throttle, routing dropped, invalid and orphaned |
+| `az monitor scheduled-query list` | 8 rules. Enabled: Key Vault expiry and denied, ledger digest mismatch and verify-missing for both prefixes (severity 1). Disabled: `ai-limits`, `agent-tasks-poison` |
+| `az resource list --resource-type microsoft.insights/workbooks` | One workbook resource exists |
+
+## Tooling added
+
+`infra/scripts/monitoring_live_inventory.py` reads the two CLI JSON lists and classifies rules into job failure, poison queue, ledger digest and IoT ingestion, reporting `enabled`, `disabled` or `missing` per class. It reports only rule name and enabled flag, and always sets `firing_observed` to false. Run on this day's live JSON:
+
+| Class | Status |
+| --- | --- |
+| job_failure | disabled |
+| poison_queue | disabled |
+| ledger_digest | enabled |
+| iot_ingestion | disabled |
+
+Overall coverage: `partial`. Regression tests: `infra/tests/test_monitoring_live_inventory.py` (7 cases, including a check that the name patterns match names the Bicep declares and that a string `"true"` is not treated as enabled). Focused tier: 38 monitoring tests in `infra/tests` pass; `ruff check` and `ruff format --isolated --line-length 100` clean. No `src` change.
 Refs #146. Scope: synthetic demo, resource group `ama`, desktop only, existing Azure CLI login, 2026-11-23 about 14:50 to 15:00 UTC. Azure calls were read-only except one throwaway storage account (tag `purpose=tmp146-delete`) with a queue diagnostic setting, created and deleted in this run; `az resource list` then showed no `tmp146` name. No drill, no Key Vault rotation, no deployment, no production change. No credential was read. Earlier pass: [2026-11-22](./issue-146-live5-monitoring-2026-11-22.md).
 
 ## Observations
@@ -22,6 +46,12 @@ Refs #146. Scope: synthetic demo, resource group `ama`, desktop only, existing A
 
 | Criterion | Result | Reason |
 | --- | --- | --- |
+| Alerts cover job failures, poison queue, ledger digest and IoT ingestion | Unproven (partial) | Ledger digest proven installed and enabled. Job, poison and IoT rules are installed but disabled; enabling needs an approval reference, and poison needs a verified `StorageQueueLogs` signal. No firing or notification drill is allowed for the demo |
+| Dashboard or workbook shows availability, errors, latency and cost against budget | Unproven | Workbook resource exists; its queries run over a private-link workspace that this host cannot reach, and opening public query would weaken a control |
+| Each alert has a runbook entry with an owner | Unproven | Test-enforced entries name proposed roles; naming a person is a human decision |
+| Tokenomics: metered AI usage beside the Azure cost record | Proven for the demo on 2026-11-18 | See the [2026-11-19 note](./issue-146-live4-monitoring-2026-11-19.md); billing reconciliation excluded by owner decision; not re-run |
+
+No box is ticked by this note.
 | Alerts cover job failures, poison queue, ledger digest and IoT Hub ingestion | Partly proven, unproven as a whole | Ledger digest installed, enabled and previously fired Sev1. Job, poison and IoT rules exist but are disabled pending named-human approval; no firing or notification was observed; poison `PutMessage` shape unverified (no such logs exist) |
 | Dashboard or workbook shows availability, errors, latency and cost against budget | Partly proven, unproven as a whole | Workbook installed and its cost, AI usage, AI variance (after fix) and limit tiles execute with real results. Availability, errors and latency have no data because Application Insights is not workspace-based. No Portal render was captured; the fixed workbook is not redeployed (production change excluded) |
 | Each alert has a runbook entry with an owner | Unproven | Test-enforced runbook entries name proposed roles; appointing named people is a human decision |

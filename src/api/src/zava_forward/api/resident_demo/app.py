@@ -378,6 +378,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
 
     class Handler(BaseHTTPRequestHandler):
         server_version = "ZavaResidentDemo"
+        sys_version = ""
         timeout = SOCKET_TIMEOUT
 
         def log_message(self, format: str, *args: Any) -> None:

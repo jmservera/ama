@@ -1,4 +1,5 @@
 {
+ "task_id": "issue-1288-live-20261123T174229Z",
  "task_id": "issue-1288-live-20261123T152238Z",
  "task_slug": "issue-1288-live-r13",
  "parent_task": null,
@@ -16,6 +17,7 @@
  },
  "confirmed_decisions": [
   {
+   "decision": "Demo desktop only; live Azure authorised (rg ama, USD 700); no push; tier FULL only if src changes, never rpi-checks --all",
    "decision": "No push; no rpi-checks --all; Azure read-only; release record not fabricated",
    "status": "confirmed",
    "evidence": "brief"
@@ -39,6 +41,9 @@
  "prioritized_follow_ups": [
   {
    "rank": 1,
+   "task": "Admit an approved Quality release record, then run the finite live walkthrough",
+   "rationale": "only blocker for criteria 4, 5 and 8",
+   "evidence": "r13 research"
    "task": "Admit approved Quality release then run live walkthrough",
    "rationale": "only blocker for criteria 4 and 8",
    "evidence": "docs r13 note"

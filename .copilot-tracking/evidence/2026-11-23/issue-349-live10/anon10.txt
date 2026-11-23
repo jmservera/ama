@@ -1,0 +1,5 @@
+anon /api/me: 401 
+anon /api/cases: 401 
+xhr: 403
+bad bearer: 401
+forged hdr: 401

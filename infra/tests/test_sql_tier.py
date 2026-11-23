@@ -1,6 +1,7 @@
 """SQL tier, backup and recovery contract (issue 145)."""
 
 import os
+import re
 import shutil
 import sys
 import unittest
@@ -63,6 +64,28 @@ class SqlTierTests(unittest.TestCase):
         ):
             self.assertIn(text, RUNBOOK)
 
+    def test_runbook_parameter_table_matches_bicep_defaults(self) -> None:
+        def row(name: str) -> str:
+            match = re.search(rf"^\| `{name}` \| ([^|]+) \|", RUNBOOK, re.MULTILINE)
+            self.assertIsNotNone(match, name)
+            assert match is not None
+            return match.group(1).strip()
+
+        module_days = re.search(r"param backupRetentionDays int = (\d+)", SQL)
+        main_days = re.search(r"param sqlBackupRetentionDays int = (\d+)", MAIN)
+        pilot_days = re.search(r"param sqlBackupRetentionDays = (\d+)", PILOT)
+        self.assertTrue(module_days and main_days and pilot_days)
+        assert module_days and main_days and pilot_days
+        self.assertEqual(module_days.group(1), main_days.group(1))
+        self.assertEqual(module_days.group(1), pilot_days.group(1))
+        self.assertEqual(row("sqlBackupRetentionDays").split()[0], module_days.group(1))
+
+        self.assertIn("param backupStorageRedundancy string = ''", SQL)
+        self.assertIn("(zoneRedundant ? 'Zone' : 'Local')", SQL)
+        self.assertIn("param zoneRedundant bool = false", SQL)
+        self.assertIn("`Local`", row("sqlBackupStorageRedundancy"))
+        self.assertIn("`false`", row("zoneRedundant"))
+
     def test_runbook_reassessment_keeps_restore_blocked(self) -> None:
         section = RUNBOOK.split("## Reassessment 2026-11-17", 1)[1].split("## Evidence", 1)[0]
         self.assertIn("`Local`", section)
@@ -79,9 +102,7 @@ class SqlTierTests(unittest.TestCase):
         self.assertEqual(params["sqlTier"]["defaultValue"], "serverless")
         self.assertEqual(params["backupRetentionDays"]["maxValue"], 35)
         database = resource(template, "Microsoft.Sql/servers/databases")
-        defaults = {
-            k: v["defaultValue"] for k, v in params.items() if "defaultValue" in v
-        }
+        defaults = {k: v["defaultValue"] for k, v in params.items() if "defaultValue" in v}
 
         def database_for(**overrides):
             return evaluate(

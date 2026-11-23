@@ -83,6 +83,19 @@ FORBIDDEN_ADVERSE_FIELDS = frozenset(
         "awaabs_clock_delayed",
     }
 )
+
+
+def _normalise_key(key: Any) -> str:
+    return str(key).strip().lower().replace("-", "_").replace(" ", "_")
+
+
+_FORBIDDEN_NORMALISED = frozenset(_normalise_key(k) for k in FORBIDDEN_ADVERSE_FIELDS)
+
+
+def _is_forbidden_key(key: Any) -> bool:
+    return _normalise_key(key) in _FORBIDDEN_NORMALISED
+
+
 SAFEGUARDS: dict[str, bool] = {
     "no_retaliation": True,
     "no_inferred_refusal": True,
@@ -244,7 +257,7 @@ def _hazard_referral_payload(owner: str, received_on: str | None) -> Record:
 
 def reject_adverse_mapping(payload: Mapping[str, Any], context: str = "Challenge payload") -> None:
     """Fail closed if any forbidden retaliation, refusal or hazard-delay key is supplied."""
-    found = sorted(k for k in payload if k in FORBIDDEN_ADVERSE_FIELDS)
+    found = sorted(str(k) for k in payload if _is_forbidden_key(k))
     if found:
         joined = ", ".join(found)
         raise ChallengeSafeguardError(
@@ -342,12 +355,12 @@ def assert_no_adverse_challenge_effects(
         permitted_keys.add("hazards")
 
     new_top_keys = set(after_case) - set(before_case)
-    forbidden_top = sorted(k for k in new_top_keys if k in FORBIDDEN_ADVERSE_FIELDS)
+    forbidden_top = sorted(str(k) for k in new_top_keys if _is_forbidden_key(k))
     if forbidden_top:
         raise ChallengeSafeguardError(
             f"Challenge mutation added forbidden adverse case field(s): {', '.join(forbidden_top)}."
         )
-    for key in sorted(k for k in after_case if k in FORBIDDEN_ADVERSE_FIELDS):
+    for key in sorted(str(k) for k in after_case if _is_forbidden_key(k)):
         if key not in before_case or after_case.get(key) != before_case.get(key):
             raise ChallengeSafeguardError(
                 f"Challenge mutation introduced or altered forbidden adverse case field '{key}'."

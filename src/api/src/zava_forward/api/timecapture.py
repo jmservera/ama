@@ -157,8 +157,9 @@ class TimeCapture:
         notice_ref = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
         notice_for = (self.env.get("ZF_TIME_NOTICE_VERSION") or "").strip()
         notice = bool(notice_ref) and notice_for == NOTICE_VERSION
-        req = self.request()
-        act = self.activation()
+        # A switched-off feature needs no storage; with the flag on, a storage failure propagates (fails closed).
+        req = self.request() if flag else None
+        act = self.activation() if flag else None
         if not flag:
             why = "Time capture is switched off."
         elif not dpia_recorded:
