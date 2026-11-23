@@ -14996,3 +14996,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2314 alert rules, runbooks and AI usage saved query (Refs #2314)
 
 * Added [issue-2314-alerts-runbooks-2026-11-23.md](research/issue-2314-alerts-runbooks-2026-11-23.md): per-criterion proof; adds a workspace saved search for AI usage by capability and period with unreconciled variance. No Azure change.
+## [2026-11-23] add | Issue 146 workbook query execution (Refs #146)
+
+* Added [issue-146-live6-monitoring-2026-11-23.md](research/issue-146-live6-monitoring-2026-11-23.md): live execution of the workbook queries, one failing query fixed in source, and a per-criterion table. Throwaway storage account created and deleted; no estate change.

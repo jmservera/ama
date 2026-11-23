@@ -584,6 +584,7 @@ A [2026-11-19 re-check](./research/issue-146-live4-monitoring-2026-11-19.md) con
 A [2026-11-22 pass](./research/issue-146-live5-monitoring-2026-11-22.md) adds source for a SQL DTU alert and a receiver job failure alert, with a live read-only inventory and a per-criterion result.
 
 A [2026-11-23 pass](./research/issue-2314-alerts-runbooks-2026-11-23.md) adds a saved search for AI usage by capability and period with unreconciled variance, and a per-criterion result.
+A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) executes the workbook queries live now that workspace query access is open, fixes a failing AI variance query and records what stays unproven.
 
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
