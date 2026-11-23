@@ -14785,3 +14785,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 1288 quality sensor evidence, tenth live audit (Refs #1288)
 
 * Added [issue-1288-live-r10-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r10-quality-sensor-evidence-2026-11-23.md): revisions 0000054 and 0000026, 92 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
+
+## [2026-11-23] update | Issue 2164 roster scope re-check, run 20261123T010755Z (Refs #2164)
+
+* Extended [issue-2164-roster-scope-recheck-2026-11-22.md](research/issue-2164-roster-scope-recheck-2026-11-22.md): fix in main, tests pass, live revisions 0000054 and 0000026 confirmed read-only; the deployed digest still cannot be tied to a commit.
