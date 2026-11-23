@@ -325,5 +325,19 @@ class SingleEnvironmentDemoProfile(unittest.TestCase):
         )
 
 
+class SimulatorFailureRateWiring(unittest.TestCase):
+    """The job's missing-reading setting must stay inside the range the simulator accepts (Refs #2191)."""
+
+    def test_default_is_accepted_and_reaches_the_simulator(self) -> None:
+        template = (INFRA / "live-simulator-job.bicep").read_text()
+        simulator = (ROOT / "src/api/src/zava_forward/api/live_simulator.py").read_text()
+        param = re.search(r"^param failureRate string = '([^']*)'", template, re.MULTILINE)
+        maximum = re.search(r"^MAX_FAILURE_RATE = ([\d.]+)", simulator, re.MULTILINE)
+        assert param is not None and maximum is not None
+        self.assertTrue(0 <= float(param.group(1)) <= float(maximum.group(1)))
+        self.assertIn("{ name: 'ZF_SIM_FAILURE_RATE', value: failureRate }", template)
+        self.assertIn('"ZF_SIM_FAILURE_RATE"', simulator)
+
+
 if __name__ == "__main__":
     unittest.main()
