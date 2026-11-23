@@ -14773,3 +14773,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2256 handoff waiting list re-verified (Refs #2256)
 
 * Added [issue-2256-live-2026-11-23.md](research/issue-2256-live-2026-11-23.md): root cause already fixed by #2258; revisions 0000054 and 0000026 list ZF-2025-0030 on the waiting screen. Due time unproven because seeded offers have no due_at. No code change.
+
+## [2026-11-23] update | Issue 2255 live re-check (Refs #2255)
+
+* Added [issue-2255-live-2026-11-23.md](research/issue-2255-live-2026-11-23.md): read-only probe on revision 0000054 shows 22 of 22 hazard clocks with a target (17 overdue, 5 running, 0 unknown). Re-seed survival stays unproven and owner-gated. No source change.

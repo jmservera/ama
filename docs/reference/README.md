@@ -730,6 +730,8 @@ The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that
 
 The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.
 
+The [issue 2255 live re-check of 2026-11-23](./research/issue-2255-live-2026-11-23.md) repeats the safety queue probe on revision 0000054 (22 of 22 clocks, 0 unknown), records the root cause of the open re-seed criterion and keeps it owner-gated.
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.
