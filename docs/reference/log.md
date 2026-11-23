@@ -14748,3 +14748,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 344 public browser access live check r10 (Refs #344)
 
 * Added [public-browser-access-live-r10-2026-11-23.md](research/public-browser-access-live-r10-2026-11-23.md): probes rerun against API revision 0000054 and resident revision 0000026; anonymous 401, `/healthz`, landing, Entra sign-in, 13-destination walk and private SQL reproduced; criterion 1 browser-redirect gap and criterion 5 stay unproven. No source or estate change.
+## [2026-11-23] update | Issue 1204 criteria re-verification (Refs #1204)
+
+* Added [issue-1204-live-2026-11-23.md](research/issue-1204-live-2026-11-23.md): instruction fields and checker tests confirmed on main, 216-tick window 0 violations, live revisions healthy. Criterion 2 unproven (no real window with the new fields). No source or estate change.
