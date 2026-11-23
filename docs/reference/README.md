@@ -742,6 +742,8 @@ The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.
 
 The [issue 2255 live re-check of 2026-11-23](./research/issue-2255-live-2026-11-23.md) repeats the safety queue probe on revision 0000054 (22 of 22 clocks, 0 unknown), records the root cause of the open re-seed criterion and keeps it owner-gated.
 
+The [issue 2117 classification](./research/issue-2117-live-2026-11-23.md) records that the one remaining nomination route criterion needs authorised human evidence and is owner-gated for the demo.
+
 For #2195, the [chat routing proof](./research/issue-2195-chat-routing-2026-11-21.md)
 records how employee and resident chat now show which agent handled each question and why,
 with local browser evidence; the deployed demo apps are not yet updated.

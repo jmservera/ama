@@ -14853,3 +14853,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Case chat refusal and citation gates re-check (Refs #2124)
 
 * Added [issue-2124-live-2026-11-23.md](research/issue-2124-live-2026-11-23.md) with evidence: live refusals 10 of 10 with zero model calls, 111 local gate tests OK, per-criterion status. No source change; production ownership and independent grading stay owner-gated.
+
+## [2026-11-23] update | Issue 2117 remaining criterion classified (Refs #2117)
+
+* Added [issue-2117-live-2026-11-23.md](research/issue-2117-live-2026-11-23.md): the one open criterion needs authorised representative and resident evidence, so it stays unproven and owner-gated. No source change.
