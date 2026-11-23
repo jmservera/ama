@@ -15001,3 +15001,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2255 live re-check, run 4 (Refs #2255)
 
 * Added [issue-2255-live-r4-2026-11-23.md](research/issue-2255-live-r4-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with a target (17 overdue, 5 open, 0 unknown) on revision 0000055; re-seed survival stays owner-gated. No source or estate change.
+## [2026-11-23] add | Issue 2256 live verification after the handoff seed (Refs #2256)
+
+* Added [issue-2256-live-2026-11-23d.md](research/issue-2256-live-2026-11-23d.md): on API revision 0000055 the waiting screen lists all 4 seeded handoffs with due time and chase owner, and the case card agrees; criteria A, B1, B2 and C are proven for the demo and no view code change was needed.
