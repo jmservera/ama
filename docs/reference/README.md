@@ -727,6 +727,8 @@ The [issue 2243 revision 0000026 re-verification](./research/issue-2243-rev26-20
 
 The [issue 2243 live re-verification of 2026-11-23](./research/issue-2243-live-2026-11-23.md) repeats the resident probe on revisions 0000026 and 0000054 (still usage_limit), confirms main already derives the expiry from the environment, and keeps the model-backed answer owner-gated on the private SQL ledger.
 
+The [issue 2244 live re-verification of 2026-11-23](./research/issue-2244-live-2026-11-23.md) confirms live API revision 0000054 runs the same `mssqlstore.py` as main (start-up retry from #2273), adds read-only schema fast paths so start-up skips the write lock when nothing changes, and records C1 to C5 as proven or unproven.
+
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
 The [issue 2255 live re-verification](./research/issue-2255-reverify-2026-11-22.md) re-checks the safety queue clocks on revision 0000054 (22 of 22 hazard clocks, 17 overdue, 5 running, 0 unknown; read-only) with a per-criterion table.
