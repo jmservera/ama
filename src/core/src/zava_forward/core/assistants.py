@@ -606,6 +606,13 @@ def review_flag(
     observed = current is not None and now_sensors.get("state") in ("ok", "no-readings")
     captured_conflicts = list(sensors.get("conflicting_readings") or [])
     captured_implausible = list(sensors.get("implausible_readings") or [])
+    # A corrected row keeps its id, so a cited reading may be impossible now although it was valid at capture.
+    if observed and not captured_implausible:
+        captured_implausible = [
+            e
+            for e in sensor_view.implausible(sensor_view.citations(now_sensors).values())
+            if e["citation_key"] in known
+        ]
     current_conflicts = list(now_sensors.get("conflicting_readings") or []) if observed else []
     same_bucket_conflict = bool(
         current_conflicts
