@@ -153,6 +153,7 @@ def main() -> int:
     assert isinstance(projects, set)
     outputs = {
         "matrix": json.dumps(matrix(projects), separators=(",", ":")),
+        "projects": ",".join(sorted(projects)),
         "namespace": str(selection["namespace"]).lower(),
         "mssql": str(selection["mssql"]).lower(),
     }
