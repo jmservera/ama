@@ -14735,3 +14735,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 435 live pass 6 (Refs #435)
 
 * Added [capstone-pitch-435-live-2026-11-23.md](research/capstone-pitch-435-live-2026-11-23.md): criteria 1 and 4 proven for the demo, criterion 2 unproven (mentor statement needed); main 342fad401d, live revisions 0000054 and 0000026 healthy, 56 held-out batch adapter tests pass. No source, deck or estate change.
+## [2026-11-23] update | Issue 1259 archive path regressions, run 7 (Refs #1259)
+
+* Added [2026-11-23-ranking-archive-unusable-1259-live-r7.md](research/2026-11-23-ranking-archive-unusable-1259-live-r7.md): red-before (7 failures) and green-after (110 tests), plus a read-only check that the live revisions do not host the ranking runner. No source change.
