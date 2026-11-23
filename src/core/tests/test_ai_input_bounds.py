@@ -47,6 +47,19 @@ class InputBounds(unittest.TestCase):
         self.assertEqual(self.meter.reserved, 0)
         self.urlopen.assert_not_called()
 
+    def test_oversized_string_is_refused_before_the_protection_hold(self) -> None:
+        target = "zava_forward.core.data_protection.dispatch_hold"
+        with mock.patch(target, return_value="held") as hold:
+            out = self.ai.evidence("sys", "x" * (MAX_TEXT_BYTES + 1))
+        self.assertEqual(out["reason"], "input-too-large")
+        hold.assert_not_called()
+        self.urlopen.assert_not_called()
+
+    def test_system_and_string_user_share_one_text_budget(self) -> None:
+        out = self.ai.evidence("s" * (MAX_TEXT_BYTES // 2 + 1), "u" * (MAX_TEXT_BYTES // 2))
+        self.assertEqual(out["reason"], "input-too-large")
+        self.urlopen.assert_not_called()
+
     def test_bounded_text_still_reaches_the_meter(self) -> None:
         self.ai.run("funding_draft", "sys", "short", "TEMPLATE")
         self.assertEqual(self.meter.reserved, 1)

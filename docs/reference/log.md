@@ -15003,6 +15003,21 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
 
+## [2026-11-23] add | Issue 223 review effort measurement (Refs #223)
+
+* Added [issue-223-live-r8-2026-11-23.md](research/issue-223-live-r8-2026-11-23.md): `review_seconds` is now retained in AI review evidence; per-criterion table, nothing ticked.
+## [2026-11-23] add | Issue 1837 CSRF header unit test (Refs #1837)
+
+* Added [issue-1837-csrf-header-test-2026-11-23.md](research/issue-1837-csrf-header-test-2026-11-23.md): a repeatable test that the nomination route write refuses a missing `X-ZF-CSRF` header under the trusted-proxy provider.
+## [2026-11-23] add | Issue 1274 workflow wiring regression (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-23-run5.md](research/issue-1274-live-evidence-2026-11-23-run5.md) and two tests in `tools/test_install_actionlint.py` pinning the Source CI actionlint bootstrap to the verified installer. AWF 0.28.23 and new-head hosted CI stay unproven.
+## [2026-11-23] add | Issue 350 edge probe tool (Refs #350)
+
+* Added [issue-350-live-r7-2026-11-23.md](research/issue-350-live-r7-2026-11-23.md): a repeatable anonymous edge probe for criterion 1; live run still shows 302 for browser-style API requests.
+## [2026-11-23] add | Issue 116 string-size boundary gap (Refs #116)
+
+* Added [issue-116-live-r9-evidence-2026-11-23.md](research/issue-116-live-r9-evidence-2026-11-23.md): the shared provider allowlist now bounds string input before the protection hold, with two tests; live payloads stay unproven.
 ## [2026-11-23] add | Issue 1258 concurrent first-publication test (Refs #1258)
 
 * Added [issue-1258-live-r10-2026-11-23.md](research/issue-1258-live-r10-2026-11-23.md): a real-process race test for first publication into a missing nested archive; 147 tests pass. Criteria 1 to 4 proven in unit tests; criterion 5 unproven and owner-gated. Test-only change.

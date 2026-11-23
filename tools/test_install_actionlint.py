@@ -194,5 +194,24 @@ class InstallTests(unittest.TestCase):
             self.assertEqual(mod.main(["x"]), 2)
 
 
+class WorkflowWiringTests(unittest.TestCase):
+    workflows = Path(__file__).resolve().parent.parent / ".github" / "workflows"
+
+    def test_src_ci_uses_installer_for_the_pinned_version(self) -> None:
+        text = (self.workflows / "src-ci.yml").read_text(encoding="utf-8")
+        self.assertIn('python3 tools/install-actionlint.py "$RUNNER_TEMP/actionlint-bin"', text)
+        self.assertIn(f"grep -Fx {mod.VERSION}", text)
+
+    def test_native_workflows_have_no_raw_release_download_fetch(self) -> None:
+        offenders = [
+            f"{path.name}:{number}"
+            for path in sorted(self.workflows.glob("*.yml"))
+            if not path.name.endswith(".lock.yml")
+            for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1)
+            if "releases/download" in line and ("curl" in line or "wget" in line)
+        ]
+        self.assertEqual(offenders, [])
+
+
 if __name__ == "__main__":
     unittest.main()

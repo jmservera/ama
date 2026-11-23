@@ -1,0 +1,77 @@
+{
+  "verdict": "fail",
+  "rows": [
+    {
+      "path": "/api/me",
+      "style": "native",
+      "status": 401,
+      "result": "pass"
+    },
+    {
+      "path": "/api/me",
+      "style": "browser-json",
+      "status": 302,
+      "result": "fail"
+    },
+    {
+      "path": "/api/me",
+      "style": "browser-html",
+      "status": 302,
+      "result": "fail"
+    },
+    {
+      "path": "/api/cases",
+      "style": "native",
+      "status": 401,
+      "result": "pass"
+    },
+    {
+      "path": "/api/cases",
+      "style": "browser-json",
+      "status": 302,
+      "result": "fail"
+    },
+    {
+      "path": "/api/cases",
+      "style": "browser-html",
+      "status": 302,
+      "result": "fail"
+    },
+    {
+      "path": "/api/staff",
+      "style": "native",
+      "status": 401,
+      "result": "pass"
+    },
+    {
+      "path": "/api/staff",
+      "style": "browser-json",
+      "status": 302,
+      "result": "fail"
+    },
+    {
+      "path": "/api/staff",
+      "style": "browser-html",
+      "status": 302,
+      "result": "fail"
+    },
+    {
+      "path": "/app",
+      "style": "native",
+      "status": 401,
+      "result": "pass"
+    },
+    {
+      "path": "/app",
+      "style": "browser-json",
+      "status": 302,
+      "result": "pass"
+    },
+    {
+      "path": "/app",
+      "style": "browser-html",
+      "status": 302,
+      "result": "pass"
+    }
+  ]
+}
