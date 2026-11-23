@@ -489,6 +489,19 @@ class RaiControlPlane218Tests(unittest.TestCase):
             broken = rai_control_plane.verify_traceability_targets(repo_root=root)
             self.assertIs(broken["all_resolved"], False)
             self.assertGreaterEqual(len(broken["unresolved"]), 15)
+            summary = rai_control_plane.traceability_summary(repo_root=root)
+            self.assertEqual(summary["target_verification"], "unresolved")
+            self.assertIs(summary["complete"], False)
+
+    def test_traceability_is_complete_when_deployment_ships_no_test_tree(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            summary = rai_control_plane.traceability_summary(repo_root=Path(tmp))
+        self.assertEqual(summary["target_verification"], "test_tree_not_shipped")
+        self.assertEqual(summary["missing_required_ids"], [])
+        self.assertIs(summary["complete"], True)
+        self.assertEqual(
+            rai_control_plane.traceability_summary()["target_verification"], "verified"
+        )
 
     def test_verify_traceability_targets_caches_default_root_immutably_under_one_ms(self) -> None:
         rai_control_plane._cached_default_traceability_targets.cache_clear()

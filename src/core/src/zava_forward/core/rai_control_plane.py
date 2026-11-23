@@ -874,8 +874,10 @@ def verify_traceability_targets(repo_root: Path | None = None) -> dict[str, Any]
         if repo_root is not None
         else _cached_default_traceability_targets()
     )
+    root = repo_root if repo_root is not None else _default_repo_root()
     return {
         "all_resolved": all_resolved,
+        "test_tree_present": (root / "src" / "core" / "tests").is_dir(),
         "verified_target_count": verified_count,
         "unresolved": [
             {"id": req_id, "target": target, "reason": reason}
@@ -897,6 +899,13 @@ def traceability_summary(repo_root: Path | None = None) -> dict[str, Any]:
     verified_ids = [entry["id"] for entry in entries if bool(entry.get("acceptance_checks"))]
     deferred_ids = [entry["id"] for entry in entries if isinstance(entry.get("deferral"), Mapping)]
     ast_check = verify_traceability_targets(repo_root)
+    # A deployed image ships no test tree, so targets cannot resolve there; CI checks them.
+    if ast_check["all_resolved"]:
+        target_verification = "verified"
+    elif not ast_check["test_tree_present"]:
+        target_verification = "test_tree_not_shipped"
+    else:
+        target_verification = "unresolved"
     return {
         "required_ids": list(REQUIRED_TRACEABILITY_IDS),
         "covered_count": len(REQUIRED_TRACEABILITY_IDS) - len(missing_required),
@@ -906,9 +915,10 @@ def traceability_summary(repo_root: Path | None = None) -> dict[str, Any]:
         "verified_by_test_ids": verified_ids,
         "deferred_live_ids": deferred_ids,
         "targets_verified": ast_check["all_resolved"],
+        "target_verification": target_verification,
         "verified_target_count": ast_check["verified_target_count"],
         "unresolved_targets": ast_check["unresolved"],
-        "complete": (not missing_required and not untraced and bool(ast_check["all_resolved"])),
+        "complete": (not missing_required and not untraced and target_verification != "unresolved"),
         "requirements": entries,
     }
 
@@ -1145,9 +1155,15 @@ def exercise_acceptance_report(
             "passed": bool(trace_summary["complete"]),
             "covered_count": trace_summary["covered_count"],
             "total_required": trace_summary["total_required"],
+            "target_verification": trace_summary["target_verification"],
             "detail": (
                 "All 15 Epic #218 requirements trace to verified acceptance checks and/or "
                 "explicit owner deferrals."
+                if trace_summary["target_verification"] == "verified"
+                else "Requirement coverage is complete; test targets are checked in CI because "
+                "this deployment ships no test tree."
+                if trace_summary["complete"]
+                else "Requirement coverage or test target resolution is incomplete."
             ),
         },
         "audit_ledger_integrity": {
@@ -1262,6 +1278,7 @@ def exercise_acceptance_report(
             "checks": exercise_checks,
             "traceability": {
                 "complete": trace_summary["complete"],
+                "target_verification": trace_summary["target_verification"],
                 "covered_count": trace_summary["covered_count"],
                 "total_required": trace_summary["total_required"],
                 "verified_by_test_ids": trace_summary["verified_by_test_ids"],

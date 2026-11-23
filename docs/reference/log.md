@@ -14970,3 +14970,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Resident showcase HSTS header and live recheck r8 (Refs #462)
 
 * Added [resident-showcase-live-r8-2026-11-23.md](research/resident-showcase-live-r8-2026-11-23.md): 36 live checks on resident revision 0000027, missing Strict-Transport-Security added to the resident demo app with a test (not redeployed), per-criterion table.
+## [2026-11-23] add | Epic 218 live RAI readiness recheck (Refs #218)
+
+* Added [issue-218-live-rai-readiness-recheck-2026-11-23.md](research/issue-218-live-rai-readiness-recheck-2026-11-23.md): live gate separation proven, a traceability check that failed on every deployment (no test tree in the image) fixed offline, and a per-criterion table. The live effect of the fix stays unproven until a redeploy.

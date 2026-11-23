@@ -1,0 +1,80 @@
+    },
+    "oq017_named_live_releases_recorded": {
+     "passed": false,
+     "approved_live_tasks": [],
+     "unapproved_live_tasks": [
+      "assessment-preparation",
+      "briefing",
+      "funding-evidence",
+      "funding_draft",
+      "message",
+      "priority",
+      "quality-evidence",
+      "read_document",
+      "stock-prioritisation",
+      "summary",
+      "works-resident-coordination"
+     ],
+     "detail": "Enabled AI tasks lack unexpired named-human actual release records (OQ-017)."
+    },
+    "oq017_authority_holders_appointed": {
+     "passed": false,
+     "open_question": "OQ-017",
+     "detail": "Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017)."
+    },
+    "oq018_live_fairness_and_thresholds_cleared": {
+     "passed": false,
+     "open_question": "OQ-018",
+     "detail": "Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018)."
+    },
+    "oq019_legal_dpo_automated_decision_cleared": {
+     "passed": false,
+     "open_question": "OQ-019",
+     "detail": "Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+    }
+   },
+   "blocking_reasons": [
+    "oq017_named_live_releases_recorded: Enabled AI tasks lack unexpired named-human actual release records (OQ-017).",
+    "oq017_authority_holders_appointed: Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017).",
+    "oq018_live_fairness_and_thresholds_cleared: Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018).",
+    "oq019_legal_dpo_automated_decision_cleared: Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+   ],
+   "deferred_open_questions": [
+    "OQ-017",
+    "OQ-018",
+    "OQ-019"
+   ],
+   "note": "Disabled, offline, or workflow-only assistance never satisfies the real-AI delivery gate; live cut-over requires real provider readiness plus named human OQ-017, OQ-018, and OQ-019 clearances."
+  },
+  "keys": [
+   "benefits",
+   "breaches",
+   "capture_blockers",
+   "capture_open",
+   "note",
+   "paused",
+   "prd_owner_acceptance",
+   "prd_quality_review",
+   "protocol",
+   "rai_evidence",
+   "rai_exercise_acceptance",
+   "real_ai_delivery_gate",
+   "release_gaps",
+   "releases",
+   "value_claims",
+   "verdicts"
+  ]
+ },
+ "/api/assistants": {
+  "status": 200,
+  "rai_exercise_acceptance": {
+   "section": "rai_exercise_acceptance",
+   "independent_of_real_ai_delivery_gate": true,
+   "passed": false,
+   "status": "failed",
+   "checks": {
+    "release_contract_fail_closed": {
+     "passed": true,
+     "detail": "13 registered AI tasks default to approved_for_live_use=False."
+    },
+    "oq017_live_activation_ga
