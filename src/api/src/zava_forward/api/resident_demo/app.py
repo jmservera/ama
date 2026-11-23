@@ -71,6 +71,7 @@ HEADERS = {
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
     "Referrer-Policy": "no-referrer",
+    "Strict-Transport-Security": "max-age=31536000",
     "Cross-Origin-Resource-Policy": "same-origin",
     "Cross-Origin-Opener-Policy": "same-origin",
     "Permissions-Policy": "camera=(), microphone=(), geolocation=()",

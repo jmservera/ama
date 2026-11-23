@@ -14967,3 +14967,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2257 third live re-probe and overlay cause tag (Refs #2257)
 
 * Added [issue-2257-live-r3-2026-11-23.md](research/issue-2257-live-r3-2026-11-23.md): 10 of 10 fresh sessions loaded on revision 0000055; the sensor overlay warning now carries the lock cause tag. Not live until the next deployment.
+## [2026-11-23] add | Resident showcase HSTS header and live recheck r8 (Refs #462)
+
+* Added [resident-showcase-live-r8-2026-11-23.md](research/resident-showcase-live-r8-2026-11-23.md): 36 live checks on resident revision 0000027, missing Strict-Transport-Security added to the resident demo app with a test (not redeployed), per-criterion table.
