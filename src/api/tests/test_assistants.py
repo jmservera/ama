@@ -1044,6 +1044,41 @@ class ReviewTests(Base):
             with self.assertRaises(PermissionError):
                 self.service.authorize(db, dict(user, view_only=True), "stock-prioritisation", "ZF-1")
 
+    def test_bound_entra_edge_branches(self):
+        user = self.bound_entra(case_ids=["ZF-1"])
+        email = user["email"]
+
+        def update(**change):
+            with self.service.transaction() as db:
+                row = json.loads(db.execute("SELECT body FROM staff WHERE email=?", (email,)).fetchone()[0])
+                row = {k: v for k, v in row.items() if k not in change}
+                row.update({k: v for k, v in change.items() if v is not ...})
+                db.execute("UPDATE staff SET body=? WHERE email=?", (canonical(row), email))
+
+        def allowed(principal=user, case_id="ZF-1"):
+            with self.service.transaction() as db:
+                return self.service.authorize(db, principal, "stock-prioritisation", case_id)["id"]
+
+        def denied(principal=user, case_id="ZF-1"):
+            with self.assertRaises(PermissionError):
+                allowed(principal, case_id)
+
+        self.assertEqual(allowed(), "ZF-1")
+        denied(dict(user, view_only=True))
+        denied(dict(user, bound=dict(user["bound"], email="other@example.test")))
+        update(tid="99999999-9999-4999-8999-999999999999")
+        denied()
+        update(tid="")
+        self.assertEqual(allowed(), "ZF-1")
+        for bad in ("ZF-1", [1], ["x" * 129], ["a"] * 1001):
+            update(case_ids=bad)
+            denied()
+        update(case_ids=...)
+        with self.service.transaction() as db:
+            area = json.loads(db.execute("SELECT body FROM cases WHERE id='ZF-1'").fetchone()[0])["home"]["area"]
+        update(areas=[area])
+        self.assertEqual(allowed(), "ZF-1")
+
     def test_independent_qa_reviewer_and_separate_human_verification(self):
         self.case(lambda c: c.update(quality=[dict(measure="Loft insulation", state="Submitted",
                                                  recorded_by=self.pm["name"], recorded_by_code=self.pm["code"], items=[])]))
