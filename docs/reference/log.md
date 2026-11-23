@@ -15122,3 +15122,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Review effort totals in the AI live report (Refs #223)
 
 * Added [issue-223-live-r9-2026-11-23.md](research/issue-223-live-r9-2026-11-23.md): `ai_tasks.live_report` now totals measured review seconds per task, with a regression test; per-criterion table, nothing ticked.
+## 2026-11-23 issue 184 CLI credential leak guard
+
+Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-environment leak probe and regression test). Refs #184.

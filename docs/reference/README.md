@@ -741,6 +741,8 @@ The [live chain note](./research/issue-184-live-chain-2026-11-22.md) records rea
 
 The [live re-check note](./research/issue-184-live-recheck-2026-11-23.md) re-proves the three criteria for the demo (sub-issues closed, rejection tests, 0 secret patterns in 260,243 live log rows) and states live message-body secret absence as unproven (#184).
 
+The [simulator CLI leak guard note](./research/issue-184-live-cli-leak-2026-11-23.md) records a hostile-environment probe of `live_simulator.main` and its regression test (#184).
+
 The [body-read attempt](./research/issue-184-live-bodyread-2026-11-23.md) shows the Event Hubs namespace is network-private (public access disabled), so live message-body secret absence stays unproven for the demo (#184).
 
 The [2118 walkthrough note](./research/issue-2118-live-iot-map-walkthrough-2026-11-23.md) records the 2026-11-23 read only Hub to receiver to employee map walkthrough on revision 0000054 (fresh reading 79 s old, per message SQL hop inferred, resident view stored only) (#2118).
