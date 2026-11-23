@@ -738,6 +738,15 @@ def _printable(value) -> str:
     return "".join(c if c.isprintable() else f"\\x{ord(c):02x}" for c in str(value))
 
 
+def _log_sensor_unavailable(path: str, exc: BaseException) -> None:
+    """Record the cause class and raise site only; the message may carry connection details."""
+    frame = traceback.extract_tb(exc.__traceback__)[-1:]
+    where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame else "unknown"
+    logging.getLogger(__name__).warning(
+        "sensor-unavailable GET %s status=503 exc=%s at=%s", _printable(path), type(exc).__name__, where
+    )
+
+
 def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
     assets = StaticAssets({
         "/" + path.relative_to(WEB).as_posix(): (path, TYPES.get(path.suffix, "application/octet-stream"))
@@ -1444,7 +1453,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(404, {"error": "Case not found."})
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
-                except Exception:
+                except Exception as exc:
+                    _log_sensor_unavailable(url.path, exc)
                     return self._json(503, {"error": "Sensor readings unavailable; continue the ordinary quality check manually."})
             if url.path.startswith("/api/cases/") and url.path.endswith("/sensor-drafts"):
                 parts = url.path.strip("/").split("/")
@@ -1456,7 +1466,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
                 except KeyError:
                     return self._json(404, {"error": "Case not found."})
-                except Exception:
+                except Exception as exc:
+                    _log_sensor_unavailable(url.path, exc)
                     return self._json(
                         503,
                         {

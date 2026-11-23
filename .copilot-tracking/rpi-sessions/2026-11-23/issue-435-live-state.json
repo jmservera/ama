@@ -1,1 +1,53 @@
-{"task_id": "issue-435-live-20261123T005217Z", "task_slug": "issue-435-live", "parent_task": null, "mode": "automatic", "active_phase": "Follow-up", "status": "completed", "session_status": "running", "artifact_paths": {"research": ".copilot-tracking/research/2026-11-23-issue-435-live-research.md", "plan": ".copilot-tracking/plans/2026-11-23-issue-435-live-plan.md", "details": ".copilot-tracking/details/2026-11-23-issue-435-live-details.md", "critique": ".copilot-tracking/plans/2026-11-23-issue-435-live-plan.md", "changes": ".copilot-tracking/changes/2026-11-23-issue-435-live-changes.md", "review": ".copilot-tracking/reviews/2026-11-23-issue-435-live-review.md"}, "confirmed_decisions": [{"decision": "research executed, ready", "status": "done", "evidence": "research file"}, {"decision": "critique executed once, accepted; tier focused, no src change", "status": "done", "evidence": "plan file"}, {"decision": "review executed once, conformant", "status": "done", "evidence": "review file"}], "blockers": [], "next_action": {"phase": "Follow-up", "action": "owner selects follow-up"}, "prioritized_follow_ups": [{"rank": 1, "task": "Ask mentor the Tokenomics meaning question", "rationale": "criterion 2", "evidence": "research note"}, {"rank": 2, "task": "Run a timed rehearsal", "rationale": "criterion 3 tick unsupported", "evidence": "rehearsal notes"}]}
+{
+ "task_id": "issue-435-live-20261123T174506Z",
+ "task_slug": "issue-435-live-20261123T174506Z",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-23-issue-435-live-20261123T174506Z-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-23-issue-435-live-20261123T174506Z-plan.md",
+  "details": ".copilot-tracking/details/2026-11-23-issue-435-live-20261123T174506Z-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-23-issue-435-live-20261123T174506Z-plan.md",
+  "changes": ".copilot-tracking/changes/2026-11-23-issue-435-live-20261123T174506Z-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-23-issue-435-live-20261123T174506Z-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "research executed, Ready",
+   "status": "done",
+   "evidence": "research file"
+  },
+  {
+   "decision": "critique executed once, accepted, applied directly",
+   "status": "done",
+   "evidence": "plan file"
+  },
+  {
+   "decision": "review executed once, conformant",
+   "status": "done",
+   "evidence": "review file"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "owner selects follow-up"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Ask mentor the Tokenomics meaning question",
+   "rationale": "criterion 2 owner-only",
+   "evidence": "research note"
+  },
+  {
+   "rank": 2,
+   "task": "Run a timed rehearsal",
+   "rationale": "criterion 3 tick unsupported",
+   "evidence": "rehearsal notes"
+  }
+ ]
+}

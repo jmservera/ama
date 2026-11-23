@@ -693,6 +693,7 @@ class AbuseAndHardeningTests(DemoTestCase):
                     else value
                 )
                 self.assertEqual(response.headers.get(key), expected, (path, key))
+            self.assertNotRegex(response.headers.get("Server", ""), r"Python|\d+\.\d+", path)
 
     def test_sign_in_moves_focus_to_content_heading_and_announces(self) -> None:
         script = (demo.WEB / "demo.js").read_text()

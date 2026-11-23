@@ -423,6 +423,15 @@ class BicepPolicyTests(unittest.TestCase):
                 assignment["name"],
             )
 
+    def test_easy_auth_never_exempts_api_paths(self) -> None:
+        """Issue #350: an /api exemption needs trusted-principal proof, so none may exist."""
+        for name in ("modules/containerapps.bicep", "modules/edge-existing-auth.bicep"):
+            source = (INFRA / name).read_text(encoding="utf-8")
+            self.assertIn("unauthenticatedClientAction", source, name)
+            for listing in re.findall(r"excludedPaths:\s*\[([^\]]*)\]", source):
+                for path in re.findall(r"'([^']*)'", listing):
+                    self.assertFalse(path.startswith("/api"), f"{name} exempts {path}")
+
     def test_web_container_apps_gate_traffic_on_startup_and_readiness_probes(self) -> None:
         """Issue #691: no request may reach Easy Auth before the app listens."""
         for name, port, container in (

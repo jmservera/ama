@@ -67,6 +67,21 @@ class Grounding(qs.Seed, ta.ApiTests):
         self.assertEqual(grounding["not_retained"], ["dew_point_c", "mould_risk_index"])
         self.assertIn("not retained", grounding["not_retained_text"])
 
+    def test_sensor_read_failure_stays_unavailable_and_logs_cause_class_only(self) -> None:
+        self.ready()
+        with patch.object(self.service, "sensors", side_effect=RuntimeError("secret-host")):
+            with self.assertLogs("zava_forward.api.server", level="WARNING") as logs:
+                status, body = self.request("/api/cases/ZF-1/sensors")
+        self.assertEqual(status, 503)
+        self.assertEqual(
+            body["error"],
+            "Sensor readings unavailable; continue the ordinary quality check manually.",
+        )
+        text = "\n".join(logs.output)
+        self.assertIn("sensor-unavailable", text)
+        self.assertIn("exc=RuntimeError", text)
+        self.assertNotIn("secret-host", text)
+
     def test_chat_answers_sensor_questions_with_retained_values_and_citations(self) -> None:
         self.ready()
         latest = self.request("/api/cases/ZF-1/sensors")[1]["latest"]

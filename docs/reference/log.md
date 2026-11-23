@@ -15062,6 +15062,26 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2256 live verification after the handoff seed (Refs #2256)
 
 * Added [issue-2256-live-2026-11-23d.md](research/issue-2256-live-2026-11-23d.md): on API revision 0000055 the waiting screen lists all 4 seeded handoffs with due time and chase owner, and the case card agrees; criteria A, B1, B2 and C are proven for the demo and no view code change was needed.
+## [2026-11-23] add | Issue 116 live round 10 (Refs #116)
+
+* Added [issue-116-live-r10-evidence-2026-11-23.md](research/issue-116-live-r10-evidence-2026-11-23.md): the shared provider-boundary allowlist now refuses non-base64 image data before any other gate; regression test fails without the fix. Live payloads stay unproven.
+## [2026-11-23] add | Issue 146 live alert inventory classifier (Refs #146)
+
+* Added [issue-146-live6-monitoring-2026-11-23.md](research/issue-146-live6-monitoring-2026-11-23.md): read-only live inventory and `infra/scripts/monitoring_live_inventory.py` with tests; ledger digest enabled, job, poison and IoT rules installed but disabled; no criterion ticked.
+## [2026-11-23] add | Issue 350 criterion 1 re-probe and Easy Auth guard (Refs #350)
+
+* Added [issue-350-live-r8-2026-11-23.md](research/issue-350-live-r8-2026-11-23.md): live probe still shows 302 for browser-style API requests; added an infra test forbidding any `/api` Easy Auth exemption. No `src/` change.
+
+## [2026-11-23] add | Resident showcase r9, Server header fix (Refs #462)
+
+* Added [resident-showcase-live-r9-2026-11-23.md](research/resident-showcase-live-r9-2026-11-23.md): 36 live checks on revision 0000028; the resident demo no longer sends the Python version in `Server` (regression test); live effect and HSTS await a redeploy.
+
+## [2026-11-23] add | Capstone pitch Tokenomics seventh pass with regression tests (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-23b.md](research/capstone-pitch-435-live-2026-11-23b.md): criteria 1 and 4 proven for the demo, criterion 2 unproven; two tests in tools/test_capstone_pitch_docs.py bind the recorded decisions to the deck and the #432 batch record. No deck or estate change.
+## [2026-11-23] add | Issue 220 guard key normalisation (Refs #220)
+
+* Added [issue-220-live-r12-key-normalisation-2026-11-23.md](research/issue-220-live-r12-key-normalisation-2026-11-23.md): the adverse-field guard now rejects case, spacing and hyphen variants of forbidden keys; regression test added; not deployed to the live demo.
 
 ## [2026-11-23] add | Issue 2245 demo AI override gap on the SQL store (Refs #2245)
 
