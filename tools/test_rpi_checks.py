@@ -4137,6 +4137,32 @@ os.fstat(3)
                     self.git("branch", "-qD", "side-main")
                     self.git("update-ref", "refs/remotes/origin/main", self.base)
 
+    def test_full_receipt_judges_the_net_main_move(self) -> None:
+        self.commit("pr", "src/api/src/zava_forward/api/server.py")
+        full = self.relaxed_receipt("full")
+        pr = self.git("branch", "--show-current")
+        self.git("switch", "-qc", "side-main", self.base)
+        try:
+            self.commit("add", "support/a.md", "src/importer/src/zava_forward/importer/x.py")
+            self.git("rm", "-q", "src/importer/src/zava_forward/importer/x.py")
+            self.git("commit", "-qm", "drop code")
+            nets_inert = self.git("rev-parse", "HEAD")
+            (self.root / "src/importer/src/zava_forward/importer").mkdir(parents=True)
+            self.git("mv", "support/a.md", "src/importer/src/zava_forward/importer/y.py")
+            self.git("commit", "-qm", "rename into code")
+            renamed = self.git("rev-parse", "HEAD")
+            self.git("switch", "-q", pr)
+            self.git("update-ref", "refs/remotes/origin/main", nets_inert)
+            proof = gate.base_relaxation(self.root, self.base, nets_inert, [], inert_only=True)
+            self.assertEqual(proof["moved_paths"], ["support/a.md"])
+            self.git("update-ref", "refs/remotes/origin/main", renamed)
+            with self.assertRaisesRegex(gate.GateError, "Base moved on .*importer/y.py"):
+                gate.validate_receipt(self.root, full, renamed)
+        finally:
+            self.git("switch", "-q", pr)
+            self.git("branch", "-qD", "side-main")
+            self.git("update-ref", "refs/remotes/origin/main", self.base)
+
     def test_verify_reports_docs_only_relaxation_for_full_receipt(self) -> None:
         self.commit("pr", "src/api/src/zava_forward/api/server.py")
         moved = self.move_main("support/other.md")
