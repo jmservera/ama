@@ -265,6 +265,21 @@ class AgentWorker:
         task = message.task
         if self.stop_event.is_set() or not self.slots.acquire(blocking=False):
             return None
+        refusal = assistants.contract_refusal(task)
+        if refusal:
+            self.slots.release()
+            envelope, output, _ = assistants.shape_result(
+                task, dict(FAILED_ENVELOPE, outcome="data-contract-refused"), limits
+            )
+            return ResultMessage(
+                task["id"],
+                task["fence"],
+                task["owner"],
+                envelope,
+                output,
+                f"{refusal} Manual review required.",
+                telemetry.carrier(),
+            )
         system, prompt = assistants.build_request(task)
         if len(system) + len(prompt) > limits.input_chars:
             self.slots.release()

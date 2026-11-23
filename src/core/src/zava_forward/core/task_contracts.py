@@ -26,7 +26,7 @@ class ContractRefusal(ValueError):
 
 PROHIBITED = {
     "email address": re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+"),
-    "telephone number": re.compile(r"(?<!\d)(?:\+44|0044|0)[\s-]?\d(?:[\s-]?\d){8,10}(?!\d)"),
+    "telephone number": re.compile(r"(?<![\w+])(?:\+44|0044|0)[\s-]?\d(?:[\s-]?\d){8,10}(?!\w)"),
     "national insurance number": re.compile(
         r"\b[A-CEGHJ-PR-TW-Z]{2}\s?\d{2}\s?\d{2}\s?\d{2}\s?[A-D]\b", re.I
     ),
