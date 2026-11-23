@@ -14861,3 +14861,22 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2116 drill criterion classified (Refs #2116)
 
 * Added [issue-2116-drill-criterion-demo-classification-2026-11-23.md](research/issue-2116-drill-criterion-demo-classification-2026-11-23.md): the witnessed drill criterion is owner-gated and unproven for the demo; constructed suspension tests re-run (20 OK). No source change.
+
+## [2026-11-23] update | Issue 184 live re-check (Refs #184)
+
+* Added [issue-184-live-recheck-2026-11-23.md](research/issue-184-live-recheck-2026-11-23.md): per-criterion re-proof for the demo; live message-body secret absence stays unproven. No source change.
+## [2026-11-23] update | Issue 1288 eleventh live audit (Refs #1288)
+
+* Added [issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r11-quality-sensor-evidence-2026-11-23.md): revisions 0000055 and 0000027, 272 focused tests OK, seven homes with live readings, release admission still blocks the Quality model; criteria 4 and 8 stay unproven; no source change.
+## [2026-11-23] update | Issue 1837 live re-verification r2 (Refs #1837)
+
+* Added [issue-1837-live-demo-evidence-2026-11-23-r2.md](research/issue-1837-live-demo-evidence-2026-11-23-r2.md): fix still on main; 66 unit tests, three axe journeys (nomination on third run) and a live refusal probe re-run. Live write and independent review stay unproven. No source change.
+## [2026-11-23] add | Nomination test bootstrap isolation fifth re-run (Refs #1847)
+
+* Added [nomination-bootstrap-isolation-rerun-1847-2026-11-23-fifth.md](research/nomination-bootstrap-isolation-rerun-1847-2026-11-23-fifth.md): both orders in source, editable and noneditable layouts with identities observed; criterion 6 (full gate receipt) stays owner-gated. No source or test change.
+## [2026-11-23] update | Issue 107 assistants criteria re-verified, fourth pass (Refs #107)
+
+* Added [issue-107-live-r4-assistants-evidence-2026-11-23.md](research/issue-107-live-r4-assistants-evidence-2026-11-23.md): independent SQL race, restart and old-image criterion proven on actual local SQL Server 2022 (95 tests OK); approved-release delivered-build criterion stays unproven. No source change.
+## [2026-11-23] update | Issue 116 provider-boundary round 8 (Refs #116)
+
+* Added [issue-116-live-r8-evidence-2026-11-23.md](research/issue-116-live-r8-evidence-2026-11-23.md): 125 boundary tests pass at head ac58e5c451, a read-only unauthenticated live probe returns 401, and live payload contents stay unproven. No source or estate change.

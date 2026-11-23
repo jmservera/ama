@@ -1,0 +1,2 @@
+d2c.telemetry.ingress.success [2117, 2054, 2092, 2066, 2080, 2110]
+d2c.endpoints.egress.eventHubs [2118, 2033, 2114, 2062, 2075, 2118]
