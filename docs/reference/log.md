@@ -15179,3 +15179,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Issue 2128 credential storage and teardown proof (Refs #2128)
 
 * Added [issue-2128-live-credential-storage-2026-11-23.md](research/issue-2128-live-credential-storage-2026-11-23.md): 24-hour live log scan clean, throwaway-hub provision and teardown with a restarted durable store, per-criterion table. Source change: opt-in `--vault-url` Key Vault store in `device_provision`. A real Key Vault write stays unproven.
+## [2026-11-23] add | Epic 218 live RAI readiness recheck (Refs #218)
+
+* Added [issue-218-live-rai-readiness-recheck-2026-11-23.md](research/issue-218-live-rai-readiness-recheck-2026-11-23.md): live gate separation proven, a traceability check that failed on every deployment (no test tree in the image) fixed offline, and a per-criterion table. The live effect of the fix stays unproven until a redeploy.
