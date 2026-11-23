@@ -15034,3 +15034,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2257 SQLSTATE in the map overlay warning (Refs #2257)
 
 * Added [issue-2257-live-r5-2026-11-23.md](research/issue-2257-live-r5-2026-11-23.md): the overlay warning now records the five-character driver SQLSTATE for non-lock failures, with a regression test; per-criterion table.
+## [2026-11-23] add | Issue 2254 over-count regression and live proof, run 5 (Refs #2254)
+
+* Added [issue-2254-live-r5-2026-11-23.md](research/issue-2254-live-r5-2026-11-23.md): new test for the over-counted stored safety column fails without the repair and passes with it; live tile, map and list agree at 23 on revision 0000056. Test-only change; no estate change.

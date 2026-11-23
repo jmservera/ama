@@ -250,6 +250,36 @@ class Migration(unittest.TestCase):
             self.assertEqual(mapped["mode"], "points")
             self.assertEqual(sum(1 for i in mapped["items"] if i["kind"] == "hazard"), tile)
 
+    def test_overcounted_safety_column_is_repaired_when_hazard_is_released_or_case_closed_issue_2254(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            p = Path(tmp) / "zavaforward.json"
+            p.write_text(json.dumps(dataset(make_cases(60))))
+            db = os.path.join(tmp, "pw.sqlite")
+            SqlStore(str(p), db)
+            raw = sqlite3.connect(db)
+            open_ids = [r[0] for r in raw.execute("SELECT id FROM cases WHERE closed=0 AND hazard=1 LIMIT 2")]
+            if len(open_ids) < 2:
+                open_ids = [r[0] for r in raw.execute("SELECT id FROM cases WHERE closed=0 LIMIT 2")]
+            released, closed = open_ids
+            for cid, edit in ((released, lambda b: b.update(hazards=[dict(category="Damp", priority="P1", noticed="2026-01-01",
+                                                                         referred=None, repaired=None, released=True,
+                                                                         job="J", owner="Bea")])),
+                              (closed, lambda b: b.update(closed=True))):
+                body = json.loads(raw.execute("SELECT body FROM cases WHERE id=?", (cid,)).fetchone()[0])
+                edit(body)
+                raw.execute("UPDATE cases SET body=?, hazard=1 WHERE id=?", (json.dumps(body), cid))
+            raw.commit()
+            raw.close()
+            s = SqlStore(str(p), db)
+            pam = STAFF[1]
+            tile = s.stats()["kpis"]["hazards"]
+            by_body = sum(1 for c in s.cases.values() if not c["closed"] and any(not h["released"] for h in c["hazards"]))
+            listed = s.page_cases(pam, "all", filters=dict(flag="hazard"), limit=100)
+            self.assertEqual(tile, by_body)
+            self.assertEqual(listed["total"], tile)
+            self.assertNotIn(released, [i["id"] for i in listed["items"]])
+            self.assertNotIn(closed, [i["id"] for i in listed["items"]])
+
     def test_repair_skips_legacy_bodies_that_lack_row_fields(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "zavaforward.json"
