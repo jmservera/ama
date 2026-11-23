@@ -575,7 +575,7 @@ def _incident_action(method):
 DEMO_OWNER_OVERRIDE_ENV = "ZF_DEMO_AI_SUSPENSION_OVERRIDE"
 
 
-def demo_owner_override(env=None):
+def demo_owner_override(env: "dict[str, str] | None" = None) -> bool:
     """Demo-only: the owner directed (2026-11-23) that open AI suspensions do not hold the demo.
 
     The suspension records stay open and visible; only the AI hold is skipped, and only when the
