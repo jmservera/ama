@@ -1,0 +1,24 @@
+date 2026-11-23T00:54:00Z
+/healthz native=200 browserJSON=200 browserHTML=200
+/api/me native=401 browserJSON=302 browserHTML=302
+/api/cases native=401 browserJSON=302 browserHTML=302
+/api/staff native=401 browserJSON=302 browserHTML=302
+/app native=401 browserJSON=302 browserHTML=302
+/cases.html native=401 browserJSON=302 browserHTML=302
+resident edge:
+/healthz native=200 browser=200
+/api/me native=404 browser=404
+/ native=200 browser=200
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "exclude": [
+    "/healthz",
+    "/readyz",
+    "/",
+    "/welcome.html",
+    "/style.css",
+    "/zava-logo.png",
+    "/sign-in"
+  ],
+  "unauth": "RedirectToLoginPage"
+}

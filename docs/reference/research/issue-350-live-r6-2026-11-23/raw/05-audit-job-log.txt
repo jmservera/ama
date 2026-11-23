@@ -1,0 +1,12 @@
+LEDGER_DIGEST_OK ledger matches the immutable digests	2026-11-22T02:01:01.1990556Z
+}	2026-11-22T02:01:01.1990544Z
+  "problems": []	2026-11-22T02:01:01.1990534Z
+  "entries": 4963,	2026-11-22T02:01:01.1990523Z
+  "year_digests": 0,	2026-11-22T02:01:01.1990513Z
+  "digests": 4,	2026-11-22T02:01:01.1990494Z
+  "intact": true,	2026-11-22T02:01:01.199037Z
+{	2026-11-22T02:01:01.1990059Z
+published: ["digest-0000004963.json"]	2026-11-22T02:01:00.5259682Z
+{"step": "by_year", "intact": true}	2026-11-21T19:26:11.5332009Z
+{"step": "reliance", "allowed": true, "years": {"2026": 3951}, "problems": []}	2026-11-21T19:26:11.4344522Z
+{"step": "store", "cls": "MssqlStore", "has_reliance": true}	2026-11-21T19:26:11.1784701Z

@@ -14729,3 +14729,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] update | Issue 2243 live re-verification (Refs #2243)
 
 * Added [issue-2243-live-2026-11-23.md](research/issue-2243-live-2026-11-23.md): fresh desktop probe of resident revision 0000026 (both questions `usage_limit`), API 0000054 Healthy, main already honours `ZF_DEMO_EXPIRES_AT`, 70 targeted tests pass, per-criterion table; model-backed answer stays owner-gated on the private SQL ledger. No source or estate change.
+## [2026-11-23] update | Issue 350 live pass 6 (Refs #350)
+
+* Added [issue-350-live-r6-2026-11-23.md](research/issue-350-live-r6-2026-11-23.md): sixth read-only live re-measurement of the ten unticked criteria on revisions 0000054 and 0000026. Behaviour unchanged; the audit job log shows `LEDGER_DIGEST_OK` over 4 digests, explaining `digests_checked` 0 on the API. Criteria 1 (live edge), 6 and 10 unproven, 9 proven for the demo, the rest partly proven. No source or estate change.

@@ -1,0 +1,6 @@
+== ledger-digests / law-snapshots
+digest-0000000000.json
+digest-0000000030.json
+digest-0000002585.json
+digest-0000004963.json
+== law

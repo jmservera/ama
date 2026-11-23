@@ -1,0 +1,703 @@
+{
+ "/api/me": {
+  "status": 200,
+  "body": {
+   "user": {
+    "code": "E-431883ca6856",
+    "name": "Aadi Kapoor",
+    "email": "[email]",
+    "role": "Retrofit Programme Manager",
+    "oid": "<GUID>",
+    "tid": "<GUID>",
+    "identity_source": "entra",
+    "display_email": "",
+    "app_admin": false,
+    "view_only": false,
+    "app_roles": "list",
+    "auth_provider": "trusted-proxy",
+    "rule_roles": "list"
+   },
+   "counts": {
+    "mine": 133,
+    "hazards": 2,
+    "open": 443
+   },
+   "staff": {
+    "list": 6,
+    "first_keys": [
+     "case_ids",
+     "code",
+     "email",
+     "name",
+     "role"
+    ]
+   },
+   "account": {
+    "name": "Aadi Kapoor",
+    "email": "",
+    "provider": "trusted-proxy"
+   },
+   "services": {
+    "photo": false,
+    "law_alerts": true,
+    "assistants": true,
+    "cases": true
+   },
+   "map": {
+    "tiles": "str",
+    "attribution": "str"
+   },
+   "navigation": {
+    "list": 13,
+    "first_keys": [
+     "href",
+     "label",
+     "scope"
+    ]
+   },
+   "work_queues": {
+    "version": "work-queues-1",
+    "default": "dict",
+    "selection": null,
+    "clock": "str",
+    "status": "Engineering definitions; operational owner ratification remains open",
+    "definitions": "list"
+   },
+   "regulatory_output_guard": {
+    "guard_version": "regulatory-non-advice-guard-v1",
+    "deterministic": true,
+    "model_calls": 0,
+    "checked_total": 0,
+    "passed_total": 0,
+    "flagged_total": 0,
+    "rewritten_total": 0,
+    "rejected_total": 0,
+    "by_category": "dict",
+    "last_decision": null
+   }
+  }
+ },
+ "/api/stats": {
+  "status": 200,
+  "body": {
+   "kpis": {
+    "open": 443,
+    "completed": 537,
+    "hazards": 23,
+    "long": 71,
+    "nodecision": 443,
+    "funding": 26,
+    "support": 140,
+    "support_unknown": 0
+   },
+   "stages": {
+    "list": 20,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "areas": {
+    "list": 11,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "waves": {
+    "list": 5,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "ages": {
+    "list": 4,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "funding": {
+    "list": 4,
+    "first_keys": [
+     "label",
+     "n"
+    ]
+   },
+   "contractors": {
+    "list": 4,
+    "first_keys": [
+     "booked",
+     "long",
+     "name",
+     "open"
+    ]
+   },
+   "team": {
+    "list": 2,
+    "first_keys": [
+     "code",
+     "hazards",
+     "name",
+     "open",
+     "role"
+    ]
+   },
+   "ai_consumption_economics": {
+    "schema": "ai-consumption-economics/v1",
+    "od_51_status": "open",
+    "price_source_configured": false,
+    "price_source": "Unknown",
+    "currency": "Unknown",
+    "coverage": "incomplete",
+    "reconciliation": "unreconciled",
+    "proposal_count": 1,
+    "accepted_outcome_count": 0,
+    "metered_call_count": 24,
+    "unmetered_call_count": 0,
+    "denominators": "dict",
+    "metered_usage": "dict",
+    "token_cost": "Unknown",
+    "other_tca_components": "dict",
+    "total_cost_of_ai": "Unknown",
+    "token_cost_per_accepted_outcome": "Unknown",
+    "cost_per_accepted_outcome": "Unknown",
+    "quality_floor_status": "Unknown",
+    "quality_qualified_cost_per_accepted_outcome": "Unknown",
+    "booked_value": "Unknown",
+    "by_capability": "dict",
+    "non_benefit_notice": "str"
+   }
+  }
+ },
+ "/api/cases": {
+  "status": 200,
+  "body": {
+   "items": {
+    "list": 50,
+    "first_keys": [
+     "address",
+     "area",
+     "closed",
+     "days",
+     "focus",
+     "funding",
+     "hazard",
+     "id",
+     "last_contact",
+     "next_visit"
+    ]
+   },
+   "total": 133,
+   "limit": 50,
+   "offset": 0,
+   "sort": "urgent",
+   "policy_version": "1.0.0",
+   "policy_hash": "str",
+   "as_of": "2026-10-16",
+   "ranked_total": 443,
+   "next_cursor": "11099997880017ZF-2025-0041"
+  }
+ },
+ "/api/map": {
+  "status": 200,
+  "body": {
+   "mode": "points",
+   "total": 443,
+   "shown": 443,
+   "cap": 500,
+   "bounds": {
+    "list": 4,
+    "first_keys": null
+   },
+   "items": {
+    "list": 443,
+    "first_keys": [
+     "address",
+     "id",
+     "kind",
+     "lat",
+     "lon",
+     "name",
+     "sensor",
+     "stage"
+    ]
+   }
+  }
+ },
+ "/api/visits": {
+  "status": 200,
+  "body": {
+   "list": 30,
+   "first_keys": [
+    "address",
+    "date",
+    "id",
+    "owner",
+    "person",
+    "phone",
+    "resident",
+    "slot",
+    "support",
+    "support_status"
+   ]
+  }
+ },
+ "/api/workorders": {
+  "status": 200,
+  "body": {
+   "list": 601,
+   "first_keys": [
+    "address",
+    "appointment_control",
+    "appointments",
+    "case_id",
+    "contractor",
+    "corrections",
+    "history",
+    "id",
+    "issued_at",
+    "issued_by"
+   ]
+  }
+ },
+ "/api/finance": {
+  "status": 200,
+  "body": {
+   "list": 13,
+   "first_keys": [
+    "address",
+    "case_id",
+    "exceptions",
+    "invoice",
+    "on_hold",
+    "ref",
+    "status",
+    "supplier",
+    "total"
+   ]
+  }
+ },
+ "/api/funding": {
+  "status": 200,
+  "body": {
+   "list": 167,
+   "first_keys": [
+    "address",
+    "area",
+    "days",
+    "grants",
+    "have",
+    "id",
+    "need",
+    "owner",
+    "resident",
+    "route"
+   ]
+  }
+ },
+ "/api/packages": {
+  "status": 200,
+  "body": {
+   "list": 1,
+   "first_keys": [
+    "capacity",
+    "consultation_authority",
+    "consultation_history",
+    "consultation_status",
+    "contract_ref",
+    "contract_version",
+    "id",
+    "leaseholder_consultation_status",
+    "letting_renewal_blocked",
+    "letting_renewal_reason"
+   ]
+  }
+ },
+ "/api/closed-cases": {
+  "status": 200,
+  "body": {
+   "label": "Demonstration data",
+   "items": {
+    "list": 20,
+    "first_keys": [
+     "address",
+     "closed_on",
+     "hazard",
+     "id",
+     "postcode",
+     "resident",
+     "status",
+     "team",
+     "town"
+    ]
+   },
+   "total": 537,
+   "page": 1,
+   "pages": 27,
+   "limit": 20,
+   "facets": {
+    "statuses": "list",
+    "teams": "list"
+   },
+   "unknown_closure_dates": 0
+  }
+ },
+ "/api/assistants": {
+  "status": 200,
+  "body": {
+   "assistants": {
+    "list": 5,
+    "first_keys": [
+     "binding",
+     "categories",
+     "id",
+     "model_bounds",
+     "purpose",
+     "release",
+     "roles",
+     "version"
+    ]
+   },
+   "registered_tasks": {
+    "list": 9,
+    "first_keys": [
+     "accountable_function",
+     "accountable_individual",
+     "activation",
+     "affected",
+     "approval_state",
+     "authority",
+     "authority_gap",
+     "binding",
+     "delegation",
+     "id"
+    ]
+   },
+   "disabled": "str",
+   "proactive": false,
+   "quality_scope": {
+    "mode": "demo-homes",
+    "homes": "list",
+    "trigger": "operator-requested-only",
+    "background_scan": "skips-quality",
+    "per_reading_calls": "none",
+    "model_call_authority_present": false
+   },
+   "principal": "service:retrofit-evidence-proposals",
+   "rule": "synthetic-gaps-2026-10-13-v1",
+   "limits": {
+    "scan_interval": 60,
+    "scan_size": 20,
+    "input_chars": 12000,
+    "output_chars": 8000,
+    "output_tokens": 600,
+    "timeout": 20,
+    "active_calls": 2,
+    "attempts": 2,
+    "backoff": 30,
+    "lease": 60
+   },
+   "manual": "str",
+   "rai_exercise_acceptance": {
+    "section": "rai_exercise_acceptance",
+    "independent_of_real_ai_delivery_gate": true,
+    "passed": false,
+    "status": "failed",
+    "checks": "dict",
+    "traceability": "dict",
+    "note": "str"
+   },
+   "real_ai_delivery_gate": {
+    "section": "real_ai_delivery_gate",
+    "separated_from_rai_exercise_acceptance": true,
+    "passed": false,
+    "status": "blocked",
+    "checks": "dict",
+    "blocking_reasons": "list",
+    "deferred_open_questions": "list",
+    "note": "str"
+   }
+  }
+ },
+ "/api/proposals": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/briefing": {
+  "status": 200,
+  "body": {
+   "text": "str",
+   "source": "template",
+   "model": null,
+   "validated": true,
+   "reason": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard r",
+   "task": "briefing",
+   "release": null,
+   "prompt_version": "b4b77f4cf772b67e",
+   "latency_ms": 16.4,
+   "citations": {
+    "list": 6,
+    "first_keys": null
+   },
+   "unresolved": {
+    "list": 0,
+    "first_keys": null
+   },
+   "dropped_uncited": 0,
+   "verified": true,
+   "approval": "Not reviewed",
+   "instruction_status": "Not an instruction",
+   "envelope": {
+    "task": "briefing",
+    "task_version": "2026-10-15.1",
+    "registered": true,
+    "registry_version": "2026-10-15.1",
+    "prompt_version": "b4b77f4cf772b67e",
+    "case_ids": "list",
+    "case_version": 2173,
+    "source_versions": "dict",
+    "provider": null,
+    "deployment": null,
+    "model": null,
+    "outcome": "abstained-or-failed",
+    "failure": "str",
+    "approval": "Not reviewed",
+    "approved": false,
+    "reviewer_function": "Retrofit Programme Manager",
+    "release": null,
+    "usage": null,
+    "meter_id": null,
+    "meter_root": null,
+    "configuration": null,
+    "prompt_hash": null
+   },
+   "record_id": "ae2a98a55ac4",
+   "continuity_epoch": 1,
+   "mode": "ai",
+   "generated_at": "2026-11-23T00:55:19+00:00",
+   "source_case_ids": {
+    "list": 8,
+    "first_keys": null
+   },
+   "statements": {
+    "list": 3,
+    "first_keys": [
+     "citations",
+     "text",
+     "unresolved"
+    ]
+   },
+   "scope": "programme",
+   "scope_label": "All programme cases",
+   "case_count": 443,
+   "summary_count": 3,
+   "label": "Summary by rules"
+  }
+ },
+ "/api/audit-check": {
+  "status": 200,
+  "body": {
+   "intact": true,
+   "entries": 5976,
+   "head": "str",
+   "problem": null,
+   "digests_checked": 0,
+   "digest_mismatches": {
+    "list": 0,
+    "first_keys": null
+   }
+  }
+ },
+ "/api/ledger/digest": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/time/status": {
+  "status": 200,
+  "body": {
+   "enabled": false,
+   "flag_on": false,
+   "dpia_recorded": false,
+   "consultation_recorded": false,
+   "notice_approved": false,
+   "requested": false,
+   "requested_by": null,
+   "requested_role": null,
+   "activated": false,
+   "activated_by": null,
+   "activated_at": null,
+   "activated_role": null,
+   "reason": "Time capture is switched off.",
+   "activities": {
+    "list": 7,
+    "first_keys": null
+   },
+   "min_group": 5,
+   "notice_version": "draft-1",
+   "storage": "the shared SQL store"
+  }
+ },
+ "/api/time/mine": {
+  "status": 403,
+  "body": {
+   "error": "Time capture is switched off.",
+   "enabled": false
+  }
+ },
+ "/api/law": {
+  "status": 404,
+  "body": {
+   "error": "Not found."
+  }
+ },
+ "/api/law/cards": {
+  "status": 200,
+  "body": {
+   "cards": {
+    "list": 4,
+    "first_keys": [
+     "applicability",
+     "approved_by",
+     "approved_on",
+     "approver",
+     "author",
+     "card_id",
+     "check",
+     "clock",
+     "created",
+     "effective"
+    ]
+   },
+   "output_guard": {
+    "checked": true,
+    "items_checked": 4,
+    "passed": true,
+    "action": "passed",
+    "rewritten_count": 0,
+    "rejected_count": 0,
+    "violations": "list",
+    "reasons": "list",
+    "guard_version": "regulatory-non-advice-guard-v1",
+    "telemetry": "dict"
+   }
+  }
+ },
+ "/api/law/alerts": {
+  "status": 200,
+  "body": {
+   "coverage_status": "unknown",
+   "homes": {
+    "list": 0,
+    "first_keys": null
+   },
+   "precision": {
+    "total": 0,
+    "classified": 0,
+    "false_positives": 0,
+    "unclassified": 0,
+    "false_positive_rate": null,
+    "by_card": "list",
+    "by_home_scope": "list"
+   },
+   "output_guard": {
+    "checked": true,
+    "items_checked": 0,
+    "passed": true,
+    "action": "passed",
+    "rewritten_count": 0,
+    "rejected_count": 0,
+    "violations": "list",
+    "reasons": "list",
+    "guard_version": "regulatory-non-advice-guard-v1",
+    "telemetry": "dict"
+   }
+  }
+ },
+ "/api/law/sources": {
+  "status": 200,
+  "body": {
+   "sources": {
+    "list": 0,
+    "first_keys": null
+   },
+   "gaps": {
+    "list": 0,
+    "first_keys": null
+   },
+   "output_guard": {
+    "checked": true,
+    "items_checked": 0,
+    "passed": true,
+    "action": "passed",
+    "rewritten_count": 0,
+    "rejected_count": 0,
+    "violations": "list",
+    "reasons": "list",
+    "guard_version": "regulatory-non-advice-guard-v1",
+    "telemetry": "dict"
+   }
+  }
+ },
+ "/api/account/photo": {
+  "status": 503,
+  "body": {
+   "error": "Microsoft photo access is not available. Sign in again after token-store setup."
+  }
+ },
+ "/api/export": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/staff": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/sensors": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/documents": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "/api/handoffs": {
+  "status": 200,
+  "body": {
+   "list": 4,
+   "first_keys": [
+    "accountable_owner",
+    "accountable_owner_code",
+    "address",
+    "answer_note",
+    "answered_at",
+    "approved_limit_hours",
+    "auto_escalated",
+    "case_id",
+    "chase_owner",
+    "chase_owner_code"
+   ]
+  }
+ },
+ "/api/health/deployment": {
+  "status": 403,
+  "body": {
+   "error": "Your role does not include this."
+  }
+ },
+ "law_page_text": "Zava Forward\nZava North Homes\nLaw store viewer\n\nRead-only reference copies of the regulatory sources held locally. No AI is used. This is not legal advice and no owner has reviewed these copies yet.\n\nSearch the provisions\n Search All sources\n\n0 sources and 0 gaps shown.\n\nSources held\nDownload sources for Excel\n\nThe file is a read-only copy; changes in it are not imported back.\n\nNo source held",
+ "time_view_text": "Staff time capture\n\nTime capture is switched off, so nothing can be recorded. Owner: application support. Next action: ask application support to switch it on when the programme agrees to start staff time capture.\n\nMissing: feature switched on\nMissing: DPIA reference recorded\nMissing: staff consultation recorded\nMissing: staff notice approved\nMissing: enabling request by a manager (audited)\nMissing: enabling by a manager in a different role (audited)"
+}
