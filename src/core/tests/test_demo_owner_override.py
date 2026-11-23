@@ -23,7 +23,7 @@ class DemoOwnerOverrideTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             data = Path(tmp) / "zavaforward.json"
             data.write_text(json.dumps(dataset.DATA))
-            store = SqlStore(str(data), os.path.join(tmp, "pw.sqlite"))
+            store = SqlStore(str(data), os.path.join(tmp, "pw.sqlite"))  # type: ignore[no-untyped-call]
             self.addCleanup(store.db.close)
             manager = next(
                 p for p in dataset.DATA["staff"] if p["role"] == "Retrofit Programme Manager"
@@ -41,13 +41,13 @@ class DemoOwnerOverrideTests(unittest.TestCase):
                 },
             )
             name, value = continuity.DEMO_OWNER_OVERRIDE_ENV, "owner-directed-2026-11-23"
-            self.assertIsNotNone(store.continuity_suspension("chat"))
+            self.assertIsNotNone(store.continuity_suspension("chat"))  # type: ignore[no-untyped-call]
             with patch.dict(os.environ, {name: value}):
-                self.assertIsNone(store.continuity_suspension("chat"))
-                self.assertIsNone(store.continuity_block("chat"))
+                self.assertIsNone(store.continuity_suspension("chat"))  # type: ignore[no-untyped-call]
+                self.assertIsNone(store.continuity_block("chat"))  # type: ignore[no-untyped-call]
             with patch.dict(os.environ, {name: value, "ZF_ENV": "production"}):
-                self.assertIsNotNone(store.continuity_suspension("chat"))
-            self.assertIsNotNone(store.continuity_suspension("chat"))
+                self.assertIsNotNone(store.continuity_suspension("chat"))  # type: ignore[no-untyped-call]
+            self.assertIsNotNone(store.continuity_suspension("chat"))  # type: ignore[no-untyped-call]
 
 
 if __name__ == "__main__":
