@@ -86,7 +86,7 @@ async function api(path, body, signal) {
       method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
     });
     const data = await res.json().catch(error => {
-      if (key) throw error;
+      if (key && (res.ok || !path.startsWith("/api/chat/"))) throw error;
       return {};
     });
     signal.throwIfAborted();
