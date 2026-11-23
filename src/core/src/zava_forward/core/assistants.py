@@ -24,7 +24,7 @@ from . import assistant_release as rel
 from .forecast_reads import ForecastReads
 from .ai import may_carry_captured_readings
 from .doc_controls import is_available_case_document
-from .mssqlstore import is_write_lock_busy
+from .mssqlstore import driver_sqlstate, is_write_lock_busy
 from . import (
     ai_consumption,
     challenges,
@@ -2406,7 +2406,13 @@ class Assistants:
         except Exception as exc:
             # The sensor overlay is optional: a database failure here must not fail the whole map (issue 2257).
             cause = "sql-write-lock-busy" if is_write_lock_busy(exc) else "other"
-            LOG.warning("map sensor summary unavailable exc=%s cause=%s", type(exc).__name__, cause)
+            state = driver_sqlstate(exc)
+            LOG.warning(
+                "map sensor summary unavailable exc=%s cause=%s%s",
+                type(exc).__name__,
+                cause,
+                f" sqlstate={state}" if state else "",
+            )
             out = {i: sensor_map.fixed("unavailable") for i in ids[: sensor_map.HOME_CAP]}
         out.update({i: sensor_map.fixed("not-loaded") for i in ids[sensor_map.HOME_CAP :]})
         return out

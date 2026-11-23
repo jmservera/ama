@@ -154,6 +154,22 @@ class MapSensors(Seed, ta.ApiTests):
         self.assertIn("cause=sql-write-lock-busy", logs.output[0])
         self.assertNotIn("driver detail", logs.output[0])
 
+    def test_an_other_overlay_failure_logs_only_the_sqlstate_code(self) -> None:
+        self.put(3, offset=120)
+        self.service.transaction = self.state_transaction
+        with self.assertLogs("zava_forward.core.assistants", "WARNING") as logs:
+            self.sensor()
+        self.assertIn("cause=other sqlstate=40001", logs.output[0])
+        self.assertNotIn("driver detail", logs.output[0])
+
+    @staticmethod
+    def state_transaction() -> Any:
+        class DatabaseError(Exception):
+            pass
+
+        DatabaseError.__module__ = "pyodbc"
+        raise DatabaseError("40001", "driver detail")
+
     @staticmethod
     def lock_transaction() -> Any:
         class ProgrammingError(Exception):
