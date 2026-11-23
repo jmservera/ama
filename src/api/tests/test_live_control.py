@@ -810,6 +810,21 @@ class ReceiverStartupTests(unittest.TestCase):
                 code, built = self.run_main(case, {})
                 self.assertEqual((code, built), (2, []))
 
+    def test_unexpected_startup_failure_names_the_class_but_never_the_message(self) -> None:
+        future = (datetime.now(UTC) + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+        def broken(_env: Any) -> object:
+            raise RuntimeError("secret-sentinel")
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            path.write_text(json.dumps(document(expires_at=future)), encoding="utf-8")
+            err = io.StringIO()
+            with patch.object(rx, "persistence", broken), patch("sys.stderr", err):
+                code = rx.main(["--control-file", str(path)], {})
+        self.assertEqual(code, 4)
+        self.assertEqual(err.getvalue(), "error_type=RuntimeError\nCannot run: RECEIVER_FAILED\n")
+
     def test_valid_control_builds_persistence_then_runs(self) -> None:
         code, built = self.run_main({}, {})
         self.assertEqual((code, built), (0, ["persistence", "ingestion"]))
