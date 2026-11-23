@@ -3,6 +3,8 @@
 import hashlib
 import json
 
+from . import task_contracts
+
 VERSION = "2026-10-15.2"
 TEXT_SYSTEM = (
     "You assist a UK housing association retrofit team. Use only the facts given. "
@@ -64,6 +66,7 @@ CITATION_RULE = (
 
 
 def render(task: str, **values: str | int) -> tuple[str, str]:
+    task_contracts.enforce(task, values)
     system, user = PROMPTS[task]
     return system.format(**values), user.format(**values)
 

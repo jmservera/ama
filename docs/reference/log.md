@@ -14981,6 +14981,18 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2310-anon-401-live-2026-11-23.md](research/issue-2310-anon-401-live-2026-11-23.md): the application and its tests already return 401 for browser-style anonymous API requests; the deployed Easy Auth edge returns 302, left for an owner decision.
 
+## [2026-11-23] add | Issue 2311 per-task data contracts evidence (Refs #2311)
+
+* Added [issue-2311-task-contracts-2026-11-23.md](research/issue-2311-task-contracts-2026-11-23.md): a data contract for each of 13 AI tasks enforced in prompt rendering, proven by 8 focused tests; DPO and Legal approval is not claimed and stays under #121.
+## [2026-11-23] add | Issue 2237 live re-proof on revision 0000055 (Refs #2237)
+
+* Added [issue-2237-live-reproof-2026-11-23.md](research/issue-2237-live-reproof-2026-11-23.md): the deployed API contains the 503 mapping, it fired 14 times live, retention returned 200 in 56 of 56 calls, and each criterion is marked proven or unproven. No source change.
+## [2026-11-23] add | Issue 2245 chat 500 live recheck (Refs #2245)
+
+* Added [issue-2245-recheck-2026-11-23.md](research/issue-2245-recheck-2026-11-23.md): the thread creation 500 reproduced live on revision 0000055 while the SQL write lock was busy; the merged 503 fix is not deployed; the AI suspension is unchanged. Index updated.
+## [2026-11-23] add | Issue 2254 safety count run 4 (Refs #2254)
+
+* Added [issue-2254-live-r4-2026-11-23.md](research/issue-2254-live-r4-2026-11-23.md): reverting the stale hazard-column repair makes the regression test fail (3 != 4); live tile, map markers and list agree at 23 by case id. No source change.
 ## [2026-11-23] add | Issue 2304 assistants forecast statement count (Refs #2304)
 
 * Added [issue-2304-forecast-live-2026-11-23.md](research/issue-2304-forecast-live-2026-11-23.md): the forecast hang reproduced live, cut from about 80 statements per open case to a flat 20 by a read-through view, with a 10 s named unavailable state; the live re-check is unproven because the registry is private.
