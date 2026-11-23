@@ -167,8 +167,11 @@ def revert(store: Any) -> dict[str, Any]:
             hazard.pop("aware_at", None)
             if mark.get("response_due_seeded"):
                 hazard.pop("response_due_at", None)
-            if mark.get("noticed_was") is not None:
-                hazard["noticed"] = mark["noticed_was"]
+            if "noticed_was" in mark:
+                if mark["noticed_was"] is None:
+                    hazard.pop("noticed", None)
+                else:
+                    hazard["noticed"] = mark["noticed_was"]
         if changed:
             store.audit(
                 "demo-hazard-clock-seed",

@@ -7,7 +7,13 @@ from email.message import Message
 from typing import Any
 from unittest.mock import Mock, patch
 
-from zava_forward.core.resident_assistant import AssistantUnavailable, CaseProgress, Topic
+from zava_forward.core.resident_assistant import (
+    AssistantUnavailable,
+    CaseProgress,
+    FakeProvider,
+    Topic,
+    advise,
+)
 
 from zava_forward.api.resident_demo import chat
 from zava_forward.api.resident_demo.aoai import (
@@ -199,6 +205,29 @@ class AzureAdvisorTests(unittest.TestCase):
         self.assertIn(
             "Summary by rules", self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1")).label
         )
+
+    def test_missing_expiry_setting_is_named_not_reported_as_ended(self) -> None:
+        self.advisor.clock = lambda: EXPIRES + 86400
+        self.transport.return_value = reply()
+        for env in ({}, {"ZF_DEMO_EXPIRES_AT": "tomorrow"}):
+            with patch.dict("os.environ", env, clear=True):
+                for result in (
+                    self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1")),
+                    self.advisor.answer_question(
+                        "When?",
+                        CASE,
+                        resident_key("C-1"),
+                        advise(Topic.STATUS, CASE, FakeProvider()),
+                    ),
+                ):
+                    self.assertIn("end date is not set or is invalid", result.label)
+                    self.assertNotIn("has ended", result.label)
+        with patch.dict("os.environ", {"ZF_DEMO_EXPIRES_AT": "2020-01-01T00:00:00Z"}, clear=True):
+            self.assertIn(
+                "the AI exercise has ended",
+                self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1")).label,
+            )
+        self.transport.assert_not_called()
 
     def test_expiry_before_reservation_and_during_credentials_and_response(self) -> None:
         for times, calls in (

@@ -179,7 +179,8 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     except (StreamError, SystemExit) as error:
         print(f"Cannot run: {error}", file=sys.stderr)
         return 2
-    except Exception:  # noqa: BLE001 - fixed code only, never a traceback or connection detail
+    except Exception as error:  # noqa: BLE001 - class name and fixed code only, never a message
+        print(f"error_type={type(error).__name__}", file=sys.stderr, flush=True)
         print("Cannot run: RECEIVER_FAILED", file=sys.stderr)
         return 4
     print(f"receipts={count}")

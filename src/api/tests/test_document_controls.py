@@ -458,6 +458,16 @@ class RetentionTests(Base):
         with self.assertRaises(ValueError):
             st.place_legal_hold(PAM, "ZF-1", "Resident Pat Test, 1 Test Road")
 
+    def test_unreadable_trigger_date_is_listed_for_review_not_a_failure(self):
+        st = self.make()
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
+        st.cases["ZF-1"]["retention_trigger"] = "not-a-date"
+        before = len(st.cases["ZF-1"]["documents"])
+        rows = st.retention_due(PAM, AS_OF)["records"]
+        self.assertEqual([(r["case_id"], r["doc_id"], r["status"], r["due"]) for r in rows],
+                         [("ZF-1", doc["id"], "needs review: trigger date unreadable", None)])
+        self.assertEqual(len(st.cases["ZF-1"]["documents"]), before)
+
 
 class SqlRetentionTests(RetentionTests):
     sql = True

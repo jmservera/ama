@@ -488,6 +488,7 @@ The [ninth run](./research/issue-220-live-r9-live-success-2026-11-22.md) shows t
 The [tenth run](./research/issue-220-live-r10-revision-0054-2026-11-22.md) repeats the probe unchanged on revision 0000054 and gets the same results.
 The [eleventh run](./research/issue-220-live-r11-revision-0054-2026-11-23.md) repeats it on 2026-11-23 on revisions 0000054 and 0000026 with the same results and a per-criterion table.
 The [twelfth run](./research/issue-220-live-r12-key-normalisation-2026-11-23.md) fixes a key-variant bypass in the non-retaliation guard, with a regression test.
+The [thirteenth run](./research/issue-220-live-r13-key-variants-live-2026-11-23.md) shows the live API on revision 0000058 already rejects those key variants through its permitted-field list.
 
 The [epic 218 selection note](./research/issue-218-first-unmet-demo-criterion-2026-11-19.md) adds an offline regression test for the signed-in staff principal and a per-criterion table for the epic.
 For #130, the [live nomination route evidence](./research/issue-130-live-nomination-route-evidence-2026-11-18.md)
@@ -736,6 +737,8 @@ The [issue 2245 chat note](./research/issue-2245-live-2026-11-23.md) finds the l
 
 The [issue 2245 recheck](./research/issue-2245-recheck-2026-11-23.md) reproduces the thread creation 500 live on revision 0000055 under a busy SQL write lock, with the fix not yet deployed and the AI suspension unchanged, plus a per-criterion table.
 
+The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.
+
 The [issue 2245 SQL store override note](./research/issue-2245-override-sqlstore-2026-11-23.md) records that the owner-directed AI suspension override did not reach the SQL store, the local fix, and a live probe on revision 0000057 with a per-criterion table.
 
 The [issue 2244 live re-verification](./research/issue-2244-live-r54-2026-11-22.md) records revision 0000054 healthy for 33 min with the start-up lock retry present, zero restarts and a clean second-replica start; the held-lock test stays unproven.
@@ -765,6 +768,7 @@ The [thread creation 500 note](./research/issue-2245-thread500-2026-11-22.md) re
 
 The [final live proof](./research/issue-2202-finalproof-2026-11-22.md) records a desktop check of API revision 0000053 and resident revision 0000025 (10 employee chat asks in 3.1 to 5.4 s, map, xlsx check-a-spreadsheet, resident chart, safety count, handoff waiting view, AI hold label) with a per-criterion table for issue 2202.
 
+The [2026-11-23 coverage note](./research/issue-2202-live-2026-11-23.md) measures homes with readings across the whole map (261 of 443) with `tools/demo_readings_coverage.py` and rechecks the resident consent checkbox on revision 0000028.
 The [deployed hardening check](./research/issue-2202-live2-2026-11-23.md) proves `ZF_CONTAINER_HARDENING=enforced` on the API, resident, agents apps and both live jobs, and adds the check to `tools/demo_preflight.py`.
 
 The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads API revision 0000054 and resident revision 0000026 and records the two owner gates for generative AI answers: the open suspension (scope all, 2026-11-18) and the resident ledger budget expiry.
@@ -782,6 +786,8 @@ The [issue 2244 live re-verification, run 2](./research/issue-2244-live-r2-2026-
 The [issue 2243 live re-verification, run 2](./research/issue-2243-live-r2-2026-11-23.md) repeats the probe about 1.5 hours later on the same revisions with the same `usage_limit` result and 70 passing targeted tests; only the owner-gated ledger criterion remains.
 
 The [issue 2243 unverified AI reply diagnosis](./research/issue-2243-live-r3-2026-11-23.md) traces the generic label to the resident-mini deployment limit of 1 request a minute (HTTP 429) and adds named fallback reasons with a test.
+
+The [issue 2243 missing expiry setting note](./research/issue-2243-live-r4-2026-11-23.md) names an unset or invalid `ZF_DEMO_EXPIRES_AT` instead of reporting that the AI exercise has ended, with a regression test.
 
 The [issue 2255 live probe](./research/issue-2255-live-2026-11-22.md) shows that all 22 live safety hazards lack `aware_at` and `response_due_at`, so redeploying main alone would not show a target clock; the gap is seeded data, not src.
 
@@ -1645,6 +1651,7 @@ or infra acceptance claimed.
 | [Five assistants live demo re-verification (#107)](./research/issue-107-live-r2-assistants-evidence-2026-11-18.md) | Second pass with raw output: 7 MSSQL 2022 race and revocation tests, 80 SQLite proxy tests, read-only live probe showing default-off and no tokens; approved-release and delivered-build criterion still unproven |
 | [Five assistants live demo re-verification, third pass (#107)](./research/issue-107-live-r3-assistants-evidence-2026-11-18.md) | ACR is private so no older image can be pulled; same-image restart (revision 0000032) kept denial and the SUS-1 suspension with zero tokens; SUS-1 origin traced; both criteria stay unticked. Docs only. |
 | [Five assistants live demo re-verification, fifth pass (#107)](./research/issue-107-live-r5-assistants-evidence-2026-11-23.md) | Regression tests: old image cannot reactivate a suspended release; expired release stays denied after restart; actual SQL Server run |
+| [Five assistants live demo re-verification, ninth pass (#107)](./research/issue-107-live-r9-criteria-2026-11-23.md) | Live revision 0000058 observation and test rerun; one criterion proven, one unproven for the demo |
 | [Five assistants live demo re-verification, fourth pass (#107)](./research/issue-107-live-r4-assistants-evidence-2026-11-23.md) | Actual SQL Server 2022 run of the release, restart and old-image tests: 95 OK, 0 skipped; live revision 0000055 read-only; approved-release criterion stays unproven |
 | [Five assistants first unmet criterion, actual SQL coverage (#107)](./research/issue-107-live-r4-criteria-2026-11-19.md) | Mismatch and allowance race tests now run on actual SQL Server; composite old-image-after-mismatch test added; second criterion unproven. |
 | [Five assistants sixth pass, per-criterion table (#107)](./research/issue-107-live-r6-criteria-2026-11-19.md) | Fresh targeted run (95 tests OK on SQLite); criterion 1 proven for the demo, criterion 2 needs a human release record. |
@@ -1690,6 +1697,7 @@ or infra acceptance claimed.
 | [Issue 2303 live rerun (#2303)](./research/issue-2303-live-2026-11-23/README.md) | Live 500 on revision 0000057, per-criterion table |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2257 SQLSTATE in the map overlay warning (#2257)](./research/issue-2257-live-r5-2026-11-23.md) | Overlay warning records the driver SQLSTATE for non-lock failures; per-criterion table |
+| [Issue 2257 map redraw after a gateway failure (#2257)](./research/issue-2257-live-r6-2026-11-23.md) | A gateway page after the read retries gets the map's one automatic redraw; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
 | [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
@@ -2300,6 +2308,7 @@ Further 2026-11-21 evidence: [issue 2190 gate flakes](./research/issue-2190-live
 Further 2026-11-22 evidence: [issue 2190 re-verification](./research/issue-2190-live-20261122-note.md), the three gate flake fixes re-run on current main with a per-criterion verdict, evidence only.
 Re-verification r2: [issue 2190 merged flake fixes](./research/issue-2190-live-20261123T071426Z-note.md). Further 2026-11-23 evidence: [issue 2190 regression tests](./research/issue-2190-live-20261123-note.md), a behavioural slow-server test, a deterministic settle wait for the chat check and a stricter `_region_passed`, with a per-criterion verdict.
 Browser regression test: [issue 2190 late_success browser test](./research/issue-2190-live-20261123T080144Z-browser-test-note.md), a real-browser reproduction of the gap before the list status.
+Glued header: [issue 2190 log text before the next test header](./research/issue-2190-live-20261123T202218Z-glued-header-note.md), a parser fix with a regression test.
 
 A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
 
@@ -2309,4 +2318,8 @@ The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3
 
 The [issue 2202 deployment receipt](./research/issue-2202-live-receipt-2026-11-23.md) records live image digests, hardening and revision health from the extended `tools/demo_preflight.py`; the image source commit stays unproven.
 The [issue 2244 StartUp probe note, run 3](./research/issue-2244-live-r3-2026-11-23.md) shows the live API StartUp window (121 s) is shorter than the start-up lock retry budget (211 s), raises the Bicep window to 241 s with a pinning test, and gives the per-criterion table.
+
+The [issue 2244 law store note, run 4](./research/issue-2244-live-r4-2026-11-23.md) shows the law store start-up took the SQL write lock on every boot, adds a read-only schema check with regression tests, and gives the per-criterion table.
 The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.
+
+The [issue 2255 live re-check, run 6](./research/issue-2255-live-r6-2026-11-23.md) repeats the safety queue probe on revision 0000058 (22 of 22 clocks, 0 unknown; read-only) and fixes the demo seeder `revert` so it removes a `noticed` date the seeder invented.

@@ -1,0 +1,2 @@
+/api/assistants/releases 401
+/api/health 401

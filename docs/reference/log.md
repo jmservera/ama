@@ -15166,6 +15166,33 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 
 * Added [issue-2303-live-2026-11-23](research/issue-2303-live-2026-11-23/README.md): read-only Playwright probe shows `GET /api/ai/report` still returns 500 (FileNotFoundError) on the running revision; the head fix and contract test pass; deployment stays owner-gated. No source or estate change.
 
+## [2026-11-23] add | Issue 107 ninth live pass (Refs #107)
+
+* Added [issue-107-live-r9-criteria-2026-11-23.md](research/issue-107-live-r9-criteria-2026-11-23.md): read-only observation of revision 0000058 and a rerun of the release and restart tests (99 OK on SQLite). The approved-release criterion stays unproven (no named approver). No source or estate change.
+## [2026-11-23] add | Issue 2190 glued test header parser fix (Refs #2190)
+
+* Added [issue-2190-live-20261123T202218Z-glued-header-note.md](research/issue-2190-live-20261123T202218Z-glued-header-note.md): a log fragment glued before the next unittest header is now split in `merge_docstring_headers`, with a regression test. No check relaxed.
+## [2026-11-23] add | Issue 220 live key-variant probe (Refs #220)
+
+* Added [issue-220-live-r13-key-variants-live-2026-11-23.md](research/issue-220-live-r13-key-variants-live-2026-11-23.md): the live API on revision 0000058 returns 400 for case, spacing and hyphen variants of forbidden challenge fields and leaves protected hashes unchanged; no source or estate change.
+## [2026-11-23] add | Issue 2202 readings coverage measure (Refs #2202)
+
+* Added [issue-2202-live-2026-11-23.md](research/issue-2202-live-2026-11-23.md), `tools/demo_readings_coverage.py` and its test: tiled live map shows 261 of 443 homes (58.9%) with readings on API 0000058, and the resident consent checkbox works on 0000028. Map gauges, rollback and generative answers stay unproven.
+## [2026-11-23] add | Issue 2243 missing expiry setting named (Refs #2243)
+
+* Added [issue-2243-live-r4-2026-11-23.md](research/issue-2243-live-r4-2026-11-23.md): an unset or invalid `ZF_DEMO_EXPIRES_AT` now shows an `expiry_not_set` reason instead of "the AI exercise has ended"; test added; live setting verified valid.
+## [2026-11-23] add | Issue 2244 law store read-only start-up check (Refs #2244)
+
+* Added [issue-2244-live-r4-2026-11-23.md](research/issue-2244-live-r4-2026-11-23.md): `lawstore.MssqlDb` skips the SQL write lock when its schema is current; regression tests added; not deployed.
+## [2026-11-23] add | Issue 2245 browser gateway error handling (Refs #2245)
+
+* Added [issue-2245-browser-gateway-error-2026-11-23.md](research/issue-2245-browser-gateway-error-2026-11-23.md): a non-JSON ingress failure on a change request now shows the plain generic message instead of a parser error; regression test added. No live change.
+## [2026-11-23] add | Issue 2255 live re-check on revision 0000058, run 6 (Refs #2255)
+
+* Added [issue-2255-live-r6-2026-11-23.md](research/issue-2255-live-r6-2026-11-23.md): read-only Playwright probe shows 22 of 22 hazard clocks with elapsed time and target, 0 unknown. The demo seeder `revert` now removes a `noticed` date it invented, with a regression test.
+## [2026-11-23] add | Issue 2257 map redraw after a gateway failure (Refs #2257)
+
+* Added [issue-2257-live-r6-2026-11-23.md](research/issue-2257-live-r6-2026-11-23.md): a non-JSON gateway failure now gets the map's one automatic redraw, with a regression test; per-criterion table.
 ## [2026-11-23] update | Owner decisions: demo scope, SUS-1, production-only approvals
 
 * Owner decision (Juan Manuel Servera, 2026-11-23): the demo needs no live-Azure human sign-off; AI is the main demo topic. A demo-only AI suspension override (`ZF_DEMO_AI_SUSPENSION_OVERRIDE`, `ZF_ENV` not production) went live in #2326 and #2331.

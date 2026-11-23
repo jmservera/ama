@@ -200,6 +200,9 @@ class MssqlDb:
         # A long SQL writer must delay start-up, not exit the process (issue #2244); LawStore ends this once seeded.
         self.db.startup_retries = LOCK_RETRY_ATTEMPTS - 1
         self.ledger = bool(self.db.execute("SELECT is_ledger_on FROM sys.databases WHERE name = DB_NAME()").fetchone()[0])
+        self.in_tran = False
+        if self._schema_current():
+            return
         self.db.execute("BEGIN IMMEDIATE")
         try:
             for t, ddl in zip(APPEND_ONLY + ("reg_index",), MSSQL_DDL):
@@ -219,6 +222,19 @@ class MssqlDb:
             self.db.execute("ROLLBACK")
             raise
         self.in_tran = False
+
+    def _schema_current(self):
+        """Read-only: every table and append-only guard exists, so start-up needs no write lock (issue #2244).
+
+        A wrong ledger kind is not current; the locked path reports it."""
+        have = {r[0] for r in self.db.execute("SELECT name FROM sys.tables").fetchall()}
+        if not set(APPEND_ONLY + ("reg_index",)) <= have:
+            return False
+        if self.ledger:
+            kinds = {r[0]: r[1] for r in self.db.execute("SELECT name, ledger_type_desc FROM sys.tables").fetchall()}
+            return all(kinds.get(t) == "APPEND_ONLY_LEDGER_TABLE" for t in APPEND_ONLY)
+        triggers = {r[0] for r in self.db.execute("SELECT name FROM sys.triggers").fetchall()}
+        return {f"{t}_append_only" for t in APPEND_ONLY} <= triggers
 
     def end_startup(self):
         self.db.startup_retries = 0

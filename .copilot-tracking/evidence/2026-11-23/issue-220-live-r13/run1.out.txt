@@ -1,0 +1,28 @@
+{
+ "case": "ZF-2025-0331",
+ "n_before": 11,
+ "variants": {
+  "Retaliation_Flag": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: Retaliation_Flag."
+  },
+  " refusal": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted:  refusal."
+  },
+  "hazard-pause": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: hazard-pause."
+  },
+  "HAZARD_PAUSE": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: HAZARD_PAUSE."
+  },
+  "priority penalty": {
+   "status": 400,
+   "err": "Supply only permitted route fields. Server-derived and unpermitted fields are not accepted: priority penalty."
+  }
+ },
+ "n_after": 11,
+ "protected_hashes_equal": true
+}

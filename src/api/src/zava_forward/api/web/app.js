@@ -86,7 +86,7 @@ async function api(path, body, signal) {
       method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
     });
     const data = await res.json().catch(error => {
-      if (key) throw error;
+      if (key && (res.ok || !path.startsWith("/api/chat/"))) throw error;
       return {};
     });
     signal.throwIfAborted();
@@ -96,7 +96,7 @@ async function api(path, body, signal) {
       me = null; login(hadSession ? "Your session has ended. Sign in again." : "");
       const error = new Error("Your session has ended. Sign in again."); error.status = 401; throw error;
     }
-    if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; e.errors = data.errors; throw e; }
+    if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; e.errors = data.errors; e.gateway = body === undefined && !data.error && startupFailure(res); throw e; }
     return data;
   } finally {
     if (key) pendingMutations.delete(key);
@@ -319,6 +319,7 @@ const NETWORK_RETRY_MESSAGE = "The connection dropped. Trying again.";
 // A cold start can answer the first reads with a gateway failure: 500/502/503/504 that is not our JSON error.
 function startupFailure(res) {
   if (![500, 502, 503, 504].includes(res.status)) return false;
+  if (!res.headers) return false;
   return !(res.headers.get("content-type") || "").includes("json");
 }
 
@@ -3360,8 +3361,8 @@ function mapPanel(coordinator = null, filters = null) {
       info.textContent = ownedNotice(`Map unavailable: ${error.message}`, "choose Try the map again, or use the case list, then contact application support if it continues.");
       retryFit = fit;
       retry.hidden = false;
-      // A dropped connection can outlast the read retries while a replica restarts; one later redraw is bounded.
-      if (!error.status && autoRetries < MAP_AUTO_RETRY_DELAYS.length) {
+      // A dropped connection or a gateway page can outlast the read retries while a replica restarts; one later redraw is bounded.
+      if ((!error.status || error.gateway) && autoRetries < MAP_AUTO_RETRY_DELAYS.length) {
         retryTimer = setTimeout(() => draw(retryFit), MAP_AUTO_RETRY_DELAYS[autoRetries++]);
       }
       return;
