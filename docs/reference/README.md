@@ -588,6 +588,8 @@ A [2026-11-22 pass](./research/issue-146-live5-monitoring-2026-11-22.md) adds so
 A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) adds an offline classifier for the live alert inventory (job, poison, ledger digest, IoT) with regression tests; coverage stays partial.
 
 A [2026-11-23 pass](./research/issue-2314-alerts-runbooks-2026-11-23.md) adds a saved search for AI usage by capability and period with unreconciled variance, and a per-criterion result.
+
+A [round 2 note](./research/issue-2314-alerts-runbooks-r2-2026-11-23.md) records a test tying the saved query to the emitted usage line.
 A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) executes the workbook queries live now that workspace query access is open, fixes a failing AI variance query and records what stays unproven.
 
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
@@ -1663,6 +1665,7 @@ or infra acceptance claimed.
 | [Epic 93 criteria re-check at head 9c3fe9dcb (#93)](./research/issue-93-criteria-recheck-live-2026-11-21.md) | Fresh 270-test offline run, signed-in read-only finance probe and issue states; C2 and C3 proven, C1 unproven for owner and review reasons; no source change |
 | [Epic 104 criteria re-check at head 981aa6aaf (#104)](./research/issue-104-criteria-recheck-live-2026-11-21.md) | #164 and #216 now closed; #108 quota headroom still empty; 59 offline tests, read-only Azure deployment check and per-criterion table; C1 and C2 unproven; no source change |
 | [Epic 100 criteria re-check at head c703a24a1 (#100)](./research/issue-100-live-criteria-recheck-2026-11-21.md) | Signed-in read-only probe of the live AI consumption economics card (denominators, Unknown costs) plus 301 focused tests; C2 proven, #440 criterion unproven; no source change |
+| [Nine-epic stabilization checkpoint evidence (#2301)](./research/issue-2301-stabilization-checkpoint-live-2026-11-23.md) | Read-only live demo probe, 34 epic audit tests and 464 focused tests behind the 2026-11-23 evidence-pack checkpoint; epic links, ticks and closures unproven |
 | [Issue 2192 sensor consent checkbox (#2192)](./research/issue-2192-live-2026-11-21.md) | Resident grant and withdraw checkbox, audit row, employee withheld state; proven locally with Playwright, live deploy unproven |
 | [Issue 2192 live proof round 2 (#2192)](./research/issue-2192-live-r2-2026-11-21.md) | Live resident checkbox proof, home key mismatch with the employee view, fix and per-criterion table |
 | [Issue 2192 live proof round 3 (#2192)](./research/issue-2192-live-r3-2026-11-22.md) | Resident image rolled to revision 0000021; employee state follows the resident consent choice live; per-criterion table |
@@ -1673,6 +1676,7 @@ or infra acceptance claimed.
 | [Issue 2257 map retry control and re-probe on revision 0000055 (#2257)](./research/issue-2257-retry-control-2026-11-23.md) | Visible retry button and bounded redraw; 8 of 8 fresh sessions loaded; per-criterion table |
 | [Issue 2302 AI consumption economics in the management view (#2302)](./research/issue-2302-ai-economics-live-2026-11-23.md) | Live Overview card on revision 0000055, focused Unknown-not-zero tests, per-criterion table |
 | [Issue 2303 chat golden file in the API image (#2303)](./research/issue-2303-chat-golden-image-2026-11-23.md) | Local container reproduction and fix, contract test, per-criterion table |
+| [Issue 2303 live rerun (#2303)](./research/issue-2303-live-2026-11-23/README.md) | Live 500 on revision 0000057, per-criterion table |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2257 SQLSTATE in the map overlay warning (#2257)](./research/issue-2257-live-r5-2026-11-23.md) | Overlay warning records the driver SQLSTATE for non-lock failures; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
@@ -1853,6 +1857,7 @@ or infra acceptance claimed.
 | [Issue 1830 Live r6, Preflight Rerun (#1830)](./research/issue-1830-live-r6-2026-11-22.md) | Sixth re-check at head 8bc751023f: preflight reruns, 320px negative control, map check, timing from four new full receipts; no source change |
 | [Issue 1830 Live r7, Original #1297 Defect Replay (#1830)](./research/issue-1830-live-r7-2026-11-22.md) | Replay of the original #1297 320px defect at its parent commit, preflight tests and selectors, map check |
 | [Issue 1830 Live r8, Close-out at 342fad401d (#1830)](./research/issue-1830-live-r8-2026-11-23.md) | No tooling drift since r7; preflight selectors, 56 unit tests and direct map and 320px browser checks re-run; criteria 1, 3 partly and 4 owner-gated, 2 proven for the demo |
+| [Issue 1830 Live r9, Explicit Queue-Wait Reporting (#1830)](./research/issue-1830-live-r9-2026-11-23.md) | Timing report marks an unmeasured queue wait as null and refuses malformed or reversed lock lines; 59 tests OK; criteria 1, 3 partly, 4 owner-gated |
 | [Issue 2188 Live, Gate Speed-up Criteria](./research/issue-2188-live-gate-speed-2026-11-21.md) | Per-criterion evidence: layer cache 80.7 s to 1.3 s on one image, retry not implemented, tamper rejection tests pass |
 | [Issue 2188 Live, Gate Speed-up Criteria Refresh](./research/issue-2188-live-gate-speed-2026-11-22.md) | Supersedes the retry finding: shard retry and receipt retries implemented, image build 70.5 s to 7.2 s, images still serial, gate-level pair unproven |
 | [Issue 2187 Live, Gate Heavy Lock Scope](./research/issue-2187-live-gate-lock-2026-11-23.md) | Heavy lock only for browser, SQL and image groups already merged in #2215; #2286 did not touch it; no remainder; per-criterion table |

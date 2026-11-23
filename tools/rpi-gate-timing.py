@@ -198,10 +198,18 @@ def analyse(receipt: dict[str, Any], log: Path | None, gap: float) -> dict[str, 
         first = lines[0]
         match = re.match(r"Lock queued (\S+); acquired (\S+);", first)
         if match:
-            queued, acquired = (datetime.fromisoformat(v).timestamp() for v in match.groups())
+            try:
+                queued, acquired = (datetime.fromisoformat(v).timestamp() for v in match.groups())
+            except ValueError as error:
+                raise TimingError(EXIT_INPUT, f"Unparseable lock line in {log}: {error}") from error
+            if acquired < queued:
+                raise TimingError(EXIT_INPUT, f"Lock acquired before it was queued in {log}")
             sealed = datetime.fromisoformat(receipt["sealed"]).timestamp()
             result["queue_wait_seconds"] = round(acquired - queued, 3)
             result["lock_to_seal_seconds"] = round(sealed - acquired, 1)
+        else:
+            result["queue_wait_seconds"] = None
+            result["queue_wait_unavailable"] = "first log line is not a 'Lock queued' line"
     return result
 
 
