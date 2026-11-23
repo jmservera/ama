@@ -8,6 +8,7 @@ from pathlib import Path
 from aftercare_fixture import CORE_SRC
 from zava_forward.core import aftercare as af
 from zava_forward.core.aftercare import AftercareRegister
+from zava_forward.core.task_contracts import ContractRefusal
 
 OWNER = "Aftercare Lead"
 
@@ -400,6 +401,13 @@ class TemplateGuardTests(unittest.TestCase):
 
 
 class ConcernPackTests(unittest.TestCase):
+    def test_pack_refused_when_recorded_facts_break_the_data_contract(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg, owner="Aftercare Lead jo.bloggs@example.org")
+        with self.assertRaises(ContractRefusal):
+            reg.propose_pack(cid)
+        self.assertEqual(reg.packs, {})
+
     def test_pack_exists_without_ai_and_is_unreviewed(self) -> None:
         reg = AftercareRegister()
         cid = raised(reg, sensor_context={"signal": "normal"})
