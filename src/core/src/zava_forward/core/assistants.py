@@ -3931,9 +3931,16 @@ class Assistants:
         return self.detail(user, tid)
 
     def _authorize_challenge_staff(self, db, user, case_id):
+        entra = identity.is_entra(user)
+        if entra:
+            verified = identity.verified(user)
+            if verified is None or verified.get("view_only"):
+                raise PermissionError("Current staff role has changed or been revoked.")
         row = db.execute("SELECT body FROM staff WHERE email=?", (user.get("email", "").lower(),)).fetchone()
         current = json.loads(row[0]) if row else None
         if (not current or current.get("role") != user.get("role") or current.get("disabled")
+                or (entra and (current.get("oid") != user.get("oid")
+                               or not identity.row_tenant_ok(self.store, current, user.get("tid"))))
                 or current.get("active") is False
                 or current.get("email", "").lower() != user.get("email", "").lower()):
             raise PermissionError("Current staff role has changed or been revoked.")
