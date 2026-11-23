@@ -15002,7 +15002,38 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2164 deployed code proof (Refs #2164)
 
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
+## [2026-11-23] add | Issue 2313 what-if workflow and PR image build (Refs #2313)
 
+* Added [issue-2313-what-if-live-2026-11-23.md](research/issue-2313-what-if-live-2026-11-23.md): `infra-plan.yml` already covers the what-if criteria; a new credential-free workflow builds a versioned image without deploying.
+## [2026-11-23] add | Issue 2314 alert rules, runbooks and AI usage saved query (Refs #2314)
+
+* Added [issue-2314-alerts-runbooks-2026-11-23.md](research/issue-2314-alerts-runbooks-2026-11-23.md): per-criterion proof; adds a workspace saved search for AI usage by capability and period with unreconciled variance. No Azure change.
+## [2026-11-23] add | Issue 146 workbook query execution (Refs #146)
+
+* Added [issue-146-live6-monitoring-2026-11-23.md](research/issue-146-live6-monitoring-2026-11-23.md): live execution of the workbook queries, one failing query fixed in source, and a per-criterion table. Throwaway storage account created and deleted; no estate change.
+## [2026-11-23] add | Issue 2303 chat golden file in the API image (Refs #2303)
+
+* Added [issue-2303-chat-golden-image-2026-11-23.md](research/issue-2303-chat-golden-image-2026-11-23.md): the image lacked `chat_golden.json`, its variable and the dockerignore allowance; fixed and proven in a local container; deployment proof stays unproven.
+
+## [2026-11-23] add | Issue 2244 StartUp probe vs retry budget (Refs #2244)
+
+* Added [issue-2244-live-r3-2026-11-23.md](research/issue-2244-live-r3-2026-11-23.md): live StartUp window 121 s against a 211 s retry budget; Bicep window raised to 241 s and test-pinned; not deployed.
+
+## [2026-11-23] add | Issue 144 hardening receipt (Refs #144)
+
+* Added [issue-144-live-hardening-receipt-2026-11-23.md](research/issue-144-live-hardening-receipt-2026-11-23.md) and `infra/scripts/deployed_hardening.py` with tests: guard enforced live, PID 1 non-root with NoNewPrivs and empty capability sets; read-only root and pipeline-built images stay unproven. No Azure change.
+
+## [2026-11-23] add | Issue 2188 wall time in the gate receipt (Refs #2188)
+
+* Added [issue-2188-live-wall-time-2026-11-23.md](research/issue-2188-live-wall-time-2026-11-23.md): the gate receipt records `wall_seconds`; the before and after wall-time pair stays unproven because it needs two full gates.
+
+## [2026-11-23] add | Issue 470 r4 re-check and timing table option (Refs #470)
+
+* Added [issue-470-live-r4-2026-11-23.md](research/issue-470-live-r4-2026-11-23.md): 129 gate tests pass for criteria 1, 2, 3 and 5; `tools/rpi-gate-timing.py compare` gained `--markdown`; criterion 4 stays unproven.
+
+## [2026-11-23] add | Issue 1288 thirteenth audit and implausible-reading guard (Refs #1288)
+
+* Added [issue-1288-live-r13-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r13-quality-sensor-evidence-2026-11-23.md): impossible retained readings are now marked in the Quality model snapshot and block the proactive request and autonomous flag; criteria 4 and 8 stay unproven (release record not approved).
 ## [2026-11-23] add | Issue 223 review effort measurement (Refs #223)
 
 * Added [issue-223-live-r8-2026-11-23.md](research/issue-223-live-r8-2026-11-23.md): `review_seconds` is now retained in AI review evidence; per-criterion table, nothing ticked.

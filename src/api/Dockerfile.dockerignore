@@ -6,6 +6,7 @@
 !agents/pyproject.toml
 !agents/src
 !agents/evals/ai_priority_golden.json
+!agents/evals/chat_golden.json
 !orchestrator/pyproject.toml
 !orchestrator/src
 !api/requirements.txt

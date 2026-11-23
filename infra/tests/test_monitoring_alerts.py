@@ -142,6 +142,13 @@ class WorkbookPanelTests(unittest.TestCase):
             if item["name"] in ("ai-usage-by-capability", "ai-limit-breaches"):
                 self.assertTrue(item["content"]["noDataMessage"].startswith("Insufficient"))
 
+    def test_saved_query_shows_usage_by_capability_period_and_variance(self) -> None:
+        source = MODULE.read_text(encoding="utf-8")
+        self.assertIn("workspaces/savedSearches@", source)
+        self.assertIn("by Capability, Period", source)
+        self.assertIn("Unreconciled, not zero", source)
+        self.assertIn("ai-usage-saved-query", _anchors(RUNBOOK.read_text(encoding="utf-8")))
+
 
 if __name__ == "__main__":
     unittest.main()

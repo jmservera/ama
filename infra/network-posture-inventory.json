@@ -450,6 +450,13 @@
       "purpose": "Conditional container-scoped staff-results RBAC grant on existing private Storage Account"
     },
     {
+      "bicepPath": "infra/modules/operationalMonitoring.bicep",
+      "resourceType": "Microsoft.OperationalInsights/workspaces",
+      "coveredBy": "ampls",
+      "coverageKind": "dataStore",
+      "purpose": "Saved AI usage query on the existing AMPLS-scoped Log Analytics Workspace (#2314)"
+    },
+    {
       "bicepPath": "infra/public-edge-existing.bicep",
       "resourceType": "Microsoft.OperationalInsights/workspaces",
       "coveredBy": "ampls",
