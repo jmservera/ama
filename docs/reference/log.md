@@ -15003,6 +15003,9 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 
 * Added [issue-2164-deployed-code-proof-2026-11-23.md](research/issue-2164-deployed-code-proof-2026-11-23.md): the live demo API package contains the assistants roster-scope fix; the sensor draft gate fix is not yet deployed (default-off feature).
 
+## [2026-11-23] add | Issue 1288 thirteenth audit and implausible-reading guard (Refs #1288)
+
+* Added [issue-1288-live-r13-quality-sensor-evidence-2026-11-23.md](research/issue-1288-live-r13-quality-sensor-evidence-2026-11-23.md): impossible retained readings are now marked in the Quality model snapshot and block the proactive request and autonomous flag; criteria 4 and 8 stay unproven (release record not approved).
 ## [2026-11-23] add | Issue 223 review effort measurement (Refs #223)
 
 * Added [issue-223-live-r8-2026-11-23.md](research/issue-223-live-r8-2026-11-23.md): `review_seconds` is now retained in AI review evidence; per-criterion table, nothing ticked.

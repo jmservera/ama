@@ -21,6 +21,7 @@ const proposalReviewStates = new Map();
 
 const FLAG_TITLES = { "review-suggested": "Review suggested by the model (automatic review flag, level L4)", "manual-proposal": "Requested by a person: not an automatic flag",
   "conflicting-readings": "Conflicting retained readings: check manually, not an automatic flag",
+  "implausible-readings": "Impossible retained reading: check manually, not an automatic flag",
   "uncited": "No retained reading cited: not a flag", "rejected": "Rejected by a person: not a flag", "reviewed": "Reviewed by a person: not a flag",
   "not-current": "No longer current: not a flag", "withheld": "Withheld: monitoring consent is not granted now" };
 
@@ -36,6 +37,7 @@ function reviewFlagBlock(f) {
       : f.changed_since_capture ? `The current authorised capture differs from the readings this finding cited: ${(cmp.changed_ids || []).length} changed and ${(cmp.missing_ids || []).length} not in the current bounded capture (they may still be stored). Review the current readings.${extra}`
         : `The current authorised capture still includes the readings this finding cited, with the same values.${extra}`;
     if (f.conflict_notice) kids.push(h("p", { role: "status", "data-flag-conflict": "" }, f.conflict_notice));
+    if (f.implausible_notice) kids.push(h("p", { role: "status", "data-flag-implausible": "" }, f.implausible_notice));
     kids.push(h("p", {}, `Model: ${model}. Raised ${f.source_time || "at an unknown time"} (${f.trigger}). Not approved.`),
       h("p", {}, `${asOf} ${change}`),
       h("p", {}, `Cited IDs: ${(f.cited_ids || []).join(", ") || "none"}. Readings cited: ${(f.readings || []).map((r) => `sensor ${r.sensor_id}, reading ${r.reading_id}`).join("; ") || "none"}.`),
