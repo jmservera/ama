@@ -33,13 +33,26 @@ print(json.dumps({{
 _FOREIGN_FIRST = """
 import json, sys
 import zava_forward.core.store as foreign
+
+def family():
+    return {n: id(m) for n, m in sys.modules.items()
+            if n == "zava_forward" or n.startswith("zava_forward.")}
+
 before = list(sys.path)
+snapshot = family()
 try:
     import test_nomination_route
     outcome = "imported"
 except ImportError as exc:
     outcome = "rejected: " + str(exc)
+try:
+    import test_nomination_route
+    second = "imported"
+except ImportError as exc:
+    second = "rejected: " + str(exc)
 print(json.dumps({
+    "family_unchanged": family() == snapshot,
+    "second_matches_first": second == outcome,
     "outcome": outcome,
     "foreign_kept": sys.modules["zava_forward.core.store"] is foreign,
     "path_unchanged": sys.path == before,
@@ -102,6 +115,8 @@ class NominationBootstrapIdentityTests(unittest.TestCase):
             )
         self.assertTrue(str(result["outcome"]).startswith("rejected: unsupported layout"))
         self.assertTrue(result["foreign_kept"])
+        self.assertTrue(result["family_unchanged"])
+        self.assertTrue(result["second_matches_first"])
         self.assertTrue(result["path_unchanged"])
         self.assertFalse(result["nomination_loaded"])
 
