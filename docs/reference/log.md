@@ -14997,3 +14997,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 1837 CSRF header unit test (Refs #1837)
 
 * Added [issue-1837-csrf-header-test-2026-11-23.md](research/issue-1837-csrf-header-test-2026-11-23.md): a repeatable test that the nomination route write refuses a missing `X-ZF-CSRF` header under the trusted-proxy provider.
+## [2026-11-23] add | Issue 1274 workflow wiring regression (Refs #1274)
+
+* Added [issue-1274-live-evidence-2026-11-23-run5.md](research/issue-1274-live-evidence-2026-11-23-run5.md) and two tests in `tools/test_install_actionlint.py` pinning the Source CI actionlint bootstrap to the verified installer. AWF 0.28.23 and new-head hosted CI stay unproven.
