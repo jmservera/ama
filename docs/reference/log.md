@@ -14951,3 +14951,7 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2257 map retry control (Refs #2257)
 
 * Added [issue-2257-retry-control-2026-11-23.md](research/issue-2257-retry-control-2026-11-23.md): visible map retry button, one bounded redraw and a regression test; 8 of 8 fresh sessions loaded on revision 0000055. Origin of the live ProgrammingError stays unproven.
+
+## [2026-11-23] add | Issue 2243 unverified AI reply diagnosis (Refs #2243)
+
+* Added [issue-2243-live-r3-2026-11-23.md](research/issue-2243-live-r3-2026-11-23.md): the generic label comes from deployment throttling (1 request a minute, HTTP 429); `_fallback` now names throttle and outage and logs the exception class; test added; criteria table.

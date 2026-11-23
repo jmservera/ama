@@ -6,6 +6,7 @@ import logging
 import os
 import re
 import time
+import urllib.error
 import uuid
 from collections.abc import Callable, Mapping
 from dataclasses import replace
@@ -62,19 +63,35 @@ FALLBACK_REASONS = {
     "invalid_answer": "the AI answer or its sources could not be verified",
     "invalid_guidance": "the AI guidance could not be verified",
     "inconsistent_guidance": "the AI guidance did not match your recorded update",
+    "provider_busy": "the AI service is busy, so try again in a minute",
+    "provider_unavailable": "the AI service did not respond",
 }
 
 
-def _fallback(base: Advice, error: Exception) -> Advice:
-    reason = (
-        error.args[0]
-        if isinstance(error, AssistantUnavailable)
+def _reason(error: Exception) -> str:
+    if (
+        isinstance(error, AssistantUnavailable)
         and error.args
         and isinstance(error.args[0], str)
         and error.args[0] in FALLBACK_REASONS
-        else "unavailable"
+    ):
+        return error.args[0]
+    # The deployment is throttled (for example 1 request a minute); that is not a failed check.
+    if isinstance(error, urllib.error.HTTPError) and error.code == 429:
+        return "provider_busy"
+    if isinstance(error, urllib.error.URLError | TimeoutError):
+        return "provider_unavailable"
+    return "unavailable"
+
+
+def _fallback(base: Advice, error: Exception) -> Advice:
+    reason = _reason(error)
+    # Class name only: messages may carry request data.
+    LOG.warning(
+        "resident_assistant outcome=rules_fallback reason=%s error=%s",
+        reason,
+        type(error).__name__,
     )
-    LOG.warning("resident_assistant outcome=rules_fallback reason=%s", reason)
     detail = FALLBACK_REASONS.get(reason, "the AI service could not provide a verified reply")
     return replace(base, label=f"Summary by rules - AI unavailable: {detail}")
 
