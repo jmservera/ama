@@ -15048,3 +15048,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 223 review effort aggregation, run 9 (Refs #223)
 
 * Added [issue-223-live-r9-2026-11-23.md](research/issue-223-live-r9-2026-11-23.md): `live_report()` now reports per-task review effort from retained `review_seconds`; unit-tested, not deployed; no box ticked.
+## [2026-11-23] add | Issue 144 live hardening re-probe (Refs #144)
+
+* Added [issue-144-live-hardening-reprobe-2026-11-23.md](research/issue-144-live-hardening-reprobe-2026-11-23.md) and `infra/scripts/deployed_hardening.py` with tests: live replica shows non-root, `NoNewPrivs` 1 and empty effective capabilities; root file system stays writable; no pipeline run. No estate change.
