@@ -14919,3 +14919,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2256 B2 handoff due-time seed tool (Refs #2256)
 
 * Added [issue-2256-b2-seed-2026-11-23.md](research/issue-2256-b2-seed-2026-11-23.md): a revertible demo seed tool gives timezone-aware offer and due times to pending handoffs; proven locally, not applied to live SQL.
+## [2026-11-23] add | Issue 2257 live re-probe r2 on revision 0000055 (Refs #2257)
+
+* Added [issue-2257-live-r2-2026-11-23.md](research/issue-2257-live-r2-2026-11-23.md): 8 of 8 fresh sessions loaded 443 markers, reset recovery proven, two overlay failures logged while the map still returned 200. Lock cause inferred, not proven. No source or estate change.
