@@ -1,0 +1,29 @@
+{
+ "urlencoded_with_csrf_header": [
+  400,
+  "{\"error\": \"Could not read that.\"}"
+ ],
+ "urlencoded_without_csrf_header": [
+  400,
+  "{\"error\": \"Could not read that.\"}"
+ ],
+ "json_without_csrf_header": [
+  403,
+  "{\"error\": \"Missing request header.\"}"
+ ],
+ "malformed_json_with_header": [
+  400,
+  "{\"error\": \"Could not read that.\"}"
+ ],
+ "unknown_case_with_header": [
+  404,
+  "{\"error\": \"Case not found.\"}"
+ ],
+ "body_case_differs_from_url": [
+  400,
+  "{\"error\": \"Supply every required route field: acknowledgement_ref, next_update, non_digita"
+ ],
+ "case_unchanged_after_probes": true,
+ "routes_page_has_script_tag": true,
+ "script_asset_status": 200
+}
