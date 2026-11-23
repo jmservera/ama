@@ -267,5 +267,72 @@ class LawStoreStartupRetryTests(unittest.TestCase):
         self.assertEqual(ended, [True])
 
 
+class LawDbReadOnlyStartupTests(unittest.TestCase):
+    TABLES = ("reg_source", "reg_version", "reg_provision", "reg_gap", "reg_index")
+
+    def open_db(
+        self, tables: tuple[str, ...], triggers: tuple[str, ...], ledger: int, kind: str
+    ) -> list[str]:
+        lawstore: Any = importlib.import_module("zava_forward.core.lawstore")
+        ran: list[str] = []
+        tbl, trg = tables, triggers
+
+        class Rows:
+            def __init__(self, rows: list[Any]) -> None:
+                self.rows = rows
+
+            def fetchone(self) -> Any:
+                return self.rows[0]
+
+            def fetchall(self) -> list[Any]:
+                return self.rows
+
+        class StubConn:
+            startup_retries = 0
+
+            def __init__(self, *a: Any, **kw: Any) -> None:
+                pass
+
+            def execute(self, sql: str, args: Any = ()) -> Any:
+                ran.append(sql)
+                if "is_ledger_on" in sql:
+                    return Rows([(ledger,)])
+                if "FROM sys.tables" in sql and "ledger_type_desc" in sql:
+                    return Rows([(t, kind) for t in tbl])
+                if "FROM sys.tables" in sql:
+                    return Rows([(t,) for t in tbl])
+                if "FROM sys.triggers" in sql:
+                    return Rows([(t,) for t in trg])
+                return Rows([(kind,)])
+
+        with (
+            patch.object(mssqlstore, "_Conn", StubConn),
+            patch.object(mssqlstore, "connection_string", lambda env: ""),
+        ):
+            try:
+                lawstore.MssqlDb({})
+            except SystemExit:
+                pass
+        return ran
+
+    def took_lock(self, ran: list[str]) -> bool:
+        return "BEGIN IMMEDIATE" in ran
+
+    def test_current_trigger_schema_takes_no_write_lock(self) -> None:
+        guards = tuple(f"{t}_append_only" for t in self.TABLES[:4])
+        self.assertFalse(self.took_lock(self.open_db(self.TABLES, guards, 0, "")))
+
+    def test_current_ledger_schema_takes_no_write_lock(self) -> None:
+        self.assertFalse(
+            self.took_lock(self.open_db(self.TABLES, (), 1, "APPEND_ONLY_LEDGER_TABLE"))
+        )
+
+    def test_missing_table_missing_trigger_or_wrong_ledger_kind_take_the_lock(self) -> None:
+        guards = tuple(f"{t}_append_only" for t in self.TABLES[:4])
+        self.assertTrue(self.took_lock(self.open_db(self.TABLES[:4], guards, 0, "")))
+        self.assertTrue(self.took_lock(self.open_db(self.TABLES, guards[:3], 0, "")))
+        self.assertTrue(self.took_lock(self.open_db(self.TABLES, (), 1, "UPDATABLE_LEDGER_TABLE")))
+
+
 if __name__ == "__main__":
     unittest.main()

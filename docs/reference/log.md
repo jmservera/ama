@@ -15141,3 +15141,6 @@ Added `research/issue-1258-live-r5-2026-11-19.md`: per-criterion record; criteri
 ## [2026-11-23] add | Issue 2243 missing expiry setting named (Refs #2243)
 
 * Added [issue-2243-live-r4-2026-11-23.md](research/issue-2243-live-r4-2026-11-23.md): an unset or invalid `ZF_DEMO_EXPIRES_AT` now shows an `expiry_not_set` reason instead of "the AI exercise has ended"; test added; live setting verified valid.
+## [2026-11-23] add | Issue 2244 law store read-only start-up check (Refs #2244)
+
+* Added [issue-2244-live-r4-2026-11-23.md](research/issue-2244-live-r4-2026-11-23.md): `lawstore.MssqlDb` skips the SQL write lock when its schema is current; regression tests added; not deployed.

@@ -2300,4 +2300,6 @@ The [issue 2243 guard note](./research/issue-2243-guard-2026-11-22.md) records t
 The [issue 2255 live re-check on revision 0000055](./research/issue-2255-live-r3-2026-11-23.md) repeats the safety queue probe on the current API revision (22 of 22 clocks, 0 unknown; read-only); the re-seed criterion stays owner-gated.
 
 The [issue 2244 StartUp probe note, run 3](./research/issue-2244-live-r3-2026-11-23.md) shows the live API StartUp window (121 s) is shorter than the start-up lock retry budget (211 s), raises the Bicep window to 241 s with a pinning test, and gives the per-criterion table.
+
+The [issue 2244 law store note, run 4](./research/issue-2244-live-r4-2026-11-23.md) shows the law store start-up took the SQL write lock on every boot, adds a read-only schema check with regression tests, and gives the per-criterion table.
 The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.
