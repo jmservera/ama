@@ -126,6 +126,15 @@ def reapply_release_changes(db, now, store, actor="system-restore"):
     return done
 
 
+def close_allowance_after_restore(db):
+    """A restore rewinds the SQL-only allowance ledger, so spent calls and reserved tokens would reappear as
+    headroom. Mark every pool exhausted; a new authority inherits the highest consumption, so rotation does not
+    reopen it. An operator must review and re-seed before assistant calls resume (the manual route stays open).
+    Returns the number of pools closed; a second run closes none."""
+    cur = db.execute("UPDATE assistant_allowance SET used_calls=calls, reserved_tokens=tokens WHERE used_calls<calls OR reserved_tokens<tokens")
+    return cur.rowcount
+
+
 def backup(store, dest):
     """Consistent copy of the SQLite database (online backup API)."""
     with store.dblock:

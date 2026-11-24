@@ -749,7 +749,11 @@ The [issue 2245 live recheck on revision 0000059](./research/issue-2245-live-202
 
 The [issue 145 audit 8](./research/issue-145-live-20261124-2026-11-24.md) records read-only Azure SQL backup settings (Local redundancy, 14 days) and fixes a restore defect: suspended and revoked releases are now kept in a register outside the database and reapplied after a restore (SQLite-tested, not run against a live restore).
 
+The [issue 145 audit 9](./research/issue-145-live-20261124T1026Z-2026-11-24.md) repeats the read-only Azure SQL observation and fixes a second restore defect: spent assistant allowance is closed (fail closed) after a restore instead of reappearing as headroom (SQLite-tested; backup redundancy and #121 retention still unproven).
+
 The [issue 2245 end-to-end override test](./research/issue-2245-live-010431-2026-11-24.md) proves on the SqlStore that the override admits one chat model call under an open suspension with the live env shape; the live "Model calls: 1" proof still needs a new revision.
+
+The [issue 2245 revision 0000060 recheck](./research/issue-2245-live-101805-2026-11-24.md) shows thread creation 8/8 live 200, live model calls in the logs, and that the demo chat meter's 20 calls per UTC day cap then holds questions with a misleading "assistant is not available" reply; it adds a cap-exhaustion regression test and a per-criterion table.
 
 The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.
 
