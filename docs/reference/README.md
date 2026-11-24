@@ -26,7 +26,8 @@ uses the completed exploratory study to resolve the
 [24-item publication checklist](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#publication-checklist)
 through reporting corrections, narrower claims and explicit deferrals.
 It adds retained-history, CR1-prerequisite and held-billing tables, a bounded
-historical coordinator recovery and a rebuilt 74-page PDF. The
+historical coordinator recovery, a sanitized GitHub study deposit release, full-text
+citation cleanup and a rebuilt 73-page PDF. The
 [validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#publication-validation-and-delivery)
 records 74 of 75 authoring checks passing, the unresolved diagram-rendering
 failure and pending human publication gates. No new experimental round ran.

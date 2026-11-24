@@ -34,7 +34,7 @@ untouched.
 | 9 | PF3 cost completeness | Tabulate held attempts by all fifteen model/arm cells and retain settled-subset denominators. | 55 charges remain held. All-allocation, quality-matched efficiency and long-horizon payback remain unidentified. |
 | 10 | O1-O5 case evidence | Recover source-located steering, repeated scheduling and adverse assistant reports; preserve participant-observer status and null release/journey pairs. | Complete HIR/IDR annotations, denominators and underlying outcome receipts remain unavailable. Case mechanisms remain hypotheses. |
 | 11 | Historical runtime identifiers | Recover the committed Sonnet worker selector, tmux/RPI prescriptions and later script chronology. | Prescribed selectors do not verify execution. Historical CLI, reviewer and backend identities remain unavailable in the inspected records. |
-| 12 | Consequential citations | Correct the Knight Capital reference in both bibliography forms to the SEC press release supported by the retained primary-page inspection. | Fresh full-page request returned 403; indexed SEC text corroborates title/date/counts/loss. Other source-specific limits remain; no all-reference audit is claimed. |
+| 12 | Consequential citations | Inspect the full SEC Order 34-70694 (Paragraphs 1, 12-17), SEC release 2013-222 and Borg et al. (2026) PDFs supplied by the owner; inspect full text of retained open web articles; remove 14 non-essential citations that had only abstract, excerpt, HTTP 403 or unverified third-party upload access. | Classic print books and papers cited for conceptual background were not re-audited page by page; no independent replication of cited studies' raw data is claimed. |
 | 13 | Metric fidelity and stopping | Keep structural measures as treatment-target proxies and retain the Ruff suppression caveat and unmet lint target. | No new suppression audit or inferred reason for session termination. |
 | 14 | Judging completeness | Keep the frozen 313/315 study frame and four unjudged endpoint packets. | No new judging; its dependence and missing-scenario limits remain. |
 | 15 | Human calibration | Retain the incomplete, AI-assisted author spot-check and context denominators. | Independent reliability is unestablished; a later instrument needs separate calibration. |
@@ -69,14 +69,22 @@ preserved. Qualifications concerning missingness, causal scope and approval
 remain. The installed prose detector was unavailable; no automated style
 score is claimed.
 
-The SEC citation correction is explicit: the former citation identified
-Exchange Act order 34-70694, whose original PDF was unavailable. The
-14 November record documents primary-page support from SEC release
-2013-222. That release now supplies the citation in both bibliography forms.
-A 24 November fresh request returned HTTP 403; indexed official text
-corroborated the title, 16 October 2013 date, four-million/212 order counts
-and loss above USD 460 million. This is bounded source reconciliation,
-with no fresh full-order inspection.
+The citation verification pass on 25 November inspected the owner-supplied full
+texts of SEC Exchange Act Release No. 34-70694 (18 pages, Paragraphs 1 and
+12-17), SEC Press Release 2013-222, and Borg et al.'s *Echoes of AI* (78 pages,
+Abstract and Sections 1, 2.2 and 4), confirming the 2005 Power Peg code move,
+the July 2012 deployment omitted on one of eight SMARS servers, more than four
+million executions from 212 customer orders, the loss exceeding USD 460
+million, and Borg et al.'s late-2024 two-phase design (observational Phase 1,
+randomized Phase 2 with no significant maintainability difference). Ten open
+web/standards references were also inspected in full text, while 14
+non-essential references that had only abstract, brief-excerpt, HTTP 403 or
+third-party caption access (`beamnxw2026memorytalk`, `philia2026ngmoroney`,
+`orosz2025beck`, `martin2026productengineers`, `besker2018cripples`,
+`bird2014extrinsic`, `microsoft2026autosaddler`, `openai2026harness`,
+`laban2025lost`, `beck2025augmented`, `beck2026mathematicians`, `beck2018tcr`,
+`eldridge2016pilot`, and `gamma1995patterns`) were removed from both
+bibliography files.
 
 ### Historical coordinator evidence
 
@@ -113,8 +121,8 @@ no live resumed agent, model call, deployment or new experimental round ran.
 
 ### Publication validation and delivery
 
-The rebuilt [paper](../main.pdf) has 74 pages, with its additive Supplement
-starting on page 46 and the source register on page 72.
+The rebuilt [paper](../main.pdf) has 73 pages, with its additive Supplement
+starting on page 45 and the source register on page 71.
 `publication_readiness_revision` in the
 [integration record](./supplement-integration.json) binds all eight TeX
 sources, the case/publication evidence snapshots, reusable bibliography and
@@ -123,15 +131,14 @@ unchanged. The active Supplement body hashes were refreshed separately.
 
 Checks performed:
 
-* The structural checker passes: approximately 16,814 main-body words,
-  1,802 abstract source characters, 94 cited/embedded entries and 105
+* The structural checker passes: approximately 16,520 main-body words,
+  1,802 abstract source characters, 80 cited/embedded entries and 91
   reusable bibliography entries. The optional `0d5dcb02` historical
   comparison remains unavailable.
 * Two-pass PDFLaTeX with shell escape disabled succeeds. The final compiler
   log contains no warnings, box warnings or unresolved references.
-  All 74 pages contain content, with no words outside page bounds or
-  unresolved-reference markers. Rendered pages 1, 9, 32, 33, 46, 54, 59,
-  60, 61 and 72 were inspected.
+  All 73 pages contain content, with no words outside page bounds or
+  unresolved-reference markers.
 * The complete package authoring suite runs 75 checks: 74 pass. All source,
   literal-prompt, active-Supplement, empirical-chart and committed-diagram
   bindings pass. The added reporting check preserves unknown CR1
@@ -145,9 +152,9 @@ Checks performed:
   and was extracted locally. This exposed the rendering failure. No
   diagram source, committed export, lockfile or exporter was changed.
 * The clean compilation archive contains exactly eight TeX sources,
-  eleven PNGs and three literal prompts (22 files, 7,227,554 uncompressed
+  eleven PNGs and three literal prompts (22 files, 7,219,690 uncompressed
   bytes). It excludes generated PDFs and private/raw histories. An isolated
-  extraction compiles twice to 74 pages; extracted text matches the
+  extraction compiles twice to 73 pages; extracted text matches the
   delivered PDF on every page. The integration record retains its digest.
   Ancillary evidence remains in the repository source package.
 * The original chart-input snapshot, empirical figures and literal prompts

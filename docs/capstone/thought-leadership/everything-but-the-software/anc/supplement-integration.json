@@ -12,7 +12,7 @@
   "historical_inputs_retained_in_git": true,
   "files": {
     "anc/additional-evidence.tex": {
-      "content_sha256": "1311e1fcdde0a0093a0d04a0c7b57a4974927809b4ab2ea301a380b367ae9aa9"
+      "content_sha256": "ae9edac946ad990b634ce20fdf39303dbd3b6fde98b99c1a13228f59fda692db"
     },
     "anc/case-audits.tex": {
       "content_sha256": "b586a879c4205122aa3a6008ffca8eef5f3832c8b03b853cdc952e44614737d2"
@@ -530,11 +530,11 @@
       "anc/measurement-provenance.tex": "e06a3569b423d9a1f36fdc7cadcbd3e8f5c3f296f48b0d0d4d9da0882926d240"
     },
     "source_sha256": {
-      "main.tex": "b66eebe071d21c59b6b9187855ceb0743af96a9d1a08d8b5ef263ff6ac547bad",
-      "anc/background.tex": "8a0666c98126481e7a0e6e9ac1d52d77170bce92d848e2b48aeba93a43a0482b",
-      "anc/experiment-protocol.tex": "2dc6738c5c5f58e699f0ccb50a7617bd9bd2042b800b5904e140945439c2c9ad",
+      "main.tex": "ce33c8552e95a28cb8cfcd266d3833063cf77f7dcf65ced18fcaa99358e34530",
+      "anc/background.tex": "a15bff97007b799ee1165035cfa88a1f299ff1b268eb6bacb13a3dc305c3fce6",
+      "anc/experiment-protocol.tex": "5f02bea0910f9c7b400edd8bd73e523fbc0512beb3eec55d3a9ff5eec7d4b6db",
       "anc/supplement-section.tex": "9e1c515228cd2d6b344c1b12fcf1484a4acb2e523d6461210ee66870c5d1d0f1",
-      "anc/additional-evidence.tex": "33efd0c4c458b2d73fd63e4e2fe488ce429f72ba38a34ec1d1d14c3785946fc0",
+      "anc/additional-evidence.tex": "0f50094ff360282413918ceefe05a42729b817ce3975352805d7d989c152ddcf",
       "anc/case-audits.tex": "29679c1e6ed4f5dbbb3bbf3b059a030fa8beb5c6ef8a9d253a35a2b1bf0fabf0",
       "anc/deferred-measures.tex": "81c02b5eaa6576f4fb0832287bbf28ad46d2ff562104791d6b47cc48fe2616fc",
       "anc/measurement-provenance.tex": "3ff8d82e920579e89b5ebe83cf06e48a0dc805cd509713b3dd3087232a6b9609"
@@ -542,13 +542,13 @@
     "evidence_sha256": {
       "anc/case-evidence-matrix.json": "a4b3a38c56b5b5506139aa704d43485f6de4f00d6bf96a77c5b10b4436608206",
       "anc/publication-evidence-2026-11-24.json": "bd478bcfb65405c46b18e89c52041228eecca2dbdce9a752338a76e8b2f5df83",
-      "references.bib": "7bc6e6cd3b29aec595ef0e6b688286dfbd0bc901d00dbd003654fdba6abad3c5"
+      "references.bib": "cf87525f66666ec0e41fe8a913aa847e4e7d071a42ebdc067a3fd5ecf3bf66ee"
     },
-    "delivery_sha256": "628edaf9d8fdb2bda420a485f6b8d1fd9a088bae9d3bb10e42569932285072cd",
-    "delivery_pages": 74,
-    "supplement_start_page": 46,
-    "source_register_start_page": 72,
-    "pdf_validation": "Two-pass PDFLaTeX with shell escape disabled; actual final log has no warnings, box warnings or unresolved references. All 74 pages have content and in-page words; changed-page samples inspected.",
+    "delivery_sha256": "2c6a26db0cdc541797b29bf4f262b62016156716b8d06f7fff489176d48fdd63",
+    "delivery_pages": 73,
+    "supplement_start_page": 45,
+    "source_register_start_page": 71,
+    "pdf_validation": "Two-pass PDFLaTeX with shell escape disabled; actual final log has no warnings, box warnings or unresolved references. All 73 pages have content and in-page words; changed-page samples inspected.",
     "native_diagram_export_validation": "Actual task-local Chromium 141.0.7390.37 / Playwright build 1194 reaches rendering but rejects five arm feature labels for text overflow on this host. Existing diagram sources and committed exports remain unchanged; their digest checks are separate.",
     "authoring_suite": {
       "run": 75,
@@ -559,13 +559,13 @@
     },
     "arxiv_source_preparation": {
       "filename": "everything-but-the-software-arxiv-source-2026-11-24.zip",
-      "sha256": "50845fe18898775b7161f8a11b1caf00d6f0f17320b4a9cc397a857a5d5e0348",
+      "sha256": "f2678aee886a0c02f1d47061d87568fa4334b181d302c7bb5c00ee0f0054412f",
       "files": 22,
       "tex_sources": 8,
       "png_figures": 11,
       "literal_prompts": 3,
-      "uncompressed_bytes": 7227554,
-      "validation": "Separate extracted tree compiles twice with shell escape disabled to 74 pages; extracted text matches delivered PDF on every page. Archive inputs match current source bytes.",
+      "uncompressed_bytes": 7219690,
+      "validation": "Separate extracted tree compiles twice with shell escape disabled to 73 pages; extracted text matches delivered PDF on every page. Archive inputs match current source bytes.",
       "limit": "Compilation-only preparation archive. Ancillary evidence remains in the repository package. Public-release selection, approval, upload and arXiv-generated-PDF checks remain pending."
     },
     "deposit_release": {
