@@ -475,7 +475,8 @@ class MeasurementProvenanceTests(unittest.TestCase):
             with self.subTest(version=version):
                 self.assertIn(f"protocol-frozen-{version}", manuscript)
         self.assertIn("releases retain separate protocol archives", manuscript)
-        self.assertIn("verify the registered-protocol archive correspondence", manuscript)
+        self.assertIn("results-exploratory-s1-v1", manuscript)
+        self.assertIn("No post-collection OSF deposit was created", manuscript)
         self.assertIn("historical/raw records and any newly published extracts require their own confidentiality review", manuscript)
         self.assertNotIn("azureuser@", manuscript)
         self.assertNotIn("4.165.128.254", manuscript)

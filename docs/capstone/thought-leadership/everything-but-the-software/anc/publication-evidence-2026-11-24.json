@@ -60,6 +60,19 @@
     "gemini-4-argon": {"A": 1, "B": 4, "C": 4, "D": 4, "E": 6},
     "gpt-6.1-sol": {"A": 4, "B": 7, "C": 10, "D": 5, "E": 9}
   },
+  "deposit_release": {
+    "repository": "https://github.com/jmservera/ama-thought-mve",
+    "tag": "results-exploratory-s1-v1",
+    "url": "https://github.com/jmservera/ama-thought-mve/releases/tag/results-exploratory-s1-v1",
+    "target_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+    "archive": "results-exploratory-s1-2026-11-24.tar.gz",
+    "archive_sha256": "9b11143ef7042d4c8f9a2276d14b0a7572223bbe69d4c81d5be41562a17a0f1c",
+    "published_source_zip_sha256": "46b34e839bd4486313b27e278b46e9153917cfe2727ee358added29810e8f49b",
+    "manifest_sha256": "d994cff80ae2b8417d007ffeefcd4bc0a1ad2240b57c38b2cfa3473442d22c3d",
+    "included_files": 216,
+    "excluded_files": 8,
+    "post_collection_osf_deposit_created": false
+  },
   "not_resolved": [
     "Complete amendment/outcome-access chronology and dependence justification",
     "Two CR1 test errors and complete graded CR1 contract decomposition",

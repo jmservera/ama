@@ -1231,20 +1231,20 @@ dataset did not complete the earlier judging snapshot. The Supplement collects
 the outcome, missingness, billing and execution details in one place.
 
 The authors select the experiment GitHub repository as the deposit.
-The source package binds the public exports used for the reporting
-reconciliation to their immutable source and SHA-256 digests
-(Supplement Section~\ref{app:reportingdisposition}). This is an analysis-input
-manifest. Public-release approval and OSF archive correspondence remain
-separate checks. A final release manifest must bind approved files and
-preserve confidentiality.
+The \href{https://github.com/jmservera/ama-thought-mve/releases/tag/results-exploratory-s1-v1}
+{results-exploratory-s1-v1 release} archives the 216 sanitized
+files from source \sourceref{R17} with checksum and manifest sidecars
+(excluding seven administrative tracking files and an endpoint DLP sidecar),
+and Supplement Section~\ref{app:reportingdisposition} binds the public
+analysis exports to their SHA-256 digests. No post-collection OSF deposit
+was created: the existing OSF registrations link to the repository and
+remain pre-collection records, while later amendments are disclosed in Git.
 Raw packets, private specimen-to-trajectory mappings and runtime workspaces
 stay off-Git in the evidence vault, which protects future reviewer blinding.
 The public attempt and provenance exports retain actual arm/model/source
 assignments, failures and unknowns. Changing execution versions and service
 conditions limit homogeneous pooling. Current access and prior exposure
-need their own records. This revision does not change the experiment, registration or repository
-visibility, and no independent replication is claimed.
-% TODO(author): complete the selected experiment GitHub deposit manifest and verify the registered-protocol archive correspondence and released file hashes. Preserve dated v4/v6/v7 archives and disclose later amendments; exclude credentials, confidential identifiers, raw mappings and unapproved internal material.
+need their own records, and no independent replication is claimed.
 
 % ===========================================================================
 \begingroup

@@ -96,11 +96,13 @@ Local compilation does not exercise that service.
 
 Employer clearance (maturing 29 November 2026 if CELA sends no further notice
 under the manager-confirmed 14-day review window, provided the 14 November
-submission covers this 24 November draft), final confirmation that both
-authors' sign-off covers the exact uploaded bytes, and the approved
-public-deposit/registration correspondence remain human actions. The existing
+submission covers this 24 November draft) and final confirmation that both
+authors' sign-off covers the exact uploaded bytes remain human actions. The
+sanitized study deposit is published on `jmservera/ama-thought-mve` as release
+`results-exploratory-s1-v1`, while the pre-collection OSF registrations remain
+linked to that repository without a post-collection OSF deposit. The existing
 AI disclosure records substantial assistance and author responsibility.
-Nothing in this revision authorizes upload or submission.
+Nothing in this revision authorizes arXiv upload or submission.
 
 ## Scientific author-voice revision 24 November
 

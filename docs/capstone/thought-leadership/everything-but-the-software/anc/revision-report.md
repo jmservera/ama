@@ -42,7 +42,7 @@ untouched.
 | 17 | Stale source binding | Add a new publication revision binding and preserve previous source/PDF records. | The final binding applies only to its named files. |
 | 18 | Authoring checks | Narrow the case-voice guard, align wording checks and add a table/snapshot consistency check. 74 of 75 authoring checks pass. | Native diagram rendering rejects five arm feature labels for text overflow on this host. Existing committed figure/source bindings pass; regeneration remains unresolved. |
 | 19 | Source/PDF consistency | Rebuild one PDF with the additive Supplement from the revised source. | Final pagination, digest and actual checks are recorded with delivery. Earlier page counts remain date-scoped. |
-| 20 | Deposit manifest and registration | Bind the four public analysis exports to their immutable source and exact SHA-256 digests. | Approved public-release selection and OSF archive correspondence remain separate author checks. No external repository was mutated. |
+| 20 | Deposit manifest and registration | Publish GitHub release `results-exploratory-s1-v1` at `d097a10b` with a 216-file sanitized archive, SHA-256 sidecar and manifest (excluding `.copilot-tracking/` and `suite.json:sec.endpointdlp`); preserve `v4`/`v6`/`v7` and OSF `ywsrv`/`xcpt4` without creating a post-collection OSF deposit. | OSF registration metadata remains owner-confirmed rather than API-verified (HTTP 401); raw workspaces and private mappings remain off-Git. |
 | 21 | Human clearance and approval | Record manager approval, the 14 November AICC receipt, the owner-reported manager confirmation of a 14-day no-objection window maturing 29 November 2026, and both authors' sign-off (Juan Manuel Servera Bondroit and owner-reported explicit sign-off from Isabel Cabezas Martin). | Written CELA policy was not independently inspected, 29 November 2026 has not yet elapsed, and the authors must confirm the 14 November submission and final sign-off cover this exact 24 November draft, subtitle and recovered excerpts. |
 | 22 | arXiv source and metadata | Add canonical policy links and instructions for the 22 required compilation inputs, metadata, licensing and generated-PDF inspection. | Actual submission, endorsement if required, license choice and arXiv compilation remain pending. |
 | 23 | Completed-research framing | Foreground the executed 315-trajectory study and its measurement contribution; update the subtitle to *An Exploratory Case Study and Experiment* per owner selection. | Confirm coauthor sign-off covers the updated subtitle on the exact submission PDF. |
@@ -145,7 +145,7 @@ Checks performed:
   and was extracted locally. This exposed the rendering failure. No
   diagram source, committed export, lockfile or exporter was changed.
 * The clean compilation archive contains exactly eight TeX sources,
-  eleven PNGs and three literal prompts (22 files, 7,227,733 uncompressed
+  eleven PNGs and three literal prompts (22 files, 7,227,554 uncompressed
   bytes). It excludes generated PDFs and private/raw histories. An isolated
   extraction compiles twice to 74 pages; extracted text matches the
   delivered PDF on every page. The integration record retains its digest.
@@ -154,14 +154,14 @@ Checks performed:
   remain byte-for-byte unchanged. No candidate, evaluator or judge was
   executed for these authoring checks.
 
-Work status: the scoped scientific/prose revision and PDF delivery are
-complete; native diagram regeneration remains unresolved. The remaining
-study gaps are disclosed limits and inputs to a deeper study. Both authors'
-sign-off is owner-reported; before upload, confirm that sign-off and the 14
-November AICC submission cover this exact 24 November draft, updated subtitle
-and newly recovered excerpts, wait through the owner-reported 29 November
-2026 CELA no-objection date, confirm the approved deposit and registration
-correspondence, and complete arXiv metadata, license and generated-PDF
+Work status: the scoped scientific/prose revision, sanitized GitHub deposit
+release (`results-exploratory-s1-v1`) and PDF delivery are complete; native
+diagram regeneration remains unresolved. The remaining study gaps are
+disclosed limits and inputs to a deeper study. Both authors' sign-off is
+owner-reported; before upload, confirm that sign-off and the 14 November AICC
+submission cover this exact 24 November draft, updated subtitle and newly
+recovered excerpts, wait through the owner-reported 29 November 2026 CELA
+no-objection date, and complete arXiv metadata, license and generated-PDF
 inspection. Independent scientific review is recommended; local assisted
 assessment supplies no human peer review or certification.
 Applicable repository exact-head review and hosted checks have not run for
