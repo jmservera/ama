@@ -15331,3 +15331,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 157 retention enforcement (Refs #157)
 
 * Added [issue-157-retention-enforcement-live-2026-11-24.md](research/issue-157-retention-enforcement-live-2026-11-24.md): live probe, `ChatPrivacy.sweep_retention` enforcing the stated period at runtime, memory limit counting live items only, and a per-criterion table; the [storage approval](research/chat-demo-storage-approval-2026-11-01.md) now records the sweep.
+
+## [2026-11-24] add | Issue 116 round 14 held-out provider bounds (Refs #116)
+
+* Added [issue-116-live-r14-evidence-2026-11-24.md](research/issue-116-live-r14-evidence-2026-11-24.md): the held-out provider boundary now applies the shared type and size allowlist before any request; the one unticked box stays unticked.

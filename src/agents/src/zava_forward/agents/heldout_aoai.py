@@ -18,6 +18,8 @@ import urllib.request
 from collections.abc import Callable
 from typing import Any
 
+from zava_forward.core.ai import InputRefused, approved_payload
+
 ENDPOINT = re.compile(r"https://[a-z0-9-]{2,64}\.(openai|cognitiveservices)\.azure\.com/?")
 DEPLOYMENT = re.compile(r"[A-Za-z0-9._-]{1,64}")
 RESOURCE = "https://cognitiveservices.azure.com"
@@ -120,6 +122,10 @@ def make_provider(
     send = opener or urllib.request.build_opener(urllib.request.ProxyHandler({}), _NoRedirect).open
 
     def call(system: str, prompt: str, max_tokens: int, timeout: int) -> dict[str, Any]:
+        try:
+            approved_payload(system, prompt)
+        except InputRefused:
+            return dict(outcome="failed")
         messages = ([dict(role="system", content=system)] if system else []) + [
             dict(role="user", content=prompt)
         ]

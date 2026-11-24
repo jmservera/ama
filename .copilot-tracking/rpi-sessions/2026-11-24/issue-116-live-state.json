@@ -1,18 +1,18 @@
 {
- "task_id": "issue-116-live-20261124T043702Z",
- "task_slug": "issue-116-live",
+ "task_id": "issue-116-live-r14-20261124T053803Z",
+ "task_slug": "issue-116-live-r14",
  "parent_task": null,
  "mode": "automatic",
- "active_phase": "Follow-up",
- "status": "completed",
+ "active_phase": "Review",
+ "status": "active",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-24-issue-116-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-24-issue-116-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-24-issue-116-live-details.md",
-  "critique": ".copilot-tracking/plans/2026-11-24-issue-116-live-plan.md",
-  "changes": ".copilot-tracking/changes/2026-11-24-issue-116-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-24-issue-116-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-24-issue-116-live-r14-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-24-issue-116-live-r14-plan.md",
+  "details": ".copilot-tracking/details/2026-11-24-issue-116-live-r14-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-24-issue-116-live-r14-plan.md",
+  "changes": ".copilot-tracking/changes/2026-11-24-issue-116-live-r14-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-24-issue-116-live-r14-review.md"
  },
  "confirmed_decisions": [
   {
@@ -33,15 +33,8 @@
  ],
  "blockers": [],
  "next_action": {
-  "phase": "Follow-up",
-  "action": "witness review-done and commit"
+  "phase": "Review",
+  "action": "witness implement-done, review-done, commit"
  },
- "prioritized_follow_ups": [
-  {
-   "rank": 1,
-   "task": "Independent review, hosted CI and gate for the unticked box",
-   "rationale": "live payloads unobservable",
-   "evidence": "research r13"
-  }
- ]
+ "prioritized_follow_ups": []
 }
