@@ -214,6 +214,43 @@ class ChatPrivacyBehaviour(_TestCase):
         self.assertEqual(c.locate(U2)["threads"], [])
 
 
+    def _age_thread(self, c: ChatPrivacy, tid: str, owner: dict[str, Any], days: int) -> None:
+        old = (datetime.now(timezone.utc) - timedelta(days=days)).isoformat(timespec="milliseconds")
+        with c.store.chat_repo.txn():
+            c.store.chat_repo.update(tid, cp.user_key(owner), 1, created_at=old)
+            c.store.chat_repo.commit()
+
+    def test_sweep_enforces_the_period_and_is_throttled(self) -> None:
+        c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="30")
+        stale = c.start_thread(U1, "ZF-1", TASK)
+        self._age_thread(c, stale, U1, 31)
+        self.assertEqual(c.sweep_retention()["threads"], 1)
+        self.assertEqual(c.locate(U1)["threads"], [])
+        stale = c.start_thread(U1, "ZF-1", TASK)
+        self._age_thread(c, stale, U1, 31)
+        self.assertIsNone(c.sweep_retention())
+        self.assertEqual(c.locate(U1)["threads"], [stale])
+        self.assertEqual(c.sweep_retention(interval=0)["threads"], 1)
+
+    def test_sweep_keeps_everything_without_a_recorded_period(self) -> None:
+        c = self.cp(**APPROVED)
+        tid = c.start_thread(U1, "ZF-1", TASK)
+        self._age_thread(c, tid, U1, 400)
+        self.assertFalse(c.sweep_retention()["applied"])
+        self.assertEqual(c.locate(U1)["threads"], [tid])
+
+    def test_expired_memory_does_not_count_toward_the_limit(self) -> None:
+        c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="30")
+        c.opt_in(U1, True)
+        ids = [c.add_memory(U1, f"synthetic preference {i}", task=TASK) for i in range(cp.MEMORY_LIMIT)]
+        with self.assertRaises(ValueError):
+            c.add_memory(U1, "one too many", task=TASK)
+        self.store.chat_repo.update_memory(cp.user_key(U1), ids[0], expires_at="2000-01-01T00:00:00.000+00:00")
+        self.assertEqual(len(c.list_memory(U1)), cp.MEMORY_LIMIT - 1)
+        c.add_memory(U1, "fits once one is expired", task=TASK)
+        self.assertEqual(len(c.list_memory(U1)), cp.MEMORY_LIMIT)
+
+
 class MemoryStoreChatPrivacy(ChatPrivacyBehaviour, unittest.TestCase):
     def make_store(self, tmp: str) -> Any:
         data = Path(tmp) / "zavaforward.json"

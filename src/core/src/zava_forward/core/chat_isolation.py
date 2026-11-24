@@ -60,6 +60,7 @@ class ChatIsolation:
 
     def current_user(self, user):
         """Re-read the signed-in user's role from the register; a removed user or unknown role is refused."""
+        self.privacy.sweep_retention()
         key = user_key(user)
         if identity.is_entra(user):
             rec = identity.verified(user)

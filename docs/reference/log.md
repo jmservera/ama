@@ -15328,3 +15328,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 145 release reapply after restore (Refs #145)
 
 * Added [issue-145-live-20261124-2026-11-24.md](research/issue-145-live-20261124-2026-11-24.md): read-only Azure SQL backup settings, `_release_changes` register with `reapply_release_changes` so a restore cannot reactivate a suspended or revoked release, and a per-criterion table.
+## [2026-11-24] add | Issue 157 retention enforcement (Refs #157)
+
+* Added [issue-157-retention-enforcement-live-2026-11-24.md](research/issue-157-retention-enforcement-live-2026-11-24.md): live probe, `ChatPrivacy.sweep_retention` enforcing the stated period at runtime, memory limit counting live items only, and a per-criterion table; the [storage approval](research/chat-demo-storage-approval-2026-11-01.md) now records the sweep.

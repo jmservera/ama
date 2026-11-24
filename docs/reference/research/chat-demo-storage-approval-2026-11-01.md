@@ -78,8 +78,10 @@ items, and no application caller yet schedules the memory purge. Update
 whose creation date is older than the recorded period (age-based, owner
 decision 2026-11-03, replacing the merged idle-based rule, so later activity
 does not extend a thread's life) and expired memory, and does nothing while no
-period is recorded. It is unit-tested only. No scheduler calls it, so a
-scheduled run (infrastructure, needs its own review) remains outstanding.
+period is recorded. Update 2026-11-24: `ChatPrivacy.sweep_retention`, called from
+`ChatIsolation.current_user`, now runs it lazily at most once an hour per API
+process, so the period is enforced while the app serves chat. A scheduled run
+(infrastructure, needs its own review) remains outstanding for an idle app.
 Ledger metadata follows the ledger policy. This
 is a demo period, not a legal retention schedule, and it does not set one for
 real data.
