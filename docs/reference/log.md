@@ -15344,3 +15344,19 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 198 rubric code-scope regression test (Refs #198)
 
 * Added [issue-198-rubric-live-20261123T203956Z-2026-11-23.md](research/issue-198-rubric-live-20261123T203956Z-2026-11-23.md) and a registry test proving solution-code and infrastructure resolve non-empty file sets. Criteria 3 and 4 stay owner-gated.
+
+## [2026-11-24] add | Issue 440 closure-push checkpoint (Refs #440)
+
+* Added [issue-440-closure-push-live-2026-11-24.md](research/issue-440-closure-push-live-2026-11-24.md) and a dated section in the cut-over evidence pack: epics 81, 89, 93 and 109 are ready for owner closure; epic 113 is not (children 115, 116, 117 and 121 open, production box deferred). No `src/` change and no Azure change.
+
+## [2026-11-24] add | Issue 470 live r9 gate timing record (Refs #470)
+
+* Added [issue-470-live-r9-2026-11-24.md](research/issue-470-live-r9-2026-11-24.md): existing before and after full-gate wall times collected from retained receipts; no measurement tool missing; criterion 4 stays partly proven (no controlled pair, no PR).
+
+## [2026-11-24] add | Issue 117 upload scan gate proof (Refs #117)
+
+* Added [issue-117-upload-scan-proof-2026-11-24.md](research/issue-117-upload-scan-proof-2026-11-24.md): the scan-before-availability gate is already on main; tests plus a live Defender for Storage run prove it for the demo. Records one unexplained 500 on a second read of a clean document.
+
+## [2026-11-24] add | Issue 220 no-retaliation closure evidence (Refs #220)
+
+* Added [issue-220-no-retaliation-closure-2026-11-24](research/issue-220-no-retaliation-closure-2026-11-24/README.md): 23 passing tests mapped to the three promises plus a non-mutating live probe; behaviour rests on the tests.

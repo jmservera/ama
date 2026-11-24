@@ -8774,3 +8774,43 @@ Legal review and approvals stay deferred to #1905, DPO approval to #1906 and per
 ### Bugs, refactoring and recommendation
 
 No new functional defect was observed, so no bug or refactor issue is opened by this checkpoint. The `/api/coordinator` 400 without parameters is input validation, not a confirmed defect. Recommendation for every epic: `continue`; keep the epic open until the owner reviews this record, ticks the criteria above and decides closure. The owner-only action of linking this section from each epic is not performed here.
+
+## Closure-push checkpoint for epics 81, 89, 93, 109 and 113 (2026-11-24, Refs #440)
+
+Refs #440. Bounded, demo-scope, desktop-only checkpoint on `origin/main` `7023da86d8520404d663fe912d6c1289b5970f5a` (read 2026-11-24). It supersedes the 2026-11-23 section for Epics #81, #89, #93, #109 and #113, which stays historical. It changes no `src/` file, creates no Azure resource, makes no write call on the demo and ticks or closes nothing. Evidence note: [issue-440-closure-push-live-2026-11-24.md](../reference/research/issue-440-closure-push-live-2026-11-24.md).
+
+### Reconciliation
+
+The [BRD](../brds/agentic-retrofit-programme-brd.md) (0.21.0, `draft`, blob `fe5320f9b5b0958e39dbbb56f3e83c18d4c5c2e5`) and [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) (0.21.0, `in-review`, blob `d1d2c569c51e700940af95e7a82ced4ce4b5e8c5`) are byte-identical to the 2026-11-23 pins, so that section's requirement traceability still holds. Twenty-one commits landed on `main` since its pin `2c06796f5f`; none touches the gate, grant, procurement or sensor-authority modules it traces. Draft and in-review documents are not approved by this record.
+
+### Actual commands and outcomes
+
+| Command or probe | Observed result | Exit |
+| --- | --- | --- |
+| `python3 -m unittest` over `tools/test_epic_81_child_disposition.py`, `test_epic_93_child_disposition.py`, `test_epic_113_child_disposition.py`, `test_epic_child_disposition_audit.py` | 24 tests OK | 0 |
+| `src/core` unittest over gates, safety and consent scenarios 81, quality procurement, grant lifecycle, funding automation boundary, coordinator, sensor non-authority, sensor analysis | 324 tests OK, 26 skipped, 1 expected failure, 159 s (six import errors were my wrong module paths; the tests live in `src/api/tests`) | 0 for the product tests |
+| `src/api` unittest over sensor ingestion, IoT stream, IoT credential hygiene, device dedup, threshold advisory, no public ingestion surface, accessibility baseline, content standard | 99 and 76 tests OK | 0 |
+| `az containerapp revision list` for `ca-cutover-test-demo-api` and `ca-resident-demo` | `--0000059` and `--0000029`, both `Healthy`; `/healthz` 200 on both | 0 |
+| Unauthenticated `curl` of `/api/cases` | 401 | 0 |
+| `az monitor metrics list` for `iot-cutover-test-rzsrg` ingress and `eh-iot-cutover-test-rzsrg` `IncomingMessages` over 24 h | Identical counts, about 12.4k per six hours | 0 |
+| Signed-in Playwright desktop probe (GET only, sign-in values read at runtime and not printed) | Cases, packages (1), work orders (601), funding (167), resident choice queue, progress, stats, checklists and the three case sensor routes return 200; `/api/aftercare` without an id returns 404 (input validation) | 0 |
+
+Not run: `rpi-checks.py`, SQL Server variants, hosted CI, any write path, person-run assistive-technology testing.
+
+### Per-epic closure readiness
+
+| Epic | Checkpoint evidence | Classification | Verdict |
+| --- | --- | --- | --- |
+| #81 | Gate, consent and exercise-scenario suites pass; choice queue 200 | local observed; Azure observed (read) | Ready to close: the other three boxes are ticked and all children are closed |
+| #89 | Procurement and quality suites pass; packages and work orders 200 | local observed; Azure observed (read) | Ready to close: the other box is ticked |
+| #93 | Grant, funding-boundary suites pass; funding 200; no-automation box ticked | local observed; Azure observed (read) | Ready to close: the other two boxes are ticked |
+| #109 | Sensor analysis, non-authority, ingestion and stream suites pass; sensor routes return draft state only; Hub-to-Event Hub counts match | local observed; Azure transport observed | Ready to close: the other two boxes are ticked |
+| #113 | Delivered children checked by the disposition audit | local observed; Azure observed (read) | Not ready. Exact gaps: children #115, #116, #117 and #121 read open on 2026-11-24, so "All child features closed or deferred" needs an owner close or defer decision; "No production claim without measured load, recovery and DPO or Legal approvals" stays unticked because production is deferred |
+
+### Azure-only residuals and deferrals
+
+Authorised live checks were read-only inside resource group `ama` and created nothing, so there is nothing to delete. Production load and recovery measurement, DPO and Legal approval, Azure billing reconciliation and person-run assistive-technology testing are deferred by the owner for the demo (2026-11-18) and remain unverified, not passed. No agent output here states a duty is satisfied.
+
+### Bugs, refactoring and recommendation
+
+No functional defect was observed, so no bug or refactor issue is opened. Recommendation: `continue`. The owner ticks the checkpoint box and closes #81, #89, #93 and #109; for #113 the owner decides close or defer for #115, #116, #117 and #121 first. Ticking and closing are owner actions not performed here.

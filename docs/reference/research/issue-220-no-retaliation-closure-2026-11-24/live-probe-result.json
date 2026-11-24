@@ -1,0 +1,10 @@
+{
+  "me": {
+    "status": 200,
+    "role": null
+  },
+  "challenge_unknown_proposal": {
+    "status": 400,
+    "error": "Supply the integer proposal revision."
+  }
+}

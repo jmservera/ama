@@ -1,0 +1,15 @@
+url https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app
+cases status 200
+keys ['items', 'total', 'limit', 'offset', 'sort', 'policy_version', 'policy_hash', 'as_of', 'ranked_total', 'next_cursor'] 
+n cases 50
+case ZF-2025-0148
+eicar upload 200 {"documents": [{"id": "D1", "name": "EPC certificate.pdf", "kind": "EPC", "at": "2025-07-20", "by": "Helen Marsden", "generated": true}, {"id": "D2", "name": "Retrofit assessment report.pdf", "kind": 
+clean upload 200 {"documents": [{"id": "D1", "name": "EPC certificate.pdf", "kind": "EPC", "at": "2025-07-20", "by": "Helen Marsden", "generated": true}, {"id": "D2", "name": "Retrofit assessment report.pdf", "kind": 
+doc synthetic117-eicar.txt pending defender-for-storage
+doc synthetic117-clean.pdf pending defender-for-storage
+read-before-clean synthetic117-eicar.txt 400 {"error": "That file failed the content check and was removed."}
+read-before-clean synthetic117-clean.pdf 200 {"text": "This file type is stored but not read. Add a short note about what it is.", "source": "template", "model": null, "validated": true, "task": "read_docu
+rescan 0 synthetic117-eicar.txt 404 {"error": "Case not found."}
+rescan 0 synthetic117-clean.pdf 200 {"status": "clean", "scanner": "defender-for-storage", "at": "2026-11-24T07:19:43", "detail": "No threats found"}
+final doc synthetic117-clean.pdf clean
+read-final 500 {"error": "The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues 
