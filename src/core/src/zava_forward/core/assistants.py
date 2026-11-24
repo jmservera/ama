@@ -22,7 +22,7 @@ from typing import Any
 
 from . import assistant_release as rel
 from . import recovery
-from .forecast_reads import ForecastReads
+from .forecast_reads import ForecastReads, ForecastTimeout
 from .ai import may_carry_captured_readings
 from .doc_controls import is_available_case_document
 from .mssqlstore import driver_sqlstate, is_write_lock_busy
@@ -1311,6 +1311,13 @@ class Affected(list):
         self.truncated = self.total > len(self)
 
 
+class _ForecastJob:
+    def __init__(self):
+        self.done = threading.Event()
+        self.result: dict | None = None
+        self.error: BaseException | None = None
+
+
 class Assistants:
     def __init__(
         self,
@@ -1340,6 +1347,9 @@ class Assistants:
             self.limits.active_calls if self.limits.valid else 1
         )
         self.scan_cursor = ""
+        self._forecasts: dict[tuple, tuple[float, dict]] = {}
+        self._forecast_jobs: dict[tuple, "_ForecastJob"] = {}
+        self._forecast_lock = threading.Lock()
         self.incomplete = set()
         self.approvers = {
             x.strip().lower()
@@ -2552,10 +2562,61 @@ class Assistants:
             persisted, window_start=window_start, window_end=window_end, replay=replay
         )
 
-    FORECAST_BUDGET_SECONDS = 10.0
+    FORECAST_BUDGET_SECONDS = 120.0  # cap on the background computation
+    FORECAST_WAIT_SECONDS = 8.0  # longest a request waits, connection time included
+    FORECAST_STALE_SECONDS = 900.0  # oldest last-good answer served when a fresh one is late
 
     def forecast(self, user, period_seconds=86400):
-        """Read-only per-period call forecast for each proactive predicate; enqueues nothing and holds no case content."""
+        """Read-only per-period call forecast for each proactive predicate; enqueues nothing and holds no case content.
+
+        The computation runs in a background job that is not cut off when this request stops waiting. A request waits at
+        most FORECAST_WAIT_SECONDS (connection time included): a quiet system answers with fresh figures; a slow one
+        answers with the last good figures marked `stale_seconds` for up to FORECAST_STALE_SECONDS; with none to show it
+        raises ForecastTimeout, and the job keeps running so the retry is answered from its result."""
+        started = time.monotonic()
+        if not isinstance(period_seconds, int) or not 60 <= period_seconds <= 2592000:
+            raise ValueError("Choose a period between 60 seconds and 30 days.")
+        if not self.sql:
+            raise ValueError(self.disabled())
+        if user.get("role") not in {r for v in REGISTRY.values() for r in v["roles"]}:
+            raise PermissionError("Staff assistance only.")
+        key = (
+            str(user.get("email", "")).lower(),
+            user.get("role"),
+            user.get("oid"),
+            user.get("tid"),
+            period_seconds,
+        )
+        with self._forecast_lock:
+            job = self._forecast_jobs.get(key)
+            if job is None or job.done.is_set():
+                job = self._forecast_jobs[key] = _ForecastJob()
+                threading.Thread(
+                    target=self._forecast_job, args=(key, job, dict(user), period_seconds), daemon=True
+                ).start()
+        remaining = max(0.0, self.FORECAST_WAIT_SECONDS - (time.monotonic() - started))
+        finished = job.done.wait(remaining)
+        if finished and job.error is None:
+            return deepcopy(job.result)
+        if finished and not isinstance(job.error, ForecastTimeout):
+            raise job.error
+        with self._forecast_lock:
+            cached = self._forecasts.get(key)
+        if cached and time.monotonic() - cached[0] <= self.FORECAST_STALE_SECONDS:
+            return {**deepcopy(cached[1]), "stale_seconds": int(time.monotonic() - cached[0])}
+        raise ForecastTimeout("The forecast is still being prepared.")
+
+    def _forecast_job(self, key, job, user, period_seconds):
+        try:
+            job.result = self._forecast_compute(user, period_seconds)
+            with self._forecast_lock:
+                self._forecasts[key] = (time.monotonic(), job.result)
+        except BaseException as exc:
+            job.error = exc
+        finally:
+            job.done.set()
+
+    def _forecast_compute(self, user, period_seconds):
         if not isinstance(period_seconds, int) or not 60 <= period_seconds <= 2592000:
             raise ValueError("Choose a period between 60 seconds and 30 days.")
         if not self.sql:

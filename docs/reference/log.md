@@ -15388,3 +15388,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2237 live re-proof on revision 0000061 (Refs #2237)
 
 * Added [issue-2237-live-reproof-2026-11-24.md](research/issue-2237-live-reproof-2026-11-24.md): retention 200 in 55 of 55 calls, 30 write-lock 503s and no 500 in Log Analytics, per-criterion table. No contradictions.
+## [2026-11-24] add | Issue 2304 forecast revision 0000061 recheck (Refs #2304)
+
+* Added [issue-2304-live-2026-11-24.md](research/issue-2304-live-2026-11-24.md): live forecast 503 after 10 to 17 s, the cause, a background-job and last-good-answer fix with tests, and a per-criterion table (live re-check unproven, not deployed).
+## [2026-11-24] add | Issue 2303 live proof of GET /api/ai/report on revision 0000061 (Refs #2303)
+
+* Added [issue-2303-live-2026-11-24.md](research/issue-2303-live-2026-11-24.md): nine 200s for the report, loaded Asset and board view, per-criterion table, and the 66 to 186 s latency finding.
