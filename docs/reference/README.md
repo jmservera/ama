@@ -2348,3 +2348,5 @@ The [issue 2244 law store note, run 4](./research/issue-2244-live-r4-2026-11-23.
 The [issue 2255 live re-check, run 4](./research/issue-2255-live-r4-2026-11-23.md) repeats the safety queue probe on revision 0000055 (22 of 22 clocks, 0 unknown; read-only) with a per-criterion table; the re-seed criterion stays owner-gated.
 
 The [issue 2255 live re-check, run 6](./research/issue-2255-live-r6-2026-11-23.md) repeats the safety queue probe on revision 0000058 (22 of 22 clocks, 0 unknown; read-only) and fixes the demo seeder `revert` so it removes a `noticed` date the seeder invented.
+
+The [issue 2244 run 6 note](./research/issue-2244-live-r6-2026-11-24.md) shows revision 0000059 still took the write lock at three start-up steps on a populated store, records the fast paths and gives the per-criterion proven and unproven table.

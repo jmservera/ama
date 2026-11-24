@@ -15308,3 +15308,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2245 demo AI override keyed on the demo profile (Refs #2245)
 
 * Added [issue-2245-live-2026-11-24.md](research/issue-2245-live-2026-11-24.md): live probe on revision 0000059 (no thread 500, rules-only answers), root cause in the override's `ZF_ENV` check, fix and per-criterion table.
+
+## [2026-11-24] add | Issue 2244 start-up write-lock fast paths (Refs #2244)
+
+* Added [issue-2244-live-r6-2026-11-24.md](research/issue-2244-live-r6-2026-11-24.md): live read-only check of revision 0000059, seed, queue and recommendation lock skips, and a per-criterion table.

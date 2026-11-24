@@ -1,5 +1,6 @@
 import importlib
 import re
+import sqlite3
 import threading
 import unittest
 from typing import Any
@@ -332,6 +333,41 @@ class LawDbReadOnlyStartupTests(unittest.TestCase):
         self.assertTrue(self.took_lock(self.open_db(self.TABLES[:4], guards, 0, "")))
         self.assertTrue(self.took_lock(self.open_db(self.TABLES, guards[:3], 0, "")))
         self.assertTrue(self.took_lock(self.open_db(self.TABLES, (), 1, "UPDATABLE_LEDGER_TABLE")))
+
+
+class PopulatedStartupLockCountTests(unittest.TestCase):
+    """Issue #2244: a populated store must not take the write lock at every start-up step."""
+
+    def begins(self, seed: str, db: str) -> int:
+        seen: list[str] = []
+        real = sqlite3.connect
+
+        def connect(*a: Any, **k: Any) -> Any:
+            c = real(*a, **k)
+            c.set_trace_callback(
+                lambda s: seen.append(s) if s.startswith("BEGIN IMMEDIATE") else None
+            )
+            return c
+
+        opened: Any = sqlstore.SqlStore
+        with patch.object(sqlite3, "connect", connect):
+            opened(seed, db).db.close()
+        return len(seen)
+
+    def test_reopen_skips_seed_queue_and_recommendation_locks(self) -> None:
+        import json
+        import tempfile
+        from pathlib import Path
+
+        data = importlib.import_module("test_bulk_edits").DATA
+
+        with tempfile.TemporaryDirectory() as tmp:
+            seed = Path(tmp) / "seed.json"
+            seed.write_text(json.dumps(data))
+            first = self.begins(str(seed), str(Path(tmp) / "d.sqlite"))
+            again = self.begins(str(seed), str(Path(tmp) / "d.sqlite"))
+        self.assertLess(again, first)
+        self.assertLessEqual(again, 2)
 
 
 if __name__ == "__main__":

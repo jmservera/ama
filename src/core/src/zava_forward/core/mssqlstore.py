@@ -437,6 +437,10 @@ class MssqlStore(SqlStore):
     def _has_rec_order(self):
         return self.db.execute("SELECT COL_LENGTH(N'recommendations', N'created_ord')").fetchone()[0] is not None
 
+    def _rec_order_indexes_present(self):
+        have = {r[0] for r in self.db.execute("SELECT name FROM sys.indexes WHERE name IS NOT NULL").fetchall()}
+        return {"ix_recs_created_ord", "ix_recs_user_ord"} <= have
+
     def _create_rec_order_index(self):
         self.db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_recs_created_ord' AND object_id = OBJECT_ID(N'recommendations')) "
                         "CREATE INDEX ix_recs_created_ord ON recommendations (created_ord)")
