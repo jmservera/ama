@@ -15312,3 +15312,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2244 start-up write-lock fast paths (Refs #2244)
 
 * Added [issue-2244-live-r6-2026-11-24.md](research/issue-2244-live-r6-2026-11-24.md): live read-only check of revision 0000059, seed, queue and recommendation lock skips, and a per-criterion table.
+## [2026-11-24] add | Issue 2245 chat override end-to-end test (Refs #2245)
+
+* Added [issue-2245-live-010431-2026-11-24.md](research/issue-2245-live-010431-2026-11-24.md): SqlStore test of the demo override with the live env shape, deployment gap on revision 0000059 and per-criterion table.

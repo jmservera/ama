@@ -401,3 +401,25 @@ class ChatDemoMeterOnSqlStore(Base):
         with mock.patch("urllib.request.urlopen", return_value=self.Response()) as opened, call_context(context):
             envelope = store.ai.evidence("system", "q", 600)
         self.assertEqual((envelope["outcome"], envelope["reason"], opened.call_count), ("financial-held", "price-unknown", 0))
+
+    def test_owner_override_lets_chat_reach_the_model_despite_an_open_suspension(self):
+        override = dict(self.DEMO_ON, ZF_ENV="production", ZF_DEMO_AI_SUSPENSION_OVERRIDE="owner-directed-2026-11-23")
+        held_env = {k: v for k, v in override.items() if k != "ZF_DEMO_AI_SUSPENSION_OVERRIDE"}
+        for env, calls, held in ((held_env, 0, "ai-suspended"), (override, 1, None)):
+            with self.subTest(override="ZF_DEMO_AI_SUSPENSION_OVERRIDE" in env):
+                store, service, model = self.chat_model(env)
+                if not calls:
+                    # The suspension is persisted, so the second store in this test sees it too.
+                    store.suspend(self.people["Quality Inspector"], dict(SUSPEND, scope="all"), service.affected("all"))
+                with mock.patch.dict(os.environ, env), \
+                        mock.patch("urllib.request.urlopen", return_value=self.Response()) as opened:
+                    self.assertEqual(chat_admission(store), held)
+                    root = reference("question")
+                    context = CallContext(root, root, CHAT_TASK, "retrofit-case", reference(CHAT_TASK), reference("system"))
+                    try:
+                        with call_context(context):
+                            reply = model("system", "Question: status?")
+                        sent = reply.calls
+                    except ModelUnavailable as error:
+                        sent = error.calls
+                self.assertEqual((opened.call_count, sent), (calls, calls))
