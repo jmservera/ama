@@ -1,0 +1,182 @@
+[
+  {
+    "Log": "2026-11-23 21:31:26,552 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T21:31:26.5535111Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 21:31:53,197 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T21:31:53.1984051Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 21:32:22,039 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T21:32:22.039948Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 21:32:50,489 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T21:32:50.4896247Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 21:33:08,769 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T21:33:08.7701453Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 21:33:35,874 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T21:33:35.8752918Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 22:15:52,891 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T22:15:52.8918602Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 22:16:18,917 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T22:16:18.9180821Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 22:16:49,049 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T22:16:49.0496075Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 22:17:17,849 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T22:17:17.8501979Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 22:17:45,043 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T22:17:45.0435517Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 22:18:13,231 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T22:18:13.2320934Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-23 22:19:15,109 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000058",
+    "T": "2026-11-23T22:19:15.1095102Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 00:22:49,924 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T00:22:49.9244643Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 02:11:04,127 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T02:11:04.1274275Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 02:11:19,469 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T02:11:19.470191Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 02:12:52,599 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T02:12:52.599684Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 03:13:41,994 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T03:13:43.2614848Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 03:14:14,751 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T03:14:14.7516081Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 03:15:10,772 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T03:15:10.7729989Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 04:35:31,970 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T04:35:31.9709282Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 06:19:51,590 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T06:19:51.5904648Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 06:20:16,473 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T06:20:16.474015Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 07:25:04,216 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000059",
+    "T": "2026-11-24T07:25:04.2171947Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 08:25:25,398 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000060",
+    "T": "2026-11-24T08:25:25.3993577Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 09:26:00,827 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000060",
+    "T": "2026-11-24T09:26:00.827787Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 09:52:15,999 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000060",
+    "T": "2026-11-24T09:52:15.9996781Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 10:53:39,015 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000060",
+    "T": "2026-11-24T10:53:39.016353Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 10:54:34,177 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000060",
+    "T": "2026-11-24T10:54:34.1772931Z",
+    "TableName": "PrimaryResult"
+  },
+  {
+    "Log": "2026-11-24 10:55:28,959 zava_forward.api.server WARNING http-error GET /api/retention status=503 exc=ProgrammingError cause=sql-write-lock-busy at=exceptions.py:583:raise_exception",
+    "Rev": "ca-cutover-test-demo-api--0000060",
+    "T": "2026-11-24T10:55:28.9594903Z",
+    "TableName": "PrimaryResult"
+  }
+]

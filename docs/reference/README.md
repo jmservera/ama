@@ -1952,6 +1952,7 @@ or infra acceptance claimed.
 | [Issue 223 Review Effort Aggregation, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: live report aggregates measured review time per task, test results, and a per-criterion table; nothing ticked |
 | [Issue 223 Review Effort Totals, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: the AI live report totals measured review seconds per task, test results and a per-criterion table; nothing ticked |
 | [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
+| [Issue 2237 Live Re-proof on 0000061](./research/issue-2237-live-reproof-2026-11-24.md) | Issue 2237: retention 200 in 55 of 55 calls on revision 0000061, the lock timeout answering 503 (30 times, no 500) on 0000058 to 0000060, and a per-criterion table |
 
 
 
@@ -2370,6 +2371,10 @@ The [issue 2255 live re-check, run 6](./research/issue-2255-live-r6-2026-11-23.m
 
 The [issue 2244 run 6 note](./research/issue-2244-live-r6-2026-11-24.md) shows revision 0000059 still took the write lock at three start-up steps on a populated store, records the fast paths and gives the per-criterion proven and unproven table.
 
+The [issue 2244 run 7 note](./research/issue-2244-live-r7-2026-11-24.md) proves read-only that revision 0000061 carries the start-up retry and write-lock fast paths (matching file hashes), started in about 41 s with no restart or lock line and answers `/healthz` 200; the concurrent-writer and lock-holder criteria stay unproven for the demo.
+
 The [issue 220 no-retaliation closure evidence](./research/issue-220-no-retaliation-closure-2026-11-24/README.md) maps the last unticked criterion to 23 passing tests and a non-mutating live route probe on the demo API.
 
 The [issue 2320 note](./research/issue-2320-live-2026-11-24.md) profiles why GET /api/briefing took the SQL write lock three times per request, records the held-briefing cache fix, a pre-fix live baseline and a per-criterion proven and unproven table.
+
+The [issue 2320 revision 0000061 re-check](./research/issue-2320-live-r2-2026-11-24.md) records the live briefing timings after the cache fix, the still-failing forecast endpoint, the chat call-cap hold and a per-criterion proven and unproven table.
