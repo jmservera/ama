@@ -120,7 +120,7 @@ detector was unavailable in the installed plugin/skill locations, so no
 automated prose score is claimed. This is an assisted editorial review,
 not independent scientific review or arXiv readiness certification.
 
-Structural checks pass: the approximate body count is 16,060 words and the
+Structural checks pass: the approximate body count is 16,152 words and the
 abstract has 1,880 source characters, below the 1,920-character limit.
 Of 74 authoring tests, 73 pass. The native figure-export test fails because
 the expected Playwright Chromium headless shell is absent. No figure source
@@ -128,10 +128,10 @@ or asset changed; fresh exporter validation remains unperformed.
 
 Two pdfLaTeX passes produced a separate 70-page PDF without unresolved
 references or box warnings. All pages were checked for blank content and
-out-of-page words; pages 1, 22, 35, 45 and 68 were visually inspected.
+out-of-page words; pages 1, 2, 22, 35, 45 and 68 were visually inspected.
 The Supplement starts on page 45 and the source register on page 68.
 The validation PDF SHA-256 is
-`6cd6798dc812973bfa67322a65d06ec83b664831398c3729a93ce9ba9e4c35bb`.
+`358554c5de5377fee258e44df10574c1393d92c59e2bdf595b2aaf2db8d2cfd1`.
 The repository's existing PDF is unchanged. No new hosted CI or independent
 exact-head review has run for this uncommitted revision.
 
