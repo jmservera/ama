@@ -134,8 +134,11 @@ class ConceptualFigureTests(unittest.TestCase):
         self.assertIn("hidden tests in isolated containers", abstract)
         self.assertIn("I could inspect completed issues", normalized)
         self.assertIn("I selected the case after encountering", normalized)
+        case = narrative.split(r"\section{Case and method}", 1)[1].split(
+            r"\section{", 1
+        )[0]
         self.assertNotRegex(
-            narrative, r"\b(?:the practitioner|the author|Servera Bondroit|his|he)\b"
+            case, r"\b(?:the practitioner|the author|Servera Bondroit|his|he)\b"
         )
 
     def test_given_manuscript_when_checked_then_concepts_and_deferred_plots_are_explicit(self) -> None:

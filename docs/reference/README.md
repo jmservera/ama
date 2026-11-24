@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-21
+ms.date: 2026-11-24
 ms.topic: overview
 ---
 
@@ -20,6 +20,16 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+The paper's [24 November publication revision](../capstone/thought-leadership/everything-but-the-software/README.md#publication-revision-24-november)
+uses the completed exploratory study to resolve the
+[24-item publication checklist](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#publication-checklist)
+through reporting corrections, narrower claims and explicit deferrals.
+It adds retained-history, CR1-prerequisite and held-billing tables, a bounded
+historical coordinator recovery and a rebuilt 74-page PDF. The
+[validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#publication-validation-and-delivery)
+records 74 of 75 authoring checks passing, the unresolved diagram-rendering
+failure and pending human publication gates. No new experimental round ran.
 
 The paper's [24 November scientific author-voice revision](../capstone/thought-leadership/everything-but-the-software/README.md#scientific-author-voice-revision-24-november)
 reviews all 70 active sections against the completed experiment report and

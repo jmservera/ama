@@ -1,7 +1,7 @@
 {
   "schema_version": "1.0",
   "created": "2026-10-27",
-  "updated": "2026-11-01",
+  "updated": "2026-11-24",
   "scope": "Index of O1-O5 source locators reported in the manuscript, not a new independent source audit or execution record.",
   "case_repository": "https://github.com/jmservera/ama",
   "reported_case_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
@@ -11,7 +11,67 @@
   },
   "locator_policy": "Reported file/version/date locators are distinguished from inspected execution evidence. Null identifiers and unverified links must not be interpreted as completed checks.",
   "original_experiment_status": "Planned twelve-trajectory pilot; not started; no experimental results. Historical 27 October statement.",
-  "experiment_status": "Prospective five-arm, three-model v5 candidate, 33 trajectories per arm/model under a stated variance assumption; no collection, new freeze or prospective OSF amendment completed.",
+  "historical_experiment_status_2026_11_01": "Prospective five-arm, three-model v5 candidate, 33 trajectories per arm/model under a stated variance assumption; no collection, new freeze or prospective OSF amendment completed.",
+  "experiment_status": "Completed exploratory five-arm, three-model study: 21 trajectories per model/arm, 315/315 completed; final public results at d097a10b090baefadf995ecd910eb96c324f0234. Registered base is author-confirmed; five-arm execution and recoveries remain unregistered. See study-results-2026-11-15.json; no new experimental round in this publication revision.",
+  "publication_case_disposition_2026_11_24": "O1-O5 remain participant-observer observations with the source-specific limits below. Recovered history corroborates recorded steering and committed launch prescriptions. Missing release/journey correspondence, actual historical runtime identities and null execution locators remain unavailable. The five case mechanisms remain hypotheses; no deployment rerun or independently verified release/journey pair is claimed.",
+  "historical_coordinator_recovery_2026_11_24": {
+    "scope": "Owner-authorized read-only inspection of retained coordinator/backlog SQLite history and directly relevant Git sources. No resumed agent, live tmux inspection, candidate/evaluator/judge execution or deployment. Raw transcripts and operational host details are excluded.",
+    "record_interpretation": "Stored user text supports recorded instructions or reported experience. Assistant summaries support what was reported, not independent verification of the reported execution. A committed launch prescription does not establish worker adherence or backend identity.",
+    "coordinator_session": "b9cc4727-b806-4e0f-a2cf-c5010d92428c",
+    "selection": "turns WHERE session_id='b9cc4727-b806-4e0f-a2cf-c5010d92428c' AND substr(timestamp,1,10) BETWEEN '2026-10-15' AND '2026-10-24'",
+    "retained_rows": 1198,
+    "first_timestamp_UTC": "2026-10-15T08:02:42.168Z",
+    "last_timestamp_UTC": "2026-10-24T12:50:14.228Z",
+    "scheduled_rule": "(user_message or '').startswith('[Scheduled prompt #')",
+    "scheduled_rows": 1066,
+    "distinct_scheduled_strings": 68,
+    "other_rows": 132,
+    "other_rows_adjudicated_as_human": false,
+    "HIR_IDR_computed": false,
+    "rate_limit": "No complete corrective-help/request annotation or attempted-cycle/opportunity denominator. Repeated scheduled records, routine launch instructions, approvals and safety stops cannot be counted indiscriminately as rescue.",
+    "backlog_session": {
+      "id": "7d9b025c-b0a6-4767-8e15-330fd3b0aa40",
+      "date_selection": ["2026-10-14", "2026-10-15"],
+      "retained_rows": 10,
+      "distinct_assistant_responses": 2,
+      "limit": "One response string is empty; retained outcome coverage is sparse."
+    },
+    "instruction_versions": [
+      {
+        "commit": "69f355d269f50eea9d38c05d7b67f27c945c33bc",
+        "path": ".github/agents/ama-backlog-delivery-coordinator.agent.md",
+        "lines": ["137-142", "154-159", "167-173"],
+        "finding": "Prescribes one tmux session/worktree per issue, temporary briefs/logs, the qualified RPI agent and recurrent checks. Source also warns that preloading an agent does not prove loop adherence."
+      },
+      {
+        "commit": "ca4baf75837de57c99718f7423716d5dc0b0e244",
+        "path": ".github/agents/ama-backlog-delivery-coordinator.agent.md",
+        "lines": ["165-174"],
+        "finding": "Prescribes --model claude-sonnet-5.5 for RPI workers, retries/corrections and continuations. Coordinator remains Automatic; independent reviewer selection unchanged. Actual launches, historical CLI version and backend builds unverified."
+      },
+      {
+        "commit": "0696d9446412707d3b972f3278abc99586f7e528",
+        "date": "2026-11-22",
+        "paths": ["tools/coordinator/launch.sh", "tools/coordinator/refill.py", "tools/coordinator/mk-live.sh"],
+        "finding": "First additions visible per path in inspected repository history. These later scripts are excluded as evidence of October execution; earlier unretained scratch scripts remain possible."
+      }
+    ],
+    "selected_steering_records": [
+      {"turns": [8, 11, 15], "date": "2026-10-15", "field": "user_message", "finding": "Requests RPI tracking artifacts, CLI/tmux workers and recurring /every checks."},
+      {"turns": [66], "timestamp_UTC": "2026-10-15T16:05:57.585Z", "field": "user_message", "quote": "build all new in src, but migrate what's needed first", "finding": "Redirects delivery to migration and src layout."},
+      {"turns": [249], "timestamp_UTC": "2026-10-16T19:53:24.888Z", "field": "user_message", "quote": "simple browser-accessible entry point", "finding": "Requests a usable demo entry while retaining private services, behavior and approval boundaries."},
+      {"turns": [400], "timestamp_UTC": "2026-10-18T13:50:24.142Z", "field": "user_message", "finding": "Reports Actions budget pressure and requests local RPI checks. Related commit fa659cfd021100f7c64f8ec73bbff76c03adf234, PR #414, records the gate change; execution was not audited."},
+      {"turns": [530, 548], "date": "2026-10-20", "field": "user_message", "finding": "Selects Sonnet 5.5, requests earlier deployment for product testing and approximately five dependency-independent issues with continued monitoring. Intended speed and concurrency are not measured outcomes."},
+      {"turns": [1048, 1145], "date": "2026-10-23", "field": "user_message", "finding": "Requests functional integration, testing/refactoring checkpoints and assessment against requirements/architecture. Assistant turn 1145 reports incomplete checkpoint work."}
+    ],
+    "adverse_outcome_summaries": [
+      {"turn": 1022, "timestamp_UTC": "2026-10-23T10:17:33.053Z", "field": "assistant_response", "finding": "Reports healthy revision alongside external 403, separate TLS failure and unresolved sign-in/readiness gates. Raw command/browser logs were not recovered."},
+      {"turn": 1145, "timestamp_UTC": "2026-10-23T22:46:44.630Z", "field": "assistant_response", "finding": "Reports unmerged checkpoint work, partial functional validation and an unresolved performance failure. Reported passing repeats did not clear the failed run."},
+      {"turn": 1147, "timestamp_UTC": "2026-10-23T22:50:07.112Z", "field": "user_message", "quote": "provide a running website as soon as possible", "finding": "Still requests a site for human gates and feedback; does not establish that no partial functionality existed."}
+    ],
+    "remaining_gaps": ["Paired release-linked sign-in/journey traces", "Raw historical launch/version and browser/command receipts", "Historical CLI/reviewer/backend identities", "Complete HIR/IDR annotation and denominators"],
+    "experiment_separation": "This VM's inspected thought-MVE checkout is an older kit copy without the final pilot-estimation state at the expected location. Original-case steering does not alter the separate experiment's 315-trajectory attestation, two CR1 unknowns or 55 billing holds."
+  },
   "revision_evidence": {
     "posthoc_static_and_metadata": "revision-metrics-2026-11-01.json",
     "source_access_and_limits": "citation-access-2026-11-01.json",

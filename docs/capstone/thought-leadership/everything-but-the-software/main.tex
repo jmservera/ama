@@ -81,23 +81,22 @@ repair. Each trajectory received ten features and a withheld change request.
 A separate evaluator ran hidden tests in isolated containers after each
 step; post-collection replay checked earlier workflows.
 
-All 315 allocated trajectories finished. Sonnet~5.5 and Gemini~4 Argon averaged
-99.18\%--99.74\% final hidden-test pass rates. One trajectory ended with a
-previously passing contract failing; replay found no witnessed losses in
-626 evaluable packets. Consolidation left no function above cyclomatic
-complexity ten at its 63 final checkpoints.
-Its equal-model-weight coverage gain over longer sessions was 1.19 percentage
-points (95\% bootstrap interval [0.10, 2.22]), below the pre-specified
-ten-point minimum useful gain. GPT~6.1 Sol contributed most of that difference.
-Gemini~4 Argon completed the change request in 16/21 review trajectories
-and 8/21 consolidation trajectories. Consolidation used 1.84--2.25 times
-the settled delivery credits of feature-only work, without consistently
-reducing change-request cost.
+All 315 allocated trajectories finished. Under rollback and protected-test
+rules, one ended with a previously passing contract failing; replay found
+no witnessed losses in 626 evaluable packets. Consolidation left no function
+above cyclomatic complexity ten at its 63 final checkpoints. Its
+equal-model-weight coverage gain over longer sessions was 1.19 percentage
+points (conditional 95\% bootstrap interval [0.10, 2.22]). Realized controls
+left at most 3.04 points of headroom, making the pre-specified ten-point
+target unattainable against them. Consolidation used 1.84--2.25 times the
+delivery credits of feature-only work in fully billed subsets.
 
-The findings are exploratory, with unregistered amendments, two unresolved
+Unregistered amendments, unverified dependence assumptions, two unresolved
 change-request outcomes, 55 billing holds and judging on an earlier
-313-trajectory snapshot. Stable retention coexisted with missing features
-and extension failures; cleanup did not establish easier or cheaper adaptation.
+313-trajectory snapshot limit inference. This completed exploratory study
+provides a basis for a deeper study: acquisition, retention and adaptation
+need separate measures, and structural cleanup did not establish easier
+or cheaper adaptation.
 \end{abstract}
 % Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
@@ -280,8 +279,9 @@ the interruption of usability to competing explanations
 (Sections~\ref{sec:method}--\ref{sec:mechanisms}).
 \item A consolidation procedure and an executed 315-trajectory, five-arm
 exploratory study with post-collection workflow replay and blinded AI
-judging, estimating retained behaviour, future changeability and resource
-cost. Its earlier planning drew on the registered-report example of
+judging. Its findings distinguish acquisition from retention and adaptation,
+expose measurement ceilings and incomplete accounting, and inform a later
+study. Its earlier planning drew on the registered-report example of
 Lulla et~al.~\cite{lulla2026protocol} and HVE Core's Minimum Viable Experiment method
 (Sections~\ref{sec:harness} and~\ref{sec:experiment}).
 \end{enumerate}
@@ -366,7 +366,14 @@ updated the project board and, under owner delegation, merged changes.
 Interactive and CLI model configurations changed during the project;
 recorded selectors and recalled interface labels are distinguished in the
 source package. The delivery record therefore describes a workflow that kept changing.
-% TODO(author): check the remaining historical case CLI/reviewer/build identifiers against retained records when VM evidence becomes available; mark identifiers unavailable if never logged. Current versions and new sessions cannot reconstruct historical identifiers.
+Read-only recovery of the original coordinator history corroborates my
+requests for RPI tracking, tmux workers and recurring checks, followed by
+migration, budget and functional-checkpoint decisions. Later committed
+instructions selected \texttt{claude-sonnet-5.5} for worker launches while
+leaving the coordinator on Automatic. Actual historical CLI versions,
+reviewer models and backend builds remain unavailable in the inspected
+records. The evidence index distinguishes prescribed selectors, stored
+instructions and assistant-reported outcomes.
 
 Early worker sessions implemented directly, prompting me to make
 the full RPI sequence and committed tracking artefacts mandatory. Further
@@ -376,6 +383,10 @@ credentials and unresolved review findings could still block work. At the
 same transition, an accepted architecture decision prioritised migration
 to a new source layout and froze feature work in the MVP. Coordination,
 migration and procedural requirements all changed at once.
+The recovered history also contains repeated scheduled prompts, so a
+message stored in the user field cannot automatically count as a human
+intervention. Supplement Section~\ref{app:deferredmeasures} records the
+selection rule and explains why HIR and IDR remain unestimated.
 
 \subsection{Data and analysis}
 
@@ -849,7 +860,7 @@ a complete all-allocation cost comparison. The resource table in
 Section~\ref{sec:resultsstructural} retains those denominators.
 
 Consolidation did not consistently reduce change-request cost across the
-three models. The settled observations show no short-horizon credit payback,
+three models. The settled observations show no demonstrated short-horizon credit payback,
 although some consolidation trajectories delivered more complete software.
 Those outcomes matter when interpreting the extra spend. The longer-session control
 (D) had 50\% more time and twice A's credit allowance, yet spent a similar
@@ -962,6 +973,9 @@ that motivated the study, but it prevents me from treating that experience
 as evidence that sequential feature work necessarily degrades software.
 A longer, more coupled task could test whether the suspected burden emerges
 under different conditions. Stable retention must remain a possible result.
+The low loss rate also reflects the study's rollback and immutable-test
+policy. A future design must state whether it measures rejected attempts,
+retained failures or both; those are different outcomes.
 
 S1 still changed what needs measuring. Acquiring a feature,
 preserving an established contract and adapting to a new requirement need
@@ -971,6 +985,11 @@ requests, evaluated on isolated branches, could probe adaptation without
 altering the continuing delivery trajectory. More coupled brownfield work
 could show whether implementation burden or loss emerges over longer
 horizons, and it would keep genuine acquisition failures visible.
+Task calibration must also leave room for the planned useful effect:
+the realized D controls averaged 96.96\%, leaving only 3.04 percentage
+points for improvement. The original ten-point target remains unmet;
+it should not be lowered after observing this dataset. A future study needs
+an outcome and target chosen together before collection.
 
 The review-only result makes a component comparison worth testing.
 HVE Core's full research, plan, implement and review workflow may provide
@@ -990,6 +1009,9 @@ would need a separately reviewed and prospectively registered protocol,
 aligned randomisation and uncertainty analysis, and quality-matched costs.
 This paper contributes the exploratory findings and the measurement lessons
 needed to design that study.
+No additional experimental round or judge batch is planned for this paper.
+The remaining unknown outcomes, billing and incomplete calibration stay
+visible in the present record.
 
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
@@ -1032,7 +1054,9 @@ checklist and framework-builder suggestions.
 Across the ten-feature S1 task, previously acquired behaviour was largely
 retained. None of the 126 feature-only or longer-session runs had an open
 regression at the final checkpoint ($P_{10}$); only one trajectory across
-all arms did. Workflow replay found no witnessed losses across 626 evaluable
+all arms did. The endpoint describes retained states after rejected
+increments were reset under protected-test rules. Workflow replay
+found no witnessed losses across 626 evaluable
 packets. The main failures were features that agents never acquired and a
 permission-boundary hole exposed by the
 withheld regional-access extension (CR1). Stable retention can
@@ -1040,8 +1064,11 @@ coexist with incomplete software or software that is unsafe to extend.
 
 Consolidation (B) removed complexity hotspots at all 63 endpoints, but its
 primary coverage advantage over longer feature-only sessions (D) was
-1.19 percentage points (95\% interval [0.10, 2.22]), below the ten-point
-minimum useful threshold. GPT~6.1 Sol supplied most of that gain by
+1.19 percentage points (conditional 95\% interval [0.10, 2.22]), below the
+ten-point minimum useful threshold. Even perfect consolidation endpoints
+could exceed the realized controls by only 3.04 points. The unmet target
+therefore also exposes a ceiling in the task and measurement design.
+GPT~6.1 Sol supplied most of the observed gain by
 completing priority ranking after an earlier test had fixed the permitted
 view methods. Sonnet~5.5 and Gemini~4 Argon showed small B--D gains whose
 intervals spanned zero. Read-only review (C) achieved 16/21 Gemini CR1
@@ -1066,6 +1093,11 @@ These are exploratory findings from one suite and one final change request.
 Owner attestation covers all 315 completed trajectories; unregistered
 amendments, two unadjudicated GPT~6.1 Sol CR1 test errors, 55 billing holds,
 the 313/315 judging snapshot and sixteen execution sources limit inference.
+The reported intervals assume independent trajectories within cells;
+unmeasured service and scheduling dependence prevents a confirmatory
+interpretation. CR1 prerequisite strata and fully billed cost summaries
+describe selected subsets with different delivered functionality. Comparing
+treatments at matched quality would require a separately defined analysis.
 The ten-feature task did not support the expected decay pattern.
 Its acquisition and permission-boundary failures instead show why retention,
 completeness and adaptation require separate measurements. A follow-up can
@@ -1129,13 +1161,12 @@ I supplied the case observations, selected the case and made the analytical
 judgements. I also checked the repository figures and Azure expenditure, and
 I confirmed the Beck paraphrase after reading the essay and watching the talk.
 The supplied automatic critique and this revision's focused source and
-arithmetic checks are assisted evidence assessments, not independent human
-verification. The package records their coverage and the sources I could not access.
+arithmetic checks used AI assistance; independent human verification remains
+outstanding. The package records their coverage and the sources I could not access.
 Metadata checks do not establish claim support, and
 source comparison does not independently validate a source's experiments.
 The human authors remain responsible for the content and final approval.
-Further disclosure must follow the
-submission venue's policy, which I have not assessed.
+Final disclosure and approval must follow the submission venue's policy.
 % TODO(author): resolve consequential source/claim gaps identified in anc/revision-report.md, preserving abstract-only/full-text limits. The author reports reading most cited papers; this is not a recorded claim-by-claim verification or independent validation of their studies.
 % Author permission (15 November 2026): selected v21 case/provenance excerpts authorized subject to required clearance; historical/raw records and any newly published extracts require their own confidentiality review.
 
@@ -1158,8 +1189,10 @@ retains the case evidence index, repository observations and metrics, missing
 execution links, analysis scripts and supplementary participant-observer context.
 These records separate retained source from participant recollection,
 and live issue states can change independently. Full source identifiers and
-file digests appear once in Table~\ref{tab:source-register} at the end of
-the Supplement. A digest identifies retained content. Claim support requires examining
+file digests for the core source records appear in
+Table~\ref{tab:source-register} at the end of the Supplement. The case
+evidence index supplies the recovered session/turn and instruction-version
+locators. A digest identifies retained content. Claim support requires examining
 that content.
 
 The experiment source and sanitized outputs are at
@@ -1198,8 +1231,13 @@ contrasts are in \nolinkurl{results/pilot-estimation-judging/}
 dataset did not complete the earlier judging snapshot. The Supplement collects
 the outcome, missingness, billing and execution details in one place.
 
-The authors select the experiment GitHub repository as the deposit. A final
-manifest must bind approved released files and preserve confidentiality.
+The authors select the experiment GitHub repository as the deposit.
+The source package binds the public exports used for the reporting
+reconciliation to their immutable source and SHA-256 digests
+(Supplement Section~\ref{app:reportingdisposition}). This is an analysis-input
+manifest. Public-release approval and OSF archive correspondence remain
+separate checks. A final release manifest must bind approved files and
+preserve confidentiality.
 Raw packets, private specimen-to-trajectory mappings and runtime workspaces
 stay off-Git in the evidence vault, which protects future reviewer blinding.
 The public attempt and provenance exports retain actual arm/model/source
@@ -1841,10 +1879,11 @@ Debt (TechDebt '22)}, pages 11--20. ACM, 2022.
 
 \bibitem{sec2013knight}
 {U.S. Securities and Exchange Commission}.
-\newblock In the matter of Knight Capital Americas LLC.
-\newblock Order, Exchange Act Release 34-70694, 16 October 2013.
-\newblock \url{https://www.sec.gov/files/litigation/admin/2013/34-70694.pdf}.
-\newblock Order retrieval attempted 1 November 2026; HTTP 403, fresh full text unavailable.
+\newblock SEC charges Knight Capital with violations of market access rule.
+\newblock Press release 2013-222, 16 October 2013.
+\newblock \url{https://www.sec.gov/newsroom/press-releases/2013-222}.
+\newblock Primary-page support recorded 14 November 2026; fresh full-page
+retrieval on 24 November returned HTTP 403. The related order was not inspected.
 
 \bibitem{waseem2025vibe}
 M.~Waseem, A.~Ahmad, K.-K. Kemell, J.~Rasku, S.~Lahti, K.~M\"akel\"a, and
@@ -1909,8 +1948,8 @@ cases.
 Record links such as \sourceref{R17} identify the version used for a claim.
 Git commit IDs identify revisions, tree IDs directory contents and blob IDs
 individual Git objects. SHA-256 digests identify retained file bytes or an
-image. Matching an identifier verifies content identity, not claim support
-or independent validation. Unless another repository is named, records refer to
+image. Matching an identifier verifies content identity. Claim support and
+independent validation require their own evidence. Unless another repository is named, records refer to
 \nolinkurl{jmservera/ama-thought-mve}. Historical and final records remain
 separate even when they concern the same file.
 
