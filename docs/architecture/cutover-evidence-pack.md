@@ -8795,6 +8795,15 @@ The [BRD](../brds/agentic-retrofit-programme-brd.md) (0.21.0, `draft`, blob `fe5
 | `az monitor metrics list` for `iot-cutover-test-rzsrg` ingress and `eh-iot-cutover-test-rzsrg` `IncomingMessages` over 24 h | Identical counts, about 12.4k per six hours | 0 |
 | Signed-in Playwright desktop probe (GET only, sign-in values read at runtime and not printed) | Cases, packages (1), work orders (601), funding (167), resident choice queue, progress, stats, checklists and the three case sensor routes return 200; `/api/aftercare` without an id returns 404 (input validation) | 0 |
 
+Checkpoint extension for Epics #73, #149 and #157 (owner approved 2026-11-24; note: [issue-73-149-157-closure-checkpoint-live-2026-11-24.md](../reference/research/issue-73-149-157-closure-checkpoint-live-2026-11-24.md)):
+
+| Command or probe | Observed result | Exit |
+| --- | --- | --- |
+| `python3 -m unittest` over `tools/test_epic_73_child_disposition.py`, `test_epic_73_requirement_trace.py`, `test_epic_child_disposition_audit.py` | 16 tests OK | 0 |
+| `src/core` unittest over home case, bulk edits, task and SQL queues, import refusals, exception queue, chat threads, memory, privacy, DPIA record, routing, journey and atlas screen trace | 270 tests OK, 7 skipped | 0 |
+| `src/api` unittest over home case, bulk edit, task queue, ranking policy, exception queue UI, chat isolation, panel, consent boundary, home chat, Epic 149 UX contract, evidence and traceability, design traceability, accessibility baseline, content standard, design system | 288 tests OK, 1 skipped | 0 |
+| Signed-in Playwright desktop probe (GET only, sign-in values not printed) | `/api/me`, cases and one case, exceptions, ranking policy, snapshot and publication, retention, chat threads (280 items), data protection, RAI metrics and stats return 200; `ca-cutover-test-demo-api--0000060` and `ca-resident-demo--0000029` `Healthy`; unauthenticated `/api/cases` 401 | 0 |
+
 Not run: `rpi-checks.py`, SQL Server variants, hosted CI, any write path, person-run assistive-technology testing.
 
 ### Per-epic closure readiness
@@ -8806,6 +8815,9 @@ Not run: `rpi-checks.py`, SQL Server variants, hosted CI, any write path, person
 | #93 | Grant, funding-boundary suites pass; funding 200; no-automation box ticked | local observed; Azure observed (read) | Ready to close: the other two boxes are ticked |
 | #109 | Sensor analysis, non-authority, ingestion and stream suites pass; sensor routes return draft state only; Hub-to-Event Hub counts match | local observed; Azure transport observed | Ready to close: the other two boxes are ticked |
 | #113 | Delivered children checked by the disposition audit | local observed; Azure observed (read) | Not ready. Exact gaps: children #115, #116, #117 and #121 read open on 2026-11-24, so "All child features closed or deferred" needs an owner close or defer decision; "No production claim without measured load, recovery and DPO or Legal approvals" stays unticked because production is deferred |
+| #73 | Home case, queue, bulk edit, ranking, import refusal and exception suites pass; trace guard and child audit pass; cases, one case, exceptions and ranking reads 200 | local observed; Azure observed (read) | Ready for owner decision. Unticked: (1) the #440 checkpoint box, an owner action now that this evidence exists; (2) "Each requirement traces to a passing acceptance check or a recorded deferral": 10 of 11 requirements are `Checked` against passing suites, and BG-011 is a recorded deferral (pilot outcome measure no demo test can prove), which the owner must accept as the deferral. The child box is ticked and 6 of 6 children are closed |
+| #149 | UX contract, traceability, accessibility baseline, content standard and design-system suites pass; workbench reads 200 | local observed; Azure observed (read) | Not ready. Unticked: (1) the #440 checkpoint box, an owner action; (2) "Child features are accepted": all 16 children are closed, but acceptance of #152, #155 and #156 rests on person-run usability and assistive-technology evidence that the owner excluded for the demo, and automated axe coverage is not whole-epic WCAG acceptance, so the owner must accept the children as demo-scope or defer |
+| #157 | Chat thread, memory, privacy, DPIA, routing, isolation and consent suites pass; chat threads, retention and data protection reads 200 | local observed; Azure observed (read) | Not ready. Unticked: (1) the #440 checkpoint box, an owner action; (2) "If accepted, child features are accepted": all 7 children are closed, but screen-reader testing, DPO and Legal approval and real-model operation are outside the demo, and the retention sweep fix is not proven on the live revision. Isolation is claimed from local suites only; a 200 on the thread list does not prove it |
 
 ### Azure-only residuals and deferrals
 
