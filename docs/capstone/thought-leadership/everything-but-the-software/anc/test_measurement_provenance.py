@@ -480,9 +480,9 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("historical/raw records and any newly published extracts require their own confidentiality review", manuscript)
         self.assertNotIn("azureuser@", manuscript)
         self.assertNotIn("4.165.128.254", manuscript)
-        self.assertIn("39\\% relative", source_review)
-        self.assertIn("caption says 35\\%", source_review)
-        self.assertIn("institutional-abstract support", source_review)
+        self.assertIn("Exchange Act Release No.~34-70694, Paragraphs~1, 12--17", source_review)
+        self.assertIn("late 2024 with IDE and chat assistants", source_review)
+        self.assertIn("Non-essential citations that had only abstract, excerpt or unverified third-party caption access were removed", source_review)
 
     def test_given_falsifiable_predictions_when_read_then_verdicts_and_future_design_are_explicit(self):
         from check_paper import expand_inputs

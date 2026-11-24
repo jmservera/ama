@@ -1,7 +1,7 @@
 ---
 title: Everything but the Software - source package
 description: Completed exploratory findings, measurement lessons and publication checklist with preserved historical evidence
-ms.date: 2026-11-24
+ms.date: 2026-11-25
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and Experiment.*
@@ -43,7 +43,7 @@ dominate the retained history; its row counts cannot supply intervention
 rates. Actual historical runtime identities and paired release/journey
 observations remain unavailable.
 
-The revised 74-page PDF includes the Supplement from page 46. Two-pass
+The revised 73-page PDF includes the Supplement from page 45. Two-pass
 PDFLaTeX compilation and all-page geometry/reference checks pass. Of 75
 authoring checks, 74 pass; the unchanged native diagram exporter reaches
 rendering but rejects five arm feature labels for text overflow on this
@@ -79,7 +79,7 @@ review correspondence, raw workspaces and private mappings. Preserve those
 records in their existing evidence locations.
 
 A compilation-only archive of these 22 inputs was prepared and compiled
-after extraction into a separate directory. Its 74-page output matches the
+after extraction into a separate directory. Its 73-page output matches the
 delivered PDF's extracted text on every page. The
 [publication binding](./anc/supplement-integration.json) records the archive
 digest and scope. Ancillary evidence stays in this repository package.
@@ -103,6 +103,74 @@ sanitized study deposit is published on `jmservera/ama-thought-mve` as release
 linked to that repository without a post-collection OSF deposit. The existing
 AI disclosure records substantial assistance and author responsibility.
 Nothing in this revision authorizes arXiv upload or submission.
+
+### Local packaging and GitHub Release
+
+Run [anc/package_arxiv.py](./anc/package_arxiv.py) locally with Python 3.11+
+and PDFLaTeX, including the TeX Live packages imported by
+[main.tex](./main.tex). It uses the Python standard library and adds no
+GitHub Action. From the repository root:
+
+```bash
+python3 docs/capstone/thought-leadership/everything-but-the-software/anc/package_arxiv.py \
+  --output /tmp/ama-arxiv-preview-2026-11-25
+```
+
+Choose a new output directory for each run. The script follows literal
+root-relative `\input`, `\include`, `\includegraphics` and `\lstinputlisting`
+references, rejects missing or unsafe paths, and preserves input bytes.
+It writes `everything-but-the-software-arxiv.zip`, the equivalent `.tar.gz`,
+and `SHA256SUMS`. Both archives open directly to `main.tex` and its inputs,
+without an enclosing directory. The script extracts the ZIP and compiles
+it twice with shell escape disabled; compilation failures and unresolved
+references stop packaging.
+
+The local `main.pdf` is a fresh preview, not a submission or release asset.
+The archives exclude existing PDFs, logs, auxiliary files, unused images,
+editable diagrams, reviews, scripts and unrelated ancillary evidence. The
+three prompt text files remain because the article typesets them. The
+bibliography is embedded in the TeX source, so `references.bib` is not needed.
+This tool supports this paper's literal file references, not arbitrary
+TeX macro-generated dependencies or a general bibliography build pipeline.
+
+After both authors approve the exact paper, employer clearance is satisfied
+and the applicable repository publication gates pass, use authenticated
+GitHub CLI (`gh auth login`) and a clean, committed checkout to publish:
+
+```bash
+python3 docs/capstone/thought-leadership/everything-but-the-software/anc/package_arxiv.py \
+  --output "$HOME/arxiv-packages/paper-source-v1" \
+  --publish --tag paper-source-v1
+```
+
+Keep publication output outside the checkout so it does not dirty the
+worktree. `--publish` and `--tag` are required together. The command creates
+a new tag at the exact local HEAD in `jmservera/ama`, whose commit must
+already exist there, and uploads both archives and their checksum file to
+a draft release before publishing it. It does not mark the paper as the
+repository's latest software release. Every packaged input must match its
+committed blob; the script rechecks the revision after compilation. It
+never pushes a branch or overwrites an existing tag or release.
+
+If tag creation or upload fails, the command exits nonzero. Inspect the
+repository's tags and releases before retrying: a new tag or draft can
+remain. Recovery is manual; the script does not delete remote records.
+An interrupted publish request may have completed remotely, so inspect
+the release rather than assuming it is still a draft.
+
+Upload either source archive, not both, through arXiv's submission page.
+Select PDFLaTeX and `main.tex`, then inspect arXiv's generated PDF.
+Packaging and a GitHub Release do not submit the article, grant clearance
+or establish arXiv acceptance. The format guidance above was rechecked on
+25 November 2026 against the official submission and TeX preparation pages.
+
+Run the packaging regressions without network access:
+
+```bash
+python3 -m unittest discover \
+  -s docs/capstone/thought-leadership/everything-but-the-software/anc \
+  -p test_package_arxiv.py -v
+```
 
 ## Scientific author-voice revision 24 November
 
@@ -200,9 +268,9 @@ the owner's direction. The current
 [paper](./main.pdf) and [source](./main.tex) present the completed exploratory
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
-The [Supplement](./main.pdf#page=46) keeps the detailed results, uncertainty,
-calibration and execution record in the same 74-page document.
-The [source and digest register](./main.pdf#page=72) fills the final
+The [Supplement](./main.pdf#page=45) keeps the detailed results, uncertainty,
+calibration and execution record in the same 73-page document.
+The [source and digest register](./main.pdf#page=71) fills the final
 three pages, so full identifiers no longer interrupt the narrative.
 The Supplement is additive. It holds source-specific qualifications, detailed
 method and rival checks, the frozen prompt, deferred rates and provenance.

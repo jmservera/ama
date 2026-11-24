@@ -1,0 +1,45 @@
+{
+  "task_id": "arxiv-release-package",
+  "task_slug": "arxiv-release-package",
+  "session_name": "arXiv release package",
+  "parent_task": null,
+  "child_tasks": [],
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-25/arxiv-release-package-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-25/arxiv-release-package-plan.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-25/arxiv-release-package-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-25/arxiv-release-package-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-25/arxiv-release-package-review.md"
+  },
+  "documents": {
+    "research": [".copilot-tracking/research/2026-11-25/arxiv-release-package-research.md"],
+    "plan": [".copilot-tracking/plans/2026-11-25/arxiv-release-package-plan.md"],
+    "critique": [".copilot-tracking/reviews/plans/2026-11-25/arxiv-release-package-plan-critique.md"],
+    "changes": [".copilot-tracking/changes/2026-11-25/arxiv-release-package-changes.md"],
+    "review": [".copilot-tracking/reviews/logs/2026-11-25/arxiv-release-package-review.md"]
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Automatic session scope",
+      "status": "current",
+      "evidence": "User request 2026-11-25: local arXiv source packaging and GitHub Release script for the attached paper; tests, usage documentation and lifecycle evidence allowed. No action, manuscript edits, arXiv submission or release execution. Owner explicitly requires the original docs/presentation-author-voice branch; switched back without discarding changes."
+    },
+    {"decision": "Automatic progression boundary", "status": "through-review", "evidence": "User selected end-to-end."},
+    {"decision": "Research decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Planning decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Review decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Follow-up decision participation", "status": "agent-owned", "evidence": "End-to-end default."},
+    {"decision": "Subagent use", "status": "none", "evidence": "Bounded task handled directly under repository guidance."},
+    {"decision": "Planning critique", "status": "standard", "evidence": "First-task default; parent-owned critique."},
+    {"decision": "Review step", "status": "run", "evidence": "First-task default."},
+    {"decision": "HVE Builder routing", "status": "satisfied-and-skipped", "evidence": "Loaded at user request. The concrete deliverable is an executable script, not a prompt, instruction, agent or skill. No customization artifacts will be invented; software implementation follows RPI."},
+    {"decision": "Canvas", "status": "current", "evidence": "instance rpi-arxiv-release-package; handle QAXJ; extensionId plugin:hve-core:rpi-workflow"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "No required code work. Owner may run package-only locally; --publish waits for exact-byte author approval, clearance and repository publication gates."},
+  "prioritized_follow_ups": []
+}

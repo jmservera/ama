@@ -15456,3 +15456,15 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
   22-input compilation archive. Of 75 authoring checks, 74 pass; native
   regeneration of unchanged diagrams reports five label overflows. No new
   experiment, judging batch, deployment, push or external submission ran.
+
+## [2026-11-25] update | Deposit release and full-text citation cleanup for Everything but the Software
+
+* Published sanitized study deposit release `results-exploratory-s1-v1` on
+  `jmservera/ama-thought-mve` at `d097a10b` (216 files with SHA-256 manifest,
+  excluding `.copilot-tracking/` and `suite.json:sec.endpointdlp`), updated the
+  paper subtitle to *An Exploratory Case Study and Experiment*, and removed the
+  internal clearance and deposit `TODO` comments from `main.tex`.
+* Verified full texts of SEC Order 34-70694, SEC Press Release 2013-222, Borg
+  et al. (*Echoes of AI*, 2026) and ten open web/standards sources; removed 14
+  non-essential citations with incomplete access from both bibliography files
+  (80 cited entries, 73-page [rebuilt PDF](../capstone/thought-leadership/everything-but-the-software/main.pdf)).
