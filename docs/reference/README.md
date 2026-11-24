@@ -745,6 +745,8 @@ The [issue 2245 chat note](./research/issue-2245-live-2026-11-23.md) finds the l
 
 The [issue 2245 recheck](./research/issue-2245-recheck-2026-11-23.md) reproduces the thread creation 500 live on revision 0000055 under a busy SQL write lock, with the fix not yet deployed and the AI suspension unchanged, plus a per-criterion table.
 
+The [issue 2245 live recheck on revision 0000059](./research/issue-2245-live-2026-11-24.md) shows chat still rules-only live because the owner override is disabled by `ZF_ENV=production`; the source fix keys it on the demo profile, with a per-criterion table.
+
 The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.
 
 The [issue 2245 SQL store override note](./research/issue-2245-override-sqlstore-2026-11-23.md) records that the owner-directed AI suspension override did not reach the SQL store, the local fix, and a live probe on revision 0000057 with a per-criterion table.

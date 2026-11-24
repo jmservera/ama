@@ -11,13 +11,18 @@ from zava_forward.core.sqlstore import SqlStore
 
 
 class DemoOwnerOverrideTests(unittest.TestCase):
-    def test_override_needs_exact_value_and_never_applies_in_production(self) -> None:
+    def test_override_needs_exact_value_and_the_demo_profile(self) -> None:
         name = continuity.DEMO_OWNER_OVERRIDE_ENV
         value = "owner-directed-2026-11-23"
+        demo = {"ZF_DEPLOYMENT_PROFILE": "demo"}
         self.assertFalse(continuity.demo_owner_override({}))
-        self.assertFalse(continuity.demo_owner_override({name: "1"}))
-        self.assertTrue(continuity.demo_owner_override({name: value}))
+        self.assertFalse(continuity.demo_owner_override({name: "1", **demo}))
+        self.assertFalse(continuity.demo_owner_override({name: value}))
         self.assertFalse(continuity.demo_owner_override({name: value, "ZF_ENV": "production"}))
+        # The live demo runs with ZF_ENV=production and the demo profile.
+        self.assertTrue(
+            continuity.demo_owner_override({name: value, "ZF_ENV": "production", **demo})
+        )
 
     def test_sql_store_hold_is_lifted_by_the_override_and_the_record_stays_open(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -42,7 +47,8 @@ class DemoOwnerOverrideTests(unittest.TestCase):
             )
             name, value = continuity.DEMO_OWNER_OVERRIDE_ENV, "owner-directed-2026-11-23"
             self.assertIsNotNone(store.continuity_suspension("chat"))  # type: ignore[no-untyped-call]
-            with patch.dict(os.environ, {name: value}):
+            demo = {name: value, "ZF_DEPLOYMENT_PROFILE": "demo", "ZF_ENV": "production"}
+            with patch.dict(os.environ, demo):
                 self.assertIsNone(store.continuity_suspension("chat"))  # type: ignore[no-untyped-call]
                 self.assertIsNone(store.continuity_block("chat"))  # type: ignore[no-untyped-call]
             with patch.dict(os.environ, {name: value, "ZF_ENV": "production"}):
