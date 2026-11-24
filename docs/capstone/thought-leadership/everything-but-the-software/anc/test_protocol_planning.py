@@ -191,7 +191,7 @@ class ProtocolPlanningTests(unittest.TestCase):
         self.assertNotIn("implements only A/B/C", prose)
         for marker in (
             "prospective reporting requirements",
-            "candidate independent-cell analysis",
+            "reported independent-cell analysis",
             "label alone cannot establish their dependence or independence",
             "forecast and approval are required separately",
         ):
