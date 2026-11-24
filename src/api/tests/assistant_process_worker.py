@@ -20,11 +20,21 @@ shared: Any = importlib.import_module("test_assistants")
 
 # Constructed runtime-binding differences for one capability, confined to this process. They are
 # not an old image or a real serving change; each moves that capability's own bound versions only.
-VARIATIONS = ("rule", "purpose", "roles")
+VARIATIONS = ("rule", "purpose", "roles", "data", "provenance", "model")
+SERVING_MODEL = {"version": "test-model"}
 
 
 def vary(kind: str, capability: str) -> None:
-    if kind == "rule":
+    if kind == "data":
+        assistants.REGISTRY[capability]["categories"] = (
+            *assistants.REGISTRY[capability]["categories"],
+            "x",
+        )
+    elif kind == "provenance":
+        assistants.PROVENANCE = "constructed-provenance-2"
+    elif kind == "model":
+        SERVING_MODEL["version"] = "different-model-version"
+    elif kind == "rule":
         assistants.RULES[capability] += " (constructed variation)"
     elif kind == "purpose":
         assistants.REGISTRY[capability]["purpose"] += " (constructed variation)"
@@ -71,7 +81,7 @@ def main(spec: dict[str, Any]) -> None:
         return inner(system, prompt, max_tokens, timeout)
 
     provider.evidence = evidence
-    provider.model_version = provider.model_version_strong = "test-model"
+    provider.model_version = provider.model_version_strong = SERVING_MODEL["version"]
     provider.release = store.release_context
     store.ai = provider
     service: Any = Assistants(store, shared.config(**spec["config"]))

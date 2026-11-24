@@ -1,0 +1,12 @@
+[
+  {
+    "active": true,
+    "created": "2026-11-24T08:11:30+00:00",
+    "fqdn": "ca-cutover-test-demo-api--0000060.happyriver-ace49996.uksouth.azurecontainerapps.io",
+    "health": "Healthy",
+    "n": "ca-cutover-test-demo-api--0000060"
+  }
+]
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+releases 401
+health 401
