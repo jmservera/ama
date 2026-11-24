@@ -1,0 +1,74 @@
+[
+ {
+  "utc": "13:58:30",
+  "status": 200,
+  "seconds": 8.24,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": 215,
+  "state": null,
+  "keys": null
+ },
+ {
+  "utc": "13:58:39",
+  "status": 200,
+  "seconds": 8.22,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": 223,
+  "state": null,
+  "keys": null
+ },
+ {
+  "utc": "13:58:47",
+  "status": 200,
+  "seconds": 8.18,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": 232,
+  "state": null,
+  "keys": null
+ },
+ {
+  "utc": "13:58:55",
+  "status": 200,
+  "seconds": 8.19,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": 240,
+  "state": null,
+  "keys": null
+ },
+ {
+  "utc": "13:59:03",
+  "status": 200,
+  "seconds": 8.22,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": 248,
+  "state": null,
+  "keys": null
+ },
+ {
+  "utc": "13:59:11",
+  "status": 200,
+  "seconds": 8.15,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": 256,
+  "state": null,
+  "keys": null
+ },
+ {
+  "utc": "13:59:15",
+  "status": 200,
+  "seconds": 3.48,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": null,
+  "state": null,
+  "keys": null
+ },
+ {
+  "utc": "13:59:23",
+  "status": 200,
+  "seconds": 8.21,
+  "basis": "Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+  "stale_seconds": 8,
+  "state": null,
+  "keys": null
+ }
+]
