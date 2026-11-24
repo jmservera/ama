@@ -7,47 +7,46 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-24-issue-2303-live-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-24/issue-2303-live-plan.md",
-  "details": ".copilot-tracking/details/2026-11-24/issue-2303-live-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-24/issue-2303-live-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-24/issue-2303-live-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-24-issue-2303-live-review.md"
+  "research": ".copilot-tracking/research/2026-11-24-issue-2303-live-r67-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-24/issue-2303-live-r67-plan.md",
+  "details": ".copilot-tracking/details/2026-11-24/issue-2303-live-r67-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-24/issue-2303-live-r67-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-24/issue-2303-live-r67-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-24-issue-2303-live-r67-review.md"
  },
  "confirmed_decisions": [
   {
+   "decision": "Target revision 0000067; demo desktop only; no deploy, no push",
+   "status": "confirmed",
+   "evidence": "owner brief 2026-11-24 and decisions 2026-11-18"
+  },
+  {
    "decision": "Research executed, Ready",
    "status": "done",
-   "evidence": ".copilot-tracking/research/2026-11-24-issue-2303-live-research.md"
+   "evidence": ".copilot-tracking/research/2026-11-24-issue-2303-live-r67-research.md"
   },
   {
-   "decision": "Critique executed once, proceed, findings applied directly",
+   "decision": "Critique executed once, proceed",
    "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-24/issue-2303-live-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-24/issue-2303-live-r67-critique.md"
   },
   {
-   "decision": "Review executed once, conformant for changed scope",
+   "decision": "Review executed once, conformant",
    "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-24-issue-2303-live-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-24-issue-2303-live-r67-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Commit and stop"
+  "action": "commit and stop"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Investigate GET /api/ai/report latency (66 to 186 s) under SQL write-lock contention",
-   "rationale": "UI shows loading for minutes",
-   "evidence": "docs/reference/research/issue-2303-live-2026-11-24.md"
-  },
-  {
-   "rank": 2,
-   "task": "Coordinator gate and owner tick of criteria 1 to 3",
+   "task": "Coordinator gate receipt for criterion 4; investigate 94-105 s report latency",
    "rationale": "criterion 4 unproven",
-   "evidence": "changes record table"
+   "evidence": "docs/reference/research/issue-2303-live-2026-11-24-r67.md"
   }
  ]
 }

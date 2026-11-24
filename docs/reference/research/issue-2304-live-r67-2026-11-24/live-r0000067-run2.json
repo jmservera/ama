@@ -1,0 +1,83 @@
+{
+ "label": "live-r0000067-run2",
+ "utc": "2026-11-24T15:40:02Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 0.21,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 9.1,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.16,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.61,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.26,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 1.7,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.15,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants",
+   "status": 200,
+   "seconds": 4.02,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 0.09,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/ai/report",
+   "status": 200,
+   "seconds": 74.74,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/retention",
+   "status": 200,
+   "seconds": 2.41,
+   "state": null,
+   "error": null
+  }
+ ]
+}

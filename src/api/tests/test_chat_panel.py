@@ -293,6 +293,17 @@ class PanelTests(roles.Matrix):
             self.assertTrue(d["citations"])
         self.assertEqual(self.api(ROLE, "/api/cases/ZF-1")[0], 200)
 
+    def test_budget_hold_reply_names_the_allowance_not_unavailability(self) -> None:
+        tid = self.thread()
+        self.model = lambda _p: dict(envelope(None, "financial-held"), reason="call-budget-limit")
+        d = self.ask(tid)[1]
+        self.assertEqual((d["kind"], d["model"]), ("answer", "workflow-only"))
+        self.assertIn("daily demo allowance", d["reply"])
+        self.assertNotIn("assistant is not available", d["reply"])
+        self.model = lambda _p: dict(envelope(None, "financial-held"), reason="liability-unknown")
+        d = self.ask(tid)[1]
+        self.assertIn("assistant is not available", d["reply"])
+
     def test_every_turn_rechecks_role_and_case(self) -> None:
         tid = self.thread()
         self.assertEqual(self.ask(tid)[0], 200)
@@ -1403,7 +1414,7 @@ class DemoActivationGuardrailPersistenceTests(Base):
         with patch.object(chat_demo_meter, budget, limit):
             reply = self.ask()
             self.assert_no_dispatch(reply)
-            self.assertEqual(reply["consumption"]["provider_outcome"], "provider-unavailable")
+            self.assertEqual(reply["consumption"]["provider_outcome"], "allowance-used")
             self.assertTrue(reply["citations"])
             held = self.chat_dispatch()
         self.assertEqual((held["outcome"], held["reason"]), ("financial-held", hold))

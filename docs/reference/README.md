@@ -755,6 +755,8 @@ The [issue 2245 end-to-end override test](./research/issue-2245-live-010431-2026
 
 The [issue 2245 revision 0000060 recheck](./research/issue-2245-live-101805-2026-11-24.md) shows thread creation 8/8 live 200, live model calls in the logs, and that the demo chat meter's 20 calls per UTC day cap then holds questions with a misleading "assistant is not available" reply; it adds a cap-exhaustion regression test and a per-criterion table.
 
+The [issue 2245 budget-hold fix and revision 0000066 recheck](./research/issue-2245-live-151955-2026-11-24.md) records thread creation 8/8 live 200, the spent daily allowance, a local fix that replaces the misleading "assistant is not available" reply for budget holds, and a per-criterion table.
+
 The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.
 
 The [issue 2245 SQL store override note](./research/issue-2245-override-sqlstore-2026-11-23.md) records that the owner-directed AI suspension override did not reach the SQL store, the local fix, and a live probe on revision 0000057 with a per-criterion table.
@@ -1728,6 +1730,7 @@ or infra acceptance claimed.
 | [Issue 2257 map redraw after a gateway failure (#2257)](./research/issue-2257-live-r6-2026-11-23.md) | A gateway page after the read retries gets the map's one automatic redraw; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
+| [Issue 2310 live re-proof on revision 0000067 (#2310)](./research/issue-2310-live-r67-2026-11-24.md) | Auth suites 93 OK; edge still 302 for anonymous API, page redirect proven, per-criterion table |
 | [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
 | [Issue 2304 assistants forecast did not answer on live data (#2304)](./research/issue-2304-forecast-live-2026-11-23.md) | Live 200 s hang reproduced, statement-count profile, bulk-read fix with a 10 s named state; live re-check blocked by the private registry; per-criterion table |
 | [Issue 2304 forecast live re-proof on revision 0000064 (#2304)](./research/issue-2304-live-r64-2026-11-24.md) | Live forecast timings (named state or 200 within 10 s, one 27 s outlier), briefing, AI report and retention, per-criterion table |
@@ -1955,6 +1958,7 @@ or infra acceptance claimed.
 | [Issue 223 Review Effort Totals, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: the AI live report totals measured review seconds per task, test results and a per-criterion table; nothing ticked |
 | [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
 | [Issue 2237 Live Re-proof on 0000061](./research/issue-2237-live-reproof-2026-11-24.md) | Issue 2237: retention 200 in 55 of 55 calls on revision 0000061, the lock timeout answering 503 (30 times, no 500) on 0000058 to 0000060, and a per-criterion table |
+| [Issue 2237 Live Re-proof on 0000067](./research/issue-2237-live-reproof-2026-11-24b.md) | Issue 2237: retention 200 in 56 of 56 calls on revision 0000067, only 503 lock timeouts (no 500) in 36 h of console logs, and a per-criterion table |
 
 
 
@@ -2375,6 +2379,8 @@ The [issue 2244 run 6 note](./research/issue-2244-live-r6-2026-11-24.md) shows r
 
 The [issue 2244 run 7 note](./research/issue-2244-live-r7-2026-11-24.md) proves read-only that revision 0000061 carries the start-up retry and write-lock fast paths (matching file hashes), started in about 41 s with no restart or lock line and answers `/healthz` 200; the concurrent-writer and lock-holder criteria stay unproven for the demo.
 
+The [issue 2244 run 9 note](./research/issue-2244-live-r9-2026-11-24.md) repeats the read-only proof on revision 0000067 (two replicas, restart count 0, `/healthz` 200, matching file hashes); the concurrent-writer and lock-holder criteria stay unproven for the demo.
+
 The [issue 220 no-retaliation closure evidence](./research/issue-220-no-retaliation-closure-2026-11-24/README.md) maps the last unticked criterion to 23 passing tests and a non-mutating live route probe on the demo API.
 
 The [issue 2320 note](./research/issue-2320-live-2026-11-24.md) profiles why GET /api/briefing took the SQL write lock three times per request, records the held-briefing cache fix, a pre-fix live baseline and a per-criterion proven and unproven table.
@@ -2383,3 +2389,5 @@ The [issue 2320 revision 0000061 re-check](./research/issue-2320-live-r2-2026-11
 The [issue 2303 note](./research/issue-2303-live-2026-11-24.md) records the live proof that GET /api/ai/report returns 200 on revision 0000061 and the Asset and board view loads the report, with a per-criterion proven and unproven table and the report latency finding.
 
 The [issue 2320 revision 0000064/0000065 re-check](./research/issue-2320-live-r3-2026-11-24.md) records live forecast, briefing, retention and AI report timings after the forecast last-good fix, with a per-criterion proven and unproven table.
+
+The [issue 2320 revision 0000067 re-check](./research/issue-2320-live-r4-2026-11-24.md) records live briefing, forecast, retention and AI report timings after the forecast release-reference fix, with a per-criterion proven and unproven table.

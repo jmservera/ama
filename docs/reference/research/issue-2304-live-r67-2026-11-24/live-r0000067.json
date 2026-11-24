@@ -1,0 +1,76 @@
+{
+ "label": "live-r0000067",
+ "utc": "2026-11-24T15:36:07Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 0.27,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.09,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.05,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.53,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.11,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 9.37,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants",
+   "status": 200,
+   "seconds": 4.88,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 10.63,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/ai/report",
+   "status": 200,
+   "seconds": 139.44,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/retention",
+   "status": 200,
+   "seconds": 5.04,
+   "state": null,
+   "error": null
+  }
+ ]
+}

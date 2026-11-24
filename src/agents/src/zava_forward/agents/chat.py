@@ -24,6 +24,8 @@ from zava_forward.core.chat_panel import ModelReply, ModelUnavailable, valid_usa
 from zava_forward.agents.dispatch import AgentWorker
 
 AI_SUSPENDED = "ai-suspended"
+ALLOWANCE_USED = "allowance-used"
+BUDGET_HOLDS = frozenset({"call-budget-limit", "token-budget-limit", "money-budget-limit"})
 CHAT_MAX_TOKENS = 600
 CHAT_TIMEOUT = 20
 
@@ -106,6 +108,8 @@ class ChatModel:
         if envelope.get("outcome") != "returned" or not isinstance(text, str) or not text.strip():
             outcome = envelope.get("outcome")
             safe = outcome if outcome in ("timeout", "disabled") else "provider-unavailable"
+            if outcome == "financial-held" and envelope.get("reason") in BUDGET_HOLDS:
+                safe = ALLOWANCE_USED
             raise unavailable(safe, envelope, calls=calls, usage=usage)
         return ModelReply(
             text,
