@@ -15344,3 +15344,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 198 rubric code-scope regression test (Refs #198)
 
 * Added [issue-198-rubric-live-20261123T203956Z-2026-11-23.md](research/issue-198-rubric-live-20261123T203956Z-2026-11-23.md) and a registry test proving solution-code and infrastructure resolve non-empty file sets. Criteria 3 and 4 stay owner-gated.
+
+## [2026-11-24] add | Issue 440 closure-push checkpoint (Refs #440)
+
+* Added [issue-440-closure-push-live-2026-11-24.md](research/issue-440-closure-push-live-2026-11-24.md) and a dated section in the cut-over evidence pack: epics 81, 89, 93 and 109 are ready for owner closure; epic 113 is not (children 115, 116, 117 and 121 open, production box deferred). No `src/` change and no Azure change.

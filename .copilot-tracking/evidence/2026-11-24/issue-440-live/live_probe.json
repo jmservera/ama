@@ -1,0 +1,121 @@
+{
+ "anon_api_cases": "blocked: Error",
+ "/api/me": [
+  200,
+  [
+   "user",
+   "counts",
+   "staff",
+   "account",
+   "services",
+   "map",
+   "navigation",
+   "work_queues"
+  ]
+ ],
+ "/api/cases": [
+  200,
+  [
+   "items",
+   "total",
+   "limit",
+   "offset",
+   "sort",
+   "policy_version",
+   "policy_hash",
+   "as_of"
+  ]
+ ],
+ "/api/packages": [
+  200,
+  1
+ ],
+ "/api/workorders": [
+  200,
+  601
+ ],
+ "/api/funding": [
+  200,
+  167
+ ],
+ "/api/resident/choice-queue": [
+  200,
+  [
+   "items",
+   "total",
+   "limit",
+   "offset"
+  ]
+ ],
+ "/api/aftercare": [
+  404,
+  [
+   "error"
+  ]
+ ],
+ "/api/progress": [
+  200,
+  [
+   "label",
+   "start",
+   "end",
+   "as_of",
+   "coverage",
+   "daily",
+   "weekly",
+   "time_to_close"
+  ]
+ ],
+ "/api/stats": [
+  200,
+  [
+   "kpis",
+   "stages",
+   "areas",
+   "waves",
+   "ages",
+   "funding",
+   "contractors",
+   "team"
+  ]
+ ],
+ "/api/checklists": [
+  200,
+  [
+   "Loft insulation",
+   "Wall insulation",
+   "Heat pump",
+   "Solar panels",
+   "General"
+  ]
+ ],
+ "case_id_found": true,
+ "sensor:sensor-summary": [
+  200,
+  [
+   "state",
+   "label",
+   "alert",
+   "calibrated"
+  ]
+ ],
+ "sensor:sensors": [
+  200,
+  [
+   "version",
+   "kind",
+   "units",
+   "home_id",
+   "max_readings",
+   "calibrated",
+   "retrofit_context",
+   "anchor"
+  ]
+ ],
+ "sensor:sensor-drafts": [
+  200,
+  [
+   "state"
+  ]
+ ]
+}
