@@ -15367,3 +15367,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 107 root cause of no-new-proof re-verification (Refs #107 #1830 #435)
 
 * Added [issue-107-live-r10-root-cause-2026-11-24](research/issue-107-live-r10-root-cause-2026-11-24.md): why repeated live re-verification adds no proof, plus new separate-process model, data and provenance mismatch race tests (SQLite and disposable SQL Server pass).
+
+## [2026-11-24] add | Issue 2320 briefing write-lock profile and fix (Refs #2320)
+
+* Added [issue-2320-live-2026-11-24.md](research/issue-2320-live-2026-11-24.md): why a held template briefing took the SQL write lock three times per GET, the read-only cache fix, a pre-fix live baseline and a per-criterion table (live re-check and 5 s bound unproven).
