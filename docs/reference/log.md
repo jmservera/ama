@@ -15335,3 +15335,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 116 round 14 held-out provider bounds (Refs #116)
 
 * Added [issue-116-live-r14-evidence-2026-11-24.md](research/issue-116-live-r14-evidence-2026-11-24.md): the held-out provider boundary now applies the shared type and size allowlist before any request; the one unticked box stays unticked.
+## [2026-11-24] add | Issue 1830 live r13 owned-server health window (Refs #1830)
+
+* Added [issue-1830-live-r13-2026-11-24.md](research/issue-1830-live-r13-2026-11-24.md): preflight and the direct map check re-proved at head; the owned-server health wait in `design_system_browser_check.py` is now a 60 s deadline instead of about 10 s. Defensive: the r12 start failure was not reproduced, so there is no before and after.

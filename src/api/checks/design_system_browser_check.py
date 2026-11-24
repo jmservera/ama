@@ -296,7 +296,8 @@ def main(
                 stderr=log,
             )
             try:
-                for _ in range(100):
+                deadline = time.monotonic() + 60
+                while time.monotonic() < deadline:
                     try:
                         with urllib.request.urlopen(base + "/healthz", timeout=1) as response:
                             if response.status == 200:
