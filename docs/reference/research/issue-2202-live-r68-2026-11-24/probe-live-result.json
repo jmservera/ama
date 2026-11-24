@@ -1,0 +1,10 @@
+{
+ "map_status": 200,
+ "card_text": "Overview Coordinator heatmap and lifecycle funnel 443 Open cases Selected 23 Safety issues open Select filter 71 Waiting 60+ days Select filter 443 Awaiting resident decision Select filter 26 Funding in progress Select filter 140 Residents needing extra support Select filter 537 Completed Show map for All areas County Durham Newcastle upon Tyne Northumberland Gateshead Sunderland Hartlepool Redcar and Cleveland North Tyneside Stockton-on-Tees Middlesbrough Darlington Map of open cases Expand map Select a home for a summary, then choose Open home. Escape closes the summary first. O Normal W Waiting 60+ days ! Safety issue open Show only homes with stale or offline sensors Applies to individual homes. Zoom in until homes are shown one by one. 443 homes shown Show the map areas as a list (keyboard and screen reader friendly) Show these as a list O W W W W O O O O O O O ! O W ! W W W O W W W O W O O ! O O O O O O O W O ! O O O O W O W O O W O O W ! W W W W ! O W O W W W W O O O O W O O O O W W W O O W O O O W O W O W O W W O O O O O O O W O O O O O W O O O O ! O O O O O O O O O O O O O ! W ! O O W O O O O O O ! O W O O ! ! O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O ! O O O O O O O O O O O O O ! O ! O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O O ! O O O O O ! O O O O O O W W O W W W O W O W O O O O O O O O O O O O O O O O O O O O O O ! O W W O O O O O O O O W O O O W O O O O O O O O O O O O",
+ "gauge_elements": 2,
+ "resident_login": 200,
+ "consent_visible": true,
+ "consent_checked_before": false,
+ "consent_checked_after": true,
+ "consent_label": null
+}

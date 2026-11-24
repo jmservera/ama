@@ -1,0 +1,26 @@
+{
+ "title": "Lorraine Henderson",
+ "latest": "Sensor status\n\u2713\nSensor recent\n. Recent reading (within 15 minutes)\nLatest reading\n11 \u00b0C, 79.4% relative humidity",
+ "meters": [
+  {
+   "label": "Temperature 11 degC, scale 0 to 40",
+   "value": 11,
+   "min": 0,
+   "max": 40,
+   "text": "11 degC"
+  },
+  {
+   "label": "Relative humidity 79.4 %RH, scale 0 to 100",
+   "value": 79.4,
+   "min": 0,
+   "max": 100,
+   "text": "79.4 %RH"
+  }
+ ],
+ "labels": [
+  "Temperature: 11 degC",
+  "Relative humidity: 79.4 %RH"
+ ],
+ "old": false,
+ "animations": 0
+}
