@@ -15356,3 +15356,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 117 upload scan gate proof (Refs #117)
 
 * Added [issue-117-upload-scan-proof-2026-11-24.md](research/issue-117-upload-scan-proof-2026-11-24.md): the scan-before-availability gate is already on main; tests plus a live Defender for Storage run prove it for the demo. Records one unexplained 500 on a second read of a clean document.
+
+## [2026-11-24] add | Issue 220 no-retaliation closure evidence (Refs #220)
+
+* Added [issue-220-no-retaliation-closure-2026-11-24](research/issue-220-no-retaliation-closure-2026-11-24/README.md): 23 passing tests mapped to the three promises plus a non-mutating live probe; behaviour rests on the tests.
