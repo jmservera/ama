@@ -395,6 +395,55 @@ class ForecastStatements(Base):
             with self.assertRaises(ForecastTimeout):
                 self.service.forecast(self.pm)
 
+    def test_slow_computation_answers_inside_the_wait_then_serves_the_last_good_answer(self):
+        started, release = threading.Event(), threading.Event()
+        real = self.service._forecast_compute
+        calls = []
+
+        def slow(user, period):
+            calls.append(period)
+            started.set()
+            release.wait(10)
+            return real(user, period)
+
+        with patch.object(Assistants, "FORECAST_WAIT_SECONDS", 0.2):
+            with patch.object(self.service, "_forecast_compute", side_effect=slow):
+                begun = time.monotonic()
+                with self.assertRaises(ForecastTimeout):
+                    self.service.forecast(self.pm)
+                self.assertLess(time.monotonic() - begun, 2.0)
+                self.assertTrue(started.wait(2))
+                with self.assertRaises(ForecastTimeout):
+                    self.service.forecast(self.pm)
+                self.assertEqual(len(calls), 1, "a retry joins the running job")
+                release.set()
+                job = next(iter(self.service._forecast_jobs.values()))
+                self.assertTrue(job.done.wait(10))
+                with patch.object(Assistants, "FORECAST_WAIT_SECONDS", 30.0):
+                    fresh = self.service.forecast(self.pm)
+                self.assertNotIn("stale_seconds", fresh)
+                release.clear()
+                begun = time.monotonic()
+                stale = self.service.forecast(self.pm)
+                self.assertLess(time.monotonic() - begun, 2.0)
+                release.set()
+        self.assertIn("stale_seconds", stale)
+        self.assertEqual({k: v for k, v in stale.items() if k != "stale_seconds"}, fresh)
+
+    def test_stale_answer_is_not_served_past_its_limit(self):
+        self.service.forecast(self.pm)
+        with patch.object(Assistants, "FORECAST_WAIT_SECONDS", 0.1), patch.object(
+            Assistants, "FORECAST_STALE_SECONDS", -1.0
+        ), patch.object(self.service, "_forecast_compute", side_effect=lambda *a: time.sleep(1)):
+            with self.assertRaises(ForecastTimeout):
+                self.service.forecast(self.pm)
+
+    def test_job_errors_reach_the_request_and_are_not_cached(self):
+        with patch.object(self.service, "_forecast_compute", side_effect=PermissionError("no")):
+            with self.assertRaises(PermissionError):
+                self.service.forecast(self.pm)
+        self.assertEqual(self.service.forecast(self.pm)["period_seconds"], 86400)
+
 
 class WorkerFailureReporting(unittest.TestCase):
     def test_worker_and_scanner_log_safe_failure_without_private_exception(self):

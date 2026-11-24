@@ -1,0 +1,48 @@
+{
+ "label": "baseline-r0000061",
+ "utc": "2026-11-24T12:50:27Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 6.08,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 16.77,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 13.44,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 10.23,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 13.44,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants",
+   "status": 200,
+   "seconds": 5.4,
+   "state": null,
+   "error": null
+  }
+ ]
+}
