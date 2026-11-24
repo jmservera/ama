@@ -27,3 +27,9 @@ Refs #108. Synthetic demo, desktop only; live Azure read-only in resource group 
 | Real AI, SQL and Azure under CON-009 and AC-057 | Unproven | Restart check is drill-like; excluded |
 
 No criterion is newly tickable.
+
+## Third round correction (2026-11-23)
+
+* Live `resident-mini` (gpt-4.1-mini 2025-04-14, Standard) has capacity 10 and limits of 10 requests and 10000 tokens per 60 s, not the capacity 1 and 1000 tokens in the earlier serving record (the Bicep default). The record now carries the live values with `live_observed_on`; the Bicep default is unchanged, so live differs from source by design of a manual scale-up.
+* `az cognitiveservices usage list -l uksouth` now returns rows, but only `OpenAI.GlobalBatch.gpt-4.1*` (limits 1000000 and 200000, current 0). No Standard or GlobalStandard row exists for these models, so headroom stays unconfirmed and the gate keeps its open item.
+* New test `test_recorded_rate_limits_follow_capacity` fails when a recorded deployment's limits disagree with its capacity.

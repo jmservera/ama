@@ -15291,3 +15291,13 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Memory: GitHub API rate limits
 
 * Added a GitHub API Rate Limits section to [memory.md](memory.md) at the owner's request: the GraphQL budget is shared per user, so delivery sessions prefer REST and one board read per check.
+## [2026-11-23] update | Issue 108 live capacity correction (Refs #108)
+
+* Updated [issue-108-live-serving-attestation-2026-11-23.md](research/issue-108-live-serving-attestation-2026-11-23.md) and the serving record: live `resident-mini` capacity is 10 (record said 1); quota headroom still unconfirmed because no Standard row is returned; one new consistency test.
+## [2026-11-23] add | Issue 440 criteria verdict, second pass (Refs #440)
+
+* Added [issue-440-live-criteria-verdict-2026-11-23b.md](research/issue-440-live-criteria-verdict-2026-11-23b.md): guard re-observed at head 2e968a6583, duplicate allowlist entry removed; criterion 7 proven except owner approval, criterion 8 unproven.
+
+## [2026-11-23] add | Issue 149 map tile-note check locator fix (Refs #149)
+
+* Added [issue-149-map-check-locator-2026-11-23.md](research/issue-149-map-check-locator-2026-11-23.md): the map tile status browser check used a stale adjacent-sibling selector; fixed with a unit assertion, live desktop render of both demo apps and a per-criterion table.
