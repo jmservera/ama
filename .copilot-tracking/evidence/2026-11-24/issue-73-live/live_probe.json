@@ -1,0 +1,140 @@
+{
+ "anon_api_cases": "blocked: Error",
+ "/api/me": [
+  200,
+  [
+   "user",
+   "counts",
+   "staff",
+   "account",
+   "services",
+   "map",
+   "navigation",
+   "work_queues"
+  ]
+ ],
+ "/api/cases": [
+  200,
+  [
+   "items",
+   "total",
+   "limit",
+   "offset",
+   "sort",
+   "policy_version",
+   "policy_hash",
+   "as_of"
+  ]
+ ],
+ "/api/exceptions": [
+  200,
+  [
+   "state",
+   "items",
+   "unrouted",
+   "sources",
+   "banner",
+   "access",
+   "note"
+  ]
+ ],
+ "/api/ranking/policy": [
+  200,
+  [
+   "policy_id",
+   "version",
+   "owner",
+   "status",
+   "effective_date",
+   "content_hash",
+   "rules",
+   "versions"
+  ]
+ ],
+ "/api/ranking/snapshot": [
+  200,
+  [
+   "policy_id",
+   "policy_version",
+   "policy_hash",
+   "as_of",
+   "total",
+   "entries",
+   "snapshot_hash"
+  ]
+ ],
+ "/api/ranking/publication": [
+  200,
+  [
+   "count",
+   "problems",
+   "latest",
+   "overdue",
+   "schedule",
+   "policy_signed",
+   "signoff_problems"
+  ]
+ ],
+ "/api/retention": [
+  200,
+  [
+   "label",
+   "as_of",
+   "records"
+  ]
+ ],
+ "/api/chat/threads": [
+  200,
+  280
+ ],
+ "/api/data-protection": [
+  200,
+  [
+   "label",
+   "owners",
+   "dpo_reviewed",
+   "subject_populations",
+   "population_separation",
+   "hosting_region_vs_inference_residency",
+   "whole_system_coverage",
+   "classes"
+  ]
+ ],
+ "/api/assistants/rai-metrics": [
+  200,
+  [
+   "status",
+   "metrics",
+   "latency_seconds_total",
+   "persisted",
+   "replay"
+  ]
+ ],
+ "/api/stats": [
+  200,
+  [
+   "kpis",
+   "stages",
+   "areas",
+   "waves",
+   "ages",
+   "funding",
+   "contractors",
+   "team"
+  ]
+ ],
+ "case_id_found": true,
+ "/api/cases/{id}": [
+  200,
+  [
+   "documents",
+   "funding",
+   "id",
+   "wave",
+   "closed",
+   "stage",
+   "synthetic_stock_anchor_id",
+   "stage_since"
+  ]
+ ]
+}

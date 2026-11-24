@@ -1,0 +1,52 @@
+.................................SQL lock-exit recovery failed; original operation failure retained
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/src/zava_forward/core/bulk_edits.py", line 251, in _execute
+    _apply(store, user, actor, body, before)
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/src/zava_forward/core/bulk_edits.py", line 406, in _apply
+    _save(
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/src/zava_forward/core/bulk_edits.py", line 218, in _save
+    store.save()
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/src/zava_forward/core/sqlstore.py", line 1275, in save
+    self._append_audit(pending)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/tests/test_bulk_edits.py", line 492, in fail
+    raise RuntimeError("Synthetic write failure")
+RuntimeError: Synthetic write failure
+SQL lock-exit recovery failed (RuntimeError); original operation failure retained. Reload persisted records before retrying.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/src/zava_forward/core/sqlstore.py", line 147, in __exit__
+    self.store._finish()
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/src/zava_forward/core/sqlstore.py", line 1191, in _finish
+    self._append_audit(pending)
+  File "/usr/lib/python3.12/unittest/mock.py", line 1134, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1138, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1199, in _execute_mock_call
+    result = effect(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/src/core/tests/test_bulk_edits.py", line 492, in fail
+    raise RuntimeError("Synthetic write failure")
+RuntimeError: Synthetic write failure
+..............................................................sssssss.......................................................................................................................................................error: [Errno 2] No such file or directory: '/home/azureuser/source/ama-wt/issue-73-live-20261124T083206Z/missing/docs/prds/zava-forward-retrofit-programme-demonstrator.md'
+....error: [Errno 2] No such file or directory: '/tmp/tmpr78bp9ir/src/api/src/zava_forward/api/web/role-screens.js'
+.............
+----------------------------------------------------------------------
+Ran 270 tests in 44.625s
+
+OK (skipped=7)
+Atlas trace: complete
+Trace completeness is not accessibility, content or human acceptance.

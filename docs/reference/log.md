@@ -15360,3 +15360,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 220 no-retaliation closure evidence (Refs #220)
 
 * Added [issue-220-no-retaliation-closure-2026-11-24](research/issue-220-no-retaliation-closure-2026-11-24/README.md): 23 passing tests mapped to the three promises plus a non-mutating live probe; behaviour rests on the tests.
+
+## [2026-11-24] add | Epics 73, 149 and 157 closure checkpoint extension (Refs #73)
+
+* Added [issue-73-149-157-closure-checkpoint-live-2026-11-24.md](research/issue-73-149-157-closure-checkpoint-live-2026-11-24.md) and three rows in the cut-over evidence pack per-epic closure table: 574 local tests and a read-only live probe; each unticked box listed with its reason; no source change, nothing ticked or closed.
