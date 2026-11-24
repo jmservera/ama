@@ -15378,3 +15378,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2245 revision 0000060 recheck and daily demo budget (Refs #2245)
 
 * Added [issue-2245-live-101805-2026-11-24.md](research/issue-2245-live-101805-2026-11-24.md): live probe (threads 8/8 200), the 20 calls per UTC day demo cap as the reason questions fell back to rules, a cap-exhaustion test and a per-criterion table.
+
+## [2026-11-24] add | Issue 2320 live re-check on revision 0000061 (Refs #2320)
+
+* Added [issue-2320-live-r2-2026-11-24.md](research/issue-2320-live-r2-2026-11-24.md): timed live probe after the briefing cache fix (0.08 to 0.16 s, no 503 in 12 calls), forecast still 503, call-cap hold seen live, per-criterion table for #2320, #145 and #2245.
