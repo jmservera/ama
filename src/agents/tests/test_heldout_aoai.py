@@ -145,6 +145,14 @@ class ProviderTests(unittest.TestCase):
         )
         self.assertNotIn(SECRET, json.dumps(envelope))
 
+    def test_input_outside_the_allowlist_makes_no_request(self) -> None:
+        opener = Opener(json.dumps(body()).encode())
+        call = provider(opener)
+        too_big = "x" * (128 * 1024 + 1)
+        for system, prompt in (("sys", too_big), (too_big, "hi"), (None, "hi"), ("sys", b"hi")):
+            self.assertEqual(call(system, prompt, 10, 5), dict(outcome="failed"))
+        self.assertEqual(opener.requests, [])
+
     def test_empty_system_is_omitted(self) -> None:
         opener = Opener(json.dumps(body()).encode())
         provider(opener)("", "hello", 10, 5)
