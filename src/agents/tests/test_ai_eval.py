@@ -261,6 +261,12 @@ class AiEvalTests(unittest.TestCase):
         self.assertEqual(in_code, in_bicep)
         self.assertIn(in_code, names)
 
+    def test_recorded_rate_limits_follow_capacity(self):
+        record = json.loads((Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-r4-2026-11-19/serving_region_record.json").read_text())
+        for d in record["deployments"]:
+            self.assertEqual(d["rate_limits"]["requests_per_minute"], d["capacity"], d["name"])
+            self.assertEqual(d["rate_limits"]["tokens_per_minute"], d["capacity"] * 1000, d["name"])
+
     def test_gate_keeps_region_open_item_until_headroom_is_confirmed(self):
         record = json.loads((Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-r4-2026-11-19/serving_region_record.json").read_text())
         ev = ai_eval.run_eval(serving_region=record)["evidence"]

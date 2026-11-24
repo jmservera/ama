@@ -30,8 +30,11 @@ def count_notice(page: Page) -> Locator:
 
 
 def tile_notice(page: Page) -> Locator:
-    """The tile fallback note: empty until a tile fails, then the fallback message."""
-    return page.locator(f"{MAP_STATUSES} + [role=status]")
+    """The tile fallback note: empty until a tile fails, then the fallback message.
+
+    Not an adjacent-sibling selector: the hidden retry button sits between the two statuses.
+    """
+    return page.locator(MAP_STATUSES).filter(has_not_text=COUNT_NOTICE)
 
 
 def check_old_locator_is_ambiguous(page: Page, state: str) -> None:
