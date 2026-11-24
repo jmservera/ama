@@ -15382,3 +15382,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2320 live re-check on revision 0000061 (Refs #2320)
 
 * Added [issue-2320-live-r2-2026-11-24.md](research/issue-2320-live-r2-2026-11-24.md): timed live probe after the briefing cache fix (0.08 to 0.16 s, no 503 in 12 calls), forecast still 503, call-cap hold seen live, per-criterion table for #2320, #145 and #2245.
+## [2026-11-24] add | Issue 2244 revision 0000061 start-up proof (Refs #2244)
+
+* Added [issue-2244-live-r7-2026-11-24.md](research/issue-2244-live-r7-2026-11-24.md): read-only live proof that the start-up retry and write-lock fast paths are deployed and healthy, with a per-criterion table (concurrent writer and lock holder unproven).
