@@ -15288,3 +15288,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 116 provider boundary aggregate image size (Refs #116)
 
 * Added [issue-116-live-r12-evidence-2026-11-23.md](research/issue-116-live-r12-evidence-2026-11-23.md): the shared provider allowlist now caps total decoded image bytes per request (previously per image only), with a failing-then-passing test. Live payloads, independent review and hosted CI stay outstanding.
+## [2026-11-23] update | Memory: GitHub API rate limits
+
+* Added a GitHub API Rate Limits section to [memory.md](memory.md) at the owner's request: the GraphQL budget is shared per user, so delivery sessions prefer REST and one board read per check.
