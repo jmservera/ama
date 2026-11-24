@@ -1757,6 +1757,12 @@ class ProcessRaces(UnleasedRevocation):
     def test_changed_serving_model_process_revokes_and_fresh_process_stays_denied(self):
         self.check_process_wide_binding("model", "model", "model_version")
 
+    def test_changed_schema_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_process_wide_binding("schema", "data", "schema_version")
+
+    def test_changed_registry_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_process_wide_binding("registry", "evidence", "registry_version")
+
 
 class SqliteUnleasedRevocation(ProcessRaces, Base):
     """Local SQLite proxy; it is not actual SQL acceptance."""
