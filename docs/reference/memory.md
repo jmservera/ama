@@ -84,3 +84,15 @@ than validated evidence:
   deployment, SQL, security, release) and once after a large group of merged
   changes, on the integrated main tip. Human, legal and resident gates are
   unchanged.
+
+## GitHub API Rate Limits, 2026-11-23
+
+* The GraphQL API gives each user 5,000 points per hour, shared by every
+  session that uses the same token. Many parallel delivery sessions plus
+  `gh project` and `gh pr` calls exhaust it (owner shared the
+  [GitHub documentation](https://docs.github.com/en/graphql/overview/rate-limits-and-query-limits-for-the-graphql-api),
+  2026-11-23).
+* Prefer REST (`gh api`) for pull requests, merges and check runs, which has a
+  separate limit. Check the GraphQL budget with `gh api rate_limit`, read the
+  project board once per delivery check (otherwise use the cache), batch
+  Status edits into that single pass and avoid parallel GraphQL bursts.
