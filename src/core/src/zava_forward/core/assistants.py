@@ -1659,14 +1659,18 @@ class Assistants:
             )
 
     def release_reference(self, db, capability):
-        selected, _ = rel.assessment(
-            db,
-            capability,
-            runtime_binding(capability, self.store.ai),
-            self.now(db),
-            live=isinstance(self.store.ai, Ai),
-        )
-        return rai_release.reference(selected) if selected else None
+        def read():
+            selected, _ = rel.assessment(
+                db,
+                capability,
+                runtime_binding(capability, self.store.ai),
+                self.now(db),
+                live=isinstance(self.store.ai, Ai),
+            )
+            return rai_release.reference(selected) if selected else None
+
+        # The forecast's view is one frozen read, so the answer is the same for every case (issue #2304).
+        return db.once(("release_reference", capability), read) if isinstance(db, ForecastReads) else read()
 
     def record_release(self, user, body):
         from . import rai_control_plane

@@ -1,0 +1,69 @@
+{
+ "label": "stale-r0000065",
+ "utc": "2026-11-24T14:09:34Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 0.21,
+   "state": null,
+   "error": null,
+   "stale_seconds": null,
+   "max_calls_this_period": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.16,
+   "state": null,
+   "error": null,
+   "stale_seconds": 12,
+   "max_calls_this_period": 2866
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 9.1,
+   "state": null,
+   "error": null,
+   "stale_seconds": 21,
+   "max_calls_this_period": 2866
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.8,
+   "state": null,
+   "error": null,
+   "stale_seconds": 30,
+   "max_calls_this_period": 2866
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.3,
+   "state": null,
+   "error": null,
+   "stale_seconds": 38,
+   "max_calls_this_period": 2866
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.87,
+   "state": null,
+   "error": null,
+   "stale_seconds": 47,
+   "max_calls_this_period": 2866
+  },
+  {
+   "path": "/api/assistants",
+   "status": 200,
+   "seconds": 3.54,
+   "state": null,
+   "error": null,
+   "stale_seconds": null,
+   "max_calls_this_period": null
+  }
+ ]
+}

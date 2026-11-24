@@ -1,0 +1,104 @@
+{
+ "label": "baseline-r0000065",
+ "utc": "2026-11-24T14:07:26Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 0.22,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.09,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.99,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.9,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.4,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.4,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.14,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.27,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.19,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 3.39,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.16,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 9.26,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 9.4,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants",
+   "status": 200,
+   "seconds": 5.7,
+   "state": null,
+   "error": null
+  }
+ ]
+}

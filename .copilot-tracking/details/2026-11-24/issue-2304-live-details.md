@@ -1,12 +1,10 @@
 ---
-title: Issue 2304 live details (2026-11-24)
+title: Issue 2304 round 2 details (2026-11-24)
 ms.date: 2026-11-24
 ---
 
 # Details
 
-* Cache key: (lower email, role, oid, tid, period). Value: (monotonic time, result). A hit inside the TTL is returned as a deep copy without SQL.
-* Job: daemon thread running `_forecast_compute` with its own connection; result or exception stored on a small job object guarded by a lock; one job per key at a time; waiters use `Event.wait(remaining)`.
-* Errors: `ForecastTimeout` after the client wait; job exceptions re-raised to the waiting request once (PermissionError, ValueError and ForecastTimeout keep their API mapping); a failed job is never cached.
-* Limit: a staff change (revocation) takes effect within the TTL for a repeat read of a precomputed counts-only forecast. Recorded in the evidence note.
-* Tests in `src/api/tests/test_assistants.py::ForecastStatements`.
+* Phase 2: `forecast_reads.py` gets `once(key, read)`; `Assistants.release_reference` uses it only when `db` is a `ForecastReads`.
+* Phase 3: in `src/api/tests/test_assistants.py` `ForecastStatements`, patch `ai_registry.tasks` with a counting wrapper and compare 0 and 40 extra cases; assert the count is equal.
+* Phase 4: `cd src/api && PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests python3 -m unittest discover -s tests -q`; mypy in src/core and src/api.
