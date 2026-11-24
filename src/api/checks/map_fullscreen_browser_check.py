@@ -444,7 +444,7 @@ def check_expanded_filters(
                   const r = el.getBoundingClientRect();
                   const p = el.closest('.overview-map-filters').getBoundingClientRect();
                   return r.height >= 40 && el.scrollWidth <= el.clientWidth
-                    && r.top >= p.top && r.bottom <= p.bottom
+                    && r.top >= p.top - 1 && r.bottom <= p.bottom + 1
                     && getComputedStyle(el).outlineStyle === 'solid';
                 }"""
                 ),

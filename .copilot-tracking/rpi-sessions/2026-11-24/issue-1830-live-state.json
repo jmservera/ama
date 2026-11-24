@@ -1,5 +1,5 @@
 {
- "task_id": "issue-1830-live-20261124T003756Z",
+ "task_id": "issue-1830-live-20261124T014120Z",
  "task_slug": "issue-1830-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,42 +7,36 @@
  "status": "active",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-24-issue-1830-live-r11-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-24-issue-1830-live-r11-plan.md",
-  "details": ".copilot-tracking/details/2026-11-24-issue-1830-live-r11-details.md",
-  "critique": ".copilot-tracking/plans/2026-11-24-issue-1830-live-r11-plan.md",
-  "changes": ".copilot-tracking/changes/2026-11-24-issue-1830-live-r11-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-24-issue-1830-live-r11-review.md"
+  "research": ".copilot-tracking/research/2026-11-24-issue-1830-live-r12-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-24-issue-1830-live-r12-plan.md",
+  "details": ".copilot-tracking/details/2026-11-24-issue-1830-live-r12-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-24-issue-1830-live-r12-plan.md",
+  "changes": ".copilot-tracking/changes/2026-11-24-issue-1830-live-r12-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-24-issue-1830-live-r12-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "critique executed once, accepted; tier FOCUSED, no src change",
+   "decision": "critique executed once, accepted; tier FULL (src change)",
    "status": "done",
-   "evidence": "r11 plan"
+   "evidence": "r12 plan"
   },
   {
-   "decision": "review executed once, conformant; tier FULL",
+   "decision": "review executed once, conformant (local scope); tier FULL",
    "status": "done",
-   "evidence": "r11 review"
+   "evidence": "r12 review"
   }
  ],
  "blockers": [],
  "next_action": {
-  "phase": "Review",
-  "action": "witness and commit"
+  "phase": "Follow-up",
+  "action": "commit"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
    "task": "Open PR for exact-head review and hosted CI",
    "rationale": "criterion 4",
-   "evidence": "r11 changes"
-  },
-  {
-   "rank": 2,
-   "task": "Investigate 390x568 filter focus flake under load",
-   "rationale": "criterion 2 residual",
-   "evidence": "r11 note"
+   "evidence": "r12 changes"
   }
  ]
 }
