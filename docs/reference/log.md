@@ -15371,3 +15371,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2320 briefing write-lock profile and fix (Refs #2320)
 
 * Added [issue-2320-live-2026-11-24.md](research/issue-2320-live-2026-11-24.md): why a held template briefing took the SQL write lock three times per GET, the read-only cache fix, a pre-fix live baseline and a per-criterion table (live re-check and 5 s bound unproven).
+
+## [2026-11-24] add | Issue 145 audit 9 allowance restore fix (Refs #145)
+
+* Added [issue-145-live-20261124T1026Z-2026-11-24.md](research/issue-145-live-20261124T1026Z-2026-11-24.md): read-only Azure SQL settings, `close_allowance_after_restore` so a restore cannot resurrect spent allowance, and a per-criterion table (live restore and #121 match unproven).

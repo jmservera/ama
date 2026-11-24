@@ -5008,8 +5008,9 @@ witnessed restore, real-model, qualified human or application acceptance.
   refused. After a restore, `reapply_release_changes(db, now, store)` returns each release to
   the strongest recorded status (revoked outranks suspended), so a restore cannot reactivate
   a release a named human withdrew. Material-change revocations are re-derived from the
-  bound versions and need no entry. Spent allowance has no outside-database record; that gap
-  is open. Tested on SQLite only.
+  bound versions and need no entry. The allowance ledger is SQL only and a restore rewinds it, so
+  `close_allowance_after_restore(db)` marks every pool exhausted (fail closed; idempotent; a rotated
+  authority inherits the highest consumption) until an operator reviews and re-seeds. Tested on SQLite only.
 * Unverified: the Azure SQL point-in-time restore drill (DH-005) has not been run;
   the register has not been run against a real storage account, nor has its
   retention or immutability policy been configured or tested; the Blob container

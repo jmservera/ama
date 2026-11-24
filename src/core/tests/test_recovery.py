@@ -380,6 +380,17 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual(recovery.reapply_release_changes(db, 4.0, self.store), [])
         self.assertNotIn("incident", json.dumps(recovery.read_release_register(self.store)))
 
+    def test_restore_does_not_resurrect_spent_allowance(self):
+        from zava_forward.core import assistants
+        db = self._release_db()
+        db.execute(next(d for d in assistants.SQLITE_DDL if "assistant_allowance" in d))
+        db.execute("INSERT INTO assistant_allowance VALUES ('p1', 10, 1000, 9e9, 2, 200)")
+        db.execute("INSERT INTO assistant_allowance VALUES ('p2', 10, 1000, 9e9, 10, 1000)")
+        self.assertEqual(recovery.close_allowance_after_restore(db), 1)
+        rows = db.execute("SELECT id,calls,tokens,used_calls,reserved_tokens FROM assistant_allowance ORDER BY id").fetchall()
+        self.assertEqual([tuple(r) for r in rows], [("p1", 10, 1000, 10, 1000), ("p2", 10, 1000, 10, 1000)])
+        self.assertEqual(recovery.close_allowance_after_restore(db), 0)
+
     def test_release_register_writes_nothing_for_unchanged_unknown_or_invalid_change(self):
         db = self._release_db()
         self.assertFalse(recovery.record_release_change(self.store, db, "nope", "suspended"))
