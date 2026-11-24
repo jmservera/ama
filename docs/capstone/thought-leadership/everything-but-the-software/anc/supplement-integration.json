@@ -490,10 +490,10 @@
     "experiment_report_sha256": "e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15",
     "unchanged_pdf_sha256": "e057c45b364e801e55fe3b2c5e53c32dba586f17b078159bcbe3206717b33ecf",
     "validation": {
-      "structural_checks": "passed; approximate body 16060 words; abstract 1880 source characters against limit below 1920",
+      "structural_checks": "passed; approximate body 16152 words; abstract 1880 source characters against limit below 1920",
       "authoring_tests": "74 run; 73 passed; native figure exporter failed because Playwright chromium_headless_shell-1194 is absent. Figure sources and assets unchanged.",
       "preservation": "Seven equations, numerical values in 40 tabular/longtable environments, 94 citation uses, 172 labels, 61 source-register rows, three literal prompt files and embedded bibliography unchanged.",
-      "external_pdf_sha256": "6cd6798dc812973bfa67322a65d06ec83b664831398c3729a93ce9ba9e4c35bb",
+      "external_pdf_sha256": "358554c5de5377fee258e44df10574c1393d92c59e2bdf595b2aaf2db8d2cfd1",
       "external_pdf_pages": 70,
       "supplement_page": 45,
       "source_register_page": 68,
@@ -507,7 +507,7 @@
       "anc/measurement-provenance.tex": "bb665b2da622b57e2ff3c06fb95c32186b01ba85e3806c090f09fe1eefe62a17"
     },
     "source_sha256": {
-      "main.tex": "f1651d3b1e86747f6c662fd8417d9b312c93069b4dd7da1be8139cbafc1a49dd",
+      "main.tex": "f1d66bf94298a083850f4b28d973db7a1703d8106b73e5e1530e4dbab9b9748b",
       "anc/background.tex": "8a0666c98126481e7a0e6e9ac1d52d77170bce92d848e2b48aeba93a43a0482b",
       "anc/experiment-protocol.tex": "4e95f2364dee9e0873d0ffa27edf69a6807c10b3e0941e7bee6f299ddda7e0b8",
       "anc/supplement-section.tex": "9e1c515228cd2d6b344c1b12fcf1484a4acb2e523d6461210ee66870c5d1d0f1",
