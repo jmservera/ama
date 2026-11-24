@@ -237,8 +237,7 @@ editing-process commentary unless the user asks for a critique.
 
 ### Voice sources
 
-These English blog posts were read on 2026-11-24 as writing samples, not as
-current technical guidance:
+These English blog posts were read on 2026-11-24 as writing samples of the same author, do not use them as current technical guidance, just for style:
 
 * [Windows applications and Kubernetes, part I (2021-09-20)](https://jmblog.servezas.org/en/2021/09/how-to-use-kubernetes-to-modernize-windows-applications-i/)
 * [Windows applications and Kubernetes, part II (2021-10-11)](https://jmblog.servezas.org/en/2021/10/how-to-use-kubernetes-to-modernize-windows-applications-ii/)
