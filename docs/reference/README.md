@@ -1952,6 +1952,7 @@ or infra acceptance claimed.
 | [Issue 223 Review Effort Aggregation, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: live report aggregates measured review time per task, test results, and a per-criterion table; nothing ticked |
 | [Issue 223 Review Effort Totals, Run 9](./research/issue-223-live-r9-2026-11-23.md) | Issue 223: the AI live report totals measured review seconds per task, test results and a per-criterion table; nothing ticked |
 | [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
+| [Issue 2237 Live Re-proof on 0000061](./research/issue-2237-live-reproof-2026-11-24.md) | Issue 2237: retention 200 in 55 of 55 calls on revision 0000061, the lock timeout answering 503 (30 times, no 500) on 0000058 to 0000060, and a per-criterion table |
 
 
 

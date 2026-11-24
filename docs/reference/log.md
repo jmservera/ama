@@ -15385,3 +15385,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2244 revision 0000061 start-up proof (Refs #2244)
 
 * Added [issue-2244-live-r7-2026-11-24.md](research/issue-2244-live-r7-2026-11-24.md): read-only live proof that the start-up retry and write-lock fast paths are deployed and healthy, with a per-criterion table (concurrent writer and lock holder unproven).
+## [2026-11-24] add | Issue 2237 live re-proof on revision 0000061 (Refs #2237)
+
+* Added [issue-2237-live-reproof-2026-11-24.md](research/issue-2237-live-reproof-2026-11-24.md): retention 200 in 55 of 55 calls, 30 write-lock 503s and no 500 in Log Analytics, per-criterion table. No contradictions.
