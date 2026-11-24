@@ -390,6 +390,26 @@ class ForecastStatements(Base):
         self.assertGreater(b["max_calls_this_period"], a["max_calls_this_period"])
         self.assertEqual(len(large), len(small), "statements must not scale with open cases")
 
+    def test_registry_builds_do_not_grow_with_open_cases(self):
+        """The live job took about 70 s of CPU because the whole registry was rebuilt for every case."""
+        from zava_forward.core import ai_registry
+
+        builds = []
+        real = ai_registry.tasks
+
+        def counting():
+            builds.append(1)
+            return real()
+
+        results = []
+        for extra in (0, 40):
+            service, _ = self.counted(extra)
+            builds.clear()
+            with patch.object(ai_registry, "tasks", counting):
+                results.append((service.forecast(self.pm), len(builds)))
+        self.assertEqual(results[0][1], results[1][1])
+        self.assertLessEqual(results[1][1], 60)
+
     def test_forecast_names_an_unavailable_state_when_the_budget_is_spent(self):
         with patch.object(Assistants, "FORECAST_BUDGET_SECONDS", -1.0):
             with self.assertRaises(ForecastTimeout):

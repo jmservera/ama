@@ -1,23 +1,21 @@
 ---
-title: Issue 2304 forecast live 503 research (2026-11-24)
+title: Issue 2304 forecast live 503 on revision 65 research (2026-11-24, round 2)
 ms.date: 2026-11-24
 ---
 
-# Research: forecast 503 after 13 to 17 s on revision 0000061
+# Research: forecast background job takes about 70 s, so no last-good answer
 
-Disposition: executing. Opening note; findings follow.
-
-Disposition: executed. Planning Readiness: Ready. Evidence note: `docs/reference/research/issue-2304-live-2026-11-24.md`.
+Disposition: executed. Planning Readiness: Ready. Evidence note: `docs/reference/research/issue-2304-live-2026-11-24-r2.md`.
 
 ## Findings
 
-* The 2026-11-23 fix is live on revision 0000061 (statements are flat per case) and the 10 s budget works: the live GET returns the named 503 `state: unavailable`, not a hang. Probe 2026-11-24: 503 after 16.77, 13.44, 10.23, 13.44 s while `/api/stats` took 6.08 s and `/api/assistants` 5.4 s.
-* Why 13 to 17 s and not 10: `ForecastReads` starts its clock after `_read_connection` has opened the Azure SQL connection, and a statement in flight cannot be cut, so total time is connection time plus 10 s plus the last statement. Even bare reads cost 5 to 6 s on this system, so each remaining round trip is slow.
-* The result is recomputed from nothing on every request; a timeout throws the work away, so every retry restarts and cannot succeed if the full read needs more than the budget.
-* No SQL write lock is taken: the path is lock-free (`_read_connection`, `rel.read_only()`).
-* Fix direction: compute in a background job that is not cut off at the client wait, keep the last answer in a short TTL cache keyed per staff identity and period, and bound the client wait to under 10 s including connection time. The first request after a cold start may still return the named 503 while the job finishes; the retry is served from the cache.
+* Revision 0000065 (stale-while-slow fix) is live. Probes show 200 responses at 8 to 9 s with `stale_seconds` growing 12, 21, 30, 38, 47: a last-good answer exists but no fresh job finishes inside the 8 s wait. One joined request answered in 3.39 s when a job finished, so the job takes roughly 60 to 80 s.
+* The job is CPU-bound, not SQL-bound. A local SQLite run with 448 open cases issues only 20 statements and still takes 80 s under cProfile.
+* Hot path: `_task_id` and `_due` call `release_reference` per case and capability (10304 calls), which calls `runtime_binding` and `rel.assessment`, which call `ai_registry.get`, which rebuilds the whole registry (`tasks()` -> `_entry` -> `monitoring_coverage.task_declaration`, 267969 deep copies). That is 72 of 80 s.
+* The outlier values (33.77 s, 135 s AI report) are consistent with this CPU load on a 0.5 vCPU container; the AI report was handled under #2303.
+* Warm-up: the cache key is per staff identity and period, and the scope depends on the signed-in user's authorisation, so a start-up warm job has no identity to compute for. With the fix a cold compute is a couple of seconds of CPU, so a warm job is not needed.
 
 ## Follow-ups
 
 1. Owner deploys and re-measures the live forecast.
-2. Measure the live statement trace once SQL is reachable.
+2. Optional: cache `ai_registry.tasks()` build per process.

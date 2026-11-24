@@ -51,6 +51,8 @@ def timed(page, path):
         j = json.loads(body)
         row["state"] = j.get("state")
         row["error"] = (j.get("error") or "")[:80] or None
+        row["stale_seconds"] = j.get("stale_seconds")
+        row["max_calls_this_period"] = j.get("max_calls_this_period")
     except Exception:
         pass
     return row

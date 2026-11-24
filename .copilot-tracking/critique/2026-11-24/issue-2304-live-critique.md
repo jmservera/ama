@@ -1,5 +1,5 @@
 ---
-title: Issue 2304 live critique (2026-11-24)
+title: Issue 2304 round 2 critique (2026-11-24)
 ms.date: 2026-11-24
 ---
 
@@ -7,7 +7,7 @@ ms.date: 2026-11-24
 
 Verdict: proceed, findings applied directly.
 
-* Risk: stale answer after a revoke. Accepted for a counts-only demo forecast; TTL is 60 s and the limit is documented. Authorisation by role is still checked on every request before the cache.
-* Risk: unbounded threads. One job per key, daemon thread, job cap 120 s.
-* Risk: tests with `FORECAST_BUDGET_SECONDS=-1`. The job reports the timeout and the request re-raises it, so the existing test stays valid.
-* Risk: a cold first request still returns 503. Accepted and stated; the retry succeeds from the cache once the job finishes. Live proof needs a deployment (not allowed here).
+* Risk: memoising `release_reference` could serve a value that changes mid-compute. The forecast reads on one read-only connection under `rel.read_only()` and never records, so the value is fixed for the run; the memo lives on the per-run `ForecastReads` view and is not shared. Applied: limit the memo to `ForecastReads`; the write paths keep the unmemoised read.
+* Risk: `assessment` may record an invalidation as a side effect. Under `rel.read_only()` it does not write, so one call equals many.
+* Risk: a start-up warm job needs an identity. Rejected with reason; cold compute becomes fast.
+* Risk: fixing the registry rebuild globally changes shared behaviour. Rejected as out of scope; recorded as follow-up.

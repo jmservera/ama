@@ -1,14 +1,14 @@
 ---
-title: Issue 2304 live review (2026-11-24)
+title: Issue 2304 round 2 review (2026-11-24)
 ms.date: 2026-11-24
 ---
 
 # Review (executed once)
 
-Outcome: conformant for the changed scope, with routed items.
+Outcome: conformant, with routed items.
 
-* Fresh answers are never delayed or replaced by the cache, so state-change tests pass (605 OK).
-* Concurrency: one job per key under a lock; daemon threads; the job holds its own connection; waiters share a read-only result copied with `deepcopy`.
-* Security: role is checked before any job; the stale answer is counts only and keyed by identity; revocation can lag up to 900 s only when a fresh answer is late. Routed: tighten by re-checking the staff row cheaply if the owner wants it.
-* Routed: the job cap 120 s can still leave the first cold request on 503; live proof needs deployment (owner).
-* Routed: `ruff format` of `assistants.py` was pre-existing unformatted and left alone.
+* The memo is scoped to the per-run `ForecastReads` view; write paths use the unmemoised read. Verified by reading `release_reference` and by `test_assistants` (156 OK).
+* The regression test fails without the fix and passes with it.
+* Claims in the evidence note match the recorded profile and probe outputs. Live fresh-answer timing and the SQL trace stay unproven and are stated so.
+
+Routed follow-ups: owner deploys and re-measures (criterion 4); confirm full api and core discover runs in the coordinator gate; optionally cache the registry build per process.

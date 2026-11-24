@@ -44,10 +44,17 @@ class ForecastReads:
         self._adopt_bound = 0
         self._adoptable: dict[tuple[Any, Any], list[Any]] = defaultdict(list)
         self._homes: dict[str, set[str] | Exception] = {}
+        self._once: dict[Any, Any] = {}
         self.statements = 0
 
     def __getattr__(self, name: str) -> Any:
         return getattr(self._db, name)
+
+    def once(self, key: Any, read: Any) -> Any:
+        """Compute a per-view value once; the release read is the same for every case."""
+        if key not in self._once:
+            self._once[key] = read()
+        return self._once[key]
 
     def check(self) -> None:
         if self._deadline is not None and time.monotonic() > self._deadline:
