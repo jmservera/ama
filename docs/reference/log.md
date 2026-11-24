@@ -15394,3 +15394,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2303 live proof of GET /api/ai/report on revision 0000061 (Refs #2303)
 
 * Added [issue-2303-live-2026-11-24.md](research/issue-2303-live-2026-11-24.md): nine 200s for the report, loaded Asset and board view, per-criterion table, and the 66 to 186 s latency finding.
+
+## [2026-11-24] add | Issue 2304 live forecast re-proof on revision 0000064 (Refs #2304)
+
+* Added [issue-2304-live-r64-2026-11-24.md](research/issue-2304-live-r64-2026-11-24.md): forecast, briefing, AI report and retention timings on revision 0000064 and a per-criterion table.

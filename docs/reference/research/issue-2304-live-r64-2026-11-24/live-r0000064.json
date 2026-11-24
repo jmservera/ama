@@ -1,0 +1,67 @@
+{
+ "label": "live-r0000064",
+ "utc": "2026-11-24T13:51:17Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 1.92,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 8.06,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 8.7,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 9.4,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 503,
+   "seconds": 8.4,
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, o"
+  },
+  {
+   "path": "/api/assistants",
+   "status": 200,
+   "seconds": 1.1,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 0.1,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/ai/report",
+   "status": "TimeoutError",
+   "seconds": 60.01
+  },
+  {
+   "path": "/api/retention",
+   "status": 200,
+   "seconds": 3.23,
+   "state": null,
+   "error": null
+  }
+ ]
+}
