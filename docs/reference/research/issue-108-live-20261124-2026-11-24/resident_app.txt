@@ -1,0 +1,6 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "ep": "https://aif-cutover-test-rzsrg.openai.azure.com",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:3e10d2dd1b49b10271afff9c27e02fdde9d56f51b99aedc67dcfd31df7177b9e",
+  "rev": "ca-resident-demo--0000029"
+}

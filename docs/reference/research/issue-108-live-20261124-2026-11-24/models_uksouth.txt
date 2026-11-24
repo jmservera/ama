@@ -1,0 +1,164 @@
+[
+  {
+    "dep": "2027-04-14T00:00:00Z",
+    "life": "Legacy",
+    "n": "gpt-4.1",
+    "sku": [
+      {
+        "cap": 10,
+        "max": 1000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "ProvisionedManaged"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "GlobalProvisionedManaged"
+      },
+      {
+        "cap": 10,
+        "max": 10000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": 50,
+        "max": 250,
+        "s": "DeveloperTier"
+      },
+      {
+        "cap": 10,
+        "max": 100000000,
+        "s": "GlobalBatch"
+      }
+    ],
+    "v": "2025-04-14"
+  },
+  {
+    "dep": "2027-04-14T00:00:00Z",
+    "life": "Legacy",
+    "n": "gpt-4.1-mini",
+    "sku": [
+      {
+        "cap": 10,
+        "max": 1000000,
+        "s": "Standard"
+      },
+      {
+        "cap": 10,
+        "max": 1000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": 10,
+        "max": 10000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": 50,
+        "max": 250,
+        "s": "DeveloperTier"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "GlobalProvisionedManaged"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "ProvisionedManaged"
+      },
+      {
+        "cap": 10,
+        "max": 100000000,
+        "s": "GlobalBatch"
+      }
+    ],
+    "v": "2025-04-14"
+  },
+  {
+    "dep": "2027-04-14T00:00:00Z",
+    "life": "Legacy",
+    "n": "gpt-4.1",
+    "sku": [
+      {
+        "cap": 10,
+        "max": 1000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "ProvisionedManaged"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "GlobalProvisionedManaged"
+      },
+      {
+        "cap": 10,
+        "max": 10000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": 50,
+        "max": 250,
+        "s": "DeveloperTier"
+      },
+      {
+        "cap": 10,
+        "max": 100000000,
+        "s": "GlobalBatch"
+      }
+    ],
+    "v": "2025-04-14"
+  },
+  {
+    "dep": "2027-04-14T00:00:00Z",
+    "life": "Legacy",
+    "n": "gpt-4.1-mini",
+    "sku": [
+      {
+        "cap": 10,
+        "max": 1000000,
+        "s": "Standard"
+      },
+      {
+        "cap": 10,
+        "max": 1000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": 10,
+        "max": 10000000,
+        "s": "GlobalStandard"
+      },
+      {
+        "cap": 50,
+        "max": 250,
+        "s": "DeveloperTier"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "GlobalProvisionedManaged"
+      },
+      {
+        "cap": null,
+        "max": 30000,
+        "s": "ProvisionedManaged"
+      },
+      {
+        "cap": 10,
+        "max": 100000000,
+        "s": "GlobalBatch"
+      }
+    ],
+    "v": "2025-04-14"
+  }
+]

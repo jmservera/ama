@@ -1,0 +1,782 @@
+[
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "OpenAI.ProvisionedManaged"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200.0,
+    "n": "OpenAI.GlobalProvisionedManaged"
+  },
+  {
+    "cur": 0.0,
+    "lim": 10.0,
+    "n": "OpenAI.FineTuned.Deployments"
+  },
+  {
+    "cur": 0.0,
+    "lim": 30.0,
+    "n": "OpenAI.S0.AccountCount"
+  },
+  {
+    "cur": 0.0,
+    "lim": 240.0,
+    "n": "OpenAI.Standard.gpt-35-turbo"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000000.0,
+    "n": "OpenAI.GlobalBatch.gpt-35-turbo"
+  },
+  {
+    "cur": 0.0,
+    "lim": 80.0,
+    "n": "OpenAI.Standard.gpt-4-turbo"
+  },
+  {
+    "cur": 0.0,
+    "lim": 750.0,
+    "n": "OpenAI.GlobalStandard.gpt-4-turbo-2024-0409"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "OpenAI.GlobalStandard.gpt-4o-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 500.0,
+    "n": "OpenAI.GlobalStandard.gpt-4o-mini-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 30000.0,
+    "n": "OpenAI.GlobalBatch.gpt-4"
+  },
+  {
+    "cur": 0.0,
+    "lim": 80000.0,
+    "n": "OpenAI.GlobalBatch.gpt-4-turbo"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.gpt-4o"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000000.0,
+    "n": "OpenAI.GlobalBatch.gpt-4o-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 0.0,
+    "n": "OpenAI.Provisioned.gpt-4o-audio-preview"
+  },
+  {
+    "cur": 0.0,
+    "lim": 150.0,
+    "n": "OpenAI.Standard.gpt-4o"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-4o"
+  },
+  {
+    "cur": 0.0,
+    "lim": 9000.0,
+    "n": "OpenAI.GlobalStandard.gpt-4o-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 350.0,
+    "n": "OpenAI.Standard.text-embedding-ada-002"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.text-embedding-ada-002"
+  },
+  {
+    "cur": 0.0,
+    "lim": 350.0,
+    "n": "OpenAI.Standard.text-embedding-3-large"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.text-embedding-3-small"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.text-embedding-3-large"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.o1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.o3-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.o3"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100000.0,
+    "n": "OpenAI.GlobalBatch.o3"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000000.0,
+    "n": "OpenAI.GlobalBatch.o3-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.ModelRouter"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.o4-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 500.0,
+    "n": "OpenAI.GlobalStandard.o4-mini-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "OpenAI.DeveloperTier.o4-mini-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.o4-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 3000.0,
+    "n": "OpenAI.GlobalStandard.gpt4.1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "OpenAI.GlobalStandard.gpt4.1-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "OpenAI.DeveloperTier.gpt4.1-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 500.0,
+    "n": "OpenAI.GlobalStandard.gpt4.1-mini-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 500.0,
+    "n": "OpenAI.DeveloperTier.gpt4.1-mini-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 500.0,
+    "n": "OpenAI.GlobalStandard.gpt4.1-nano-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 500.0,
+    "n": "OpenAI.DeveloperTier.gpt4.1-nano-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 16000.0,
+    "n": "OpenAI.GlobalStandard.gpt4.1-mini"
+  },
+  {
+    "cur": 10.0,
+    "lim": 5000.0,
+    "n": "OpenAI.Standard.gpt4.1-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000000.0,
+    "n": "OpenAI.GlobalBatch.gpt-4.1-mini"
+  },
+  {
+    "cur": 10.0,
+    "lim": 16000.0,
+    "n": "OpenAI.GlobalStandard.gpt4.1-nano"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.gpt-4.1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.gpt-4.1-nano"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5-chat"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 16000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5-nano"
+  },
+  {
+    "cur": 0.0,
+    "lim": 350.0,
+    "n": "OpenAI.GlobalStandard.gpt-5-pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.gpt-5"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5-codex"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.1-chat"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.gpt-5.1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.1-codex"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.1-codex-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.1-codex-max"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.2"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.2-chat"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.2-codex"
+  },
+  {
+    "cur": 0.0,
+    "lim": 3000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.3-codex"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.3-chat"
+  },
+  {
+    "cur": 0.0,
+    "lim": 350.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.4-pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.4"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.gpt-5.4"
+  },
+  {
+    "cur": 0.0,
+    "lim": 16000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.4-nano"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.4-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200000.0,
+    "n": "OpenAI.GlobalBatch.gpt-5.4-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.5"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-chat-latest"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.6-luna"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.6-sol"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-5.6-terra"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-6-astra"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-6-luna"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-6-sol"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "OpenAI.GlobalStandard.gpt-6.1-sol"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-6.1-terra"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-6.2-astra"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "OpenAI.GlobalStandard.gpt-6.2-sol"
+  },
+  {
+    "cur": 1.0,
+    "lim": 100.0,
+    "n": "AIServices.S0.AccountCount"
+  },
+  {
+    "cur": 0.0,
+    "lim": 600.0,
+    "n": "AIServices.GlobalStandard.MaaS"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Ministral-3B-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.GPT-OSS-20B-Finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Llama-3.3-70B-Instruct-Finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Qwen3-32B-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Mistral-Large-3"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-R1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-R1-0528"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V3-0324"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V3.1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "AIServices.GlobalStandard.Llama-4-Maverick-17B-128E-Instruct-FP8"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "AIServices.GlobalStandard.Llama-3.3-70B-Instruct"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Phi-4"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Phi-4-mini-instruct"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Phi-4-mini-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Phi-4-multimodal-instruct"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Phi-4-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Ministral-3B"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.mistral-medium-2505"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.mistral-small-2503"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Codestral-2501"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.Llama-4-Scout-17B-16E-Instruct"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Cohere-Command-A"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Embed-V-4-0"
+  },
+  {
+    "cur": 0.0,
+    "lim": 5000.0,
+    "n": "AIServices.GlobalStandard.gpt-oss-120b"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.MAI-DS-R1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 30.0,
+    "n": "AIServices.GlobalStandard.FLUX-1.1-pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 30.0,
+    "n": "AIServices.GlobalStandard.FLUX.1-Kontext-pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 60.0,
+    "n": "AIServices.GlobalStandard.mistral-document-ai-2505"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-3"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-3-mini"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4-fast-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4-fast-non-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 0.0,
+    "n": "AIServices.GlobalProvisionedManaged"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Kimi-K2-Thinking"
+  },
+  {
+    "cur": 0.0,
+    "lim": 300.0,
+    "n": "AIServices.GlobalStandard.Cohere-Rerank-V4-Fast"
+  },
+  {
+    "cur": 0.0,
+    "lim": 300.0,
+    "n": "AIServices.GlobalStandard.Cohere-Rerank-V4-Pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 4.0,
+    "n": "AIServices.GlobalStandard.FLUX.2-pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V3.2-Speciale"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V3.2"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Kimi-K2.5"
+  },
+  {
+    "cur": 0.0,
+    "lim": 60.0,
+    "n": "AIServices.GlobalStandard.mistral-document-ai-2512"
+  },
+  {
+    "cur": 0.0,
+    "lim": 4.0,
+    "n": "AIServices.GlobalStandard.FLUX.2-flex"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4-1-fast-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4-1-fast-non-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4-20-non-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4-20-reasoning"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Kimi-K2.6"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V4-Flash"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4.3"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V4-Pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 60.0,
+    "n": "AIServices.GlobalStandard.mistral-ocr-4-0"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.mistral-medium-3-5"
+  },
+  {
+    "cur": 0.0,
+    "lim": 300.0,
+    "n": "AIServices.GlobalStandard.Cohere-command-a-plus-05-2026"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Kimi-K2.7-Code"
+  },
+  {
+    "cur": 0.0,
+    "lim": 250.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V4-Flash-0731"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.grok-4.6"
+  },
+  {
+    "cur": 0.0,
+    "lim": 60.0,
+    "n": "AIServices.GlobalStandard.Cohere-parse-v5"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V4.1-Flash"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Cohere-Embed-V5-Fast"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Cohere-Embed-V5-Pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 315.0,
+    "n": "AIServices.GlobalStandard.grok-4.7"
+  },
+  {
+    "cur": 0.0,
+    "lim": 4500.0,
+    "n": "AIServices.GlobalStandard.Microsoft-Decision-1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 200.0,
+    "n": "AIServices.GlobalStandard.Cohere-rerank-v5-pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Cohere-rerank-v5-fast"
+  },
+  {
+    "cur": 0.0,
+    "lim": 100.0,
+    "n": "AIServices.GlobalStandard.Kimi-K3.1-Pro"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.DeepSeek-V4.1-Flash-1017"
+  },
+  {
+    "cur": 0.0,
+    "lim": 4500.0,
+    "n": "AIServices.GlobalStandard.Microsoft-Decision-1.1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 1000.0,
+    "n": "AIServices.GlobalStandard.mistral-large-4-latest"
+  },
+  {
+    "cur": 0.0,
+    "lim": 500.0,
+    "n": "AIServices.GlobalStandard.MAI-Thinking-1"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "AIServices.GlobalStandard.MAI-Code-1.1-Flash-finetune"
+  },
+  {
+    "cur": 0.0,
+    "lim": 2000.0,
+    "n": "AIServices.DeveloperTier.MAI-Code-1.1-Flash-finetune"
+  },
+  {
+    "cur": 1.0,
+    "lim": 200.0,
+    "n": "AccountCount"
+  }
+]
