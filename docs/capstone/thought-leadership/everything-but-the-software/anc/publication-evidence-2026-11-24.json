@@ -1,0 +1,70 @@
+{
+  "schema": "publication-reporting-reconciliation/v1",
+  "date": "2026-11-24",
+  "scope": "Post-collection descriptive tabulation of existing public exports only; no experimental, evaluator or judge execution and no replacement of the original estimator, intervals or scores.",
+  "source_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+  "export_directory": "results/pilot-estimation",
+  "export_sha256": {
+    "runs.csv": "027a39429416e0ff81040e1ce6b1a141ff33d17dd60fe633cb07371aa1753db7",
+    "retention.csv": "b0ca8bccf3179bbf97fbd86db42a6128cb45a9f32795e1f52fcc6964e68d47c5",
+    "episodes.csv": "9411376afdfb90c91b508729a9c54ce9c0b8c3da8617ff271a6794585f01cc85",
+    "attempts.csv": "93d6200b908ec60766c41886baee3ed32ebfb1f7cf2c3eeac21261ac61931609"
+  },
+  "realized_control_ceiling": {
+    "method": "Mean end_pass_rate within each D model cell, then equal-weight mean over all three models; headroom is 100 minus that mean.",
+    "D_mean_pct": 96.96287964004499,
+    "maximum_gain_against_observed_D_pct_points": 3.0371203599550114,
+    "original_target_pct_points": 10,
+    "target_changed": false
+  },
+  "retention": {
+    "rows": 6300,
+    "risk_complete_rows": 6300,
+    "observation_complete_rows": 6300,
+    "empty_risk_set_rows": 630,
+    "rows_per_arm_per_checkpoint": 630,
+    "F_loss_contract_checkpoints_by_arm": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 3},
+    "P_loss_contract_checkpoints_by_arm": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 4},
+    "episodes": 1,
+    "episode_run": "pilot-estimation-gemini-4-argon-E-07",
+    "onset": "P7",
+    "recovery_observed": false,
+    "censored": true
+  },
+  "CR1_prerequisite_strata": {
+    "method": "Join P10 retention groups to runs.csv by run_id. Both complete means currently_passing equals eligible in both f09 and f10. Arrays are [CR1 successes, subgroup allocations, CR1 unknowns]; unknowns remain in allocations. Post-treatment descriptive strata only.",
+    "claude-sonnet-5.5": {
+      "A": {"both_complete": [12, 12, 0], "not_both_complete": [9, 9, 0]},
+      "B": {"both_complete": [13, 13, 0], "not_both_complete": [8, 8, 0]},
+      "C": {"both_complete": [13, 13, 0], "not_both_complete": [8, 8, 0]},
+      "D": {"both_complete": [11, 11, 0], "not_both_complete": [9, 10, 0]},
+      "E": {"both_complete": [17, 17, 0], "not_both_complete": [3, 4, 0]}
+    },
+    "gemini-4-argon": {
+      "A": {"both_complete": [6, 21, 0], "not_both_complete": [0, 0, 0]},
+      "B": {"both_complete": [8, 21, 0], "not_both_complete": [0, 0, 0]},
+      "C": {"both_complete": [16, 21, 0], "not_both_complete": [0, 0, 0]},
+      "D": {"both_complete": [7, 21, 0], "not_both_complete": [0, 0, 0]},
+      "E": {"both_complete": [11, 21, 0], "not_both_complete": [0, 0, 0]}
+    },
+    "gpt-6.1-sol": {
+      "A": {"both_complete": [5, 5, 0], "not_both_complete": [14, 16, 0]},
+      "B": {"both_complete": [12, 12, 0], "not_both_complete": [5, 9, 1]},
+      "C": {"both_complete": [8, 8, 0], "not_both_complete": [9, 13, 1]},
+      "D": {"both_complete": [6, 6, 0], "not_both_complete": [13, 15, 0]},
+      "E": {"both_complete": [12, 12, 0], "not_both_complete": [8, 9, 0]}
+    }
+  },
+  "held_attempts_by_model_arm": {
+    "claude-sonnet-5.5": {"A": 0, "B": 0, "C": 0, "D": 0, "E": 1},
+    "gemini-4-argon": {"A": 1, "B": 4, "C": 4, "D": 4, "E": 6},
+    "gpt-6.1-sol": {"A": 4, "B": 7, "C": 10, "D": 5, "E": 9}
+  },
+  "not_resolved": [
+    "Complete amendment/outcome-access chronology and dependence justification",
+    "Two CR1 test errors and complete graded CR1 contract decomposition",
+    "55 final attempt charges and quality-matched all-allocation costs",
+    "Four unjudged endpoint packets and incomplete human calibration",
+    "Historical case runtime identifiers without retained source locators"
+  ]
+}

@@ -2,7 +2,8 @@
 
 The measurement definitions below come from public source \sourceref{R05}
 in \url{https://github.com/jmservera/ama-thought-mve}. This is a source
-inventory, not a remeasurement of private experimental data. The collection path is
+inventory based on inspected code; private experimental data were not
+remeasured. The collection path is
 \nolinkurl{harness/runner.py} $\rightarrow$
 \nolinkurl{harness/measure.py} $\rightarrow$
 \nolinkurl{skeleton/tools/metrics_core.py}; pilot outcomes are derived in
@@ -54,7 +55,7 @@ instrumented test-coverage measures. \\
 \texttt{md\_words}, \texttt{test\_counts}, \texttt{diff}, \texttt{commits} &
 Whitespace-delimited Markdown words excluding generated reports/dot
 directories; AST test/assertion counts; Git additions/deletions by area
-and post-step commits. Counts describe artifacts, not semantic quality. \\
+and post-step commits. Semantic quality requires examining those artifacts. \\
 Usage and timing &
 \texttt{totalNanoAiu}/$10^9$ supplies AI credits; input, output, cache-read
 and cache-write token counts remain separate. \texttt{agent.seconds} is
@@ -80,8 +81,8 @@ Lizard measures each Python source function. jscpd runs from an empty
 configuration directory in Python mode with minimum 50 tokens and five
 lines. Ruff runs with isolated configuration, fixed
 \texttt{E,F,W,C90,B,SIM} selection, JSON output, no cache and
-\texttt{--exit-zero}; diagnostics are counted rather than treating its exit
-code as a clean-lint verdict.
+\texttt{--exit-zero}. The engine counts diagnostics; the exit code alone
+cannot establish a clean-lint result.
 
 The invocation omits \texttt{--ignore-noqa}, leaving inline suppressions
 effective. The dictionary contains neither a suppression count nor a
@@ -102,7 +103,10 @@ post-step. It writes outcomes, provenance, source HEAD, raw metrics,
 integrity and diff records. The current final score is unavailable when
 sequence/panel identities or binary endpoint observations are incomplete.
 Section~\ref{sec:decaymeasurement} identifies the loss and CR1 summaries
-that the inspected source did not yet export. Those gaps remain unresolved.
+that the inspected source did not yet export. The final-export disposition
+in Section~\ref{app:reportingdisposition} distinguishes available retained
+F/P summaries and descriptive prerequisite strata from still-unavailable
+graded CR1 reporting.
 Credits require complete consumption flags; all-attempt delivery/CR1 totals
 need a matching attempt journal. Aggregate statistics and seeded resampling
 operate on these records, not on AI opinions. Model-specific allocation,
@@ -312,6 +316,144 @@ disclosed AI-assisted failure/mismatch triage.
 \endgroup
 
 \FloatBarrier
+\subsection{Final reporting disposition from existing exports}\label{app:reportingdisposition}
+
+This post-collection reporting reconciliation uses only the public
+\nolinkurl{runs.csv}, \nolinkurl{retention.csv}, \nolinkurl{episodes.csv}
+and \nolinkurl{attempts.csv} under
+\nolinkurl{results/pilot-estimation/} at source \sourceref{R17}.
+Their SHA-256 digests and derived counts are retained in
+\nolinkurl{anc/publication-evidence-2026-11-24.json}. No candidate code, hidden
+tests or judge was rerun, and no score, sample size or interval was changed.
+
+\paragraph{PF1: retained feature histories.}
+The export contains 6,300 rows: ten F and ten P checkpoints for each of
+315 trajectories. All rows declare complete risk-set histories and binary
+observations; 630 first-cycle F/P rows have empty prior-pass risk sets and
+undefined loss density. A/D rows repeat the same retained state at F/P.
+The independent-unit assumption applies to trajectories; checkpoints
+remain repeated observations within them.
+The conservative analyzer therefore supplies complete retained-state
+counts for this dataset. Its absent observed-subset/missing-count output
+does not conceal missing feature observations here; it remains a reporting
+limitation for future incomplete histories.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Retained loss reconciliation. Each arm has 630 F and 630 P rows.
+Loss-checkpoints sum failing previously acquired contracts over time,
+counting a persisting failure again at each observed checkpoint.}
+\label{tab:retentionreconciliation}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr@{}}
+\toprule
+Arm & F loss-checkpoints & P loss-checkpoints & Affected trajectories & Episodes \\
+\midrule
+A & 0 & 0 & 0 & 0 \\
+B & 0 & 0 & 0 & 0 \\
+C & 0 & 0 & 0 & 0 \\
+D & 0 & 0 & 0 & 0 \\
+E & 3 & 4 & 1 & 1 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+The single episode is the paused-case consent contract in Gemini E-07.
+It first fails at $P_7$, remains open through $F_8/P_8$, $F_9/P_9$ and
+$F_{10}/P_{10}$, and is right-censored without an observed recovery at
+the end of feature delivery. Seven failed contract-checkpoints thus describe
+one persisting episode. Rejected edits and failures inside sessions are
+outside this retained-checkpoint series. The existing progression figure
+plots retained P means. Reconstructing every attempted edit would require
+additional within-session evidence.
+
+\paragraph{PF2: CR1 and its prerequisites.}
+Table~\ref{tab:crprerequisites} joins the F9/F10 group counts at $P_{10}$
+to the existing composite CR1 outcome. ``Complete'' requires every F9
+and F10 contract to pass before CR1; the other group can still contain
+partially implemented prerequisites. For GPT, the incomplete group lacks
+both F9 and F10 completion; Sonnet's groups have different deficits.
+Conditioning on these treatment-affected states is descriptive.
+It does not repair the unequal preservation burden or estimate a causal
+adaptation effect.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{CR1 successes/allocated trajectories by pre-CR1 F9/F10
+completeness. Unknown outcomes remain in the denominator and are listed
+separately. A dash denotes an empty subgroup, for which a success rate
+is undefined.}
+\label{tab:crprerequisites}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcllr@{}}
+\toprule
+Model & Arm & Both complete & Not both complete & Unknown (latter group) \\
+\midrule
+Sonnet 5.5 & A & 12/12 & 9/9 & 0 \\
+Sonnet 5.5 & B & 13/13 & 8/8 & 0 \\
+Sonnet 5.5 & C & 13/13 & 8/8 & 0 \\
+Sonnet 5.5 & D & 11/11 & 9/10 & 0 \\
+Sonnet 5.5 & E & 17/17 & 3/4 & 0 \\
+\midrule
+Gemini 4 Argon & A & 6/21 & -- & 0 \\
+Gemini 4 Argon & B & 8/21 & -- & 0 \\
+Gemini 4 Argon & C & 16/21 & -- & 0 \\
+Gemini 4 Argon & D & 7/21 & -- & 0 \\
+Gemini 4 Argon & E & 11/21 & -- & 0 \\
+\midrule
+GPT 6.1 Sol & A & 5/5 & 14/16 & 0 \\
+GPT 6.1 Sol & B & 12/12 & 5/9 & 1 \\
+GPT 6.1 Sol & C & 8/8 & 9/13 & 1 \\
+GPT 6.1 Sol & D & 6/6 & 13/15 & 0 \\
+GPT 6.1 Sol & E & 12/12 & 8/9 & 0 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+The two same-state-ranking test errors stay unknown; neither final coverage
+nor a successful workflow scenario resolves their cause. The exports used
+here do not supply a complete graded CR1 panel separating new contracts
+passed from previously passing feature contracts lost. That richer endpoint,
+complete attempt-level failure classification and independently reviewed
+assistance coverage are deferred measurement work. The original owner
+attestation and composite success bounds remain unchanged.
+
+\paragraph{PF3: incomplete all-attempt costs.}
+All 5,372 attempt rows remain included in the accounting frame.
+Table~\ref{tab:heldbillingcells} shows why a settled complete-case frontier
+cannot represent every allocation. Attempt holds can share a trajectory;
+their counts are not counts of missing repositories. The 19,200 reserved
+credits do not cap the eventual invoice, and the 783.16186-credit partial
+lower bound does not resolve it. We report the already settled subset
+means with their existing denominators. All-allocation costs and
+quality-matched efficiency remain unidentified. Final-coverage/cost scatterplots
+retain this subset scope.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Attempts with held billing by development model and arm,
+including feature, post-step and CR1 attempts. Zero means no held attempt,
+not zero spending.}
+\label{tab:heldbillingcells}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
+\toprule
+Model & A & B & C & D & E & Total \\
+\midrule
+Sonnet 5.5 & 0 & 0 & 0 & 0 & 1 & 1 \\
+Gemini 4 Argon & 1 & 4 & 4 & 4 & 6 & 19 \\
+GPT 6.1 Sol & 4 & 7 & 10 & 5 & 9 & 35 \\
+\midrule
+Total & 5 & 11 & 14 & 9 & 16 & 55 \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+No further experimental round, judge batch or retrospective registration
+is used to fill these gaps. Future work needs a calibrated task with
+headroom, explicit acquisition and adaptation denominators, retained and
+rejected failure measures, aligned randomisation/inference, fully reconciled
+costs and an independently reviewed rating instrument. The present paper
+reports what this completed exploratory study could measure.
+
+\FloatBarrier
 \subsection{Additional endpoint and resource statistics}\label{app:resultsdetail}
 
 These tables retain distributional, size and judging detail from the
@@ -455,7 +597,7 @@ Equal-model & E -- B & [+6.35, +7.94] \\
 Boolean outcomes in both arms, in percentage points. Intervals subtract
 opposite endpoints of 97.5\% equal-tailed Clopper--Pearson intervals for the
 two arms, giving at least 95\% coverage per comparison under the binomial
-model, not simultaneous coverage over all comparisons.}
+model. Simultaneous coverage over all comparisons is unestablished.}
 \label{tab:resultscrintervals}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrl@{}}
 \toprule
@@ -960,6 +1102,11 @@ inspection found per-attempt starts and durations in retained state;
 reconciling those records with amendments and outcome access remains
 necessary. Neither the scheduler nor the export grouping establishes
 independent provider-service conditions or resolves the bootstrap choice.
+For this paper the complete amendment/outcome-access chronology remains
+unavailable; the old requirement is dispositioned as a limit on inference,
+not reported as satisfied. Reconstructing it would require approved retained
+operator records. A later study must record
+decision times, outcome access and execution overlaps prospectively.
 
 \subsection{Historical resource planning scenarios}\label{app:resources}
 

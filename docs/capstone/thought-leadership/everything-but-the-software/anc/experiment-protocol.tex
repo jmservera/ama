@@ -27,8 +27,8 @@ handling, VM restarts and quarantine-completion transitions) were publicly
 disclosed in version control, culminating in initial handoff commit
 \sourceref{R07} and final quarantine-recovery sources
 \sourceref{R22} and \sourceref{R23} in the end register.
-The completed study is exploratory. We estimate differences under an evolving
-protocol, not through a preregistered confirmatory evaluation.
+The completed study estimates exploratory differences under an evolving
+protocol. The registered base covers only part of that execution history.
 The public protocol leaves its formal hypothesis list empty and marks the
 current amendment's registration fields false or null. Those fields concern
 the amendment; the registered base remains based on my confirmation.
@@ -43,14 +43,19 @@ A trajectory is the sequence of work on one repository. Its feature steps,
 sessions and completion counters describe work within that sequence and
 cannot be counted as additional independent replicates.
 
-Collection used sixteen successive execution-source versions, rather than
-one frozen implementation. The first three were inspected on 8 November;
+Collection used sixteen successive execution-source versions.
+The first three were inspected on 8 November;
 the 13--14 November snapshot had 313 completed trajectories, and audited
 recovery completed all 315. Table~\ref{tab:executionepochs} links each version
 to its operational correction and step counts; the end register supplies
 the full identifiers. Failures and unknowns remain in the record.
 Implementation changes and scheduling can be confounded with time, arm
 and model; source-commit times alone do not establish collection times.
+The retained amendment records document decisions and source transitions,
+but do not provide a complete decision-by-decision record of outcomes
+already inspected when each change was made. That chronology is unavailable
+in the public exports used here. We retain the resulting descriptive
+comparisons without claiming prospective outcome-blind adaptation.
 
 The 1 November five-arm amendment, 2 November allocation revision and
 5 November v6 source findings below remain dated planning and inspection
@@ -110,7 +115,7 @@ retained in the dated revision record and source register.
 
 B--D is the primary comparison: a scheduled consolidation session versus
 giving the builder the same total time and nominal credits in one session.
-The allowances are ceilings, not measured spending.
+The allowances set ceilings; actual spending is reported separately.
 D also has fewer fresh sessions.
 B--A adds both the consolidation package and its resources. B--C changes
 editing rights, tests and handover content. E--B compares repair against
@@ -199,7 +204,8 @@ Development agents request isolated commands against a writable repository;
 post-run judging follows read-only workflow replay and receives evidence
 without tools. Python orchestration and JavaScript model transport remain
 on the trusted host in both paths. Arrows describe information/control
-flow, not observed study execution or measured causal effects.
+flow specified by that source. Their empirical execution and causal effects
+require separate evidence.
 Source and historical-runtime qualification are in the revision record.}
 \label{fig:runtimeboundaries}
 \end{figure}
@@ -218,8 +224,8 @@ comprehension is not measured.
 
 \paragraph{Who measures, and what ``quality'' means.}
 During development, models implement features, consolidate code, write
-review notes or repair defects. Those activities are treatments, not outcome
-ratings. The separate host evaluator (\sourceref{R05}) runs fixed hidden
+review notes or repair defects as assigned treatments.
+The separate host evaluator (\sourceref{R05}) runs fixed hidden
 contracts and code-analysis tools, writes \texttt{measure.json} and computes
 the numerical summaries. It does not call a separate LLM-as-judge. Table~\ref{tab:measurementprovenance} separates
 outcomes, structural proxies and resource observations.
@@ -336,8 +342,11 @@ from the earlier design. The 8 November read-only source inspection
 (\sourceref{R05}) confirms that the conservative rule remains in
 \texttt{pilot\_analysis.retention}; it does not establish the planned
 observed-subset export or amend the reporting rule.
-The source-bound reporting decision remains to be documented without
-backdating an amendment or inferring completeness from raw vectors.
+The final public export permits a bounded reporting disposition
+(Supplement Section~\ref{app:reportingdisposition}): all 6,300 F/P rows
+declare complete risk sets and observations, so no partial-observation
+bounds are needed for these retained feature checkpoints. This does not
+implement or validate the richer pipeline for future incomplete histories.
 
 \begin{figure}[!htbp]
 \centering
@@ -353,14 +362,17 @@ previously passing contracts lost, and observed/missing denominators.
 The earlier reporting plan also requested results stratified by whether
 F9 and F10 were acquired before CR1. Less complete repositories have fewer
 passing contracts to preserve. Treatment can affect prerequisite acquisition,
-so these strata are post-treatment selections, not randomised subgroups.
+so conditioning on these strata introduces post-treatment selection.
 One fixed CR1 is task-specific. A prewritten, randomly selected request
 pool belongs to a separately registered subsequent study.
 The summary inspected on 5 November computes composite CR1 success. The
 active-source inspection on 8 November likewise finds composite
 \texttt{cr\_success}, not a completed graded or F9/F10-stratified CR1
-reporting pipeline. Those additional reporting requirements retain the same
-source-bound reconciliation gap; retained raw vectors alone
+reporting pipeline. Supplement Section~\ref{app:reportingdisposition}
+adds descriptive F9/F10 strata from existing exports. A complete graded
+15-contract CR1 panel and prior-pass loss decomposition are unavailable in
+those summaries and deferred to the deeper study; composite outcomes and
+the two unknowns remain the reported endpoints. Retained raw vectors alone
 do not establish a completed reporting pipeline.
 
 \begin{figure}[!htbp]
@@ -477,8 +489,8 @@ n_{\mathrm{plan}}(\sigma)=
 \centering\small
 \caption{Historical conditional normal planning for the ten-point B--D contrast,
 three equally weighted models, $\alpha=0.05$ and target power 0.80.
-The SDs are assumptions, not measured variances or interchangeable power
-guarantees.}
+The SDs are planning assumptions; power remains conditional on their
+validity and the stated model.}
 \label{tab:replicationchoices}
 \begin{tabular}{@{}rr@{}}
 \toprule
@@ -491,8 +503,8 @@ Assumed within-cell SD (points) & Planning minimum per model per arm \\
 \end{tabular}
 \end{table}
 
-These are conditional planning assumptions, not estimates of actual
-within-cell variability. Target power depends on independent trajectories,
+Actual within-cell variability was unknown at planning. Target power
+depends on independent trajectories,
 the common variance, normal approximation and equal-model estimand; it is
 not guaranteed by any offered choice. In particular, default $n=12$ is
 \emph{not} an 80\%-power design under the existing SD of 25 points.
@@ -502,7 +514,7 @@ These planning requirements and assumptions are retained from the earlier
 record. Neither the registered base nor selection of $n=21$ establishes
 their validity for evolving-source exploratory data.
 
-The candidate independent-cell analysis uses a bootstrap that samples whole
+The reported independent-cell analysis uses a bootstrap that samples whole
 trajectories with replacement within each model/arm cell.
 The 2.5th and 97.5th percentiles of 10,000 resulting estimates give each
 95\% interval. The inspected v6 code uses independent arm/model draws; it
@@ -525,7 +537,12 @@ but the label alone cannot establish their dependence or independence. Schedulin
 inference require justification; block-aware analysis would require a
 separately approved, disclosed choice and aligned planning variance.
 Shared block/service effects remain unmeasured; the v6 source freeze
-does not resolve this choice, and this update supplies no new resolution.
+does not resolve this choice. We preserve the analysis actually performed
+as a conditional exploratory summary. Its nominal 95\% coverage depends
+on within-cell trajectory independence and does not account for
+execution-epoch confounding or shared provider conditions. An interval
+excluding zero is therefore not a confirmed causal or generalisable
+treatment effect.
 Public run identifiers allow the model/replicate scheduling groups and
 source epochs to be reconstructed. Retained operator metadata also contain
 start times and controller durations for every attempt (Supplement
@@ -533,7 +550,12 @@ Section~\ref{app:executiondetail}). Those intervals describe controller activity
 requests shared provider conditions or whether their errors were independent. The reported companion intervals retain the analysis actually
 performed; a dependence-sensitive comparison would be a separately
 disclosed post-collection analysis.
-% TODO(author): document and approve the dependence justification and actual amendment/outcome-access chronology using retained records. Any new sensitivity analysis must be explicitly post-collection; do not silently replace the estimator or backdate registration.
+No dependence-sensitive reanalysis or additional experimental round is
+included in this paper. The incomplete outcome-access chronology and
+dependence justification are recorded limitations; a deeper study needs
+prospective timing, source and exposure records and inference aligned
+with its randomisation. The present estimand covers only these three
+selected models, this task and this evolving execution.
 Chen, Zaharia and Zou's dated ChatGPT comparison motivates monitoring
 service drift despite exposed names~\cite{chen2023drift}; it does not
 measure drift in this roster or make a version pin an immutability guarantee.
@@ -604,6 +626,10 @@ the original budget; poor performance never justifies replay.
 Contradictory valid oracle results halt collection.
 Assisted and incomplete trajectories and all their costs are retained,
 without replacements or success-conditioned primary analyses.
+Consequently, a zero retained-loss count does not mean that agents never
+produced broken edits. Rejected or transient failures belong to an attempt
+outcome; the retention endpoint measures the state allowed to survive.
+Immutable accepted tests and rollback are part of every tested policy.
 
 \ifresults
 \FloatBarrier
@@ -739,7 +765,15 @@ points ($[-0.45, 1.75]$) and E--B is $+0.04$ points ($[-1.07, 1.14]$). The
 intervals use 10,000 stratified whole-trajectory draws with seed 2027.
 
 All estimated coverage gains are small relative to the earlier ten-point
-practical benchmark ($\Delta_*=10$ percentage points). Model-specific
+practical benchmark ($\Delta_*=10$ percentage points).
+The realized equal-model D mean was 96.9629\%. Even if every B endpoint
+had scored 100\%, its gain against these observed controls could not exceed
+$100-96.9629=3.0371$ percentage points. This post-collection arithmetic
+check diagnoses ceiling-limited measurement; it neither changes the
+original target nor estimates an alternative treatment effect. P2 is
+unmet, but this task could not have demonstrated its ten-point target
+against the realized controls.
+Model-specific
 contrasts in Supplement Table~\ref{tab:resultsh1modelintervals} show that
 the pooled $+1.19$-point B--D gain comes almost entirely from GPT~6.1 Sol
 acquiring the ninth feature ($+3.15$ points, 95\% interval $[0.00,+6.30]$;
@@ -758,7 +792,10 @@ repair. Exploratory inspection in the source report attributed the recurring fai
 to views that blocked known write methods but forwarded new CR1 methods.
 The structural improvement therefore coexisted with a permission-boundary
 failure. The cell summaries do not establish which review actions caused
-the difference.
+the difference. The conservative Gemini B--C 95\% interval is
+$[-77.05,+14.69]$ percentage points under the independent-binomial
+assumptions (Supplement Table~\ref{tab:resultscrintervals}); the observed
+16-versus-8 comparison does not establish a precise review advantage.
 
 \begin{table}[!htbp]
 \centering\small
@@ -799,6 +836,10 @@ and 15/21 cases, respectively; B carried it into 12/21. A higher CR1
 success rate can therefore coexist with less complete software. The
 Supplement retains the exact model-specific contrast intervals and bounds,
 including the two unadjudicated errors rather than imputing them.
+Supplement Table~\ref{tab:crprerequisites} cross-tabulates the existing
+outcomes with F9/F10 completeness. These post-treatment groups describe
+different preservation burdens and cannot identify effects among otherwise
+comparable repositories.
 
 \FloatBarrier
 \subsection{Structural quality, code volume and resource consumption}\label{sec:resultsstructural}
@@ -811,8 +852,8 @@ complexity 10 at any of the 63 B endpoints. Relative to A, lint density
 fell by about 92\% on Sonnet and reached zero on GPT. The targets were
 not uniformly achieved: Sonnet B still averaged 2.26 lint warnings per
 1,000 source lines despite the zero-warning target. These metrics
-describe treatment fidelity and structural proxies, rather than a
-general architecture or correctness score.
+measure the intervention's structural targets. Broader architecture and
+correctness require separate assessment.
 
 Gemini's baseline metrics were already low, but some functions exceeded
 complexity 10 and lint was nonzero. Its baseline therefore did not satisfy
@@ -866,8 +907,9 @@ reported in Supplement Section~\ref{app:resultsdetail}.
 \caption{Mean credits and recorded session minutes for delivery and CR1.
 Credit means use only trajectories with complete billing for that phase;
 counts are in parentheses. Duration means describe all 21 completed
-trajectories per cell (315/315 total), not human effort or total calendar
-time. Outstanding charges remain outside settled means. \armlegend}
+trajectories per cell (315/315 total). Human effort and total calendar
+time were outside that measure. Outstanding charges remain outside settled
+means. \armlegend}
 \label{tab:resultscosts}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrr@{}}
 \toprule
@@ -906,8 +948,8 @@ coverage against mean settled delivery AI credits (\texttt{H5}, completely
 billed sample size $n$ in brackets; 55 held attempts with 19,200 reserved
 credits remain separate). Positive contrasts favour the first named arm;
 intervals including zero leave the direction uncertain. The red line marks
-the primary comparison's ten-point practical benchmark, not statistical
-significance. More CR1 passes are preferable, but retention obligations
+the primary comparison's ten-point practical benchmark. Statistical
+uncertainty appears in the intervals. More CR1 passes are preferable, but retention obligations
 depend on feature completeness; grey outcomes remain unknown. In (c), up
 means more coverage and left means less spending: upper-left is preferable
 only at comparable delivered behaviour. Coverage uses all 21 trajectories,
@@ -947,7 +989,7 @@ The updated companion supplies exploratory bootstrap intervals. At CR1,
 all four intervals for these two dimensions include zero. No
 practical-importance threshold was established, and the intervals are
 not adjusted for multiplicity: their stated coverage applies to each
-comparison, not to all comparisons jointly. The Supplement retains the detailed
+comparison separately. The Supplement retains the detailed
 contrasts, all cell means and the separate v1/v2/v3 accounting.
 
 \begin{table}[!htbp]
@@ -1021,14 +1063,14 @@ decision.}
 Prediction & Falsification / target criterion & Observed ten-feature result (315/315 complete) & Exploratory verdict \\
 \midrule
 P1: Short-horizon decay premise (\texttt{H2}) & Unconsolidated delivery (Arms~A, D) exhibits open regressions ($L^P_{r,10}>0$) or witnessed workflow losses by $P_{10}$ & 0/126 completed A and D runs with open loss at $P_{10}$ (1/315 overall, in Gemini~E); 99.18\%--99.74\% Sonnet/Gemini coverage across arms; 0/626 workflow-replay losses & Not supported at $N=10$ \\
-P2: Primary consolidation coverage gain (\texttt{H1}, \texttt{H7}) & Arm~B exceeds Arm~D in equal-model-weight $P_{10}$ coverage by $\Delta_*\geq10$ percentage points & $+1.19$ pp (95\% CI $[+0.10,+2.22]$; B--A $+1.41$ pp, $[+0.33,+2.45]$; B--C $+0.66$ pp, $[-0.45,+1.75]$); GPT $+3.15$ pp $[0.00,+6.30]$ (F9 acquisition: 12/21 vs 6/21), while Sonnet $+0.26$ pp and Gemini $+0.15$ pp CIs span zero & Mixed / below 10-point threshold (single-model F9 recovery) \\
+P2: Primary consolidation coverage gain (\texttt{H1}, \texttt{H7}) & Arm~B exceeds Arm~D in equal-model-weight $P_{10}$ coverage by $\Delta_*\geq10$ percentage points & $+1.19$ pp (95\% CI $[+0.10,+2.22]$; B--A $+1.41$ pp, $[+0.33,+2.45]$; B--C $+0.66$ pp, $[-0.45,+1.75]$); GPT $+3.15$ pp $[0.00,+6.30]$ (F9 acquisition: 12/21 vs 6/21), while Sonnet $+0.26$ pp and Gemini $+0.15$ pp CIs span zero & Unmet; ceiling-limited (single-model F9 recovery) \\
 P3: Change-request adaptability and cost payback (\texttt{H5}, \texttt{H6}) & Arm~B raises CR1 success and reduces CR1 or net credit spend relative to Arms~A, C and D & Equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ pp, B--C $[-14.29,-11.11]$ pp; Gemini review 16/21 vs Arm~B 8/21; settled delivery credits $1.84\times$--$2.25\times$ Arm~A with no consistent CR1 saving & Not supported (\texttt{H5} threshold unmet; \texttt{H6} inconclusive for B, higher observed Gemini CR1 success under review) \\
 Manipulation check: Structural hygiene (\texttt{H3}, \texttt{H4}) & Arm~B reduces functions above complexity 10, duplication and lint toward stopping targets & 0.00\% functions $>10$ complexity across all 63 Arm~B endpoints; lint $-92\%$ on Sonnet (to 2.26/kloc) and $-100\%$ on GPT (to 0.00/kloc); \texttt{src} NLOC $+3.2\%$ to $+7.2\%$ & Structural change observed; not all stopping targets met. Hybrid B+C+E remains untested. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 \else
-% Historical conditional plotting requests: active results exist, but the original full F/P and all-attempt-cost requirements still need the dated disposition in anc/revision-report.md.
+% Historical requests retained verbatim; bounded final dispositions are in app:reportingdisposition and the 24 November publication revision record.
 % TODO(author): PF1 requires actual F/P checkpoint vectors, eligibility and missingness.
 % TODO(author): PF2 requires actual CR1 vectors, prerequisites, assistance and all-attempt costs.
 % TODO(author): PF3 requires actual final coverage and attributable delivery credits.

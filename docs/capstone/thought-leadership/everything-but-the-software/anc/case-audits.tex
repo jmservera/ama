@@ -14,11 +14,11 @@ failed deployment (Section~\ref{sec:audittrail}).
 Explanation & Case support & Counter-evidence or limits & Treatment \\
 \midrule
 Migration decision & ADR 0006 (issue \#196) froze feature work in the MVP and
-prioritised a new layout. & Health and restart checks passed, not usability. &
+prioritised a new layout. & Health and restart checks passed; usability remained unverified. &
 Migration and coordination changed together; autonomy alone is not identified. \\
 Capstone rubric & Research and documentation are rewarded; full completeness
 marks coexist with blocked sign-in. & A working demonstrator is required;
-release/scope linkage is pending. & Possible incentive, not a measured effect. \\
+release/scope linkage is pending. & An incentive explanation remains a hypothesis. \\
 Owner overrides and priorities & Committed RPI records, full gates and delegated
 merging; PR \#445 required an exception. & The MVP used agents successfully;
 HVE Core defaults retain human stops. & Owner choices are part of the case. \\
@@ -29,7 +29,7 @@ a higher ceiling and reduced resources. & Merges continued without established
 deployed usability. & More budget is not proven to resolve delivery. \\
 Identity and sign-in setup & Missing registration/staff bindings; issue \#349
 distinguishes redirect from sign-in. & Those steps worked in the MVP. &
-Concrete configuration obstacle, not proof of code decay or lost knowledge. \\
+A configuration obstacle is documented; decay and knowledge loss remain unproven. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -160,8 +160,8 @@ integrity. Gate duration and human review effort were not measured per PR. \\
 Rival explanations & Legitimate safety and privacy requirements, budget
 constraints, new deployment complexity and owner-selected risk tolerance. \\
 Experimental implication & Measure gate time and accepted outcomes under
-matched risk. The pilot's resource description concerns the package, not the effect of
-removing this repository's required gates. \\
+matched risk. The pilot measures resources for its treatment package;
+the effect of removing this repository's required gates remains untested. \\
 \bottomrule
 \end{tabularx}
 \par
@@ -177,7 +177,8 @@ Element & Audit \\
 \midrule
 Definition & Independent outcome-level feedback is insufficient to correct
 delivery decisions despite abundant artefact-level validation. The defining
-gap is between the evaluated proxy and intended outcome, not test count alone. \\
+gap concerns what the evaluated proxy reveals about the intended outcome;
+test counts alone leave that correspondence unknown. \\
 Counter-evidence & Human oversight continued; agents surfaced blockers;
 engineering checks provided real, though narrower, feedback. \\
 Rival explanations & Identity and service configuration, migration priority,
@@ -283,8 +284,8 @@ the cumulative net difference is
 \end{equation}
 The first term sums the assumed extra implementation cost without
 consolidation; the second subtracts B's consolidation investment.
-A positive value means A costs more within this assumed model, not that
-the experiment measured a saving.
+A positive value means A costs more within this assumed model.
+Experimental savings would require measured, quality-matched costs.
 For $k>0$ and $\delta>0$, the first cycle count with $\Delta C(N)\geq0$ is
 $N_{\mathrm{BE}}=\lceil1+2k/\delta\rceil$; when $\delta=0$, the investment never pays back in
 this credit-only model. Actual cost differences may grow nonlinearly, and B can retain debt too.
@@ -294,8 +295,8 @@ it does not measure either arm's total debt.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-refactoring-economics.png}
-\caption{Assumed cost-of-inaction mechanism and break-even sensitivity, not
-pilot results or an empirical projection. A linearly increasing relative
+\caption{Assumed cost-of-inaction mechanism and break-even sensitivity.
+The figure uses illustrative parameters throughout. A linearly increasing relative
 implementation premium accumulates across feature boundaries; recurring
 consolidation has an explicit cost. Payback depends on $k/\delta$: a ratio of 5 breaks even at 11 cycles
 and a ratio of 100 at 201; $\delta=0$ gives no payback for $k>0$.
@@ -303,8 +304,8 @@ Parameters are invented for transparent sensitivity,
 not fitted to study data. No dollar conversion or human-work estimate is
 implied. Higher $\Delta C(N)$ favours B in the assumed model; a lower
 break-even cycle count means earlier recovery of the investment. Increasing
-$k/\delta$ delays that break-even, rather than demonstrating an observed
-cost or quality effect.}\label{fig:refactoringeconomics}
+$k/\delta$ delays that break-even within the assumed model.
+Observed cost and quality effects require empirical estimates.}\label{fig:refactoringeconomics}
 \end{figure}
 
 \begin{table}[!htbp]
@@ -379,7 +380,8 @@ acquired contracts by $P_{30}$ or per-cycle implementation-credit growth
 of $\delta\geq0.5$ credits per cycle for P1, a task-calibrated minimum
 useful B--D coverage gain $\Delta_*$ for P2, and cumulative net credits
 $\Delta C(N)>0$ at matched behavioural coverage for P3.
-These are proposed criteria, not accepted decision rules or estimates.
+These criteria await protocol review and approval; no estimates have been
+collected under them.
 A new protocol should justify its thresholds and align randomisation and
 variance estimation, considering $(\mathrm{model},\mathrm{replicate})$
 blocks, a block bootstrap or a mixed model as appropriate to the actual

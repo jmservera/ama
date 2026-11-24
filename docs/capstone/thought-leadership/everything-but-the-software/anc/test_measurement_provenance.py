@@ -55,11 +55,19 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        current = bindings["scientific_voice_revision"]
-        self.assertEqual(current["prior_delivery_revision"], "copy_review_revision")
-        for name, sha256 in current["source_sha256"].items():
+        previous = bindings["scientific_voice_revision"]
+        self.assertEqual(previous["prior_delivery_revision"], "copy_review_revision")
+        current = bindings["publication_readiness_revision"]
+        self.assertEqual(current["prior_delivery_revision"], "scientific_voice_revision")
+        for name, sha256 in {
+            **current["source_sha256"], **current["evidence_sha256"]
+        }.items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
+        self.assertEqual(
+            hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
+            current["delivery_sha256"],
+        )
 
     def test_measurement_slice_and_prompt_examples_are_active(self):
         supplement = (ANC / "supplement-section.tex").read_text()
@@ -94,7 +102,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
             with self.subTest(field=field):
                 self.assertIn(field, text)
         self.assertIn("not interchangeable instruments", text)
-        self.assertIn("not a remeasurement", text)
+        self.assertIn("inventory based on inspected code", text)
 
     def test_given_completed_judging_when_described_then_original_endpoints_remain_distinct(self):
         protocol = (ANC / "experiment-protocol.tex").read_text()
@@ -338,7 +346,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("primary_estimates_available=true", protocol)
         self.assertIn("two completed GPT trajectories", protocol)
         self.assertIn("63 versus 63", protocol)
-        self.assertIn("completed study is exploratory", protocol)
+        self.assertIn("estimates exploratory differences", protocol)
         self.assertNotIn("attestation remains absent", protocol)
         self.assertNotIn("missing intervention attestation", manuscript)
         self.assertIn("have not been independently verified", supplement)
@@ -370,7 +378,43 @@ class MeasurementProvenanceTests(unittest.TestCase):
                 lower, upper = [float(value) for value in row[-1].strip("[]").split(",")]
                 self.assertLessEqual(lower, 0)
                 self.assertGreaterEqual(upper, 0)
-        self.assertIn("not simultaneous coverage over all comparisons", supplement)
+        self.assertIn("Simultaneous coverage over all comparisons is unestablished", supplement)
+
+    def test_given_reporting_reconciliation_when_tabulated_then_denominators_and_holds_match(self):
+        from test_protocol_planning import table_rows
+
+        evidence = json.loads((ANC / "publication-evidence-2026-11-24.json").read_text())
+        supplement = (ANC / "measurement-provenance.tex").read_text()
+        models = {
+            "Sonnet 5.5": "claude-sonnet-5.5",
+            "Gemini 4 Argon": "gemini-4-argon",
+            "GPT 6.1 Sol": "gpt-6.1-sol",
+        }
+        prerequisite_rows = table_rows(supplement, "tab:crprerequisites")
+        self.assertEqual(len(prerequisite_rows), sum(
+            len(evidence["CR1_prerequisite_strata"][model]) for model in models.values()
+        ))
+        for model, arm, complete, other, unknown in prerequisite_rows:
+            model = models[model.removeprefix(r"\midrule").strip()]
+            groups = evidence["CR1_prerequisite_strata"][model][arm]
+            with self.subTest(model=model, arm=arm):
+                for observed, name in ((complete, "both_complete"), (other, "not_both_complete")):
+                    successes, allocated, _ = groups[name]
+                    expected = f"{successes}/{allocated}" if allocated else "--"
+                    self.assertEqual(observed, expected)
+                self.assertEqual(groups["both_complete"][2], 0)
+                self.assertEqual(int(unknown), groups["not_both_complete"][2])
+
+        held_rows = table_rows(supplement, "tab:heldbillingcells")
+        column_totals = [0] * 5
+        for model, *counts in held_rows[:-1]:
+            expected = evidence["held_attempts_by_model_arm"][models[model]]
+            observed = [int(value) for value in counts]
+            self.assertEqual(observed, [*[expected[arm] for arm in "ABCDE"],
+                                        sum(expected.values())])
+            column_totals = [a + b for a, b in zip(column_totals, observed[:-1])]
+        self.assertEqual([int(value) for value in held_rows[-1][1:]],
+                         [*column_totals, sum(column_totals)])
 
     def test_given_report_refresh_when_judging_summarised_then_abstentions_remain_visible(self):
         from test_protocol_planning import table_rows
@@ -550,7 +594,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
         self.assertIn("contract sets expand across cycles", protocol)
         self.assertIn("cheap failure is not efficiency", protocol)
-        self.assertIn("not statistical significance", protocol)
+        self.assertIn("Statistical uncertainty appears in the intervals", protocol)
 
     def test_given_full_identifiers_when_read_then_register_is_unique_linked_and_last(self):
         from check_paper import expand_inputs

@@ -15445,3 +15445,17 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
   prompts and source records. The [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#scientific-author-voice-revision-24-november)
   distinguishes the editorial work from unresolved scientific and publication
   requirements.
+
+## [2026-11-24] update | Exploratory paper publication disposition and historical coordinator recovery
+
+* Revised [Everything but the Software](../capstone/thought-leadership/everything-but-the-software/README.md#publication-revision-24-november)
+  against the completed public experiment, preserving original outcomes,
+  equations, thresholds, intervals, prompts and historical records. Added
+  retention, CR1-prerequisite and held-billing reconciliation, the realized
+  control ceiling and bounded historical steering/source locators.
+* The [24-item checklist and validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#publication-checklist)
+  separate applied corrections and future-study limits from human clearance,
+  release and submission actions. Rebuilt one 74-page PDF and verified a
+  22-input compilation archive. Of 75 authoring checks, 74 pass; native
+  regeneration of unchanged diagrams reports five label overflows. No new
+  experiment, judging batch, deployment, push or external submission ran.

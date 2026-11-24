@@ -12,16 +12,16 @@
   "historical_inputs_retained_in_git": true,
   "files": {
     "anc/additional-evidence.tex": {
-      "content_sha256": "7d2a9285d2d82f6300372c88d82057fdf2cd6b2cde797fc21b2f7a3365f2133b"
+      "content_sha256": "1311e1fcdde0a0093a0d04a0c7b57a4974927809b4ab2ea301a380b367ae9aa9"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "e5459ab053f044b73c314d7d033e86b2f8f6d21f153951d0ed98a8096be89e48"
+      "content_sha256": "b586a879c4205122aa3a6008ffca8eef5f3832c8b03b853cdc952e44614737d2"
     },
     "anc/deferred-measures.tex": {
-      "content_sha256": "f7c6d9bc08543a9ebab8edb1838052b19d91944f330e2a64f739c1146e2da998"
+      "content_sha256": "d0f107fb70f2d36500346cc8a888748d79e1cc21cb3419fda4387cfe26e2ca0f"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "e06a3569b423d9a1f36fdc7cadcbd3e8f5c3f296f48b0d0d4d9da0882926d240"
+      "content_sha256": "34cea80fe1c0a92081d1ba2e64f8350c5aefa674563131d74b0279fcf02bf5a0"
     }
   },
   "author_review_revision": {
@@ -516,6 +516,65 @@
       "anc/deferred-measures.tex": "0aa0e6df5b2624b6882e5ff0b97c642d96f7c17fa02d6a3c776eb8b080287fa8",
       "anc/measurement-provenance.tex": "6518ce940fb146875e34af69cb588a5689354f9dc4d2c7b80c52ff845ee4063b"
     }
+  },
+  "publication_readiness_revision": {
+    "date": "2026-11-24",
+    "scope": "Completed exploratory-study framing, conditional inference and realized-control ceiling; descriptive retention/prerequisite/billing reconciliation; bounded historical coordinator recovery; citation and affirmative-prose corrections. Original outcomes, estimator, intervals, seven equations, chart inputs and literal prompts retained. No experimental or judge rerun.",
+    "prior_delivery_revision": "scientific_voice_revision",
+    "version_status": "Uncommitted source and delivery bytes bound below; no independent exact-head, human scientific or publication approval implied.",
+    "experiment_results_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+    "prior_active_content_sha256": {
+      "anc/additional-evidence.tex": "7d2a9285d2d82f6300372c88d82057fdf2cd6b2cde797fc21b2f7a3365f2133b",
+      "anc/case-audits.tex": "e5459ab053f044b73c314d7d033e86b2f8f6d21f153951d0ed98a8096be89e48",
+      "anc/deferred-measures.tex": "f7c6d9bc08543a9ebab8edb1838052b19d91944f330e2a64f739c1146e2da998",
+      "anc/measurement-provenance.tex": "e06a3569b423d9a1f36fdc7cadcbd3e8f5c3f296f48b0d0d4d9da0882926d240"
+    },
+    "source_sha256": {
+      "main.tex": "ca9c5b0440887d484a78b38af4f530cfcc665a6dfedfcf7bb7e04e670ad485ca",
+      "anc/background.tex": "8a0666c98126481e7a0e6e9ac1d52d77170bce92d848e2b48aeba93a43a0482b",
+      "anc/experiment-protocol.tex": "2dc6738c5c5f58e699f0ccb50a7617bd9bd2042b800b5904e140945439c2c9ad",
+      "anc/supplement-section.tex": "9e1c515228cd2d6b344c1b12fcf1484a4acb2e523d6461210ee66870c5d1d0f1",
+      "anc/additional-evidence.tex": "33efd0c4c458b2d73fd63e4e2fe488ce429f72ba38a34ec1d1d14c3785946fc0",
+      "anc/case-audits.tex": "29679c1e6ed4f5dbbb3bbf3b059a030fa8beb5c6ef8a9d253a35a2b1bf0fabf0",
+      "anc/deferred-measures.tex": "81c02b5eaa6576f4fb0832287bbf28ad46d2ff562104791d6b47cc48fe2616fc",
+      "anc/measurement-provenance.tex": "3ff8d82e920579e89b5ebe83cf06e48a0dc805cd509713b3dd3087232a6b9609"
+    },
+    "evidence_sha256": {
+      "anc/case-evidence-matrix.json": "a4b3a38c56b5b5506139aa704d43485f6de4f00d6bf96a77c5b10b4436608206",
+      "anc/publication-evidence-2026-11-24.json": "1fd95d3d24d7dfdc7f716a9f66608aff704fbf1e2c502bda906d159c7764e393",
+      "references.bib": "7bc6e6cd3b29aec595ef0e6b688286dfbd0bc901d00dbd003654fdba6abad3c5"
+    },
+    "delivery_sha256": "7fa6652bff8a28ddfd4635999fb8a18fca7e7bc75a6af2f01a3eff7cec7c9048",
+    "delivery_pages": 74,
+    "supplement_start_page": 46,
+    "source_register_start_page": 72,
+    "pdf_validation": "Two-pass PDFLaTeX with shell escape disabled; actual final log has no warnings, box warnings or unresolved references. All 74 pages have content and in-page words; changed-page samples inspected.",
+    "native_diagram_export_validation": "Actual task-local Chromium 141.0.7390.37 / Playwright build 1194 reaches rendering but rejects five arm feature labels for text overflow on this host. Existing diagram sources and committed exports remain unchanged; their digest checks are separate.",
+    "authoring_suite": {
+      "run": 75,
+      "passed": 74,
+      "failed": 1,
+      "remaining_failure": "test_given_native_exporter_when_run_then_exports_without_rewriting_sources: five arm feature-label text overflows",
+      "experiment_candidate_evaluator_or_judge_execution": false
+    },
+    "arxiv_source_preparation": {
+      "filename": "everything-but-the-software-arxiv-source-2026-11-24.zip",
+      "sha256": "85959f577bcff8ae07d8398287ec1539f59563417f1823f2b8d1a41fd4be3c47",
+      "files": 22,
+      "tex_sources": 8,
+      "png_figures": 11,
+      "literal_prompts": 3,
+      "uncompressed_bytes": 7228093,
+      "validation": "Separate extracted tree compiles twice with shell escape disabled to 74 pages; extracted text matches delivered PDF on every page. Archive inputs match current source bytes.",
+      "limit": "Compilation-only preparation archive. Ancillary evidence remains in the repository package. Public-release selection, approval, upload and arXiv-generated-PDF checks remain pending."
+    },
+    "remaining_limits": [
+      "Dependence and complete amendment/outcome-access chronology",
+      "Two CR1 unknowns, 55 held attempt charges and incomplete calibration",
+      "Historical actual CLI/reviewer/backend identities and paired release/journey receipts",
+      "Exact-version author/employer clearance, approved release manifest and registration correspondence",
+      "Independent final assessment, applicable hosted review and arXiv-generated-PDF inspection"
+    ]
   },
   "restored_citation_keys": [
     "bacchelli2013review",
