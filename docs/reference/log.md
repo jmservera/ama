@@ -15321,3 +15321,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 1830 live r12 map check sub-pixel flake (Refs #1830)
 
 * Added [issue-1830-live-r12-2026-11-24.md](research/issue-1830-live-r12-2026-11-24.md): the 390x568 focus-fit flake was a 0.17 px sub-pixel overshoot; 1 px tolerance in `src/api/checks/map_fullscreen_browser_check.py`, six reruns pass.
+
+## [2026-11-24] add | Issue 116 live r13 provider boundary part count (Refs #116)
+
+* Added [issue-116-live-r13-evidence-2026-11-24.md](research/issue-116-live-r13-evidence-2026-11-24.md): `approved_payload` now refuses more than eight parts as `input-too-many-parts`; one test added.

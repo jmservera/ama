@@ -6,7 +6,7 @@ import unittest
 from typing import Any
 from unittest import mock
 
-from zava_forward.core.ai import MAX_IMAGE_BYTES, MAX_TEXT_BYTES
+from zava_forward.core.ai import MAX_IMAGE_BYTES, MAX_PARTS, MAX_TEXT_BYTES
 from zava_forward.core.ai import Ai as UntypedAi
 
 Ai: Any = UntypedAi
@@ -115,6 +115,16 @@ class InputBounds(unittest.TestCase):
         image = {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{half}"}}
         self.refused([{"type": "text", "text": "hi"}, image, image, image])
         self.ai.evidence("sys", [{"type": "text", "text": "hi"}, image, image])
+        self.assertEqual(self.meter.reserved, 1)
+
+    def test_shared_boundary_bounds_part_count(self) -> None:
+        empty = {"type": "text", "text": ""}
+        out = self.ai.evidence("sys", [empty] * (MAX_PARTS + 1))
+        self.assertEqual(out["outcome"], "input-refused")
+        self.assertEqual(out["reason"], "input-too-many-parts")
+        self.assertEqual(self.meter.reserved, 0)
+        self.urlopen.assert_not_called()
+        self.ai.evidence("sys", [empty] * MAX_PARTS)
         self.assertEqual(self.meter.reserved, 1)
 
     def test_shared_boundary_refuses_non_base64_image_data(self) -> None:
