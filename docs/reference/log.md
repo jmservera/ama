@@ -15341,3 +15341,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] update | Issue 202 old workflow removal (Refs #202)
 
 * Removed the dispatch-only `mvp-ci.yml` and `mvp-validation.yml` workflows and their references in `src-ci.yml`, `tools/rpi-checks.py`, tests and READMEs. The `mainprotect` ruleset lists no required checks, so no protection edit was needed. Hosted container-hardening probe (`image` job) is no longer in CI; `image-api` local check remains. No external full receipt was produced.
+## [2026-11-23] add | Issue 198 rubric code-scope regression test (Refs #198)
+
+* Added [issue-198-rubric-live-20261123T203956Z-2026-11-23.md](research/issue-198-rubric-live-20261123T203956Z-2026-11-23.md) and a registry test proving solution-code and infrastructure resolve non-empty file sets. Criteria 3 and 4 stay owner-gated.

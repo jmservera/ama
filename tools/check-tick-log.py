@@ -79,7 +79,7 @@ def has_action(row: dict[str, Any]) -> bool:
     return _text(row.get("action")) and _text(row.get("evidence"))
 
 
-def check_ticks(rows: list[dict[str, Any]]) -> list[Violation]:
+def check_ticks(rows: list[dict[str, Any]], require_extended: bool = False) -> list[Violation]:
     violations: list[Violation] = []
     ordered = sorted(rows, key=lambda r: r.get("tick") if isinstance(r.get("tick"), int) else -1)
     seen_items: set[str] = set()
@@ -90,6 +90,12 @@ def check_ticks(rows: list[dict[str, Any]]) -> list[Violation]:
             violations.append(Violation(tick, "schema", "tick must be an integer"))
         if not isinstance(row.get("counts"), dict):
             violations.append(Violation(tick, "schema", "counts object is required"))
+        if require_extended:
+            missing = [c for c in OPTIONAL_COLUMNS if c not in row]
+            if missing:
+                violations.append(
+                    Violation(tick, "schema", f"extended fields missing: {', '.join(missing)}")
+                )
         pending = _count(row, "ready") + _count(row, "unassessed")
         acted = has_action(row)
 
@@ -231,6 +237,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "path", type=Path, help="tick_log export (JSON array, JSON lines) or a session .db file"
     )
+    parser.add_argument(
+        "--require-extended",
+        action="store_true",
+        help="fail rows lacking closure_batch, approval, reclassified or global_stop fields",
+    )
     args = parser.parse_args(argv)
     try:
         if args.path.suffix == ".db":
@@ -240,7 +251,7 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
-    violations = check_ticks(rows)
+    violations = check_ticks(rows, args.require_extended)
     for violation in violations:
         print(violation)
     print(f"{len(rows)} ticks, {len(violations)} violations")

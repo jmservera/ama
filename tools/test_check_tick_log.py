@@ -35,6 +35,20 @@ def rules(rows: list[dict[str, object]]) -> list[str]:
 
 
 class TickLogTests(unittest.TestCase):
+    def test_require_extended_rejects_legacy_rows_only_when_asked(self) -> None:
+        self.assertEqual(rules([tick(1)]), [])
+        strict = checker.check_ticks([tick(1)], require_extended=True)
+        self.assertEqual([v.rule for v in strict], ["schema"])
+        full = tick(
+            1,
+            closure_batch=["a"],
+            approvals_granted=[],
+            approvals_expired=[],
+            reclassified=[],
+            global_stop=False,
+        )
+        self.assertEqual(checker.check_ticks([full], require_extended=True), [])
+
     def test_clean_log_passes(self) -> None:
         self.assertEqual(rules([tick(1), tick(2)]), [])
 
