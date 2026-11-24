@@ -59,7 +59,7 @@ An Exploratory Case Study and an Experiment Protocol}
 authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \small Senior Partner Solution Architect, Microsoft EMEA, Zurich\\[9pt]
 \large Isabel Cabezas Martin\\[4pt]
-\small Software Engineer, Frontier Company at Microsoft}
+\small Software Engineer, Frontier Company at Microsoft, Zurich}
 
 \date{Draft of 24 November 2026}
 % TODO(author): replace with the submission date.
@@ -108,7 +108,8 @@ feedback loops; human-AI interaction; exploratory case study; experiment protoco
 % ===========================================================================
 \section{Introduction}\label{sec:intro}
 
-I wanted to rebuild a demonstrator without losing what already worked.
+Following the HyperVelocity methodology, I wanted to rebuild a product
+without losing what already worked during my preliminary work.
 Short exchanges with agents had produced a prototype and a Minimum Viable
 Experiment (MVE) in a few hours, including working sign-in. I used those
 results to refine the business and product requirements documents (BRD and
@@ -118,76 +119,83 @@ than 180 in the first 5 days. I could inspect completed issues and passing
 checks, but when I opened the replacement to provide feedback, I could not
 sign in.
 
-The immediate problem was a blocked deployment workflow. The question it
-raised concerned the accumulated system: when a change passes its local
-checks, what evidence shows that the next change inherits working software?
+In my rebuild, the immediate problem was a blocked deployment and sign-in
+workflow. Yet it raised a question about the accumulated system as a whole:
+when a change passes its local checks, what evidence shows that the next
+change inherits working software?
 
-On 1~August 2012, Knight Capital's automated router sent more than four
-million orders while attempting to fill 212 customer orders. The firm lost
-more than USD~460 million. The SEC traced the incident to a defective
-function left in the router after a 2005 change, an incorrect deployment for
-a new trading programme, and inadequate controls. The new deployment
-activated old code that was no longer meant to run~\cite{sec2013knight}.
-The failure crossed a feature boundary and a seven-year interval.
-Understanding it required examining the code and deployment state that the
-new programme inherited.
+Software development had this problem long before coding agents existed, as
+public post-mortems and classic maintenance accounts show. On the 1st of
+August 2012, for instance, Knight Capital's automated router sent more than
+four million orders while attempting to fill 212 customer orders, costing
+the firm more than USD~460 million. The SEC traced that public incident to
+a defective function left in the router after a 2005 change, an incorrect
+deployment for a new trading programme, and inadequate controls; the new
+deployment activated old code that was no longer meant to
+run~\cite{sec2013knight}. The failure crossed a feature boundary and a
+seven-year interval, so understanding it required examining the code and
+deployment state that the new programme inherited.
 
-Less spectacular versions of the same maintenance problem are familiar.
-Cunningham's 1992 account of WyCash described a financial product continually
-adapted to market demands. Its mature code was repeatedly revised and
-rewritten; the technical-debt metaphor explained why shipping a
+Everyday maintenance shows quieter versions of the same failure mode.
+Cunningham's 1992 account of WyCash described a financial product
+continually adapted to market demands, where mature code was repeatedly
+revised and rewritten; his technical-debt metaphor explained why shipping a
 first-time implementation required later rewriting as understanding
-improved~\cite{cunningham1992wycash}.
-Some debt is visible as duplication or awkward dependencies. Some remains
-hidden in assumptions about inputs, deployment and earlier behaviour until
-another change depends on it. A count of completed changes shows neither kind.
+improved~\cite{cunningham1992wycash}. Some of that debt is visible as
+duplication or awkward dependencies. The rest stays hidden in assumptions
+about inputs, deployment and earlier behaviour until another change depends
+on it. A count of completed changes shows neither kind.
 
-Agentic development makes this distinction more pressing. PhotoCraft, an
-early-alpha reimplementation of Photoshop, reports 631 of 631 menu items
-live. That count measures dispatch; the project's dated assessment
-separately estimates about 76\% feature breadth and 45\%
+Public projects and benchmarks suggest that agentic development makes this
+older maintenance problem more pressing by compressing the schedule. In the
+external PhotoCraft repository, an early-alpha reimplementation of
+Photoshop, the project reports 631 of 631 menu items live, while its dated
+assessment separately estimates about 76\% feature breadth and 45\%
 readiness for real work~\cite{photocraft2026}. A command can be reachable
-while the surrounding workflow is still unreliable. At the repository level,
-SWE-Maintain finds that agents solve fewer later tasks when starting from
-their own earlier changes than from the developers' changes, even though
-each task starts in a fresh session~\cite{pan2026swemaintain}.
-A fresh session still receives the code produced by earlier sessions,
-including any faults left in it.
+while the surrounding workflow is still unreliable. Published benchmarks
+point to a related repository effect: SWE-Maintain finds that agents solve
+fewer later tasks when starting from their own earlier changes than from
+the developers' changes, even though each task starts in a fresh
+session~\cite{pan2026swemaintain}. Starting a fresh session clears the
+conversation, but the next run still inherits the code and any faults left
+in it.
 
-Engineering practice has a long answer: isolation and explicit contracts
-limit dependencies; tests and continuous integration expose regressions;
-small releases shorten feedback; refactoring preserves room for later
+Established engineering practice has a long answer to inherited faults:
+isolation and explicit contracts limit dependencies; tests and continuous
+integration expose regressions; small releases shorten feedback;
+refactoring preserves room for later
 change~\cite{parnas1994aging,beck2002tdd,beck2004xp,fowler2007stamina}.
 Recent discussions by Beck, Martin and Fowler revisit these concerns for
-agent-assisted work~\cite{beck2026prodacity,martin2026productengineers,fowler2025thoughts}. Beck's
-distinction between producing code and learning through working software
-sharpens the research question~\cite{beck2026prodacity,orosz2025beck}:
+agent-assisted work~\cite{beck2026prodacity,martin2026productengineers,fowler2025thoughts}.
+Beck's distinction between producing code and learning through working
+software sharpens the research question~\cite{beck2026prodacity,orosz2025beck}:
 what does a feature leave behind for the next one?
 
-The preparation involved sustained conversation and decisions, rather than
-a single specification prompt. Research agents maintained the evidence base;
-Design Thinking methods, including what-if scenarios, persona analysis and
-journey mapping, helped me question the proposed solution. Disposable pilots
-and prototypes exposed workflow problems before a usable minimum viable
-product (MVP) emerged. A backlog agent translated the resulting requirements
-and architecture decisions into epics and user stories. I expected clearer
-criteria and review to make the rebuild faster and more reliable; neither
-gain was measured.
+In my own rebuild, the broken sign-in was hard to blame on hasty prompting:
+weeks of structured discovery, sustained conversation and documented
+decisions had preceded autonomous delivery. Research agents maintained the
+evidence base; Design Thinking methods, including what-if scenarios,
+persona analysis and journey mapping, helped me question the proposed
+solution. Disposable pilots and prototypes exposed workflow problems before
+a usable minimum viable product (MVP) emerged, and a backlog agent
+translated the resulting requirements and architecture decisions into epics
+and user stories. I expected clearer criteria and review to make the
+rebuild faster and more reliable, though I measured neither gain.
 
-Once the replacement became unusable, my attempts to use it again
-redirected implementation and refactoring. The case therefore examines
-where preparation and local completion checks failed to preserve the
-workflow I needed.
+Once my replacement became unusable, trying to use it again redirected
+implementation and refactoring. The case analysis below therefore examines
+my delivery record to see where preparation and local completion checks
+failed to preserve the workflow I needed.
 The repository, pull requests, append-only log and versioned coordinator
-instructions retain the evolving delivery record~\cite{servera2026ama};
+instructions retain that evolving record~\cite{servera2026ama};
 the source package pins the evidence used here. The repository may be
 temporarily unavailable during the experiment embargo, after which the
 approved history and context are intended for release.
-My earlier
-experience with Aithena, a book-search project with PDF ingestion and
-a browser interface discussed separately in the supplement, and the PhotoCraft
-inspection selected after the motivating-case analysis have separate provenance in
-the ancillary \nolinkurl{anc/supplementary-context.md}.
+My earlier experience on a separate book-search project (Aithena, with PDF
+ingestion and a browser interface, discussed in the supplement) and the
+external PhotoCraft inspection selected after the motivating-case analysis
+have separate provenance in the ancillary
+\nolinkurl{anc/supplementary-context.md}.
 
 The initial conjecture was that feature-driven delivery carries
 unresolved errors and avoidable change burden forward, and that cumulative
