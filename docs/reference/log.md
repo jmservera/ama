@@ -15348,3 +15348,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 440 closure-push checkpoint (Refs #440)
 
 * Added [issue-440-closure-push-live-2026-11-24.md](research/issue-440-closure-push-live-2026-11-24.md) and a dated section in the cut-over evidence pack: epics 81, 89, 93 and 109 are ready for owner closure; epic 113 is not (children 115, 116, 117 and 121 open, production box deferred). No `src/` change and no Azure change.
+
+## [2026-11-24] add | Issue 470 live r9 gate timing record (Refs #470)
+
+* Added [issue-470-live-r9-2026-11-24.md](research/issue-470-live-r9-2026-11-24.md): existing before and after full-gate wall times collected from retained receipts; no measurement tool missing; criterion 4 stays partly proven (no controlled pair, no PR).
