@@ -161,8 +161,8 @@ the files before relying on them; they are not self-updating.
   `infra/**`, listed tools and their tests, listed workflows and a few
   synthetic-data and UX paths). A PR that changes only other documentation,
   `.github/copilot-instructions.md`, agent files or `.copilot-tracking/` may
-  have no Source CI run at all. `mvp-ci.yml` and `mvp-validation.yml` are
-  dispatch-only. The infrastructure what-if runs after Source projects CI and
+  have no Source CI run at all. The former `mvp-ci.yml` and `mvp-validation.yml`
+  were removed (issue #202). The infrastructure what-if runs after Source projects CI and
   only when `infra/` changed and its repository variable enables it. The rubric
   workflow ignores only `.copilot-tracking/**`.
 * Selection: `tools/ci-affected.py` selects projects, `namespace` and `mssql`

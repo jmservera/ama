@@ -15338,3 +15338,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 1830 live r13 owned-server health window (Refs #1830)
 
 * Added [issue-1830-live-r13-2026-11-24.md](research/issue-1830-live-r13-2026-11-24.md): preflight and the direct map check re-proved at head; the owned-server health wait in `design_system_browser_check.py` is now a 60 s deadline instead of about 10 s. Defensive: the r12 start failure was not reproduced, so there is no before and after.
+## [2026-11-23] update | Issue 202 old workflow removal (Refs #202)
+
+* Removed the dispatch-only `mvp-ci.yml` and `mvp-validation.yml` workflows and their references in `src-ci.yml`, `tools/rpi-checks.py`, tests and READMEs. The `mainprotect` ruleset lists no required checks, so no protection edit was needed. Hosted container-hardening probe (`image` job) is no longer in CI; `image-api` local check remains. No external full receipt was produced.

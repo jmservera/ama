@@ -2,7 +2,7 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_affected.py", "tools/install-actionlint.py", "tools/test_install_actionlint.py", "tools/backlog-sync.py", "tools/test_backlog_sync.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
+    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_affected.py", "tools/install-actionlint.py", "tools/test_install_actionlint.py", "tools/backlog-sync.py", "tools/test_backlog_sync.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
   workflow_dispatch:
 
 permissions:
@@ -292,7 +292,7 @@ jobs:
           python3 tools/install-actionlint.py "$RUNNER_TEMP/actionlint-bin"
           export PATH="$RUNNER_TEMP/actionlint-bin:$PATH"
           actionlint -version | head -n 1 | grep -Fx 1.7.7
-          actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml .github/workflows/mvp-ci.yml .github/workflows/mvp-validation.yml
+          actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml
 
   no-working-data:
     name: src-no-working-data

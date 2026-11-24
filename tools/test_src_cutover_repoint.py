@@ -122,18 +122,6 @@ class WorkflowContract(unittest.TestCase):
         }
         self.assertEqual(projects, set(PROJECTS))
 
-    def test_legacy_named_ci_builds_from_src_context(self):
-        workflow = yaml.safe_load(read(".github/workflows/mvp-ci.yml"))
-        builds = [
-            s["run"]
-            for s in workflow_steps(workflow)
-            if "docker build" in str(s.get("run", ""))
-        ]
-        self.assertTrue(builds)
-        for run in builds:
-            self.assertIn("-f src/api/Dockerfile", run)
-            self.assertTrue(run.rstrip().endswith(" src"))
-
 
 def workflow_on(workflow: dict) -> dict:
     # PyYAML parses the bare key "on" as boolean True.
