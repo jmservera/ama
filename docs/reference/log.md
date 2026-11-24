@@ -15434,3 +15434,11 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2202 second live re-proof and receiver window-edge fix (Refs #2202)
 
 * Added [issue-2202-live-r2-2026-11-24.md](research/issue-2202-live-r2-2026-11-24.md): read-only live proof on API 0000068 and resident 0000030, one Failed receiver execution diagnosed and fixed in source (not yet deployed), per-criterion table; image provenance, rollback drill and generative answers stay unproven.
+## [2026-11-24] update | Scientific author-voice revision of Everything but the Software
+
+* Reviewed all 70 active paper sections against the completed experiment and
+  the owner's writing samples. Rewrote the abstract, opening and interpretive
+  prose for a scientific audience; preserved numerical evidence, equations,
+  prompts and source records. The [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#scientific-author-voice-revision-24-november)
+  distinguishes the editorial work from unresolved scientific and publication
+  requirements.

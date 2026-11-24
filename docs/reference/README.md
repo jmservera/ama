@@ -21,6 +21,15 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+The paper's [24 November scientific author-voice revision](../capstone/thought-leadership/everything-but-the-software/README.md#scientific-author-voice-revision-24-november)
+reviews all 70 active sections against the completed experiment report and
+the owner's blog samples. The revised abstract and narrative distinguish
+stable retention from missing features and extension failures. Numerical
+evidence, equations, prompts and source records are preserved. The
+[revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#scientific-author-voice-revision-24-november)
+keeps validation and publication limits explicit; earlier entries below
+retain their dated scope.
+
 The owner-requested [IoT and resident architecture update](../capstone/source/diagrams/architecture/text-equivalent.md)
 adds the home-sensor receiving chain, telemetry/history and average-service
 responsibilities, and the separate resident site to both
