@@ -791,6 +791,8 @@ The [final live proof](./research/issue-2202-finalproof-2026-11-22.md) records a
 The [2026-11-23 coverage note](./research/issue-2202-live-2026-11-23.md) measures homes with readings across the whole map (261 of 443) with `tools/demo_readings_coverage.py` and rechecks the resident consent checkbox on revision 0000028.
 The [deployed hardening check](./research/issue-2202-live2-2026-11-23.md) proves `ZF_CONTAINER_HARDENING=enforced` on the API, resident, agents apps and both live jobs, and adds the check to `tools/demo_preflight.py`.
 
+The [2026-11-24 live re-proof](./research/issue-2202-live-r68-2026-11-24.md) re-proves revision health, hardening, sensor charts, map gauges, the consent checkbox, chat routing and readings coverage (262 of 443 homes) on API 0000068 and resident 0000030, with a per-criterion table and the unproven items (image provenance, rollback drill).
+
 The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads API revision 0000054 and resident revision 0000026 and records the two owner gates for generative AI answers: the open suspension (scope all, 2026-11-18) and the resident ledger budget expiry.
 
 The [issue 2243 live probe](./research/issue-2243-live-probe-2026-11-22.md) records the resident and API revisions, the resident AI chat falling back with `usage_limit` after the expiry fix, and a post-merge probe plan.
@@ -2391,3 +2393,5 @@ The [issue 2303 note](./research/issue-2303-live-2026-11-24.md) records the live
 The [issue 2320 revision 0000064/0000065 re-check](./research/issue-2320-live-r3-2026-11-24.md) records live forecast, briefing, retention and AI report timings after the forecast last-good fix, with a per-criterion proven and unproven table.
 
 The [issue 2320 revision 0000067 re-check](./research/issue-2320-live-r4-2026-11-24.md) records live briefing, forecast, retention and AI report timings after the forecast release-reference fix, with a per-criterion proven and unproven table.
+
+The [issue 2256 revision 0000068 re-proof](./research/issue-2256-live-2026-11-24b.md) records the live waiting list, queues and case card on revision 0000068, with a per-criterion proven and unproven table.

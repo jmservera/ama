@@ -15417,3 +15417,10 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2245 budget-hold wording fix and live recheck (Refs #2245)
 
 * Added [issue-2245-live-151955-2026-11-24.md](research/issue-2245-live-151955-2026-11-24.md): live recheck on revision 0000066, the allowance-used outcome fix, and a per-criterion table.
+
+## [2026-11-24] add | Issue 2256 live re-proof on revision 0000068 (Refs #2256)
+
+* Added [issue-2256-live-2026-11-24b.md](research/issue-2256-live-2026-11-24b.md): offered handoff on ZF-2025-0030 listed with chase owner and due time, card and list agree, per-criterion table.
+## [2026-11-24] add | Issue 2202 live re-proof on API 0000068 and resident 0000030 (Refs #2202)
+
+* Added [issue-2202-live-r68-2026-11-24.md](research/issue-2202-live-r68-2026-11-24.md): read-only live proof of revision health, hardening on all apps and jobs, sensor chart, map gauges, consent checkbox, chat routing and 59.1% readings coverage, with a per-criterion table (image provenance and rollback drill unproven).

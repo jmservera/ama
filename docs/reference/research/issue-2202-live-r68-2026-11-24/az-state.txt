@@ -1,0 +1,17 @@
+Read-only Azure CLI output, resource group ama, taken 2026-11-24 16:38 UTC. No secrets.
+ca-cutover-test-demo-api--0000068	True	Running	Healthy	100	2026-11-24T16:18:10+00:00
+Single	1	4	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:7610c41b06e75a51a1e15c1b7465fb73270e2b3bb79153955fe63225c988f456	enforced	True
+ca-resident-demo--0000030	True	RunningAtMaxScale	Healthy	100	2026-11-24T14:32:22+00:00
+Single	1	1	crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:3e10d2dd1b49b10271afff9c27e02fdde9d56f51b99aedc67dcfd31df7177b9e	enforced	True
+ca-cutover-test-demo-agents--0000004	True	ScaledToZero	Healthy	0	2026-11-24T14:31:40+00:00
+Single	0	5	crcutovertestrzsrg.azurecr.io/zava-forward-agents@sha256:59ea12f41b7ce30cbe36488b16d6dc61d08c30558dfb683cf1b2ac430a41c695	enforced	None
+job-live-simulator	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5a20dbd3500099c8b8c3e2bf10c2d70bc4292e297dabc935056adf27dabd2f1d	enforced	0,7,15,22,30,37,45,52 * * * *
+Running	2026-11-24T16:37:00+00:00
+Succeeded	2026-11-24T16:30:00+00:00
+Succeeded	2026-11-24T16:22:00+00:00
+Succeeded	2026-11-24T16:15:00+00:00
+job-live-receiver	crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5a20dbd3500099c8b8c3e2bf10c2d70bc4292e297dabc935056adf27dabd2f1d	enforced	*/30 * * * *
+Running	2026-11-24T16:30:00+00:00
+Succeeded	2026-11-24T16:00:00+00:00
+Succeeded	2026-11-24T15:30:00+00:00
+Succeeded	2026-11-24T15:00:00+00:00
