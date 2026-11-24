@@ -1,0 +1,55 @@
+{
+ "label": "baseline-r0000060",
+ "utc": "2026-11-24T09:38:05Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 12.8,
+   "source": null,
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 12.09,
+   "source": "template",
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 13.78,
+   "source": "template",
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 12.5,
+   "source": "template",
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 13.64,
+   "source": "template",
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 10.83,
+   "source": "template",
+   "error": null
+  },
+  {
+   "path": "/api/briefing?mode=workflow",
+   "status": 200,
+   "seconds": 6.79,
+   "source": "template",
+   "error": null
+  }
+ ]
+}

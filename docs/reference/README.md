@@ -2367,3 +2367,5 @@ The [issue 2255 live re-check, run 6](./research/issue-2255-live-r6-2026-11-23.m
 The [issue 2244 run 6 note](./research/issue-2244-live-r6-2026-11-24.md) shows revision 0000059 still took the write lock at three start-up steps on a populated store, records the fast paths and gives the per-criterion proven and unproven table.
 
 The [issue 220 no-retaliation closure evidence](./research/issue-220-no-retaliation-closure-2026-11-24/README.md) maps the last unticked criterion to 23 passing tests and a non-mutating live route probe on the demo API.
+
+The [issue 2320 note](./research/issue-2320-live-2026-11-24.md) profiles why GET /api/briefing took the SQL write lock three times per request, records the held-briefing cache fix, a pre-fix live baseline and a per-criterion proven and unproven table.

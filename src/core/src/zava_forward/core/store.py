@@ -147,16 +147,21 @@ class Store(
             "as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()
         )
 
-    def release_block(self, task, deployment=None):
+    def release_denial(self, task, deployment=None):
+        """Why a configured provider may not be called for task now, or None; a pure read that records nothing."""
         if not self.ai.configured:
             return None
         from . import assistant_release as rel
 
-        denied = rel.denial(
+        return rel.denial(
             "durable SQL release records are required", ["SQL-owned release record"], task
-        )
-        self.audit("system", "ai_release_denied", "-", denied["reason"])
-        return denied["reason"]
+        )["reason"]
+
+    def release_block(self, task, deployment=None):
+        reason = self.release_denial(task, deployment)
+        if reason:
+            self.audit("system", "ai_release_denied", "-", reason)
+        return reason
 
     def release_context(self, task, deployment=None):
         return None
@@ -1968,6 +1973,16 @@ class Store(
             + ("" if r["verified"] else ". Unverified: its sources do not match the case record"),
         )
 
+    def _briefing_denial_unchanged(self, cached):
+        """A template briefing held by a release denial stays valid while that same denial holds.
+
+        Without this every GET re-ran the held dispatch, which wrote an audit entry, a comparison record and a
+        second audit entry under the SQL write lock (issue #2320)."""
+        if cached["source"] == "ai" or cached.get("release") is not None:
+            return False
+        reason = cached.get("reason")
+        return bool(reason) and reason == self.release_denial("briefing")
+
     def briefing(self, user, mode=None):
         if not projection.allowed(user, "briefing"):
             raise PermissionError("Your role does not include this.")
@@ -1996,6 +2011,7 @@ class Store(
                 and (
                     (hit[1]["source"] != "ai" and (off or not self.ai.configured))
                     or self.release_current("briefing", hit[1].get("release"), hit[1].get("model"))
+                    or self._briefing_denial_unchanged(hit[1])
                 )
             ):
                 return hit[1]

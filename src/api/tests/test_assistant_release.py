@@ -1325,6 +1325,17 @@ class TaskReleaseRecord(Base):
         self.assertEqual(self.store.briefing(user)["source"], "template")
         self.assertEqual(calls, [])
         version = self.store.version
+        begins = []
+        self.store.db.set_trace_callback(
+            lambda sql: begins.append(sql) if sql.startswith("BEGIN IMMEDIATE") else None
+        )
+        audit_before = len(list(self.store.audit_entries()))
+        try:
+            self.assertIs(self.store.briefing(user), denied)
+        finally:
+            self.store.db.set_trace_callback(None)
+        self.assertEqual(begins, [], "a repeated held briefing GET must not take the write lock")
+        self.assertEqual(len(list(self.store.audit_entries())), audit_before)
         payload = release_support.fixture(
             "legacy:briefing", ai_registry.legacy_binding("briefing", ai, ai.fast), cls="actual"
         )

@@ -233,16 +233,20 @@ class SqlStore(Store):
         self.db.execute("PRAGMA journal_mode=WAL")
         self.db.execute("PRAGMA busy_timeout=5000")
 
-    def release_block(self, task, deployment=None):
-        """Retained legacy dispatch needs a matching release before any provider call; unconfigured AI never calls out."""
+    def release_denial(self, task, deployment=None):
+        """Why a configured provider may not be called for task now, or None; reads on a separate connection and writes nothing."""
         if not self.ai.configured:
             return None
         _, denied = self.release_assessment(task, deployment)
-        if denied:
+        return denied["reason"] if denied else None
+
+    def release_block(self, task, deployment=None):
+        """Retained legacy dispatch needs a matching release before any provider call; unconfigured AI never calls out."""
+        reason = self.release_denial(task, deployment)
+        if reason:
             with self.lock:
-                self.audit("system", "ai_release_denied", "-", denied["reason"])
-            return denied["reason"]
-        return None
+                self.audit("system", "ai_release_denied", "-", reason)
+        return reason
 
     def release_assessment(self, task, deployment=None):
         from . import assistant_release as rel
