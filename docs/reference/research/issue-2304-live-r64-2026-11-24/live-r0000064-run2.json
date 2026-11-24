@@ -1,0 +1,67 @@
+{
+ "label": "live-r0000064-run2",
+ "utc": "2026-11-24T13:55:58Z",
+ "calls": [
+  {
+   "path": "/api/stats",
+   "status": 200,
+   "seconds": 0.76,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants",
+   "status": 200,
+   "seconds": 9.16,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/briefing",
+   "status": 200,
+   "seconds": 0.44,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/ai/report",
+   "status": "TimeoutError",
+   "seconds": 60.01
+  },
+  {
+   "path": "/api/retention",
+   "status": 503,
+   "seconds": 19.16,
+   "state": null,
+   "error": "The service is busy saving other work. Owner: application support. Next action: "
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 27.11,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.19,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 3.44,
+   "state": null,
+   "error": null
+  },
+  {
+   "path": "/api/assistants/forecast",
+   "status": 200,
+   "seconds": 8.27,
+   "state": null,
+   "error": null
+  }
+ ]
+}

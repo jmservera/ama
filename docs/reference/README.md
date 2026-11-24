@@ -1730,6 +1730,7 @@ or infra acceptance claimed.
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
 | [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
 | [Issue 2304 assistants forecast did not answer on live data (#2304)](./research/issue-2304-forecast-live-2026-11-23.md) | Live 200 s hang reproduced, statement-count profile, bulk-read fix with a 10 s named state; live re-check blocked by the private registry; per-criterion table |
+| [Issue 2304 forecast live re-proof on revision 0000064 (#2304)](./research/issue-2304-live-r64-2026-11-24.md) | Live forecast timings (named state or 200 within 10 s, one 27 s outlier), briefing, AI report and retention, per-criterion table |
 | [Issue 2304 forecast still 503 on revision 0000061 (#2304)](./research/issue-2304-live-2026-11-24.md) | Live 503 after 10 to 17 s explained (clock started after the connection, work discarded on timeout); background job with a last-good stale answer; per-criterion table |
 | [Issue 2313 what-if workflow and PR image build (#2313)](./research/issue-2313-what-if-live-2026-11-23.md) | Existing infra-plan.yml covers what-if; new credential-free versioned image build; per-criterion table |
 | [Issue 2205 AI quality scope (#2205)](./research/issue-2205-live-2026-11-21.md) | Effective Quality scope listing in the assistants registry; source and tests proven, live scope unset and unproven |
@@ -2380,3 +2381,5 @@ The [issue 2320 note](./research/issue-2320-live-2026-11-24.md) profiles why GET
 
 The [issue 2320 revision 0000061 re-check](./research/issue-2320-live-r2-2026-11-24.md) records the live briefing timings after the cache fix, the still-failing forecast endpoint, the chat call-cap hold and a per-criterion proven and unproven table.
 The [issue 2303 note](./research/issue-2303-live-2026-11-24.md) records the live proof that GET /api/ai/report returns 200 on revision 0000061 and the Asset and board view loads the report, with a per-criterion proven and unproven table and the report latency finding.
+
+The [issue 2320 revision 0000064/0000065 re-check](./research/issue-2320-live-r3-2026-11-24.md) records live forecast, briefing, retention and AI report timings after the forecast last-good fix, with a per-criterion proven and unproven table.
