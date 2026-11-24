@@ -251,6 +251,7 @@ class SqlStoreTests(unittest.TestCase):
             _create_schema = base_sql_cls._create_schema
             _has_rec_order = base_sql_cls._has_rec_order
             _create_rec_order_index = base_sql_cls._create_rec_order_index
+            _rec_order_indexes_present = base_sql_cls._rec_order_indexes_present
             _create_indexes = base_sql_cls._create_indexes
             _columns = base_sql_cls._columns
             _meta_set = base_sql_cls._meta_set

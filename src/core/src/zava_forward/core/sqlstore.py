@@ -377,6 +377,17 @@ class SqlStore(Store):
     def _has_rec_order(self):
         return "created_ord" in {r[1] for r in self.db.execute("PRAGMA table_info(recommendations)")}
 
+    def _rec_order_indexes_present(self):
+        have = {r[1] for r in self.db.execute("PRAGMA index_list(recommendations)")}
+        return {"ix_recs_created_ord", "ix_recs_user_ord"} <= have
+
+    def _recommendations_current(self):
+        """Read-only (issue #2244): the ordinal migration would change nothing, so start-up need not queue for the write lock."""
+        return (self._has_rec_order() and self._rec_order_indexes_present()
+                and self.db.execute("SELECT 1 FROM recommendations WHERE created_ord = 0").fetchone() is None
+                and self._meta_value("rec_order_review") == REC_REVIEW
+                and self._meta_value("rec_unres_index") is not None)
+
     def _create_rec_order_index(self):
         self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_created_ord ON recommendations (created_ord)")
         self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_user_ord ON recommendations (user, created_ord)")
@@ -388,6 +399,8 @@ class SqlStore(Store):
         and reviews a database already backfilled by the earlier candidate."""
         if self._rec_order_pending():
             self._audit_evidence()
+        if self._recommendations_current():
+            return
         self.db.execute("BEGIN IMMEDIATE")
         try:
             if not self._has_rec_order():
@@ -853,6 +866,9 @@ class SqlStore(Store):
 
     def _ensure_queue_membership(self):
         with self.dblock:
+            row = self.db.execute("SELECT value FROM meta WHERE key='queue_context'").fetchone()
+            if row is not None and row[0] == self._queue_fingerprint():
+                return  # issue #2244: the locked refresh would write nothing
             self.db.execute("BEGIN IMMEDIATE")
             try:
                 self._refresh_queue_membership([])
@@ -896,6 +912,8 @@ class SqlStore(Store):
 
     def _seed(self, data_path):
         with self.dblock:
+            if self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]:
+                return  # issue #2244: a populated store is never reseeded, so do not queue for the write lock
             self.db.execute("BEGIN IMMEDIATE")
             try:
                 if self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0] == 0:
