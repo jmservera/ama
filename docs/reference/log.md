@@ -15431,3 +15431,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Capstone pitch model-tier comparison and placement (Refs #435)
 
 * Added [capstone-pitch-435-live-2026-11-24.md](research/capstone-pitch-435-live-2026-11-24.md) and the pitch page [tokenomics-model-tier-comparison.md](../capstone/pitch/tokenomics-model-tier-comparison.md): dated decision model, small GPT and large LLM comparison, slide 22 lead-in, computed timing, per-criterion table.
+## [2026-11-24] add | Issue 2202 second live re-proof and receiver window-edge fix (Refs #2202)
+
+* Added [issue-2202-live-r2-2026-11-24.md](research/issue-2202-live-r2-2026-11-24.md): read-only live proof on API 0000068 and resident 0000030, one Failed receiver execution diagnosed and fixed in source (not yet deployed), per-criterion table; image provenance, rollback drill and generative answers stay unproven.

@@ -297,7 +297,13 @@ class HubReceiver:
                 if admitted >= max_events:
                     return
                 try:
-                    if time.monotonic() >= deadline or (stop and stop.is_set()):
+                    if stop and stop.is_set():
+                        raise StreamError("RUN_STOPPED")
+                    if time.monotonic() >= deadline:
+                        if bounded_window:
+                            # An event that lands as the window closes is its normal end.
+                            finished.set()
+                            return
                         raise StreamError("RUN_STOPPED")
                     try:
                         row = decode(event, self.bindings)
