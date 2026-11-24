@@ -20,7 +20,7 @@ shared: Any = importlib.import_module("test_assistants")
 
 # Constructed runtime-binding differences for one capability, confined to this process. They are
 # not an old image or a real serving change; each moves that capability's own bound versions only.
-VARIATIONS = ("rule", "purpose", "roles", "data", "provenance", "model")
+VARIATIONS = ("rule", "purpose", "roles", "data", "provenance", "model", "schema", "registry")
 SERVING_MODEL = {"version": "test-model"}
 
 
@@ -32,6 +32,10 @@ def vary(kind: str, capability: str) -> None:
         )
     elif kind == "provenance":
         assistants.PROVENANCE = "constructed-provenance-2"
+    elif kind == "schema":
+        assistants.SCHEMA_VERSION = "evidence-proposal-v2-constructed"
+    elif kind == "registry":
+        assistants.VERSION = "9.9.9-constructed"
     elif kind == "model":
         SERVING_MODEL["version"] = "different-model-version"
     elif kind == "rule":

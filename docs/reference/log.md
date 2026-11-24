@@ -15424,3 +15424,13 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2202 live re-proof on API 0000068 and resident 0000030 (Refs #2202)
 
 * Added [issue-2202-live-r68-2026-11-24.md](research/issue-2202-live-r68-2026-11-24.md): read-only live proof of revision health, hardening on all apps and jobs, sensor chart, map gauges, consent checkbox, chat routing and 59.1% readings coverage, with a per-criterion table (image provenance and rollback drill unproven).
+
+## [2026-11-24] add | Issue 107 separate-process schema and registry mismatch tests (Refs #107)
+
+* Added [issue-107-live-r11-schema-registry-2026-11-24.md](research/issue-107-live-r11-schema-registry-2026-11-24.md): two new race tests, SQLite and disposable SQL Server results, per-criterion table (delivered-build acceptance unproven).
+## [2026-11-24] add | Capstone pitch model-tier comparison and placement (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-24.md](research/capstone-pitch-435-live-2026-11-24.md) and the pitch page [tokenomics-model-tier-comparison.md](../capstone/pitch/tokenomics-model-tier-comparison.md): dated decision model, small GPT and large LLM comparison, slide 22 lead-in, computed timing, per-criterion table.
+## [2026-11-24] add | Issue 2202 second live re-proof and receiver window-edge fix (Refs #2202)
+
+* Added [issue-2202-live-r2-2026-11-24.md](research/issue-2202-live-r2-2026-11-24.md): read-only live proof on API 0000068 and resident 0000030, one Failed receiver execution diagnosed and fixed in source (not yet deployed), per-criterion table; image provenance, rollback drill and generative answers stay unproven.

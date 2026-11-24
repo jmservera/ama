@@ -353,6 +353,35 @@ class ReceiverTests(unittest.IsolatedAsyncioTestCase):
             with self.assertRaisesRegex(StreamError, "^IOT_OPERATION_TIMEOUT$"):
                 await self.run_receiver(2)
 
+    async def test_bounded_window_ends_normally_when_an_event_lands_after_the_deadline(
+        self,
+    ) -> None:
+        clock = {"now": 0.0}
+        fake_time = Mock(monotonic=lambda: clock["now"])
+        event_row = event(observations()[0])
+
+        async def late(on_event: object, **kwargs: object) -> None:
+            clock["now"] = 10_000.0
+            context = Mock(spec=PartitionContext, partition_id="0")
+            await on_event(context, event_row)  # type: ignore[operator]
+            await asyncio.Event().wait()
+
+        self.client.receive = late
+        with (
+            patch("zava_forward.api.iot_stream.time", fake_time),
+            patch(
+                "zava_forward.api.iot_stream.ManagedIdentityCredential",
+                return_value=self.credentials,
+            ),
+            patch("zava_forward.api.iot_stream.EventHubConsumerClient", return_value=self.client),
+        ):
+            receipts = await self.receiver.run(max_seconds=2, max_events=2, bounded_window=True)
+            self.assertEqual(receipts, ())
+            self.client = Mock(close=AsyncMock(), receive=late)
+            self.credentials = Mock(close=AsyncMock())
+            clock["now"] = 0.0
+        self.assertEqual(self.count("sensor_reading"), 0)
+
     async def test_bounded_window_never_retries_an_uncertain_commit(self) -> None:
         self.events = [("0", event(observations()[0]))]
         self.receiver.sql_backoff = (0.0, 0.0)

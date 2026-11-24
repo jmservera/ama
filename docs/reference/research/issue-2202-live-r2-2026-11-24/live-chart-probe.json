@@ -1,0 +1,44 @@
+{
+ "axes": [
+  "Temperature (degC)",
+  "Relative humidity (%RH)",
+  "Time (UK time)"
+ ],
+ "leftTicks": [
+  "7.5",
+  "7.75",
+  "8",
+  "8.25",
+  "8.5",
+  "24 Nov, 20:35"
+ ],
+ "rightTicks": [
+  "82",
+  "83",
+  "84",
+  "85",
+  "86",
+  "24 Nov, 19:15"
+ ],
+ "tempDash": "none",
+ "humidDash": "7px, 4px",
+ "circles": 12,
+ "squares": 12,
+ "role": "img",
+ "describedby": "sensor-chart-summary",
+ "summary": "12 readings from 24 Nov, 19:15 to 24 Nov, 20:35 (UK time). Temperature ranged 7.54 to 8.44 degC, from 8.44 to 7.54 degC. Relative humidity ranged 82.28 to 85.69 %RH, from 82.28 to 85.69 %RH. The two vertical axes have different scales, so the lines show how the values move together, not how large they are. The same readings are in the Recent readings table below.",
+ "key": [
+  "Temperature: solid line, circles, left axis",
+  "Relative humidity: dashed line, squares, right axis"
+ ],
+ "tableRows": [
+  [
+   "Recent readings, newest first",
+   12
+  ]
+ ],
+ "animations": 0,
+ "overflowX": false,
+ "old": false,
+ "reduced": true
+}

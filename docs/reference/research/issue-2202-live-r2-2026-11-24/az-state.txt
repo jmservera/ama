@@ -1,0 +1,74 @@
+== ca-cutover-test-demo-api
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "hard": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:7610c41b06e75a51a1e15c1b7465fb73270e2b3bb79153955fe63225c988f456",
+  "mode": "Single",
+  "ready": "ca-cutover-test-demo-api--0000068",
+  "rev": "ca-cutover-test-demo-api--0000068"
+}
+[
+  {
+    "active": true,
+    "health": "Healthy",
+    "n": "ca-cutover-test-demo-api--0000068",
+    "run": "Running",
+    "tr": 100
+  }
+]
+== ca-resident-demo
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "hard": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:3e10d2dd1b49b10271afff9c27e02fdde9d56f51b99aedc67dcfd31df7177b9e",
+  "mode": "Single",
+  "ready": "ca-resident-demo--0000030",
+  "rev": "ca-resident-demo--0000030"
+}
+[
+  {
+    "active": true,
+    "health": "Healthy",
+    "n": "ca-resident-demo--0000030",
+    "run": "RunningAtMaxScale",
+    "tr": 100
+  }
+]
+== agents
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+ca-cutover-test-demo-api
+ca-resident-demo
+ca-cutover-test-demo-agents
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+[
+  {
+    "hard": "enforced",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-importer@sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f",
+    "n": "job-cutover-test-demo-load"
+  },
+  {
+    "hard": "enforced",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7",
+    "n": "job-cutover-test-demo-audit"
+  },
+  {
+    "hard": "enforced",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7",
+    "n": "job-cutover-test-demo-orch"
+  },
+  {
+    "hard": "enforced",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5a20dbd3500099c8b8c3e2bf10c2d70bc4292e297dabc935056adf27dabd2f1d",
+    "n": "job-live-simulator"
+  },
+  {
+    "hard": "enforced",
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:5a20dbd3500099c8b8c3e2bf10c2d70bc4292e297dabc935056adf27dabd2f1d",
+    "n": "job-live-receiver"
+  },
+  {
+    "hard": null,
+    "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:463d096c02ada946d222b0037daf2a1743a7aa63ed7290ea5fe083cf8b21e96b",
+    "n": "job-184-bodyscan"
+  }
+]
