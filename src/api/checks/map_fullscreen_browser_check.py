@@ -913,6 +913,7 @@ def check_narrow_expand_reopen(page: Page, label: str) -> None:
     title = page.locator("#map-home-title")
     markers.nth(2).focus()
     markers.nth(2).press("Enter")
+    expect(card).not_to_contain_text("Loading sensor readings")
     selected = card.inner_text()
     page.get_by_role("button", name="Expand map", exact=True).press("Enter")
     dialog = page.get_by_role("dialog")
@@ -922,6 +923,8 @@ def check_narrow_expand_reopen(page: Page, label: str) -> None:
     dialog.locator(".map-marker").nth(2).press("Enter")
     expect(card).to_be_visible()
     expect(title).to_be_focused()
+    # The card renders a transient sensor loading state before the readings return.
+    expect(card).not_to_contain_text("Loading sensor readings")
     check(f"{label}: expanded dialog shows the same home summary", card.inner_text() == selected)
     intercepted = page.evaluate(
         """() => {
@@ -954,6 +957,7 @@ def check_narrow_expand_reopen(page: Page, label: str) -> None:
     expect(dialog).to_be_visible()
     dialog.locator(".map-marker").nth(2).press("Enter")
     expect(title).to_be_focused()
+    expect(card).not_to_contain_text("Loading sensor readings")
     check(f"{label}: reopened dialog selects the same home", card.inner_text() == selected)
     page.keyboard.press("Escape")
     expect(card).to_be_hidden()

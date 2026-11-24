@@ -579,11 +579,12 @@ def demo_owner_override(env: "dict[str, str] | None" = None) -> bool:
     """Demo-only: the owner directed (2026-11-23) that open AI suspensions do not hold the demo.
 
     The suspension records stay open and visible; only the AI hold is skipped, and only when the
-    deployment sets this variable. It is never set for production.
+    deployment sets this variable and runs the demo profile. The live demo also sets ZF_ENV=production
+    for its hardening checks, so the demo profile, not ZF_ENV, is the discriminator.
     """
     env = os.environ if env is None else env
     directed = env.get(DEMO_OWNER_OVERRIDE_ENV) == "owner-directed-2026-11-23"
-    return directed and env.get("ZF_ENV") != "production"
+    return directed and env.get("ZF_DEPLOYMENT_PROFILE") == "demo"
 
 
 class ContinuityMixin:

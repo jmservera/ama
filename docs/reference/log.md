@@ -15301,3 +15301,10 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-23] add | Issue 149 map tile-note check locator fix (Refs #149)
 
 * Added [issue-149-map-check-locator-2026-11-23.md](research/issue-149-map-check-locator-2026-11-23.md): the map tile status browser check used a stale adjacent-sibling selector; fixed with a unit assertion, live desktop render of both demo apps and a per-criterion table.
+
+## [2026-11-24] add | Issue 1830 live r11 map check race (Refs #1830)
+
+* Added [issue-1830-live-r11-2026-11-24.md](research/issue-1830-live-r11-2026-11-24.md): the map browser check raced the sensor loading state; waits added in `src/api/checks/map_fullscreen_browser_check.py`, with reruns and a per-criterion table.
+## [2026-11-24] add | Issue 2245 demo AI override keyed on the demo profile (Refs #2245)
+
+* Added [issue-2245-live-2026-11-24.md](research/issue-2245-live-2026-11-24.md): live probe on revision 0000059 (no thread 500, rules-only answers), root cause in the override's `ZF_ENV` check, fix and per-criterion table.
