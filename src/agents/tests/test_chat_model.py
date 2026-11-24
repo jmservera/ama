@@ -248,6 +248,17 @@ class ChatModelTests(unittest.TestCase):
         self.assertEqual((transport.call_count, caught.exception.calls), (1, 1))
         self.assertNotIn("PRIVATE", str(caught.exception))
 
+    def test_budget_hold_is_a_distinct_outcome_but_other_holds_are_not(self) -> None:
+        for reason, expected in (
+            ("call-budget-limit", "allowance-used"),
+            ("money-budget-limit", "allowance-used"),
+            ("liability-unknown", "provider-unavailable"),
+        ):
+            envelope = dict(outcome="financial-held", reason=reason, text="")
+            with self.subTest(reason), self.assertRaises(ModelUnavailable) as caught:
+                ChatModel(worker(envelope), admission=lambda: None)("s", "p")
+            self.assertEqual(caught.exception.outcome, expected)
+
     def test_post_dispatch_failures_carry_the_meter_reference(self) -> None:
         for outcome in ("timeout", "disabled", "provider-unavailable", "returned"):
             envelope = dict(outcome=outcome, text=" ", meter_id="rid-1", meter_root="root-1")

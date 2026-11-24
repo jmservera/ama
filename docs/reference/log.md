@@ -15414,3 +15414,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2310 live re-proof on revision 0000067 (Refs #2310)
 
 * Added [issue-2310-live-r67-2026-11-24.md](research/issue-2310-live-r67-2026-11-24.md): 93 auth tests OK, anonymous API still 302 at the Easy Auth edge (owner decision), page redirect to Entra proven live, per-criterion table.
+## [2026-11-24] add | Issue 2245 budget-hold wording fix and live recheck (Refs #2245)
+
+* Added [issue-2245-live-151955-2026-11-24.md](research/issue-2245-live-151955-2026-11-24.md): live recheck on revision 0000066, the allowance-used outcome fix, and a per-criterion table.
