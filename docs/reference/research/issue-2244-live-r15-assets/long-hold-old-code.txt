@@ -1,0 +1,11 @@
+2026-11-24T22:25:45.1921476Z stdout F HOLDER took the write lock, releases in 300 s
+2026-11-24T22:25:45.3147102Z stdout F BEGIN requested by execute < _migrate < _initialize < _initialize
+2026-11-24T22:26:00.3287814Z stdout F 2026-11-24 22:26:00,328 WARNING SQL write lock busy at start-up; retry 1 of 7 in 1 s
+2026-11-24T22:26:16.3383131Z stdout F 2026-11-24 22:26:16,337 WARNING SQL write lock busy at start-up; retry 2 of 7 in 2 s
+2026-11-24T22:26:33.3433460Z stdout F 2026-11-24 22:26:33,343 WARNING SQL write lock busy at start-up; retry 3 of 7 in 4 s
+2026-11-24T22:26:52.3634267Z stdout F 2026-11-24 22:26:52,363 WARNING SQL write lock busy at start-up; retry 4 of 7 in 8 s
+2026-11-24T22:27:15.3802359Z stdout F 2026-11-24 22:27:15,379 WARNING SQL write lock busy at start-up; retry 5 of 7 in 16 s
+2026-11-24T22:27:46.3994513Z stdout F 2026-11-24 22:27:46,399 WARNING SQL write lock busy at start-up; retry 6 of 7 in 30 s
+2026-11-24T22:28:31.4113251Z stdout F 2026-11-24 22:28:31,411 WARNING SQL write lock busy at start-up; retry 7 of 7 in 30 s
+2026-11-24T22:29:16.4226138Z stdout F RESULT schema current, lock held 300 s (longer than the retry budget of about 211 s): FAILED after 211.2 s: ProgrammingError: Driver Error: Syntax error or access violation; DDBC Error: [Microsoft][SQL Server]could not take the write lock
+2026-11-24T22:30:45.2236898Z stdout F HOLDER released the write lock

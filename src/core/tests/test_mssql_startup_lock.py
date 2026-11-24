@@ -370,5 +370,74 @@ class PopulatedStartupLockCountTests(unittest.TestCase):
         self.assertLessEqual(again, 2)
 
 
+class MigrateFastPathTests(unittest.TestCase):
+    """Issue #2244: the derived-column migration takes the write lock only when it has work."""
+
+    def open_store(self, tmp: str) -> Any:
+        import json
+        from pathlib import Path
+
+        data = importlib.import_module("test_bulk_edits").DATA
+        seed = Path(tmp) / "seed.json"
+        seed.write_text(json.dumps(data))
+        opened: Any = sqlstore.SqlStore
+        return opened(str(seed), str(Path(tmp) / "d.sqlite"))
+
+    def test_gate_in_sync_is_read_only_and_detects_drift(self) -> None:
+        import tempfile
+
+        from zava_forward.core import continuity
+
+        with tempfile.TemporaryDirectory() as tmp:
+            s = self.open_store(tmp)
+            self.assertTrue(continuity.gate_in_sync(s.db))
+            s.db.execute(
+                "INSERT INTO continuity_open_holds (scope, incident_id, epoch) VALUES ('x', 'i', 1)"
+            )
+            self.assertFalse(continuity.gate_in_sync(s.db))
+            s.db.execute("DELETE FROM continuity_open_holds")
+            self.assertTrue(continuity.gate_in_sync(s.db))
+            s.db.execute("UPDATE meta SET value = 'not json' WHERE key = 'continuity'")
+            self.assertFalse(continuity.gate_in_sync(s.db))
+            s.db.execute("DELETE FROM meta WHERE key = 'continuity'")
+            self.assertFalse(continuity.gate_in_sync(s.db))
+            s.db.close()
+
+    def test_identity_drift_is_reported_without_writing(self) -> None:
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            s = self.open_store(tmp)
+            self.assertEqual(list(s._identity_drift()), [])
+            s.db.execute("UPDATE cases SET stage = 'drifted'")
+            self.assertTrue(list(s._identity_drift()))
+            self.assertEqual(
+                s.db.execute("SELECT COUNT(*) FROM cases WHERE stage = 'drifted'").fetchone()[0],
+                len(list(s._identity_drift())),
+            )
+            s.db.close()
+
+    def test_current_store_skips_the_locked_migration_and_stale_takes_it(self) -> None:
+        calls: list[str] = []
+        s = store(FakeDb(set(), set(), set(), set()))
+        with (
+            patch.object(MssqlStore, "_migrate_current", return_value=True),
+            patch.object(sqlstore.SqlStore, "_migrate", lambda self: calls.append("locked")),
+        ):
+            s._migrate()
+        self.assertEqual(calls, [])
+        with (
+            patch.object(MssqlStore, "_migrate_current", return_value=False),
+            patch.object(sqlstore.SqlStore, "_migrate", lambda self: calls.append("locked")),
+        ):
+            s._migrate()
+        self.assertEqual(calls, ["locked"])
+
+    def test_missing_derived_column_is_not_current(self) -> None:
+        db = FakeDb(set(), set(), set(), set(sqlstore.CASE_COLS) - {"days"})
+        self.assertFalse(store(db)._migrate_current())
+        self.assertFalse(any("BEGIN" in q for q in db.sql))
+
+
 if __name__ == "__main__":
     unittest.main()

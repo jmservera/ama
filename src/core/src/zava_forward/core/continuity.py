@@ -32,6 +32,7 @@ import re
 import uuid
 from copy import deepcopy
 from functools import wraps
+from typing import Any
 
 from . import controls as k
 from .change_provenance import _actor
@@ -187,6 +188,38 @@ def sync_sql_gate(db, raw_value=None, *, read_meta=False, mssql=False):
             "INSERT INTO continuity_open_holds (scope, incident_id, epoch) VALUES (?, ?, ?)",
             (scope, incident_id, hold_epoch),
         )
+
+
+def gate_in_sync(db: Any, *, mssql: bool = False) -> bool:
+    """Read-only: True when sync_sql_gate would change nothing, so start-up needs no write lock (issue #2244).
+
+    Anything unusual returns False and the caller takes the locked path."""
+    state_row = db.execute("SELECT gate_version, epoch FROM continuity_gate_state WHERE id = 1").fetchone()
+    if state_row is None:
+        return False
+    stored_epoch = int(state_row[1])
+    has_meta = (
+        "SELECT name FROM sys.tables WHERE name = ?"
+        if mssql
+        else "SELECT name FROM sqlite_master WHERE type = 'table' AND name = ?"
+    )
+    raw_value = None
+    if db.execute(has_meta, ("meta",)).fetchone() is not None:
+        meta_row = db.execute("SELECT value FROM meta WHERE key = ?", ("continuity",)).fetchone()
+        if meta_row is None or not isinstance(meta_row[0], str):
+            return False
+        try:
+            parsed = json.loads(meta_row[0])
+        except (ValueError, TypeError):
+            return False
+        if not isinstance(parsed, dict) or "gate_version" not in parsed:
+            return False
+        raw_value = meta_row[0]
+    safe_epoch, holds = gate_sync_rows(raw_value, stored_epoch)
+    if safe_epoch > stored_epoch:
+        return False
+    stored = sorted((str(r[0]), str(r[1]), int(r[2])) for r in db.execute("SELECT scope, incident_id, epoch FROM continuity_open_holds").fetchall())
+    return stored == sorted((str(a), str(b), int(e)) for a, b, e in holds)
 
 
 def active(doc, task, constructed=False):

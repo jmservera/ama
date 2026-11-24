@@ -350,6 +350,11 @@ class SqlStore(Store):
         A writer that edits a body without its derived columns would otherwise leave the SQL list paths
         (own queue, counts, filters) disagreeing with the in-memory paths (exports) indefinitely.
         """
+        for cid, row in self._identity_drift():
+            self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", row[1:] + (cid,))
+
+    def _identity_drift(self):
+        """Read-only: yield (id, derived row) for every case whose filter columns disagree with its body."""
         cols = ("stage", "area", "wave", "owner_code", "closed", "hazard", "contractor", "support", "days", "fstatus")
         norm = lambda v: int(v) if isinstance(v, bool | int) else str(v)  # noqa: E731 - Azure SQL returns bits as bool
         for cid, body, *have in self.db.execute("SELECT id, body, " + ", ".join(cols) + " FROM cases").fetchall():
@@ -359,7 +364,7 @@ class SqlStore(Store):
                 continue  # a legacy-schema body lacks fields _row needs; leave it untouched
             want = [row[CASE_COLS.index(c) + 1] for c in cols]
             if [norm(v) for v in have] != [norm(v) for v in want]:
-                self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", row[1:] + (cid,))
+                yield cid, row
 
     # ---- load and sync
     def _migrate_queues(self):

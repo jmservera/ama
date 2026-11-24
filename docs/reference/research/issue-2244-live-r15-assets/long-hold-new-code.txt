@@ -1,0 +1,3 @@
+2026-11-24T22:31:30.5207496Z stdout F HOLDER took the write lock, releases in 300 s
+2026-11-24T22:31:32.2626443Z stdout F RESULT schema current, lock held 300 s (longer than the retry budget of about 211 s): opened in 1.7 s
+2026-11-24T22:36:30.5553186Z stdout F HOLDER released the write lock

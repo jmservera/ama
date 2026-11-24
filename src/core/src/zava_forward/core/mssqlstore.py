@@ -21,7 +21,8 @@ import threading
 import time
 
 from .chatthreads import MEMORY_ADDED as CHAT_MEMORY_ADDED, MSSQL_DDL as CHAT_DDL, MSSQL_INDEX as CHAT_INDEX
-from .sqlstore import INDEXES, QUEUE_COLS, SqlStore
+from . import continuity, ranking, stock
+from .sqlstore import CASE_COLS, INDEXES, QUEUE_COLS, SqlStore
 
 COLLATE = "COLLATE Latin1_General_100_BIN2"
 
@@ -367,6 +368,27 @@ class MssqlStore(SqlStore):
         """Read-only: every column the chat memory migration would add already exists (no write lock needed)."""
         cols = [("chat_memory", c) for c, _ in CHAT_MEMORY_ADDED] + [("chat_message", "actor_role")]
         return all(self.db.execute("SELECT COL_LENGTH(?, ?)", (t, c)).fetchone()[0] is not None for t, c in cols)
+
+    def _migrate_current(self):
+        """Read-only: derived columns, rank policy, identity columns and the continuity gate are already current (issue #2244).
+
+        Anything unusual returns False and takes the locked path, which owns every repair."""
+        have = self._columns()
+        if not have >= set(CASE_COLS):
+            return False
+        row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
+        encoding = self.db.execute("SELECT value FROM meta WHERE key='support_encoding'").fetchone()
+        if (row[0] if row else None) != ranking.CURRENT["version"] or (encoding[0] if encoding else None) != stock.SUPPORT_ENCODING:
+            return False
+        if next(self._identity_drift(), None) is not None:
+            return False
+        return continuity.gate_in_sync(self.db, mssql=hasattr(self, "_env"))
+
+    def _migrate(self):
+        with self.dblock:
+            if self._migrate_current():
+                return
+            super()._migrate()
 
     def _migrate_queues(self):
         # Read-only fast path (issue #2244): nothing to add, so do not queue for the global write lock.
