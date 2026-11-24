@@ -1728,6 +1728,7 @@ or infra acceptance claimed.
 | [Issue 2257 map redraw after a gateway failure (#2257)](./research/issue-2257-live-r6-2026-11-23.md) | A gateway page after the read retries gets the map's one automatic redraw; per-criterion table |
 | [Issue 2309 seeded critical-defect gate harness evidence (#2309)](./research/issue-2309-seeded-defect-gate-harness-2026-11-23.md) | Existing #223 harness proven against five criteria by 6 passing tests; no source change |
 | [Issue 2310 anonymous protected API 401 (#2310)](./research/issue-2310-anon-401-live-2026-11-23.md) | Code and tests already return 401; deployed edge returns 302, per-criterion table |
+| [Issue 2310 live re-proof on revision 0000067 (#2310)](./research/issue-2310-live-r67-2026-11-24.md) | Auth suites 93 OK; edge still 302 for anonymous API, page redirect proven, per-criterion table |
 | [Issue 2311 per-task data contracts (#2311)](./research/issue-2311-task-contracts-2026-11-23.md) | Contract per AI task enforced before prompt build, tests, per-criterion table |
 | [Issue 2304 assistants forecast did not answer on live data (#2304)](./research/issue-2304-forecast-live-2026-11-23.md) | Live 200 s hang reproduced, statement-count profile, bulk-read fix with a 10 s named state; live re-check blocked by the private registry; per-criterion table |
 | [Issue 2304 forecast live re-proof on revision 0000064 (#2304)](./research/issue-2304-live-r64-2026-11-24.md) | Live forecast timings (named state or 200 within 10 s, one 27 s outlier), briefing, AI report and retention, per-criterion table |

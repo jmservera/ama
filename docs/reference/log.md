@@ -15411,3 +15411,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2237 live re-proof on revision 0000067 (Refs #2237)
 
 * Added [issue-2237-live-reproof-2026-11-24b.md](research/issue-2237-live-reproof-2026-11-24b.md): retention 200 in 56 of 56 calls on 0000067, no 500 in 36 h of console logs, per-criterion table.
+## [2026-11-24] add | Issue 2310 live re-proof on revision 0000067 (Refs #2310)
+
+* Added [issue-2310-live-r67-2026-11-24.md](research/issue-2310-live-r67-2026-11-24.md): 93 auth tests OK, anonymous API still 302 at the Easy Auth edge (owner decision), page redirect to Entra proven live, per-criterion table.
