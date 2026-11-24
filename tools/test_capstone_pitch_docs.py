@@ -97,6 +97,22 @@ class CapstonePitchDocsTest(unittest.TestCase):
             for stale in ("authorised but not run", "not yet run live", "That batch has not run"):
                 self.assertNotIn(stale, text, f"{doc.name}: {stale}")
 
+    def test_model_tier_comparison_is_dated_sourced_and_makes_no_saving_claim(self) -> None:
+        text = " ".join(
+            (CAPSTONE / "pitch" / "tokenomics-model-tier-comparison.md")
+            .read_text(encoding="utf-8")
+            .split()
+        )
+        self.assertIn("retrieved 2026-11-24", text)
+        for source in (
+            "omg.org/spec/DMN",
+            "developers.openai.com/api/docs/pricing",
+            "model-router",
+        ):
+            self.assertIn(source, text)
+        self.assertIn("not a saving", text)
+        self.assertIn("Cost per accepted outcome | Unknown | Unknown | Unknown", text)
+
 
 if __name__ == "__main__":
     unittest.main()

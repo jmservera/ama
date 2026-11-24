@@ -113,6 +113,8 @@ rehearsal happens. Do not fill them in beforehand.
 
 Update 2026-11-18: the placement decision and the spend authority are evidenced for the synthetic demo in [capstone-pitch-435-live-2026-11-18.md](../../reference/research/capstone-pitch-435-live-2026-11-18.md); the 12-proposal measured batch ran under #432. Mentor confirmation and a timed rehearsal remain unperformed. A fifth pass on 2026-11-22 ([note](../../reference/research/capstone-pitch-435-live-2026-11-22.md)) re-read the deck and found slide 22, not slide 16, carries the segment.
 
+Update 2026-11-24: the [model-tier comparison](./tokenomics-model-tier-comparison.md) adds a dated decision model, small GPT model and large LLM comparison and a recommended spoken lead-in on slide 22 inside its 50-second slot; timing there is computed, not rehearsed.
+
 ## Decisions Needed From the Owner
 
 * Which format and time limit apply.

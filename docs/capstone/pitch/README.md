@@ -21,6 +21,7 @@ Use the [current PPTX](../deck/zava-forward-cowork-v2-draft.pptx) and
 [demo runbook](../demo/runbook.md). The
 [DRAFT Tokenomics placement and rehearsal outline](./tokenomics-placement-draft.md)
 awaits owner review, the
+[model-tier comparison and placement](./tokenomics-model-tier-comparison.md) (decision model, small GPT model, large LLM; computed timing), the
 [timing and rehearsal notes](./tokenomics-rehearsal-notes.md) hold the unperformed
 15-minute run sheet, and the
 [offline current-deck assessment and Tokenomics statement audit](./current-deck-assessment-2026-11-12.md)
