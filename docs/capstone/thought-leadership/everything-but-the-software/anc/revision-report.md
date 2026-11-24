@@ -1,7 +1,7 @@
 ---
 title: Everything but the Software - Revision Record
 description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
-ms.date: 2026-11-16
+ms.date: 2026-11-24
 ---
 
 The 16 November source-only revision applies a plain-language pass to the
@@ -77,6 +77,63 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Scientific author-voice revision 24 November
+
+The owner requested a full review and rewrite for a scientific audience,
+using the completed experiment and the voice in the supplied blog examples.
+All 70 active sections were read, including the seven TeX inputs and back
+matter. The two inactive historical inputs were excluded.
+
+The three English blog posts were retrieved as style samples only. Their
+practical motivation, direct explanations and candid trade-offs informed the
+rewrite; their dated technical guidance supplied no scientific evidence.
+The pinned experiment report at `d097a10b` was retrieved through GitHub REST,
+and its SHA-256 matched `e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15`.
+No private dataset or new model outcome was collected.
+
+The abstract and opening were rewritten. Interpretive passages distinguish
+acquisition, retained behaviour and extension failure, with the case account
+in first person and experimental findings stated descriptively. The summary
+table no longer labels the across-arm coverage range as Arm A alone,
+claims no consistent CR1 saving and does not treat structural cleanup as
+validation of an untested hybrid. Stable short-horizon retention remains
+evidence against the expected decay pattern under these conditions.
+
+Classification: focused editorial work with a directly coupled source-binding
+test update. It changes no experimental data, scoring, execution, dependencies
+of the application or publication authority. `scientific_voice_revision`
+records the new sources and prior active-content digests; every older revision
+binding remains unchanged.
+
+Preservation checks compare the pre-edit source with the revision: all seven
+equations, numerical values in 40 table environments, citation keys, labels,
+three literal prompt references, the embedded bibliography and all 61 source
+register rows are unchanged. Two CR1 outcomes, 55 billing holds, the
+313-trajectory judging snapshot, dependence assumptions and clearance/source
+TODOs remain unresolved. The 47-of-more-than-180 issue count in the opening
+is attributed to the participant's account, not independently verified.
+
+The installed humanizer and scientific-critical-thinking skills guided the
+edit; the existing Scientific Agent Skills citation remains. The prose
+detector was unavailable in the installed plugin/skill locations, so no
+automated prose score is claimed. This is an assisted editorial review,
+not independent scientific review or arXiv readiness certification.
+
+Structural checks pass: the approximate body count is 16,060 words and the
+abstract has 1,880 source characters, below the 1,920-character limit.
+Of 74 authoring tests, 73 pass. The native figure-export test fails because
+the expected Playwright Chromium headless shell is absent. No figure source
+or asset changed; fresh exporter validation remains unperformed.
+
+Two pdfLaTeX passes produced a separate 70-page PDF without unresolved
+references or box warnings. All pages were checked for blank content and
+out-of-page words; pages 1, 22, 35, 45 and 68 were visually inspected.
+The Supplement starts on page 45 and the source register on page 68.
+The validation PDF SHA-256 is
+`6cd6798dc812973bfa67322a65d06ec83b664831398c3729a93ce9ba9e4c35bb`.
+The repository's existing PDF is unchanged. No new hosted CI or independent
+exact-head review has run for this uncommitted revision.
 
 ## Copy Review Recommendations 16 November
 

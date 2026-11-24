@@ -1,21 +1,21 @@
-\section{Testing the harness: an evolving exploratory experiment}\label{sec:experiment}
+\section{Experiment: design and results}\label{sec:experiment}
 
-The experiment asks whether scheduled correction improves the repository
-inherited by later feature work. RQ3 is addressed by a five-arm exploratory
-study and post-collection evaluation completed in November 2026. Agent
-configuration protocols and empirical-study guidance informed its earlier
-planning~\cite{lulla2026protocol,baltes2026guidelines,wohlin2012experimentation}.
+To address RQ3, we compared scheduled correction with feature-only delivery
+and longer sessions on the same task. The five-arm exploratory study and
+post-collection evaluation completed in November 2026. Its planning drew on
+agent-configuration protocols and empirical-study guidance
+~\cite{lulla2026protocol,baltes2026guidelines,wohlin2012experimentation}.
 
 \subsection{Execution status and disclosed amendments}\label{sec:studyexecution}
 
 Isabel Cabezas Martin conducted the experiment and collected its data
 independently across the 315 allocated trajectories under the predefined
-exploratory protocol and disclosed amendments. Study conception, methodology,
-evaluation criteria, post-collection analysis, the human-calibration
-spot-check and manuscript preparation were undertaken by
-Juan Manuel Servera Bondroit. Separating these roles was intended to reduce potential experimenter bias.
-Both authors are Microsoft employees, and the analysis and scientific
-review remain within that shared institutional setting.
+exploratory protocol and disclosed amendments. Juan Manuel Servera Bondroit
+conceived and designed the study, defined the evaluation criteria, analysed
+the results, conducted the human-calibration spot-check and prepared the
+manuscript. This division of work was intended to reduce experimenter bias.
+Both authors are Microsoft employees; execution was separate from design
+and analysis, but not institutionally independent.
 
 An earlier three-arm protocol was registered at \url{https://osf.io/ywsrv/overview},
 and I, the repository maintainer, confirm a 7 November 2026 OSF-registered base at
@@ -27,8 +27,8 @@ handling, VM restarts and quarantine-completion transitions) were publicly
 disclosed in version control, culminating in initial handoff commit
 \sourceref{R07} and final quarantine-recovery sources
 \sourceref{R22} and \sourceref{R23} in the end register.
-The completed study is exploratory and estimates effects under an evolving
-protocol. It cannot be treated as one preregistered confirmatory evaluation.
+The completed study is exploratory. We estimate differences under an evolving
+protocol, not through a preregistered confirmatory evaluation.
 The public protocol leaves its formal hypothesis list empty and marks the
 current amendment's registration fields false or null. Those fields concern
 the amendment; the registered base remains based on my confirmation.
@@ -63,10 +63,10 @@ quarantines, credit holds and execution-version boundaries.
 
 \subsection{Design and estimands}\label{sec:protocolsummary}
 
-The planned independent experimental unit is one fresh repository developed
-through S1's ten ordered features and a final held-out change request, CR1.
-We call this sequence a \emph{trajectory}. The dependence assumptions used
-in the analysis are discussed in Section~\ref{sec:protocollimits}.
+One fresh repository developed through ten ordered features and CR1 is the
+experimental unit, called a \emph{trajectory}. The analysis treats
+trajectories as independent within cells; shared execution conditions limit
+that assumption (Section~\ref{sec:protocollimits}).
 S1 is a standard-library Python workbench covering lifecycle, handoffs,
 consent, permissions, ranking and audit. CR1 adds regional access control.
 The notation $F_t$ denotes the state after feature $t$, and $P_t$ the state
@@ -108,19 +108,19 @@ replicate selector, superseding an earlier A/B/C-only capability account.
 The source inspection, historical gate status and unchanged v4 freeze are
 retained in the dated revision record and source register.
 
-B--D is the primary practical comparison: consolidation versus giving
-the builder the same total time and nominal credits. These are maximum
-allowances; actual spending can differ, and D also has fewer fresh sessions.
+B--D is the primary comparison: a scheduled consolidation session versus
+giving the builder the same total time and nominal credits in one session.
+The allowances are ceilings, not measured spending.
+D also has fewer fresh sessions.
 B--A adds both the consolidation package and its resources. B--C changes
 editing rights, tests and handover content. E--B compares repair against
 visible requirements with consolidation intended to preserve behaviour.
-Each comparison changes several things at once, so it cannot identify the
-effect of refactoring alone or of any one case mechanism.
+Because these comparisons change several conditions together, they cannot
+isolate refactoring or any one of the case mechanisms.
 
-C cannot repair code during its review session, but REVIEW.md can direct
-repairs in later feature sessions. To establish follow-through, an external assessor would need to link a
-specific review item to a later diff. Changes to the same file would be
-insufficient evidence. B's added tests must agree with visible
+C cannot edit code during review, but its REVIEW.md can guide later feature
+sessions. Establishing that a note led to a repair would require linking the
+specific review item to the later change; a shared file path is insufficient. B's added tests must agree with visible
 specifications; a test that accepts a defect does not satisfy this rule. Subsequent feature sessions must keep accepted
 tests green. E can correct an agent-authored expectation only with a
 specific contradictory specification and a retained explanation.
@@ -206,29 +206,25 @@ Source and historical-runtime qualification are in the revision record.}
 
 \subsection{Outcomes and retained-contract loss}\label{sec:decaymeasurement}
 
-The primary outcome is final behavioural coverage: contracts passed out
-of all 127 scheduled feature contracts at $P_{10}$, before CR1.
-A contract is a required behaviour checked by a fixed hidden test.
-This score can improve because an agent implements a missing feature,
-preserves an existing one or repairs a failure. The score alone cannot
-distinguish those routes.
+The primary outcome is the proportion of all 127 feature contracts passed
+at $P_{10}$, before CR1. Each contract checks a required behaviour through
+a fixed hidden test. We call this \emph{behavioural coverage}; it is
+not instrumented line or branch coverage. A higher score can reflect acquisition, retention
+or repair, so the analysis examines those outcomes separately.
 Retained-contract loss and CR1 adaptation are distinct secondary outcomes,
 with legacy identifiers H2 and H6 retained only for data traceability.
 HIR/IDR definitions are in the supplementary appendices;
 comprehension is not measured.
 
 \paragraph{Who measures, and what ``quality'' means.}
-The development evaluator (\sourceref{R05}) does not call a separate LLM-as-judge
-to assign numerical outcome scores. The experiment models implement features, consolidate code, write review
-notes or make repairs. These activities are the interventions being tested.
-Separate instruments measure their outcomes. The host evaluator runs fixed hidden test contracts and
-external code-analysis tools, writes \texttt{measure.json}, and computes
-summaries from those records. Table~\ref{tab:measurementprovenance} separates
+During development, models implement features, consolidate code, write
+review notes or repair defects. Those activities are treatments, not outcome
+ratings. The separate host evaluator (\sourceref{R05}) runs fixed hidden
+contracts and code-analysis tools, writes \texttt{measure.json} and computes
+the numerical summaries. It does not call a separate LLM-as-judge. Table~\ref{tab:measurementprovenance} separates
 outcomes, structural proxies and resource observations.
-``Behavioural coverage'' is the fraction of test contracts passed. It is
-not instrumented line or branch coverage. Complexity, duplication and lint
-describe selected code properties; they cannot establish overall
-architecture quality, readability or comprehension. The active metric
+Complexity, duplication and lint describe selected code properties. They
+do not measure overall architecture quality, readability or comprehension. The active metric
 dictionary contains no maintainability-index score.
 
 \begin{table}[!htbp]
@@ -297,9 +293,10 @@ code, rather than accepting an AI statement as an independent quality verdict.
 The exact checked-in B/C examples, parameter substitution and saved-prompt
 limitations are in Supplement Section~\ref{app:activeprompts}.
 
-The following risk-set definitions and reporting requirements come from
-the earlier design. They describe intended reporting; the inspected
-analyzer's more conservative export is distinguished below.
+The earlier design specified the risk sets and reporting rules below.
+The inspected analyzer exports a more conservative summary, as explained
+after Equation~\ref{eq:decayloss}. The distinction is a reporting gap,
+not evidence that the richer export was completed.
 
 For trajectory $r$, $F_t$ is the retained state after feature step $t$ and
 $P_t$ the state after its assigned post-step; these source states coincide
@@ -315,12 +312,11 @@ L^p_{r,t}=\sum_{q\in\mathcal{O}^{p}_{r,t}}
 d^p_{r,t}=\frac{L^p_{r,t}}{|\mathcal{O}^{p}_{r,t}|}.
 \label{eq:decayloss}
 \end{equation}
-Here $L$ counts failures and $d$ is the fraction failing among observed,
-previously acquired contracts at that checkpoint. An empty observed denominator is undefined.
-To interpret either summary, we need to know which contracts belong in the
-full risk set. If an earlier checkpoint is missing, we may not know whether
-a contract was ever acquired. Preserve that uncertainty and the per-contract
-checkpoint results; lack of an observation cannot establish an acquisition
+Here $L$ counts observed failures among previously acquired contracts, and
+$d$ divides that count by the observed risk-set size. The fraction is
+undefined when its denominator is empty. Missing earlier checkpoints can
+leave acquisition unknown, so the proposed report retains per-contract
+results and that uncertainty; a missing observation is not an acquisition
 failure.
 Publish the full risk set, observed subset and missing count
 $M^p_{r,t}=|\mathcal{R}_{r,t}|-|\mathcal{O}^p_{r,t}|$ alongside it.
@@ -354,11 +350,10 @@ frequencies.}\label{fig:contractstates}
 CR1 success requires all 15 CR1 contracts and retention of every feature
 contract passing before CR1. Also report contracts passed out of 15,
 previously passing contracts lost, and observed/missing denominators.
-Report results separately by whether F9 and F10 prerequisites were acquired
-before CR1. A less complete repository has fewer passing contracts to
-preserve. Because treatment can affect whether those prerequisites are
-acquired, these groups are selected after treatment and cannot be interpreted
-as randomised subgroups.
+The earlier reporting plan also requested results stratified by whether
+F9 and F10 were acquired before CR1. Less complete repositories have fewer
+passing contracts to preserve. Treatment can affect prerequisite acquisition,
+so these strata are post-treatment selections, not randomised subgroups.
 One fixed CR1 is task-specific. A prewritten, randomly selected request
 pool belongs to a separately registered subsequent study.
 The summary inspected on 5 November computes composite CR1 success. The
@@ -391,9 +386,11 @@ and jscpd duplication. The inspected Ruff invocation uses
 ignoring repository configuration files, but does not include
 \texttt{--ignore-noqa}. Inline \texttt{\# noqa} can therefore suppress
 diagnostics, and the active metric dictionary exports no separate suppression
-count. The earlier description overstated this safeguard. This limits the integrity of the lint measurement. The inspection did
-not establish that participants used suppression. This manuscript clarification changes no running instrumentation;
-any subsequent fix needs explicit source/epoch and amendment disclosure.
+count. The omitted flag limits the lint measurement's protection against
+suppression, although the inspection did not establish that agents used it.
+The earlier description overstated the safeguard. The clarification
+changes no running instrumentation; a fix would require its own source,
+epoch and amendment disclosure.
 SDK request wall time and tool time are observable. Provider-active
 time and rate-limit waits require explicit telemetry; absent telemetry
 is not zero.
@@ -505,8 +502,8 @@ These planning requirements and assumptions are retained from the earlier
 record. Neither the registered base nor selection of $n=21$ establishes
 their validity for evolving-source exploratory data.
 
-The candidate independent-cell analysis uses a bootstrap: it repeatedly
-samples whole trajectories with replacement within each model/arm cell.
+The candidate independent-cell analysis uses a bootstrap that samples whole
+trajectories with replacement within each model/arm cell.
 The 2.5th and 97.5th percentiles of 10,000 resulting estimates give each
 95\% interval. The inspected v6 code uses independent arm/model draws; it
 does not preserve joint scheduling-block draws.
@@ -733,9 +730,9 @@ longer-session trajectories, 8/21 review-only trajectories and 12/21 with
 either consolidation or repair. The main difference was acquisition of
 ranking, while previously working features remained largely intact.
 
-Across all 63 versus 63 completed unassisted trajectories, the unlocked
-primary equal-model-weight coverage gain for consolidation over the
-longer-session control (B--D) is 1.19 percentage points (95\% bootstrap
+Across 63 trajectories per arm, the primary equal-model-weight coverage
+gain for consolidation over longer sessions (B--D) was 1.19 percentage
+points (95\% bootstrap
 interval [0.10, 2.22]), and 1.41 points over feature-only delivery (B--A,
 [0.33, 2.45]). With C and E also complete (63 versus 63), B--C is $+0.66$
 points ($[-0.45, 1.75]$) and E--B is $+0.04$ points ($[-1.07, 1.14]$). The
@@ -757,11 +754,11 @@ contracts had to pass while preserving the feature contracts that passed
 before the extension. Sonnet succeeded in nearly every trajectory. On
 Gemini, read-only review achieved 16/21 successes (76.2\%) versus 8/21
 (38.1\%) with consolidation and 11/21 (52.4\%) with visible-specification
-repair. The handoff attributes the recurring failure to read-only views
-that blocked known write methods but forwarded new ones introduced by CR1.
-Cleaner code did not ensure that the permission boundary extended
-correctly. This is a task-specific exploratory explanation; the cell
-summaries do not establish which review actions produced the difference.
+repair. Exploratory inspection in the source report attributed the recurring failure
+to views that blocked known write methods but forwarded new CR1 methods.
+The structural improvement therefore coexisted with a permission-boundary
+failure. The cell summaries do not establish which review actions caused
+the difference.
 
 \begin{table}[!htbp]
 \centering\small
@@ -853,14 +850,12 @@ GPT 6.1 Sol & E & 3.32 & 0.05 & 20.73 \\
 \end{tabular*}
 \end{table}
 
-The additional sessions carried a resource cost
+The additional sessions used more resources
 (Table~\ref{tab:resultscosts} and Figure~\ref{fig:studyoutcomescosts}).
 Settled delivery credits in B were 1.84 to
 2.25 times those in A, with no consistent CR1 cost reduction. The longer
 single feature session in D used similar resources to A despite its larger
-allowance. This distinction between an allowance and observed spending
-matters for interpreting B--D: its matched ceilings did not produce equal
-resource use. Completely billed trajectory counts vary by cell, and all
+allowance. B--D had matched ceilings, but unequal observed resource use. Completely billed trajectory counts vary by cell, and all
 55 unresolved attempt holds remain separate from these settled means.
 Source size, mean function complexity and documentation volume are
 reported in Supplement Section~\ref{app:resultsdetail}.
@@ -947,7 +942,7 @@ evaluable packet: 1,252 calls costing 418.64 settled AI credits in
 Assessment v3. Its complete-frame differences in functional completeness
 and API usability favoured B by about 0.06 on the 0--4 scale at $P_{10}$
 (Table~\ref{tab:resultsjudgecontrasts}), largely reflecting GPT's greater
-ranking completion. These are small descriptive ordinal differences.
+ranking completion. These differences are small descriptive summaries on an ordinal scale.
 The updated companion supplies exploratory bootstrap intervals. At CR1,
 all four intervals for these two dimensions include zero. No
 practical-importance threshold was established, and the intervals are
@@ -1025,10 +1020,10 @@ decision.}
 \toprule
 Prediction & Falsification / target criterion & Observed ten-feature result (315/315 complete) & Exploratory verdict \\
 \midrule
-P1: Short-horizon decay premise (\texttt{H2}) & Unconsolidated delivery (Arms~A, D) exhibits open regressions ($L^P_{r,10}>0$) or witnessed workflow losses by $P_{10}$ & 0/126 completed A and D runs with open loss at $P_{10}$ (1/315 overall, in Gemini~E); 99.18\%--99.74\% Arm~A coverage on Sonnet and Gemini; 0/626 workflow-replay losses & Not supported / invalidated at $N=10$ \\
+P1: Short-horizon decay premise (\texttt{H2}) & Unconsolidated delivery (Arms~A, D) exhibits open regressions ($L^P_{r,10}>0$) or witnessed workflow losses by $P_{10}$ & 0/126 completed A and D runs with open loss at $P_{10}$ (1/315 overall, in Gemini~E); 99.18\%--99.74\% Sonnet/Gemini coverage across arms; 0/626 workflow-replay losses & Not supported at $N=10$ \\
 P2: Primary consolidation coverage gain (\texttt{H1}, \texttt{H7}) & Arm~B exceeds Arm~D in equal-model-weight $P_{10}$ coverage by $\Delta_*\geq10$ percentage points & $+1.19$ pp (95\% CI $[+0.10,+2.22]$; B--A $+1.41$ pp, $[+0.33,+2.45]$; B--C $+0.66$ pp, $[-0.45,+1.75]$); GPT $+3.15$ pp $[0.00,+6.30]$ (F9 acquisition: 12/21 vs 6/21), while Sonnet $+0.26$ pp and Gemini $+0.15$ pp CIs span zero & Mixed / below 10-point threshold (single-model F9 recovery) \\
-P3: Change-request adaptability and cost payback (\texttt{H5}, \texttt{H6}) & Arm~B raises CR1 success and reduces CR1 or net credit spend relative to Arms~A, C and D & Equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ pp, B--C $[-14.29,-11.11]$ pp; Gemini review 16/21 vs Arm~B 8/21; settled delivery credits $1.84\times$--$2.25\times$ Arm~A with no CR1 saving & Not supported (\texttt{H5} invalidated; \texttt{H6} inconclusive for B, higher observed Gemini CR1 success under review) \\
-Manipulation check: Structural hygiene (\texttt{H3}, \texttt{H4}) & Arm~B reduces functions above complexity 10, duplication and lint toward stopping targets & 0.00\% functions $>10$ complexity across all 63 Arm~B endpoints; lint $-92\%$ on Sonnet (to 2.26/kloc) and $-100\%$ on GPT (to 0.00/kloc); \texttt{src} NLOC $+3.2\%$ to $+7.2\%$ & Supported as treatment fidelity (\textbf{adjust} to triggered hybrid B+C+E pass) \\
+P3: Change-request adaptability and cost payback (\texttt{H5}, \texttt{H6}) & Arm~B raises CR1 success and reduces CR1 or net credit spend relative to Arms~A, C and D & Equal-model CR1 B--D and B--A bounds $[0.00,+1.59]$ pp, B--C $[-14.29,-11.11]$ pp; Gemini review 16/21 vs Arm~B 8/21; settled delivery credits $1.84\times$--$2.25\times$ Arm~A with no consistent CR1 saving & Not supported (\texttt{H5} threshold unmet; \texttt{H6} inconclusive for B, higher observed Gemini CR1 success under review) \\
+Manipulation check: Structural hygiene (\texttt{H3}, \texttt{H4}) & Arm~B reduces functions above complexity 10, duplication and lint toward stopping targets & 0.00\% functions $>10$ complexity across all 63 Arm~B endpoints; lint $-92\%$ on Sonnet (to 2.26/kloc) and $-100\%$ on GPT (to 0.00/kloc); \texttt{src} NLOC $+3.2\%$ to $+7.2\%$ & Structural change observed; not all stopping targets met. Hybrid B+C+E remains untested. \\
 \bottomrule
 \end{tabularx}
 \end{table}

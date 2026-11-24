@@ -1,11 +1,11 @@
 \subsection{Additional source qualifications}\label{app:additionalevidence}
 
-These qualifications apply to the literature discussed in
-Section~\ref{sec:background}. The original-source check on 14 November
-found that Laban et~al.'s arXiv v1 abstract and Section~6.1 report a 39\% relative
-performance drop, whereas that version's Figure~1 caption says 35\%.
-The main text uses the results passage's 39\%. The discrepancy within the
-source remains unresolved, and neither value estimates repository decay.
+Some sources contain discrepancies or were only partly accessible.
+In Laban et~al.'s arXiv v1, the abstract and Section~6.1 report a 39\%
+relative performance drop, while Figure~1's caption says 35\%.
+The 14 November source check left that discrepancy unresolved. The main
+text uses 39\% from the results passage; neither figure measures repository
+decay.
 Gloaguen et~al.'s Table~3 records the developer-versus-LLM comparison as
 $p=0.038$, despite percentage-formatted p-values in the surrounding prose.
 The manuscript uses the table value. Besker et~al.'s 43-developer/23\%
@@ -46,19 +46,17 @@ an effect of retrieval; accessed, applied and sufficient guidance differ. \\
 \end{tabularx}
 \end{table}
 
-The provenance of merge-outcome studies also matters. Peralta et al.
-start with 9,799 human-reviewed agent PRs and manually inspect 717.
-Their 35.7\% clear-failure share among rejections and 15.4\% explicit
-reviewer-involvement share among merges describe that manual sample
+Merge-outcome studies measure different populations and outcomes.
+Peralta et al. started with 9,799 human-reviewed agent PRs and manually
+inspected 717. The 35.7\% clear-failure share among rejections and 15.4\%
+explicit reviewer-involvement share among merges describe that manual sample
 ~\cite{peralta2026merged}. Murphy-Hill et al. estimate roughly 24\% more merges among adopters in an
-observational rollout study~\cite{murphyhill2026agents}. That measures
-output; the delivered value needs separate assessment. AIDev contains
+observational rollout study~\cite{murphyhill2026agents}. That is a measure of output, not delivered value. AIDev contains
 932,791 agent-authored PRs from five agents across 116,211 repositories
-~\cite{li2026aidev}. It provides a population for research without establishing
-how many user outcomes were accepted.
+~\cite{li2026aidev}. Its size does not establish how many user outcomes were accepted.
 
 Pavlenko et al.'s World Model offers an additional context-management
 design: preserve raw evidence, derive rebuildable views and retrieve compact,
 task-specific context with provenance and access controls
-~\cite{pavlenko2026factory}. That architecture is an alternative to relying
-on an expanding read path; its effect on the AMA case is untested.
+~\cite{pavlenko2026factory}. This offers an alternative to continually expanding the required read path.
+Its effect on the AMA case was not tested.

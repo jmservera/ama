@@ -1,10 +1,32 @@
 ---
 title: Everything but the Software - source package (draft v23)
 description: Findings-led narrative, direct prose revision and future-study learning with preserved evidence in one additive Supplement
-ms.date: 2026-11-16
+ms.date: 2026-11-24
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
+
+## Scientific author-voice revision 24 November
+
+The revision reviews all 70 active sections across the article and seven
+TeX inputs against the completed experiment report and the owner's three
+English blog samples. It rewrites the abstract and opening, removes repeated
+explanations and states the results without treating the original decay
+conjecture as confirmed. First-person case observations remain distinct from
+the experiment's methods and findings.
+
+The numerical table values, seven equations, literal prompts, bibliography
+and source identifiers are unchanged. The prediction summary now attributes
+the Sonnet/Gemini coverage range to all arms, qualifies CR1 cost savings as
+inconsistent and separates structural treatment fidelity from the untested
+hybrid proposal. The draft date is 24 November; it is not a submission date.
+
+The [revision record](./anc/revision-report.md#scientific-author-voice-revision-24-november)
+records the evidence check and validation. `scientific_voice_revision` binds
+the current sources without rewriting earlier source/PDF records. The existing
+PDF remains unchanged; a separate build validates the revised source.
+Final author approval, publication clearance and arXiv submission remain
+outstanding.
 
 ## Copy Review Recommendations 16 November
 

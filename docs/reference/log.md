@@ -15424,3 +15424,12 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2202 live re-proof on API 0000068 and resident 0000030 (Refs #2202)
 
 * Added [issue-2202-live-r68-2026-11-24.md](research/issue-2202-live-r68-2026-11-24.md): read-only live proof of revision health, hardening on all apps and jobs, sensor chart, map gauges, consent checkbox, chat routing and 59.1% readings coverage, with a per-criterion table (image provenance and rollback drill unproven).
+
+## [2026-11-24] update | Scientific author-voice revision of Everything but the Software
+
+* Reviewed all 70 active paper sections against the completed experiment and
+  the owner's writing samples. Rewrote the abstract, opening and interpretive
+  prose for a scientific audience; preserved numerical evidence, equations,
+  prompts and source records. The [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#scientific-author-voice-revision-24-november)
+  distinguishes the editorial work from unresolved scientific and publication
+  requirements.
