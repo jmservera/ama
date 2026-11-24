@@ -15315,3 +15315,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2245 chat override end-to-end test (Refs #2245)
 
 * Added [issue-2245-live-010431-2026-11-24.md](research/issue-2245-live-010431-2026-11-24.md): SqlStore test of the demo override with the live env shape, deployment gap on revision 0000059 and per-criterion table.
+## [2026-11-24] add | Issue 108 quota headroom confirmed (Refs #108)
+
+* Added [issue-108-live-20261124-2026-11-24.md](research/issue-108-live-20261124-2026-11-24.md): usage rows now return Standard and GlobalStandard quota for the served models; new serving record is `confirmed`; tests repointed.

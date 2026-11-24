@@ -1,0 +1,51 @@
+[
+  {
+    "kind": "AIServices",
+    "loc": "uksouth",
+    "n": "aif-cutover-test-rzsrg",
+    "sku": "S0"
+  }
+]
+== aif-cutover-test-rzsrg
+[
+  {
+    "cap": 10,
+    "model": "gpt-4.1-nano",
+    "n": "standard",
+    "rl": [
+      {
+        "c": 10.0,
+        "k": "request",
+        "r": 60.0
+      },
+      {
+        "c": 10000.0,
+        "k": "token",
+        "r": 60.0
+      }
+    ],
+    "sku": "GlobalStandard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  },
+  {
+    "cap": 10,
+    "model": "gpt-4.1-mini",
+    "n": "resident-mini",
+    "rl": [
+      {
+        "c": 10.0,
+        "k": "request",
+        "r": 60.0
+      },
+      {
+        "c": 10000.0,
+        "k": "token",
+        "r": 60.0
+      }
+    ],
+    "sku": "Standard",
+    "state": "Succeeded",
+    "ver": "2025-04-14"
+  }
+]
