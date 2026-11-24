@@ -1,8 +1,8 @@
 \subsection{Measurement fields and provenance}\label{app:measurementprovenance}
 
-This inventory describes public source \sourceref{R05} in
-\url{https://github.com/jmservera/ama-thought-mve}. It is not a remeasurement
-of private experimental data. The collection path is
+The measurement definitions below come from public source \sourceref{R05}
+in \url{https://github.com/jmservera/ama-thought-mve}. This is a source
+inventory, not a remeasurement of private experimental data. The collection path is
 \nolinkurl{harness/runner.py} $\rightarrow$
 \nolinkurl{harness/measure.py} $\rightarrow$
 \nolinkurl{skeleton/tools/metrics_core.py}; pilot outcomes are derived in
@@ -83,10 +83,10 @@ lines. Ruff runs with isolated configuration, fixed
 \texttt{--exit-zero}; diagnostics are counted rather than treating its exit
 code as a clean-lint verdict.
 
-The actual invocation omits \texttt{--ignore-noqa}, so inline suppressions
-remain effective. No suppression-count field or maintainability-index
-field appears in the active dictionary. An installed dependency or
-qualitative review phrase must not be reported as a measured variable.
+The invocation omits \texttt{--ignore-noqa}, leaving inline suppressions
+effective. The dictionary contains neither a suppression count nor a
+maintainability index. A tool's presence or a qualitative review statement
+does not establish that either variable was measured.
 With no detected functions the engine emits zero mean/maximum/share
 summaries; these are empty-input sentinels, not measured zero complexity,
 and the mean/share denominator is undefined.
@@ -111,19 +111,17 @@ the scoring algorithm is programmatic.
 
 \subsection{Supplementary judging instrument and interpretation}\label{app:postrunjudging}
 
-The historical 9 November proposal is documented in
-\nolinkurl{judging/README.md} (source \sourceref{R36}, file \sourceref{R37})
-in the experiment repository.
-That pin identifies the proposal, not a replacement for the development
-experiment. The completed post-collection assessment used the v3 source
-and runtime identified below. Preparation used a stopped local archive,
+The 9 November proposal in \nolinkurl{judging/README.md}
+(source \sourceref{R36}, file \sourceref{R37}) preceded the completed
+post-collection assessment. That assessment used the v3 source and runtime
+identified below. It is not a replacement for the development experiment. Preparation used a stopped local archive,
 retained every allocated model/arm/replicate cell and selected recorded
 measurement HEADs.
 Missing $P_{10}$ or CR1 observations cannot be replaced by an earlier
 successful checkpoint. The reported replay used read-only snapshots and
 evaluator assets, with each scenario starting from a fresh in-memory
-Workbench. This revision checks the supplied records, rather than
-re-executing the archived candidates or independently qualifying the image.
+Workbench. The revision checked supplied records; it did not re-execute archived
+candidates or independently qualify the image.
 
 \begin{table}[!htbp]
 \centering\small
@@ -168,11 +166,10 @@ selected endpoint. Dividing by the number of earlier witnessed passes
 gives a dimensionless fraction from zero to one. An empty risk set
 or any unavailable risk-set endpoint leaves the density undefined.
 Publish the witnessed risk-set size, losses and unavailable count with
-final scenario outcomes. Treatment can affect how much behaviour was acquired in the first place.
-A repository that implemented little may lose little and still fail
-many final requirements.
-This conditional density therefore cannot alone rank treatment efficacy
-or replace the original hidden-contract loss measure.
+final scenario outcomes. Treatment can affect acquisition. A repository with few implemented
+capabilities can lose little while still failing many final requirements.
+This conditional loss density therefore cannot alone rank treatment efficacy
+or replace the hidden-contract loss measure.
 
 The instrument distinguishes retained and observed-loss scenarios,
 endpoint passes without an earlier witness, complete histories with no
@@ -189,9 +186,8 @@ baseline and remains distinct from this endpoint measure.
 A witnessed pass followed by an endpoint failure
 supports endpoint loss despite missing intervening observations, while
 leaving onset time unresolved. A final pass can conceal a recovered
-regression. The panel compares endpoints with earlier witnesses. It cannot establish
-uninterrupted retention, how long a failure lasted, whether it recurred
-or which feature caused it.
+regression. Comparing an endpoint with an earlier witness establishes neither
+uninterrupted retention nor a failure's duration, recurrence or cause.
 
 \paragraph{Ratings, blinding and calibration.}
 Functional completeness, workflow coherence, error recovery and API
@@ -235,9 +231,9 @@ model, repeat variation does not measure between-model agreement.
 \paragraph{Aggregation and resources.}
 A scenario/dimension mean requires all scheduled judge/repeat ratings.
 A trajectory mean describes its available scenario means and retains
-available/scheduled counts and a completeness flag. The ratings are ordinal: a 4 ranks above a 3, but the gap need not mean
-the same as the gap between 2 and 1. Their averages are descriptive
-summaries; equal spacing has not been calibrated.
+available/scheduled counts and a completeness flag. The ratings are ordinal. A 4 ranks above a 3, but that difference need not
+equal the gap between 2 and 1. Means are descriptive summaries; equal
+spacing has not been calibrated.
 Arm differences require complete trajectory scores for both compared
 arms in every allocated development model; otherwise the contrast is
 unavailable rather than estimated from complete survivors. Complete-frame
@@ -248,9 +244,9 @@ bootstrap intervals, hypothesis tests or formal verdicts. The 14 November
 companion extraction adds exploratory intervals without changing that
 strict instrument or its whole-frame gate. It resamples whole trajectories
 independently within development-model/arm strata (10,000 draws, seed 2027),
-equally weighting model differences. Here a ``complete pair'' means both compared arms have all allocated
-observations. The bootstrap still samples arms independently; it does
-not match trajectories into statistical pairs. The reported intervals are not multiplicity-adjusted.
+equally weighting model differences. ``Complete pair'' refers to two arms with all allocated observations.
+The bootstrap samples arms independently; it
+does not match trajectories into statistical pairs. The reported intervals are not multiplicity-adjusted.
 Repeated scenarios, snapshots and judge sessions remain nested within
 trajectory; implementation epochs and shared scheduling/service effects
 retain the unresolved interpretation limits in
@@ -362,9 +358,8 @@ averages are $+1.19$, $+1.41$, $+0.66$ and $+0.04$ points. The pooled
 within-cell SD over all 315 completed endpoints is 3.1278 points with 300
 degrees of freedom (3.1119 points with 298 degrees of freedom across the
 313 pre-recovery endpoints). Within-model cell SD ranges are 0.47--0.94 for
-Sonnet, 0.39--0.98 for Gemini and 4.81--5.59 for GPT. The pooled SD summarises variability across these cells and may inform
-future planning. Pooling does not establish that the cells share a common
-variance, and it does not calculate the study's observed power.
+Sonnet, 0.39--0.98 for Gemini and 4.81--5.59 for GPT. The pooled SD may inform future planning, but does not establish a common
+cell variance or calculate observed power.
 
 \begin{table}[!htbp]
 \centering\small
@@ -569,9 +564,9 @@ Table~\ref{tab:judgeobservedcontrasts} compares each trajectory's mean over
 its available scenarios. It reports trajectories with at least one
 unrated scenario dimension alongside the difference and interval.
 Every compared arm has 63 observed trajectories, but its rated scenario
-mix can differ. The resulting comparison concerns available scenarios. It answers a
-different question from a comparison covering every scheduled scenario;
-counting abstentions cannot recover the missing ratings.
+mix can differ. The available-scenario comparison answers a different question from a
+comparison covering every scheduled scenario. Its scenario mix can differ
+between treatments, and counting abstentions does not recover missing ratings.
 
 \begin{table}[!htbp]
 \centering\small
@@ -747,8 +742,8 @@ Servera Bondroit's \nolinkurl{human-calibration-guidance/v3} record remains
 \nolinkurl{review_completed_yes_no=no}. It discloses AI-assisted selection
 of failure/mismatch cases rather than individual inspection of every
 passing row. Guidance v3 followed an AI usability dry run and the start
-of initial AI scoring. The agreement figures describe this incomplete, AI-assisted spot-check.
-They cannot establish independent inter-rater reliability.
+of initial AI scoring. The agreement figures describe an incomplete, AI-assisted spot-check,
+not independent inter-rater reliability.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -960,8 +955,7 @@ model/replicate groups, each containing A--E. The 5,372-row
 \nolinkurl{attempts.csv} retains source assignments across sixteen epochs,
 but has no per-attempt start or finish timestamp columns.
 The separate \nolinkurl{provenance.json} records parallelism changing from
-ten to eight and controller-start metadata. The CSV lists records in export order. That order does not establish
-when the attempts ran. The earlier operator
+ten to eight and controller-start metadata. CSV export order does not establish execution order. The earlier operator
 inspection found per-attempt starts and durations in retained state;
 reconciling those records with amendments and outcome access remains
 necessary. Neither the scheduler nor the export grouping establishes
@@ -1037,8 +1031,7 @@ allocation and is reported incomplete.
 
 These are the exact B/C templates checked in at the inspected active
 source commit. They are not a new judge prompt or a protocol amendment.
-The complete request supplied to the provider also includes session
-context that is outside these templates. The runner removes HTML-comment lines and the first
+The provider request also contains session context outside these templates. The runner removes HTML-comment lines and the first
 Markdown heading, substitutes the configured post-step budget in minutes,
 and saves the actual supplied text as the step's \texttt{prompt.md}.
 The public configuration has a 900-second post-step budget, rendering
@@ -1052,8 +1045,8 @@ targets. Arm C requests a 300-word issue-oriented \texttt{REVIEW.md}
 without code/test changes. The host enforces the permitted-file and
 retained-test rules; it does not parse either note into a numerical quality
 score. Differences between review notes are variation in the treatment.
-The study did not use those notes to measure reviewer reliability or
-calibrate an outcome judge.
+The notes were not used to measure reviewer reliability or calibrate the
+outcome judge.
 The template's ``optional placebo'' heading is retained verbatim.
 Arm C supplies information that can affect later development, so it
 cannot be assumed to be an inert placebo.

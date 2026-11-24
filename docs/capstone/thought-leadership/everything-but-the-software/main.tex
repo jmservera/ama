@@ -61,50 +61,43 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \large Isabel Cabezas Martin\\[4pt]
 \small Software Engineer, Frontier Company at Microsoft}
 
-\date{Draft of 15 November 2026}
+\date{Draft of 24 November 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-After spending time to carefully build requirements documents, a prototype and
-an initial working version that validated my approach,
-I rebuilt the system with a coordinator of Research-Plan-Implement loop agents (RPI).
-Despite extensive planning, the loop left me with a solution I could not use.
-This situation, and some other similar experiences I had with agentic loops, led to
-what I'm asking here: What does each feature leave for the next one?
-This case analysis considers five possible causes and other technical explanations.
+After refining requirements and testing prototypes, I used coordinated
+coding agents to rebuild a working demonstrator. Local checks passed, but
+the replacement was a solution I could not use. What does each feature leave
+for the next one? A case analysis examines five possible mechanisms alongside
+migration and configuration failures.
 
-To examine this question, I designed a study in which agents build ten
-features, then implement a previously unknown change request. Between features, agents
-kept coding, consolidated, reviewed without editing, or repaired specified
-behaviour. Then, a separate evaluator ran hidden tests in isolated containers
-after each step, and a later workflow replays earlier capabilities to identify the
-differences in decay when using different techniques.
+We tested a standard-library Python task with three models, each completing
+21 repository trajectories in every condition: feature-only delivery,
+consolidation, read-only review, longer sessions and visible-specification
+repair. Each trajectory received ten features and a withheld change request.
+A separate evaluator ran hidden tests in isolated containers after each
+step; post-collection replay checked earlier workflows.
 
-All 315 allocated trajectories finished.
-Each trajectory follows work on one codebase. The three models each completed
-21 repository trajectories in every condition.
-Sonnet~5.5 and Gemini~4 Argon averaged hidden test pass rates of
-99.18\%--99.74\%. One run ended with a previously passing requirement still
-failing. Workflow replay found no losses of earlier observed capabilities.
+All 315 allocated trajectories finished. Sonnet~5.5 and Gemini~4 Argon averaged
+99.18\%--99.74\% final hidden-test pass rates. One trajectory ended with a
+previously passing contract failing; replay found no witnessed losses in
+626 evaluable packets. Consolidation left no function above cyclomatic
+complexity ten at its 63 final checkpoints.
+Its equal-model-weight coverage gain over longer sessions was 1.19 percentage
+points (95\% bootstrap interval [0.10, 2.22]), below the pre-specified
+ten-point minimum useful gain. GPT~6.1 Sol contributed most of that difference.
+Gemini~4 Argon completed the change request in 16/21 review trajectories
+and 8/21 consolidation trajectories. Consolidation used 1.84--2.25 times
+the settled delivery credits of feature-only work, without consistently
+reducing change-request cost.
 
-Structurally, consolidation kept every function to at most ten
-independent code paths at all 63 final checkpoints.
-Its test pass-rate gain over longer coding sessions was 1.19 percentage
-points (95\% resampling-based interval [0.10, 2.22]).
-The improvement fell well short of the ten-point benchmark
-for representing a practically important gain.
-
-Consolidation helped GPT~6.1 Sol more than the other two models. For Gemini~4 Argon,
-agents given read-only review sessions succeeded on the last change request in
-16 of 21 runs, compared with 8 for consolidation, with the drawback that the
-consolidation process almost doubled feature-delivery credit usage versus feature-only
-coding and did not lower later change costs.
-
-Taken together, features mostly left earlier behaviour intact in this short study;
-clean code alone did not ensure easier or cheaper later changes.
+The findings are exploratory, with unregistered amendments, two unresolved
+change-request outcomes, 55 billing holds and judging on an earlier
+313-trajectory snapshot. Stable retention coexisted with missing features
+and extension failures; cleanup did not establish easier or cheaper adaptation.
 \end{abstract}
 % Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
@@ -115,20 +108,19 @@ feedback loops; human-AI interaction; exploratory case study; experiment protoco
 % ===========================================================================
 \section{Introduction}\label{sec:intro}
 
-I was working on a project assignment with the help of agents,
-I inspected completed issues and passing checks, but,
-after a few days of having the agents working in a loop, I could not sign in
-and test the solution I was building. Previously, I ran some short exchanges
-with agents that produced a working prototype and an MVE in just a few hours.
-I used them to improve the specifications documents (BRD \& PRD) with the intention
-to make the agentic build process better, faster and produce reliable outcomes.
-I defined a coordinator and parallel workers that delivered a formal backlog,
-and I let them build it autonomously. The first 5 days they completed 47 of the
-more than 180 issues. It looked as good progress, but, when I tried to open the
-product to provide feedback, I couldn't even log in into the portal,
-while in the prototype and MVE this basic feature was working from the beginning.
-That interruption, raised a broader question than any one failed deployment:
-when each change looks locally complete, who checks the system that the next change inherits?
+I wanted to rebuild a demonstrator without losing what already worked.
+Short exchanges with agents had produced a prototype and a Minimum Viable
+Experiment (MVE) in a few hours, including working sign-in. I used those
+results to refine the business and product requirements documents (BRD and
+PRD), then gave a coordinator and parallel workers a formal backlog to
+implement autonomously. My account records 47 completed issues out of more
+than 180 in the first 5 days. I could inspect completed issues and passing
+checks, but when I opened the replacement to provide feedback, I could not
+sign in.
+
+The immediate problem was a blocked deployment workflow. The question it
+raised concerned the accumulated system: when a change passes its local
+checks, what evidence shows that the next change inherits working software?
 
 On 1~August 2012, Knight Capital's automated router sent more than four
 million orders while attempting to fill 212 customer orders. The firm lost
@@ -136,8 +128,9 @@ more than USD~460 million. The SEC traced the incident to a defective
 function left in the router after a 2005 change, an incorrect deployment for
 a new trading programme, and inadequate controls. The new deployment
 activated old code that was no longer meant to run~\cite{sec2013knight}.
-The failure crossed a feature boundary and a seven-year interval. The
-relevant starting point was the accumulated system, and the latest patch was only part of it.
+The failure crossed a feature boundary and a seven-year interval.
+Understanding it required examining the code and deployment state that the
+new programme inherited.
 
 Less spectacular versions of the same maintenance problem are familiar.
 Cunningham's 1992 account of WyCash described a financial product continually
@@ -171,21 +164,20 @@ distinction between producing code and learning through working software
 sharpens the research question~\cite{beck2026prodacity,orosz2025beck}:
 what does a feature leave behind for the next one?
 
-I built the demonstrator that triggered this study with multiple agents.
-Research documents, business and product
-requirements and architecture decisions came out of sustained
-conversation, challenge and owner decisions. Design Thinking methods,
-including what-if scenarios, persona analysis and journey mapping, helped
-question the proposed solution; disposable pilots and prototypes exposed
-workflow problems before a usable MVP emerged. A backlog agent then converted
-that accumulated context into epics and user stories for a delivery coordinator.
-I expected this preparation to speed implementation of better-understood
-features, with explicit acceptance criteria and review.
+The preparation involved sustained conversation and decisions, rather than
+a single specification prompt. Research agents maintained the evidence base;
+Design Thinking methods, including what-if scenarios, persona analysis and
+journey mapping, helped me question the proposed solution. Disposable pilots
+and prototypes exposed workflow problems before a usable minimum viable
+product (MVP) emerged. A backlog agent translated the resulting requirements
+and architecture decisions into epics and user stories. I expected clearer
+criteria and review to make the rebuild faster and more reliable; neither
+gain was measured.
 
-Extended autonomous sessions nevertheless left the replacement unusable for
-me. Renewed product-use feedback redirected implementation and
-refactoring. This sequence motivates the question of how preparation and local
-completion checks translate into the behaviour that later work inherits.
+Once the replacement became unusable, my attempts to use it again
+redirected implementation and refactoring. The case therefore examines
+where preparation and local completion checks failed to preserve the
+workflow I needed.
 The repository, pull requests, append-only log and versioned coordinator
 instructions retain the evolving delivery record~\cite{servera2026ama};
 the source package pins the evidence used here. The repository may be
@@ -207,9 +199,9 @@ both kinds of state. Section~\ref{sec:background} separates these
 pathways; the case then examines how they interact with completion proxies,
 review capacity and product-use feedback.
 
-The experiment must allow evidence against that conjecture. A single
-regression would provide little support for progressive decay, whereas
-stable behaviour would count against it under the tested conditions. Here
+Stable behaviour would count against the conjecture under the tested
+conditions. A single regression would provide little evidence of progressive
+decay. Here
 \emph{feature-driven decay} means a measurable loss of previously passing
 behaviour or a rising cost and failure burden across sequential changes.
 To make the conjecture falsifiable on the ten-feature S1 task and its
@@ -241,12 +233,11 @@ and lint density toward its stopping targets. This check asks whether
 the intervention changed structure before the behavioural
 results are interpreted.
 
-The experiment changed how I read the motivating case.
-Behaviour was largely retained, and consolidation's coverage gain fell
-below the practical benchmark even though structural cleanup occurred.
-Table~\ref{tab:predictionverdicts} sets the criteria beside the results.
-The more useful question became which capabilities were never acquired, which
-survived, and which failed when a new requirement crossed an old boundary.
+The results changed my interpretation of the case. Most acquired behaviour
+survived, and structural cleanup produced a coverage gain below the practical
+benchmark (Table~\ref{tab:predictionverdicts}). The analysis therefore
+separates features that were never implemented from regressions and from
+failures exposed when a new requirement crossed an existing boundary.
 
 Only $\Delta_*=10$ percentage points was fixed in the pre-collection
 planning calculation. The public execution manifest
@@ -268,7 +259,7 @@ completion signals and usable replacement behaviour suggest?
 improve retained behaviour and future changeability, and at what cost?
 \end{itemize}
 
-\noindent The report makes three contributions:
+\noindent The paper contributes:
 
 \begin{enumerate}[leftmargin=*]
 \item A focused synthesis distinguishing conversational self-conditioning,
@@ -352,11 +343,10 @@ still needed requirements reconciliation. A custom coordinator dispatched
 implementation and review against this evolving backlog
 (Section~\ref{sec:coordinator}).
 
-The intended benefit was accelerated planning and better-grounded feature
-delivery. Neither a human-only comparator nor a measured speed or quality
-gain was available. I retain the documents and conversations because
-they shaped what workers were asked to build and reviewers were asked to
-accept.
+I intended this preparation to shorten planning and clarify what each
+feature needed to do. There was no human-only comparator, and I measured no
+speed or quality gain. The retained documents and conversations show what
+workers were asked to build and reviewers were asked to accept.
 
 \subsection{The coordinator}\label{sec:coordinator}
 
@@ -397,14 +387,13 @@ process clarification and an export of project issue states, retained as
 counts and extraction rules remain in the ancillary records. The main
 account uses them to reconstruct the sequence and handoffs.
 
-Analysis combined descriptive measures, reference tracing of recorded
-lessons and AI-assisted interpretation of selected episodes. It did not
-include systematic entry-by-entry coding. Early log entries were
-reconstructed from history; later entries are contemporaneous project
-accounts. Specification review was selective. Participant recollection,
-committed source and execution evidence remain distinct, including in my
-fuller account of renewed feedback. The original source package
-retains missing score-to-release and deployed-journey links.
+I analysed descriptive measures, traced references to recorded lessons and
+used AI assistance to interpret selected episodes. I did not systematically
+code every log entry or review every specification. Early entries were
+reconstructed from history; later entries were written during the project.
+The evidence record distinguishes my recollection from committed source and
+execution observations. It also records missing links between assessment
+scores, releases and deployed tasks.
 
 External repositories and literature were selected for relevance to
 inherited faults, instruction maintenance and outcome verification.
@@ -443,11 +432,11 @@ Five measurement categories remain separate. PRs, lines and words describe
 \emph{validation activity}; observed user tasks describe \emph{system
 behaviour}; code metrics and the change request probe \emph{internal quality
 and changeability}; and corrective help requested or supplied describes
-\emph{intervention}. The original observations cover the first three.
-A later post-hoc comparison adds code metrics as indirect measures of
-structure. It includes no controlled changeability task or systematically
-coded intervention dataset. Volume and validation activity describe the
-process; measuring decay requires evidence about behaviour or change burden.
+\emph{intervention}. The original observations cover the first three categories. A later
+post-hoc comparison adds code metrics as indirect measures of structure,
+but no controlled changeability task or systematically coded intervention
+dataset. To measure decay, we need observations of lost behaviour or
+increased change burden.
 
 \subsection{Chain of evidence and reflexivity}\label{sec:audittrail}
 
@@ -508,11 +497,11 @@ where a link still needs checking.
 \FloatBarrier
 \section{Exploratory testbed: observations}\label{sec:what}
 
-The interruption was concrete: I could no longer complete the replacement's
-sign-in and service workflow after using the MVP.
-To see how that happened, I follow the work before the failure (discovery,
-prototypes and the backlog handoff) and the feedback after it. Table~\ref{tab:timeline} summarises those
-phases; exact chronology and changing totals remain in the source package.
+After using the MVP, I could no longer complete sign-in and the service
+workflow in its replacement. The sequence in Table~\ref{tab:timeline}
+starts with discovery and the backlog handoff, then follows the interruption
+and my renewed feedback. The source package retains the dated chronology
+and changing totals.
 
 \begin{table}[!htbp]
 \centering\small
@@ -629,14 +618,12 @@ history after that point records implementation refinement and recurring stabili
 checkpoints. The retained checkpoint review qualifies its local engineering
 evidence and leaves live acceptance separate.
 
-The project was steered through interaction, and neither the backlog nor the
-worker instructions settled the product outcome. A dated, release-linked journey is still needed to measure
-time to restored usability. The original observation window and the later
-repository snapshots remain distinct. The repository supplies the evolving
-history; the ancillary records preserve the exact observations used here,
-including changing issue totals, document volume, lexical counts and static
-source metrics. Those records support reconstruction; the separate
-experiment reported below tests retained behaviour and changeability.
+My interaction with the project continued to change what needed building.
+To measure time to restored usability, the account still needs a dated task
+execution linked to a release. Later repository snapshots cannot fill that
+gap in the original observation window. The ancillary records retain issue
+totals, document volume, lexical counts and static source metrics for
+reconstruction; the separate experiment tests retention and changeability.
 
 % ===========================================================================
 \FloatBarrier
@@ -682,12 +669,11 @@ usable increment \\
 \end{tabularx}
 \end{table}
 
-Each mechanism could weaken the link between completed work and the
-intended outcome. Expanding specifications leave more obligations for later
-changes. Recorded lessons help only when the session that needs them can
-retrieve and apply them. Completion signals decide what advances, and gates
-consume some of the capacity available to check it. If realistic product
-use is delayed, the loop can continue without exposing the missing journey.
+The proposed mechanisms concern different parts of delivery. Specifications
+add obligations; later sessions need to retrieve and apply recorded lessons.
+Completion criteria determine what advances, while gates consume validation
+capacity. Delaying realistic product use can leave missing dependencies
+undetected even as local checks pass.
 Table~\ref{tab:theory} in the Supplement relates this account to
 accumulation, transmission and correction.
 
@@ -707,13 +693,13 @@ separate its effects from competing explanations.
 \subsection{A proposed reinforcing relationship}
 
 The mechanisms suggest a possible reinforcing loop
-(Figure~\ref{fig:loop}). In this case a large specification came with a
-large backlog and parallel sessions. Artefact-based gates generated more
-documents, some recorded lessons were absent from later briefs, and routine
-product use did not expose regressions. I answered each gap with more rules,
-criteria and gates. That sequence is consistent with reinforcement but does
-not establish each causal link. I propose a running increment and a human
-checkpoint as conditions of every cycle, to test whether they interrupt the loop.
+(Figure~\ref{fig:loop}). In this case, an extensive specification led into a large backlog and
+parallel sessions. Artefact-based gates generated more documents, some
+recorded lessons were absent from later briefs, and I could not use the
+replacement to expose workflow gaps. I responded with further rules,
+criteria and gates. This sequence suggests reinforcement, but does not
+establish the causal links. A running increment and a human-use checkpoint
+in each cycle are proposed interventions; they were not tested here.
 
 \begin{figure}[t]
 \centering
@@ -854,8 +840,10 @@ trajectories, whose counts differ across cells; unresolved charges prevent
 a complete all-allocation cost comparison. The resource table in
 Section~\ref{sec:resultsstructural} retains those denominators.
 
-Across the three models, consolidation did not consistently reduce final change-request cost, so the accounted observations show no short-horizon credit payback. Some trajectories did deliver more complete software, so read
-the additional spend alongside those outcomes. The longer-session control
+Consolidation did not consistently reduce change-request cost across the
+three models. The settled observations show no short-horizon credit payback,
+although some consolidation trajectories delivered more complete software.
+Those outcomes matter when interpreting the extra spend. The longer-session control
 (D) had 50\% more time and twice A's credit allowance, yet spent a similar
 amount to A. B and D had matching allowances but did not use matching resources.
 
@@ -879,14 +867,13 @@ experiment reports the observed short-horizon trade-off.
 
 \subsection{What worked}
 
-Agents gave useful challenge and fast iteration. The research phase
-assembled a corpus and analysis in days; I did not measure a human-only
-duration. The role agents' challenge
-led me to reject the proposed five end-to-end agents before I wrote any code. The
-agents refused to invent approvals, figures or company facts, and recorded
-the limits of their evidence. I built and reshaped the MVP in a day. These episodes included targeted human challenge and feedback. With no
-controlled human-only comparison, they show how I used the workflow
-and cannot establish a general advantage for short feedback loops.
+The agents helped me question what to build. Research assembled a corpus
+and analysis in days, and role-agent challenges led me to reject the proposed
+five end-to-end agents before coding. They recorded unknowns instead of
+inventing approvals, figures or company facts. I built and reshaped the MVP
+in a day through targeted exchanges and feedback.
+These are observations from my use of the tools. I did not measure a
+human-only duration or run a controlled comparison of feedback cadences.
 
 \subsection{Human judgement and reflective work}
 
@@ -900,7 +887,8 @@ raise the question of whether agents could make comparable ones.
 The experiment asks something narrower: whether bounded post-feature
 correction preserves behaviour and later changeability.
 
-An approval record does not show who formed the judgment. In Anthropic's
+An approval record alone cannot establish that a person evaluated the
+alternatives independently. In Anthropic's
 randomised study, 61 analysts were recruited and 50 used the agent. Those
 50 analysts matched their agent's
 randomly assigned preference on 86\% of four analytical choices
@@ -908,8 +896,7 @@ randomly assigned preference on 86\% of four analytical choices
 deliberately strengthened in one farming-analysis task with one model; the
 rate concerns a different task and setting from coding
 \cite[Our study's limitations]{herdagdelen2026judgment}.
-Approval alone therefore should not count as evidence of independent
-judgment. The study did not assess the decisions reported in this case. Its authors suggest
+The study did not assess the decisions reported in this case. Its authors suggest
 asking experts for their view first or making the best case for each option
 \cite[What this means]{herdagdelen2026judgment}. I propose a separate step:
 record the alternatives and a person's reasons before accepting an agent's
@@ -961,13 +948,12 @@ remain separate questions in the ancillary research agenda.
 
 \subsection{What this study teaches a future experiment}\label{sec:futureexperiment}
 
-The result surprised me. I had expected the experiment to expose decay and
-was disappointed that it largely retained previously acquired behaviour.
-I read this as a reason to test the suspected burden with longer,
-more complex work. The experiment examined a ten-feature horizon across
-three current models; future research can vary task duration and complexity
-to test this explanation. A follow-up must allow stable retention to remain
-a legitimate result.
+I expected to see decay. Instead, the agents largely preserved what they
+had implemented. That result does not explain the larger migration failure
+that motivated the study, but it prevents me from treating that experience
+as evidence that sequential feature work necessarily degrades software.
+A longer, more coupled task could test whether the suspected burden emerges
+under different conditions. Stable retention must remain a possible result.
 
 S1 still changed what needs measuring. Acquiring a feature,
 preserving an established contract and adapting to a new requirement need
@@ -978,13 +964,12 @@ altering the continuing delivery trajectory. More coupled brownfield work
 could show whether implementation burden or loss emerges over longer
 horizons, and it would keep genuine acquisition failures visible.
 
-The review-only result also changes the treatment question. I suspect that
-the review stage of HVE Core's research, plan, implement and review workflow
-may already give useful correction. This experiment evaluated bounded
-feature and post-feature sessions with discovery disabled. A future study can
-estimate whether the full RPI sequence improves correction over feature-only
-delivery, separating the effects of review, refactoring, extra tests
-and handover content where feasible.
+The review-only result makes a component comparison worth testing.
+HVE Core's full research, plan, implement and review workflow may provide
+correction that these bounded sessions did not: discovery was disabled in
+the experiment. A follow-up could compare full RPI with feature-only delivery
+and separate review from refactoring, extra tests and handover content
+where feasible. The present results do not establish that RPI is better.
 
 The earlier numerical design candidates remain in Supplement
 Section~\ref{app:futuredesign}: longer trajectories, branch-isolated
@@ -1000,9 +985,9 @@ needed to design that study.
 
 \subsection{Implications for practice}\label{sec:feedbackfirst}
 
-The final report's Minimum Viable Experiment framework recommends
-\textbf{adjust}: change the next study instead of adopting the full
-consolidation package. On this workload, extra single-session allowance
+The final report's Minimum Viable Experiment assessment recommends
+\emph{adjust}: revise the next study before adopting the full consolidation
+package. On this workload, extra single-session allowance
 left observed spending and outcomes similar, while unconditional
 consolidation roughly doubled delivery credits. The report rates both
 strategies \emph{no-go} at this horizon. Similar cell means do not establish
@@ -1017,8 +1002,8 @@ Section~\ref{app:practicecandidate}. Its efficacy and cost advantage still
 need testing, and replacing an established review
 workflow with that unevaluated combination would be premature.
 
-If you adopt scheduled consolidation, measure its added cost against retained
-behaviour and success on a new requirement. In this study, structural
+For teams considering scheduled consolidation, the relevant comparison is
+its added cost at comparable retained behaviour and success on new requirements. In this study, structural
 measures improved, but the coverage gain over longer sessions was 1.19
 percentage points and change-request costs did not consistently fall.
 The case also supports protecting a usable increment, bounding the delivery
@@ -1028,8 +1013,8 @@ squash-merged product diff after preserving durable findings and original
 reviews. Selection must be finite, archive-backed and restore-verified,
 including adverse reviews. Mandatory safety, privacy, approval and publication
 gates stay in place, and compact context views must retain their source evidence.
-None of these practices, the proposed human-checkpoint cadence or the preservation of
-expertise has been tested. The ancillary context holds the fuller practice
+This study did not test these practices, the proposed human-checkpoint
+cadence or a method for preserving expertise. The ancillary context holds the fuller practice
 checklist and framework-builder suggestions.
 
 % ===========================================================================
@@ -1054,19 +1039,17 @@ view methods. Sonnet~5.5 and Gemini~4 Argon showed small B--D gains whose
 intervals spanned zero. Read-only review (C) achieved 16/21 Gemini CR1
 successes versus 8/21 with consolidation, while consolidation roughly
 doubled settled delivery credits without consistently lowering CR1 cost.
-The report's \emph{adjust} recommendation
-points to testing a combined pass triggered by code metrics or a halted
-session. It would pair \texttt{./tcr} structural cleanup with review of
-rules that must remain true as features change. This study measured no
-efficacy or cost advantage for the combined policy.
+The report proposes testing a combined pass triggered by code metrics or a
+halted session: \texttt{./tcr} cleanup with review of rules that must survive
+later features. No combined-policy efficacy or cost advantage was measured.
 
 The motivating case concerns a different scale and failure: a migration
 interrupted a usable workflow after extensive agent-assisted preparation.
 Its five candidate mechanisms link inherited obligations, lessons and
 completion signals to opportunities for correction. The experiment did not
-test those mechanisms individually. Together with the literature,
-the two accounts motivate evaluating the system left for the next change.
-They also show why the next experiment needs a new design: longer,
+test those mechanisms individually. Together with the literature, the case and experiment identify different
+ways to evaluate what later work inherits. The next experiment needs a
+separate design: longer,
 more coupled work, several adaptation probes and comparisons that can
 distinguish full RPI delivery from its corrective components
 (Section~\ref{sec:futureexperiment}).
@@ -1075,14 +1058,12 @@ These are exploratory findings from one suite and one final change request.
 Owner attestation covers all 315 completed trajectories; unregistered
 amendments, two unadjudicated GPT~6.1 Sol CR1 test errors, 55 billing holds,
 the 313/315 judging snapshot and sixteen execution sources limit inference.
-The study began
-with a decay hypothesis, found mostly stable retention and showed why
-acquisition, adaptation and structural quality need separate measures.
-A future paper can use those distinctions to test
-longer development loops and RPI-based correction, once a new protocol
-and the larger resource commitment are approved. For practice, measure three
-things: whether the system completes its intended task, whether it accepts
-the next change, and what each improvement costs.
+The ten-feature task did not support the expected decay pattern.
+Its acquisition and permission-boundary failures instead show why retention,
+completeness and adaptation require separate measurements. A follow-up can
+test longer loops and RPI-based correction once its protocol and resources
+are approved. The present evidence supports structural improvement at
+additional delivery cost, without a demonstrated short-horizon payback.
 
 % Author disposition (15 November 2026): only coauthor review is reported; no additional reviewer acknowledgement is claimed.
 
@@ -1093,11 +1074,10 @@ conducted the post-collection analysis and human-calibration spot-check,
 and wrote the manuscript. Isabel Cabezas Martin conducted the experiment and
 collected its data independently across the 315 allocated trajectories under
 the predefined exploratory protocol and disclosed amendments.
-Keeping execution and data collection apart from study conception, design and
-manuscript preparation is meant to reduce experimenter bias.
-Both authors are Microsoft employees. Any remaining bias is still open to
-assessment, because scientific review and analysis were not institutionally
-independent.
+Separating execution and data collection from design and analysis was intended
+to reduce experimenter bias. Both authors are Microsoft employees; this
+division of work does not establish institutionally independent analysis
+or scientific review.
 
 \section*{Use of generative AI}
 GitHub Copilot with HVE Core agents supported development of the system under
@@ -1155,7 +1135,7 @@ submission venue's policy, which I have not assessed.
 Both authors are Microsoft employees. The study concerns Microsoft and
 GitHub tools, and its historical case arose within a Microsoft training
 programme. I designed the coordinator and analysed a case in which I
-participated. Cabezas Martin conducts experimental execution
+participated. Cabezas Martin conducted experimental execution
 and data collection separately from those roles. These professional and
 participant-observer interests remain relevant despite the operational
 separation. The authors' views do not imply company endorsement.
@@ -1171,8 +1151,8 @@ execution links, analysis scripts and supplementary participant-observer context
 These records separate retained source from participant recollection,
 and live issue states can change independently. Full source identifiers and
 file digests appear once in Table~\ref{tab:source-register} at the end of
-the Supplement. A digest lets readers check whether retained content matches. To assess a
-claim, you still need to examine that content.
+the Supplement. A digest identifies retained content. Claim support requires examining
+that content.
 
 The experiment source and sanitized outputs are at
 \url{https://github.com/jmservera/ama-thought-mve}. Historical
@@ -1217,8 +1197,8 @@ stay off-Git in the evidence vault, which protects future reviewer blinding.
 The public attempt and provenance exports retain actual arm/model/source
 assignments, failures and unknowns. Changing execution versions and service
 conditions limit homogeneous pooling. Current access and prior exposure
-need their own records. This editorial revision changes no experiment,
-registration or repository visibility, and it claims no independent replication.
+need their own records. This revision does not change the experiment, registration or repository
+visibility, and no independent replication is claimed.
 % TODO(author): complete the selected experiment GitHub deposit manifest and verify the registered-protocol archive correspondence and released file hashes. Preserve dated v4/v6/v7 archives and disclose later amendments; exclude credentials, confidential identifiers, raw mappings and unapproved internal material.
 
 % ===========================================================================
@@ -1918,13 +1898,11 @@ cases.
 \FloatBarrier
 \section{Source and digest register}\label{app:source-register}
 
-Record links such as \sourceref{R17} point to the retained version used for
-a claim. Git commit
-IDs name repository revisions, tree IDs name directory contents, and
-blob IDs name individual Git objects. SHA-256 digests name retained
-file bytes or an image. Each identifier applies to its own kind of object. A matching digest
-confirms that the content is the same, but you still have to judge whether the content
-supports a claim and whether anyone has independently verified it. Unless another repository is named, records refer to
+Record links such as \sourceref{R17} identify the version used for a claim.
+Git commit IDs identify revisions, tree IDs directory contents and blob IDs
+individual Git objects. SHA-256 digests identify retained file bytes or an
+image. Matching an identifier verifies content identity, not claim support
+or independent validation. Unless another repository is named, records refer to
 \nolinkurl{jmservera/ama-thought-mve}. Historical and final records remain
 separate even when they concern the same file.
 

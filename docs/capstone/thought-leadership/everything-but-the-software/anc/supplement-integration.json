@@ -12,16 +12,16 @@
   "historical_inputs_retained_in_git": true,
   "files": {
     "anc/additional-evidence.tex": {
-      "content_sha256": "a32fa066c6da3133d2200b5205f5a76b9f674b36a3d5fe274e50b8867493d716"
+      "content_sha256": "7d2a9285d2d82f6300372c88d82057fdf2cd6b2cde797fc21b2f7a3365f2133b"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "7ead2c0de20fd5136d65e6f55c785571392b6055e225a0cf4e04f6de5e1c85c9"
+      "content_sha256": "e5459ab053f044b73c314d7d033e86b2f8f6d21f153951d0ed98a8096be89e48"
     },
     "anc/deferred-measures.tex": {
-      "content_sha256": "7346b69e089fdf713b9b73e614ba97acd6c247584928a566f4583b1ab686034d"
+      "content_sha256": "f7c6d9bc08543a9ebab8edb1838052b19d91944f330e2a64f739c1146e2da998"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "bb665b2da622b57e2ff3c06fb95c32186b01ba85e3806c090f09fe1eefe62a17"
+      "content_sha256": "e06a3569b423d9a1f36fdc7cadcbd3e8f5c3f296f48b0d0d4d9da0882926d240"
     }
   },
   "author_review_revision": {
@@ -479,6 +479,42 @@
       "anc/case-audits.tex": "229f5e9f275641d0874451167d0f25dd9bebd0e91cd5680bbb4a4eb5bdffb95d",
       "anc/deferred-measures.tex": "36464df072e2f13548352c786b1e462ad1bf1a9d203da25a45243a2643f9742a",
       "anc/measurement-provenance.tex": "4f09f69256d74543cdb4e177e4b603181f4deefc6180d257a321cb955b7c2c4a"
+    }
+  },
+  "scientific_voice_revision": {
+    "date": "2026-11-24",
+    "scope": "Review of all 70 active sections across main.tex and seven TeX inputs against the completed experiment report and three owner-supplied blog samples. Rewritten abstract, case opening and interpretive prose; scientific limits retained. Equations, numerical table values, citations, source identifiers and literal prompts unchanged.",
+    "prior_delivery_revision": "copy_review_revision",
+    "delivery_status": "source-only; existing main.pdf excluded; separate validation PDF",
+    "experiment_report_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+    "experiment_report_sha256": "e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15",
+    "unchanged_pdf_sha256": "e057c45b364e801e55fe3b2c5e53c32dba586f17b078159bcbe3206717b33ecf",
+    "validation": {
+      "structural_checks": "passed; approximate body 16060 words; abstract 1880 source characters against limit below 1920",
+      "authoring_tests": "74 run; 73 passed; native figure exporter failed because Playwright chromium_headless_shell-1194 is absent. Figure sources and assets unchanged.",
+      "preservation": "Seven equations, numerical values in 40 tabular/longtable environments, 94 citation uses, 172 labels, 61 source-register rows, three literal prompt files and embedded bibliography unchanged.",
+      "external_pdf_sha256": "6cd6798dc812973bfa67322a65d06ec83b664831398c3729a93ce9ba9e4c35bb",
+      "external_pdf_pages": 70,
+      "supplement_page": 45,
+      "source_register_page": 68,
+      "pdf_checks": "Two pdfLaTeX passes completed without unresolved references or box warnings; all 70 pages checked for blank content and out-of-page words; rendered pages 1, 22, 35, 45 and 68 visually inspected.",
+      "limits": "Prose scoring unavailable; no new hosted CI or independent exact-head scientific review; publication clearance and final author approval outstanding."
+    },
+    "prior_active_content_sha256": {
+      "anc/additional-evidence.tex": "a32fa066c6da3133d2200b5205f5a76b9f674b36a3d5fe274e50b8867493d716",
+      "anc/case-audits.tex": "7ead2c0de20fd5136d65e6f55c785571392b6055e225a0cf4e04f6de5e1c85c9",
+      "anc/deferred-measures.tex": "7346b69e089fdf713b9b73e614ba97acd6c247584928a566f4583b1ab686034d",
+      "anc/measurement-provenance.tex": "bb665b2da622b57e2ff3c06fb95c32186b01ba85e3806c090f09fe1eefe62a17"
+    },
+    "source_sha256": {
+      "main.tex": "f1651d3b1e86747f6c662fd8417d9b312c93069b4dd7da1be8139cbafc1a49dd",
+      "anc/background.tex": "8a0666c98126481e7a0e6e9ac1d52d77170bce92d848e2b48aeba93a43a0482b",
+      "anc/experiment-protocol.tex": "4e95f2364dee9e0873d0ffa27edf69a6807c10b3e0941e7bee6f299ddda7e0b8",
+      "anc/supplement-section.tex": "9e1c515228cd2d6b344c1b12fcf1484a4acb2e523d6461210ee66870c5d1d0f1",
+      "anc/additional-evidence.tex": "4dde5af865bde757b4ce4d37d58fdf0fe79f7504a29f31c8a575c01ba22d3225",
+      "anc/case-audits.tex": "5e7b4e429bc9d7f5f5e4d90e756ac20cd65ebb19f3808c47400c747eaf62a621",
+      "anc/deferred-measures.tex": "0aa0e6df5b2624b6882e5ff0b97c642d96f7c17fa02d6a3c776eb8b080287fa8",
+      "anc/measurement-provenance.tex": "6518ce940fb146875e34af69cb588a5689354f9dc4d2c7b80c52ff845ee4063b"
     }
   },
   "restored_citation_keys": [

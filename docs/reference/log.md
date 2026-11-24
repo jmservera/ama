@@ -15437,3 +15437,11 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2244 live run 15, held write lock reproduced and fixed (Refs #2244)
 
 * Added [issue-2244-live-r15-2026-11-24.md](research/issue-2244-live-r15-2026-11-24.md) and its assets: throwaway database copy and jobs (deleted) showed the derived-column migration still took the write lock at every start-up; a read-only fast path was added in `src/core`, with a per-criterion table (C5 unproven).
+## [2026-11-24] update | Scientific author-voice revision of Everything but the Software
+
+* Reviewed all 70 active paper sections against the completed experiment and
+  the owner's writing samples. Rewrote the abstract, opening and interpretive
+  prose for a scientific audience; preserved numerical evidence, equations,
+  prompts and source records. The [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#scientific-author-voice-revision-24-november)
+  distinguishes the editorial work from unresolved scientific and publication
+  requirements.

@@ -55,7 +55,9 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         for name, (sha256, _) in PROMPTS.items():
             self.assertEqual(bindings["literal_inputs"][f"anc/{name}"], sha256)
-        for name, sha256 in bindings["copy_review_revision"]["source_sha256"].items():
+        current = bindings["scientific_voice_revision"]
+        self.assertEqual(current["prior_delivery_revision"], "copy_review_revision")
+        for name, sha256 in current["source_sha256"].items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
 
