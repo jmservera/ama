@@ -530,7 +530,7 @@
       "anc/measurement-provenance.tex": "e06a3569b423d9a1f36fdc7cadcbd3e8f5c3f296f48b0d0d4d9da0882926d240"
     },
     "source_sha256": {
-      "main.tex": "ca9c5b0440887d484a78b38af4f530cfcc665a6dfedfcf7bb7e04e670ad485ca",
+      "main.tex": "4e01c88f4982aea30897814da958490de43f2a26a8b9edaf485f7cd169f38890",
       "anc/background.tex": "8a0666c98126481e7a0e6e9ac1d52d77170bce92d848e2b48aeba93a43a0482b",
       "anc/experiment-protocol.tex": "2dc6738c5c5f58e699f0ccb50a7617bd9bd2042b800b5904e140945439c2c9ad",
       "anc/supplement-section.tex": "9e1c515228cd2d6b344c1b12fcf1484a4acb2e523d6461210ee66870c5d1d0f1",
@@ -544,7 +544,7 @@
       "anc/publication-evidence-2026-11-24.json": "1fd95d3d24d7dfdc7f716a9f66608aff704fbf1e2c502bda906d159c7764e393",
       "references.bib": "7bc6e6cd3b29aec595ef0e6b688286dfbd0bc901d00dbd003654fdba6abad3c5"
     },
-    "delivery_sha256": "7fa6652bff8a28ddfd4635999fb8a18fca7e7bc75a6af2f01a3eff7cec7c9048",
+    "delivery_sha256": "7c2ad67953612ea76ab482ac01ed4e675622df4364b7a3afd47bc66059d16901",
     "delivery_pages": 74,
     "supplement_start_page": 46,
     "source_register_start_page": 72,
@@ -559,12 +559,12 @@
     },
     "arxiv_source_preparation": {
       "filename": "everything-but-the-software-arxiv-source-2026-11-24.zip",
-      "sha256": "85959f577bcff8ae07d8398287ec1539f59563417f1823f2b8d1a41fd4be3c47",
+      "sha256": "61eb29c8c9e5988ad1bf0b2a6fd64ba3001f9df0774a1169c5c87882259da7d4",
       "files": 22,
       "tex_sources": 8,
       "png_figures": 11,
       "literal_prompts": 3,
-      "uncompressed_bytes": 7228093,
+      "uncompressed_bytes": 7227733,
       "validation": "Separate extracted tree compiles twice with shell escape disabled to 74 pages; extracted text matches delivered PDF on every page. Archive inputs match current source bytes.",
       "limit": "Compilation-only preparation archive. Ancillary evidence remains in the repository package. Public-release selection, approval, upload and arXiv-generated-PDF checks remain pending."
     },

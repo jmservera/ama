@@ -438,18 +438,21 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_given_finalization_when_approval_recorded_then_cela_clearance_is_not_invented(self):
         manuscript = (PACKAGE / "main.tex").read_text()
-        approval_note = next(
-            line for line in manuscript.splitlines()
-            if line.startswith("% TODO(author)") and "CELA" in line
+        report = (ANC / "revision-report.md").read_text()
+        checklist_row = next(
+            line for line in report.splitlines()
+            if line.startswith("| 21 | Human clearance and approval |")
         )
 
-        self.assertIn("owner-reported manager approval", approval_note)
-        self.assertIn("AICC acknowledgement of 14 November 2026", approval_note)
-        self.assertIn("expected by 29 November 2026, not guaranteed approval", approval_note)
-        self.assertIn("Confirm that the applicable clearance process covers the final draft", approval_note)
-        self.assertIn("CELA/final-version clearance remains pending", approval_note)
-        self.assertNotIn("27 October 2026 CELA submission", approval_note)
-        self.assertNotIn("CELA approved", approval_note)
+        self.assertNotIn("CELA", manuscript)
+        self.assertNotIn("AICC", manuscript)
+        self.assertIn("Record manager approval", checklist_row)
+        self.assertIn("14 November AICC receipt", checklist_row)
+        self.assertIn("14-day no-objection window maturing 29 November 2026", checklist_row)
+        self.assertIn("Written CELA policy was not independently inspected", checklist_row)
+        self.assertIn("29 November 2026 has not yet elapsed", checklist_row)
+        self.assertIn("cover this exact 24 November draft", checklist_row)
+        self.assertNotIn("CELA approved", report)
 
     def test_given_finalization_when_metadata_recovered_then_history_is_not_rerun(self):
         supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
