@@ -1,0 +1,116 @@
+{
+  "date": "2026-11-24",
+  "modes": ["improve", "refactor"],
+  "target": ".github/agents/ama-presentation-communications-strategist.agent.md",
+  "write_boundary": "Humanize the output section and this lifecycle evidence record",
+  "base_revision": "ca9f9fdb7cc8dc2e5a55dda0037bead058a5246e",
+  "candidate_sha256": "8e35e45d4d1a5b7466dc482bed41cfd58af8eb2451155d14f8451ce065773a33",
+  "validation_tier": {
+    "classification": "focused",
+    "basis": "Prose-only agent voice guidance; no tools, permissions, dependencies, deployment, gate semantics or executable changes"
+  },
+  "baseline": {
+    "preserved": [
+      "Agent frontmatter, grounding, four audience archetypes, six-step presentation workflow, response and orchestrator handoff contracts",
+      "Clear active prose, varied sentence length, supported examples, reader address and factual verification",
+      "Anti-hype guidance, no empty contrast structures, no em dashes, no unsolicited emojis or Why it matters section"
+    ],
+    "changed": [
+      "Replaced the blanket analogy ban with audience-appropriate retention of supplied humour and concrete comparisons supported by the samples",
+      "Scoped promotional vocabulary restrictions so they cannot erase accurate technical terms or quotations",
+      "Replaced the blanket human oversight wording ban with explicit named review and approval responsibilities",
+      "Added owner-specific voice guidance, newer-sample precedence and humanizer skill routing with an unavailable-skill path"
+    ],
+    "unchanged_distribution": "Single repository agent; no plugin package or generated distribution is modified"
+  },
+  "sources": [
+    {
+      "url": "https://jmblog.servezas.org/en/2021/09/how-to-use-kubernetes-to-modernize-windows-applications-i/",
+      "published": "2021-09-20",
+      "retrieved": "2026-11-24",
+      "anchors": ["Opening business trade-offs", "Is this even possible?", "Docker layer cache explanation", "Continue playing"],
+      "observations": ["Practical motivation before implementation", "Reader questions", "Reasons beside actions", "Concrete result and next step"]
+    },
+    {
+      "url": "https://jmblog.servezas.org/en/2021/10/how-to-use-kubernetes-to-modernize-windows-applications-ii/",
+      "published": "2021-10-11",
+      "retrieved": "2026-11-24",
+      "anchors": ["Jurassic Park caption", "How will Kubernetes help?", "And now, how do I upload my container to Kubernetes?", "To be continued"],
+      "observations": ["Dry self-deprecation", "Simpler alternatives considered", "Shared walkthrough voice", "Temporary solution limits"]
+    },
+    {
+      "url": "https://jmblog.servezas.org/en/2021/05/how-to-use-unifi-cameras-in-home-assistant-after-nvr-being-deprecated/",
+      "published": "2021-05-30",
+      "retrieved": "2026-11-24",
+      "anchors": ["Opening hardware motivation", "Security warning", "Standalone RTSP alternative", "Java failure log", "Zero Trust aside", "No future"],
+      "observations": ["Real motivation", "Warning before risky actions", "Alternative with explicit feature loss", "Diagnostic output", "Occasional humour", "Candid end-of-life limits"]
+    }
+  ],
+  "validation": [
+    {
+      "check": "git diff --check",
+      "owner": "local",
+      "status": "Passed"
+    },
+    {
+      "check": "Python standard-library assertions: exact pre-humanizer baseline preservation, frontmatter preservation, one humanizer heading, three source URLs and ASCII new section",
+      "owner": "local",
+      "status": "Passed"
+    },
+    {
+      "check": "Source link retrieval",
+      "owner": "local",
+      "status": "Passed",
+      "detail": "All three supplied blog posts retrieved and read; no technical instructions executed"
+    },
+    {
+      "check": "Prose detector",
+      "owner": "local",
+      "status": "Unavailable",
+      "detail": "CLAUDE_PLUGIN_ROOT unset; no sloptrim/scripts/detect.py found in installed plugin or agent locations; prose rules applied manually"
+    },
+    {
+      "check": "Hosted exact-head CI",
+      "owner": "CI",
+      "status": "Pending CI",
+      "detail": "No publication yet; unobserved or path-filtered workflows must not be reported as successful"
+    }
+  ],
+  "review": {
+    "method": "Parent-owned rubric review of the complete candidate against the supplied baseline and three retrieved samples",
+    "verdict": "Pass",
+    "findings": [],
+    "coverage": [
+      "Existing presentation scope, frontmatter and audience strategy preserved",
+      "Source-backed voice observations; dated samples explicitly excluded as current technical guidance",
+      "Personal experiences cannot be invented; neutral reference prose remains neutral",
+      "Humour cannot become a technical claim or weaken security warnings",
+      "Short slides and detailed notes retain their separate purposes",
+      "Skill routing, newer-sample precedence, missing-skill response and rewrite checks are explicit"
+    ],
+    "reasoned_scenarios": [
+      {
+        "input": "Tutorial draft with a supplied first-person experience, a command and expected output",
+        "expected": "Retain the experience and command, explain the action naturally and preserve expected output",
+        "assessment": "Covered by voice bullets and final rewrite check"
+      },
+      {
+        "input": "Executive slide about a proposal requiring approval, with no supplied personal anecdote",
+        "expected": "Keep copy concise, preserve proposal status and named approval, invent no anecdote or joke",
+        "assessment": "Covered by audience precedence, slide scope and factual boundaries"
+      },
+      {
+        "input": "Regulatory reference paragraph or dated Java workaround",
+        "expected": "Keep neutral prose and safety limits; do not adopt the sample's dated technical advice",
+        "assessment": "Covered by neutral-prose and dated-source rules"
+      }
+    ],
+    "execution_fidelity": "Static instruction review and reasoned scenarios, not native agent execution or measured voice-match acceptance",
+    "independent_exact_head_review": "Not performed; still required before PR acceptance"
+  },
+  "correction_cycles": 0,
+  "local_validation_result": "Pass",
+  "overall_outcome": "Deferred",
+  "stop_reason": "Local source work is complete; publication authorization, hosted exact-head checks, independent review and owner voice acceptance remain pending",
+  "next_action": "Ask the owner to authorize commit, push and pull request creation; retain human merge authority"
+}
