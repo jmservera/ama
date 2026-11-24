@@ -375,6 +375,23 @@ class ChatDemoMeterOnSqlStore(Base):
         self.assertEqual(outcomes, ["returned", "financial-held"])
         self.assertEqual(self.kinds(service).count("reserved"), 1)
 
+    def test_daily_demo_budget_exhaustion_holds_the_next_question_before_dispatch(self):
+        store, service, _ = self.chat_model(self.DEMO_ON)
+        outcomes = []
+        with mock.patch.dict(os.environ, self.DEMO_ON), \
+                mock.patch("urllib.request.urlopen", return_value=self.Response()) as opened:
+            chat_admission(store)
+            for number in range(chat_demo_meter.CALLS + 1):
+                root = reference(f"question-{number}")
+                context = CallContext(root, root, CHAT_TASK, "retrofit-case", reference(CHAT_TASK), reference("s"))
+                with call_context(context):
+                    outcomes.append(store.ai.evidence("system", "q", 600)["outcome"])
+        self.assertEqual(outcomes, ["returned"] * chat_demo_meter.CALLS + ["financial-held"])
+        self.assertEqual(opened.call_count, chat_demo_meter.CALLS)
+        with service.transaction() as db:
+            alerts = [json.loads(row[0]) for row in db.execute("SELECT body FROM assistant_events")]
+        self.assertEqual([a["reason"] for a in alerts if a["kind"] == "alert"], ["call-budget-limit"])
+
     def test_repeated_admission_seeds_the_ledger_once_and_reseeds_on_new_settings(self):
         store, service, _ = self.chat_model(self.DEMO_ON)
         with mock.patch.dict(os.environ, self.DEMO_ON), \
