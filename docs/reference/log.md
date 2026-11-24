@@ -15318,3 +15318,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 108 quota headroom confirmed (Refs #108)
 
 * Added [issue-108-live-20261124-2026-11-24.md](research/issue-108-live-20261124-2026-11-24.md): usage rows now return Standard and GlobalStandard quota for the served models; new serving record is `confirmed`; tests repointed.
+## [2026-11-24] add | Issue 1830 live r12 map check sub-pixel flake (Refs #1830)
+
+* Added [issue-1830-live-r12-2026-11-24.md](research/issue-1830-live-r12-2026-11-24.md): the 390x568 focus-fit flake was a 0.17 px sub-pixel overshoot; 1 px tolerance in `src/api/checks/map_fullscreen_browser_check.py`, six reruns pass.
