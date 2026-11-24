@@ -15352,3 +15352,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 470 live r9 gate timing record (Refs #470)
 
 * Added [issue-470-live-r9-2026-11-24.md](research/issue-470-live-r9-2026-11-24.md): existing before and after full-gate wall times collected from retained receipts; no measurement tool missing; criterion 4 stays partly proven (no controlled pair, no PR).
+
+## [2026-11-24] add | Issue 117 upload scan gate proof (Refs #117)
+
+* Added [issue-117-upload-scan-proof-2026-11-24.md](research/issue-117-upload-scan-proof-2026-11-24.md): the scan-before-availability gate is already on main; tests plus a live Defender for Storage run prove it for the demo. Records one unexplained 500 on a second read of a clean document.
