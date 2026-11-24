@@ -530,7 +530,7 @@
       "anc/measurement-provenance.tex": "e06a3569b423d9a1f36fdc7cadcbd3e8f5c3f296f48b0d0d4d9da0882926d240"
     },
     "source_sha256": {
-      "main.tex": "4e01c88f4982aea30897814da958490de43f2a26a8b9edaf485f7cd169f38890",
+      "main.tex": "b66eebe071d21c59b6b9187855ceb0743af96a9d1a08d8b5ef263ff6ac547bad",
       "anc/background.tex": "8a0666c98126481e7a0e6e9ac1d52d77170bce92d848e2b48aeba93a43a0482b",
       "anc/experiment-protocol.tex": "2dc6738c5c5f58e699f0ccb50a7617bd9bd2042b800b5904e140945439c2c9ad",
       "anc/supplement-section.tex": "9e1c515228cd2d6b344c1b12fcf1484a4acb2e523d6461210ee66870c5d1d0f1",
@@ -541,10 +541,10 @@
     },
     "evidence_sha256": {
       "anc/case-evidence-matrix.json": "a4b3a38c56b5b5506139aa704d43485f6de4f00d6bf96a77c5b10b4436608206",
-      "anc/publication-evidence-2026-11-24.json": "1fd95d3d24d7dfdc7f716a9f66608aff704fbf1e2c502bda906d159c7764e393",
+      "anc/publication-evidence-2026-11-24.json": "bd478bcfb65405c46b18e89c52041228eecca2dbdce9a752338a76e8b2f5df83",
       "references.bib": "7bc6e6cd3b29aec595ef0e6b688286dfbd0bc901d00dbd003654fdba6abad3c5"
     },
-    "delivery_sha256": "7c2ad67953612ea76ab482ac01ed4e675622df4364b7a3afd47bc66059d16901",
+    "delivery_sha256": "628edaf9d8fdb2bda420a485f6b8d1fd9a088bae9d3bb10e42569932285072cd",
     "delivery_pages": 74,
     "supplement_start_page": 46,
     "source_register_start_page": 72,
@@ -559,20 +559,28 @@
     },
     "arxiv_source_preparation": {
       "filename": "everything-but-the-software-arxiv-source-2026-11-24.zip",
-      "sha256": "61eb29c8c9e5988ad1bf0b2a6fd64ba3001f9df0774a1169c5c87882259da7d4",
+      "sha256": "50845fe18898775b7161f8a11b1caf00d6f0f17320b4a9cc397a857a5d5e0348",
       "files": 22,
       "tex_sources": 8,
       "png_figures": 11,
       "literal_prompts": 3,
-      "uncompressed_bytes": 7227733,
+      "uncompressed_bytes": 7227554,
       "validation": "Separate extracted tree compiles twice with shell escape disabled to 74 pages; extracted text matches delivered PDF on every page. Archive inputs match current source bytes.",
       "limit": "Compilation-only preparation archive. Ancillary evidence remains in the repository package. Public-release selection, approval, upload and arXiv-generated-PDF checks remain pending."
+    },
+    "deposit_release": {
+      "repository": "https://github.com/jmservera/ama-thought-mve",
+      "tag": "results-exploratory-s1-v1",
+      "url": "https://github.com/jmservera/ama-thought-mve/releases/tag/results-exploratory-s1-v1",
+      "archive": "results-exploratory-s1-2026-11-24.tar.gz",
+      "archive_sha256": "9b11143ef7042d4c8f9a2276d14b0a7572223bbe69d4c81d5be41562a17a0f1c",
+      "manifest_sha256": "d994cff80ae2b8417d007ffeefcd4bc0a1ad2240b57c38b2cfa3473442d22c3d"
     },
     "remaining_limits": [
       "Dependence and complete amendment/outcome-access chronology",
       "Two CR1 unknowns, 55 held attempt charges and incomplete calibration",
       "Historical actual CLI/reviewer/backend identities and paired release/journey receipts",
-      "Exact-version author/employer clearance, approved release manifest and registration correspondence",
+      "29 November 2026 CELA no-objection window and confirmation that 14 November submission and coauthor sign-off cover exact final bytes",
       "Independent final assessment, applicable hosted review and arXiv-generated-PDF inspection"
     ]
   },
