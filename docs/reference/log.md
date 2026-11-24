@@ -15401,3 +15401,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2320 live re-check on revision 0000064/0000065 (Refs #2320)
 
 * Added [issue-2320-live-r3-2026-11-24.md](research/issue-2320-live-r3-2026-11-24.md): forecast 13 of 14 within 10 s (one 33.77 s outlier), briefing 0.43 to 0.85 s, retention 2.25 s, AI report 200 in 135 s, per-criterion table.
+
+## [2026-11-24] add | Issue 2320 live re-check on revision 0000067 (Refs #2320)
+
+* Added [issue-2320-live-r4-2026-11-24.md](research/issue-2320-live-r4-2026-11-24.md): briefing 0.28 to 0.90 s, forecast 14 of 14 within 8.57 s (one named 503), retention 2.49 s, AI report 200 in 122.7 s, per-criterion table.
