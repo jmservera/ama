@@ -46,6 +46,7 @@ def may_carry_captured_readings(carrier):
 
 MAX_TEXT_BYTES = 128 * 1024
 MAX_IMAGE_BYTES = 4 * 1024 * 1024
+MAX_PARTS = 8
 IMAGE_TYPES = ("image/png", "image/jpeg")
 
 
@@ -70,6 +71,8 @@ def approved_payload(system, user):
         user = [{"type": "text", "text": user}]
     if not isinstance(user, list) or not user:
         raise InputRefused("input-type-not-approved")
+    if len(user) > MAX_PARTS:
+        raise InputRefused("input-too-many-parts")
     for part in user:
         if not isinstance(part, dict):
             raise InputRefused("input-type-not-approved")

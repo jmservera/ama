@@ -15321,3 +15321,13 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 1830 live r12 map check sub-pixel flake (Refs #1830)
 
 * Added [issue-1830-live-r12-2026-11-24.md](research/issue-1830-live-r12-2026-11-24.md): the 390x568 focus-fit flake was a 0.17 px sub-pixel overshoot; 1 px tolerance in `src/api/checks/map_fullscreen_browser_check.py`, six reruns pass.
+
+## [2026-11-24] add | Issue 116 live r13 provider boundary part count (Refs #116)
+
+* Added [issue-116-live-r13-evidence-2026-11-24.md](research/issue-116-live-r13-evidence-2026-11-24.md): `approved_payload` now refuses more than eight parts as `input-too-many-parts`; one test added.
+## [2026-11-24] add | Issue 145 release reapply after restore (Refs #145)
+
+* Added [issue-145-live-20261124-2026-11-24.md](research/issue-145-live-20261124-2026-11-24.md): read-only Azure SQL backup settings, `_release_changes` register with `reapply_release_changes` so a restore cannot reactivate a suspended or revoked release, and a per-criterion table.
+## [2026-11-24] add | Issue 157 retention enforcement (Refs #157)
+
+* Added [issue-157-retention-enforcement-live-2026-11-24.md](research/issue-157-retention-enforcement-live-2026-11-24.md): live probe, `ChatPrivacy.sweep_retention` enforcing the stated period at runtime, memory limit counting live items only, and a per-criterion table; the [storage approval](research/chat-demo-storage-approval-2026-11-01.md) now records the sweep.

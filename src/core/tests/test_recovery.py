@@ -10,6 +10,7 @@ import dataset
 from zava_forward.core import ledger
 from zava_forward.core.synthetic import loadcheck
 from zava_forward.core import recovery
+from zava_forward.core import assistant_release as rel
 from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreError
 from zava_forward.core.sqlstore import LedgerRelianceError, SqlStore
 from zava_forward.core.store import Store
@@ -353,6 +354,48 @@ class RecoveryTests(unittest.TestCase):
     def test_reason_required(self):
         with self.assertRaises(ValueError):
             recovery.erase_resident(self.store, self.sam, "ZF-1", " ")
+
+    def _release_db(self):
+        db = self.store.assistant_connection()
+        for ddl in rel.SQLITE_DDL:
+            db.execute(ddl)
+        db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES ('r1','t','active','{}',1)")
+        db.execute("INSERT INTO assistant_releases (id,capability,status,body,revision) VALUES ('r2','t','active','{}',1)")
+        db.execute("CREATE TABLE IF NOT EXISTS assistant_events (id TEXT PRIMARY KEY, task_id TEXT, at REAL, body TEXT)")
+        return db
+
+    def test_restore_does_not_resurrect_suspended_or_revoked_release(self):
+        db = self._release_db()
+        self.assertTrue(recovery.record_release_change(self.store, db, "r1", "suspended"))
+        self.assertTrue(recovery.record_release_change(self.store, db, "r2", "suspended"))
+        rel.change(db, 1.0, None, "r1", "suspended", "incident", system=True)
+        rel.change(db, 1.0, None, "r2", "suspended", "incident", system=True)
+        self.assertTrue(recovery.record_release_change(self.store, db, "r2", "revoked"))
+        rel.change(db, 2.0, None, "r2", "revoked", "withdrawn", system=True)
+        # a restore returns both rows to the earlier active state
+        db.execute("UPDATE assistant_releases SET status='active'")
+        self.assertEqual(recovery.reapply_release_changes(db, 3.0, self.store), ["r1", "r2"])
+        got = dict(db.execute("SELECT id,status FROM assistant_releases").fetchall())
+        self.assertEqual(got, {"r1": "suspended", "r2": "revoked"})
+        self.assertEqual(recovery.reapply_release_changes(db, 4.0, self.store), [])
+        self.assertNotIn("incident", json.dumps(recovery.read_release_register(self.store)))
+
+    def test_release_register_writes_nothing_for_unchanged_unknown_or_invalid_change(self):
+        db = self._release_db()
+        self.assertFalse(recovery.record_release_change(self.store, db, "nope", "suspended"))
+        self.assertFalse(recovery.record_release_change(self.store, db, "r1", "active"))
+        rel.change(db, 1.0, None, "r1", "revoked", "withdrawn", system=True)
+        self.assertFalse(recovery.record_release_change(self.store, db, "r1", "suspended"))
+        self.assertEqual(recovery.read_release_register(self.store), [])
+
+    def test_unwritable_release_register_blocks_the_change(self):
+        db = self._release_db()
+        blob = FakeRegisterBlob()
+        blob.fail_put = True
+        self.store.docstore = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=blob)
+        with self.assertRaises(DocumentStoreError):
+            recovery.record_release_change(self.store, db, "r1", "suspended")
+        self.assertEqual(blob.blobs, {})
 
 
 class LoadCheckTests(unittest.TestCase):

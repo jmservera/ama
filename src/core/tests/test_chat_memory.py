@@ -1,6 +1,7 @@
 import json
 import tempfile
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import dataset
@@ -112,6 +113,17 @@ class MemoryLifecycle:
         self.assertEqual(self.c.list_memory(U1), [])
         with self.assertRaises(LookupError):
             self.c.edit_memory(U1, i, "new")
+
+    def test_current_user_sweeps_expired_threads(self):
+        env = dict(APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="30")
+        iso = ChatIsolation(self.store, env=env)
+        t = self.store.chat_create_thread(U1, task=TASK)
+        old = (datetime.now(timezone.utc) - timedelta(days=31)).isoformat(timespec="milliseconds")
+        with self.store.chat_repo.txn():
+            self.store.chat_repo.update(t["id"], cp.user_key(U1), 1, created_at=old)
+            self.store.chat_repo.commit()
+        iso.current_user(U1)
+        self.assertEqual(self.store.chat_list_threads(U1), [])
 
     def test_prompt_memory_is_non_authoritative_and_never_evidence(self):
         self.c.opt_in(U1, True)

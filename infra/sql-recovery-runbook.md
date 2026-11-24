@@ -44,7 +44,7 @@ EXEC sp_verify_database_ledger_from_digest_storage @locations;
 SELECT COUNT(*) FROM <audit ledger table>;
 ```
 
-Compare row counts and latest version against the source at the restore point. Reapply erasure tombstones and legal holds, and confirm that revoked permissions, suspended proposals and spent allowance are not resurrected. Delete the copy afterwards. Publish only hashes, status and counts.
+Compare row counts and latest version against the source at the restore point. Reapply erasure tombstones and legal holds with `recovery.reapply_deletions`, and reapply suspended and revoked releases with `recovery.reapply_release_changes` (register `_release_changes`, written before each release change). Confirm that revoked permissions, suspended proposals and spent allowance are not resurrected; spent allowance has no reapply step yet. Delete the copy afterwards. Publish only hashes, status and counts.
 
 ## Reassessment 2026-11-17
 

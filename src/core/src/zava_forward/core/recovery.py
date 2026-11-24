@@ -82,6 +82,50 @@ def reapply_deletions(store, actor="system-restore"):
     return done
 
 
+RELEASE_REGISTER_CASE = "_release_changes"
+RELEASE_STATUSES = ("suspended", "revoked")
+_RANK = {"active": 0, "suspended": 1, "revoked": 2}
+
+
+def read_release_register(store):
+    """Release changes recorded outside the database, oldest first. A backend failure raises."""
+    entries = [json.loads(store.docstore.get(RELEASE_REGISTER_CASE, name)) for name in store.docstore.list_ids(RELEASE_REGISTER_CASE)]
+    return sorted(entries, key=lambda e: (e["at"], e["release"]))
+
+
+def record_release_change(store, db, release_id, status):
+    """Write a write-once entry (release id, status, time; no free text) BEFORE the SQL change, so a restore
+    cannot return a suspended or revoked release to active. Returns False, writing nothing, when the change
+    would not apply. A register write failure raises and the caller changes nothing."""
+    if status not in RELEASE_STATUSES:
+        return False
+    row = db.execute("SELECT status FROM assistant_releases WHERE id=?", (release_id,)).fetchone()
+    if row is None or _RANK.get(row[0], 2) >= _RANK[status]:
+        return False
+    entry = dict(release=release_id, status=status, at=datetime.now().isoformat(timespec="seconds"))
+    store.docstore.put(RELEASE_REGISTER_CASE, f"{entry['at'].replace(':', '')}-{uuid.uuid4().hex[:12]}",
+                       json.dumps(entry, sort_keys=True).encode(), "application/json")
+    return True
+
+
+def reapply_release_changes(db, now, store, actor="system-restore"):
+    """After a restore, move each release back to the stricter status the register holds. Revoked outranks
+    suspended; a release the restored database does not know is skipped. Returns the release ids changed."""
+    from . import assistant_release as rel
+    strongest = {}
+    for entry in read_release_register(store):
+        if _RANK.get(entry["status"], 0) > _RANK.get(strongest.get(entry["release"], "active"), 0):
+            strongest[entry["release"]] = entry["status"]
+    done = []
+    for rid, status in strongest.items():
+        row = db.execute("SELECT status FROM assistant_releases WHERE id=?", (rid,)).fetchone()
+        if row is None or _RANK.get(row[0], 2) >= _RANK[status]:
+            continue
+        rel.change(db, now, None, rid, status, f"Reapplied after restore ({actor}).", system=True)
+        done.append(rid)
+    return done
+
+
 def backup(store, dest):
     """Consistent copy of the SQLite database (online backup API)."""
     with store.dblock:

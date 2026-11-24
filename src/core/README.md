@@ -5002,6 +5002,14 @@ witnessed restore, real-model, qualified human or application acceptance.
   register is an error, never an empty one. Tests: a SQLite backup restore proves the
   erasure returns, a fake Blob transport proves the register backend and the write
   ordering.
+* The same module keeps a release-change register under the case id `_release_changes`
+  (release id, status and time only). `assistants.change_release` and the serving-attestation
+  suspension write an entry before the SQL change; if it cannot be written the change is
+  refused. After a restore, `reapply_release_changes(db, now, store)` returns each release to
+  the strongest recorded status (revoked outranks suspended), so a restore cannot reactivate
+  a release a named human withdrew. Material-change revocations are re-derived from the
+  bound versions and need no entry. Spent allowance has no outside-database record; that gap
+  is open. Tested on SQLite only.
 * Unverified: the Azure SQL point-in-time restore drill (DH-005) has not been run;
   the register has not been run against a real storage account, nor has its
   retention or immutability policy been configured or tested; the Blob container

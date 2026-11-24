@@ -1,0 +1,38 @@
+{
+ "me_role": 200,
+ "/api/chat/status": [
+  200,
+  "{\"warning\": \"Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, financial hardship or other special-category details, and do not paste resident contact details. Use the case record instead. Matching text is masked before it is saved, but masking can miss things.\", \"retention\": \"30 days\", \"storage_approved\": true, \"provider_position\": {\"valid\": true, \"provider\": \"Azure OpenAI through the existing Foundry deployments (ADR 0001 to ADR 0003)"
+ ],
+ "/api/chat/threads": [
+  200,
+  "[{\"id\": \"CT-638c73ed0abf489c\", \"owner\": \"e-431883ca6856@entra.invalid\", \"owner_role\": \"Retrofit Programme Manager\", \"case_id\": \"ZF-2025-0031\", \"title\": \"New chat\", \"task\": \"\", \"task_version\": \"\", \"model\": \"\", \"status\": \"active\", \"rowversion\": 1, \"message_count\": 0, \"created_at\": \"2026-11-24T03:07:17.105+00:00\", \"updated_at\": \"2026-11-24T03:07:17.105+00:00\"}, {\"id\": \"CT-8154785bf7874e2a\", \"owner\": \"e-431883ca6856@entra.invalid\", \"owner_role\": \"Retrofit Programme Manager\", \"case_id\": \"ZF-2025-0031"
+ ],
+ "/api/chat/threads/not-my-thread-0000": [
+  404,
+  "{\"error\": \"Not found.\"}"
+ ],
+ "/api/audit-check": [
+  200,
+  "{\"intact\": true, \"entries\": 8891, \"head\": \"cd7ec2b062e21d134d2bc0ae61ff6b79747112f3ef5cf8651580251e05d0c18e\", \"problem\": null, \"digests_checked\": 0, \"digest_mismatches\": []}"
+ ],
+ "/api/chat/regulatory/usage": [
+  403,
+  "{\"error\": \"A separately assigned RegulatoryChat capability is required.\"}"
+ ],
+ "breakglass": [
+  403,
+  "{\"error\": \"Break-glass access is refused: policy not decided or role not named.\"}"
+ ],
+ "audit_after": [
+  200,
+  "{\"intact\": true, \"entries\": 8892, \"head\": \"aef7bfa7f5d9a90dfb79a8963ca39afaa6c83b72aee5c6f67e53935ac20fc3aa\", \"problem\": null, \"digests_checked\": 0, \"digest_mismatches\": []}"
+ ],
+ "memory_off": [
+  200,
+  "[]"
+ ],
+ "chat_nav": [
+  "#/assistants|Assistant proposals"
+ ]
+}

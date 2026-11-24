@@ -24,6 +24,7 @@ Tests use labelled synthetic values only. Open items stay with the DPO and Legal
 in docs/reference/research/chat-memory-dpia.md.
 """
 import json
+import logging
 import os
 import re
 import time
@@ -53,6 +54,8 @@ REDACTION_VERSION = "draft-1"
 MEMORY_CLASSES = ("working_preference", "terminology", "task_context")
 MEMORY_MAX = 1000
 MEMORY_LIMIT = 50
+SWEEP_INTERVAL_SECONDS = 3600.0
+LOG = logging.getLogger(__name__)
 # Placeholder pending an owner decision on the administrator persona: no Entra app role is named for it yet.
 # OPEN OWNER DECISION (see docs/reference/research/chat-memory-dpia.md): the role is checked against the register record.
 MEMORY_ADMIN_ROLES = ("Retrofit Programme Manager",)
@@ -121,6 +124,7 @@ class ChatPrivacy:
             raise TypeError("ChatPrivacy needs a Store with the chat repository.")
         self.store = store
         self.env: Mapping[str, str] = os.environ if env is None else env
+        self._swept: float | None = None
 
     def _ref(self, key: str) -> str:
         return (self.env.get(key) or "").strip()
@@ -353,7 +357,7 @@ class ChatPrivacy:
                  redactions=",".join(kinds), item_class=item_class, source=str(source)[:200], created_at=now, updated_at=now,
                  expires_at=self._expiry(d))
         with repo.txn():
-            if len(repo.memories(owner)) >= MEMORY_LIMIT:
+            if len(self._live(owner)) >= MEMORY_LIMIT:
                 raise ValueError(f"At most {MEMORY_LIMIT} memory items; delete one first.")
             repo.insert_memory(m)
             repo.commit()
@@ -459,3 +463,17 @@ class ChatPrivacy:
             memory = repo.purge_memory(stamp)
             repo.commit()
         return dict(threads=threads, messages=messages, memory=memory, applied=True)
+
+    def sweep_retention(self, interval: float = SWEEP_INTERVAL_SECONDS) -> dict[str, Any] | None:
+        """Enforce the recorded period at runtime without a scheduler: run `purge_retention` at most once per interval.
+        The run time is recorded first so a failing purge is retried next interval, not on every request, and a failure
+        never blocks chat. Deletion is idempotent, so replicas may each sweep."""
+        now = time.monotonic()
+        if self._swept is not None and now - self._swept < interval:
+            return None
+        self._swept = now
+        try:
+            return self.purge_retention()
+        except Exception:
+            LOG.warning("chat retention sweep failed", exc_info=True)
+            return None
