@@ -21,6 +21,7 @@ from contextlib import contextmanager
 from typing import Any
 
 from . import assistant_release as rel
+from . import recovery
 from .forecast_reads import ForecastReads
 from .ai import may_carry_captured_readings
 from .doc_controls import is_available_case_document
@@ -1714,6 +1715,7 @@ class Assistants:
             raise ValueError(self.disabled())
         with self.transaction() as db:
             self.authorize(db, user, "funding-evidence")
+            recovery.record_release_change(self.store, db, rid, status)
             rel.change(db, self.now(db), user, rid, status, reason)
         return dict(id=rid, status=status)
 
@@ -3557,6 +3559,7 @@ class Assistants:
                     quarantined = True
                     for r in released:
                         if r["status"] == "active":
+                            recovery.record_release_change(self.store, db, r["id"], "suspended")
                             rel.change(
                                 db,
                                 now,

@@ -15325,3 +15325,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 116 live r13 provider boundary part count (Refs #116)
 
 * Added [issue-116-live-r13-evidence-2026-11-24.md](research/issue-116-live-r13-evidence-2026-11-24.md): `approved_payload` now refuses more than eight parts as `input-too-many-parts`; one test added.
+## [2026-11-24] add | Issue 145 release reapply after restore (Refs #145)
+
+* Added [issue-145-live-20261124-2026-11-24.md](research/issue-145-live-20261124-2026-11-24.md): read-only Azure SQL backup settings, `_release_changes` register with `reapply_release_changes` so a restore cannot reactivate a suspended or revoked release, and a per-criterion table.
