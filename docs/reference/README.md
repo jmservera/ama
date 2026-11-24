@@ -2379,3 +2379,4 @@ The [issue 220 no-retaliation closure evidence](./research/issue-220-no-retaliat
 The [issue 2320 note](./research/issue-2320-live-2026-11-24.md) profiles why GET /api/briefing took the SQL write lock three times per request, records the held-briefing cache fix, a pre-fix live baseline and a per-criterion proven and unproven table.
 
 The [issue 2320 revision 0000061 re-check](./research/issue-2320-live-r2-2026-11-24.md) records the live briefing timings after the cache fix, the still-failing forecast endpoint, the chat call-cap hold and a per-criterion proven and unproven table.
+The [issue 2303 note](./research/issue-2303-live-2026-11-24.md) records the live proof that GET /api/ai/report returns 200 on revision 0000061 and the Asset and board view loads the report, with a per-criterion proven and unproven table and the report latency finding.
