@@ -2391,3 +2391,5 @@ The [issue 2303 note](./research/issue-2303-live-2026-11-24.md) records the live
 The [issue 2320 revision 0000064/0000065 re-check](./research/issue-2320-live-r3-2026-11-24.md) records live forecast, briefing, retention and AI report timings after the forecast last-good fix, with a per-criterion proven and unproven table.
 
 The [issue 2320 revision 0000067 re-check](./research/issue-2320-live-r4-2026-11-24.md) records live briefing, forecast, retention and AI report timings after the forecast release-reference fix, with a per-criterion proven and unproven table.
+
+The [issue 2256 revision 0000068 re-proof](./research/issue-2256-live-2026-11-24b.md) records the live waiting list, queues and case card on revision 0000068, with a per-criterion proven and unproven table.
