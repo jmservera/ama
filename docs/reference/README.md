@@ -2387,6 +2387,8 @@ The [issue 2244 run 7 note](./research/issue-2244-live-r7-2026-11-24.md) proves 
 
 The [issue 2244 run 9 note](./research/issue-2244-live-r9-2026-11-24.md) repeats the read-only proof on revision 0000067 (two replicas, restart count 0, `/healthz` 200, matching file hashes); the concurrent-writer and lock-holder criteria stay unproven for the demo.
 
+The [issue 2244 run 15 note](./research/issue-2244-live-r15-2026-11-24.md) reproduces the held write lock on a throwaway copy of the demo database (old code failed at 211.2 s under a 300 s writer), finds `_migrate` as the remaining lock taker, and shows a read-only fast path starting in 1.7 s; C5 stays unproven.
+
 The [issue 220 no-retaliation closure evidence](./research/issue-220-no-retaliation-closure-2026-11-24/README.md) maps the last unticked criterion to 23 passing tests and a non-mutating live route probe on the demo API.
 
 The [issue 2320 note](./research/issue-2320-live-2026-11-24.md) profiles why GET /api/briefing took the SQL write lock three times per request, records the held-briefing cache fix, a pre-fix live baseline and a per-criterion proven and unproven table.

@@ -1,0 +1,6 @@
+2026-11-24T22:17:04Z HOLDER took the write lock, releases in 45 s
+2026-11-24T22:17:04Z BEGIN requested by execute < _migrate < _initialize < _initialize
+2026-11-24T22:17:19Z WARNING SQL write lock busy at start-up; retry 1 of 7 in 1 s
+2026-11-24T22:17:35Z WARNING SQL write lock busy at start-up; retry 2 of 7 in 2 s
+2026-11-24T22:17:49Z HOLDER released the write lock
+2026-11-24T22:17:50Z RESULT schema current, lock held 45 s: opened in 46.9 s
