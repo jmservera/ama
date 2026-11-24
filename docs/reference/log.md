@@ -15364,3 +15364,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Epics 73, 149 and 157 closure checkpoint extension (Refs #73)
 
 * Added [issue-73-149-157-closure-checkpoint-live-2026-11-24.md](research/issue-73-149-157-closure-checkpoint-live-2026-11-24.md) and three rows in the cut-over evidence pack per-epic closure table: 574 local tests and a read-only live probe; each unticked box listed with its reason; no source change, nothing ticked or closed.
+## [2026-11-24] add | Issue 107 root cause of no-new-proof re-verification (Refs #107 #1830 #435)
+
+* Added [issue-107-live-r10-root-cause-2026-11-24](research/issue-107-live-r10-root-cause-2026-11-24.md): why repeated live re-verification adds no proof, plus new separate-process model, data and provenance mismatch race tests (SQLite and disposable SQL Server pass).
