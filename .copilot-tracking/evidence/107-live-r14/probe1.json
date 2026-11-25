@@ -1,0 +1,156 @@
+{
+ "status": 200,
+ "keys": [
+  "assistants",
+  "registered_tasks",
+  "disabled",
+  "proactive",
+  "quality_scope",
+  "principal",
+  "rule",
+  "limits",
+  "manual",
+  "rai_exercise_acceptance",
+  "real_ai_delivery_gate"
+ ],
+ "assistant0": {
+  "id": "stock-prioritisation",
+  "version": "1.0.0",
+  "release": {
+   "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+   "missing": [
+    "approved, unexpired release record"
+   ],
+   "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+   "manual": "Use the ordinary case controls.",
+   "task": "stock-prioritisation",
+   "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+   "authority_holders": [
+    {
+     "authority": "release",
+     "holder": null,
+     "status": "gap",
+     "reference": "OQ-017"
+    },
+    {
+     "authority": "residual-risk acceptance",
+     "holder": null,
+     "status": "gap",
+     "reference": "OQ-017"
+    },
+    {
+     "authority": "suspension",
+     "holder": null,
+     "status": "gap",
+     "reference": "OQ-017"
+    },
+    {
+     "authority": "restart",
+     "holder": null,
+     "status": "gap",
+     "reference": "OQ-017"
+    }
+   ]
+  },
+  "binding": {
+   "registry_version": "1.0.0",
+   "schema_version": "evidence-proposal-v1",
+   "provider": "azure-openai",
+   "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+   "deployment": "standard",
+   "prompt_version": "3768ed36e3242c28",
+   "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+   "data_version": "bd66b741abf300ac",
+   "provenance_version": "constructed-synthetic-demo-labelled",
+   "permission_version": "0fb3bef9c37875ca",
+   "model_version": "gpt-4.1-nano-2025-04-14",
+   "task_contract_version": "b591a7fb7d211c1bb8ac4d398cea1e2ee52b6a7dbfeccc2f97de1408d420ec91",
+   "evaluation_version": "task-release-evaluation-v1"
+  },
+  "model_bounds": {
+   "calls_per_attempt": 1,
+   "max_attempts": 2,
+   "max_calls_per_request": 2,
+   "max_agent_depth": 1,
+   "tools": 0,
+   "attempt_ceiling": 3
+  },
+  "roles": [
+   "Retrofit Coordinator",
+   "Retrofit Programme Manager"
+  ],
+  "categories": [
+   "home",
+   "survey",
+   "ranking"
+  ],
+  "purpose": "Explain stock facts and prepare a data-owner query"
+ },
+ "gate": {
+  "section": "real_ai_delivery_gate",
+  "separated_from_rai_exercise_acceptance": true,
+  "passed": false,
+  "status": "blocked",
+  "checks": {
+   "provider_configured_and_enabled": {
+    "passed": true,
+    "workflow_only_forced": false,
+    "detail": "Live Azure OpenAI provider configured and active."
+   },
+   "durable_sql_release_store": {
+    "passed": true,
+    "detail": "Durable SQL release store connected."
+   },
+   "no_active_suspension": {
+    "passed": true,
+    "detail": "No active continuity or governance guardrail suspension."
+   },
+   "oq017_named_live_releases_recorded": {
+    "passed": false,
+    "approved_live_tasks": [],
+    "unapproved_live_tasks": [
+     "assessment-preparation",
+     "briefing",
+     "funding-evidence",
+     "funding_draft",
+     "message",
+     "priority",
+     "quality-evidence",
+     "read_document",
+     "stock-prioritisation",
+     "summary",
+     "works-resident-coordination"
+    ],
+    "detail": "Enabled AI tasks lack unexpired named-human actual release records (OQ-017)."
+   },
+   "oq017_authority_holders_appointed": {
+    "passed": false,
+    "open_question": "OQ-017",
+    "detail": "Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017)."
+   },
+   "oq018_live_fairness_and_thresholds_cleared": {
+    "passed": false,
+    "open_question": "OQ-018",
+    "detail": "Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018)."
+   },
+   "oq019_legal_dpo_automated_decision_cleared": {
+    "passed": false,
+    "open_question": "OQ-019",
+    "detail": "Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+   }
+  },
+  "blocking_reasons": [
+   "oq017_named_live_releases_recorded: Enabled AI tasks lack unexpired named-human actual release records (OQ-017).",
+   "oq017_authority_holders_appointed: Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017).",
+   "oq018_live_fairness_and_thresholds_cleared: Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018).",
+   "oq019_legal_dpo_automated_decision_cleared: Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+  ],
+  "deferred_open_questions": [
+   "OQ-017",
+   "OQ-018",
+   "OQ-019"
+  ],
+  "note": "Disabled, offline, or workflow-only assistance never satisfies the real-AI delivery gate; live cut-over requires real provider readiness plus named human OQ-017, OQ-018, and OQ-019 clearances."
+ },
+ "disabled": "Operator authority, finite allowance and expiry are required."
+}

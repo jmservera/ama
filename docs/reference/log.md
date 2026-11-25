@@ -15521,3 +15521,10 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2303 live latency on revision 0000073 and live-report fix (Refs #2303)
 
 * Added [issue-2303-live-2026-11-25-r73.md](research/issue-2303-live-2026-11-25-r73.md): GET /api/ai/report still takes 70 to 87 s cold and warm on the cache image; container timings put 68 s in `ai_live_report` (42 withheld-value scans of 980 cases), not in the cached evaluations; `live_report` now scans once per distinct case set (source and test only, not deployed, live latency after the fix unproven).
+## [2026-11-25] update | GitHub API rate limit notes in project memory
+
+* Added a "GitHub API Rate Limits" section to [memory.md](memory.md) from the GitHub GraphQL and REST rate-limit documentation (retrieved 2026-11-25), at the owner's request. Context only, not evidence; it explains the coordinator's GraphQL exhaustion and the REST-first rule.
+
+## [2026-11-25] add | Issue 107 demo release records and capped batch blocked (Refs #107)
+
+* Added [issue-107-live-r14-release-records-2026-11-25.md](research/issue-107-live-r14-release-records-2026-11-25.md): five demo release records recorded after fixing the approver identity, harness admission shape corrected, live batch blocked by a private endpoint with zero tokens spent.

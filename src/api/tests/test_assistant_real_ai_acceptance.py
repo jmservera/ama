@@ -26,8 +26,7 @@ def listing(ready: tuple[str, ...] = ()) -> dict[str, Any]:
     denied = dict(reason="Release admission denied: no approved release matches", missing=["x"])
     return dict(
         assistants=[
-            dict(id=n, release=dict(id="rel-1") if n in ready else denied)
-            for n in harness.ASSISTANTS
+            dict(id=n, release="in force" if n in ready else denied) for n in harness.ASSISTANTS
         ]
     )
 
@@ -88,10 +87,11 @@ class RealAiHarness(unittest.TestCase):
             (report["outcome"], provider.calls, report["tokens"]), ("stopped-bad-usage", 1, 600)
         )
 
-    def test_release_without_id_or_with_denial_is_not_admitted(self) -> None:
+    def test_only_the_in_force_marker_is_admitted(self) -> None:
+        self.assertTrue(harness.admitted(dict(release="in force")))
         self.assertFalse(harness.admitted(dict(release=dict(reason="denied", id="r"))))
-        self.assertFalse(harness.admitted(dict(release=dict())))
-        self.assertFalse(harness.admitted(dict(release="in force")))
+        self.assertFalse(harness.admitted(dict(release=dict(id="rel-1"))))
+        self.assertFalse(harness.admitted(dict()))
 
 
 if __name__ == "__main__":
