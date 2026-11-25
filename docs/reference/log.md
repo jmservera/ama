@@ -15528,3 +15528,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 107 demo release records and capped batch blocked (Refs #107)
 
 * Added [issue-107-live-r14-release-records-2026-11-25.md](research/issue-107-live-r14-release-records-2026-11-25.md): five demo release records recorded after fixing the approver identity, harness admission shape corrected, live batch blocked by a private endpoint with zero tokens spent.
+## [2026-11-25] update | Capstone deck Tokenomics slide B28 (#435)
+
+* Added appendix slide B28 (page 56) to the capstone deck and regenerated the PDF at the owner's request; recorded validation, the manifest and builder drift (no PowerShell here) and the per-criterion status in [capstone-pitch-435-live-2026-11-25.md](research/capstone-pitch-435-live-2026-11-25.md). Updated the [capstone README](../capstone/README.md).
