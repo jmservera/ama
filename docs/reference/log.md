@@ -15514,3 +15514,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2202 live proof on API 0000072 and sensor read lock fix (Refs #2202)
 
 * Added [issue-2202-live-r72-2026-11-25.md](research/issue-2202-live-r72-2026-11-25.md): live proof of revisions, hardening, map gauges, consent checkbox, chat routing and 58.9% readings coverage; Home sensors 503 under write-lock contention fixed in source (not deployed); per-criterion table with image provenance, rollback drill and the fix on the live host unproven.
+## [2026-11-25] add | Issue 107 capped real-AI acceptance harness (Refs #107)
+
+* Added [issue-107-live-r13-real-ai-harness-2026-11-25.md](research/issue-107-live-r13-real-ai-harness-2026-11-25.md): dry-run harness `src/api/checks/assistant_real_ai_acceptance.py` and eight tests; no tokens spent, no Azure change; both open criteria stay unproven.
