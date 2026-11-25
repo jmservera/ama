@@ -15511,3 +15511,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2303 report latency profile and fix (Refs #2303)
 
 * Added [issue-2303-report-latency-2026-11-25.md](research/issue-2303-report-latency-2026-11-25.md): the report handler recomputed two golden evaluations per request; a bounded single-flight cache and start-up warm-up fix it locally (repeat read 0.002 s); live latency after the fix is unproven because nothing was deployed.
+## [2026-11-25] add | Issue 2202 live proof on API 0000072 and sensor read lock fix (Refs #2202)
+
+* Added [issue-2202-live-r72-2026-11-25.md](research/issue-2202-live-r72-2026-11-25.md): live proof of revisions, hardening, map gauges, consent checkbox, chat routing and 58.9% readings coverage; Home sensors 503 under write-lock contention fixed in source (not deployed); per-criterion table with image provenance, rollback drill and the fix on the live host unproven.

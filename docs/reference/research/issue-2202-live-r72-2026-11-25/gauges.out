@@ -1,0 +1,55 @@
+me 200
+cases 200
+n 50
+sensor status counts {(200, 'synthetic-retained-readings'): 50}
+homes with chart data ['ZF-2025-0331', 'ZF-2025-0150', 'ZF-2025-0032', 'ZF-2025-0389', 'ZF-2025-0340', 'ZF-2025-0364', 'ZF-2026-0742', 'ZF-2025-0295', 'ZF-2025-0320', 'ZF-2025-0321', 'ZF-2025-0464', 'ZF-2025-0217', 'ZF-2026-0674', 'ZF-2026-0587', 'ZF-2026-0591', 'ZF-2026-0538', 'ZF-2026-0732', 'ZF-2026-0660', 'ZF-2026-0692', 'ZF-2026-0696', 'ZF-2025-0487', 'ZF-2026-0776', 'ZF-2025-0349', 'ZF-2025-0482', 'ZF-2026-0530', 'ZF-2026-0630', 'ZF-2025-0152', 'ZF-2025-0157', 'ZF-2025-0030', 'ZF-2025-0041']
+{
+ "axes": [
+  "Temperature (degC)",
+  "Relative humidity (%RH)",
+  "Time (UK time)"
+ ],
+ "leftTicks": [
+  "9.25",
+  "9.5",
+  "9.75",
+  "10",
+  "10.25",
+  "10.5",
+  "25 Nov, 17:45"
+ ],
+ "rightTicks": [
+  "77",
+  "78",
+  "79",
+  "80",
+  "81",
+  "82",
+  "25 Nov, 16:00"
+ ],
+ "tempDash": "none",
+ "humidDash": "7px, 4px",
+ "circles": 12,
+ "squares": 12,
+ "role": "img",
+ "describedby": "sensor-chart-summary",
+ "summary": "12 readings from 25 Nov, 16:00 to 25 Nov, 17:45 (UK time). Temperature ranged 9.49 to 10.37 degC, from 10.37 to 9.49 degC. Relative humidity ranged 77.84 to 81.66 %RH, from 77.85 to 80.65 %RH. The two vertical axes have different scales, so the lines show how the values move together, not how large they are. The same readings are in the Recent readings table below.",
+ "key": [
+  "Temperature: solid line, circles, left axis",
+  "Relative humidity: dashed line, squares, right axis"
+ ],
+ "tableRows": [
+  [
+   "Recent readings, newest first",
+   12
+  ]
+ ],
+ "animations": 0,
+ "overflowX": false,
+ "old": false,
+ "reduced": true
+}
+api keys ['version', 'kind', 'units', 'home_id', 'max_readings', 'calibrated', 'retrofit_context', 'anchor']
+api readings 12 temp 10.07 9.91 rh 77.84 81.66
+markers 443 with readings in label 0
+marker with gauges None
