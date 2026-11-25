@@ -1,0 +1,32 @@
+{
+ "scale": 1.3958333333333333,
+ "body_px": 16,
+ "text": [
+  [
+   "-10",
+   12
+  ],
+  [
+   "17.5",
+   12
+  ],
+  [
+   "45",
+   12
+  ],
+  [
+   "Latest stored",
+   12
+  ]
+ ],
+ "text_overlaps": 0,
+ "circles": 4,
+ "touching_circles": 0,
+ "forecast_squares": 6,
+ "latest_label": true,
+ "legend": "Temperature history and 24-hour forecast (\u00b0C)\n-10\n17.5\n45\nLatest stored\n\nAcross 48 readings: lowest 5.65\u00a0\u00b0C, highest 11.73\u00a0\u00b0C. The latest value is higher than the first. Simple 24-hour forecast (estimate): 8.6\u00a0\u00b0C to 10.3\u00a0\u00b0C.\n\nTime (UK time): 21 Nov 2026, 19:45 to 24 Nov 2026, 17:45\n\nSolid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate). Circles mark some of",
+ "figcaption": "Across 48 readings: lowest 5.65\u00a0\u00b0C, highest 11.73\u00a0\u00b0C. The latest value is higher than the first. Simple 24-hour forecast (estimate): 8.6\u00a0\u00b0C to 10.3\u00a0\u00b0C.\n\nTime (UK time): 21 Nov 2026, 19:45 to 24 Nov 2026, 17:45\n\nSolid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate). Circles mark some of the stored readings; the table lists every reading.",
+ "forecast_heading": [
+  "Simple 24-hour synthetic forecast (estimate)"
+ ]
+}
