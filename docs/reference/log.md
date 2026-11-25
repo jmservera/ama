@@ -15478,3 +15478,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] update | Issue 2253 resident chart live proof with fresh readings
 
 * Added [issue-2253-live-r9-2026-11-25.md](research/issue-2253-live-r9-2026-11-25.md): live Playwright proof on `ca-resident-demo--0000030` that tick and marker text is body-sized, labels do not overlap, stored readings draw as separate circles and the forecast squares and "Latest stored" label render. No source or Azure change.
+## [2026-11-25] add | Issue 2164 revision 69 deployed code proof (Refs #2164)
+
+* Added [issue-2164-deployed-code-proof-2026-11-25.md](research/issue-2164-deployed-code-proof-2026-11-25.md): read-only marker greps on API revision 0000069 and re-run tests. The live restricted-row behaviour stays unproven because it needs a roster edit that the demo excludes.
