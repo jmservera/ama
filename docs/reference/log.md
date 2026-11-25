@@ -15504,3 +15504,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2310 anonymous protected API requests on revision 0000072 (Refs #2310)
 
 * Added [issue-2310-live-2026-11-25-r72.md](research/issue-2310-live-2026-11-25-r72.md): 45 auth tests pass; live browser-style anonymous API calls return 302 because Container Apps built-in authentication redirects first; no source or estate change.
+## [2026-11-25] add | Issue 2310 anonymous API 401 test evidence (Refs #2310)
+
+* Added [2026-11-25-issue-2310-anonymous-api-401-proof.md](research/2026-11-25-issue-2310-anonymous-api-401-proof.md): the requested tests already exist and pass (45 auth tests), live demo app returns 302 for anonymous API requests because the platform redirects first; no code change.
