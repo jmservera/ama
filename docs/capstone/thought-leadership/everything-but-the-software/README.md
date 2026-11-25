@@ -6,6 +6,24 @@ ms.date: 2026-11-25
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and Experiment.*
 
+## Concrete-example revision 25 November
+
+The owner authorized a whole-paper revision of generic claims, including all
+seven active TeX inputs. The review covered 71 headed sections, including
+starred sections. General explanations now use the recorded sign-in failure,
+staff binding, prototype approval, ranking-test and read-only-view examples.
+Literature passages name the inspected procedures and trials; proposed
+mechanisms and future work remain proposals.
+
+The [claim-to-example record](./anc/revision-report.md#concrete-example-revision-25-november)
+identifies the sources, verification limits and checks. All 88 selected
+authoring regressions pass. Native-diagram regeneration remains blocked by
+its missing browser; the diagram sources and exports are unchanged.
+A separate 75-page PDF preview compiles without warnings. The delivered
+`main.pdf`, numerical results, equations, bibliography and literal prompts
+are unchanged. `generic_claims_revision` binds the revised sources and preview
+without replacing historical records or implying publication approval.
+
 ## Publication revision 24 November
 
 The owner selected the completed experiment as the evidence base for this

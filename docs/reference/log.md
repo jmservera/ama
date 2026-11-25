@@ -15528,3 +15528,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 107 demo release records and capped batch blocked (Refs #107)
 
 * Added [issue-107-live-r14-release-records-2026-11-25.md](research/issue-107-live-r14-release-records-2026-11-25.md): five demo release records recorded after fixing the approver identity, harness admission shape corrected, live batch blocked by a private endpoint with zero tokens spent.
+
+## [2026-11-25] update | Whitepaper claims grounded in concrete examples
+
+* Revised all eight active TeX sources after reviewing 71 headed sections. Retained case, experiment and literature examples replace general explanations; numerical results, equations, prompts and figures are unchanged.
+* Added the [claim-to-example and validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#concrete-example-revision-25-november), refreshed active Supplement digests and preserved earlier bindings. The owner approved the directly coupled source-binding test update.
+* All 88 selected authoring checks pass. A separate 75-page PDF preview compiles without warnings; the delivered PDF is unchanged. Native-diagram regeneration lacks its required browser, automated prose scoring is unavailable, and no scientific or publication approval is implied.

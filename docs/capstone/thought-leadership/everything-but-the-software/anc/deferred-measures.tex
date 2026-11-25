@@ -28,7 +28,12 @@ intervention-demand rate (IDR) is the fraction of cycles requiring that help:
 \end{equation}
 IDR counts cycles needing help, including requests that received none.
 A timeout alone does not establish such a request; zero attempts gives
-undefined rates. A future annotation protocol would need to locate each event, cycle and
+undefined rates. The experiment's eighteen GPT F9 sessions ending with
+a request to extend the immutable \texttt{READ\_METHODS} test are
+concrete demand candidates. Their recorded requests do not show that
+anyone supplied the requested help; coding them would still require
+cycle-level annotation and a complete denominator.
+A future annotation protocol would need to locate each event, cycle and
 phase, check coverage and adjudicate unclear cases. Missing records leave
 the rate unknown. Routine launches, planned approvals and safety stops are
 not corrective rescue. An intervention measure must retain that distinction

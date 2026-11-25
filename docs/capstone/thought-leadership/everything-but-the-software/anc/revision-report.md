@@ -1,8 +1,107 @@
 ---
 title: Everything but the Software - Revision Record
 description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
-ms.date: 2026-11-24
+ms.date: 2026-11-25
 ---
+
+## Concrete-example revision 25 November
+
+### Scope and applied changes
+
+The owner requested a review of the whole whitepaper for generic claims,
+with real examples replacing vague explanations. The approved outputs were
+all eight active TeX sources, existing revision records and a separate PDF
+preview. The owner subsequently approved the directly coupled source-binding
+test update. Work continued on `docs/remove-paper-results-switch` from
+`4538851406ef3945aa71c98dc202d926a3b618df`; no commit, push or submission ran.
+
+The review covered 71 section, subsection and subsubsection headings, including
+starred sections, across the article and seven active inputs. Changes name
+the observed task or inspected procedure instead of adding unsupported
+performance claims. Repeated summaries were shortened where the example
+already explained the point. The selected title and 29 November 2026
+manuscript date remain unchanged.
+
+Classification: focused manuscript work with directly coupled source bindings
+and one existing authoring-test update. No application, experimental scoring,
+dependency manifest, infrastructure, deployment, security control or repository
+gate semantics changed.
+
+### Claim-to-example and evidence map
+
+Case passages use the retained source pin
+`29c6b512f5e68733bb2cc1882343db39f5eb2cad`. Experiment passages use the
+[final report](https://github.com/jmservera/ama-thought-mve/blob/d097a10b090baefadf995ecd910eb96c324f0234/results/pilot-estimation/report.md)
+at `d097a10b090baefadf995ecd910eb96c324f0234`, with the existing
+[numerical snapshot](./study-results-2026-11-15.json) and
+[case evidence index](./case-evidence-matrix.json).
+Full-text support below means the inspected passage supports the stated
+example; it does not mean every source or external claim was audited.
+
+| Manuscript locator | Concrete replacement | Inspected source and locator | Evidence state and limit |
+| --- | --- | --- | --- |
+| Abstract; Sections 3.1 and 4.2 | Inability to sign in, followed by the difference between app-role assignment and an internal staff binding; the recorded error is "no staff record with this oid". | Case account and historical knowledge-base log, lines 1912-1916 at the case pin. | Full-text support for the recorded distinction; no paired release-linked sign-in execution was recovered. |
+| Introduction | Before another chat-app feature, start the server, create a chat, send a message and check its response. | [Anthropic harness article](https://www.anthropic.com/research/effective-harnesses-for-long-running-agents), "Getting up to speed". | Full-text support for the described startup check; no estimate of its effect on this case. |
+| Sections 3.2 and 4.1 | Photo/GPS provenance, professional assessment, structured-invoice, capacity and sensor what-ifs; the journey-atlas handoff to requirements. | Historical log, lines 334-381 and 468-477; [PR 71](https://github.com/jmservera/ama/pull/71), requirements and approval disposition. | Full-text support for recorded discovery and handoff; role answers remain exercise hypotheses. |
+| Section 3.2 and opening of Section 4 | "My cases today", case cards, call logs, manual paths and separately recorded resident decisions; a material handover change requiring fresh acceptance. | Historical log, lines 1202-1213; [PR 32](https://github.com/jmservera/ama/pull/32), prototype simplicity review; retained prototype review RV-001, re-acceptance after handover. | Full-text support for recorded affordances and review findings; fresh acceptance was a proposed remedy, not a completed staff usability study. |
+| Sections 3.3 and 4.4 | "build all new in src, but migrate what's needed first"; later, "provide a running website as soon as possible". | Case evidence index, retained coordinator user-message turns 66 and 1147. | Full-text support for owner steering; the messages do not establish deployment completion or actual historical worker identities. |
+| Section 5 and Supplement A.3 | Requirement handoffs, missing staff bindings, the file-size-limit correction and requests for a running site replace abstract mechanism indicators. | Case records above; [PR 445](https://github.com/jmservera/ama/pull/445), per-artifact size override and interrupted full gate. | Full-text support for the records. PR 445 did not pass that interrupted gate; mechanisms remain hypotheses, not measured causes. |
+| Sections 7.2-7.4 and 8.4; Supplement, "Additional endpoint and resource statistics" | Consent/hold precedence, contractor-field redaction, ranking consistency and regional handoff; `READ_METHODS`, `view.rank_cases()` and `NotAllowed`; known versus newly added writes through read-only views. | Final report, GPT F9 ranking and read-only test incompatibility; Gemini `privacy:3` and regional/handoff extension accounts. | Full-text support for report examples. The records do not identify the treatment action that caused a cell difference. |
+| Sections 7.9 and 7.11; Supplement, "Detailed post-collection ratings and calibration" | Different CR1 preservation burdens and a terminal `ValidationError` without a later recovery action explain endpoint and calibration limits. | Existing CR1 prerequisite table; final report, calibration disagreement on `ranking:3`. | Full-text support for the recorded distinction; the two GPT CR1 outcomes and incomplete calibration remain unresolved. |
+| Background Section 2.3 and engineering-rationale paragraph | SkillOpt retains validation-selected edits and rejected-edit feedback; AgentRx checks trace evidence against schema and policy; one Kiro bug fix expands to four stories and sixteen criteria. | [SkillOpt](https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/), "How SkillOpt works"; [AgentRx](https://www.microsoft.com/en-us/research/blog/systematic-debugging-for-ai-agents-introducing-the-agentrx-framework/), guarded diagnosis; [Böckeler's trial](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), Kiro example. | Full-text support for inspected procedures and trial details; external retrieval was targeted and partly truncated, not an exhaustive literature audit. |
+| Supplement opening and "Illustrative economics and sensitivity" | The existing cost-model example explains the assumed implementation premium beside the measured ten-feature spending. | Existing illustrative economics, equation definitions and figure inputs. | Illustrative assumption, not fitted evidence or measured currency savings. |
+| Supplement A.9 | Eighteen GPT F9 permission-request sessions are concrete annotation candidates. | Final report, execution/tool account; existing Supplement task and accounting record. | Full-text support for requests and unchanged-source records; received help, HIR and IDR are not inferred. |
+| Supplement A.1 and A.11-A.16 | Source-specific qualifications, nonzero Sonnet lint despite report generation, zero retained loss without acquiring ranking, citation-ID anchoring and the limits of note word counts. | Retained literature qualifications, final report, numerical snapshot and literal prompt records. | Full-text support for the stated examples and instrument rules; counts and generated reports do not establish usability or review quality. |
+
+### Validation and preview-only delivery
+
+The structural checker passes. The abstract has 1,823 normalized source
+characters against its strict limit of fewer than 1,920. The approximate
+main-body count is 17,428 words under the existing checker definition.
+Its historical comparison against `0d5dcb02` is unavailable.
+
+Exact comparisons with the intake commit preserve all seven displayed
+equations, 176 labels, eleven figure inputs, three literal prompt inputs,
+61 source-register bindings and the embedded bibliography. Numerical
+sequences in every table are unchanged. The reusable bibliography,
+experimental snapshot, diagram sources and figure exports are untouched.
+
+The initial 89-test authoring run found stale source bindings, the earlier
+record's PDF digest mismatch and a missing Playwright build 1194 browser.
+The authorized test update reads the new revision binding while retaining
+the historical chain and evidence checks. The subsequent focused selection
+passes all 88 tests; native-diagram regeneration was not selected because
+its required browser remains unavailable. Ruff passes for the modified
+test, and ChkTeX and the whitespace check pass.
+
+Two PDFLaTeX passes with shell escape disabled produced the separate
+75-page preview. The final compiler log has no warnings, box warnings,
+missing characters or unresolved references. Every page has content and
+all extracted words are within page bounds. Rendered pages 1, 4, 8, 9, 13,
+28, 36, 46, 69 and 72 were inspected; the Supplement starts on page 46 and
+the source register on page 72.
+
+The preview SHA-256 is
+`8e3110d7438b213bb6a7cf1d2831e984fca546f071be4708a43e90fb1ae1a421`.
+The unchanged delivered PDF remains
+`03695df517d118e6e6bbf8e022c4126e83806cd28db3e35aae434346d22c7a8b`.
+The older cleanup record's different PDF digest is preserved as history,
+not silently replaced. `generic_claims_revision` records the current source
+and preview bindings; four active Supplement body digests were refreshed.
+The preview and compiler evidence are in this session's files directory;
+they were not published or copied over the delivered PDF.
+
+Automated prose scoring is unavailable because the installed detector could
+not be found. No new candidate, evaluator, judge, deployment or paid run was
+executed. The 315 trajectories, conditional interval, original unmet target,
+two CR1 unknowns, 55 billing holds, unregistered amendments and dependence
+limits retain their existing meaning.
+
+Work execution: Complete for the authorized prose, records and preview.
+Assessment: scoped example grounding and selected authoring checks complete;
+native-diagram regeneration is blocked. Independent scientific review,
+human approval, applicable hosted checks and publication acceptance remain
+separate and were not performed in this revision.
 
 ## Publication revision and disposition 24 November
 

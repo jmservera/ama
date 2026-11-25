@@ -73,7 +73,11 @@ experimental unit, called a \emph{trajectory}. The analysis treats
 trajectories as independent within cells; shared execution conditions limit
 that assumption (Section~\ref{sec:protocollimits}).
 S1 is a standard-library Python workbench covering lifecycle, handoffs,
-consent, permissions, ranking and audit. CR1 adds regional access control.
+consent, permissions, ranking and audit. A resident's withdrawal of
+consent pauses installation; a safety hold takes precedence over that
+pause. Contractor views must hide contact and vulnerability fields and
+refuse every write. CR1 adds postcode-prefix regions, region-scoped users
+and manager-approved cross-region handoffs.
 The notation $F_t$ denotes the state after feature $t$, and $P_t$ the state
 after its assigned post-step; these coincide in feature-only arms A and D.
 Thus $P_{10}$ is the final ten-feature repository before the withheld extension.
@@ -115,6 +119,9 @@ retained in the dated revision record and source register.
 
 B--D is the primary comparison: a scheduled consolidation session versus
 giving the builder the same total time and nominal credits in one session.
+Both permit 45 minutes and 600 nominal credits per feature cycle.
+B divides that allowance between feature work and a separate consolidation
+session; D keeps one longer feature session.
 The allowances set ceilings; actual spending is reported separately.
 D also has fewer fresh sessions.
 B--A adds both the consolidation package and its resources. B--C changes
@@ -214,7 +221,9 @@ Source and historical-runtime qualification are in the revision record.}\label{f
 
 The primary outcome is the proportion of all 127 feature contracts passed
 at $P_{10}$, before CR1. Each contract checks a required behaviour through
-a fixed hidden test. We call this \emph{behavioural coverage}; it is
+a fixed hidden test, such as refusing a write through a contractor view
+or producing the same ranking from the same state.
+We call this \emph{behavioural coverage}; it is
 not instrumented line or branch coverage. A higher score can reflect acquisition, retention
 or repair, so the analysis examines those outcomes separately.
 Retained-contract loss and CR1 adaptation are distinct secondary outcomes,
@@ -230,7 +239,9 @@ contracts and code-analysis tools, writes \texttt{measure.json} and computes
 the numerical summaries. It does not call a separate LLM-as-judge. Table~\ref{tab:measurementprovenance} separates
 outcomes, structural proxies and resource observations.
 Complexity, duplication and lint describe selected code properties. They
-do not measure overall architecture quality, readability or comprehension. The active metric
+can miss the view that forwards a newly added write method, even when
+every function is short and lint-clean. Overall architecture quality,
+readability and comprehension require other evidence. The active metric
 dictionary contains no maintainability-index score.
 
 \begin{table}[!htbp]
@@ -435,7 +446,8 @@ usability. Ratings required final-observation citations, with null values
 where evidence was insufficient. They concern the exercised API tasks;
 no human interface usability study was performed. The packets also exposed
 earlier passing witnesses and retention labels, allowing historical
-anchoring despite anonymisation. The judge shares a provider/model family
+anchoring despite anonymisation: a judge could see that a scenario had
+worked earlier before rating its final state. The judge shares a provider/model family
 with the development model \texttt{gpt-6.1-sol}.
 
 The assessment provides supplementary exploratory evidence. Development-time
@@ -833,6 +845,10 @@ implemented ranking had no passing ranking contracts to preserve during
 CR1. GPT~6.1 Sol A and D entered the extension without ranking in 16/21
 and 15/21 cases, respectively; B carried it into 12/21. A higher CR1
 success rate can therefore coexist with less complete software. The
+same pattern is visible in the prerequisite table: GPT A's fourteen CR1
+successes among sixteen incomplete repositories are separate from its
+five successes among five repositories with both F9 and F10 complete.
+The
 Supplement retains the exact model-specific contrast intervals and bounds,
 including the two unadjudicated errors rather than imputing them.
 Supplement Table~\ref{tab:crprerequisites} cross-tabulates the existing
@@ -971,10 +987,11 @@ panel described in Section~\ref{sec:postrunjudging}.
 
 Zero workflow losses and the hidden-contract regression count answer
 different questions. The workflow panel exercised selected journeys; the
-hidden suite checked additional invariants. In particular, Gemini views
-could pass a scenario rejecting an existing write method while allowing
-a newly introduced CR1 write method. A successful demonstration of one
-refusal did not establish that the whole view remained read-only. This
+hidden suite checked additional invariants. In particular, the workflow's
+\texttt{privacy:3} scenario checked refusal of \texttt{view.open\_case},
+but did not exercise \texttt{view.define\_region} or
+\texttt{view.approve\_handoff}. Those new methods could still write
+through a view that passed the first check. This
 coverage gap explains why near-perfect workflow ratings can coexist with
 poor hidden-suite CR1 success.
 
@@ -1031,7 +1048,10 @@ scored 90 rows, of which 79 were scorable and represented sixteen distinct
 requirement/evidence contexts. Guidance was clarified after initial AI
 scoring, the review remained in progress and AI-assisted triage focused
 inspection on failures or mismatches. There were no numeric disagreements
-of two or more points, but the high agreement and strong ceiling
+of two or more points. One disagreement concerned a
+\texttt{ValidationError} rejection at the last step: did that demonstrate
+error recovery when no subsequent action was observed?
+The high agreement and strong ceiling
 concentration do not establish independent inter-rater reliability.
 Table~\ref{tab:resultscalibration} retains the raw and context-weighted
 agreement figures and abstentions.

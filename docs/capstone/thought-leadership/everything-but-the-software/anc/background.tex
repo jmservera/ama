@@ -10,9 +10,12 @@ than fifteen years of change history~\cite{eick2001decay}; a systematic
 review likewise found uneven support across systems~\cite{herraiz2013laws}.
 Counting features or changed lines cannot establish decay. A regression
 requires previously working behaviour that is still required to fail.
-An unimplemented capability is an acquisition failure, and a failure that
-continues across changes is persistence. Showing that one failure caused a
-distinct later defect requires tracing the dependency.
+In our study, GPT trajectories that never implemented priority ranking
+had an acquisition failure. The Gemini consent contract that first failed
+at $P_7$ and remained failing through $P_{10}$ instead records one
+persistent regression (Section~\ref{app:reportingdisposition}).
+Showing that it caused a distinct later defect would require tracing
+that dependency.
 
 Cunningham describes shipping first-time code and rewriting it as
 understanding improves~\cite{cunningham1992wycash}. Fowler's design
@@ -24,8 +27,12 @@ low-quality files~\cite{tornhill2022codered}.
 \paragraph{What survives the next session?}\label{sec:inheritance}
 A fresh session can inherit code, tests and deployment assumptions from the
 repository, as well as instructions and handover notes. Either channel can
-preserve a sound decision or carry a mistake forward
-(Figure~\ref{fig:stateinheritance}). ``Software entropy'' is used here only
+preserve a sound decision or carry a mistake forward. The study's
+\texttt{READ\_METHODS} test, for example, continued to constrain the
+ninth feature after the session that wrote it had ended
+(Section~\ref{sec:resultscorrectness}).
+Figure~\ref{fig:stateinheritance} distinguishes the software and instruction
+paths. ``Software entropy'' is used here only
 as an analogy for maintenance burden; the measured outcomes are retained
 behaviour, adaptation and resource use.
 
@@ -88,6 +95,11 @@ setting limit direct comparison.
 
 Instruction files themselves require
 maintenance~\cite{nigh2025agentsmd,rajasekaran2025context}.
+Anthropic's harness asks each coding session to update
+\texttt{claude-progress.txt} and leaves the next one a startup script,
+feature list and Git history to inspect~\cite{anthropic2025harness}.
+That is a concrete handoff whose accuracy matters when the next session
+starts testing and changing the application.
 Mohsenimofidi et~al.\ assign 242 labels across nine categories to 169 commits.
 A commit can receive several labels: 78 include instruction additions,
 59 modifications and 23 removals
@@ -113,14 +125,20 @@ higher inference cost with LLM-written context files. Success was lower by
 the no-file baselines were not statistically significant. Developer-written files outperform
 LLM-written ones on CTXbench ($p=0.038$)
 ~\cite[Sec.~4.2, Tables~2--3]{gloaguen2026agentsmd}.
-SkillOpt and Jiang et~al.\ provide counterevidence to treating retained
-instructions as inherently harmful: evaluated procedural guidance can
-help, while retrieval and downstream success remain distinct
-~\cite{microsoft2026skillopt,jiang2026skills}.
+SkillOpt uses a more selective update rule: a proposed skill edit survives
+only if it improves the held-out validation score, while rejected edits
+remain feedback for later proposals~\cite[How SkillOpt works]{microsoft2026skillopt}.
+Its target model's weights remain fixed. This gives a concrete alternative
+to appending a new directive after each failure.
+Jiang et~al.\ separately evaluate skill retrieval and downstream execution
+~\cite{jiang2026skills}; loading the intended file does not by itself
+show that the agent applied it successfully.
 
 \paragraph{Tests and review.}\label{sec:evaluationwork}
-Evaluation needs to distinguish the requested outcome from the checks
-used to accept it. RefactorBench tests refactoring tasks
+In our study, a view could refuse \texttt{open\_case} in the workflow
+panel while permitting the later \texttt{approve\_handoff} write.
+The two tests covered different parts of the requested read-only rule.
+RefactorBench tests refactoring tasks
 ~\cite{gautam2025refactorbench}, and SWE-Sharp-Bench supplies reproducible
 repository evaluation~\cite{mhatre2025swesharp}. CRBugBench examines the
 limits of automated review~\cite{yang2026crbugbench}; observations of
@@ -131,7 +149,11 @@ twelve oracle-in-the-loop runs left a required library dead or absent
 broadly~\cite{zhong2026impossiblebench}. Protecting tests against edits is
 therefore separate from checking that they cover the intended behaviour.
 AgentRx provides a precedent for traceable failure diagnosis
-~\cite{microsoft2026agentrx}.
+~\cite{microsoft2026agentrx}: it derives guarded constraints from tool
+schemas and domain policies, checks them at applicable steps and supplies
+the resulting violations to a diagnostic judge. For example, a tool
+response required to be valid JSON can be checked against that requirement
+before the judge attributes the failure.
 
 \paragraph{Bounded correction.}\label{sec:factory}
 Pavlenko et~al.'s factory optimises human-architected systems against
@@ -152,6 +174,8 @@ external tools to check and revise an output
 repeated-trial budgets and feedback differ from this experiment: hidden
 evaluator outputs never reach the development agents. Whether a retained
 revision helps with a different, later feature remains an empirical question.
+Here that later request added regional access and cross-region handoff
+approval to an already developed read-only view.
 
 Ng coauthored MedAgentBench, which evaluates task completion in an
 interactive medical-record environment rather than chatbot answers alone
@@ -165,16 +189,23 @@ options~\cite{beck2023tidy,beck2025devslow,beck2026prodacity}.
 Extending that metaphor to acceptance criteria is my interpretation.
 Beck separates producing code from learning
 through working software~\cite{beck2026prodacity}.
-Tests, short releases, explicit design responsibilities and usable
-increments motivate the checklist
+For the case, the proposed checkpoint is concrete: let a staff member
+sign in and complete an assigned-case task before the coordinator advances
+the next delivery increment. Tests, short releases and explicit design
+responsibilities motivate that checklist
 ~\cite{beck2002tdd,beck2004xp,
 naur1985theory,brooks1987silver,royce1970,gall1975,cockburn2004crystal,
 hunt1999pragmatic,agile2001manifesto}.
 Monitoring burden and completion proxies qualify the rationale
 ~\cite{bainbridge1983ironies,simkute2024ironies,tankelevitch2024metacognitive,
 lee2025critical,goodhart1975,strathern1997improving,cohen2006review}.
-Spec-driven tools structure handoffs; the intended outcomes still need
-execution checks~\cite{delimarsky2025speckit,boeckeler2025sdd,agarwal2026sdd,waseem2025vibe}.
+B\"ockeler's Kiro trial illustrates the burden of applying a fixed
+specification workflow to a small change: one bug fix became four user
+stories with sixteen acceptance criteria
+~\cite[One workflow to fit all sizes?]{boeckeler2025sdd}.
+Her account is a practitioner trial, not an estimate of wasted effort.
+Spec-driven handoffs still need checks of the resulting behaviour
+~\cite{delimarsky2025speckit,agarwal2026sdd,waseem2025vibe}.
 
 \paragraph{HVE Core.}\label{sec:hve}
 Microsoft's Hypervelocity Engineering Core supplies file-based

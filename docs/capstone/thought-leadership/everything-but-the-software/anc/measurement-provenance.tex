@@ -82,7 +82,9 @@ configuration directory in Python mode with minimum 50 tokens and five
 lines. Ruff runs with isolated configuration, fixed
 \texttt{E,F,W,C90,B,SIM} selection, JSON output, no cache and
 \texttt{--exit-zero}. The engine counts diagnostics; the exit code alone
-cannot establish a clean-lint result.
+cannot establish a clean-lint result. Sonnet B's 2.26 warnings per 1,000
+source lines, for example, remain nonzero despite successful report
+generation and the requested zero-warning target.
 
 The invocation omits \texttt{--ignore-noqa}, leaving inline suppressions
 effective. The dictionary contains neither a suppression count nor a
@@ -173,7 +175,9 @@ Publish the witnessed risk-set size, losses and unavailable count with
 final scenario outcomes. Treatment can affect acquisition. A repository with few implemented
 capabilities can lose little while still failing many final requirements.
 This conditional loss density therefore cannot alone rank treatment efficacy
-or replace the hidden-contract loss measure.
+or replace the hidden-contract loss measure. A GPT repository that never
+acquired ranking could have zero witnessed ranking loss and still fail
+the final ranking workflow.
 
 The instrument distinguishes retained and observed-loss scenarios,
 endpoint passes without an earlier witness, complete histories with no
@@ -210,7 +214,9 @@ source trees, treatment notes, transcripts and usage logs.
 The inspected packet also includes an earlier passing witness and its
 retention label. Historical and final observations reuse scenario-local
 IDs; validation checks citation membership in final evidence, without
-establishing which occurrence influenced a rationale. Historical anchoring
+establishing which occurrence influenced a rationale. A citation to a
+scenario-local ID can therefore identify a final observation even though
+the judge also saw its earlier passing occurrence. Historical anchoring
 and dimension-specific support therefore need human inspection.
 Endpoint-only rating packets or checkpoint-qualified IDs would require
 a separately versioned instrument; they are not claimed implemented here.
@@ -680,7 +686,9 @@ GPT 6.1 Sol & E & 2.60 & 545.6 & 1859.1 \\
 Sonnet and Gemini retained the skeleton's 106 Markdown words in A, D
 and E\@; B/C added the design or review handover. GPT produced longer
 documentation even without those post-steps. Word counts describe how much text was retained. Assessing its accuracy
-or use by later sessions requires separate evidence.
+or use by later sessions requires separate evidence. In particular, a
+\texttt{REVIEW.md} count cannot establish that the next feature session
+acted on a warning about write methods in a read-only view.
 Completely billed B consolidation sessions averaged 5.82 credits on
 Sonnet (210 sessions), 12.59 on Gemini (208) and 12.04 on GPT (208).
 These settled step means do not include unknown charges or identify a

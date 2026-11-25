@@ -83,7 +83,9 @@ Element & Audit \\
 \midrule
 Definition & Requirements and acceptance obligations expand faster than
 independently validated behaviour, without evidence that the added scope is
-needed for the next usable increment. Length alone is insufficient. \\
+needed for the next usable increment. The relevant comparison is added
+obligations versus accepted tasks, such as staff sign-in and case access;
+document length alone cannot supply either outcome. \\
 Counter-evidence & Growth began before autonomy and sometimes followed the
 owner's feedback; regulatory and consent controls can justify detail. \\
 Rival explanations & Genuine scope expansion, specification ambiguity,
@@ -106,8 +108,9 @@ mechanism, even if consolidation helps. \\
 Element & Audit \\
 \midrule
 Definition & A completion proxy becomes a decision criterion and remains
-positive when an independent test of the intended outcome is negative. Proxy
-use alone does not establish capture. \\
+positive when an independent test of the intended outcome is negative.
+Testing this case would require pairing a completion assessment with
+sign-in on the assessed release; that link remains unavailable. \\
 Counter-evidence & Agents explicitly reported unmet acceptance; neither
 fabricated approval nor deliberate deception is established. \\
 Rival explanations & An inadequate scorer or acceptance oracle, different
@@ -130,7 +133,9 @@ Element & Audit \\
 \midrule
 Definition & A recorded lesson relevant to a later decision is absent from,
 unusable on, or not applied through that decision's effective context path,
-and the associated problem recurs. A missing citation alone is insufficient. \\
+and the associated problem recurs. The staff-binding lesson would need to
+be traced into a later worker's inputs and deployment decisions;
+its absence from a citation list cannot establish lost knowledge. \\
 Counter-evidence & Important domain decisions survived; the lesson could have
 been known but deferred. Actual session attention was not measured. \\
 Rival explanations & Deliberate migration sequencing, deployment-specific
@@ -153,8 +158,10 @@ permissions differ. A matched-context study would be needed. \\
 Element & Audit \\
 \midrule
 Definition & Additional procedural obligations increase per-change burden
-without demonstrated proportional improvement in the targeted outcome. More
-gates alone are not evidence that their net benefit is negative. \\
+without demonstrated proportional improvement in the targeted outcome.
+PR \#445's size-limit correction and interrupted gate identify a place
+to measure this burden, but neither elapsed gate time nor avoided defects
+was measured for the comparison. \\
 Counter-evidence & Checks caught bounded defects and enforced evidence
 integrity. Gate duration and human review effort were not measured per PR\@. \\
 Rival explanations & Legitimate safety and privacy requirements, budget
@@ -176,9 +183,10 @@ the effect of removing this repository's required gates remains untested. \\
 Element & Audit \\
 \midrule
 Definition & Independent outcome-level feedback is insufficient to correct
-delivery decisions despite abundant artefact-level validation. The defining
-gap concerns what the evaluated proxy reveals about the intended outcome;
-test counts alone leave that correspondence unknown. \\
+delivery decisions despite abundant artefact-level validation.
+Here health and unauthenticated-request checks left the authorised
+staff journey untested. Measuring the gap requires the intended task and
+its release, not a count of tests. \\
 Counter-evidence & Human oversight continued; agents surfaced blockers;
 engineering checks provided real, though narrower, feedback. \\
 Rival explanations & Identity and service configuration, migration priority,
@@ -207,7 +215,8 @@ change?~\cite{sinha2025illusion,pan2026swemaintain} &
 Growing specifications and read path; previously working identity setup not preserved \\
 Selection and correction & Do review and tests expose the cumulative
 consequences before more work depends on them?~\cite{cohen2006review,yu2026habituation} &
-Proxy capture; process-gate inflation; feedback starvation \\
+Completion assessments, the interrupted PR \#445 gate and requests for
+a running website; their separate effects remain unmeasured \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -267,7 +276,11 @@ Display wrapping does not alter its text. Braces mark runner parameters.
 
 The earlier cost model assumes that consolidation reduces a growing
 implementation premium (Section~\ref{sec:costprojection}). Its parameters
-were not fitted to the ten-feature observations.
+were not fitted to the ten-feature observations. For example, its
+$k=5,\delta=0.5$ scenario means spending five credits on consolidation
+every cycle while the assumed excess implementation cost without it
+increases by half a credit per successive cycle. Those assumptions give
+break-even at cycle 21; the experiment does not estimate that growth rate.
 
 Let $N\geq1$ be an integer number of feature cycles, $k$ the assumed average consolidation
 investment in AI credits per cycle, and $\delta\cdot(t-1)$ the assumed excess

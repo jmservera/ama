@@ -55,7 +55,8 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \begin{abstract}
 After refining requirements and testing prototypes, I used coordinated
 coding agents to rebuild a working demonstrator. Local checks passed, but
-the replacement was a solution I could not use. What does each feature leave
+the replacement was a solution I could not use: I could not sign in.
+What does each feature leave
 for the next one? A case analysis examines five possible mechanisms alongside
 migration and configuration failures.
 
@@ -143,10 +144,16 @@ conversation, but the next run still inherits the code and any faults left
 in it.
 
 Established engineering practice has a long answer to inherited faults:
-isolation and explicit contracts limit dependencies; tests and continuous
-integration expose regressions; small releases shorten feedback;
-refactoring preserves room for later
-change~\cite{parnas1994aging,beck2002tdd,beck2004xp,fowler2007stamina}.
+define which behaviour a change must preserve, test it, and keep the
+running increment available for feedback. Refactoring can then change
+the implementation while those contracts continue to hold
+~\cite{parnas1994aging,beck2002tdd,beck2004xp,fowler2007stamina}.
+Anthropic's long-running-agent example makes this concrete: before adding
+a feature to a chat application, the next session starts the server,
+opens a new chat, sends a message and checks for a response
+~\cite[Getting up to speed]{anthropic2025harness}. That check asks whether
+the previous session left a usable application for the next
+change.
 Recent discussions by Beck and Fowler revisit these concerns for
 agent-assisted work~\cite{beck2026prodacity,fowler2025thoughts}.
 Beck's distinction between producing code and learning through working
@@ -156,10 +163,13 @@ what does a feature leave behind for the next one?
 In my own rebuild, the broken sign-in was hard to blame on hasty prompting:
 weeks of structured discovery, sustained conversation and documented
 decisions had preceded autonomous delivery. Research agents maintained the
-evidence base; Design Thinking methods, including what-if scenarios,
-persona analysis and journey mapping, helped me question the proposed
-solution. Disposable pilots and prototypes exposed workflow problems before
-a usable minimum viable product (MVP) emerged, and a backlog agent
+evidence base. In one what-if exercise, I asked whether phone photos with
+GPS metadata would make an assessment agent more useful; the resulting
+proposal still required checked provenance and a professional decision.
+Persona and journey work examined who would take over a case when
+information or approval was missing. Disposable pilots and prototypes
+exposed workflow problems before a usable minimum viable product (MVP)
+emerged, and a backlog agent
 translated the resulting requirements and architecture decisions into epics
 and user stories. I expected clearer criteria and review to make the
 rebuild faster and more reliable, though I measured neither gain.
@@ -184,7 +194,9 @@ unresolved errors and avoidable change burden forward, and that cumulative
 verification and consolidation can reduce that burden. Two kinds of state matter:
 the software being changed, and the instructions used to change it. Adding
 a corrective rule after every failure can leave prompts, skills and
-handover notes with their own maintenance burden. A fresh agent inherits
+handover notes with their own maintenance burden. In this case, my
+instructions grew to require the full RPI sequence, committed evidence
+and recurring checks (Section~\ref{sec:coordinator}). A fresh agent inherits
 both kinds of state. Section~\ref{sec:background} separates these
 pathways; the case then examines how they interact with completion proxies,
 review capacity and product-use feedback.
@@ -292,7 +304,10 @@ identification limits.
 For this architectural training exercise, I took on the roles of
 architect, developer and product owner.
 Its synthetic, multi-role service workflow combined documentary evidence,
-approvals, identity, data and external-service dependencies. The exercise
+approvals, identity, data and external-service dependencies. A staff member
+needed to sign in, open an assigned case and record a resident decision
+separately from the staff decision to release work. An assistant could
+prepare a draft, but nothing was sent automatically. The exercise
 required research, requirements, architecture, a delivery plan and a working
 demonstrator. Given these interdependencies, keeping a complete user
 journey intact mattered even in a non-production system. No operational
@@ -313,8 +328,10 @@ build. Research agents assembled source snapshots and maintained syntheses
 in a knowledge base with an index, owner-curated memory and an append-only
 log. The Design Thinking coach and stakeholder-role agents then challenged
 assumptions through what-if scenarios, persona analysis and journey mapping.
-Those exchanges separated bounded AI tasks from deterministic controls and
-accountable human decisions. Role-agent answers remained hypotheses for the
+For example, a photo's GPS metadata could support the location of a survey,
+but did not establish whether the evidence was sufficient for a retrofit
+assessment. The proposed assessor would check the evidence bundle and retain
+professional approval. Role-agent answers remained hypotheses for the
 exercise; direct stakeholder research was still needed.
 
 As understanding changed, BRD and PRD builders, quality review and the ADR
@@ -322,7 +339,10 @@ assistant helped turn conversations and owner decisions into revised
 requirements and architecture records. Disposable pilots and prototypes
 made candidate workflows tangible. Critiques and my product-use feedback
 informed a deployed MVP that I used intermittently and refined
-through short feedback loops.
+through short feedback loops. Its landing view was
+\textquotedblleft{}My cases today\textquotedblright{};
+case cards showed status and the next action, while a call log and manual
+paths let work continue without a model response.
 
 The handoff to autonomous delivery changed how that understanding reached
 implementation. A backlog agent converted the accumulated context into
@@ -359,7 +379,10 @@ instructions and assistant-reported outcomes.
 Early worker sessions implemented directly, prompting me to make
 the full RPI sequence and committed tracking artefacts mandatory. Further
 instructions required evidence-backed acceptance ticks, scheduled monitoring
-and increasingly extensive local gates. Human decisions, approvals,
+and increasingly extensive local gates. My recorded migration instruction
+was ``build all new in src, but migrate what's needed first''
+(\nolinkurl{anc/case-evidence-matrix.json}, coordinator turn 66).
+Human decisions, approvals,
 credentials and unresolved review findings could still block work. At the
 same transition, an accepted architecture decision prioritised migration
 to a new source layout and froze feature work in the MVP\@. Coordination,
@@ -416,8 +439,9 @@ note as context; it does not vary skill use as a separate treatment.
 
 \emph{Working behaviour} means completing an intended task through the
 running system, including the identity, data and service dependencies needed
-for that task. A healthy endpoint or passing repository test covers only
-part of that evidence\@. \emph{Decay} denotes loss of previously working behaviour or
+for that task. In this case, rejecting an unauthenticated request did not
+show that an authorised staff member could sign in and open a case.
+\emph{Decay} denotes loss of previously working behaviour or
 increasing difficulty of understanding and changing a system. The case
 records lost usability during replacement; any decline in intrinsic code
 quality remains unmeasured. Deployment drift could produce the same observation.
@@ -464,11 +488,11 @@ my sign-in remained blocked. & The completion signals covered a
 different or insufficiently linked outcome. & Link the assessed capability
 and release to the failed deployed task. \\
 O3 & Requirements and process records expanded through discovery and delivery;
-even a small source correction carried a substantial evidence record. &
+PR \#445's small source correction carried a separate evidence record. &
 Documented context may outgrow what a worker or reviewer can use effectively.
 & Compare actual context access and review effort with validated behaviour. \\
 O4 & Simplicity and deployment lessons were recorded, but later replacement
-work omitted previously working prerequisites. & Lesson availability and
+work lacked registration and staff bindings. & Lesson availability and
 application may diverge. & Trace the relevant session inputs and whether
 the lesson was actionable or deliberately deferred. \\
 O5 & Coordinator rules formalised gates and delegated merging; I continued
@@ -533,19 +557,27 @@ Product-use feedback again shapes what subsequent work must establish. \\
 \subsection{Building the epics and user stories}
 
 Preparation took sustained steering, with no single specification
-prompt. Role-agent challenges questioned the requested end-to-end agents;
-what-if scenarios tested alternative inputs and responsibilities. Persona
-and journey work exposed handoffs, missing information and approval boundaries.
-The resulting BRDs, PRDs and ADRs were critiqued and revised through further
-conversation. These activities changed the proposed solution before and
-during implementation.
+prompt. I first asked whether better inputs would change the proposed
+agents' responsibilities, then asked for distinct scenarios rather than
+one photo/GPS example. The retained study considers structured invoices,
+contractor-capacity feeds and sensor-validity metadata as well.
+The desk-research journey atlas subsequently informed BRD and PRD revisions
+and ADR~0003, while leaving quality and approval questions open.
+The case evidence index records these exchanges and the requirements
+handoff; none was direct stakeholder validation.
 
 Disposable prototypes then made some assumptions tangible. My critique
 and an agent-assisted simplicity review produced requirements for
 clear ownership, a visible next action, understandable blockers and manual
-paths that remained usable without AI\@. Short feedback cycles reshaped an
-MVP around those lessons. I used it intermittently,
-including sign-in, synthetic data and model-backed assistant paths.
+paths that remained usable without AI\@. The retained prototype review
+also records a re-acceptance defect after handover, outside the existing
+tests: a material change could leave an earlier approval valid. The
+resulting proposals required invalidation and fresh acceptance.
+Short feedback cycles reshaped an
+MVP around those lessons. The three disposable prototype PRs stayed
+unmerged as evidence, and the simplicity review proposed SA-001--SA-010.
+I used the resulting MVP intermittently, including sign-in, synthetic
+data and model-backed assistant paths.
 
 The backlog manager drew on this accumulated context to generate the work
 hierarchy, acceptance criteria and dependencies. Existing-coverage labels
@@ -566,6 +598,13 @@ replacement passed bounded engineering checks, including health, restart
 and unauthenticated-request rejection, but lacked identity, staff and model
 prerequisites needed for my complete workflow. Restoring a
 public entry point left sign-in dependencies unresolved.
+
+The earlier setup log distinguishes an application-role assignment from
+the internal staff binding: a user could pass tenant and role validation
+and still receive \textquotedblleft{}no staff record with this oid\textquotedblright{}.
+That recorded
+dependency helps explain why opening a browser entry point alone could
+not restore the staff workflow.
 
 I continued supplying approvals and resolving technical blockers.
 What diminished was the ability to exercise realistic work in the
@@ -609,9 +648,11 @@ behaviour depended on task framing, context and opportunities for challenge. \\
 
 \subsection{Renewed feedback and follow-up}\label{sec:currentstatus}
 
-I requested a usable increment, prioritised feedback-first work and asked
-the coordinator to pause, exercise the accumulated functionality and
-refactor. My account places this renewed feedback at the turning point in
+I asked the coordinator to exercise the accumulated functionality and
+refactor, then still had to request ``provide a running website as soon
+as possible'' (retained coordinator turn 1147). That request sought a
+site where I could supply human acceptance and product feedback.
+My account places this renewed feedback at the turning point in
 making the replacement useful. Source
 history after that point records implementation refinement and recurring stabilization
 checkpoints. The retained checkpoint review qualifies its local engineering
@@ -644,23 +685,23 @@ and proposed early-warning signals. Indicators are not causal tests.}\label{tab:
 Candidate & Case indicators & Related prior work & Early-warning signal \\
 \midrule
 Specification inflation & Expanding requirements and acceptance obligations
-during both discovery and implementation &
+during discovery; the journey atlas adds requirements and ADR work &
 Royce; Gall; Brooks; B\"ockeler; Beck & Specification growth versus
 human-validated behaviour \\
 Proxy capture & Artefacts became a merge condition; completion assessments
-coexisted with blocked sign-in, with release/scope linkage still pending &
+coexisted with blocked staff sign-in, with release/scope linkage still pending &
 Goodhart; Strathern; Beck's genie; ImpossibleBench; METR &
 Artefacts per behaviour change; scores that disagree with a live demo \\
 Learning evaporation & Recorded simplicity and deployment lessons were
-followed by missing prerequisites; actual session access remains unknown & Naur; context studies;
+followed by missing staff bindings; actual session access remains unknown & Naur; context studies;
 multi-agent failure taxonomy & Lessons that exist only as prose; problems
 solved twice \\
 Process-gate inflation & Broad per-push gates, constrained validation
-resources and an exception for a small correction & Bainbridge;
+resources and PR \#445's correction exception & Bainbridge;
 ironies of generative AI\@; Murphy; Goldratt & Gate time per change; review
 minutes per merge \\
 Feedback starvation & A used MVP was frozen; I could not exercise the
-replacement and requested usable increments & XP\@; incremental delivery;
+replacement and requested a running website & XP\@; incremental delivery;
 tracer bullets; Agile Manifesto; DORA & Time to first human use; age of last
 usable increment \\
 \bottomrule
@@ -668,10 +709,12 @@ usable increment \\
 \end{table}
 
 The proposed mechanisms concern different parts of delivery. Specifications
-add obligations; later sessions need to retrieve and apply recorded lessons.
-Completion criteria determine what advances, while gates consume validation
-capacity. Delaying realistic product use can leave missing dependencies
-undetected even as local checks pass.
+added approval and handoff requirements through the journey atlas.
+Later sessions also needed the staff-binding lesson from the working MVP\@.
+The coordinator could advance a PR after its engineering checks without
+my completing sign-in, and the move to local gates responded to Actions
+budget pressure. These are different possible sources of delay or failure;
+the record does not estimate their separate effects.
 Table~\ref{tab:theory} in the Supplement relates this account to
 accumulation, transmission and correction.
 
@@ -692,9 +735,9 @@ separate its effects from competing explanations.
 
 The mechanisms suggest a possible reinforcing loop
 (Figure~\ref{fig:loop}). In this case, an extensive specification led into a large backlog and
-parallel sessions. Artefact-based gates generated more documents, some
-recorded lessons were absent from later briefs, and I could not use the
-replacement to expose workflow gaps. I responded with further rules,
+parallel sessions. Artefact-based gates generated more documents.
+The replacement lacked the previously working staff bindings, and I
+could not use it to expose workflow gaps. I responded with further rules,
 criteria and gates. This sequence suggests reinforcement, but does not
 establish the causal links. A running increment and a human-use checkpoint
 in each cycle are proposed interventions; they were not tested here.
@@ -853,8 +896,10 @@ experiment reports the observed short-horizon trade-off.
 
 The agents helped me question what to build. Research assembled a corpus
 and analysis in days, and role-agent challenges led me to reject the proposed
-five end-to-end agents before coding. They recorded unknowns instead of
-inventing approvals, figures or company facts. I built and reshaped the MVP
+five end-to-end agents before coding. An evidence-assessment task still
+needed surveyor judgement; a resident-contact task still needed consent
+and a manual route. The prototypes made those boundaries visible in a
+case card and resident-decision record. I built and reshaped the MVP
 in a day through targeted exchanges and feedback.
 These are observations from my use of the tools. I did not measure a
 human-only duration or run a controlled comparison of feedback cadences.
@@ -902,21 +947,21 @@ training to the provider, and a recorded model name cannot rule out
 provider-side changes during collection.
 
 Two results from the experiment illustrate the problem. On GPT~6.1 Sol, some earlier
-tests encoded a closed list of permitted view methods. A later feature
-needed to extend that list, but the study rules protected accepted test files
-from edits. Consolidation and visible-specification repair were associated
-with more complete feature delivery in that setting. Generated tests, study rules and code
-structure evidently interact.
+tests encoded a closed \texttt{READ\_METHODS} list. The ninth feature
+added \texttt{view.rank\_cases()}, but the earlier test expected
+\texttt{NotAllowed} for methods outside that list, and the study rules
+protected accepted test files from edits. Consolidation and visible-specification repair were associated
+with more complete feature delivery in that setting.
 
-On Gemini~4 Argon, a view rejected named write methods
-but forwarded newly added ones. Read-only review had more successful final
+On Gemini~4 Argon, a view could reject \texttt{view.open\_case}
+yet forward newly added \texttt{define\_region} and
+\texttt{approve\_handoff} calls. Read-only review had more successful final
 extensions than consolidation, despite consolidation's cleaner structural
 metrics. Baseline metrics were low, but did not satisfy every stopping
 target. The cell summaries establish neither why a session stopped nor
 that a particular review action caused the difference. They do show that
 structural hygiene and a rule such as ``every
-write through a read-only view must be refused'' are separate things. A small function can
-still violate that rule.
+write through a read-only view must be refused'' are separate things.
 
 These observations support testing structural cleanup and checks of intended
 behaviour together. Choosing when to interrupt delivery, changing product
@@ -982,9 +1027,9 @@ strategies \emph{no-go} at this horizon. Similar cell means do not establish
 equivalence or explain why sessions stopped early.
 
 A more promising question is when a particular correction is needed.
-Structural cleanup helped with complex functions, review had a stronger
-Gemini CR1 outcome, and explicit repair offered another route past an
-over-constrained test. These separate observations motivate a triggered
+In the reported cells, B removed complexity hotspots, C had more Gemini
+CR1 successes, and E had more complete GPT feature suites than A.
+Those observations motivate a triggered
 hybrid, whose candidate commands and thresholds are in Supplement
 Section~\ref{app:practicecandidate}. Its efficacy and cost advantage still
 need testing, and replacing an established review
@@ -994,8 +1039,11 @@ For teams considering scheduled consolidation, the relevant comparison is
 its added cost at comparable retained behaviour and success on new requirements. In this study, structural
 measures improved, but the coverage gain over longer sessions was 1.19
 percentage points and change-request costs did not consistently fall.
-The case also supports protecting a usable increment, bounding the delivery
-horizon and keeping lessons retrievable or executable. Its extensive evidence
+For the motivating case, a concrete checkpoint would have been staff
+sign-in followed by opening an assigned case, with the application-role
+and internal-staff bindings checked together. The case also motivates
+shorter delivery horizons and carrying those prerequisites into later
+briefs or executable checks. Its extensive evidence
 trail suggests keeping routine intermediate tracking files out of the
 squash-merged product diff after preserving durable findings and original
 reviews. Selection must be finite, archive-backed and restore-verified,
