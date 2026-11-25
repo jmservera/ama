@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-25T23:27:32+00:00",
-  "commit": "5bac4d3ff37a76aedda40bddad13c11e77164530",
+  "scored_at": "2026-11-25T23:37:30+00:00",
+  "commit": "c67289436e89b2cd6224f38e28499225c67eda9e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/45719550507",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/45721917924",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
     "adr": "b57f49945945ec4ca2cbe1be00a5aa090b0d70bdfe09dfa1c601f27da28e3f48",
-    "solution-code": "63d2d3b6b79424c52e4bfaa927527bdda421e01aacb053713b839befb067e734",
-    "infrastructure": "6d6756812c2b4d1c61390df9dad3f084cf35544b032c964b560487f51a56d24c",
+    "solution-code": "1c48783ea142a7e5aece98834df30c247c05abe9130cb4a5410766b0c8c52e69",
+    "infrastructure": "d5625414f6c9b683d7f749c5b7c67c5ae1f7120b21c357aedaeea5148c8e82f8",
     "capstone-deck": "2621b14b2b9eea5489078c506330c58082752f178e98d7d1dc03b051d43c7e53",
     "pitch": "22f929c884c0a23938472aad8bc3b3ce21b67359e6436b3ab064f5ee3a7a0399",
     "thought-leadership": "27f68b1c976e53a2283525f4114a4127538e49ff1d820b39ae8e7b5f4f8606b2"
@@ -43,10 +43,9 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/finance.py:37-68",
-        "src/core/src/zava_forward/core/gates.py:128-205"
+        "src/api/tests/test_assistants.py:1108-1125"
       ],
-      "rationale": "Diff adds fail-closed handling of malformed/non-string identity and reason fields across finance and gates, tightening existing RAI/security control surface. Reinforces ceiling (5), unchanged."
+      "rationale": "Ceiling (5) unchanged; new fail-closed authorization test for malformed Entra row scope reinforces existing control, no new mechanism."
     },
     "A4": {
       "score": 5,
@@ -59,10 +58,10 @@
     "A5": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:770-868",
-        "src/agents/src/zava_forward/agents/paired_trial.py:135-168"
+        "infra/scripts/monitoring_live_inventory.py:26-57",
+        "infra/tests/test_monitoring_live_inventory.py:99-109"
       ],
-      "rationale": "Spend is now reconciled per call against a shared ledger and cost inputs reject non-finite/overflowing numbers; strengthens cost measurement at existing ceiling (5), unchanged."
+      "rationale": "Ceiling (5) unchanged; new monitoring-inventory job-coverage check adds granularity but does not raise an already-maxed observability score."
     },
     "A6": {
       "score": 5,
