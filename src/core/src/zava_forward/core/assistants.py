@@ -2425,7 +2425,7 @@ class Assistants:
             raise ValueError("Choose a bounded case ID.")
         if not self.sql:
             raise ValueError(self.disabled())
-        with self.transaction() as db:
+        with self._read_connection() as db:
             c = self.authorize(db, user, "quality-evidence", case_id)
             out = sensor_view.view(
                 db, case_id, sensor_view.reference_for(c.get("quality")), self.now(db), self.mssql
@@ -2444,7 +2444,7 @@ class Assistants:
             return {i: sensor_map.fixed("not-connected") for i in ids}
         out = {}
         try:
-            with self.transaction() as db:
+            with self._read_connection() as db:
                 now = self.now(db)
                 allowed = []
                 for i in ids[: sensor_map.HOME_CAP]:

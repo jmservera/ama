@@ -1,0 +1,15 @@
+{
+ "resident_login": 200,
+ "login_body_keys": [
+  "csrf",
+  "session_id",
+  "signed_in"
+ ],
+ "account_visible": 1,
+ "page_text": "Skip to the main content Synthetic showcase - not a live resident service. Everything here is invented test information. The shared demonstration sign-in does not prove who you are. Do not use this to make any decision. Legal and Data Protection Officer review is still outstanding. Do not use this for real resident data or decisions. Z Zava North Homes Home improvement progress Your home improvement progress Your home and works records are read-only. Synthetic callback booking is not connected in this showcase environment. Nobody will call you. You are signed in. Your progress is shown below. ",
+ "consent_visible": true,
+ "consent_checked_before": false,
+ "consent_checked_after": true,
+ "consent_label": null,
+ "consent_aria_name": 1
+}

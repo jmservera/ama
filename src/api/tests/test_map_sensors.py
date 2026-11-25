@@ -136,9 +136,19 @@ class MapSensors(Seed, ta.ApiTests):
         view = insights.map_view(self.store.cases.values(), {})
         self.assertTrue(all(i["sensor"]["state"] == "not-connected" for i in view["items"]))
 
-    def test_a_failing_sensor_transaction_keeps_the_map_available(self) -> None:
+    def test_sensor_reads_do_not_take_the_write_lock(self) -> None:
         self.put(3, offset=120)
-        self.service.transaction = self.fail_transaction
+
+        def busy() -> Any:
+            raise AssertionError("sensor reads must not take the write lock")
+
+        self.service.transaction = busy
+        self.assertEqual(self.service.sensors(self.pm, "ZF-1")["case_id"], "ZF-1")
+        self.assertEqual(self.sensor()["state"], "fresh")
+
+    def test_a_failing_sensor_connection_keeps_the_map_available(self) -> None:
+        self.put(3, offset=120)
+        self.service._read_connection = self.fail_transaction
         with self.assertLogs("zava_forward.core.assistants", "WARNING") as logs:
             s = self.sensor()
         self.assertEqual(s["state"], "unavailable")
@@ -147,7 +157,7 @@ class MapSensors(Seed, ta.ApiTests):
 
     def test_a_write_lock_timeout_in_the_overlay_is_logged_with_its_cause(self) -> None:
         self.put(3, offset=120)
-        self.service.transaction = self.lock_transaction
+        self.service._read_connection = self.lock_transaction
         with self.assertLogs("zava_forward.core.assistants", "WARNING") as logs:
             s = self.sensor()
         self.assertEqual(s["state"], "unavailable")
@@ -156,7 +166,7 @@ class MapSensors(Seed, ta.ApiTests):
 
     def test_an_other_overlay_failure_logs_only_the_sqlstate_code(self) -> None:
         self.put(3, offset=120)
-        self.service.transaction = self.state_transaction
+        self.service._read_connection = self.state_transaction
         with self.assertLogs("zava_forward.core.assistants", "WARNING") as logs:
             self.sensor()
         self.assertIn("cause=other sqlstate=40001", logs.output[0])

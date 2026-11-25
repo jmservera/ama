@@ -815,6 +815,8 @@ The [deployed hardening check](./research/issue-2202-live2-2026-11-23.md) proves
 
 The [2026-11-24 live re-proof](./research/issue-2202-live-r68-2026-11-24.md) re-proves revision health, hardening, sensor charts, map gauges, the consent checkbox, chat routing and readings coverage (262 of 443 homes) on API 0000068 and resident 0000030, with a per-criterion table and the unproven items (image provenance, rollback drill).
 
+The [2026-11-25 live proof](./research/issue-2202-live-r72-2026-11-25.md) re-proves the #2202 criteria on API 0000072, records a 503 on the Home sensors tab under SQL write-lock contention, fixes it in source (sensor reads use the lock-free read connection) and lists what stays unproven.
+
 The [second 2026-11-24 live re-proof](./research/issue-2202-live-r2-2026-11-24.md) repeats the revision, hardening, chart, gauge, consent, chat routing and coverage proofs (58.9% of homes with readings), diagnoses one Failed receiver execution at its window edge, records the fix, and corrects the job image digest statement, with a per-criterion table.
 
 The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads API revision 0000054 and resident revision 0000026 and records the two owner gates for generative AI answers: the open suspension (scope all, 2026-11-18) and the resident ledger budget expiry.
@@ -1756,6 +1758,7 @@ or infra acceptance claimed.
 | [Issue 2303 chat golden file in the API image (#2303)](./research/issue-2303-chat-golden-image-2026-11-23.md) | Local container reproduction and fix, contract test, per-criterion table |
 | [Issue 2310 anonymous API 401 on revision 0000072 (#2310)](./research/issue-2310-live-2026-11-25-r72.md) | Code and tests pass; live browser-style API calls get 302 from platform auth; per-criterion table |
 | [Issue 2303 live rerun (#2303)](./research/issue-2303-live-2026-11-23/README.md) | Live 500 on revision 0000057, per-criterion table |
+| [Issue 2303 report latency profile and fix (#2303)](./research/issue-2303-report-latency-2026-11-25.md) | Handler profile, evaluation cache, local proof, per-criterion table |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2257 SQLSTATE in the map overlay warning (#2257)](./research/issue-2257-live-r5-2026-11-23.md) | Overlay warning records the driver SQLSTATE for non-lock failures; per-criterion table |
 | [Issue 2257 map redraw after a gateway failure (#2257)](./research/issue-2257-live-r6-2026-11-23.md) | A gateway page after the read retries gets the map's one automatic redraw; per-criterion table |
