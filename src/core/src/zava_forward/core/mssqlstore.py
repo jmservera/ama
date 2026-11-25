@@ -12,6 +12,7 @@ Authentication is Microsoft Entra. ZF_SQL_AUTH=msi uses the app's managed identi
 default uses the developer's Azure login; token takes a bearer token for one-off operator tasks such as the first seed; password is for the CI SQL Server container only.
 The driver is mssql-python (pinned in requirements.txt); it is imported only when this store is chosen.
 """
+import contextlib
 import json
 import os
 import re
@@ -87,6 +88,7 @@ GATE_TRIGGERS = (
 BEGIN = ("BEGIN TRAN; DECLARE @r INT; EXEC @r = sp_getapplock @Resource = N'zavaforward_write', @LockMode = N'Exclusive', "
          "@LockOwner = N'Transaction', @LockTimeout = 15000; IF @r < 0 THROW 50002, 'could not take the write lock', 1;")
 
+LOCK_WAIT_MS = 15000
 LOCK_FAILED = "could not take the write lock"
 _DRIVER_MODULES = ("mssql_python", "pyodbc")
 _DRIVER_ERRORS = ("ProgrammingError", "DatabaseError")
@@ -265,13 +267,28 @@ class _Conn:
             return None
         return self._run(self._rewrite(sql), tuple(args))
 
+    def _begin_sql(self):
+        wait = getattr(self.__dict__.get("_wait"), "ms", None)
+        return BEGIN if wait is None else BEGIN.replace(f"@LockTimeout = {LOCK_WAIT_MS}", f"@LockTimeout = {int(wait)}")
+
+    @contextlib.contextmanager
+    def write_wait(self, ms):
+        """Cap how long this thread waits for the write lock, for example for a GET that only records a comparison."""
+        local = self.__dict__.setdefault("_wait", threading.local())
+        before = getattr(local, "ms", None)
+        local.ms = ms
+        try:
+            yield
+        finally:
+            local.ms = before
+
     def _begin(self):
         """Take the write lock. During start-up a lock timeout is retried with backoff, so a long writer delays the start
         instead of crash-looping the app (issue #2244). Any other failure, and the last timeout, propagate unchanged."""
         retries = self.startup_retries
         for attempt in range(retries + 1):
             try:
-                self._run(BEGIN, ())
+                self._run(self._begin_sql(), ())
                 self.in_tran = True
                 return
             except BaseException as e:
@@ -334,6 +351,9 @@ class MssqlStore(SqlStore):
     def _open(self, db_path):
         self.db = _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
         self.db.startup_retries = LOCK_RETRY_ATTEMPTS - 1
+
+    def write_wait(self, ms):
+        return self.db.write_wait(ms)
 
     def _initialize(self, *args):
         try:
