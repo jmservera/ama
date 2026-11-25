@@ -1760,6 +1760,7 @@ or infra acceptance claimed.
 | [Issue 2310 anonymous API 401 on revision 0000072 (#2310)](./research/issue-2310-live-2026-11-25-r72.md) | Code and tests pass; live browser-style API calls get 302 from platform auth; per-criterion table |
 | [Issue 2303 live rerun (#2303)](./research/issue-2303-live-2026-11-23/README.md) | Live 500 on revision 0000057, per-criterion table |
 | [Issue 2303 report latency profile and fix (#2303)](./research/issue-2303-report-latency-2026-11-25.md) | Handler profile, evaluation cache, local proof, per-criterion table |
+| [Issue 2303 report latency on revision 0000073 (#2303)](./research/issue-2303-live-2026-11-25-r73.md) | Live cold and warm probe still 70 to 87 s; cost located in live_report; per-case-set memo fix, not deployed |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2257 SQLSTATE in the map overlay warning (#2257)](./research/issue-2257-live-r5-2026-11-23.md) | Overlay warning records the driver SQLSTATE for non-lock failures; per-criterion table |
 | [Issue 2257 map redraw after a gateway failure (#2257)](./research/issue-2257-live-r6-2026-11-23.md) | A gateway page after the read retries gets the map's one automatic redraw; per-criterion table |

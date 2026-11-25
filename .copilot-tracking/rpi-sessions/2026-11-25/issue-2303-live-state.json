@@ -1,34 +1,34 @@
 {
- "task_id": "issue-2303-latency",
- "task_slug": "issue-2303-live-latency",
+ "task_id": "issue-2303-r73-cache-latency",
+ "task_slug": "issue-2303-r73-cache-latency",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-25-issue-2303-live-latency-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-25/issue-2303-live-latency-plan.md",
-  "details": ".copilot-tracking/details/2026-11-25/issue-2303-live-latency-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-25/issue-2303-live-latency-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-25/issue-2303-live-latency-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-25-issue-2303-live-latency-review.md"
+  "research": ".copilot-tracking/research/2026-11-25-issue-2303-r73-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-25/issue-2303-r73-plan.md",
+  "details": ".copilot-tracking/details/2026-11-25/issue-2303-r73-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-25/issue-2303-r73-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-25/issue-2303-r73-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-25-issue-2303-r73-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Goal: /api/ai/report 73.5 s API on r0000072 must answer well under 5 s; demo, desktop only; no push, no PR",
+   "decision": "Goal: re-probe live /api/ai/report cold and warm on r0000073; fix only if still slow; no push",
    "status": "confirmed",
    "evidence": "owner brief 2026-11-25"
   },
   {
-   "decision": "Critique executed once, proceed with direct amendments",
+   "decision": "Critique executed once; proceed with amendments",
    "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-25/issue-2303-live-latency-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-25/issue-2303-r73-critique.md"
   },
   {
    "decision": "Review executed once, conformant locally",
    "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-25-issue-2303-live-latency-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-25-issue-2303-r73-review.md"
   }
  ],
  "blockers": [],
@@ -39,9 +39,9 @@
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Deploy image and re-measure live /api/ai/report; coordinator Full gate receipt",
-   "rationale": "live latency and criterion 4 unproven",
-   "evidence": "docs/reference/research/issue-2303-report-latency-2026-11-25.md"
+   "task": "Build and deploy image with ZF_BUILD_COMMIT, re-probe /api/ai/report; coordinator Full gate",
+   "rationale": "live latency after fix and criterion 4 unproven",
+   "evidence": "docs/reference/research/issue-2303-live-2026-11-25-r73.md"
   }
  ]
 }
