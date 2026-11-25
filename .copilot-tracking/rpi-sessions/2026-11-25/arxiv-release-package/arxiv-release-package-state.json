@@ -3,7 +3,13 @@
   "task_slug": "arxiv-release-package",
   "session_name": "arXiv release package",
   "parent_task": null,
-  "child_tasks": [],
+  "child_tasks": [
+    {
+      "task_id": "arxiv-reserved-anc",
+      "task_slug": "arxiv-reserved-anc",
+      "state_path": ".copilot-tracking/rpi-sessions/2026-11-25/arxiv-release-package/arxiv-reserved-anc-state.json"
+    }
+  ],
   "mode": "automatic",
   "active_phase": "Follow-up",
   "status": "completed",
@@ -40,6 +46,6 @@
     {"decision": "Canvas", "status": "current", "evidence": "instance rpi-arxiv-release-package; handle QAXJ; extensionId plugin:hve-core:rpi-workflow"}
   ],
   "blockers": [],
-  "next_action": {"phase": "Follow-up", "action": "No required code work. Owner may run package-only locally; --publish waits for exact-byte author approval, clearance and repository publication gates."},
+  "next_action": {"phase": "Follow-up", "action": "Child arxiv-reserved-anc corrected reserved-directory handling and passed local validation. Owner should use the corrected archive; child changes were not newly reviewed."},
   "prioritized_follow_ups": []
 }

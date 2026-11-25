@@ -118,7 +118,13 @@ python3 docs/capstone/thought-leadership/everything-but-the-software/anc/package
 
 Choose a new output directory for each run. The script follows literal
 root-relative `\input`, `\include`, `\includegraphics` and `\lstinputlisting`
-references, rejects missing or unsafe paths, and preserves input bytes.
+references and rejects missing or unsafe paths.
+Inside the submission only, it moves compilation inputs from `anc/` to
+`tex-inputs/` and rewrites their literal TeX file arguments. Repository
+sources, prompt contents and images stay unchanged. arXiv
+[reserves root-level `anc/` for ancillary files](https://info.arxiv.org/help/ancillary_files.html)
+and does not accept TeX inputs there; local PDFLaTeX alone does not detect
+that restriction.
 It writes `everything-but-the-software-arxiv.zip`, the equivalent `.tar.gz`,
 and `SHA256SUMS`. Both archives open directly to `main.tex` and its inputs,
 without an enclosing directory. The script extracts the ZIP and compiles
@@ -150,7 +156,9 @@ already exist there, and uploads both archives and their checksum file to
 a draft release before publishing it. It does not mark the paper as the
 repository's latest software release. Every packaged input must match its
 committed blob; the script rechecks the revision after compilation. It
-never pushes a branch or overwrites an existing tag or release.
+never pushes a branch or overwrites an existing tag or release. The Git
+checks compare the original inputs; archive-only path rewrites happen
+after that source check.
 
 If tag creation or upload fails, the command exits nonzero. Inspect the
 repository's tags and releases before retrying: a new tag or draft can
@@ -159,6 +167,9 @@ An interrupted publish request may have completed remotely, so inspect
 the release rather than assuming it is still a draft.
 
 Upload either source archive, not both, through arXiv's submission page.
+If replacing an earlier bundle containing `anc/`, use arXiv's Delete All
+control on the upload page first, then upload the corrected archive. Its
+compilation inputs should appear under `tex-inputs/`, not as ancillary files.
 Select PDFLaTeX and `main.tex`, then inspect arXiv's generated PDF.
 Packaging and a GitHub Release do not submit the article, grant clearance
 or establish arXiv acceptance. The format guidance above was rechecked on
