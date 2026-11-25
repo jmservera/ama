@@ -2000,6 +2000,7 @@ or infra acceptance claimed.
 | [Issue 2237 Live Re-proof on 0000061](./research/issue-2237-live-reproof-2026-11-24.md) | Issue 2237: retention 200 in 55 of 55 calls on revision 0000061, the lock timeout answering 503 (30 times, no 500) on 0000058 to 0000060, and a per-criterion table |
 | [Issue 2237 Live Re-proof on 0000067](./research/issue-2237-live-reproof-2026-11-24b.md) | Issue 2237: retention 200 in 56 of 56 calls on revision 0000067, only 503 lock timeouts (no 500) in 36 h of console logs, and a per-criterion table |
 | [Issue 2237 Live Re-proof on 0000068 (2026-11-25)](./research/issue-2237-live-reproof-2026-11-25.md) | Issue 2237: retention 200 as Programme Manager on revision 0000068 (35 of 35 sequential and parallel calls), the 503 lock mapping firing live, no retention 500 in 48 h of console logs, and a per-criterion table |
+| [Issue 2237 Retention Listing Tolerates a Busy Write Lock (2026-11-25)](./research/issue-2237-retention-unrecorded-listing-2026-11-25.md) | Issue 2237: why /api/retention still answered 503 under lock contention, the failing-first test and fix that return the list unrecorded, and a per-criterion table |
 
 
 

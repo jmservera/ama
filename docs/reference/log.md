@@ -15531,3 +15531,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] update | Capstone deck Tokenomics slide B28 (#435)
 
 * Added appendix slide B28 (page 56) to the capstone deck and regenerated the PDF at the owner's request; recorded validation, the manifest and builder drift (no PowerShell here) and the per-criterion status in [capstone-pitch-435-live-2026-11-25.md](research/capstone-pitch-435-live-2026-11-25.md). Updated the [capstone README](../capstone/README.md).
+## [2026-11-25] update | Issue 2237 retention listing tolerates a busy write lock
+
+* Added [issue-2237-retention-unrecorded-listing-2026-11-25.md](research/issue-2237-retention-unrecorded-listing-2026-11-25.md): the retention listing audit write took the global SQL write lock and caused the 503s; source and test change (not deployed) returns the list unrecorded when the lock is busy.

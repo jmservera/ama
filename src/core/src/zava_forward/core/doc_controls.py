@@ -366,9 +366,21 @@ class DocControlsMixin:
                         continue
                     rows.append(dict(case_id=c["id"], doc_id=d["id"], kind=d["kind"], trigger=trig.isoformat(), due=due.isoformat(),
                                      status="blocked: legal hold" if held else "awaiting owner approval"))
-            self.audit(user["email"], "retention_job_listed", "-", f"{len(rows)} due, {sum(r['status'].startswith('blocked') for r in rows)} held")
         rows.sort(key=lambda r: (r["due"] or "", r["case_id"], r["doc_id"]))
-        return dict(label=RETENTION_LABEL, as_of=today.isoformat(), records=rows)
+        out = dict(label=RETENTION_LABEL, as_of=today.isoformat(), records=rows)
+        detail = f"{len(rows)} due, {sum(r['status'].startswith('blocked') for r in rows)} held"
+        try:
+            with self.write_wait(self.BRIEFING_WRITE_WAIT_MS), self.lock:
+                self.audit(user["email"], "retention_job_listed", "-", detail)
+        except Exception as exc:
+            from .mssqlstore import is_write_lock_busy
+
+            if not is_write_lock_busy(exc):
+                raise
+            # A listing must not fail because other clients hold the SQL write lock (issue #2237): show it, say it
+            # was not recorded, and let the next request record it.
+            out.update(recorded=False, note="The list is shown but this view was not saved to the record because the record is busy. Refresh in a moment.")
+        return out
 
     def approve_retention_deletion(self, user, case_id, doc_id, today=None):
         """Owner approval for one due document. A legal hold blocks it. The log keeps no file name or content."""
