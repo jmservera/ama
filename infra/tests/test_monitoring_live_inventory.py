@@ -96,6 +96,18 @@ class MonitoringLiveInventoryTests(unittest.TestCase):
         self.assertRegex("alert-job-x-orch-failed", inventory.CLASSES["job_failure"])
         self.assertRegex("alert-p-agent-tasks-poison", inventory.CLASSES["poison_queue"])
 
+    def test_enabled_rule_for_one_job_does_not_cover_a_job_without_a_rule(self) -> None:
+        rules = _rules({"alert-job-a-failed": True, "alert-job-b-failed": False})
+        report = inventory.classify(rules, ["job-a", "job-b", "job-live-receiver"])
+        job = report["classes"]["job_failure"]
+        self.assertEqual(job["status"], "partial")
+        self.assertEqual(job["uncovered_jobs"], ["job-b", "job-live-receiver"])
+        self.assertFalse(report["all_classes_enabled"])
+        covered = inventory.classify(rules[:1], ["job-a"])["classes"]["job_failure"]
+        self.assertEqual(covered["status"], "enabled")
+        self.assertEqual(covered["uncovered_jobs"], [])
+        self.assertNotIn("uncovered_jobs", inventory.classify(rules)["classes"]["job_failure"])
+
     def test_cli_reports_and_rejects_bad_input(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             metric = Path(tmp, "m.json")
@@ -109,6 +121,24 @@ class MonitoringLiveInventoryTests(unittest.TestCase):
                 )
             self.assertEqual(code, 0)
             self.assertEqual(json.loads(out.getvalue())["coverage"], "partial")
+            jobs = Path(tmp, "j.json")
+            jobs.write_text(json.dumps([{"name": "job-x", "id": "/subscriptions/s"}]), "utf-8")
+            out = io.StringIO()
+            with redirect_stdout(out):
+                inventory.main(
+                    [
+                        "--metric-alerts",
+                        str(metric),
+                        "--scheduled-queries",
+                        str(query),
+                        "--jobs",
+                        str(jobs),
+                    ]
+                )
+            self.assertEqual(
+                json.loads(out.getvalue())["classes"]["job_failure"]["uncovered_jobs"], ["job-x"]
+            )
+            self.assertNotIn("subscriptions", out.getvalue())
             query.write_text('{"not": "a list"}', encoding="utf-8")
             err = io.StringIO()
             with redirect_stderr(err):

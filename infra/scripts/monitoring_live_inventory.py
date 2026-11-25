@@ -23,7 +23,9 @@ CLASSES: dict[str, re.Pattern[str]] = {
 }
 
 
-def classify(rules: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def classify(
+    rules: Sequence[Mapping[str, Any]], jobs: Sequence[str] | None = None
+) -> dict[str, Any]:
     classes: dict[str, Any] = {}
     for label, pattern in CLASSES.items():
         matched = [
@@ -37,12 +39,22 @@ def classify(rules: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
             status = "disabled"
         else:
             status = "missing"
-        classes[label] = {"status": status, "rules": sorted(matched, key=lambda m: m["name"])}
+        entry: dict[str, Any] = {
+            "status": status,
+            "rules": sorted(matched, key=lambda m: m["name"]),
+        }
+        if label == "job_failure" and jobs is not None:
+            enabled_names = {m["name"] for m in matched if m["enabled"]}
+            uncovered = sorted(j for j in jobs if f"alert-{j}-failed" not in enabled_names)
+            entry["uncovered_jobs"] = uncovered
+            if status == "enabled" and uncovered:
+                entry["status"] = "partial"
+        classes[label] = entry
     all_enabled = all(c["status"] == "enabled" for c in classes.values())
     return {
         "classes": classes,
         "coverage": "partial"
-        if any(c["status"] == "enabled" for c in classes.values())
+        if any(c["status"] in ("enabled", "partial") for c in classes.values())
         else "none",
         "all_classes_enabled": all_enabled,
         "firing_observed": False,
@@ -60,13 +72,17 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--metric-alerts", type=Path, required=True)
     parser.add_argument("--scheduled-queries", type=Path, required=True)
+    parser.add_argument(
+        "--jobs", type=Path, help="`az containerapp job list` JSON; reports jobs lacking a rule"
+    )
     args = parser.parse_args(argv)
     try:
         rules = _load(args.metric_alerts) + _load(args.scheduled_queries)
+        jobs = [str(j["name"]) for j in _load(args.jobs)] if args.jobs else None
     except (OSError, ValueError) as exc:
         print(f"invalid input: {exc}", file=sys.stderr)
         return 2
-    print(json.dumps(classify(rules), indent=2))
+    print(json.dumps(classify(rules, jobs), indent=2))
     return 0
 
 
