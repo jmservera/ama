@@ -15534,3 +15534,4 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] update | Issue 2237 retention listing tolerates a busy write lock
 
 * Added [issue-2237-retention-unrecorded-listing-2026-11-25.md](research/issue-2237-retention-unrecorded-listing-2026-11-25.md): the retention listing audit write took the global SQL write lock and caused the 503s; source and test change (not deployed) returns the list unrecorded when the lock is busy.
+* Added [issue-2253-live-r11-2026-11-25.md](research/issue-2253-live-r11-2026-11-25.md): live probe on API 0000076 (0 overlaps, 5 circles; forecast hidden by data age), deployed assets match the repository, new per-metric chart test.
