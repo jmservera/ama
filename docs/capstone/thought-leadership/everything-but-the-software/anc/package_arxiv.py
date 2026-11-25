@@ -14,7 +14,7 @@ import tempfile
 import zipfile
 from pathlib import Path
 
-from check_paper import strip_comments
+from check_paper import TEX_COMMENT
 
 PAPER = Path(__file__).resolve().parent.parent
 REPOSITORY = "jmservera/ama"
@@ -47,6 +47,24 @@ def run(command: list[str], cwd: Path, timeout: int = 180) -> bytes:
             f"{command[0]} failed (exit {error.returncode}):\n"
             + "\n".join(detail.splitlines()[-35:])
         ) from error
+
+
+def file_references(name: str, text: str) -> list[tuple[str, re.Match[str]]]:
+    """Mask non-code without moving the file-argument offsets in the original text."""
+    masked = re.sub(
+        r"\\begin\{(verbatim\*?|lstlisting)\}.*?\\end\{\1\}",
+        lambda match: " " * len(match.group(0)),
+        text,
+        flags=re.DOTALL,
+    )
+    masked = TEX_COMMENT.sub(lambda match: match.group(1).ljust(len(match.group(0))), masked)
+    references = []
+    for match in COMMAND.finditer(masked):
+        argument = ARGUMENT.match(masked, match.end())
+        if argument is None:
+            raise PackageError(f"Only literal braced file arguments are supported in {name}")
+        references.append((match.group(1), argument))
+    return references
 
 
 def collect_sources(paper: Path) -> dict[str, bytes]:
@@ -85,26 +103,34 @@ def collect_sources(paper: Path) -> dict[str, bytes]:
         if kind not in {"input", "include"}:
             return
         active.add(name)
-        text = files[name].decode("utf-8")
-        text = re.sub(
-            r"\\begin\{(verbatim\*?|lstlisting)\}.*?\\end\{\1\}",
-            "",
-            text,
-            flags=re.DOTALL,
-        )
-        text = strip_comments(text)
-        for match in COMMAND.finditer(text):
-            argument = ARGUMENT.match(text, match.end())
-            if argument is None:
-                raise PackageError(f"Only literal braced file arguments are supported in {name}")
-            visit(argument.group(1).strip(), match.group(1))
+        for command, argument in file_references(name, files[name].decode("utf-8")):
+            visit(argument.group(1).strip(), command)
         active.remove(name)
 
     visit("main.tex", "input")
     return dict(sorted(files.items()))
 
 
+def submission_sources(files: dict[str, bytes]) -> dict[str, bytes]:
+    names = {name: f"tex-inputs/{name[4:]}" if name.startswith("anc/") else name for name in files}
+    if len(set(names.values())) != len(names):
+        raise PackageError("Relocating reserved anc/ inputs would overwrite a tex-inputs/ file.")
+    submission = {}
+    for name, data in files.items():
+        if name.endswith(".tex"):
+            text = data.decode("utf-8")
+            for _, argument in reversed(file_references(name, text)):
+                start, end = argument.span(1)
+                original = text[start:end]
+                replacement = re.sub(r"^(\s*)anc/", r"\1tex-inputs/", original)
+                text = text[:start] + replacement + text[end:]
+            data = text.encode("utf-8")
+        submission[names[name]] = data
+    return dict(sorted(submission.items()))
+
+
 def write_archives(files: dict[str, bytes], destination: Path) -> None:
+    files = submission_sources(files)
     with zipfile.ZipFile(destination / ARCHIVES[0], "x", zipfile.ZIP_DEFLATED) as archive:
         for name, data in files.items():
             info = zipfile.ZipInfo(name, date_time=(1980, 1, 1, 0, 0, 0))

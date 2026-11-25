@@ -28,10 +28,12 @@ not the repository's independent exact-head publication review.
 
 ### Current Disposition
 
-Based on RD-001 through RD-006: agent-owned participation, skipped-auto
-walkthrough, Complete execution and Conformant local-tool outcome. No required
-implementation follow-up remains. Human approval and repository publication
-gates must precede an actual release; none is claimed by this outcome.
+Based on RD-001 through RD-008: the original direct review is Complete.
+The later arXiv upload exposed the reserved-directory defect, corrected in
+child arxiv-reserved-anc. The child passed local validation but was not newly
+reviewed; the original outcome does not certify its changes or arXiv acceptance.
+No required local correction remains. Human approval and repository
+publication gates still precede an actual release.
 
 ### Decision History
 
@@ -43,6 +45,8 @@ gates must precede an actual release; none is claimed by this outcome.
 | RD-004 | Outcome | Agent | Conformant, local-tool scope | RPI parent | Requirements have implementation and local evidence |
 | RD-005 | Continuation | Agent | Finish local delivery | RPI parent | No required code corrections; do not publish or push |
 | RD-006 | Session acceptance | Agent | Local delivery complete | RPI parent | Both plan tasks, local checks and review complete; live release explicitly excluded |
+| RD-007 | User upload failure | User and official arXiv rule | Required correction in child arxiv-reserved-anc | RPI parent | arXiv reserves root anc for ancillary material; original local validation did not test this |
+| RD-008 | Child continuation | Agent | Correction locally validated, not newly reviewed | RPI parent | 24 tests and corrected archive compilation pass; owner re-upload and publication gates remain separate |
 
 ## Validation Evidence
 

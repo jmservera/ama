@@ -74,6 +74,7 @@ class ArxivPackageTests(unittest.TestCase):
 
     def test_archives_are_deterministic_rooted_and_byte_identical(self) -> None:
         files = tool.collect_sources(self.paper)
+        expected = tool.submission_sources(files)
         first, second = self.root / "first", self.root / "second"
         first.mkdir()
         second.mkdir()
@@ -82,19 +83,76 @@ class ArxivPackageTests(unittest.TestCase):
         for name in tool.ASSETS:
             self.assertEqual((first / name).read_bytes(), (second / name).read_bytes())
         with zipfile.ZipFile(first / tool.ARCHIVES[0]) as archive:
-            self.assertEqual({name: archive.read(name) for name in archive.namelist()}, files)
+            self.assertFalse(any(name.startswith("anc/") for name in archive.namelist()))
+            self.assertEqual({name: archive.read(name) for name in archive.namelist()}, expected)
         with tarfile.open(first / tool.ARCHIVES[1]) as archive_tar:
-            self.assertEqual(set(archive_tar.getnames()), set(files))
+            self.assertEqual(set(archive_tar.getnames()), set(expected))
             for member in archive_tar:
                 stream = archive_tar.extractfile(member)
                 self.assertIsNotNone(stream)
                 assert stream is not None
                 with stream:
-                    self.assertEqual(stream.read(), files[member.name])
+                    self.assertEqual(stream.read(), expected[member.name])
                 self.assertTrue(member.isfile())
         for line in (first / "SHA256SUMS").read_text().splitlines():
             digest, name = line.split("  ")
             self.assertEqual(digest, hashlib.sha256((first / name).read_bytes()).hexdigest())
+
+    def test_reserved_anc_inputs_are_relocated_with_only_file_arguments_rewritten(self) -> None:
+        source = (
+            "% \\input{anc/comment.tex}\n"
+            "\\input{anc/body}\n"
+            "\\includegraphics{anc/figure.png}\n"
+            "\\nolinkurl{anc/evidence.json}\n"
+            "\\begin{verbatim}\\input{anc/example.tex}\\end{verbatim}\n"
+            "\\begin{lstlisting}\\input{anc/example.tex}\\end{lstlisting}\n"
+        )
+        files = {
+            "main.tex": source.encode(),
+            "anc/body.tex": (
+                b"\\include{anc/other}\n"
+                b"\\lstinputlisting[\n basicstyle=\\ttfamily]{anc/prompt.txt}\n"
+            ),
+            "anc/other.tex": b"Other section.",
+            "anc/prompt.txt": rb"Literal \input{anc/not-a-dependency.tex}",
+            "anc/figure.png": b"\x89PNG\r\n\x1a\n",
+        }
+        original = files.copy()
+        submission = tool.submission_sources(files)
+        self.assertEqual(
+            submission["main.tex"].decode(),
+            source.replace(r"\input{anc/body}", r"\input{tex-inputs/body}").replace(
+                r"\includegraphics{anc/figure.png}", r"\includegraphics{tex-inputs/figure.png}"
+            ),
+        )
+        self.assertEqual(
+            submission["tex-inputs/body.tex"],
+            b"\\include{tex-inputs/other}\n"
+            b"\\lstinputlisting[\n basicstyle=\\ttfamily]{tex-inputs/prompt.txt}\n",
+        )
+        self.assertEqual(submission["tex-inputs/prompt.txt"], files["anc/prompt.txt"])
+        self.assertEqual(submission["tex-inputs/figure.png"], files["anc/figure.png"])
+        self.assertEqual(files, original)
+        self.assertEqual(
+            set(submission),
+            {
+                "main.tex",
+                "tex-inputs/body.tex",
+                "tex-inputs/other.tex",
+                "tex-inputs/prompt.txt",
+                "tex-inputs/figure.png",
+            },
+        )
+
+    def test_reserved_directory_relocation_rejects_name_collisions(self) -> None:
+        with self.assertRaisesRegex(tool.PackageError, "would overwrite"):
+            tool.submission_sources(
+                {
+                    "main.tex": b"",
+                    "anc/body.tex": b"Anc input.",
+                    "tex-inputs/body.tex": b"Different existing input.",
+                }
+            )
 
     def test_compiles_extracted_zip_twice_without_shell_escape(self) -> None:
         tool.write_archives(tool.collect_sources(self.paper), self.root)
