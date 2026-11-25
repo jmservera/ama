@@ -20,8 +20,21 @@ shared: Any = importlib.import_module("test_assistants")
 
 # Constructed runtime-binding differences for one capability, confined to this process. They are
 # not an old image or a real serving change; each moves that capability's own bound versions only.
-VARIATIONS = ("rule", "purpose", "roles", "data", "provenance", "model", "schema", "registry")
+VARIATIONS = (
+    "rule",
+    "purpose",
+    "roles",
+    "data",
+    "provenance",
+    "model",
+    "schema",
+    "registry",
+    "provider",
+    "endpoint",
+    "deployment",
+)
 SERVING_MODEL = {"version": "test-model"}
+ROUTE: dict[str, str] = {}
 
 
 def vary(kind: str, capability: str) -> None:
@@ -38,6 +51,8 @@ def vary(kind: str, capability: str) -> None:
         assistants.VERSION = "9.9.9-constructed"
     elif kind == "model":
         SERVING_MODEL["version"] = "different-model-version"
+    elif kind in ("provider", "endpoint", "deployment"):
+        ROUTE[{"deployment": "fast"}.get(kind, kind)] = f"constructed-{kind}-2"
     elif kind == "rule":
         assistants.RULES[capability] += " (constructed variation)"
     elif kind == "purpose":
@@ -87,6 +102,8 @@ def main(spec: dict[str, Any]) -> None:
     provider.evidence = evidence
     provider.model_version = provider.model_version_strong = SERVING_MODEL["version"]
     provider.release = store.release_context
+    for attribute, value in ROUTE.items():
+        setattr(provider, attribute, value)
     store.ai = provider
     service: Any = Assistants(store, shared.config(**spec["config"]))
     results: list[bool] = []

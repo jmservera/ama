@@ -15484,3 +15484,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 146 live monitoring pass (Refs #146)
 
 * Added [issue-146-live8-monitoring-2026-11-25.md](research/issue-146-live8-monitoring-2026-11-25.md): source workbook queries executed live, deployed workbook found 12 of 14 items, poison query valid on live queue logs but firing not provoked (policy blocks the write), throwaway resources deleted. No box ticked; no source change.
+## [2026-11-25] add | Issue 2320 live re-check on revision 0000069 (Refs #2320)
+
+* Added [issue-2320-live-r5-2026-11-25.md](research/issue-2320-live-r5-2026-11-25.md): two briefing 503 sql-write-lock-busy lines logged on 0000069, 18 of 18 probed calls 200 in 0.07 to 20.42 s, cause in the cache-miss recording step, local fix not yet deployed, criteria 2 and 3 still unproven.
+## [2026-11-25] add | Issue 107 separate-process provider, endpoint and deployment tests and live gate proof (Refs #107)
+
+* Added [issue-107-live-r12-endpoint-deployment-2026-11-25.md](research/issue-107-live-r12-endpoint-deployment-2026-11-25.md): three new race tests, SQLite and disposable SQL Server results, read-only live proof that all five assistants are denied without an approved release, per-criterion table (delivered-build acceptance unproven).

@@ -1358,6 +1358,32 @@ class TaskReleaseRecord(Base):
         self.assertEqual(calls, [1])
 
 
+    def test_briefing_answers_without_503_when_recording_hits_a_busy_write_lock(self):
+        from zava_forward.core.mssqlstore import LOCK_FAILED
+
+        user = self.priority_user(self.store)
+        busy = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
+            f"[SQL Server]{LOCK_FAILED}"
+        )
+        real_audit = self.store.audit
+
+        def audit_fails(*_a, **_k):
+            raise busy
+
+        self.store.audit = audit_fails
+        try:
+            out = self.store.briefing(user)
+            self.assertEqual((out["source"], out["recorded"]), ("template", False))
+            self.assertEqual(out["reason"], self.store.BRIEFING_BUSY)
+            self.assertNotIn(self.store.version, [v[0] for v in self.store._briefings.values()])
+            self.store.audit = lambda *a, **k: (_ for _ in ()).throw(ValueError("other"))
+            with self.assertRaises(ValueError):
+                self.store.briefing(user)
+        finally:
+            self.store.audit = real_audit
+        self.assertNotIn("recorded", self.store.briefing(user))
+
+
 class UnleasedRevocation:
     """A pending, never-claimed proposal is denied by release admission, not by a lease, on a reopened worker."""
 
@@ -1762,6 +1788,15 @@ class ProcessRaces(UnleasedRevocation):
 
     def test_changed_registry_process_revokes_and_fresh_process_stays_denied(self):
         self.check_process_wide_binding("registry", "evidence", "registry_version")
+
+    def test_changed_provider_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_process_wide_binding("provider", "model", "provider")
+
+    def test_changed_endpoint_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_process_wide_binding("endpoint", "model", "endpoint")
+
+    def test_changed_deployment_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_process_wide_binding("deployment", "model", "deployment")
 
 
 class SqliteUnleasedRevocation(ProcessRaces, Base):

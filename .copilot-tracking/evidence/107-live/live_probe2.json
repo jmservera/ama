@@ -1,0 +1,359 @@
+{
+ "disabled": "Operator authority, finite allowance and expiry are required.",
+ "proactive": false,
+ "manual": "Use the ordinary case controls; proposals never approve or change the case.",
+ "assistant_release_view": [
+  {
+   "id": "stock-prioritisation",
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "stock-prioritisation",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   }
+  },
+  {
+   "id": "assessment-preparation",
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "assessment-preparation",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   }
+  },
+  {
+   "id": "funding-evidence",
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "funding-evidence",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   }
+  },
+  {
+   "id": "works-resident-coordination",
+   "release": {
+    "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "approved, unexpired release record"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "works-resident-coordination",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   }
+  },
+  {
+   "id": "quality-evidence",
+   "release": {
+    "reason": "Release admission denied: no approved release matches (unexpired release). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+    "missing": [
+     "unexpired release"
+    ],
+    "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+    "manual": "Use the ordinary case controls.",
+    "task": "quality-evidence",
+    "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+    "authority_holders": [
+     {
+      "authority": "release",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "residual-risk acceptance",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "suspension",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     },
+     {
+      "authority": "restart",
+      "holder": null,
+      "status": "gap",
+      "reference": "OQ-017"
+     }
+    ]
+   }
+  }
+ ],
+ "top_keys": [
+  "assistants",
+  "registered_tasks",
+  "disabled",
+  "proactive",
+  "quality_scope",
+  "principal",
+  "rule",
+  "limits",
+  "manual",
+  "rai_exercise_acceptance",
+  "real_ai_delivery_gate"
+ ],
+ "gates": [
+  {
+   "path": "/real_ai_delivery_gate",
+   "exercise_passed": true,
+   "exercise_status": "passed",
+   "exercise_checks": {
+    "release_contract_fail_closed": true,
+    "oq017_live_activation_gate": true,
+    "challenge_and_appeal_safeguards": true,
+    "operator_suspension_and_restart_authority": true,
+    "monitoring_and_threshold_declarations": true,
+    "human_review_cohort_and_privacy_guards": true,
+    "requirement_traceability_complete": true,
+    "audit_ledger_integrity": true
+   },
+   "delivery_passed": false,
+   "delivery_status": "blocked",
+   "delivery_checks": {
+    "provider_configured_and_enabled": true,
+    "durable_sql_release_store": true,
+    "no_active_suspension": true,
+    "oq017_named_live_releases_recorded": false,
+    "oq017_authority_holders_appointed": false,
+    "oq018_live_fairness_and_thresholds_cleared": false,
+    "oq019_legal_dpo_automated_decision_cleared": false
+   },
+   "blocking": [
+    "oq017_named_live_releases_recorded: Enabled AI tasks lack unexpired named-human actual release records (OQ-017).",
+    "oq017_authority_holders_appointed: Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017).",
+    "oq018_live_fairness_and_thresholds_cleared: Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018).",
+    "oq019_legal_dpo_automated_decision_cleared: Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+   ],
+   "deferred": [
+    "OQ-017",
+    "OQ-018",
+    "OQ-019"
+   ]
+  }
+ ],
+ "release_view": null,
+ "proposal_keys": [
+  "proposals",
+  "disabled",
+  "manual",
+  "next_after"
+ ],
+ "proposals": [
+  {
+   "capability": "quality-evidence",
+   "state": "disabled",
+   "stale": true,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "quality-evidence",
+   "state": "disabled",
+   "stale": true,
+   "reason": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency",
+   "release_status": null,
+   "has_release_id": true
+  },
+  {
+   "capability": "works-resident-coordination",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "quality-evidence",
+   "state": "disabled",
+   "stale": true,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "works-resident-coordination",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "stock-prioritisation",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "quality-evidence",
+   "state": "disabled",
+   "stale": true,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "funding-evidence",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "stock-prioritisation",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "assessment-preparation",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "assessment-preparation",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  },
+  {
+   "capability": "funding-evidence",
+   "state": "disabled",
+   "stale": false,
+   "reason": "Operator authority, finite allowance and expiry are required.",
+   "release_status": null,
+   "has_release_id": false
+  }
+ ]
+}

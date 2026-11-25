@@ -1,0 +1,64 @@
+{
+ "samples": [
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  },
+  {
+   "keys_sql_path": true,
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "durable_sql_release_store": true
+  }
+ ]
+}
