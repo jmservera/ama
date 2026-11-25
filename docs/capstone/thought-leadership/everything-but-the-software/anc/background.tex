@@ -25,9 +25,9 @@ vendor-associated 39-codebase study reports 124\% longer issue resolution in
 low-quality files~\cite{tornhill2022codered}.
 
 \paragraph{What survives the next session?}\label{sec:inheritance}
-A fresh session can inherit code, tests and deployment assumptions from the
-repository, as well as instructions and handover notes. Either channel can
-preserve a sound decision or carry a mistake forward. The study's
+In this experiment, fresh feature sessions received the retained repository;
+B and C also permitted design and review handover files
+(Section~\ref{sec:protocolsummary}). The study's
 \texttt{READ\_METHODS} test, for example, continued to constrain the
 ninth feature after the session that wrote it had ended
 (Section~\ref{sec:resultscorrectness}).
@@ -39,8 +39,7 @@ behaviour, adaptation and resource use.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-state-inheritance.png}
-\caption{Conceptual read/write paths between sessions. A fresh conversation
-inherits software and instructions. Arrows identify state-carrying paths
+\caption{Conceptual read/write paths available between sessions. Arrows identify state-carrying paths
 whose effects require measurement.}\label{fig:stateinheritance}
 \end{figure}
 
@@ -93,13 +92,14 @@ setting limit direct comparison.
 
 \subsection{Instruction maintenance and evaluation}\label{sec:instructiondebt}
 
-Instruction files themselves require
-maintenance~\cite{nigh2025agentsmd,rajasekaran2025context}.
+Nigh recommends runnable commands such as \texttt{npm test} and explicit
+write boundaries for agent
+instruction files~\cite{nigh2025agentsmd}; Anthropic's context-engineering
+guide recommends compacting history and retaining structured notes
+~\cite{rajasekaran2025context}.
 Anthropic's harness asks each coding session to update
 \texttt{claude-progress.txt} and leaves the next one a startup script,
 feature list and Git history to inspect~\cite{anthropic2025harness}.
-That is a concrete handoff whose accuracy matters when the next session
-starts testing and changing the application.
 Mohsenimofidi et~al.\ assign 242 labels across nine categories to 169 commits.
 A commit can receive several labels: 78 include instruction additions,
 59 modifications and 23 removals
@@ -128,8 +128,7 @@ LLM-written ones on CTXbench ($p=0.038$)
 SkillOpt uses a more selective update rule: a proposed skill edit survives
 only if it improves the held-out validation score, while rejected edits
 remain feedback for later proposals~\cite[How SkillOpt works]{microsoft2026skillopt}.
-Its target model's weights remain fixed. This gives a concrete alternative
-to appending a new directive after each failure.
+Its target model's weights remain fixed.
 Jiang et~al.\ separately evaluate skill retrieval and downstream execution
 ~\cite{jiang2026skills}; loading the intended file does not by itself
 show that the agent applied it successfully.

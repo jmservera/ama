@@ -4,7 +4,9 @@ The case records support several competing explanations
 (Table~\ref{tab:rivals}). Other plausible alternatives lack discriminating
 evidence (Table~\ref{tab:rivalsadditional}). None is ruled out by missing
 records. In particular, the assessed release has not been linked to the
-failed deployment (Section~\ref{sec:audittrail}).
+failed deployment (Section~\ref{sec:audittrail}). The named issues,
+decisions, selector changes and participant accounts are indexed in
+\nolinkurl{anc/case-evidence-matrix.json}.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -22,7 +24,7 @@ release/scope linkage is pending. & An incentive explanation remains a hypothesi
 Owner overrides and priorities & Committed RPI records, full gates and delegated
 merging; PR \#445 required an exception. & The MVP used agents successfully;
 HVE Core defaults retain human stops. & Owner choices are part of the case. \\
-Model and tool changes & Versions changed during the study. & No matched rerun
+Model and tool changes & Recorded model selectors changed during the case. & No matched rerun
 under fixed versions. & Actual session configuration remains partly unknown. \\
 CI and cloud budgets & Issue \#413 moved validation locally; costs prompted
 a higher ceiling and reduced resources. & Merges continued without established
@@ -162,8 +164,8 @@ without demonstrated proportional improvement in the targeted outcome.
 PR \#445's size-limit correction and interrupted gate identify a place
 to measure this burden, but neither elapsed gate time nor avoided defects
 was measured for the comparison. \\
-Counter-evidence & Checks caught bounded defects and enforced evidence
-integrity. Gate duration and human review effort were not measured per PR\@. \\
+Counter-evidence & The size-limit correction addressed a bounded implementation
+defect; the interrupted gate did not establish a pass. Gate duration and human review effort were not measured per PR\@. \\
 Rival explanations & Legitimate safety and privacy requirements, budget
 constraints, new deployment complexity and owner-selected risk tolerance. \\
 Experimental implication & Measure gate time and accepted outcomes under
@@ -301,7 +303,7 @@ A positive value means A costs more within this assumed model.
 Experimental savings would require measured, quality-matched costs.
 For $k>0$ and $\delta>0$, the first cycle count with $\Delta C(N)\geq0$ is
 $N_{\mathrm{BE}}=\lceil1+2k/\delta\rceil$; when $\delta=0$, the investment never pays back in
-this credit-only model. Actual cost differences may grow nonlinearly, and B can retain debt too.
+this credit-only model.
 The parameter $\delta$ describes how the cost gap between A and B grows;
 it does not measure either arm's total debt.
 

@@ -119,29 +119,19 @@ old code that was no longer meant to run~\cite{sec2013knight}. The failure cross
 seven-year interval, so understanding it required examining the code and
 deployment state that the new programme inherited.
 
-Everyday maintenance shows quieter versions of the same failure mode.
 Cunningham's 1992 account of WyCash described a financial product
 continually adapted to market demands, where mature code was repeatedly
 revised and rewritten; his technical-debt metaphor explained why shipping a
 first-time implementation required later rewriting as understanding
-improved~\cite{cunningham1992wycash}. Some of that debt is visible as
-duplication or awkward dependencies. The rest stays hidden in assumptions
-about inputs, deployment and earlier behaviour until another change depends
-on it. A count of completed changes shows neither kind.
+improved~\cite{cunningham1992wycash}.
 
-Public projects and benchmarks suggest that agentic development makes this
-older maintenance problem more pressing by compressing the schedule. In the
-external PhotoCraft repository, an early-alpha reimplementation of
-Photoshop, the project reports 631 of 631 menu items live, while its dated
+The external PhotoCraft project, an early-alpha reimplementation of
+Photoshop, reports 631 of 631 menu items live, while its dated
 assessment separately estimates about 76\% feature breadth and 45\%
-readiness for real work~\cite{photocraft2026}. A command can be reachable
-while the surrounding workflow is still unreliable. Published benchmarks
-point to a related repository effect: SWE-Maintain finds that agents solve
+readiness for real work~\cite{photocraft2026}. SWE-Maintain finds that agents solve
 fewer later tasks when starting from their own earlier changes than from
 the developers' changes, even though each task starts in a fresh
-session~\cite{pan2026swemaintain}. Starting a fresh session clears the
-conversation, but the next run still inherits the code and any faults left
-in it.
+session~\cite{pan2026swemaintain}.
 
 Established engineering practice has a long answer to inherited faults:
 define which behaviour a change must preserve, test it, and keep the
@@ -160,9 +150,8 @@ Beck's distinction between producing code and learning through working
 software sharpens the research question~\cite{beck2026prodacity}:
 what does a feature leave behind for the next one?
 
-In my own rebuild, the broken sign-in was hard to blame on hasty prompting:
-weeks of structured discovery, sustained conversation and documented
-decisions had preceded autonomous delivery. Research agents maintained the
+In my rebuild, weeks of structured discovery, sustained conversation and
+documented decisions had preceded autonomous delivery. Research agents maintained the
 evidence base. In one what-if exercise, I asked whether phone photos with
 GPS metadata would make an assessment agent more useful; the resulting
 proposal still required checked provenance and a professional decision.
@@ -191,13 +180,10 @@ have separate provenance in the ancillary
 
 The initial conjecture was that feature-driven delivery carries
 unresolved errors and avoidable change burden forward, and that cumulative
-verification and consolidation can reduce that burden. Two kinds of state matter:
-the software being changed, and the instructions used to change it. Adding
-a corrective rule after every failure can leave prompts, skills and
-handover notes with their own maintenance burden. In this case, my
+verification and consolidation can reduce that burden. I distinguish
+the software being changed from the instructions used to change it. In this case, my
 instructions grew to require the full RPI sequence, committed evidence
-and recurring checks (Section~\ref{sec:coordinator}). A fresh agent inherits
-both kinds of state. Section~\ref{sec:background} separates these
+and recurring checks (Section~\ref{sec:coordinator}). Section~\ref{sec:background} separates these
 pathways; the case then examines how they interact with completion proxies,
 review capacity and product-use feedback.
 
@@ -309,8 +295,7 @@ needed to sign in, open an assigned case and record a resident decision
 separately from the staff decision to release work. An assistant could
 prepare a draft, but nothing was sent automatically. The exercise
 required research, requirements, architecture, a delivery plan and a working
-demonstrator. Given these interdependencies, keeping a complete user
-journey intact mattered even in a non-production system. No operational
+demonstrator. No operational
 service or real resident data is evaluated here.
 
 Agents performed most research synthesis, drafting and coding; I steered
@@ -326,7 +311,9 @@ additional completion signal. Internal assessment wording is not reproduced.
 GitHub Copilot and HVE Core first helped me learn what to
 build. Research agents assembled source snapshots and maintained syntheses
 in a knowledge base with an index, owner-curated memory and an append-only
-log. The Design Thinking coach and stakeholder-role agents then challenged
+log (\nolinkurl{anc/case-evidence-matrix.json}, author-review discovery
+and handoff entries).
+The Design Thinking coach and stakeholder-role agents then challenged
 assumptions through what-if scenarios, persona analysis and journey mapping.
 For example, a photo's GPS metadata could support the location of a survey,
 but did not establish whether the evidence was sufficient for a retrofit
@@ -342,7 +329,9 @@ informed a deployed MVP that I used intermittently and refined
 through short feedback loops. Its landing view was
 \textquotedblleft{}My cases today\textquotedblright{};
 case cards showed status and the next action, while a call log and manual
-paths let work continue without a model response.
+paths let work continue without a model response. These affordances are
+recorded in the historical log and prototype review identified in the
+case evidence index; my intermittent MVP use remains a participant account.
 
 The handoff to autonomous delivery changed how that understanding reached
 implementation. A backlog agent converted the accumulated context into
@@ -430,7 +419,9 @@ from the motivating project.
 \subsection{Constructs and evidential boundaries}\label{sec:constructs}
 
 Here an \emph{agent} combines a model, tools and instructions in a loop that
-selects and executes actions. People remain accountable for its use.
+selects and executes actions. In the case, I retained scope decisions,
+approval and delegated merge authority (Section~\ref{sec:coordinator});
+the human authors retain responsibility for this study.
 A \emph{skill} is a reusable set of procedures describing when and how to
 act and check the outcome. It differs from a session history and does not
 update model weights. This distinction follows
@@ -449,7 +440,8 @@ quality remains unmeasured. Deployment drift could produce the same observation.
 on the unforeseen change request under a fixed budget. This measures one
 aspect of maintainability\@. \emph{Consolidation} means scheduled structural work intended
 to preserve observable behaviour, with tests checking that intention.
-Passing finite tests supports only the contracts they cover.
+The later CR1 view-write failures exposed behaviour that the earlier
+workflow panel did not check (Section~\ref{sec:resultsjudging}).
 
 Five measurement categories remain separate. PRs, lines and words describe
 \emph{production volume}; checks, reviews and receipts describe
@@ -459,8 +451,7 @@ and changeability}; and corrective help requested or supplied describes
 \emph{intervention}. The original observations cover the first three categories. A later
 post-hoc comparison adds code metrics as indirect measures of structure,
 but no controlled changeability task or systematically coded intervention
-dataset. To measure decay, we need observations of lost behaviour or
-increased change burden.
+dataset.
 
 \subsection{Chain of evidence and reflexivity}\label{sec:audittrail}
 
@@ -564,7 +555,8 @@ contractor-capacity feeds and sensor-validity metadata as well.
 The desk-research journey atlas subsequently informed BRD and PRD revisions
 and ADR~0003, while leaving quality and approval questions open.
 The case evidence index records these exchanges and the requirements
-handoff; none was direct stakeholder validation.
+handoff under its author-review context, including PR~\#71;
+none was direct stakeholder validation.
 
 Disposable prototypes then made some assumptions tangible. My critique
 and an agent-assisted simplicity review produced requirements for
@@ -612,14 +604,15 @@ replacement and use that experience to steer the next change. Missing
 prerequisites became further issues, each with research, planning, review
 and correction work. Scope additions and validation costs also changed
 delivery conditions. These observations locate a concrete interruption of
-usable behaviour within a broader process of accumulating obligations.
+usable behaviour. The case evidence index's O1, O2 and O5 records retain
+the participant account and the unresolved execution links.
 The automated score and failed journey still need release-and-scope linkage
 before their disagreement can be assessed as a matched comparison.
 
 \subsection{Bounded within-case contrasts}\label{sec:contrasts}
 
 Table~\ref{tab:contrasts} compares episodes and negative cases already in the
-record. Migration, models, workload and gate rules changed alongside
+record. Migration, recorded model choices, workload and gate rules changed alongside
 coordination, so these contrasts motivate explanations for later testing.
 
 \begin{table}[!htbp]
@@ -640,8 +633,8 @@ Engineering checks versus participant task & Bounded checks passed while
 real-user sign-in remained blocked. & Acceptance needs coverage of the whole
 journey and its deployment dependencies. \\
 Exploratory challenge versus backlog execution & Role agents questioned the
-initial proposal; delivery workers implemented specified stories. & Agent
-behaviour depended on task framing, context and opportunities for challenge. \\
+initial proposal; delivery workers implemented specified stories. & Task
+framing changed with the tools and environment; its contribution was not isolated. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -735,7 +728,8 @@ separate its effects from competing explanations.
 
 The mechanisms suggest a possible reinforcing loop
 (Figure~\ref{fig:loop}). In this case, an extensive specification led into a large backlog and
-parallel sessions. Artefact-based gates generated more documents.
+parallel sessions. Committed RPI evidence became a merge condition
+(Section~\ref{sec:coordinator}).
 The replacement lacked the previously working staff bindings, and I
 could not use it to expose workflow gaps. I responded with further rules,
 criteria and gates. This sequence suggests reinforcement, but does not
@@ -894,7 +888,8 @@ experiment reports the observed short-horizon trade-off.
 
 \subsection{What worked}
 
-The agents helped me question what to build. Research assembled a corpus
+In my participant account, the agents helped me question what to build.
+Research assembled a corpus
 and analysis in days, and role-agent challenges led me to reject the proposed
 five end-to-end agents before coding. An evidence-assessment task still
 needed surveyor judgement; a resident-contact task still needed consent
@@ -903,6 +898,9 @@ case card and resident-decision record. I built and reshaped the MVP
 in a day through targeted exchanges and feedback.
 These are observations from my use of the tools. I did not measure a
 human-only duration or run a controlled comparison of feedback cadences.
+The retained author review and case evidence index describe the discovery,
+prototype and backlog handoffs; they do not independently corroborate my
+reported durations.
 
 \subsection{Human judgement and reflective work}
 
@@ -936,7 +934,8 @@ recommendation. This study did not test that procedure.
 Room for change here means the options the system supports after the current
 feature. Beck's alternation suggests preserving those options during
 feature work~\cite{beck2026prodacity,beck2025devslow}. Darwin and
-SkillOpt already offer precedents for agent-guided correction, and Ng's
+SkillOpt offer agent-guided correction procedures
+~\cite{pavlenko2026factory,microsoft2026skillopt}. Ng's
 reflection framework argues for evaluating and revising work instead
 of accepting first-pass generation as finished
 ~\cite{ng2024reflection}. I define improvement as a measured advantage in
@@ -976,14 +975,15 @@ that motivated the study, but it prevents me from treating that experience
 as evidence that sequential feature work necessarily degrades software.
 A longer, more coupled task could test whether the suspected burden emerges
 under different conditions. Stable retention must remain a possible result.
-The low loss rate also reflects the study's rollback and immutable-test
-policy. A future design must state whether it measures rejected attempts,
+The loss endpoint counted states retained after rollback under immutable-test
+rules (Section~\ref{sec:prerun}); the experiment did not compare those rules
+with an unrestricted policy. A future design must state whether it measures rejected attempts,
 retained failures or both; those are different outcomes.
 
 S1 still changed what needs measuring. Acquiring a feature,
 preserving an established contract and adapting to a new requirement need
-separate outcomes. A missing prerequisite can make a later change look
-easier, because there is less working behaviour to preserve. Several change
+separate outcomes. GPT A's incomplete-ranking repositories entered CR1 with fewer acquired
+contracts to preserve (Table~\ref{tab:crprerequisites}). Several change
 requests, evaluated on isolated branches, could probe adaptation without
 altering the continuing delivery trajectory. More coupled brownfield work
 could show whether implementation burden or loss emerges over longer
@@ -994,10 +994,8 @@ points for improvement. The original ten-point target remains unmet;
 it should not be lowered after observing this dataset. A future study needs
 an outcome and target chosen together before collection.
 
-The review-only result makes a component comparison worth testing.
-HVE Core's full research, plan, implement and review workflow may provide
-correction that these bounded sessions did not: discovery was disabled in
-the experiment. A follow-up could compare full RPI with feature-only delivery
+Discovery was disabled in the experiment
+(Section~\ref{sec:runtimeboundaries}). A follow-up could compare full RPI with feature-only delivery
 and separate review from refactoring, extra tests and handover content
 where feasible. The present results do not establish that RPI is better.
 
@@ -1005,8 +1003,7 @@ The earlier numerical design candidates remain in Supplement
 Section~\ref{app:futuredesign}: longer trajectories, branch-isolated
 change requests and component comparisons. They offer design inputs for a
 future study; its task scale, resource needs and protocol require separate
-development and review. Longer, more complex tasks are expected to need
-substantially more tokens, and the authors are postponing
+development and review. The authors are postponing
 that study until resource estimates and spending are approved. A later paper
 would need a separately reviewed and prospectively registered protocol,
 aligned randomisation and uncertainty analysis, and quality-matched costs.
@@ -1026,7 +1023,6 @@ consolidation roughly doubled delivery credits. The report rates both
 strategies \emph{no-go} at this horizon. Similar cell means do not establish
 equivalence or explain why sessions stopped early.
 
-A more promising question is when a particular correction is needed.
 In the reported cells, B removed complexity hotspots, C had more Gemini
 CR1 successes, and E had more complete GPT feature suites than A.
 Those observations motivate a triggered
@@ -1043,11 +1039,10 @@ For the motivating case, a concrete checkpoint would have been staff
 sign-in followed by opening an assigned case, with the application-role
 and internal-staff bindings checked together. The case also motivates
 shorter delivery horizons and carrying those prerequisites into later
-briefs or executable checks. Its extensive evidence
-trail suggests keeping routine intermediate tracking files out of the
-squash-merged product diff after preserving durable findings and original
-reviews. Selection must be finite, archive-backed and restore-verified,
-including adverse reviews. Mandatory safety, privacy, approval and publication
+briefs or executable checks. These are proposed follow-ups, not measured
+improvements. Any later evidence-retention change would require a finite,
+archive-backed and restore-verified selection, including adverse reviews.
+Mandatory safety, privacy, approval and publication
 gates stay in place, and compact context views must retain their source evidence.
 This study did not test these practices, the proposed human-checkpoint
 cadence or a method for preserving expertise. The ancillary context holds the fuller practice
@@ -1064,8 +1059,8 @@ increments were reset under protected-test rules. Workflow replay
 found no witnessed losses across 626 evaluable
 packets. The main failures were features that agents never acquired and a
 permission-boundary hole exposed by the
-withheld regional-access extension (CR1). Stable retention can
-coexist with incomplete software or software that is unsafe to extend.
+withheld regional-access extension (CR1), as the GPT ranking and Gemini
+view-write results in Section~\ref{sec:resultscorrectness} illustrate.
 
 Consolidation (B) removed complexity hotspots at all 63 endpoints, but its
 primary coverage advantage over longer feature-only sessions (D) was
@@ -1244,7 +1239,8 @@ analysis exports to their SHA-256 digests. No post-collection OSF deposit
 was created: the existing OSF registrations link to the repository and
 remain pre-collection records, while later amendments are disclosed in Git.
 Raw packets, private specimen-to-trajectory mappings and runtime workspaces
-stay off-Git in the evidence vault, which protects future reviewer blinding.
+stay off-Git in the evidence vault, with the intention of preserving future
+reviewer blinding.
 The public attempt and provenance exports retain actual arm/model/source
 assignments, failures and unknowns. Changing execution versions and service
 conditions limit homogeneous pooling. Current access and prior exposure

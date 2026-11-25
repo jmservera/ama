@@ -239,8 +239,8 @@ contracts and code-analysis tools, writes \texttt{measure.json} and computes
 the numerical summaries. It does not call a separate LLM-as-judge. Table~\ref{tab:measurementprovenance} separates
 outcomes, structural proxies and resource observations.
 Complexity, duplication and lint describe selected code properties. They
-can miss the view that forwards a newly added write method, even when
-every function is short and lint-clean. Overall architecture quality,
+did not establish CR1 read-only enforcement in Gemini's cleaned repositories
+(Section~\ref{sec:resultscorrectness}). Overall architecture quality,
 readability and comprehension require other evidence. The active metric
 dictionary contains no maintainability-index score.
 
@@ -284,14 +284,11 @@ checks; absent annotation is not zero \\
 \end{tabularx}
 \end{table}
 
-For fixed inputs, test oracles and static metrics are programmatic and
-normally repeatable. Environment-dependent code, timeouts or flaky tests
-can still vary. The evaluator records errors, skips and timeouts; missing
+The \sourceref{R05} evaluator records errors, skips and timeouts; missing
 or non-binary endpoints cannot silently become passing outcomes.
-The reported local evaluator is not a claim of OS or network isolation.
-Elapsed time and consumption vary with execution and provider conditions.
-Summing recorded values is repeatable, even when the underlying observations
-vary between runs.
+The source-described isolation boundary is separate
+(Section~\ref{sec:runtimeboundaries}); its archived enforcement was not
+independently qualified.
 Raw fields, units, scopes, tool settings and missingness are specified in
 Supplement Section~\ref{app:measurementprovenance}.
 
