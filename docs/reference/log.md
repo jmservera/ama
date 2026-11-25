@@ -15471,3 +15471,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
   et al. (*Echoes of AI*, 2026) and ten open web/standards sources; removed 14
   non-essential citations with incomplete access from both bibliography files
   (80 cited entries, 73-page [rebuilt PDF](../capstone/thought-leadership/everything-but-the-software/main.pdf)).
+
+## 2026-11-25 Issue 2237 live re-proof on revision 0000068
+
+* Added [issue-2237-live-reproof-2026-11-25.md](./research/issue-2237-live-reproof-2026-11-25.md) with Playwright and Log Analytics evidence and a per-criterion table (Refs #2237). No source change.
