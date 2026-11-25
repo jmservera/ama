@@ -2427,4 +2427,6 @@ The [issue 2320 revision 0000067 re-check](./research/issue-2320-live-r4-2026-11
 
 The [issue 2320 revision 0000069 re-check](./research/issue-2320-live-r5-2026-11-25.md) records that GET /api/briefing still logged 503 sql-write-lock-busy under shared use, the cause in the cache-miss recording step, and the local fix with a per-criterion table.
 
+The [issue 2320 slow-GET cause note](./research/issue-2320-live-r8-2026-11-25.md) rules out cold start and SQL resume, ties the 2.1 to 16.4 s quiet briefing GETs to an uncached busy fallback, and records a 10 s cache of that answer with a test.
+
 The [issue 2256 revision 0000068 re-proof](./research/issue-2256-live-2026-11-24b.md) records the live waiting list, queues and case card on revision 0000068, with a per-criterion proven and unproven table.

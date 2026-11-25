@@ -1376,12 +1376,44 @@ class TaskReleaseRecord(Base):
             self.assertEqual((out["source"], out["recorded"]), ("template", False))
             self.assertEqual(out["reason"], self.store.BRIEFING_BUSY)
             self.assertNotIn(self.store.version, [v[0] for v in self.store._briefings.values()])
+            self.store._briefing_busy.clear()
             self.store.audit = lambda *a, **k: (_ for _ in ()).throw(ValueError("other"))
             with self.assertRaises(ValueError):
                 self.store.briefing(user)
         finally:
             self.store.audit = real_audit
         self.assertNotIn("recorded", self.store.briefing(user))
+
+    def test_busy_briefing_answer_is_reused_briefly_instead_of_waiting_again(self):
+        from zava_forward.core.mssqlstore import LOCK_FAILED
+
+        user = self.priority_user(self.store)
+        busy = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
+            f"[SQL Server]{LOCK_FAILED}"
+        )
+        real_audit, attempts = self.store.audit, []
+
+        def audit_fails(*_a, **_k):
+            attempts.append(1)
+            raise busy
+
+        self.store.audit = audit_fails
+        try:
+            first = self.store.briefing(user)
+            self.assertFalse(first["recorded"])
+            self.assertEqual(len(attempts), 1)
+            self.assertIs(self.store.briefing(user), first)
+            self.assertEqual(len(attempts), 1, "a repeat GET must not wait for the lock again")
+            self.store._briefing_busy = {
+                k: (0.0, v[1]) for k, v in self.store._briefing_busy.items()
+            }
+            self.store.briefing(user)
+            self.assertEqual(len(attempts), 2)
+        finally:
+            self.store.audit = real_audit
+        self.store._briefing_busy.clear()
+        self.assertNotIn("recorded", self.store.briefing(user))
+        self.assertEqual(self.store._briefing_busy, {})
 
 
     def test_briefing_caps_its_write_lock_wait_and_a_cached_read_takes_no_lock(self):

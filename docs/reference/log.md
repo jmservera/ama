@@ -15490,3 +15490,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 107 separate-process provider, endpoint and deployment tests and live gate proof (Refs #107)
 
 * Added [issue-107-live-r12-endpoint-deployment-2026-11-25.md](research/issue-107-live-r12-endpoint-deployment-2026-11-25.md): three new race tests, SQLite and disposable SQL Server results, read-only live proof that all five assistants are denied without an approved release, per-criterion table (delivered-build acceptance unproven).
+
+## [2026-11-25] add | Issue 2320 slow briefing GET cause and busy-answer cache (Refs #2320)
+
+* Added [issue-2320-live-r8-2026-11-25.md](research/issue-2320-live-r8-2026-11-25.md): cold start and SQL resume ruled out, uncached busy fallback repeated the 2 s lock wait per GET, 10 s cache and test added, criteria 2 and 4 live proof pending deployment.

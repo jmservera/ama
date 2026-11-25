@@ -10,6 +10,7 @@ import logging
 import os
 import re
 import threading
+import time
 import uuid
 from copy import deepcopy
 from datetime import datetime
@@ -142,6 +143,7 @@ class Store(
         )
         self.version = 0
         self._briefings = {}
+        self._briefing_busy: dict = {}
         self._ranks = None
         self.data.setdefault("recommendations", [])
         self.as_of = self.data.setdefault(
@@ -1995,7 +1997,19 @@ class Store(
         "It is shown without being saved; refresh in a moment."
     )
 
+    BRIEFING_BUSY_TTL_S = 10
+
     def _briefing_unrecorded(self, key, hit, programme, candidates, top, tmpl):
+        out = self._briefing_unrecorded_answer(key, hit, programme, candidates, top, tmpl)
+        # Without this every GET in a busy period repeated the capped lock wait while holding store.lock.
+        now = time.monotonic()
+        with self.lock:
+            for k in [k for k, v in self._briefing_busy.items() if v[0] <= now]:
+                del self._briefing_busy[k]
+            self._briefing_busy[key] = (now + self.BRIEFING_BUSY_TTL_S, out)
+        return out
+
+    def _briefing_unrecorded_answer(self, key, hit, programme, candidates, top, tmpl):
         stale = hit or self._briefings.get(key)
         if stale:
             return dict(stale[1], reason=self.BRIEFING_BUSY, recorded=False)
@@ -2043,6 +2057,9 @@ class Store(
                 off,
             )
             hit = self._briefings.get(key)
+            busy = self._briefing_busy.get(key)
+            if busy and busy[0] > time.monotonic():
+                return busy[1]
             if (
                 hit
                 and hit[0] == self.version
@@ -2140,6 +2157,7 @@ class Store(
                 for c in top[:3]
             ]
         with self.lock:
+            self._briefing_busy.pop(key, None)
             if self.version - ver <= 1:  # only our own comparison record was saved meanwhile
                 for old in [k for k, v in self._briefings.items() if v[0] != self.version]:
                     del self._briefings[old]
