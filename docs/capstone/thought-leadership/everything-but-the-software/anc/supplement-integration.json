@@ -530,7 +530,7 @@
       "anc/measurement-provenance.tex": "e06a3569b423d9a1f36fdc7cadcbd3e8f5c3f296f48b0d0d4d9da0882926d240"
     },
     "source_sha256": {
-      "main.tex": "ce33c8552e95a28cb8cfcd266d3833063cf77f7dcf65ced18fcaa99358e34530",
+      "main.tex": "61d40101fa717afad3b6dd08ae5dce2d1ba2d519d11a185c3346e2d1245bb502",
       "anc/background.tex": "a15bff97007b799ee1165035cfa88a1f299ff1b268eb6bacb13a3dc305c3fce6",
       "anc/experiment-protocol.tex": "5f02bea0910f9c7b400edd8bd73e523fbc0512beb3eec55d3a9ff5eec7d4b6db",
       "anc/supplement-section.tex": "9e1c515228cd2d6b344c1b12fcf1484a4acb2e523d6461210ee66870c5d1d0f1",
@@ -544,7 +544,7 @@
       "anc/publication-evidence-2026-11-24.json": "bd478bcfb65405c46b18e89c52041228eecca2dbdce9a752338a76e8b2f5df83",
       "references.bib": "cf87525f66666ec0e41fe8a913aa847e4e7d071a42ebdc067a3fd5ecf3bf66ee"
     },
-    "delivery_sha256": "2c6a26db0cdc541797b29bf4f262b62016156716b8d06f7fff489176d48fdd63",
+    "delivery_sha256": "98b42ac3737e27f33d47626b623e5e84fa2444b512cb1cca5488c55bf873c2b8",
     "delivery_pages": 73,
     "supplement_start_page": 45,
     "source_register_start_page": 71,
@@ -558,14 +558,14 @@
       "experiment_candidate_evaluator_or_judge_execution": false
     },
     "arxiv_source_preparation": {
-      "filename": "everything-but-the-software-arxiv-source-2026-11-24.zip",
-      "sha256": "f2678aee886a0c02f1d47061d87568fa4334b181d302c7bb5c00ee0f0054412f",
+      "filename": "everything-but-the-software-arxiv.zip",
+      "sha256": "4cd3df27360794db9d2bc229a068d57146c408ea73f05fe91a0d506bf968b372",
+      "tar_gz_sha256": "6c10465049124c9f009d380e5aefd64251631d925ea04c80f31a9ab8bb8644b8",
       "files": 22,
       "tex_sources": 8,
       "png_figures": 11,
       "literal_prompts": 3,
-      "uncompressed_bytes": 7219690,
-      "validation": "Separate extracted tree compiles twice with shell escape disabled to 73 pages; extracted text matches delivered PDF on every page. Archive inputs match current source bytes.",
+      "validation": "Built with anc/package_arxiv.py (moving anc/ inputs to tex-inputs/ for arXiv reserved-directory rules) and compiled twice with shell escape disabled to 73 pages; microtype TS1 missing-character and hyperref lstlisting-bookmark log triggers removed.",
       "limit": "Compilation-only preparation archive. Ancillary evidence remains in the repository package. Public-release selection, approval, upload and arXiv-generated-PDF checks remain pending."
     },
     "deposit_release": {
