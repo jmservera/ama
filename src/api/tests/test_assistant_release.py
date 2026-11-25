@@ -1384,6 +1384,38 @@ class TaskReleaseRecord(Base):
         self.assertNotIn("recorded", self.store.briefing(user))
 
 
+    def test_briefing_caps_its_write_lock_wait_and_a_cached_read_takes_no_lock(self):
+        ai = self.legacy()
+        ai._chat = lambda *a, **k: "- Fact [[ZF-1: Stage: Contacting resident]]"
+        user = self.priority_user(self.store)
+        waits = []
+        real = self.store.write_wait
+
+        def spy(ms):
+            waits.append(ms)
+            return real(ms)
+
+        self.store.write_wait = spy
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_releases WHERE capability='legacy:briefing'")
+        out = self.store.briefing(user)
+        self.assertEqual(waits, [self.store.BRIEFING_WRITE_WAIT_MS])
+        self.assertLessEqual(self.store.BRIEFING_WRITE_WAIT_MS, 2000)
+        out = self.store.briefing(user)
+        self.assertIn((self.store.version, out), self.store._briefings.values())
+        waits.clear()
+        begins = []
+        self.store.db.set_trace_callback(
+            lambda sql: begins.append(sql) if sql.startswith("BEGIN IMMEDIATE") else None
+        )
+        try:
+            self.assertIs(self.store.briefing(user), out)
+        finally:
+            self.store.db.set_trace_callback(None)
+        self.assertEqual(begins, [], "a cached briefing GET must not take the write lock")
+        self.assertEqual(waits, [])
+
+
 class UnleasedRevocation:
     """A pending, never-claimed proposal is denied by release admission, not by a lease, on a reopened worker."""
 

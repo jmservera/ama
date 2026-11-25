@@ -56,6 +56,22 @@ class StartupLockRetryTests(unittest.TestCase):
         self.assertEqual(d.calls, 4)
         self.assertEqual(self.sleeps, [1.0, 2.0, 4.0])
 
+    def test_write_wait_caps_this_threads_lock_timeout_then_restores_it(self) -> None:
+        sent: list[str] = []
+        d = FakeDriver(0)
+        c = conn(d, 0)
+        with patch.object(d, "execute", lambda sql, args=(): sent.append(sql)):
+            with c.write_wait(2000):
+                c.execute("BEGIN IMMEDIATE")
+                t = threading.Thread(target=lambda: (c.execute("COMMIT"), c._begin()))
+                t.start()
+                t.join()
+            c.execute("BEGIN IMMEDIATE")
+        begins = [x for x in sent if x.startswith("BEGIN TRAN")]
+        self.assertIn("@LockTimeout = 2000", begins[0])
+        self.assertIn("@LockTimeout = 15000", begins[1])
+        self.assertIn("@LockTimeout = 15000", begins[2])
+
     def test_exhausted_retries_raise_the_lock_error(self) -> None:
         d = FakeDriver(99)
         c = conn(d, 2)

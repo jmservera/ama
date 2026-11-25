@@ -1,5 +1,6 @@
 """Case store: loading, views, actions, gates and the hash-chained audit log."""
 
+import contextlib
 import csv
 import errno
 import hashlib
@@ -1983,6 +1984,12 @@ class Store(
         reason = cached.get("reason")
         return bool(reason) and reason == self.release_denial("briefing")
 
+    BRIEFING_WRITE_WAIT_MS = 2000
+
+    def write_wait(self, ms):
+        """Cap the wait for the write lock in this thread; the SQLite store has no shared lock to wait for."""
+        return contextlib.nullcontext()
+
     BRIEFING_BUSY = (
         "The briefing could not be saved to the record just now because the record is busy. "
         "It is shown without being saved; refresh in a moment."
@@ -2077,30 +2084,31 @@ class Store(
             )
         sysmsg, prompt = ai_prompts.render("briefing", facts=facts)
         try:
-            r = ai_tasks.run_text_task(
-                self,
-                user,
-                "briefing",
-                top,
-                sysmsg,
-                prompt,
-                tmpl,
-                [
-                    x
-                    for c in top[:3]
-                    for x in [
-                        f"{c['id']}: Stage: {c['stage']}",
-                        f"{c['id']}: Days in stage: {c['days_in_stage']}",
-                    ]
-                ],
-                mode=mode,
-            )
-            self.audit(
-                user["email"],
-                "ai_run",
-                "-",
-                f"briefing source={r['source']} model={r['model']} verified={r['verified']}",
-            )
+            with self.write_wait(self.BRIEFING_WRITE_WAIT_MS):
+                r = ai_tasks.run_text_task(
+                    self,
+                    user,
+                    "briefing",
+                    top,
+                    sysmsg,
+                    prompt,
+                    tmpl,
+                    [
+                        x
+                        for c in top[:3]
+                        for x in [
+                            f"{c['id']}: Stage: {c['stage']}",
+                            f"{c['id']}: Days in stage: {c['days_in_stage']}",
+                        ]
+                    ],
+                    mode=mode,
+                )
+                self.audit(
+                    user["email"],
+                    "ai_run",
+                    "-",
+                    f"briefing source={r['source']} model={r['model']} verified={r['verified']}",
+                )
         except Exception as exc:
             from .mssqlstore import is_write_lock_busy
 
