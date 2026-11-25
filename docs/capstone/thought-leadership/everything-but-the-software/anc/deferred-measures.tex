@@ -1,8 +1,8 @@
 \subsection{Deferred intervention measures}\label{app:deferredmeasures}
 
-The study retains help and administrative records to determine eligibility
-and cost. It does not report intervention rates. The proposed measures
-below distinguish help supplied from help needed. HG-DAgger and
+Help and administrative records determine trajectory eligibility and cost,
+but the study does not report intervention rates. The proposed measures
+distinguish cycles receiving corrective help from cycles needing it. HG-DAgger and
 ThriftyDAgger provide precedents for measuring intervention in other domains;
 their findings do not establish effectiveness for coding agents
 ~\cite{kelly2019hgdagger,hoque2022thriftydagger}.
@@ -28,18 +28,33 @@ intervention-demand rate (IDR) is the fraction of cycles requiring that help:
 \end{equation}
 IDR counts cycles needing help, including requests that received none.
 A timeout alone does not establish such a request; zero attempts gives
-undefined rates. A future annotation protocol needs a locator for each
-event, cycle and phase, checks of annotation coverage and adjudication of
-unclear cases. Missing records leave the rate unknown. Routine launches, planned approvals and safety
-stops differ from corrective rescue. Low intervention must not reward
-silent failure or discourage necessary human judgement.
+undefined rates. A future annotation protocol would need to locate each event, cycle and
+phase, check coverage and adjudicate unclear cases. Missing records leave
+the rate unknown. Routine launches, planned approvals and safety stops are
+not corrective rescue. An intervention measure must retain that distinction
+so it does not reward silent failure or discourage necessary human judgement.
+
+The original-case history provides qualitative steering examples: requests
+for RPI tracking, migration, resource controls and functional checkpoints.
+Within the retained coordinator session, 1,198 rows span the selected case
+period. Of these, 1,066 user-message strings begin with the exact prefix
+\texttt{[Scheduled prompt \#}; the other 132 rows have not been exhaustively
+classified as manually authored corrective help. Repeated scheduled strings
+occur among these records. The case evidence index retains the session,
+date selection, turn locators and versioned launch prescriptions, together
+with adverse assistant summaries of unresolved readiness and checkpoint
+failures. Those summaries lack the underlying execution receipts.
+Attempted-cycle denominators and complete help annotations remain
+unavailable, so neither HIR nor IDR can be calculated. This case history is
+separate from the completed experiment's owner-attested unassisted
+trajectories.
 
 \subsection{Historical freeze provenance}\label{app:freezeprovenance}
 
 The reported case-tool snapshot is HVE Core \texttt{plugins-v3.3.106},
 snapshot \sourceref{R29}, generated from source \sourceref{R30}.
-These identifiers record the reported tool source. They leave its
-installation date and use in individual sessions unverified.
+These identifiers establish the reported tool source, but not its
+installation date or use in individual sessions.
 
 The historical v4 execution source, manifest-only revision, archive and
 runtime image are \sourceref{R31}--\sourceref{R34}, respectively.

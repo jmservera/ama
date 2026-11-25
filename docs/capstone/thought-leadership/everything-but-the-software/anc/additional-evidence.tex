@@ -1,17 +1,23 @@
 \subsection{Additional source qualifications}\label{app:additionalevidence}
 
-These qualifications apply to the literature discussed in
-Section~\ref{sec:background}. The original-source check on 14 November
-found that Laban et~al.'s arXiv v1 abstract and Section~6.1 report a 39\% relative
-performance drop, whereas that version's Figure~1 caption says 35\%.
-The main text uses the results passage's 39\%. The discrepancy within the
-source remains unresolved, and neither value estimates repository decay.
-Gloaguen et~al.'s Table~3 records the developer-versus-LLM comparison as
-$p=0.038$, despite percentage-formatted p-values in the surrounding prose.
-The manuscript uses the table value. Besker et~al.'s 43-developer/23\%
-claim has institutional-abstract support; the full original and the
-tool-generation qualifier in the Echoes of AI source remain subject to the
-access limits recorded in the ancillary source review.
+Retained literature claims reflect specific scope and formatting details in
+the inspected primary texts. Gloaguen et~al.'s Table~3 records the
+developer-versus-LLM comparison on CTXbench as $p=0.038$, alongside
+percentage-formatted p-values in the surrounding prose; the manuscript uses
+the table value. Borg et~al.'s two-phase study (151 participants, 95\%
+professional developers) was conducted in late 2024 with IDE and chat
+assistants predating autonomous coding agents: Phase~1 was observational,
+while Phase~2 randomised human evolution of Phase~1 solutions without AI
+assistance and found no significant differences in completion time or
+CodeHealth~\cite[Secs.~1, 2.2, 4]{borg2025echoes}. In the SEC's Knight
+Capital order (Exchange Act Release No.~34-70694, Paragraphs~1, 12--17) and
+companion press release 2013-222, a 2005 change moved cumulative-quantity
+tracking in discontinued Power Peg code without retesting it, and a July
+2012 deployment omitted one of eight SMARS servers, triggering millions of
+child orders, more than four million executions from 212 parent orders, and
+a loss exceeding USD~460 million~\cite{sec2013knight}. Non-essential
+citations that had only abstract, excerpt or unverified third-party caption
+access were removed rather than retained with unresolved gaps.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -31,7 +37,7 @@ Pan et al.~\cite[Sec.~5.1, Fig.~4]{pan2026swemaintain} &
 In the \texttt{parse\_crontab} episode, a local Python 3 change satisfies
 current tests but omits module-wide compatibility aliases later code uses. &
 An initially successful patch can leave a latent dependency failure.
-This complements, rather than repeats, the line-terminator example in the main text. \\
+This supplies a second mechanism alongside the main text's line-terminator example. \\
 Gloaguen et al.~\cite[Secs.~4.2--4.4]{gloaguen2026agentsmd} &
 File length does not explain success in their analysis, and generated
 context helps when other documentation is removed. &
@@ -46,19 +52,18 @@ an effect of retrieval; accessed, applied and sufficient guidance differ. \\
 \end{tabularx}
 \end{table}
 
-The provenance of merge-outcome studies also matters. Peralta et al.
-start with 9,799 human-reviewed agent PRs and manually inspect 717.
-Their 35.7\% clear-failure share among rejections and 15.4\% explicit
-reviewer-involvement share among merges describe that manual sample
+Merge-outcome studies measure different populations and outcomes.
+Peralta et al. started with 9,799 human-reviewed agent PRs and manually
+inspected 717. The 35.7\% clear-failure share among rejections and 15.4\%
+explicit reviewer-involvement share among merges describe that manual sample
 ~\cite{peralta2026merged}. Murphy-Hill et al. estimate roughly 24\% more merges among adopters in an
-observational rollout study~\cite{murphyhill2026agents}. That measures
-output; the delivered value needs separate assessment. AIDev contains
+observational rollout study~\cite{murphyhill2026agents}. Delivered value
+was outside that output measure. AIDev contains
 932,791 agent-authored PRs from five agents across 116,211 repositories
-~\cite{li2026aidev}. It provides a population for research without establishing
-how many user outcomes were accepted.
+~\cite{li2026aidev}. Its size does not establish how many user outcomes were accepted.
 
 Pavlenko et al.'s World Model offers an additional context-management
 design: preserve raw evidence, derive rebuildable views and retrieve compact,
 task-specific context with provenance and access controls
-~\cite{pavlenko2026factory}. That architecture is an alternative to relying
-on an expanding read path; its effect on the AMA case is untested.
+~\cite{pavlenko2026factory}. This offers an alternative to continually expanding the required read path.
+Its effect on the AMA case was not tested.

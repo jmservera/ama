@@ -1,10 +1,10 @@
 \subsection{Case rival-explanation register}\label{app:rivals}
 
-Section~\ref{sec:threats} discusses the main competing explanations.
-The first table lists explanations supported by case records; the second
-lists plausible alternatives that still need testing. Limited evidence
-leaves an explanation open. The link between the assessed release and the
-failed deployment also remains unverified (Section~\ref{sec:audittrail}).
+The case records support several competing explanations
+(Table~\ref{tab:rivals}). Other plausible alternatives lack discriminating
+evidence (Table~\ref{tab:rivalsadditional}). None is ruled out by missing
+records. In particular, the assessed release has not been linked to the
+failed deployment (Section~\ref{sec:audittrail}).
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -14,11 +14,11 @@ failed deployment also remains unverified (Section~\ref{sec:audittrail}).
 Explanation & Case support & Counter-evidence or limits & Treatment \\
 \midrule
 Migration decision & ADR 0006 (issue \#196) froze feature work in the MVP and
-prioritised a new layout. & Health and restart checks passed, not usability. &
+prioritised a new layout. & Health and restart checks passed; usability remained unverified. &
 Migration and coordination changed together; autonomy alone is not identified. \\
 Capstone rubric & Research and documentation are rewarded; full completeness
 marks coexist with blocked sign-in. & A working demonstrator is required;
-release/scope linkage is pending. & Possible incentive, not a measured effect. \\
+release/scope linkage is pending. & An incentive explanation remains a hypothesis. \\
 Owner overrides and priorities & Committed RPI records, full gates and delegated
 merging; PR \#445 required an exception. & The MVP used agents successfully;
 HVE Core defaults retain human stops. & Owner choices are part of the case. \\
@@ -29,7 +29,7 @@ a higher ceiling and reduced resources. & Merges continued without established
 deployed usability. & More budget is not proven to resolve delivery. \\
 Identity and sign-in setup & Missing registration/staff bindings; issue \#349
 distinguishes redirect from sign-in. & Those steps worked in the MVP. &
-Concrete configuration obstacle, not proof of code decay or lost knowledge. \\
+A configuration obstacle is documented; decay and knowledge loss remain unproven. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -67,12 +67,11 @@ analysis distinguishing inherited debt from introduced faults. \\
 
 \subsection{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
 
-These definitions specify how the paper uses each candidate mechanism.
-Their applicability to other agentic-development settings remains untested.
-Tables~\ref{tab:mechanisms} and \ref{tab:audittrail} report the case indicators.
-For each mechanism below, the experimental implication describes evidence
-that could distinguish it from competing explanations. The five-arm
-experiment does not test the mechanisms separately.
+Each candidate mechanism has a definition, counter-evidence and a proposed
+check against competing explanations. Tables~\ref{tab:mechanisms} and
+\ref{tab:audittrail} give the case indicators. The five-arm experiment did
+not isolate these mechanisms, and their applicability to other settings
+remains untested.
 
 \subsubsection{Specification inflation}
 
@@ -161,8 +160,8 @@ integrity. Gate duration and human review effort were not measured per PR. \\
 Rival explanations & Legitimate safety and privacy requirements, budget
 constraints, new deployment complexity and owner-selected risk tolerance. \\
 Experimental implication & Measure gate time and accepted outcomes under
-matched risk. The pilot's resource description concerns the package, not the effect of
-removing this repository's required gates. \\
+matched risk. The pilot measures resources for its treatment package;
+the effect of removing this repository's required gates remains untested. \\
 \bottomrule
 \end{tabularx}
 \par
@@ -178,7 +177,8 @@ Element & Audit \\
 \midrule
 Definition & Independent outcome-level feedback is insufficient to correct
 delivery decisions despite abundant artefact-level validation. The defining
-gap is between the evaluated proxy and intended outcome, not test count alone. \\
+gap concerns what the evaluated proxy reveals about the intended outcome;
+test counts alone leave that correspondence unknown. \\
 Counter-evidence & Human oversight continued; agents surfaced blockers;
 engineering checks provided real, though narrower, feedback. \\
 Rival explanations & Identity and service configuration, migration priority,
@@ -265,9 +265,9 @@ Display wrapping does not alter its text. Braces mark runner parameters.
 \FloatBarrier
 \subsection{Illustrative economics and sensitivity}\label{app:economics}
 
-This is the earlier assumed model discussed in
-Section~\ref{sec:costprojection}. Its parameters and scenarios are preserved
-for inspection; they were not fitted to the observed ten-feature costs.
+The earlier cost model assumes that consolidation reduces a growing
+implementation premium (Section~\ref{sec:costprojection}). Its parameters
+were not fitted to the ten-feature observations.
 
 Let $N\geq1$ be an integer number of feature cycles, $k$ the assumed average consolidation
 investment in AI credits per cycle, and $\delta\cdot(t-1)$ the assumed excess
@@ -282,10 +282,10 @@ the cumulative net difference is
 =\delta\frac{N(N-1)}{2}-kN.
 \label{eq:costprojection}
 \end{equation}
-The first term adds up the assumed extra implementation cost without
-consolidation. The second subtracts the consolidation investment.
-A positive difference means A costs more under these assumptions.
-No measured saving is implied.
+The first term sums the assumed extra implementation cost without
+consolidation; the second subtracts B's consolidation investment.
+A positive value means A costs more within this assumed model.
+Experimental savings would require measured, quality-matched costs.
 For $k>0$ and $\delta>0$, the first cycle count with $\Delta C(N)\geq0$ is
 $N_{\mathrm{BE}}=\lceil1+2k/\delta\rceil$; when $\delta=0$, the investment never pays back in
 this credit-only model. Actual cost differences may grow nonlinearly, and B can retain debt too.
@@ -295,8 +295,8 @@ it does not measure either arm's total debt.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-refactoring-economics.png}
-\caption{Assumed cost-of-inaction mechanism and break-even sensitivity, not
-pilot results or an empirical projection. A linearly increasing relative
+\caption{Assumed cost-of-inaction mechanism and break-even sensitivity.
+The figure uses illustrative parameters throughout. A linearly increasing relative
 implementation premium accumulates across feature boundaries; recurring
 consolidation has an explicit cost. Payback depends on $k/\delta$: a ratio of 5 breaks even at 11 cycles
 and a ratio of 100 at 201; $\delta=0$ gives no payback for $k>0$.
@@ -304,8 +304,8 @@ Parameters are invented for transparent sensitivity,
 not fitted to study data. No dollar conversion or human-work estimate is
 implied. Higher $\Delta C(N)$ favours B in the assumed model; a lower
 break-even cycle count means earlier recovery of the investment. Increasing
-$k/\delta$ delays that break-even, rather than demonstrating an observed
-cost or quality effect.}\label{fig:refactoringeconomics}
+$k/\delta$ delays that break-even within the assumed model.
+Observed cost and quality effects require empirical estimates.}\label{fig:refactoringeconomics}
 \end{figure}
 
 \begin{table}[!htbp]
@@ -330,11 +330,11 @@ Assumed premium increase $\delta$ & 10 cycles & 20 cycles & 40 cycles \\
 \FloatBarrier
 \subsection{Retained follow-up design candidates}\label{app:futuredesign}
 
-These settings preserve the earlier numerical proposal behind
-Section~\ref{sec:futureexperiment}. All task scales, thresholds, allocations
-and analysis choices below need a new design review, feasibility estimate,
-spending approval and prospective registration. The completed study remains
-unchanged. A longer task could still show stable retention.
+The numerical candidates behind Section~\ref{sec:futureexperiment} are
+retained here for a separate study. Their task scales, thresholds, allocations
+and analysis choices require design review, feasibility estimates, spending
+approval and prospective registration. They do not amend the completed
+experiment, and a longer task could still show stable retention.
 
 \paragraph{Longer trajectories and greater coupling.}
 In the assumed cost model, break-even depends on investment $k$ and the
@@ -380,7 +380,8 @@ acquired contracts by $P_{30}$ or per-cycle implementation-credit growth
 of $\delta\geq0.5$ credits per cycle for P1, a task-calibrated minimum
 useful B--D coverage gain $\Delta_*$ for P2, and cumulative net credits
 $\Delta C(N)>0$ at matched behavioural coverage for P3.
-These are proposed criteria, not accepted decision rules or estimates.
+These criteria await protocol review and approval; no estimates have been
+collected under them.
 A new protocol should justify its thresholds and align randomisation and
 variance estimation, considering $(\mathrm{model},\mathrm{replicate})$
 blocks, a block bootstrap or a mixed model as appropriate to the actual
@@ -388,8 +389,8 @@ allocation and dependence. Bounded transport retries, missing-data rules
 and the primary estimand must be settled before collection.
 
 \paragraph{Full RPI versus corrective components.}
-The author's additional hypothesis concerns a full research, plan,
-implement and review workflow compared with feature-only delivery.
+I also propose comparing the full research, plan, implement and review
+workflow with feature-only delivery.
 Testing the package would not by itself identify review's contribution.
 A component comparison must specify instructions, editing and test rights,
 handover, context, sessions and budgets, and record actual resource use.
@@ -409,5 +410,5 @@ The proposed combined step would be triggered when cyclomatic complexity
 exceeds 10, duplication reaches $3\%$, lint is nonzero, a feature session
 halts uncommitted, or periodically every three to five features. It would
 include C's semantic-invariant checklist and an audited test-assertion
-escape hatch. These commands and thresholds retain the report's proposal;
-the hybrid's efficacy, stopping behaviour and cost remain unmeasured.
+escape hatch. The commands and thresholds come from the report's proposal. The combined
+policy's efficacy, stopping behaviour and cost have not been measured.

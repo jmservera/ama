@@ -15437,3 +15437,37 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-24] add | Issue 2244 live run 15, held write lock reproduced and fixed (Refs #2244)
 
 * Added [issue-2244-live-r15-2026-11-24.md](research/issue-2244-live-r15-2026-11-24.md) and its assets: throwaway database copy and jobs (deleted) showed the derived-column migration still took the write lock at every start-up; a read-only fast path was added in `src/core`, with a per-criterion table (C5 unproven).
+## [2026-11-24] update | Scientific author-voice revision of Everything but the Software
+
+* Reviewed all 70 active paper sections against the completed experiment and
+  the owner's writing samples. Rewrote the abstract, opening and interpretive
+  prose for a scientific audience; preserved numerical evidence, equations,
+  prompts and source records. The [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#scientific-author-voice-revision-24-november)
+  distinguishes the editorial work from unresolved scientific and publication
+  requirements.
+
+## [2026-11-24] update | Exploratory paper publication disposition and historical coordinator recovery
+
+* Revised [Everything but the Software](../capstone/thought-leadership/everything-but-the-software/README.md#publication-revision-24-november)
+  against the completed public experiment, preserving original outcomes,
+  equations, thresholds, intervals, prompts and historical records. Added
+  retention, CR1-prerequisite and held-billing reconciliation, the realized
+  control ceiling and bounded historical steering/source locators.
+* The [24-item checklist and validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#publication-checklist)
+  separate applied corrections and future-study limits from human clearance,
+  release and submission actions. Rebuilt one 74-page PDF and verified a
+  22-input compilation archive. Of 75 authoring checks, 74 pass; native
+  regeneration of unchanged diagrams reports five label overflows. No new
+  experiment, judging batch, deployment, push or external submission ran.
+
+## [2026-11-25] update | Deposit release and full-text citation cleanup for Everything but the Software
+
+* Published sanitized study deposit release `results-exploratory-s1-v1` on
+  `jmservera/ama-thought-mve` at `d097a10b` (216 files with SHA-256 manifest,
+  excluding `.copilot-tracking/` and `suite.json:sec.endpointdlp`), updated the
+  paper subtitle to *An Exploratory Case Study and Experiment*, and removed the
+  internal clearance and deposit `TODO` comments from `main.tex`.
+* Verified full texts of SEC Order 34-70694, SEC Press Release 2013-222, Borg
+  et al. (*Echoes of AI*, 2026) and ten open web/standards sources; removed 14
+  non-essential citations with incomplete access from both bibliography files
+  (80 cited entries, 73-page [rebuilt PDF](../capstone/thought-leadership/everything-but-the-software/main.pdf)).

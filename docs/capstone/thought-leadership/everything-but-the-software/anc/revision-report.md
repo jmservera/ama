@@ -1,8 +1,180 @@
 ---
 title: Everything but the Software - Revision Record
 description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
-ms.date: 2026-11-16
+ms.date: 2026-11-24
 ---
+
+## Publication revision and disposition 24 November
+
+The owner authorized repairs against the completed experiment and excluded
+another experimental round. A deeper study will address the remaining
+measurement and identification questions. The revision preserves original
+scores, thresholds, intervals, literal prompts and prior adverse findings.
+New tables are post-collection descriptions of existing public exports.
+
+Classification: focused document/package work with directly coupled
+authoring guards and data bindings. No application, experimental scoring,
+execution, dependency manifest, infrastructure, deployment, security control
+or repository gate semantics changed. The owner selected the current branch
+despite its separate presentation PR. Unrelated agent-file work was left
+untouched.
+
+### Publication checklist
+
+| No. | Review item | Applied disposition | Remaining action or limit |
+| --- | --- | --- | --- |
+| 1 | Dependence and uncertainty | Preserve the original estimator and intervals; state their independence assumptions in methods, abstract and conclusion. | Service/epoch dependence is unmeasured. Intervals support conditional exploratory interpretation. |
+| 2 | Amendments and outcome access | Retain sixteen source epochs and distinguish decision/commit dates from collection and inspection times. | Complete outcome-access chronology remains unavailable in the public final-study exports. |
+| 3 | Ten-point threshold and ceiling | Add the realized 96.9629% D mean and 3.0371-point maximum gain against those controls. | Original target remains unmet; a future outcome/target pair needs calibration before collection. |
+| 4 | PF1 retained F/P reporting | Reconcile all 6,300 rows: complete risk and observation flags, 630 empty-risk rows, one persistent episode. | Rich observed-subset reporting for future incomplete histories remains deferred. |
+| 5 | Rollback and test protection | Explain that rejected increments were reset and accepted tests protected. | Retained loss cannot describe every failed edit or an unchecked maintenance policy. |
+| 6 | PF2 CR1 prerequisites and graded outcomes | Add all fifteen F9/F10 prerequisite cross-tabulations from existing exports. | Strata are post-treatment; complete graded new-contract/prior-pass decomposition remains deferred. |
+| 7 | Two CR1 test errors | Preserve unknown status and allocation bounds. | Existing summary exports do not settle the causes; no rerun is used. |
+| 8 | F8/F9 immutable-test mechanism | Keep the source report's inspection and identify interaction with the harness's accepted-file policy. | No separately randomized mechanism or general model-ranking claim. |
+| 9 | PF3 cost completeness | Tabulate held attempts by all fifteen model/arm cells and retain settled-subset denominators. | 55 charges remain held. All-allocation, quality-matched efficiency and long-horizon payback remain unidentified. |
+| 10 | O1-O5 case evidence | Recover source-located steering, repeated scheduling and adverse assistant reports; preserve participant-observer status and null release/journey pairs. | Complete HIR/IDR annotations, denominators and underlying outcome receipts remain unavailable. Case mechanisms remain hypotheses. |
+| 11 | Historical runtime identifiers | Recover the committed Sonnet worker selector, tmux/RPI prescriptions and later script chronology. | Prescribed selectors do not verify execution. Historical CLI, reviewer and backend identities remain unavailable in the inspected records. |
+| 12 | Consequential citations | Inspect the full SEC Order 34-70694 (Paragraphs 1, 12-17), SEC release 2013-222 and Borg et al. (2026) PDFs supplied by the owner; inspect full text of retained open web articles; remove 14 non-essential citations that had only abstract, excerpt, HTTP 403 or unverified third-party upload access. | Classic print books and papers cited for conceptual background were not re-audited page by page; no independent replication of cited studies' raw data is claimed. |
+| 13 | Metric fidelity and stopping | Keep structural measures as treatment-target proxies and retain the Ruff suppression caveat and unmet lint target. | No new suppression audit or inferred reason for session termination. |
+| 14 | Judging completeness | Keep the frozen 313/315 study frame and four unjudged endpoint packets. | No new judging; its dependence and missing-scenario limits remain. |
+| 15 | Human calibration | Retain the incomplete, AI-assisted author spot-check and context denominators. | Independent reliability is unestablished; a later instrument needs separate calibration. |
+| 16 | Abstract and conclusions | Lead with completed exploratory findings and measurement lessons; add ceiling, protection and conditional-inference limits. | No causal, broad model-population, hybrid-efficacy or payback claim. |
+| 17 | Stale source binding | Add a new publication revision binding and preserve previous source/PDF records. | The final binding applies only to its named files. |
+| 18 | Authoring checks | Narrow the case-voice guard, align wording checks and add a table/snapshot consistency check. 74 of 75 authoring checks pass. | Native diagram rendering rejects five arm feature labels for text overflow on this host. Existing committed figure/source bindings pass; regeneration remains unresolved. |
+| 19 | Source/PDF consistency | Rebuild one PDF with the additive Supplement from the revised source. | Final pagination, digest and actual checks are recorded with delivery. Earlier page counts remain date-scoped. |
+| 20 | Deposit manifest and registration | Publish GitHub release `results-exploratory-s1-v1` at `d097a10b` with a 216-file sanitized archive, SHA-256 sidecar and manifest (excluding `.copilot-tracking/` and `suite.json:sec.endpointdlp`); preserve `v4`/`v6`/`v7` and OSF `ywsrv`/`xcpt4` without creating a post-collection OSF deposit. | OSF registration metadata remains owner-confirmed rather than API-verified (HTTP 401); raw workspaces and private mappings remain off-Git. |
+| 21 | Human clearance and approval | Record manager approval, the 14 November AICC receipt, the owner-reported manager confirmation of a 14-day no-objection window maturing 29 November 2026, and both authors' sign-off (Juan Manuel Servera Bondroit and owner-reported explicit sign-off from Isabel Cabezas Martin). | Written CELA policy was not independently inspected, 29 November 2026 has not yet elapsed, and the authors must confirm the 14 November submission and final sign-off cover this exact 24 November draft, subtitle and recovered excerpts. |
+| 22 | arXiv source and metadata | Add canonical policy links and instructions for the 22 required compilation inputs, metadata, licensing and generated-PDF inspection. | Actual submission, endorsement if required, license choice and arXiv compilation remain pending. |
+| 23 | Completed-research framing | Foreground the executed 315-trajectory study and its measurement contribution; update the subtitle to *An Exploratory Case Study and Experiment* per owner selection. | Confirm coauthor sign-off covers the updated subtitle on the exact submission PDF. |
+| 24 | Independent final review | Separate local authoring checks from scientific assessment and approval. | Independent human scientific/statistical review and applicable exact-head/hosted review remain outstanding. |
+
+### Evidence checked for the new reporting
+
+The immutable experiment source remains
+`d097a10b090baefadf995ecd910eb96c324f0234`. The four inspected exports
+are `results/pilot-estimation/runs.csv`, `retention.csv`, `episodes.csv`
+and `attempts.csv`. Their full hashes, derivation rules and cell counts are
+in the [publication evidence snapshot](./publication-evidence-2026-11-24.json).
+The original chart-input snapshot remains byte-for-byte unchanged.
+An offline consistency check compared every new cell with those CSVs:
+all four hashes, the retention counts, thirty prerequisite subgroups,
+fifteen held-attempt cells and the realized-control ceiling matched.
+This operation tabulated retained public records without executing
+candidates, evaluators or judges.
+
+The original seven equations and published uncertainty calculations are
+unchanged. The publication revision also replaces staged contrast
+sentences with direct statements where their scientific meaning can be
+preserved. Qualifications concerning missingness, causal scope and approval
+remain. The installed prose detector was unavailable; no automated style
+score is claimed.
+
+The citation verification pass on 25 November inspected the owner-supplied full
+texts of SEC Exchange Act Release No. 34-70694 (18 pages, Paragraphs 1 and
+12-17), SEC Press Release 2013-222, and Borg et al.'s *Echoes of AI* (78 pages,
+Abstract and Sections 1, 2.2 and 4), confirming the 2005 Power Peg code move,
+the July 2012 deployment omitted on one of eight SMARS servers, more than four
+million executions from 212 customer orders, the loss exceeding USD 460
+million, and Borg et al.'s late-2024 two-phase design (observational Phase 1,
+randomized Phase 2 with no significant maintainability difference). Ten open
+web/standards references were also inspected in full text, while 14
+non-essential references that had only abstract, brief-excerpt, HTTP 403 or
+third-party caption access (`beamnxw2026memorytalk`, `philia2026ngmoroney`,
+`orosz2025beck`, `martin2026productengineers`, `besker2018cripples`,
+`bird2014extrinsic`, `microsoft2026autosaddler`, `openai2026harness`,
+`laban2025lost`, `beck2025augmented`, `beck2026mathematicians`, `beck2018tcr`,
+`eldridge2016pilot`, and `gamma1995patterns`) were removed from both
+bibliography files.
+
+### Historical coordinator evidence
+
+The owner authorized read-only historical VM investigation. The
+[case evidence index](./case-evidence-matrix.json) now retains a bounded
+recovery record with exact session/turn, date and committed-source locators.
+The article and deferred-measures Supplement summarize it without publishing
+host details, raw transcripts or private configuration.
+
+The coordinator selection contains 1,198 retained rows from 15 to 24 October:
+1,066 start with `[Scheduled prompt #` and 132 do not. The latter have not
+been exhaustively classified as manually authored corrective help. The
+record supports examples of migration and product steering, resource/gate
+decisions and requests for functional/refactoring checkpoints. It also
+preserves assistant reports of unresolved sign-in/readiness and checkpoint
+failures. Underlying execution receipts and paired release-linked user
+observations were not recovered. These row counts supply no HIR/IDR rate.
+
+Committed instructions prescribe tmux/worktree issue sessions, qualified
+RPI workers and recurring checks. The 21 October instruction version selects
+`claude-sonnet-5.5` for workers and continuations, leaving the coordinator
+Automatic and reviewer selection unchanged. Actual launches, historical
+CLI/reviewer identities and backend builds remain unverified. The
+versioned coordinator shell/Python scripts first appear on 22 November in
+the inspected history; attributing them to the October case would be
+unsupported.
+
+The inspected experiment-kit checkout on that VM is an older copy without
+the final pilot-estimation state at its expected location. It cannot settle
+the completed study's two CR1 unknowns or 55 billing holds. Historical case
+steering and the separate experiment's owner attestation retain their own
+evidence boundaries. The investigation used stored records and Git sources;
+no live resumed agent, model call, deployment or new experimental round ran.
+
+### Publication validation and delivery
+
+The rebuilt [paper](../main.pdf) has 73 pages, with its additive Supplement
+starting on page 45 and the source register on page 71.
+`publication_readiness_revision` in the
+[integration record](./supplement-integration.json) binds all eight TeX
+sources, the case/publication evidence snapshots, reusable bibliography and
+the delivered PDF. Previous revisions and their original hashes remain
+unchanged. The active Supplement body hashes were refreshed separately.
+
+Checks performed:
+
+* The structural checker passes: approximately 16,520 main-body words,
+  1,802 abstract source characters, 80 cited/embedded entries and 91
+  reusable bibliography entries. The optional `0d5dcb02` historical
+  comparison remains unavailable.
+* Two-pass PDFLaTeX with shell escape disabled succeeds. The final compiler
+  log contains no warnings, box warnings or unresolved references.
+  All 73 pages contain content, with no words outside page bounds or
+  unresolved-reference markers.
+* The complete package authoring suite runs 75 checks: 74 pass. All source,
+  literal-prompt, active-Supplement, empirical-chart and committed-diagram
+  bindings pass. The added reporting check preserves unknown CR1
+  denominators, undefined empty-stratum rates and the held-attempt cells.
+* The remaining failure is the unmodified native diagram exporter:
+  five `arm-*-feature-label` elements exceed their containers during
+  regeneration. The original missing-browser failure was resolved for
+  validation with the official Chromium 141.0.7390.37 archive, Playwright
+  build 1194, in a task-local cache. The automatic installer stalled after
+  download and was stopped; the downloaded archive passed CRC verification
+  and was extracted locally. This exposed the rendering failure. No
+  diagram source, committed export, lockfile or exporter was changed.
+* The clean compilation archive contains exactly eight TeX sources,
+  eleven PNGs and three literal prompts (22 files, 7,219,690 uncompressed
+  bytes). It excludes generated PDFs and private/raw histories. An isolated
+  extraction compiles twice to 73 pages; extracted text matches the
+  delivered PDF on every page. The integration record retains its digest.
+  Ancillary evidence remains in the repository source package.
+* The original chart-input snapshot, empirical figures and literal prompts
+  remain byte-for-byte unchanged. No candidate, evaluator or judge was
+  executed for these authoring checks.
+
+Work status: the scoped scientific/prose revision, sanitized GitHub deposit
+release (`results-exploratory-s1-v1`) and PDF delivery are complete; native
+diagram regeneration remains unresolved. The remaining study gaps are
+disclosed limits and inputs to a deeper study. Both authors' sign-off is
+owner-reported; before upload, confirm that sign-off and the 14 November AICC
+submission cover this exact 24 November draft, updated subtitle and newly
+recovered excerpts, wait through the owner-reported 29 November 2026 CELA
+no-objection date, and complete arXiv metadata, license and generated-PDF
+inspection. Independent scientific review is recommended; local assisted
+assessment supplies no human peer review or certification.
+Applicable repository exact-head review and hosted checks have not run for
+these uncommitted changes. Nothing was committed, pushed or submitted.
+
+### Preserved earlier revision summaries
 
 The 16 November source-only revision applies a plain-language pass to the
 article and every active TeX input. Its scope and validation are recorded
@@ -77,6 +249,63 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Scientific author-voice revision 24 November
+
+The owner requested a full review and rewrite for a scientific audience,
+using the completed experiment and the voice in the supplied blog examples.
+All 70 active sections were read, including the seven TeX inputs and back
+matter. The two inactive historical inputs were excluded.
+
+The three English blog posts were retrieved as style samples only. Their
+practical motivation, direct explanations and candid trade-offs informed the
+rewrite; their dated technical guidance supplied no scientific evidence.
+The pinned experiment report at `d097a10b` was retrieved through GitHub REST,
+and its SHA-256 matched `e4680e66ba6791c7a23bd484954767bc7d580f881db939cf4fb113d28af10f15`.
+No private dataset or new model outcome was collected.
+
+The abstract and opening were rewritten. Interpretive passages distinguish
+acquisition, retained behaviour and extension failure, with the case account
+in first person and experimental findings stated descriptively. The summary
+table no longer labels the across-arm coverage range as Arm A alone,
+claims no consistent CR1 saving and does not treat structural cleanup as
+validation of an untested hybrid. Stable short-horizon retention remains
+evidence against the expected decay pattern under these conditions.
+
+Classification: focused editorial work with a directly coupled source-binding
+test update. It changes no experimental data, scoring, execution, dependencies
+of the application or publication authority. `scientific_voice_revision`
+records the new sources and prior active-content digests; every older revision
+binding remains unchanged.
+
+Preservation checks compare the pre-edit source with the revision: all seven
+equations, numerical values in 40 table environments, citation keys, labels,
+three literal prompt references, the embedded bibliography and all 61 source
+register rows are unchanged. Two CR1 outcomes, 55 billing holds, the
+313-trajectory judging snapshot, dependence assumptions and clearance/source
+TODOs remain unresolved. The 47-of-more-than-180 issue count in the opening
+is attributed to the participant's account, not independently verified.
+
+The installed humanizer and scientific-critical-thinking skills guided the
+edit; the existing Scientific Agent Skills citation remains. The prose
+detector was unavailable in the installed plugin/skill locations, so no
+automated prose score is claimed. This is an assisted editorial review,
+not independent scientific review or arXiv readiness certification.
+
+Structural checks pass: the approximate body count is 16,152 words and the
+abstract has 1,880 source characters, below the 1,920-character limit.
+Of 74 authoring tests, 73 pass. The native figure-export test fails because
+the expected Playwright Chromium headless shell is absent. No figure source
+or asset changed; fresh exporter validation remains unperformed.
+
+Two pdfLaTeX passes produced a separate 70-page PDF without unresolved
+references or box warnings. All pages were checked for blank content and
+out-of-page words; pages 1, 2, 22, 35, 45 and 68 were visually inspected.
+The Supplement starts on page 45 and the source register on page 68.
+The validation PDF SHA-256 is
+`358554c5de5377fee258e44df10574c1393d92c59e2bdf595b2aaf2db8d2cfd1`.
+The repository's existing PDF is unchanged. No new hosted CI or independent
+exact-head review has run for this uncommitted revision.
 
 ## Copy Review Recommendations 16 November
 

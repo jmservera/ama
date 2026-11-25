@@ -1,10 +1,327 @@
 ---
-title: Everything but the Software - source package (draft v23)
-description: Findings-led narrative, direct prose revision and future-study learning with preserved evidence in one additive Supplement
-ms.date: 2026-11-16
+title: Everything but the Software - source package
+description: Completed exploratory findings, measurement lessons and publication checklist with preserved historical evidence
+ms.date: 2026-11-25
 ---
 
-Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
+Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and Experiment.*
+
+## Publication revision 24 November
+
+The owner selected the completed experiment as the evidence base for this
+paper and deferred further experimental rounds to a deeper study. The
+revision preserves the original scores, thresholds, intervals, source pins
+and unknowns. It adds descriptive reporting from the existing public exports:
+
+* The realized D controls average 96.9629% final coverage. Even perfect B
+  outcomes could improve on them by only 3.0371 percentage points. The
+  original ten-point target remains unmet.
+* All 6,300 retained F/P rows have complete observation and risk-history
+  flags. Seven failing contract-checkpoints describe one persistent
+  Gemini E-07 episode; rejected edits fall outside this endpoint.
+* The CR1 prerequisite table separates repositories with both F9 and F10
+  complete from those with a different preservation burden. Its strata
+  describe post-treatment states. The two GPT outcomes remain unknown.
+* The 55 held attempt charges vary across models and arms. Fully billed
+  subset means retain their denominators; all-allocation payback remains
+  unresolved.
+
+The article now treats its intervals as conditional exploratory summaries.
+The source chronology and exposure record cannot establish independent
+provider conditions or outcome-blind amendments. The earlier 313/315
+judging frame and incomplete AI-assisted calibration remain explicit.
+No new candidate, evaluator or judge outcome was collected.
+
+The [publication checklist](./anc/revision-report.md#publication-revision-and-disposition-24-november)
+tracks all 24 review items, including final author and employer approvals.
+Earlier dated sections below preserve their own validation results and
+delivery scope.
+
+The [historical coordinator recovery](./anc/revision-report.md#historical-coordinator-evidence)
+adds source-located steering and launch prescriptions. Scheduled messages
+dominate the retained history; its row counts cannot supply intervention
+rates. Actual historical runtime identities and paired release/journey
+observations remain unavailable.
+
+The revised 73-page PDF includes the Supplement from page 45. Two-pass
+PDFLaTeX compilation and all-page geometry/reference checks pass. Of 75
+authoring checks, 74 pass; the unchanged native diagram exporter reaches
+rendering but rejects five arm feature labels for text overflow on this
+host. Committed diagram/export bindings pass. The
+[validation record](./anc/revision-report.md#publication-validation-and-delivery)
+separates that unresolved regeneration check from the successful PDF build.
+
+### arXiv preparation
+
+The following official guidance was checked on 24 November 2026:
+[submission guidelines](https://info.arxiv.org/help/submit/index.html),
+[TeX submissions](https://info.arxiv.org/help/submit_tex.html),
+[moderation and generative-AI policy](https://info.arxiv.org/help/moderation/index.html)
+and [content types](https://info.arxiv.org/help/policies/content-types.html).
+The returned TeX and submission pages were truncated after the relevant
+format/preparation sections; those sections and the full relevant content-type
+and AI-policy passages were inspected. Initial guessed policy endpoints
+returned 404 and were replaced with the canonical links above.
+
+The [31 October 2025 CS notice](https://blog.arxiv.org/2025/10/31/attention-authors-updated-practice-for-review-articles-and-position-papers-in-arxiv-cs-category/comment-page-1/)
+requires successful prior peer review for review/position papers; the notice
+was corroborated through indexed official text in this pass. This manuscript
+reports original exploratory empirical work. Its completed findings should
+remain clear to readers and moderators. Do not recategorize it to bypass
+a content-type restriction.
+
+Prepare the submission from the final approved [article source](./main.tex),
+its seven active TeX inputs, three literal prompt inputs and eleven referenced
+PNG figures. Compile from the bundle root with PDFLaTeX and shell escape
+disabled. The embedded bibliography supplies the references; this build
+does not invoke BibTeX. Exclude generated PDFs, logs, auxiliary files,
+review correspondence, raw workspaces and private mappings. Preserve those
+records in their existing evidence locations.
+
+A compilation-only archive of these 22 inputs was prepared and compiled
+after extraction into a separate directory. Its 73-page output matches the
+delivered PDF's extracted text on every page. The
+[publication binding](./anc/supplement-integration.json) records the archive
+digest and scope. Ancillary evidence stays in this repository package.
+This preparation is separate from selecting approved public-release files.
+
+Use the approved title and author spellings from the article, and copy its
+final abstract into the metadata field. The current abstract is 1,802 source
+characters, below arXiv's 1,920-character limit; check the actual metadata
+field again at submission. Select a subject category only after checking
+its scope (cs.SE is a candidate), choose the license with both authors,
+and obtain any required endorsement. Set the real submission date at that
+point. Inspect the PDF generated by arXiv before completing submission.
+Local compilation does not exercise that service.
+
+Employer clearance (maturing 29 November 2026 if CELA sends no further notice
+under the manager-confirmed 14-day review window, provided the 14 November
+submission covers this 24 November draft) and final confirmation that both
+authors' sign-off covers the exact uploaded bytes remain human actions. The
+sanitized study deposit is published on `jmservera/ama-thought-mve` as release
+`results-exploratory-s1-v1`, while the pre-collection OSF registrations remain
+linked to that repository without a post-collection OSF deposit. The existing
+AI disclosure records substantial assistance and author responsibility.
+Nothing in this revision authorizes arXiv upload or submission.
+
+### Local packaging and GitHub Release
+
+Run [anc/package_arxiv.py](./anc/package_arxiv.py) locally with Python 3.11+
+and PDFLaTeX, including the TeX Live packages imported by
+[main.tex](./main.tex). It uses the Python standard library and adds no
+GitHub Action. From the repository root:
+
+```bash
+python3 docs/capstone/thought-leadership/everything-but-the-software/anc/package_arxiv.py \
+  --output /tmp/ama-arxiv-preview-2026-11-25
+```
+
+Choose a new output directory for each run. The script follows literal
+root-relative `\input`, `\include`, `\includegraphics` and `\lstinputlisting`
+references and rejects missing or unsafe paths.
+Inside the submission only, it moves compilation inputs from `anc/` to
+`tex-inputs/` and rewrites their literal TeX file arguments. Repository
+sources, prompt contents and images stay unchanged. arXiv
+[reserves root-level `anc/` for ancillary files](https://info.arxiv.org/help/ancillary_files.html)
+and does not accept TeX inputs there; local PDFLaTeX alone does not detect
+that restriction.
+It writes `everything-but-the-software-arxiv.zip`, the equivalent `.tar.gz`,
+and `SHA256SUMS`. Both archives open directly to `main.tex` and its inputs,
+without an enclosing directory. The script extracts the ZIP and compiles
+it twice with shell escape disabled; compilation failures and unresolved
+references stop packaging.
+
+The local `main.pdf` is a fresh preview, not a submission or release asset.
+The archives exclude existing PDFs, logs, auxiliary files, unused images,
+editable diagrams, reviews, scripts and unrelated ancillary evidence. The
+three prompt text files remain because the article typesets them. The
+bibliography is embedded in the TeX source, so `references.bib` is not needed.
+This tool supports this paper's literal file references, not arbitrary
+TeX macro-generated dependencies or a general bibliography build pipeline.
+
+After both authors approve the exact paper, employer clearance is satisfied
+and the applicable repository publication gates pass, use authenticated
+GitHub CLI (`gh auth login`) and a clean, committed checkout to publish:
+
+```bash
+python3 docs/capstone/thought-leadership/everything-but-the-software/anc/package_arxiv.py \
+  --output "$HOME/arxiv-packages/paper-source-v1" \
+  --publish --tag paper-source-v1
+```
+
+Keep publication output outside the checkout so it does not dirty the
+worktree. `--publish` and `--tag` are required together. The command creates
+a new tag at the exact local HEAD in `jmservera/ama`, whose commit must
+already exist there, and uploads both archives and their checksum file to
+a draft release before publishing it. It does not mark the paper as the
+repository's latest software release. Every packaged input must match its
+committed blob; the script rechecks the revision after compilation. It
+never pushes a branch or overwrites an existing tag or release. The Git
+checks compare the original inputs; archive-only path rewrites happen
+after that source check.
+
+If tag creation or upload fails, the command exits nonzero. Inspect the
+repository's tags and releases before retrying: a new tag or draft can
+remain. Recovery is manual; the script does not delete remote records.
+An interrupted publish request may have completed remotely, so inspect
+the release rather than assuming it is still a draft.
+
+Upload either source archive, not both, through arXiv's submission page.
+If replacing an earlier bundle containing `anc/`, use arXiv's Delete All
+control on the upload page first, then upload the corrected archive. Its
+compilation inputs should appear under `tex-inputs/`, not as ancillary files.
+Select PDFLaTeX and `main.tex`, then inspect arXiv's generated PDF.
+Packaging and a GitHub Release do not submit the article, grant clearance
+or establish arXiv acceptance. The format guidance above was rechecked on
+25 November 2026 against the official submission and TeX preparation pages.
+
+Run the packaging regressions without network access:
+
+```bash
+python3 -m unittest discover \
+  -s docs/capstone/thought-leadership/everything-but-the-software/anc \
+  -p test_package_arxiv.py -v
+```
+
+## Scientific author-voice revision 24 November
+
+The revision reviews all 70 active sections across the article and seven
+TeX inputs against the completed experiment report and the owner's three
+English blog samples. It rewrites the abstract and opening, removes repeated
+explanations and states the results without treating the original decay
+conjecture as confirmed. First-person case observations remain distinct from
+the experiment's methods and findings.
+
+The numerical table values, seven equations, literal prompts, bibliography
+and source identifiers are unchanged. The prediction summary now attributes
+the Sonnet/Gemini coverage range to all arms, qualifies CR1 cost savings as
+inconsistent and separates structural treatment fidelity from the untested
+hybrid proposal. The draft date is 24 November; it is not a submission date.
+
+The [revision record](./anc/revision-report.md#scientific-author-voice-revision-24-november)
+records the evidence check and validation. `scientific_voice_revision` binds
+the current sources without rewriting earlier source/PDF records. The existing
+PDF remains unchanged; a separate build validates the revised source.
+Final author approval, publication clearance and arXiv submission remain
+outstanding.
+
+## Publication revision 24 November
+
+The owner selected the completed experiment as the evidence base for this
+paper and deferred further experimental rounds to a deeper study. The
+revision preserves the original scores, thresholds, intervals, source pins
+and unknowns. It adds descriptive reporting from the existing public exports:
+
+* The realized D controls average 96.9629% final coverage. Even perfect B
+  outcomes could improve on them by only 3.0371 percentage points. The
+  original ten-point target remains unmet.
+* All 6,300 retained F/P rows have complete observation and risk-history
+  flags. Seven failing contract-checkpoints describe one persistent
+  Gemini E-07 episode; rejected edits fall outside this endpoint.
+* The CR1 prerequisite table separates repositories with both F9 and F10
+  complete from those with a different preservation burden. Its strata
+  describe post-treatment states. The two GPT outcomes remain unknown.
+* The 55 held attempt charges vary across models and arms. Fully billed
+  subset means retain their denominators; all-allocation payback remains
+  unresolved.
+
+The article now treats its intervals as conditional exploratory summaries.
+The source chronology and exposure record cannot establish independent
+provider conditions or outcome-blind amendments. The earlier 313/315
+judging frame and incomplete AI-assisted calibration remain explicit.
+No new candidate, evaluator or judge outcome was collected.
+
+The [publication checklist](./anc/revision-report.md#publication-revision-and-disposition-24-november)
+tracks all 24 review items, including final author and employer approvals.
+Earlier dated sections below preserve their own validation results and
+delivery scope.
+
+The [historical coordinator recovery](./anc/revision-report.md#historical-coordinator-evidence)
+adds source-located steering and launch prescriptions. Scheduled messages
+dominate the retained history; its row counts cannot supply intervention
+rates. Actual historical runtime identities and paired release/journey
+observations remain unavailable.
+
+The revised 74-page PDF includes the Supplement from page 46. Two-pass
+PDFLaTeX compilation and all-page geometry/reference checks pass. Of 75
+authoring checks, 74 pass; the unchanged native diagram exporter reaches
+rendering but rejects five arm feature labels for text overflow on this
+host. Committed diagram/export bindings pass. The
+[validation record](./anc/revision-report.md#publication-validation-and-delivery)
+separates that unresolved regeneration check from the successful PDF build.
+
+### arXiv preparation
+
+The following official guidance was checked on 24 November 2026:
+[submission guidelines](https://info.arxiv.org/help/submit/index.html),
+[TeX submissions](https://info.arxiv.org/help/submit_tex.html),
+[moderation and generative-AI policy](https://info.arxiv.org/help/moderation/index.html)
+and [content types](https://info.arxiv.org/help/policies/content-types.html).
+The returned TeX and submission pages were truncated after the relevant
+format/preparation sections; those sections and the full relevant content-type
+and AI-policy passages were inspected. Initial guessed policy endpoints
+returned 404 and were replaced with the canonical links above.
+
+The [31 October 2025 CS notice](https://blog.arxiv.org/2025/10/31/attention-authors-updated-practice-for-review-articles-and-position-papers-in-arxiv-cs-category/comment-page-1/)
+requires successful prior peer review for review/position papers; the notice
+was corroborated through indexed official text in this pass. This manuscript
+reports original exploratory empirical work. Its completed findings should
+remain clear to readers and moderators. Do not recategorize it to bypass
+a content-type restriction.
+
+Prepare the submission from the final approved [article source](./main.tex),
+its seven active TeX inputs, three literal prompt inputs and eleven referenced
+PNG figures. Compile from the bundle root with PDFLaTeX and shell escape
+disabled. The embedded bibliography supplies the references; this build
+does not invoke BibTeX. Exclude generated PDFs, logs, auxiliary files,
+review correspondence, raw workspaces and private mappings. Preserve those
+records in their existing evidence locations.
+
+A compilation-only archive of these 22 inputs was prepared and compiled
+after extraction into a separate directory. Its 74-page output matches the
+delivered PDF's extracted text on every page. The
+[publication binding](./anc/supplement-integration.json) records the archive
+digest and scope. Ancillary evidence stays in this repository package.
+This preparation is separate from selecting approved public-release files.
+
+Use the approved title and author spellings from the article, and copy its
+final abstract into the metadata field. The current abstract is 1,802 source
+characters, below arXiv's 1,920-character limit; check the actual metadata
+field again at submission. Select a subject category only after checking
+its scope (cs.SE is a candidate), choose the license with both authors,
+and obtain any required endorsement. Set the real submission date at that
+point. Inspect the PDF generated by arXiv before completing submission.
+Local compilation does not exercise that service.
+
+Employer clearance (maturing 29 November 2026 if CELA sends no further notice
+under the manager-confirmed 14-day review window, provided the 14 November
+submission covers this 24 November draft), final confirmation that both
+authors' sign-off covers the exact uploaded bytes, and the approved
+public-deposit/registration correspondence remain human actions. The existing
+AI disclosure records substantial assistance and author responsibility.
+Nothing in this revision authorizes upload or submission.
+
+## Scientific author-voice revision 24 November
+
+The revision reviews all 70 active sections across the article and seven
+TeX inputs against the completed experiment report and the owner's three
+English blog samples. It rewrites the abstract and opening, removes repeated
+explanations and states the results without treating the original decay
+conjecture as confirmed. First-person case observations remain distinct from
+the experiment's methods and findings.
+
+The numerical table values, seven equations, literal prompts, bibliography
+and source identifiers are unchanged. The prediction summary now attributes
+the Sonnet/Gemini coverage range to all arms, qualifies CR1 cost savings as
+inconsistent and separates structural treatment fidelity from the untested
+hybrid proposal. The draft date is 24 November; it is not a submission date.
+
+The [revision record](./anc/revision-report.md#scientific-author-voice-revision-24-november)
+records the evidence check and validation. `scientific_voice_revision` binds
+the current sources without rewriting earlier source/PDF records. The existing
+PDF remains unchanged; a separate build validates the revised source.
+Final author approval, publication clearance and arXiv submission remain
+outstanding.
 
 ## Copy Review Recommendations 16 November
 
@@ -74,13 +391,15 @@ remain separate.
 
 ## Current Status
 
-The title is unchanged at the owner's request. The current
+The subtitle now reads *Feature-Driven Decay in an Agentic Coding Loop. An
+Exploratory Case Study and Experiment*, replacing *an Experiment Protocol* at
+the owner's direction. The current
 [paper](./main.pdf) and [source](./main.tex) present the completed exploratory
 study through its principal findings: largely stable retention, selective
 benefits from consolidation or review, and additional resource cost.
 The [Supplement](./main.pdf#page=45) keeps the detailed results, uncertainty,
-calibration and execution record in the same 72-page document.
-The [source and digest register](./main.pdf#page=70) fills the final
+calibration and execution record in the same 73-page document.
+The [source and digest register](./main.pdf#page=71) fills the final
 three pages, so full identifiers no longer interrupt the narrative.
 The Supplement is additive. It holds source-specific qualifications, detailed
 method and rival checks, the frozen prompt, deferred rates and provenance.
@@ -92,13 +411,16 @@ At the owner's request, the standalone supplement PDF/TeX/bibliography were
 removed after exact archive readback and restore checks. Their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [15 November narrative and TODO record](./anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november)
-covers the current v22 delivery and the remaining evidence plan. The
+The [24 November publication record](./anc/revision-report.md#publication-revision-and-disposition-24-november)
+tracks the present source/PDF binding, all 24 review dispositions and
+remaining publication gates. The
+[15 November narrative and TODO record](./anc/revision-report.md#narrative-learning-and-todo-reconciliation-15-november)
+preserves the v22 delivery and its evidence plan. The
 [15 November direct style revision](./anc/revision-report.md#direct-style-revision-15-november)
-binds the current v23 source and PDF without changing the prior
+binds the historical v23 source and PDF without changing the prior
 author-voice record. The
 [author voice follow-up](./anc/revision-report.md#author-voice-follow-up-15-november)
-records the current first-person revision and its validation. Earlier
+records that first-person revision and its validation. Earlier
 deliveries keep their own records. The
 [15 November provenance and readability record](./anc/revision-report.md#provenance-and-readability-15-november)
 holds v21. The

@@ -2,32 +2,32 @@
 
 \subsection{Accumulation and inherited state}\label{sec:decay}
 
-Lehman's laws and Parnas's software-aging account motivate maintenance
-alongside growth~\cite{lehman1980laws,lehman1997metrics,parnas1994aging}.
-The 1997 formulation states that quality declines without maintenance,
-but supplies no data for or against that law. Eick et~al. report mixed evidence from
-fifteen-plus years of change history~\cite{eick2001decay}, and a systematic
-review finds uneven support across systems~\cite{herraiz2013laws}.
-Feature count and churn describe activity. A regression loses still-required,
-previously working behaviour; an unimplemented capability is an acquisition
-failure. A failure that continues across changes is persistence. Establishing
-that it caused a distinct later defect requires a trace of that dependency.
+Maintenance alongside growth is a recurring concern in software evolution
+~\cite{lehman1980laws,lehman1997metrics,parnas1994aging}. Lehman's 1997
+formulation states that quality declines without maintenance, but supplies
+no data for or against that law. Eick et~al. found mixed evidence in more
+than fifteen years of change history~\cite{eick2001decay}; a systematic
+review likewise found uneven support across systems~\cite{herraiz2013laws}.
+Counting features or changed lines cannot establish decay. A regression
+requires previously working behaviour that is still required to fail.
+An unimplemented capability is an acquisition failure, and a failure that
+continues across changes is persistence. Showing that one failure caused a
+distinct later defect requires tracing the dependency.
 
 Cunningham describes shipping first-time code and rewriting it as
 understanding improves~\cite{cunningham1992wycash}. Fowler's design
 stamina is explicitly a hypothesis~\cite{fowler2007stamina}.
-Reported debt costs concern different settings: a vendor-associated
-39-codebase study reports 124\% longer issue resolution in low-quality
-files~\cite{tornhill2022codered}; 43 developers self-report about 23\%
-of working time lost to debt~\cite{besker2018cripples}.
-Both estimates are specific to their settings and measurement methods.
+Reported debt costs depend on setting and measurement method: a
+vendor-associated 39-codebase study reports 124\% longer issue resolution in
+low-quality files~\cite{tornhill2022codered}.
 
 \paragraph{What survives the next session?}\label{sec:inheritance}
-Code, tests and deployment assumptions survive through the repository;
-instructions and handovers survive through procedural context.
-Either channel can preserve a sound decision or a mistake.
-Here ``software entropy'' is an analogy for this maintenance burden.
-The study measures retained behaviour, adaptation and resource use.
+A fresh session can inherit code, tests and deployment assumptions from the
+repository, as well as instructions and handover notes. Either channel can
+preserve a sound decision or carry a mistake forward
+(Figure~\ref{fig:stateinheritance}). ``Software entropy'' is used here only
+as an analogy for maintenance burden; the measured outcomes are retained
+behaviour, adaptation and resource use.
 
 \begin{figure}[!htbp]
 \centering
@@ -44,11 +44,6 @@ Zhang et~al. study false justifications after
 wrong answers~\cite{zhang2023snowball}; Sinha et~al. vary erroneous prior
 state updates in a controlled execution task
 ~\cite[Secs.~2.2--3, Figs.~5--6]{sinha2025illusion}.
-Laban et~al. report a 39\% relative performance drop in simulated multi-turn
-conversations with incomplete specifications. Their study concerns conversation
-history, so it provides no direct estimate of repository defects;
-locators refer to their arXiv v1
-~\cite[Secs.~3.3, 6.1, App.~F]{laban2025lost}.
 
 Pan et~al.'s SWE-Maintain more directly tests repository inheritance:
 100 sequences of three maintenance tasks from 50 Python repositories.
@@ -62,11 +57,11 @@ a 14.0-point gap. Unweighted mean current-task gaps grow from 4.0 to
 $-1.1$ points, interval $[-3.8,+1.6]$, and cumulative event resolution
 differs by $+2.7$, interval $[-0.5,+6.1]$
 ~\cite[Secs.~4.1--4.2, Tables~2--3]{pan2026swemaintain}.
-The pattern points to inherited behavioural failures as the main observed
-channel. Complexity alone explains less of the difference. Because the
-clean-history subset was selected rather than randomly repaired, the
-comparison cannot establish what a repair intervention would achieve
-or how widely the pattern applies.
+The smaller difference in the clean-history subset is consistent with
+inherited behavioural failures contributing more than complexity alone.
+However, the authors selected that subset; they did not randomly repair
+the repositories. The comparison therefore cannot estimate the benefit of
+a repair intervention or establish how widely the pattern applies.
 
 \begin{figure}[!htbp]
 \centering
@@ -82,12 +77,12 @@ the published estimates and intervals.}
 Their \texttt{python\_unidiff} example reuses line-splitting logic that
 loses terminators in a later constructor; Figure~1's caption introduces
 it and Section~5.1/Figure~5 supplies the detail
-~\cite{pan2026swemaintain}. SlopCodeBench and SWE-CI extend iterative
-evaluation~\cite{orlanski2026slopcodebench,chen2026sweci}.
-Borg et~al.'s maintainability study finds no significant downstream
-difference for late-2024 assistants; only phase two was randomised
-~\cite{borg2025echoes}. Its findings provide a useful contrast across tool
-generations and collaboration settings.
+~\cite{pan2026swemaintain}. SlopCodeBench and SWE-CI also evaluate agents over successive changes
+~\cite{orlanski2026slopcodebench,chen2026sweci}. Evidence of downstream harm
+is not uniform. Borg et~al. found no significant maintainability difference
+for late-2024 assistants in a two-phase study where the second phase was
+randomised~\cite[Secs.~1, 4]{borg2025echoes}. Differences in tool generation and collaboration
+setting limit direct comparison.
 
 \subsection{Instruction maintenance and evaluation}\label{sec:instructiondebt}
 
@@ -99,8 +94,9 @@ A commit can receive several labels: 78 include instruction additions,
 ~\cite[Sec.~4.3, Table~2]{mohsenimofidi2026context}.
 Chatlatanagulchai et~al.'s sampled maintenance labels likewise include
 addition and pruning~\cite{chatlatanagulchai2026readmes}.
-Instruction debt here is the author's term for obsolete, duplicated,
-conflicting or poorly routed directives.
+I use \emph{instruction debt} for obsolete, duplicated, conflicting or poorly
+routed directives. This names a possible maintenance burden; the commit
+counts alone do not measure its effect on development.
 
 \begin{figure}[!htbp]
 \centering
@@ -123,25 +119,26 @@ help, while retrieval and downstream success remain distinct
 ~\cite{microsoft2026skillopt,jiang2026skills}.
 
 \paragraph{Tests and review.}\label{sec:evaluationwork}
-RefactorBench evaluates refactoring tasks
-~\cite{gautam2025refactorbench}; developer-agent collaboration studies
-are observational~\cite{kumar2025agents}.
-SWE-Sharp-Bench supplies reproducible repository evaluation
-~\cite{mhatre2025swesharp}, while CRBugBench exposes review limits
-~\cite{yang2026crbugbench}. Building to the Test finds a dead or
-absent required library in seven of twelve oracle-in-the-loop runs
-~\cite{ma2026building}. ImpossibleBench tests exploitation more broadly
-~\cite{zhong2026impossiblebench}. Test integrity and adequate outcome
-coverage are different requirements. AgentRx motivates traceable
-failure diagnosis~\cite{microsoft2026agentrx}.
+Evaluation needs to distinguish the requested outcome from the checks
+used to accept it. RefactorBench tests refactoring tasks
+~\cite{gautam2025refactorbench}, and SWE-Sharp-Bench supplies reproducible
+repository evaluation~\cite{mhatre2025swesharp}. CRBugBench examines the
+limits of automated review~\cite{yang2026crbugbench}; observations of
+developer-agent collaboration describe practice without isolating its
+causal effects~\cite{kumar2025agents}. In Building to the Test, seven of
+twelve oracle-in-the-loop runs left a required library dead or absent
+~\cite{ma2026building}. ImpossibleBench examines test exploitation more
+broadly~\cite{zhong2026impossiblebench}. Protecting tests against edits is
+therefore separate from checking that they cover the intended behaviour.
+AgentRx provides a precedent for traceable failure diagnosis
+~\cite{microsoft2026agentrx}.
 
 \paragraph{Bounded correction.}\label{sec:factory}
 Pavlenko et~al.'s factory optimises human-architected systems against
 measurable objectives; productivity estimates cover application work,
 excluding infrastructure and onboarding
-~\cite{pavlenko2026factory}. AutoSaddler treats harness updates as
-offline learning~\cite{microsoft2026autosaddler}.
-Neither isolates the present intervention and later change probe.
+~\cite{pavlenko2026factory}. That evaluation does not isolate the present
+between-feature intervention and later change probe.
 
 \paragraph{Reflection and self-improvement.}
 Ng's reflection design-pattern letter explicitly recommends Self-Refine,
@@ -151,9 +148,10 @@ without training~\cite[Sec.~2]{madaan2023selfrefine}. Reflexion retains
 linguistic feedback in episodic memory for subsequent trials rather than
 updating model weights~\cite[Sec.~3]{shinn2023reflexion}. CRITIC uses
 external tools to check and revise an output
-~\cite[Sec.~3]{gou2024critic}. These methods show how agents can revise work using feedback. Whether a
-retained lesson or revision helps with later features still needs testing. Their feedback and repeated-trial budgets differ from
-the present protocol, whose hidden evaluator outputs never reach agents.
+~\cite[Sec.~3]{gou2024critic}. These methods provide ways to revise work using feedback. Their
+repeated-trial budgets and feedback differ from this experiment: hidden
+evaluator outputs never reach the development agents. Whether a retained
+revision helps with a different, later feature remains an empirical question.
 
 Ng coauthored MedAgentBench, which evaluates task completion in an
 interactive medical-record environment rather than chatbot answers alone
@@ -161,25 +159,15 @@ interactive medical-record environment rather than chatbot answers alone
 Its evaluation of observable action outcomes informs the measurement focus
 of this protocol.
 
-The two owner-selected videos illustrate proposed practices. In the Ng/Moroney talk, Ng describes
-human-feedback iteration; Moroney later warns about code structure and
-describes task-level reflection~\cite{philia2026ngmoroney}.
-In the separate memory presentation, a speaker identifying herself as
-Anthropic staff describes persistent memory and asynchronous
-transcript-driven curation, with human review of proposed updates
-~\cite{beamnxw2026memorytalk}. Both sources are third-party uploads checked through automatic captions.
-The audio was not verified, and neither video supplies experimental
-findings. The study below tests the narrower between-feature intervention.
-
 \paragraph{Engineering rationale.}\label{sec:practitioners}\label{sec:theory}
 Beck's alternation of features and tidying aims to restore future
-options~\cite{beck2023tidy,beck2025augmented,beck2025devslow,beck2026prodacity}.
-Extending that metaphor to acceptance criteria is this author's
-interpretation. Understanding/abstraction and learning through use
-have separate sources~\cite{beck2026mathematicians,beck2026prodacity}.
+options~\cite{beck2023tidy,beck2025devslow,beck2026prodacity}.
+Extending that metaphor to acceptance criteria is my interpretation.
+Beck separates producing code from learning
+through working software~\cite{beck2026prodacity}.
 Tests, short releases, explicit design responsibilities and usable
 increments motivate the checklist
-~\cite{beck2002tdd,beck2004xp,gamma1995patterns,martin2026productengineers,
+~\cite{beck2002tdd,beck2004xp,
 naur1985theory,brooks1987silver,royce1970,gall1975,cockburn2004crystal,
 hunt1999pragmatic,agile2001manifesto}.
 Monitoring burden and completion proxies qualify the rationale
@@ -190,8 +178,8 @@ execution checks~\cite{delimarsky2025speckit,boeckeler2025sdd,agarwal2026sdd,was
 
 \paragraph{HVE Core.}\label{sec:hve}
 Microsoft's Hypervelocity Engineering Core supplies file-based
-Research--Plan--Implement--Review handovers; the author's coordinator
-added autonomous dispatch. The reported case snapshot is
+Research--Plan--Implement--Review handovers. My coordinator added autonomous
+dispatch. The reported case snapshot is
 \texttt{plugins-v3.3.106}; its installation date remains unverified
 ~\cite{hvecore}. Additional source qualifications and reproducibility detail
 are in the supplement.
