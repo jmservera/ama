@@ -1,0 +1,16 @@
+{
+ "approved_by": "Juan Manuel Servera, project owner",
+ "authority_ref": "owner-decision:2026-11-25 demo real-AI batch, hard cap 200000 tokens",
+ "model": "gpt-4.1-nano",
+ "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+ "deployment": "standard",
+ "expires_utc": "2026-11-26T00:30:57.662632+00:00",
+ "max_calls": 5,
+ "max_total_tokens": 200000,
+ "max_prompt_tokens": 400,
+ "max_completion_tokens": 200,
+ "max_budget_usd": "1.00",
+ "currency": "USD",
+ "input_usd_per_1m": "0.10",
+ "output_usd_per_1m": "0.40"
+}

@@ -1,34 +1,34 @@
 {
- "task_id": "issue-107-live-20261125T181213Z",
- "task_slug": "issue-107-live-r13-real-ai-harness",
+ "task_id": "issue-107-live-20261125T222322Z",
+ "task_slug": "issue-107-live-demo-release-records",
  "parent_task": null,
  "mode": "automatic",
  "active_phase": "Follow-up",
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-25-issue-107-live-r13-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-25-issue-107-live-r13-plan.md",
-  "details": ".copilot-tracking/details/2026-11-25-issue-107-live-r13-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-25-issue-107-live-r13-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-25-issue-107-live-r13-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-25-issue-107-live-r13-review.md"
+  "research": ".copilot-tracking/research/2026-11-25-issue-107-live-r14-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-25-issue-107-live-r14-plan.md",
+  "details": ".copilot-tracking/details/2026-11-25-issue-107-live-r14-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-25-issue-107-live-r14-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-25-issue-107-live-r14-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-25-issue-107-live-r14-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Research disposition: executed; no tokens spent, harness dry-run only",
+   "decision": "Owner 2026-11-25: demo API has ZF_ASSIST_RELEASE_APPROVERS set; record five releases then run harness once, cap 200k tokens",
    "status": "confirmed",
-   "evidence": "owner brief 2026-11-25"
+   "evidence": "owner brief"
   },
   {
    "decision": "critique executed once, verdict proceed, dispositions applied",
    "status": "confirmed",
-   "evidence": ".copilot-tracking/critique/2026-11-25-issue-107-live-r13-critique.md"
+   "evidence": ".copilot-tracking/critique/2026-11-25-issue-107-live-r14-critique.md"
   },
   {
    "decision": "Review executed once; conformant with disclosed limits",
    "status": "confirmed",
-   "evidence": ".copilot-tracking/reviews/2026-11-25-issue-107-live-r13-review.md"
+   "evidence": ".copilot-tracking/reviews/2026-11-25-issue-107-live-r14-review.md"
   }
  ],
  "blockers": [],
@@ -39,9 +39,9 @@
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Confirm approved-release listing shape and wire live adapter after OQ-017 release",
-   "rationale": "unblocks real-AI acceptance",
-   "evidence": "r13 research note"
+   "task": "Run run_harness.py from the private network or after owner-approved network/allowance change",
+   "rationale": "only route to measured tokens",
+   "evidence": "r14 note"
   }
  ]
 }

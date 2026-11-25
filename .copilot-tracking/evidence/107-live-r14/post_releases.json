@@ -1,0 +1,49 @@
+{
+ "stock-prioritisation": {
+  "status": 201,
+  "response": {
+   "id": "c6baec4c120344c3accf73feb7a8ae68",
+   "status": "active",
+   "note": "Permits bounded proposals only; no approval, domain write or live-use authority."
+  }
+ },
+ "assessment-preparation": {
+  "status": 201,
+  "response": {
+   "id": "603997fa4c0542b28dae58379482a2cd",
+   "status": "active",
+   "note": "Permits bounded proposals only; no approval, domain write or live-use authority."
+  }
+ },
+ "funding-evidence": {
+  "status": 201,
+  "response": {
+   "id": "971a2c6704024bf8a80388a44bd2e15d",
+   "status": "active",
+   "note": "Permits bounded proposals only; no approval, domain write or live-use authority."
+  }
+ },
+ "works-resident-coordination": {
+  "status": 201,
+  "response": {
+   "id": "2165626cfe7e4e8ca9419fa07a17a399",
+   "status": "active",
+   "note": "Permits bounded proposals only; no approval, domain write or live-use authority."
+  }
+ },
+ "quality-evidence": {
+  "status": 201,
+  "response": {
+   "id": "b3f9bd92d8674b5c8c0c045fff8b9886",
+   "status": "active",
+   "note": "Permits bounded proposals only; no approval, domain write or live-use authority."
+  }
+ },
+ "listing_after": {
+  "stock-prioritisation": "in force",
+  "assessment-preparation": "in force",
+  "funding-evidence": "in force",
+  "works-resident-coordination": "in force",
+  "quality-evidence": "in force"
+ }
+}
