@@ -204,6 +204,7 @@ class SqlStore(Store):
         self.ai.release = self.release_context
         self.version = 0
         self._briefings = {}
+        self._briefing_busy: dict = {}
         self._ranks = None
         self._seq = 0
         self.cases, self.staff = {}, {}
