@@ -35,6 +35,29 @@ def epic_rows(body: str) -> dict[int, list[str]]:
     return rows
 
 
+def gap_rows(body: str) -> list[list[str]]:
+    start = body.index("### Remaining epic criteria as exact gaps")
+    following = re.search(r"^### ", body[start + 4 :], re.MULTILINE)
+    block = body[start : start + 4 + following.start()] if following else body[start:]
+    rows = []
+    for line in block.splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if len(cells) == 3 and cells[0] not in ("Epic", "---"):
+            rows.append(cells)
+    return rows
+
+
+def non_continue_without_gap_issue(rows: dict[int, list[str]]) -> list[int]:
+    """Epics recommended fix or pivot must cite a scoped gap issue other than the epic itself."""
+    bad = []
+    for epic, cells in rows.items():
+        if cells[6] in ("fix", "pivot"):
+            cited = {int(n) for n in re.findall(r"#(\d+)", cells[6] + " " + cells[5])}
+            if not cited - {epic}:
+                bad.append(epic)
+    return bad
+
+
 class StabilizationCheckpoint2301Tests(unittest.TestCase):
     def test_source_pin_is_a_full_commit_hash(self) -> None:
         self.assertRegex(section(), r"Source commit \| `[0-9a-f]{40}`")
@@ -94,6 +117,22 @@ class StabilizationCheckpoint2301Tests(unittest.TestCase):
     def test_evidence_note_exists_and_is_linked_from_the_pack(self) -> None:
         self.assertTrue(NOTE.is_file())
         self.assertIn(NOTE.name, section())
+
+    def test_every_remaining_criterion_names_an_epic_and_an_owner(self) -> None:
+        rows = gap_rows(section())
+        self.assertTrue(rows, "gap table missing")
+        for epic, gap in ((r[0], r[2]) for r in rows):
+            with self.subTest(epic=epic):
+                ids = {int(n) for n in re.findall(r"#(\d+)", epic)}
+                self.assertTrue(epic == "All nine" or ids <= set(EPICS), epic)
+                self.assertRegex(gap, r"(?i)owner|deferred to #\d+")
+
+    def test_fix_or_pivot_recommendation_requires_a_gap_issue(self) -> None:
+        self.assertEqual(non_continue_without_gap_issue(epic_rows(section())), [])
+        synthetic = {73: ["#73", "", "", "", "", "local observed", "fix"]}
+        self.assertEqual(non_continue_without_gap_issue(synthetic), [73])
+        synthetic[73][5] = "local observed; gap #2999"
+        self.assertEqual(non_continue_without_gap_issue(synthetic), [])
 
 
 if __name__ == "__main__":

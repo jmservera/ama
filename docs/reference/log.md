@@ -15535,3 +15535,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 
 * Added [issue-2237-retention-unrecorded-listing-2026-11-25.md](research/issue-2237-retention-unrecorded-listing-2026-11-25.md): the retention listing audit write took the global SQL write lock and caused the 503s; source and test change (not deployed) returns the list unrecorded when the lock is busy.
 * Added [issue-2253-live-r11-2026-11-25.md](research/issue-2253-live-r11-2026-11-25.md): live probe on API 0000076 (0 overlaps, 5 circles; forecast hidden by data age), deployed assets match the repository, new per-metric chart test.
+
+## [2026-11-25] update | Issue 107 in-environment real-AI batch
+
+* Added [issue-107-live-r15-in-environment-real-ai-2026-11-25.md](research/issue-107-live-r15-in-environment-real-ai-2026-11-25.md): capped batch run once inside the demo API replica with its managed identity; 258 measured tokens across the five assistants, per-criterion status recorded.
