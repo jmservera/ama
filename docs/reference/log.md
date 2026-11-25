@@ -15471,3 +15471,16 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
   et al. (*Echoes of AI*, 2026) and ten open web/standards sources; removed 14
   non-essential citations with incomplete access from both bibliography files
   (80 cited entries, 73-page [rebuilt PDF](../capstone/thought-leadership/everything-but-the-software/main.pdf)).
+
+## 2026-11-25 Issue 2237 live re-proof on revision 0000068
+
+* Added [issue-2237-live-reproof-2026-11-25.md](./research/issue-2237-live-reproof-2026-11-25.md) with Playwright and Log Analytics evidence and a per-criterion table (Refs #2237). No source change.
+## [2026-11-25] update | Issue 2253 resident chart live proof with fresh readings
+
+* Added [issue-2253-live-r9-2026-11-25.md](research/issue-2253-live-r9-2026-11-25.md): live Playwright proof on `ca-resident-demo--0000030` that tick and marker text is body-sized, labels do not overlap, stored readings draw as separate circles and the forecast squares and "Latest stored" label render. No source or Azure change.
+## [2026-11-25] add | Issue 2164 revision 69 deployed code proof (Refs #2164)
+
+* Added [issue-2164-deployed-code-proof-2026-11-25.md](research/issue-2164-deployed-code-proof-2026-11-25.md): read-only marker greps on API revision 0000069 and re-run tests. The live restricted-row behaviour stays unproven because it needs a roster edit that the demo excludes.
+## [2026-11-25] add | Issue 146 live monitoring pass (Refs #146)
+
+* Added [issue-146-live8-monitoring-2026-11-25.md](research/issue-146-live8-monitoring-2026-11-25.md): source workbook queries executed live, deployed workbook found 12 of 14 items, poison query valid on live queue logs but firing not provoked (policy blocks the write), throwaway resources deleted. No box ticked; no source change.

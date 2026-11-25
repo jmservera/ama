@@ -621,6 +621,8 @@ A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) execute
 
 A [2026-11-23 ingress pass](./research/issue-146-live7-monitoring-2026-11-23.md) finds the availability, errors and latency tiles read empty Application Insights tables, adds a workbook tile on Container Apps ingress logs that returns live data, and records what stays unproven.
 
+A [2026-11-25 live pass](./research/issue-146-live8-monitoring-2026-11-25.md) re-observes the installed alerts, executes every source workbook query live, finds the deployed workbook two items behind source and records a blocked poison-queue provocation.
+
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
 
@@ -1871,6 +1873,7 @@ or infra acceptance claimed.
 | [Roster Scope for Entra Staff Re-proof (Issue #2164)](./research/issue-2164-roster-scope-recheck-2026-11-22.md) | Fix 6a03928ccb confirmed on main, scope-bypass and view-only tests re-run, per-criterion table |
 | [Staff identity.verified Audit (Issue #2164)](./research/issue-2164-staff-verified-audit-2026-11-23.md) | Audit of every identity.verified caller; sensor review draft gate now matches the bound roster row and refuses view-only; per-criterion table |
 | [Deployed Code Proof (Issue #2164)](./research/issue-2164-deployed-code-proof-2026-11-23.md) | Read-only marker grep shows the demo API carries the assistants roster-scope fix; sensor draft fix not yet deployed; per-criterion table |
+| [Deployed Code Proof, Revision 69 (Issue #2164)](./research/issue-2164-deployed-code-proof-2026-11-25.md) | Marker greps on revision 0000069, tests re-run, live restricted-row proof still unproven; per-criterion table |
 | [Bound Tenant Binding (Issue #2164)](./research/issue-2164-bound-tenant-binding-2026-11-23.md) | Assistants and sensor draft gates apply the legacy-tenant rule to bound Entra staff rows; regression test added; live restricted-row proof unproven for the demo |
 | [Resident Portal Documentation Integration Status (Issue #441)](./research/resident-portal-441-live-status-2026-11-18.md) | Live-demo assessment of the one unticked #441 criterion (FR-044/AC-084 owner disposition): evidence checked and why it stays unproven |
 | [Resident Demo Authority End Live Check (Issue #521)](./research/resident-demo-authority-live-521-2026-11-18.md) | Source tests, live app expiry setting `2028-01-01T00:00:00Z` and a Playwright sign-in on the deployed synthetic showcase, with a per-criterion table. Live SQL window unproven (private server). Refs #521. | 2026-11-18 |
@@ -1985,6 +1988,7 @@ or infra acceptance claimed.
 | [Issue 2237 Live Re-proof on 0000055](./research/issue-2237-live-reproof-2026-11-23.md) | Issue 2237: live revision 0000055 contains the 503 write-lock mapping (container grep), the mapping fired 14 times in Log Analytics, no retention 500 since 2026-11-22, retention 200 in 56 of 56 calls, and a per-criterion table |
 | [Issue 2237 Live Re-proof on 0000061](./research/issue-2237-live-reproof-2026-11-24.md) | Issue 2237: retention 200 in 55 of 55 calls on revision 0000061, the lock timeout answering 503 (30 times, no 500) on 0000058 to 0000060, and a per-criterion table |
 | [Issue 2237 Live Re-proof on 0000067](./research/issue-2237-live-reproof-2026-11-24b.md) | Issue 2237: retention 200 in 56 of 56 calls on revision 0000067, only 503 lock timeouts (no 500) in 36 h of console logs, and a per-criterion table |
+| [Issue 2237 Live Re-proof on 0000068 (2026-11-25)](./research/issue-2237-live-reproof-2026-11-25.md) | Issue 2237: retention 200 as Programme Manager on revision 0000068 (35 of 35 sequential and parallel calls), the 503 lock mapping firing live, no retention 500 in 48 h of console logs, and a per-criterion table |
 
 
 
