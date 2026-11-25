@@ -15501,3 +15501,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2253 resident chart live re-proof on API 0000072 (Refs #2253)
 
 * Added [issue-2253-live-r10-2026-11-25.md](research/issue-2253-live-r10-2026-11-25.md): re-run of the live Playwright probe with API revision 0000072 active; 0 text overlaps, 12-unit text, 4 circles, 6 forecast squares; 65 local tests OK. No source or estate change.
+## [2026-11-25] add | Issue 2310 anonymous protected API requests on revision 0000072 (Refs #2310)
+
+* Added [issue-2310-live-2026-11-25-r72.md](research/issue-2310-live-2026-11-25-r72.md): 45 auth tests pass; live browser-style anonymous API calls return 302 because Container Apps built-in authentication redirects first; no source or estate change.

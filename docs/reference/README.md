@@ -1753,6 +1753,7 @@ or infra acceptance claimed.
 | [Issue 2257 map retry control and re-probe on revision 0000055 (#2257)](./research/issue-2257-retry-control-2026-11-23.md) | Visible retry button and bounded redraw; 8 of 8 fresh sessions loaded; per-criterion table |
 | [Issue 2302 AI consumption economics in the management view (#2302)](./research/issue-2302-ai-economics-live-2026-11-23.md) | Live Overview card on revision 0000055, focused Unknown-not-zero tests, per-criterion table |
 | [Issue 2303 chat golden file in the API image (#2303)](./research/issue-2303-chat-golden-image-2026-11-23.md) | Local container reproduction and fix, contract test, per-criterion table |
+| [Issue 2310 anonymous API 401 on revision 0000072 (#2310)](./research/issue-2310-live-2026-11-25-r72.md) | Code and tests pass; live browser-style API calls get 302 from platform auth; per-criterion table |
 | [Issue 2303 live rerun (#2303)](./research/issue-2303-live-2026-11-23/README.md) | Live 500 on revision 0000057, per-criterion table |
 | [Issue 2257 third live re-probe and overlay cause tag (#2257)](./research/issue-2257-live-r3-2026-11-23.md) | 10 of 10 fresh sessions loaded on revision 0000055; overlay warning now names a lock cause; per-criterion table |
 | [Issue 2257 SQLSTATE in the map overlay warning (#2257)](./research/issue-2257-live-r5-2026-11-23.md) | Overlay warning records the driver SQLSTATE for non-lock failures; per-criterion table |
