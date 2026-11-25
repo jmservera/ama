@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-24T23:21:44+00:00",
-  "commit": "15254820ce8be8eea7b6c537e5bb118482bbffb4",
+  "scored_at": "2026-11-25T07:13:30+00:00",
+  "commit": "5c9bc9b6aa278453100f334f28acfe66b251720f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/45508198926",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/45565342923",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
@@ -14,14 +14,14 @@
     "infrastructure": "6d6756812c2b4d1c61390df9dad3f084cf35544b032c964b560487f51a56d24c",
     "capstone-deck": "b97119f4cd4a717eb21eb78ca274dd030fe0495726d2de31987568eb33171d49",
     "pitch": "22f929c884c0a23938472aad8bc3b3ce21b67359e6436b3ab064f5ee3a7a0399",
-    "thought-leadership": "6a40595ec971a24c589118002c230082bd8d7db828b15e034d6b2370fd505173"
+    "thought-leadership": "27f68b1c976e53a2283525f4114a4127538e49ff1d820b39ae8e7b5f4f8606b2"
   },
-  "total": 79,
+  "total": 81,
   "sections": {
     "A": 35,
     "B": 23,
     "C": 12,
-    "D": 9
+    "D": 11
   },
   "floors_met": true,
   "outcome": "Pass with Merit",
@@ -143,27 +143,27 @@
       "rationale": "Draft continues explicit, unprompted disclosure discipline: records owner decisions while stating plainly which acceptance criteria remain unmet and that no rehearsal/measurement result is claimed or may be fabricated. Reinforces existing Excellent (5); ceiling unchanged."
     },
     "D1": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:98-130",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md"
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex:318-360",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:759-770"
       ],
-      "rationale": "Open criterion reassessed. 16 Nov changes are copy-review and prose-polish wording passes only (README.md, main.tex, anc/experiment-protocol.tex); no new synthesis, data or argument. Good (4) retained unchanged."
+      "rationale": "Open criterion reassessed. New app:reportingdisposition adds PF1/PF2/PF3 reconciliation tables and a ceiling-limited-measurement finding (realized 96.9629% D mean leaves only 3.0371 pp headroom). New original analysis, not prose polish. Raised Good (4) to Excellent (5)."
     },
     "D2": {
-      "score": 3,
+      "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-11",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md:81-130"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:11,66",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:627-630"
       ],
-      "rationale": "Open criterion reassessed. TODO(author) counts unchanged (6 in main.tex, 4 in anc/experiment-protocol.tex); main.pdf remains unrebuilt/unverified per revision record. Satisfactory (3) retained unchanged."
+      "rationale": "Open criterion reassessed. main.tex TODO(author) count fell from 6 to 2; the dependence/chronology TODO was resolved into explained text. PDF rebuilt (73 pages), checks pass per revision-report.md. Raised Satisfactory (3) to Good (4)."
     },
     "D3": {
       "score": 2,
       "evidence": [
         "docs/capstone/thought-leadership/everything-but-the-software/README.md:813-814"
       ],
-      "rationale": "Open criterion reassessed. README still states no archive, OSF upload, visibility change or scientific submission occurred; publication approval remains pending. Needs Improvement (2) retained unchanged."
+      "rationale": "Open criterion reassessed. README still states no archive, OSF upload, visibility change or scientific submission occurred; clearance and arXiv submission remain outstanding. Needs Improvement (2) retained unchanged."
     }
   }
 }
