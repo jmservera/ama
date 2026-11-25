@@ -621,6 +621,8 @@ A [2026-11-23 pass](./research/issue-146-live6-monitoring-2026-11-23.md) execute
 
 A [2026-11-23 ingress pass](./research/issue-146-live7-monitoring-2026-11-23.md) finds the availability, errors and latency tiles read empty Application Insights tables, adds a workbook tile on Container Apps ingress logs that returns live data, and records what stays unproven.
 
+A [2026-11-25 live pass](./research/issue-146-live8-monitoring-2026-11-25.md) re-observes the installed alerts, executes every source workbook query live, finds the deployed workbook two items behind source and records a blocked poison-queue provocation.
+
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
 

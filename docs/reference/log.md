@@ -15481,3 +15481,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2164 revision 69 deployed code proof (Refs #2164)
 
 * Added [issue-2164-deployed-code-proof-2026-11-25.md](research/issue-2164-deployed-code-proof-2026-11-25.md): read-only marker greps on API revision 0000069 and re-run tests. The live restricted-row behaviour stays unproven because it needs a roster edit that the demo excludes.
+## [2026-11-25] add | Issue 146 live monitoring pass (Refs #146)
+
+* Added [issue-146-live8-monitoring-2026-11-25.md](research/issue-146-live8-monitoring-2026-11-25.md): source workbook queries executed live, deployed workbook found 12 of 14 items, poison query valid on live queue logs but firing not provoked (policy blocks the write), throwaway resources deleted. No box ticked; no source change.
