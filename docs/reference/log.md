@@ -15517,3 +15517,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 107 capped real-AI acceptance harness (Refs #107)
 
 * Added [issue-107-live-r13-real-ai-harness-2026-11-25.md](research/issue-107-live-r13-real-ai-harness-2026-11-25.md): dry-run harness `src/api/checks/assistant_real_ai_acceptance.py` and eight tests; no tokens spent, no Azure change; both open criteria stay unproven.
+
+## [2026-11-25] add | Issue 2303 live latency on revision 0000073 and live-report fix (Refs #2303)
+
+* Added [issue-2303-live-2026-11-25-r73.md](research/issue-2303-live-2026-11-25-r73.md): GET /api/ai/report still takes 70 to 87 s cold and warm on the cache image; container timings put 68 s in `ai_live_report` (42 withheld-value scans of 980 cases), not in the cached evaluations; `live_report` now scans once per distinct case set (source and test only, not deployed, live latency after the fix unproven).

@@ -600,6 +600,8 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None, assistant
     )
     tasks, reasons, fallbacks = {}, [], {}
     effort: dict[str, dict[str, Any]] = {}
+    # Each withheld-value scan covers every case, so share it between recommendations on the same cases.
+    withheld_by_scope: dict[tuple[str, ...], tuple[str, ...]] = {}
     for r in recs:
         task = "priority" if r.get("kind") != "ai_task" else r["task"]
         status = NOT_REVIEWED if r["status"] == "Proposed" else r["status"]
@@ -626,7 +628,10 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None, assistant
                 if not reason_ok:
                     shown_reason = projection.NOTE_HELD
                 else:
-                    withheld = projection.withheld_scope_values(store, user, r.get("case_ids", []))
+                    scope = tuple(dict.fromkeys(str(c) for c in r.get("case_ids", []) if c))
+                    if scope not in withheld_by_scope:
+                        withheld_by_scope[scope] = projection.withheld_scope_values(store, user, scope)
+                    withheld = withheld_by_scope[scope]
                     if projection.contains_withheld_value(raw_reason, withheld):
                         shown_reason = projection.NOTE_HELD
             reasons.append(dict(task=task, action=status, reason=shown_reason))
