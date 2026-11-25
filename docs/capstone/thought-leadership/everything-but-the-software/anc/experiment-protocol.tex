@@ -89,8 +89,8 @@ would overstate the sample size. The selected number $n$ applies
 \begin{table}[!htbp]
 \centering\small
 \caption{Five-arm comparison retained from the earlier design. D is the matched-resource A+
-control; E tests visible regression repair, not hidden-test feedback.}
-\label{tab:protocolsummary}
+control; E tests visible regression repair, not hidden-test feedback.}\label{tab:protocolsummary}
+
 \begin{tabularx}{\textwidth}{@{}L{1cm}YL{3.6cm}@{}}
 \toprule
 Arm & Intervention and information & Per-cycle ceilings \\
@@ -206,8 +206,8 @@ without tools. Python orchestration and JavaScript model transport remain
 on the trusted host in both paths. Arrows describe information/control
 flow specified by that source. Their empirical execution and causal effects
 require separate evidence.
-Source and historical-runtime qualification are in the revision record.}
-\label{fig:runtimeboundaries}
+Source and historical-runtime qualification are in the revision record.}\label{fig:runtimeboundaries}
+
 \end{figure}
 
 \subsection{Outcomes and retained-contract loss}\label{sec:decaymeasurement}
@@ -239,8 +239,8 @@ dictionary contains no maintainability-index score.
 \caption{Measurements in the active kit (\sourceref{R05}).
 Programmatic scoring is distinct from model-generated treatment text.
 Deterministic means repeatable for fixed source, inputs, tools and environment,
-not identical across different generated repositories or runtime sessions.}
-\label{tab:measurementprovenance}
+not identical across different generated repositories or runtime sessions.}\label{tab:measurementprovenance}
+
 \begin{tabularx}{\linewidth}{@{}L{0.22\linewidth}Y L{0.23\linewidth}@{}}
 \toprule
 Measure and role & Values and instrument & Provenance \\
@@ -480,7 +480,7 @@ $1-\beta=0.80$ and target difference $\Delta_*=10$ points, the normal
 planning minimum, conditional on the assumed SD, is
 \begin{equation}
 n_{\mathrm{plan}}(\sigma)=
-\left\lceil\frac{2(z_{1-\alpha/2}+z_{1-\beta})^2\sigma^2}
+\left\lceil\frac{2{(z_{1-\alpha/2}+z_{1-\beta})}^2\sigma^2}
 {M\Delta_*^2}\right\rceil.
 \label{eq:samplesize}
 \end{equation}
@@ -490,8 +490,8 @@ n_{\mathrm{plan}}(\sigma)=
 \caption{Historical conditional normal planning for the ten-point B--D contrast,
 three equally weighted models, $\alpha=0.05$ and target power 0.80.
 The SDs are planning assumptions; power remains conditional on their
-validity and the stated model.}
-\label{tab:replicationchoices}
+validity and the stated model.}\label{tab:replicationchoices}
+
 \begin{tabular}{@{}rr@{}}
 \toprule
 Assumed within-cell SD (points) & Planning minimum per model per arm \\
@@ -631,7 +631,6 @@ produced broken edits. Rejected or transient failures belong to an attempt
 outcome; the retention endpoint measures the state allowed to survive.
 Immutable accepted tests and rollback are part of every tested policy.
 
-\ifresults
 \FloatBarrier
 \subsection{Collection completeness, resilience and credit ledger}\label{sec:resultsledger}
 
@@ -701,8 +700,8 @@ Arms~A, B, C and D.
 trajectories per cell (315/315 total). ``All 127'' counts complete
 test-suite passes; ``With loss'' counts trajectories with a previously
 passing unchanged contract failing at $P_{10}$. Additional distribution and
-loss statistics are in the Supplement. \armlegend}
-\label{tab:resultsbenchmark}
+loss statistics are in the Supplement\@. \armlegend}\label{tab:resultsbenchmark}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrr@{}}
 \toprule
 Model & Arm & Observed & Mean (\%) & All 127 & With loss \\
@@ -802,8 +801,8 @@ assumptions (Supplement Table~\ref{tab:resultscrintervals}); the observed
 \caption{CR1 outcomes across all 21 completed trajectories per cell.
 Bounds assign the two unadjudicated GPT~6.1 Sol test errors (\texttt{B-08}
 and \texttt{C-14}) first to failure and then to success. They describe
-missing-outcome uncertainty, not sampling confidence intervals. \armlegend}
-\label{tab:resultsadaptation}
+missing-outcome uncertainty, not sampling confidence intervals\@. \armlegend}\label{tab:resultsadaptation}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrl@{}}
 \toprule
 Model & Arm & Pass & Fail & Unknown & Success bounds (\%) \\
@@ -849,7 +848,7 @@ Consolidation's clearest advantage was structural cleanup
 control-flow paths through a function; the threshold applies to each function.
 No functions exceeded cyclomatic
 complexity 10 at any of the 63 B endpoints. Relative to A, lint density
-fell by about 92\% on Sonnet and reached zero on GPT. The targets were
+fell by about 92\% on Sonnet and reached zero on GPT\@. The targets were
 not uniformly achieved: Sonnet B still averaged 2.26 lint warnings per
 1,000 source lines despite the zero-warning target. These metrics
 measure the intervention's structural targets. Broader architecture and
@@ -864,8 +863,8 @@ structural measures can improve while a semantic permission defect remains.
 \centering\small
 \caption{Mean structural metrics at $P_{10}$, over all 21 observed endpoints
 per cell (315/315 total). The complexity threshold applies to individual
-functions, not the mean complexity of a repository. \armlegend}
-\label{tab:resultsstructural}
+functions, not the mean complexity of a repository\@. \armlegend}\label{tab:resultsstructural}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrr@{}}
 \toprule
 Model & Arm & \shortstack{Functions above\\complexity 10 (\%)} & \shortstack{Duplicated\\lines (\%)} & \shortstack{Lint warnings per\\1,000 source lines} \\
@@ -909,8 +908,8 @@ Credit means use only trajectories with complete billing for that phase;
 counts are in parentheses. Duration means describe all 21 completed
 trajectories per cell (315/315 total). Human effort and total calendar
 time were outside that measure. Outstanding charges remain outside settled
-means. \armlegend}
-\label{tab:resultscosts}
+means\@. \armlegend}\label{tab:resultscosts}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrr@{}}
 \toprule
 Model & Arm & \shortstack{Delivery\\credits ($n$)} & \shortstack{CR1\\credits ($n$)} & \shortstack{Delivery\\minutes} & \shortstack{CR1\\minutes} \\
@@ -939,11 +938,11 @@ GPT 6.1 Sol & E & 300.18 (15) & 39.88 (20) & 54.33 & 6.68 \\
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-study-outcomes-costs.png}
-\caption{Synthesis of the completed 315/315 study endpoints. (a) Pooled
+\caption{Synthesis of the completed 315/315 study endpoints\@. (a) Pooled
 63-versus-63 and within-model 21-versus-21 $P_{10}$ coverage contrasts
 (\texttt{H1}) with 95\% bootstrap intervals relative to zero and the
-$+10$~pp target. (b) CR1 adaptation counts (\texttt{H6}: pass, fail and
-unadjudicated test error) across all 15 model-arm cells. (c) Mean $P_{10}$
+$+10$~pp target\@. (b) CR1 adaptation counts (\texttt{H6}: pass, fail and
+unadjudicated test error) across all 15 model-arm cells\@. (c) Mean $P_{10}$
 coverage against mean settled delivery AI credits (\texttt{H5}, completely
 billed sample size $n$ in brackets; 55 held attempts with 19,200 reserved
 credits remain separate). Positive contrasts favour the first named arm;
@@ -999,8 +998,8 @@ intervals on the 0--4 scale (10,000 whole-trajectory draws, seed 2027),
 equally weighting the three development models. B--D compares matched
 allowances; B--A adds the consolidation allowance. Both compared arms must
 have complete ratings for every allocated trajectory and scheduled scenario:
-63 versus 63 at each endpoint. Intervals are exploratory and unadjusted.}
-\label{tab:resultsjudgecontrasts}
+63 versus 63 at each endpoint. Intervals are exploratory and unadjusted.}\label{tab:resultsjudgecontrasts}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrr@{}}
 \toprule
 Endpoint & Contrast & Completeness (95\% CI) & API (95\% CI) \\
@@ -1056,8 +1055,8 @@ trajectories (\texttt{H1}--\texttt{H7} in \nolinkurl{results/EXPERIMENT_RESULTS.
 Only the $\Delta_*=10$ percentage-point B--D threshold was pre-specified in
 the planning calculation; P1 and P3 structure the post-collection evaluation
 of the two-part conjecture, yielding an overall \textbf{adjust} portfolio
-decision.}
-\label{tab:predictionverdicts}
+decision.}\label{tab:predictionverdicts}
+
 \begin{tabularx}{\textwidth}{@{}L{0.22\textwidth}L{0.24\textwidth}YL{0.20\textwidth}@{}}
 \toprule
 Prediction & Falsification / target criterion & Observed ten-feature result (315/315 complete) & Exploratory verdict \\
@@ -1069,9 +1068,3 @@ Manipulation check: Structural hygiene (\texttt{H3}, \texttt{H4}) & Arm~B reduce
 \bottomrule
 \end{tabularx}
 \end{table}
-\else
-% Historical requests retained verbatim; bounded final dispositions are in app:reportingdisposition and the 24 November publication revision record.
-% TODO(author): PF1 requires actual F/P checkpoint vectors, eligibility and missingness.
-% TODO(author): PF2 requires actual CR1 vectors, prerequisites, assistance and all-attempt costs.
-% TODO(author): PF3 requires actual final coverage and attributable delivery credits.
-\fi

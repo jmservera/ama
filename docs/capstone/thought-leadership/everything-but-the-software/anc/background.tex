@@ -5,7 +5,7 @@
 Maintenance alongside growth is a recurring concern in software evolution
 ~\cite{lehman1980laws,lehman1997metrics,parnas1994aging}. Lehman's 1997
 formulation states that quality declines without maintenance, but supplies
-no data for or against that law. Eick et~al. found mixed evidence in more
+no data for or against that law. Eick et~al.\ found mixed evidence in more
 than fifteen years of change history~\cite{eick2001decay}; a systematic
 review likewise found uneven support across systems~\cite{herraiz2013laws}.
 Counting features or changed lines cannot establish decay. A regression
@@ -40,8 +40,8 @@ whose effects require measurement.}\label{fig:stateinheritance}
 \subsection{Evidence within and between features}\label{sec:empirical}
 
 Conversational benchmarks identify dependence on erroneous histories.
-Zhang et~al. study false justifications after
-wrong answers~\cite{zhang2023snowball}; Sinha et~al. vary erroneous prior
+Zhang et~al.\ study false justifications after
+wrong answers~\cite{zhang2023snowball}; Sinha et~al.\ vary erroneous prior
 state updates in a controlled execution task
 ~\cite[Secs.~2.2--3, Figs.~5--6]{sinha2025illusion}.
 
@@ -70,8 +70,8 @@ a repair intervention or establish how widely the pattern applies.
 95\% intervals from Pan et~al., Table~3. Current and prior
 non-superseded tests must pass. The overlapping selected cohorts apply
 different restrictions to the same benchmark. Points and whiskers reproduce
-the published estimates and intervals.}
-\label{fig:inheritedhistory}
+the published estimates and intervals.}\label{fig:inheritedhistory}
+
 \end{figure}
 
 Their \texttt{python\_unidiff} example reuses line-splitting logic that
@@ -79,7 +79,7 @@ loses terminators in a later constructor; Figure~1's caption introduces
 it and Section~5.1/Figure~5 supplies the detail
 ~\cite{pan2026swemaintain}. SlopCodeBench and SWE-CI also evaluate agents over successive changes
 ~\cite{orlanski2026slopcodebench,chen2026sweci}. Evidence of downstream harm
-is not uniform. Borg et~al. found no significant maintainability difference
+is not uniform. Borg et~al.\ found no significant maintainability difference
 for late-2024 assistants in a two-phase study where the second phase was
 randomised~\cite[Secs.~1, 4]{borg2025echoes}. Differences in tool generation and collaboration
 setting limit direct comparison.
@@ -88,7 +88,7 @@ setting limit direct comparison.
 
 Instruction files themselves require
 maintenance~\cite{nigh2025agentsmd,rajasekaran2025context}.
-Mohsenimofidi et~al. assign 242 labels across nine categories to 169 commits.
+Mohsenimofidi et~al.\ assign 242 labels across nine categories to 169 commits.
 A commit can receive several labels: 78 include instruction additions,
 59 modifications and 23 removals
 ~\cite[Sec.~4.3, Table~2]{mohsenimofidi2026context}.
@@ -103,17 +103,17 @@ counts alone do not measure its effect on development.
 \includegraphics[width=0.94\linewidth]{fig-instruction-maintenance.png}
 \caption{Labels in 100 sampled post-adoption commits, from
 Chatlatanagulchai et~al., Sections~4.2.2--4.2.3. Labels overlap and
-count edit types, not net token growth or effects on agent success.}
-\label{fig:instructionmaintenance}
+count edit types, not net token growth or effects on agent success.}\label{fig:instructionmaintenance}
+
 \end{figure}
 
-In their two benchmark comparisons, Gloaguen et~al. report 20\% and 23\%
+In their two benchmark comparisons, Gloaguen et~al.\ report 20\% and 23\%
 higher inference cost with LLM-written context files. Success was lower by
 0.5 and 2 percentage points, respectively; the success differences from
 the no-file baselines were not statistically significant. Developer-written files outperform
 LLM-written ones on CTXbench ($p=0.038$)
 ~\cite[Sec.~4.2, Tables~2--3]{gloaguen2026agentsmd}.
-SkillOpt and Jiang et~al. provide counterevidence to treating retained
+SkillOpt and Jiang et~al.\ provide counterevidence to treating retained
 instructions as inherently harmful: evaluated procedural guidance can
 help, while retrieval and downstream success remain distinct
 ~\cite{microsoft2026skillopt,jiang2026skills}.

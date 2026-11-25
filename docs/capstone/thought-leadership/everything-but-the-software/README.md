@@ -2519,10 +2519,20 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 
 * Overleaf: upload the zip as a new project. The compiler is pdfLaTeX. The zip has `main.tex` and `anc/` at its root, the layout arXiv expects.
 * Locally: run `pdflatex main.tex` twice.
+* From this package directory, run `chktex main.tex`. The local [.chktexrc](./.chktexrc) recognizes whitespace-consuming commands, literal identifiers and valid arm-contrast en dashes without disabling warning categories. From another directory, pass its path with `chktex -l`. Use the retained external Tectonic build below to inspect compiler warnings.
 * Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, placeins, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
-* Keep `\resultsfalse` while experimental outcomes remain deferred. Before you publish results, you need checked runs and an analysis with registered-base, unregistered-amendment and implementation-epoch provenance, and the owner must authorize the update.
+* Completed exploratory results are unconditional; the former results switch and inactive reporting TODO branch have been removed. Historical requests and their dispositions remain in the revision record and Git history. Publishing further results requires checked runs, source-bound analysis and owner authorization.
+* The final article source retains only its editor compiler directive as a comment. Dated editing and permission records remain in the revision report and historical source bindings; compiler guards, disclosures and the additive Supplement remain active.
 * Focused source checks: from this package, run `python3 -B -m unittest discover -s anc -p 'test_*.py' -q` and `python3 -B anc/check_paper.py`.
 * Tectonic also works. Keep compiler intermediates and logs, caches and rendered inspection pages in an explicit external build directory. Inspect its actual log and PDF before replacing only `main.pdf`. The optional `--check-latex-log` expects a pdfLaTeX-specific output marker, so it does not validate a Tectonic build.
+* Tectonic can report undefined forward references and changed citations, labels or bookmarks on its first pass. Its automatic reruns resolve them. The `-p` stream includes every pass, so `tectonic -p main.tex | grep '[Ww]arning'` also prints warnings that have already been resolved; that pipeline's exit status comes from `grep`, not the compiler. Check the final retained log after a successful build:
+
+  ```bash
+  tectonic -p --untrusted --keep-logs --keep-intermediates --outdir /path/to/build main.tex &&
+    grep -En 'Warning:|Overfull|Underfull|Missing character:|^!' /path/to/build/main.log
+  ```
+
+  No output from `grep`, with exit status 1, means no matching final-log diagnostics. Exit status 2 indicates a `grep` error, not a clean log. Any diagnostics that remain in the final log need investigation.
 
 ## What changed in draft v2
 

@@ -112,10 +112,9 @@ class ConceptualFigureTests(unittest.TestCase):
 
         for stem in STEMS:
             self.assertIn(f"{{{stem}.png}}", source)
-        for identifier in ("PF1", "PF2", "PF3"):
-            self.assertIn(f"TODO(author): {identifier}", source)
-        self.assertIn(r"\resultstrue", narrative)
-        self.assertNotIn(r"\resultsfalse", narrative)
+        for label in ("sec:resultsledger", "tab:resultsadaptation", "tab:predictionverdicts"):
+            self.assertIn(r"\label{" + label + "}", narrative)
+        self.assertNotRegex(narrative, r"\\(?:ifresults|results(?:true|false))\b")
         self.assertIn("ten ordered features", narrative)
         self.assertNotIn("Regional access scope change", narrative)
 

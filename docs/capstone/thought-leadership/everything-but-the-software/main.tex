@@ -1,16 +1,4 @@
 % !TEX program = pdflatex
-% ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v22, integrated Supplement)
-% Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
-% anc/make_figures.py regenerates only case and published-evidence figures.
-% anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
-% anc/export_results_charts.mjs exports empirical study charts to SVG and PNG.
-% Compile with pdflatex, twice. No BibTeX run is needed: the bibliography is
-% embedded below, so arXiv's automatic TeX processing works without a .bbl.
-% references.bib in the same folder holds the same entries for reuse.
-% Before submission: disposition every TODO(author) and update \date.
-% Exploratory study and post-collection judging results are included below.
-% ---------------------------------------------------------------------------
 \newcommand{\DoNotLoadEpstopdf}{}
 \documentclass[11pt,a4paper]{article}
 
@@ -40,17 +28,14 @@
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 \newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
 \newcommand{\sourceref}[1]{\hyperref[prov:#1]{\textsf{#1}}}
-\newcommand{\armlegend}{A: feature-only; B: consolidation; C: read-only
-review; D: longer feature-only sessions; E: visible-specification repair.}
+\newcommand{\armlegend}{A\@: feature-only; B\@: consolidation; C\@: read-only
+review; D\@: longer feature-only sessions; E\@: visible-specification repair.}
 \urlstyle{same}
 \setlength{\emergencystretch}{2em}
 \renewcommand{\arraystretch}{1.15}
 \renewcommand{\topfraction}{0.9}
 \renewcommand{\textfraction}{0.08}
 \renewcommand{\floatpagefraction}{0.85}
-\newif\ifresults
-\resultstrue
-% Authorized exploratory results update from committed results/EXPERIMENT_RESULTS.md; retains base registration, unregistered amendments and 16 implementation epochs.
 
 \title{Everything but the Software:\\[4pt]
 \large Feature-Driven Decay in an Agentic Coding Loop.\\
@@ -62,8 +47,7 @@ authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \large Isabel Cabezas Martin\\[4pt]
 \small Software Engineer, Frontier Company at Microsoft, Zurich}
 
-\date{Draft of 24 November 2026}
-% TODO(author): replace with the submission date.
+\date{29 November 2026}
 
 \begin{document}
 \maketitle
@@ -99,13 +83,11 @@ provides a basis for a deeper study: acquisition, retention and adaptation
 need separate measures, and structural cleanup did not establish easier
 or cheaper adaptation.
 \end{abstract}
-% Complete 315/315 unassisted intervals retain the owner-attestation boundary, 313/315 judging snapshot and 16-epoch provenance.
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
 spec-driven development; software evolution; technical debt; refactoring;
 feedback loops; human-AI interaction; exploratory case study; experiment protocol.
 
-% ===========================================================================
 \section{Introduction}\label{sec:intro}
 
 Following the HyperVelocity methodology, I wanted to rebuild a product
@@ -301,7 +283,6 @@ the execution record preserves interruptions and recoveries. Sections~\ref{sec:t
 and~\ref{sec:protocollimits} consolidate the case's validity and the pilot's
 identification limits.
 
-% ===========================================================================
 \input{anc/background.tex}
 
 \section{Case and method}\label{sec:method}
@@ -358,7 +339,7 @@ workers were asked to build and reviewers were asked to accept.
 
 \subsection{The coordinator}\label{sec:coordinator}
 
-The coordinator ran through Copilot CLI on a VM. It selected dependency-ready
+The coordinator ran through Copilot CLI on a VM\@. It selected dependency-ready
 issues and launched parallel worker sessions in isolated git worktrees.
 Each worker received an issue and HVE Core's research, plan, implement and
 review (RPI) workflow. The coordinator checked the resulting pull request,
@@ -381,7 +362,7 @@ instructions required evidence-backed acceptance ticks, scheduled monitoring
 and increasingly extensive local gates. Human decisions, approvals,
 credentials and unresolved review findings could still block work. At the
 same transition, an accepted architecture decision prioritised migration
-to a new source layout and froze feature work in the MVP. Coordination,
+to a new source layout and froze feature work in the MVP\@. Coordination,
 migration and procedural requirements all changed at once.
 The recovered history also contains repeated scheduled prompts, so a
 message stored in the user field cannot automatically count as a human
@@ -436,13 +417,13 @@ note as context; it does not vary skill use as a separate treatment.
 \emph{Working behaviour} means completing an intended task through the
 running system, including the identity, data and service dependencies needed
 for that task. A healthy endpoint or passing repository test covers only
-part of that evidence. \emph{Decay} denotes loss of previously working behaviour or
+part of that evidence\@. \emph{Decay} denotes loss of previously working behaviour or
 increasing difficulty of understanding and changing a system. The case
 records lost usability during replacement; any decline in intrinsic code
 quality remains unmeasured. Deployment drift could produce the same observation.
 \emph{Adaptability} was defined in the prospective design as success and cost
 on the unforeseen change request under a fixed budget. This measures one
-aspect of maintainability. \emph{Consolidation} means scheduled structural work intended
+aspect of maintainability\@. \emph{Consolidation} means scheduled structural work intended
 to preserve observable behaviour, with tests checking that intention.
 Passing finite tests supports only the contracts they cover.
 
@@ -504,15 +485,14 @@ explanation. Experience-based beliefs can differ from project
 evidence~\cite{devanbu2016belief}; the same caution applies to AI-written
 records and AI-assisted synthesis. Independent checking of O1--O5 against
 retained source and execution records remains outstanding.
-Jiang et~al. make mechanism analysis inspectable through matched trajectories,
+Jiang et~al.\ make mechanism analysis inspectable through matched trajectories,
 evidence-linked labels and a separate human check of taxonomy construction,
-while distinguishing that check from exhaustive human coding
-\cite[Sec.~4, App.~A.2]{jiang2026skills}. Here the five mechanisms organise
-selected episodes. Their prevalence and causal effects require a different
+while distinguishing that check from exhaustive human coding~\cite[Sec.~4, App.~A.2]{jiang2026skills}.
+Here the five mechanisms organise selected episodes.
+Their prevalence and causal effects require a different
 design. The evidence index retains null release or execution identifiers
 where a link still needs checking.
 
-% ===========================================================================
 \FloatBarrier
 \section{Exploratory testbed: observations}\label{sec:what}
 
@@ -524,8 +504,8 @@ and changing totals.
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Phases of the motivating case and the state carried forward.}
-\label{tab:timeline}
+\caption{Phases of the motivating case and the state carried forward.}\label{tab:timeline}
+
 \begin{tabularx}{\textwidth}{@{}L{2.8cm}YY@{}}
 \toprule
 Phase & Activity & State inherited by later work \\
@@ -534,7 +514,7 @@ Discovery, several weeks & Research, role-agent and Design Thinking challenge,
 what-if scenarios, persona and journey analysis; iterative BRD, PRD and ADR
 work. & A rich but evolving requirements and decision context. \\
 Interactive probes, about a week & Disposable prototypes, my critique
-and short implementation/feedback cycles produce a used MVP. &
+and short implementation/feedback cycles produce a used MVP\@. &
 Working journeys, simplicity lessons and deployment prerequisites. \\
 Backlog handoff & A backlog agent derives epics and user stories, criteria,
 dependencies and existing-coverage labels. & A formal work hierarchy that
@@ -563,13 +543,13 @@ during implementation.
 Disposable prototypes then made some assumptions tangible. My critique
 and an agent-assisted simplicity review produced requirements for
 clear ownership, a visible next action, understandable blockers and manual
-paths that remained usable without AI. Short feedback cycles reshaped an
+paths that remained usable without AI\@. Short feedback cycles reshaped an
 MVP around those lessons. I used it intermittently,
 including sign-in, synthetic data and model-backed assistant paths.
 
 The backlog manager drew on this accumulated context to generate the work
 hierarchy, acceptance criteria and dependencies. Existing-coverage labels
-distinguished proposed work from functionality already present in the MVP.
+distinguished proposed work from functionality already present in the MVP\@.
 The supplied project export records a batch expansion around this handoff,
 followed by movement into completed states. It provides a trace of work
 organisation; accepted user journeys require their own evidence.
@@ -581,7 +561,7 @@ the issue hierarchy remained an evolving interpretation of the design.
 
 Autonomous delivery changed the feedback path. The coordinator selected
 issues and workers satisfied local implementation and review obligations.
-At the same time, a source-layout migration replaced the used MVP. The
+At the same time, a source-layout migration replaced the used MVP\@. The
 replacement passed bounded engineering checks, including health, restart
 and unauthenticated-request rejection, but lacked identity, staff and model
 prerequisites needed for my complete workflow. Restoring a
@@ -605,8 +585,8 @@ coordination, so these contrasts motivate explanations for later testing.
 
 \begin{table}[!htbp]
 \centering\footnotesize
-\caption{Contrasts relevant to context, completion and feedback.}
-\label{tab:contrasts}
+\caption{Contrasts relevant to context, completion and feedback.}\label{tab:contrasts}
+
 \begin{tabularx}{\textwidth}{@{}L{3.1cm}YY@{}}
 \toprule
 Contrast & Recorded difference & Analytical consequence \\
@@ -644,7 +624,6 @@ gap in the original observation window. The ancillary records retain issue
 totals, document volume, lexical counts and static source metrics for
 reconstruction; the separate experiment tests retention and changeability.
 
-% ===========================================================================
 \FloatBarrier
 \section{Five candidate mechanisms}\label{sec:mechanisms}
 
@@ -678,10 +657,10 @@ multi-agent failure taxonomy & Lessons that exist only as prose; problems
 solved twice \\
 Process-gate inflation & Broad per-push gates, constrained validation
 resources and an exception for a small correction & Bainbridge;
-ironies of generative AI; Murphy; Goldratt & Gate time per change; review
+ironies of generative AI\@; Murphy; Goldratt & Gate time per change; review
 minutes per merge \\
 Feedback starvation & A used MVP was frozen; I could not exercise the
-replacement and requested usable increments & XP; incremental delivery;
+replacement and requested usable increments & XP\@; incremental delivery;
 tracer bullets; Agile Manifesto; DORA & Time to first human use; age of last
 usable increment \\
 \bottomrule
@@ -729,7 +708,6 @@ Context overload is unmeasured. The proposed human-checkpoint intervention
 differs from the consolidation package tested in Section~\ref{sec:experiment}.}\label{fig:loop}
 \end{figure}
 
-% ===========================================================================
 \FloatBarrier
 \subsection{Case validity and rival explanations}\label{sec:threats}
 
@@ -821,8 +799,8 @@ First?}~\cite{beck2023tidy}. The procedure costs time, and its benefit remains
 an empirical question. Agent
 refactorings can be incomplete or incorrect~\cite{gautam2025refactorbench},
 and human studies caution against equating a refactoring label with a
-quality gain. Kim et~al. report developers' refactoring challenges and
-benefits~\cite{kim2014refactoring}; Bavota et~al. find that observed
+quality gain. Kim et~al.\ report developers' refactoring challenges and
+benefits~\cite{kim2014refactoring}; Bavota et~al.\ find that observed
 refactorings do not consistently target or remove code
 smells~\cite{bavota2015quality}. These findings argue for checking outcomes
 instead of assuming improvement. Test-commit-or-revert
@@ -830,7 +808,6 @@ protects behaviour only to the extent that the tests cover it
 ~\cite{ma2026building}. Section~\ref{sec:experiment} specifies how
 the procedure was evaluated and reports the results.
 
-% ===========================================================================
 \FloatBarrier
 \input{anc/experiment-protocol.tex}
 
@@ -899,13 +876,13 @@ alternatives independently. In Anthropic's
 randomised study, 61 analysts were recruited and 50 used the agent. Those
 50 analysts matched their agent's
 randomly assigned preference on 86\% of four analytical choices
-\cite[Study design; Results]{herdagdelen2026judgment}. The preferences were
+~\cite[Study design; Results]{herdagdelen2026judgment}. The preferences were
 deliberately strengthened in one farming-analysis task with one model; the
 rate concerns a different task and setting from coding
-\cite[Our study's limitations]{herdagdelen2026judgment}.
+~\cite[Our study's limitations]{herdagdelen2026judgment}.
 The study did not assess the decisions reported in this case. Its authors suggest
 asking experts for their view first or making the best case for each option
-\cite[What this means]{herdagdelen2026judgment}. I propose a separate step:
+~\cite[What this means]{herdagdelen2026judgment}. I propose a separate step:
 record the alternatives and a person's reasons before accepting an agent's
 recommendation. This study did not test that procedure.
 
@@ -1028,7 +1005,6 @@ This study did not test these practices, the proposed human-checkpoint
 cadence or a method for preserving expertise. The ancillary context holds the fuller practice
 checklist and framework-builder suggestions.
 
-% ===========================================================================
 \FloatBarrier
 \section{Conclusion}\label{sec:conclusion}
 
@@ -1086,7 +1062,6 @@ test longer loops and RPI-based correction once its protocol and resources
 are approved. The present evidence supports structural improvement at
 additional delivery cost, without a demonstrated short-horizon payback.
 
-% Author disposition (15 November 2026): only coauthor review is reported; no additional reviewer acknowledgement is claimed.
 
 \section*{Author contributions}
 Juan Manuel Servera Bondroit conceived the study, designed the methodology,
@@ -1149,7 +1124,6 @@ Metadata checks do not establish claim support, and
 source comparison does not independently validate a source's experiments.
 The human authors remain responsible for the content and final approval.
 Final disclosure and approval must follow the submission venue's policy.
-% Author permission (15 November 2026): selected v21 case/provenance excerpts authorized subject to required clearance; historical/raw records and any newly published extracts require their own confidentiality review.
 
 \section*{Competing interests}
 Both authors are Microsoft employees. The study concerns Microsoft and
@@ -1228,7 +1202,6 @@ assignments, failures and unknowns. Changing execution versions and service
 conditions limit homogeneous pooling. Current access and prior exposure
 need their own records, and no independent replication is claimed.
 
-% ===========================================================================
 \begingroup
 \small
 \begin{thebibliography}{999}
@@ -1242,7 +1215,7 @@ S.~Agarwal, A.~Singhal, A.~Macvean, B.~Vasilescu, and T.~Breaux.
 L.~Bainbridge.
 \newblock Ironies of automation.
 \newblock \emph{Automatica}, 19(6):775--779, 1983.
-\newblock doi:10.1016/0005-1098(83)90046-8.
+\newblock doi:\nolinkurl{10.1016/0005-1098(83)90046-8}.
 
 \bibitem{baltes2026guidelines}
 S.~Baltes et~al.
@@ -1309,7 +1282,7 @@ U.~Kini, and D.~Farley.
 \newblock Echoes of {AI}: Investigating the downstream effects of {AI}
 assistants on software maintainability.
 \newblock \emph{Empirical Software Engineering}, 31(6):161, 2026.
-\newblock doi:10.1007/s10664-026-10889-1. Full article PDF inspected 25 November 2026.
+\newblock doi:\nolinkurl{10.1007/s10664-026-10889-1}. Full article PDF inspected 25 November 2026.
 
 \bibitem{brooks1987silver}
 F.~P. Brooks,~Jr.
@@ -1323,7 +1296,7 @@ P.~Leelaprute, A.~Rungsawang, B.~Manaskasemsak, B.~Adams, A.~E. Hassan,
 and H.~Iida.
 \newblock Agent {READMEs}: An empirical study of context files for agentic coding.
 \newblock \emph{ACM Transactions on Software Engineering and Methodology},
-2026. doi:10.1145/3840295. Inspected text: arXiv:2511.12884v2.
+2026\@. doi:10.1145/3840295. Inspected text: arXiv:2511.12884v2.
 \newblock \url{https://arxiv.org/abs/2511.12884v2}.
 
 \bibitem{chen2023drift}
@@ -1423,7 +1396,7 @@ Reserve Bank of Australia, Sydney, 1975.
 
 \bibitem{gou2024critic}
 Z.~Gou, Z.~Shao, Y.~Gong, Y.~Shen, Y.~Yang, N.~Duan, and W.~Chen.
-\newblock CRITIC: Large language models can self-correct with tool-interactive critiquing.
+\newblock CRITIC\@: Large language models can self-correct with tool-interactive critiquing.
 \newblock In \emph{ICLR}, 2024. Inspected text: arXiv:2305.11738v4,
 Section 3; accessed 1 November 2026.
 \newblock \url{https://arxiv.org/abs/2305.11738v4}.
@@ -1540,7 +1513,7 @@ Hao Li, Haoxiang Zhang, and Ahmed~E. Hassan.
 J.~L. Lulla, M.~Galster, J.~M. Zhang, S.~Baltes, and C.~Treude.
 \newblock The impact of configuring agentic {AI} coding tools on build-vs-buy
 decisions: A study protocol.
-\newblock ESEM 2026, Registered Reports track. arXiv:2606.03907, 2026.
+\newblock ESEM 2026, Registered Reports track\@. arXiv:2606.03907, 2026.
 
 \bibitem{ma2026building}
 Y.~Ma, B.~Kereopa-Yorke, and B.~Schultz.
@@ -1597,7 +1570,7 @@ Emerson Murphy-Hill, Jenna Butler, and Alexandra Savelieva.
 \newblock Adoption and impact of command-line {AI} coding agents: A study of
   {Microsoft}'s early 2026 rollout of {Claude Code} and {GitHub Copilot CLI},
   2026.
-\newblock arXiv:2607.01418v1. \url{https://arxiv.org/abs/2607.01418v1}.
+\newblock arXiv:2607.01418v1\@. \url{https://arxiv.org/abs/2607.01418v1}.
 \newblock Sections 5.1 and 6 inspected 14 November 2026; observational
 merged-PR output, not a direct delivered-value measure.
 
@@ -1605,7 +1578,7 @@ merged-PR output, not a direct delivered-value measure.
 P.~Naur.
 \newblock Programming as theory building.
 \newblock \emph{Microprocessing and Microprogramming}, 15(5):253--261, 1985.
-\newblock doi:10.1016/0165-6074(85)90032-8.
+\newblock doi:\nolinkurl{10.1016/0165-6074(85)90032-8}.
 
 \bibitem{ng2024reflection}
 A.~Ng.
@@ -1667,7 +1640,7 @@ Sien Reeve~O. Peralta, Fumika Hoshi, Hironori Washizaki, Naoyasu Ubayashi,
 \newblock GitHub, source record \sourceref{R28}; retrieved 25 October 2026.
 \newblock \url{https://github.com/storytold/photocraft}.
 \newblock Dated counts and claim locators in the ancillary repository-observation record.
-\newblock Commit metadata accessed 1 November 2026 through GitHub CLI; application not executed.
+\newblock Commit metadata accessed 1 November 2026 through GitHub CLI\@; application not executed.
 
 \bibitem{rajasekaran2025context}
 P.~Rajasekaran, E.~Dixon, C.~Ryan, and J.~Hadfield.
@@ -1694,7 +1667,7 @@ P.~Runeson and M.~H\"ost.
 \newblock Guidelines for conducting and reporting case study research in
 software engineering.
 \newblock \emph{Empirical Software Engineering}, 14(2):131--164, 2009.
-\newblock doi:10.1007/s10664-008-9102-8.
+\newblock doi:\nolinkurl{10.1007/s10664-008-9102-8}.
 
 \bibitem{servera2026ama}
 J.~M. Servera~Bondroit.
@@ -1730,7 +1703,7 @@ in {LLMs}.
 
 \bibitem{strathern1997improving}
 M.~Strathern.
-\newblock `Improving ratings': Audit in the {British} university system.
+\newblock \textquoteleft{}Improving ratings\textquoteright{}: Audit in the {British} university system.
 \newblock \emph{European Review}, 5(3):305--321, 1997.
 
 \bibitem{tankelevitch2024metacognitive}
@@ -1752,8 +1725,8 @@ Debt (TechDebt '22)}, pages 11--20. ACM, 2022.
 \bibitem{sec2013knight}
 {U.S. Securities and Exchange Commission}.
 \newblock In the matter of {Knight Capital Americas LLC}.
-\newblock Order, Securities Exchange Act Release No.~34-70694, File No.~3-15570,
-16 October 2013; companion press release 2013-222.
+\newblock Order, Securities Exchange Act Release No.~\nolinkurl{34-70694}, File No.~\nolinkurl{3-15570},
+16 October 2013; companion press release \nolinkurl{2013-222}.
 \newblock \url{https://www.sec.gov/files/litigation/admin/2013/34-70694.pdf};
 \url{https://www.sec.gov/newsroom/press-releases/2013-222}.
 \newblock Full order (Paragraphs~1, 12--17) and press release inspected 25 November 2026.
@@ -1770,7 +1743,7 @@ C.~Wohlin, P.~Runeson, M.~H\"ost, M.~C. Ohlsson, B.~Regnell, and
 A.~Wessl\'en.
 \newblock \emph{Experimentation in Software Engineering}.
 \newblock Springer, 2012.
-\newblock doi:10.1007/978-3-642-29044-2.
+\newblock doi:\nolinkurl{10.1007/978-3-642-29044-2}.
 
 \bibitem{yang2026crbugbench}
 C.~Yang, H.~He, T.-C. Cheng, J.~Butler, E.~Murphy-Hill, C.~Badea, and C.~Bird.
@@ -1811,7 +1784,6 @@ cases.
 \end{thebibliography}
 \endgroup
 
-% ===========================================================================
 \appendix
 \input{anc/supplement-section.tex}
 
@@ -1830,8 +1802,8 @@ separate even when they concern the same file.
 \footnotesize
 \begin{longtable}{@{}L{0.7cm}L{6.2cm}L{8.1cm}@{}}
 \caption{Exact source identifiers and digests. Each distinct identifier is
-listed once; descriptions specify its object and revision scope.}
-\label{tab:source-register}\\
+listed once; descriptions specify its object and revision scope.}\label{tab:source-register}
+\\
 \toprule
 ID & Retained object and use & Identifier type and full value \\
 \midrule

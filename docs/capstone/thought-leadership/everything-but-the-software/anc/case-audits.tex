@@ -28,7 +28,7 @@ CI and cloud budgets & Issue \#413 moved validation locally; costs prompted
 a higher ceiling and reduced resources. & Merges continued without established
 deployed usability. & More budget is not proven to resolve delivery. \\
 Identity and sign-in setup & Missing registration/staff bindings; issue \#349
-distinguishes redirect from sign-in. & Those steps worked in the MVP. &
+distinguishes redirect from sign-in. & Those steps worked in the MVP\@. &
 A configuration obstacle is documented; decay and knowledge loss remain unproven. \\
 \bottomrule
 \end{tabularx}
@@ -43,7 +43,7 @@ A configuration obstacle is documented; decay and knowledge loss remain unproven
 Explanation & Reason considered & Counter-evidence or limits & Evidence still needed \\
 \midrule
 External services and deployment drift & Model/identity configuration differs
-from the MVP. & No provider outage is established; health checks were narrower. &
+from the MVP\@. & No provider outage is established; health checks were narrower. &
 Versioned deployment/configuration and dependency-health records for the journey. \\
 Scope expansion & RAI and consumption criteria added to issues; further
 resident-preview obligations. & Expansion predates autonomy; some controls
@@ -69,7 +69,7 @@ analysis distinguishing inherited debt from introduced faults. \\
 
 Each candidate mechanism has a definition, counter-evidence and a proposed
 check against competing explanations. Tables~\ref{tab:mechanisms} and
-\ref{tab:audittrail} give the case indicators. The five-arm experiment did
+~\ref{tab:audittrail} give the case indicators. The five-arm experiment did
 not isolate these mechanisms, and their applicability to other settings
 remains untested.
 
@@ -156,7 +156,7 @@ Definition & Additional procedural obligations increase per-change burden
 without demonstrated proportional improvement in the targeted outcome. More
 gates alone are not evidence that their net benefit is negative. \\
 Counter-evidence & Checks caught bounded defects and enforced evidence
-integrity. Gate duration and human review effort were not measured per PR. \\
+integrity. Gate duration and human review effort were not measured per PR\@. \\
 Rival explanations & Legitimate safety and privacy requirements, budget
 constraints, new deployment complexity and owner-selected risk tolerance. \\
 Experimental implication & Measure gate time and accepted outcomes under
@@ -222,8 +222,8 @@ Word counts use whitespace tokenisation of the entry, heading included.
 
 \paragraph{Evidence-boundary phrases.} Each entry was searched, case-insensitively and
 on word boundaries, for these patterns: \emph{unmet}; \emph{not accepted};
-\emph{not inferred}; \emph{is inferred}; \emph{remain(s) open};
-\emph{remain(s) unproved}; \emph{remain(s) unverified}; \emph{not claimed};
+\emph{not inferred}; \emph{is inferred}; \emph{remain{(s)} open};
+\emph{remain{(s)} unproved}; \emph{remain{(s)} unverified}; \emph{not claimed};
 \emph{not established}; and \emph{no} followed, within forty letters, spaces,
 commas, slashes or hyphens, by \emph{is} or \emph{was} and then
 \emph{claimed} or \emph{inferred}. Density is matches per 1,000 words.
@@ -241,9 +241,9 @@ word counts at the original case snapshot (\sourceref{R01}).
 
 \paragraph{Proposed measures.} \emph{Time to first human use}: elapsed time
 from the start of a delivery cycle to the first time a person uses the running
-increment for its purpose. \emph{Age of the last usable increment}: time since
+increment for its purpose\@. \emph{Age of the last usable increment}: time since
 a person last verified that the deployed system could be used for its main
-journey. \emph{Behaviour-changing merge ratio}: the share of merged pull
+journey\@. \emph{Behaviour-changing merge ratio}: the share of merged pull
 requests that change what a user can observe in the running increment.
 \emph{Cost per accepted outcome}: total model, tool and cloud cost divided by
 the number of outcomes a human accepted in the same period. Predeclare the
@@ -314,8 +314,8 @@ Observed cost and quality effects require empirical estimates.}\label{fig:refact
 Equation~\ref{eq:costprojection}, with assumed $k=5$ credits/cycle.
 Negative values mean B's investment has not paid back; zero and positive
 values mean break-even and a conditional credit advantage.
-None of the scenarios is an observed or preferred estimate.}
-\label{tab:costscenario}
+None of the scenarios is an observed or preferred estimate.}\label{tab:costscenario}
+
 \begin{tabular}{@{}lrrr@{}}
 \toprule
 Assumed premium increase $\delta$ & 10 cycles & 20 cycles & 40 cycles \\

@@ -12,16 +12,16 @@
   "historical_inputs_retained_in_git": true,
   "files": {
     "anc/additional-evidence.tex": {
-      "content_sha256": "ae9edac946ad990b634ce20fdf39303dbd3b6fde98b99c1a13228f59fda692db"
+      "content_sha256": "61c05be76ef96ecc12f1115f7e679f95443a9a59cd6eafbfb901e62a5c4b4aef"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "b586a879c4205122aa3a6008ffca8eef5f3832c8b03b853cdc952e44614737d2"
+      "content_sha256": "82ab559f28a2f72d2dacba2f8d4b6a6b4b1436c29b8e8153337f0b72c75bc25e"
     },
     "anc/deferred-measures.tex": {
       "content_sha256": "d0f107fb70f2d36500346cc8a888748d79e1cc21cb3419fda4387cfe26e2ca0f"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "34cea80fe1c0a92081d1ba2e64f8350c5aefa674563131d74b0279fcf02bf5a0"
+      "content_sha256": "27904986ecf348fe305953b9ec0541a979588057be853420fe32b0693dcae443"
     }
   },
   "author_review_revision": {
@@ -583,6 +583,67 @@
       "29 November 2026 CELA no-objection window and confirmation that 14 November submission and coauthor sign-off cover exact final bytes",
       "Independent final assessment, applicable hosted review and arXiv-generated-PDF inspection"
     ]
+  },
+  "results_switch_cleanup": {
+    "date": "2026-11-25",
+    "scope": "Removed the results switch and inactive reporting TODO branch; results-enabled TeX content is unchanged. Preserved the owner's existing main.tex edits, including the selected date.",
+    "prior_delivery_revision": "publication_readiness_revision",
+    "delivery_status": "source-only; existing main.pdf unchanged; separate validation PDFs",
+    "intake_main_sha256": "e598ce95431a477f7ab96b1c34da1eb1aa42d56b7e7c3864397e4bc121f26da0",
+    "unchanged_pdf_sha256": "98b42ac3737e27f33d47626b623e5e84fa2444b512cb1cca5488c55bf873c2b8",
+    "source_sha256": {
+      "main.tex": "1d0e5b0ca15799d2100343eb50452c0c4543bbb34a8f10a2bf1446c2127128b9",
+      "anc/experiment-protocol.tex": "14fd1327cf60a5afe4ab97807cf724f49e68a20384ae0f45a7cf72a802b3c4c4"
+    },
+    "validation": "Exact source comparison preserves the former true branch and all owner edits. Before/after compiled PDFs are byte-identical except creation/modification timestamps and trailer IDs. Two-pass PDFLaTeX produces 73 pages with no warnings or unresolved references. Existing delivered PDF and earlier provenance records are unchanged.",
+    "authoring_tests": "47 focused checker, measurement and manuscript-integration regressions passed; historical bindings preserved.",
+    "lint": "Six existing Ruff findings in check_paper.py and test_conceptual_figures.py reproduced from HEAD; other changed Python files pass. No unrelated lint corrections applied.",
+    "validation_tier": "Focused manuscript/source and non-gate authoring-tool checks; no application, infrastructure, study protocol or repository gate changes.",
+    "limits": "No independent scientific review, hosted CI, publication approval or submission. Native diagram regeneration is outside this cleanup."
+  },
+  "latex_warning_cleanup": {
+    "date": "2026-11-25",
+    "scope": "ChkTeX macro/literal recognition, explicit sentence and citation spacing, adjacent caption labels, typographic quotation commands, literal DOI/release identifiers and explicit empty-stratum en dashes. Scientific wording, equation meaning, labels, numerical results and literal prompts preserved.",
+    "prior_delivery_revision": "results_switch_cleanup",
+    "delivery_status": "source-only; existing owner-modified main.pdf preserved; separate Tectonic and PDFLaTeX validation builds",
+    "intake_main_sha256": "4e2aa1da277b729b0784cba0d5e502d1c458415a4e5c15f00a255661d98d9437",
+    "unchanged_pdf_sha256": "78b42773ddd2d1f33c7ee97f295f8e21b6603134a4acce0c636dc6de073d5ab8",
+    "prior_active_content_sha256": {
+      "anc/additional-evidence.tex": "ae9edac946ad990b634ce20fdf39303dbd3b6fde98b99c1a13228f59fda692db",
+      "anc/case-audits.tex": "b586a879c4205122aa3a6008ffca8eef5f3832c8b03b853cdc952e44614737d2",
+      "anc/measurement-provenance.tex": "34cea80fe1c0a92081d1ba2e64f8350c5aefa674563131d74b0279fcf02bf5a0"
+    },
+    "source_sha256": {
+      "main.tex": "66246f561438fa051727a8f9b73f0348edc8fb6d79b133cc95add398849c746a",
+      "anc/background.tex": "69389ec32a88d32cbca0f448a94fc61149576a46996c186f0a72e219f0db2cde",
+      "anc/experiment-protocol.tex": "747a80f6d63733e9876a9383b296eb27d52d0b8dbe347ed3de26a6c0d7795951",
+      "anc/supplement-section.tex": "d0b4f422d7d38b14b6f5d993ca74e0c3d63e77fe85abcd37e97602c7ad53d286",
+      "anc/additional-evidence.tex": "1a7132509a12c639e2a79f028c78859c3b4153541308c08eaf10c7b1d1968e8c",
+      "anc/case-audits.tex": "7b80559542006862cbd874040fb84511e627e6c8e47ec15274cbb31b642adba1",
+      "anc/deferred-measures.tex": "81c02b5eaa6576f4fb0832287bbf28ad46d2ff562104791d6b47cc48fe2616fc",
+      "anc/measurement-provenance.tex": "1a5f37ce3ea176c5ddf5c059e235583e9e591d86e77401ea77599aab9a3b3509",
+      ".chktexrc": "67385322a855c28d85fb3b57a334048361b3d70dd40bde5a7554a655d6f5b82d"
+    },
+    "validation": "ChkTeX 1.7.9 reports zero warnings with package-local recognition rules; regression stimuli retain ordinary dash and reference-spacing warnings. Tectonic 0.17.0 builds 73 pages with no final-log warnings, missing characters or unresolved references; initial forward-reference warnings resolve on automatic reruns. PDFLaTeX compilation of the 22-input source bundle also succeeds.",
+    "authoring_tests": "All 58 focused paper-tooling, measurement-provenance, protocol-planning and manuscript-integration regressions passed.",
+    "lint": "Changed paper-tooling and measurement tests pass Ruff; the existing re.S alias finding in test_protocol_planning.py is unchanged and reproduced from HEAD.",
+    "validation_tier": "Focused manuscript and non-gate authoring-tool checks; no application, infrastructure, experimental-design or repository-gate changes.",
+    "limits": "No independent scientific review, hosted CI, publication approval, diagram regeneration or submission. Existing PDF changes predate this cleanup and are not a newly approved delivery."
+  },
+  "final_source_comment_cleanup": {
+    "date": "2026-11-25",
+    "scope": "Removed 24 standalone header, separator and historical editing comments from main.tex. Retained the editor compiler directive, all active TeX commands, scientific text, disclosures and Supplement.",
+    "prior_delivery_revision": "latex_warning_cleanup",
+    "delivery_status": "source-only; existing main.pdf unchanged; separate validation builds",
+    "intake_main_sha256": "66246f561438fa051727a8f9b73f0348edc8fb6d79b133cc95add398849c746a",
+    "unchanged_pdf_sha256": "78b42773ddd2d1f33c7ee97f295f8e21b6603134a4acce0c636dc6de073d5ab8",
+    "source_sha256": {
+      "main.tex": "7705833745c5cf30cdd445f9b84e036ac087e814ba0d5e69f040f457a3e0ba36"
+    },
+    "validation": "Exact byte comparison confirms only the authorized comment lines were removed. Before/after compiled PDFs are byte-identical except timestamps and trailer IDs. ChkTeX and the final Tectonic log contain no warnings.",
+    "authoring_tests": "All 32 focused source-binding and manuscript-integration regressions pass; the structural checker, Ruff and whitespace checks also pass. The privacy guard checks the rendered data boundary and retained historical permission record rather than a removed source comment.",
+    "validation_tier": "Focused comment-only manuscript and source-binding checks; no application, study design, infrastructure or repository-gate changes.",
+    "limits": "Dated permission and review evidence remains in the revision records and historical source bindings. No new approval, independent scientific review, hosted CI or submission is implied."
   },
   "restored_citation_keys": [
     "bacchelli2013review",

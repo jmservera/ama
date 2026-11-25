@@ -59,14 +59,23 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertEqual(previous["prior_delivery_revision"], "copy_review_revision")
         current = bindings["publication_readiness_revision"]
         self.assertEqual(current["prior_delivery_revision"], "scientific_voice_revision")
+        cleanup = bindings["results_switch_cleanup"]
+        self.assertEqual(cleanup["prior_delivery_revision"], "publication_readiness_revision")
+        warning_cleanup = bindings["latex_warning_cleanup"]
+        self.assertEqual(warning_cleanup["prior_delivery_revision"], "results_switch_cleanup")
+        comment_cleanup = bindings["final_source_comment_cleanup"]
+        self.assertEqual(comment_cleanup["prior_delivery_revision"], "latex_warning_cleanup")
         for name, sha256 in {
-            **current["source_sha256"], **current["evidence_sha256"]
+            **current["source_sha256"], **current["evidence_sha256"],
+            **cleanup["source_sha256"],
+            **warning_cleanup["source_sha256"],
+            **comment_cleanup["source_sha256"],
         }.items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
         self.assertEqual(
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
-            current["delivery_sha256"],
+            warning_cleanup["unchanged_pdf_sha256"],
         )
 
     def test_measurement_slice_and_prompt_examples_are_active(self):
@@ -118,7 +127,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn(r"\sourceref{R37}", text)
         self.assertEqual(records["R36"], "b7973e200a6edbb1d19355badae3b7e03a066b09")
         self.assertEqual(records["R37"], "6cc0c236e4ca093198d38909dceb80f850196faa")
-        self.assertIn(r"\resultstrue", (PACKAGE / "main.tex").read_text())
+        self.assertIn(r"\label{sec:resultsledger}", protocol)
         methods = protocol.split(r"\label{sec:postrunjudging}", 1)[1].split(
             r"\subsection{Replication and uncertainty}", 1
         )[0]
@@ -322,7 +331,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
                 self.assertEqual(sum(int(value) for value in row[:3]), 21)
         self.assertEqual(adaptation[("Gemini 4 Argon", "B")][0], "8")
         self.assertEqual(adaptation[("Gemini 4 Argon", "C")][0], "16")
-        results = protocol.split(r"\ifresults", 1)[1].split(r"\else", 1)[0]
+        results = protocol.split(r"\label{sec:resultsledger}", 1)[1]
         self.assertNotIn(r"\scriptsize", results)
 
     def test_given_structural_summary_when_read_then_target_shortfalls_are_explicit(self):
@@ -400,7 +409,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
             with self.subTest(model=model, arm=arm):
                 for observed, name in ((complete, "both_complete"), (other, "not_both_complete")):
                     successes, allocated, _ = groups[name]
-                    expected = f"{successes}/{allocated}" if allocated else "--"
+                    expected = f"{successes}/{allocated}" if allocated else r"\textendash{}"
                     self.assertEqual(observed, expected)
                 self.assertEqual(groups["both_complete"][2], 0)
                 self.assertEqual(int(unknown), groups["not_both_complete"][2])
@@ -469,6 +478,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
     def test_given_finalization_when_deposit_selected_then_lineage_and_privacy_remain_explicit(self):
         manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
         source_review = " ".join((ANC / "additional-evidence.tex").read_text().split())
+        revision_report = " ".join((ANC / "revision-report.md").read_text().split())
 
         self.assertIn("select the experiment GitHub repository as the deposit", manuscript)
         for version in ("v4", "v6", "v7"):
@@ -477,10 +487,19 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("releases retain separate protocol archives", manuscript)
         self.assertIn("results-exploratory-s1-v1", manuscript)
         self.assertIn("No post-collection OSF deposit was created", manuscript)
-        self.assertIn("historical/raw records and any newly published extracts require their own confidentiality review", manuscript)
+        self.assertIn(
+            "Raw packets, private specimen-to-trajectory mappings and runtime workspaces "
+            "stay off-Git in the evidence vault", manuscript,
+        )
+        self.assertIn(
+            "Historical/raw records and newly released excerpts require confidentiality review.",
+            revision_report,
+        )
         self.assertNotIn("azureuser@", manuscript)
         self.assertNotIn("4.165.128.254", manuscript)
-        self.assertIn("Exchange Act Release No.~34-70694, Paragraphs~1, 12--17", source_review)
+        self.assertIn(
+            r"Exchange Act Release No.~\nolinkurl{34-70694}, Paragraphs~1, 12--17", source_review,
+        )
         self.assertIn("late 2024 with IDE and chat assistants", source_review)
         self.assertIn("Non-essential citations that had only abstract, excerpt or unverified third-party caption access were removed", source_review)
 

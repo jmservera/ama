@@ -128,7 +128,7 @@ class ProtocolPlanningTests(unittest.TestCase):
                 self.assertEqual(numeric_cell(row[1]), minimum)
                 self.assertEqual(minimum, n)
         equation = (
-            r"\frac{2(z_{1-\alpha/2}+z_{1-\beta})^2\sigma^2}"
+            r"\frac{2{(z_{1-\alpha/2}+z_{1-\beta})}^2\sigma^2}"
             r"{M\Delta_*^2}"
         )
         self.assertIn(equation, re.sub(r"\s+", "", self.protocol))
