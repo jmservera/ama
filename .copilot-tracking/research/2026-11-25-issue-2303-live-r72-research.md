@@ -1,9 +1,6 @@
 ---
-title: Issue 2303 research, revision 0000072 (2026-11-25)
+title: Issue 2303 research on revision 0000072 (2026-11-25)
+ms.date: 2026-11-25
 ---
 
-Disposition: executed. Planning Readiness: Ready.
-
-Findings: `src/api/Dockerfile` copies `chat_golden.json` (line 30) and sets `ZF_CHAT_GOLDEN` (line 34); `test_cutover_audit` covers it. Revision 0000072 (healthy, 100% traffic) returned 200 on `/api/ai/report` in 78 s; the Asset and board view rendered without the failure text. Full note: `docs/reference/research/issue-2303-live-2026-11-25-r72.md`.
-
-Decision: evidence only; no `src` change, so focused tier.
+Research disposition: executed. Prior evidence: docs/reference/research/issue-2303-live-2026-11-25-r69.md (Dockerfile COPY and ZF_CHAT_GOLDEN present at lines 30 and 34; core test test_cutover_audit covers them). Gaps: no contract test under src/api/tests; live proof only on 0000069. Active revision now 0000072 (digest sha256:14f917d6b9bb...). Planning Readiness: Ready.

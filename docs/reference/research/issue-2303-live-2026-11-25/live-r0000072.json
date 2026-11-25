@@ -1,0 +1,57 @@
+{
+ "label": "live-r0000072",
+ "utc": "2026-11-25T17:26:35Z",
+ "calls": [
+  {
+   "path": "/api/ai/report",
+   "status": 200,
+   "seconds": 73.5,
+   "keys": [
+    "chat_evaluation",
+    "consumption",
+    "evaluation",
+    "live",
+    "registry"
+   ],
+   "has_consumption": true,
+   "error": ""
+  }
+ ],
+ "case_found": true,
+ "console": [],
+ "ui_report_response_status": {
+  "started /api/me": 0.1,
+  "/api/me": [
+   200,
+   0.2
+  ],
+  "started /api/cases": 0.2,
+  "/api/cases": [
+   200,
+   3.2
+  ],
+  "started /api/cases/ZF-2025-0122": 0.4,
+  "/api/cases/ZF-2025-0122": [
+   200,
+   2.9
+  ],
+  "started /api/ai/report": 3.2,
+  "/api/ai/report": [
+   200,
+   93.4
+  ],
+  "started /api/asset/stock-queue": 93.5,
+  "/api/asset/stock-queue": [
+   200,
+   93.6
+  ]
+ },
+ "ui_heading_present": true,
+ "ui_report_loaded": false,
+ "ui_report_unavailable": false,
+ "ui_lines": [
+  "AI cohort quality floor\tState: Unknown. As reported for all homes\tLedger-wide, not this home.",
+  "AI cost per accepted outcome\tState: Unknown. Other cost components are not complete and quality-qualified\tA token count is never shown as the cost of AI."
+ ],
+ "ui_unknown_ai_count": 0
+}
