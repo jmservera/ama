@@ -1,0 +1,198 @@
+{
+ "/api/assistants": [
+  200,
+  {
+   "assistants": {
+    "len": 5,
+    "first": {
+     "id": "str",
+     "version": "str",
+     "release": "object",
+     "binding": "object",
+     "model_bounds": "object",
+     "roles": "object",
+     "categories": "object",
+     "purpose": "str"
+    }
+   },
+   "registered_tasks": {
+    "len": 9,
+    "first": {
+     "id": "str",
+     "kind": "str",
+     "version": "str",
+     "purpose": "str",
+     "scope": "str",
+     "permitted_capability": "str",
+     "intended_use": "str",
+     "prohibited_uses": "object",
+     "influence": "str",
+     "inputs": "object",
+     "limits": "object",
+     "owner": "str",
+     "affected": "object",
+     "roles": "object",
+     "source_permissions": "object",
+     "accountable_function": "str",
+     "accountable_individual": "str",
+     "delegation": "str",
+     "approval_state": "str",
+     "activation": "str",
+     "impact_record": "object",
+     "required_approval_evidence": "object",
+     "authority": "object",
+     "reliance_review": "str",
+     "manual_route": "str"
+    }
+   },
+   "disabled": "str",
+   "proactive": false,
+   "quality_scope": {
+    "mode": "str",
+    "homes": {
+     "len": 5,
+     "first": null
+    },
+    "trigger": "str",
+    "background_scan": "str",
+    "per_reading_calls": "str",
+    "model_call_authority_present": false
+   },
+   "principal": "str",
+   "rule": "str",
+   "limits": {
+    "scan_interval": 60,
+    "scan_size": 20,
+    "input_chars": 12000,
+    "output_chars": 8000,
+    "output_tokens": 600,
+    "timeout": 20,
+    "active_calls": 2,
+    "attempts": 2,
+    "backoff": 30,
+    "lease": 60
+   },
+   "manual": "str",
+   "rai_exercise_acceptance": {
+    "section": "str",
+    "independent_of_real_ai_delivery_gate": true,
+    "passed": true,
+    "status": "str",
+    "checks": {
+     "release_contract_fail_closed": "object",
+     "oq017_live_activation_gate": "object",
+     "challenge_and_appeal_safeguards": "object",
+     "operator_suspension_and_restart_authority": "object",
+     "monitoring_and_threshold_declarations": "object",
+     "human_review_cohort_and_privacy_guards": "object",
+     "requirement_traceability_complete": "object",
+     "audit_ledger_integrity": "object"
+    },
+    "traceability": {
+     "complete": true,
+     "target_verification": "str",
+     "covered_count": 15,
+     "total_required": 15,
+     "verified_by_test_ids": "object",
+     "deferred_live_ids": "object",
+     "untraced_ids": "object"
+    },
+    "note": "str"
+   },
+   "real_ai_delivery_gate": {
+    "section": "str",
+    "separated_from_rai_exercise_acceptance": true,
+    "passed": false,
+    "status": "str",
+    "checks": {
+     "provider_configured_and_enabled": "object",
+     "durable_sql_release_store": "object",
+     "no_active_suspension": "object",
+     "oq017_named_live_releases_recorded": "object",
+     "oq017_authority_holders_appointed": "object",
+     "oq018_live_fairness_and_thresholds_cleared": "object",
+     "oq019_legal_dpo_automated_decision_cleared": "object"
+    },
+    "blocking_reasons": {
+     "len": 4,
+     "first": null
+    },
+    "deferred_open_questions": {
+     "len": 3,
+     "first": null
+    },
+    "note": "str"
+   }
+  }
+ ],
+ "/api/assistants/rai-metrics": [
+  200,
+  {
+   "status": "str",
+   "metrics": {
+    "invocation": 4,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 4,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 4,
+    "latency_samples": 0,
+    "tokens": 0
+   },
+   "latency_seconds_total": 0,
+   "persisted": 71,
+   "replay": {
+    "duplicates": 0,
+    "new": 0,
+    "outside_window": 0,
+    "invalid": 0
+   }
+  }
+ ],
+ "/api/assistants/proposals": [
+  200,
+  {
+   "proposals": {
+    "len": 12,
+    "first": {
+     "capability": "str",
+     "case_id": "str",
+     "continuity_epoch": 1,
+     "created_at": 1795007301.386,
+     "envelope": "object",
+     "id": "str",
+     "manual": "str",
+     "manual_requested": true,
+     "output": "object",
+     "proposal_identity": "object",
+     "reason": "str",
+     "release": "object",
+     "review": "object",
+     "snapshot": "object",
+     "source_signature": "str",
+     "verification": "object",
+     "version": "str",
+     "state": "str",
+     "fence": 0,
+     "owner": "str",
+     "lease_until": 0,
+     "attempts": 0,
+     "not_before": 0,
+     "revision": 1,
+     "stale": true
+    }
+   },
+   "disabled": "str",
+   "manual": "str",
+   "next_after": null
+  }
+ ],
+ "/api/assistants/forecast": [
+  400,
+  {
+   "error": "str"
+  }
+ ]
+}

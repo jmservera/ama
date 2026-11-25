@@ -1,0 +1,14 @@
+2026-11-25T14:16:13Z
+[
+  {
+    "c": "2026-11-24T16:18:10+00:00",
+    "h": "Healthy",
+    "n": "ca-cutover-test-demo-api--0000068",
+    "t": 100
+  }
+]
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:7610c41b06e75a51a1e15c1b7465fb73270e2b3bb79153955fe63225c988f456
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+api/health 401
+api/assistants/releases 401
