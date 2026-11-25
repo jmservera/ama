@@ -1,0 +1,15 @@
+{
+ "blocked": {},
+ "calls": [
+  {
+   "assistant": "stock-prioritisation",
+   "usage": "missing or malformed"
+  }
+ ],
+ "label": "measured held-out batch",
+ "mode": "live",
+ "outcome": "stopped-bad-usage",
+ "problems": [],
+ "tokens": 600,
+ "usd": "0.00012"
+}

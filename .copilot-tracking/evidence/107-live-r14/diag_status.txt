@@ -1,0 +1,12 @@
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 401 PermissionDenied Principal does not have access to API/Operation.
+http 403 403 Public access is disabled. Please configure private endpoint.
+http 403 403 Public access is disabled. Please configure private endpoint.
+http 403 403 Public access is disabled. Please configure private endpoint.
+http 403 403 Public access is disabled. Please configure private endpoint.

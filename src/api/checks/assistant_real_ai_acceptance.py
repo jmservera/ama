@@ -38,14 +38,8 @@ def prompt_for(assistant: str) -> str:
 
 
 def admitted(entry: Mapping[str, Any]) -> bool:
-    """A release in force is an object with an id and no denial reason or missing evidence."""
-    release = entry.get("release")
-    return (
-        isinstance(release, Mapping)
-        and bool(release.get("id"))
-        and not release.get("reason")
-        and not release.get("missing")
-    )
+    """The staff listing shows a release in force as the string "in force"; a denial is an object."""
+    return entry.get("release") == "in force"
 
 
 def plan(
