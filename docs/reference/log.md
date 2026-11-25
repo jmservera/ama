@@ -15494,3 +15494,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2320 slow briefing GET cause and busy-answer cache (Refs #2320)
 
 * Added [issue-2320-live-r8-2026-11-25.md](research/issue-2320-live-r8-2026-11-25.md): cold start and SQL resume ruled out, uncached busy fallback repeated the 2 s lock wait per GET, 10 s cache and test added, criteria 2 and 4 live proof pending deployment.
+
+## [2026-11-25] add | Issue 1844 browser-free pin for the narrow map summary (Refs #1844)
+
+* Added [issue-1844-live-r9-2026-11-25.md](research/issue-1844-live-r9-2026-11-25.md): five browser-free tests pin the static narrow-width summary, 436 harness passes with 0 skips, live probe on API revision 0000072, criterion 6 stays owner-gated.
