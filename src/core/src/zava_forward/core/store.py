@@ -1983,6 +1983,39 @@ class Store(
         reason = cached.get("reason")
         return bool(reason) and reason == self.release_denial("briefing")
 
+    BRIEFING_BUSY = (
+        "The briefing could not be saved to the record just now because the record is busy. "
+        "It is shown without being saved; refresh in a moment."
+    )
+
+    def _briefing_unrecorded(self, key, hit, programme, candidates, top, tmpl):
+        stale = hit or self._briefings.get(key)
+        if stale:
+            return dict(stale[1], reason=self.BRIEFING_BUSY, recorded=False)
+        cites = [
+            f"{c['id']}: {part}"
+            for c in top[:3]
+            for part in (f"Stage: {c['stage']}", f"Days in stage: {c['days_in_stage']}")
+        ]
+        return dict(
+            text=tmpl,
+            source="template",
+            model=None,
+            validated=True,
+            verified=bool(cites),
+            approval="Not reviewed",
+            task="briefing",
+            release=None,
+            reason=self.BRIEFING_BUSY,
+            recorded=False,
+            citations=cites,
+            scope="programme" if programme else "assigned",
+            scope_label="All programme cases" if programme else "My assigned cases",
+            case_count=len(candidates),
+            summary_count=len(top[:3]),
+            label="Summary by rules",
+        )
+
     def briefing(self, user, mode=None):
         if not projection.allowed(user, "briefing"):
             raise PermissionError("Your role does not include this.")
@@ -2043,30 +2076,39 @@ class Store(
                 else empty
             )
         sysmsg, prompt = ai_prompts.render("briefing", facts=facts)
-        r = ai_tasks.run_text_task(
-            self,
-            user,
-            "briefing",
-            top,
-            sysmsg,
-            prompt,
-            tmpl,
-            [
-                x
-                for c in top[:3]
-                for x in [
-                    f"{c['id']}: Stage: {c['stage']}",
-                    f"{c['id']}: Days in stage: {c['days_in_stage']}",
-                ]
-            ],
-            mode=mode,
-        )
-        self.audit(
-            user["email"],
-            "ai_run",
-            "-",
-            f"briefing source={r['source']} model={r['model']} verified={r['verified']}",
-        )
+        try:
+            r = ai_tasks.run_text_task(
+                self,
+                user,
+                "briefing",
+                top,
+                sysmsg,
+                prompt,
+                tmpl,
+                [
+                    x
+                    for c in top[:3]
+                    for x in [
+                        f"{c['id']}: Stage: {c['stage']}",
+                        f"{c['id']}: Days in stage: {c['days_in_stage']}",
+                    ]
+                ],
+                mode=mode,
+            )
+            self.audit(
+                user["email"],
+                "ai_run",
+                "-",
+                f"briefing source={r['source']} model={r['model']} verified={r['verified']}",
+            )
+        except Exception as exc:
+            from .mssqlstore import is_write_lock_busy
+
+            if not is_write_lock_busy(exc):
+                raise
+            # A GET must not answer 503 because other clients hold the SQL write lock (issue #2320):
+            # show the last answer or a rules summary, say it was not recorded, and let the next GET record it.
+            return self._briefing_unrecorded(key, hit, programme, candidates, top, tmpl)
         out = dict(
             r,
             scope="programme" if programme else "assigned",
