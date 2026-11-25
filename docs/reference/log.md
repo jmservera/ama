@@ -15498,3 +15498,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 1844 browser-free pin for the narrow map summary (Refs #1844)
 
 * Added [issue-1844-live-r9-2026-11-25.md](research/issue-1844-live-r9-2026-11-25.md): five browser-free tests pin the static narrow-width summary, 436 harness passes with 0 skips, live probe on API revision 0000072, criterion 6 stays owner-gated.
+## [2026-11-25] add | Issue 2253 resident chart live re-proof on API 0000072 (Refs #2253)
+
+* Added [issue-2253-live-r10-2026-11-25.md](research/issue-2253-live-r10-2026-11-25.md): re-run of the live Playwright probe with API revision 0000072 active; 0 text overlaps, 12-unit text, 4 circles, 6 forecast squares; 65 local tests OK. No source or estate change.
