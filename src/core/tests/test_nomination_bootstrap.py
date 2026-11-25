@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -56,6 +57,35 @@ print(json.dumps({
     "outcome": outcome,
     "foreign_kept": sys.modules["zava_forward.core.store"] is foreign,
     "path_unchanged": sys.path == before,
+    "nomination_loaded": "test_nomination_route" in sys.modules,
+}))
+"""
+
+_COPY_BULK_FIRST = """
+import json, sys
+def family():
+    return {n: id(m) for n, m in sys.modules.items()
+            if n == "zava_forward" or n.startswith("zava_forward.")}
+before = list(sys.path)
+try:
+    import test_bulk_edits as b
+except ImportError as exc:
+    print(json.dumps({"bulk_rejected": str(exc)}))
+    raise SystemExit(0)
+snapshot = family()
+try:
+    import test_nomination_route
+    outcome = "imported"
+except ImportError as exc:
+    outcome = "rejected: " + str(exc)
+store = sys.modules["zava_forward.core.store"]
+print(json.dumps({
+    "outcome": outcome,
+    "family_unchanged": family() == snapshot,
+    "path_unchanged": sys.path == before,
+    "store_file": store.__file__,
+    "conflict_file": sys.modules[b.ConflictError.__module__].__file__,
+    "foreign_kept": b.Store is store.Store,
     "nomination_loaded": "test_nomination_route" in sys.modules,
 }))
 """
@@ -119,6 +149,33 @@ class NominationBootstrapIdentityTests(unittest.TestCase):
         self.assertTrue(result["second_matches_first"])
         self.assertTrue(result["path_unchanged"])
         self.assertFalse(result["nomination_loaded"])
+
+    def _noneditable_copy(self, tmp: str) -> Path:
+        shutil.copytree(
+            _CORE_SRC / "zava_forward",
+            Path(tmp) / "zava_forward",
+            ignore=shutil.ignore_patterns("__pycache__"),
+        )
+        return Path(tmp)
+
+    def test_noneditable_copy_layout_both_orders(self) -> None:
+        nomination_first = _IDENTITY.format(first="").replace(
+            "import test_bulk_edits as b\nimport test_nomination_route as n\n",
+            "import test_nomination_route as n\nimport test_bulk_edits as b\n",
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            site = self._noneditable_copy(tmp)
+            roots = (site, _AGENTS_SRC, _TESTS)
+            self._assert_source_identity(self._run(nomination_first, *roots))
+            result = self._run(_COPY_BULK_FIRST, *roots)
+            self.assertNotIn("bulk_rejected", result)
+            self.assertTrue(str(result["outcome"]).startswith("rejected: unsupported layout"))
+            for key in ("store_file", "conflict_file"):
+                self.assertTrue(Path(str(result[key])).is_relative_to(site), key)
+            self.assertTrue(result["foreign_kept"])
+            self.assertTrue(result["family_unchanged"])
+            self.assertTrue(result["path_unchanged"])
+            self.assertFalse(result["nomination_loaded"])
 
 
 if __name__ == "__main__":
