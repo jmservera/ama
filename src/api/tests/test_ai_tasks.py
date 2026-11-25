@@ -1211,6 +1211,23 @@ class Endpoints(unittest.TestCase):
         self.assertEqual(len(chat["summary"]["review_effort"]["missing_inputs"]), 4)
         self.assertEqual(chat["enablement"]["state"], "disabled")
 
+    def test_report_repeat_request_reuses_evaluations_and_answers_within_five_seconds(self):
+        import time
+
+        from zava_forward.agents import chat_eval
+
+        self.call("pam@example.test", "/api/ai/report")
+        with (
+            mock.patch.object(ai_eval, "run_scenario", side_effect=AssertionError("recomputed")),
+            mock.patch.object(chat_eval, "run_scenario", side_effect=AssertionError("recomputed")),
+        ):
+            started = time.monotonic()
+            code, body = self.call("pam@example.test", "/api/ai/report")
+            elapsed = time.monotonic() - started
+        self.assertEqual(code, 200)
+        self.assertLess(elapsed, 5.0)
+        self.assertTrue(body["chat_evaluation"]["passed"])
+
     def test_report_chat_failure_does_not_alter_single_turn_results_and_live_stays_disabled(self):
         baseline_code, baseline = self.call("pam@example.test", "/api/ai/report")
         self.assertEqual(baseline_code, 200)

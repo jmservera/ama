@@ -26,7 +26,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
-from zava_forward.api import auth, build_info, plain_language, sensor_badges, simulator_admin, welcome
+from zava_forward.api import auth, build_info, eval_report_cache, plain_language, sensor_badges, simulator_admin, welcome
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import AI_SUSPENDED, CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -1391,7 +1391,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             consumption = app.assistants.consumption.report(start=start, end=end, as_of=as_of)
                         except ai_consumption.DispatchHeld as error:
                             consumption["reason"] = str(error)
-                    evaluation = dict(ai_eval.run_eval())
+                    evaluation = dict(eval_report_cache.cached(ai_eval.run_eval, ai_eval.GOLDEN))
                     heldout_suite = heldout_eval.canonical_offline_heldout_suite()
                     evaluation["held_out"] = heldout_eval.compact_report_summary(heldout_suite)
                     evaluation["tokenomics_comparison"] = tokenomics_comparison.compact_comparison_summary(
@@ -1402,7 +1402,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         200,
                         {
                             "evaluation": evaluation,
-                            "chat_evaluation": chat_eval.run_eval(),
+                            "chat_evaluation": eval_report_cache.cached(chat_eval.run_eval, chat_eval.GOLDEN),
                             "live": (
                                 s.ai_live_report(u, assistants_service=app.assistants, **live_bounds)
                                 if isinstance(s, Store)
@@ -2424,6 +2424,17 @@ def main() -> None:
         telemetry.shutdown()
 
 
+def _warm_report_evaluations() -> None:
+    """Fill the report evaluation cache at start-up; on failure the first request recomputes."""
+    from zava_forward.agents import ai_eval, chat_eval
+
+    try:
+        eval_report_cache.cached(ai_eval.run_eval, ai_eval.GOLDEN)
+        eval_report_cache.cached(chat_eval.run_eval, chat_eval.GOLDEN)
+    except Exception:
+        logging.getLogger(__name__).warning("report evaluation warm-up failed", exc_info=True)
+
+
 def _serve() -> None:
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:
@@ -2438,6 +2449,7 @@ def _serve() -> None:
     if app.provider.name == "password" and not os.environ.get("ZF_PASSWORD"):
         print(f"Sign in with any staff email and the password {password}")
     app.assistants.start()
+    threading.Thread(target=_warm_report_evaluations, name="report-eval-warmup", daemon=True).start()
     try:
         _Server((host, port), make_handler(app)).serve_forever()
     finally:

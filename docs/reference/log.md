@@ -15507,3 +15507,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 2310 anonymous API 401 test evidence (Refs #2310)
 
 * Added [2026-11-25-issue-2310-anonymous-api-401-proof.md](research/2026-11-25-issue-2310-anonymous-api-401-proof.md): the requested tests already exist and pass (45 auth tests), live demo app returns 302 for anonymous API requests because the platform redirects first; no code change.
+
+## [2026-11-25] add | Issue 2303 report latency profile and fix (Refs #2303)
+
+* Added [issue-2303-report-latency-2026-11-25.md](research/issue-2303-report-latency-2026-11-25.md): the report handler recomputed two golden evaluations per request; a bounded single-flight cache and start-up warm-up fix it locally (repeat read 0.002 s); live latency after the fix is unproven because nothing was deployed.
