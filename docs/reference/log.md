@@ -15599,3 +15599,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 2190 skills-load wait (Refs #2190)
 
 * Added [issue-2190-live-20261126T062859Z-note.md](research/issue-2190-live-20261126T062859Z-note.md): a load-dependent option-count race in the employee chat browser check (1 of 7 runs) fixed by waiting for the enabled input, with a per-criterion table.
+
+## [2026-11-26] add | Issue 435 cost per home versus value evidence (Refs #435)
+
+* Added [capstone-pitch-435-live-2026-11-26.md](research/capstone-pitch-435-live-2026-11-26.md) and the [pitch evidence page](../capstone/pitch/tokenomics-cost-per-home-vs-value.md): measured batch, planning scenario, modelled grant and time-saved gaps with Unknown where no source exists, and a per-criterion table.

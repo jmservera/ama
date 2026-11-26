@@ -67,3 +67,4 @@ claim a price, a saving or a payback."
 * [B25 and B27 answers](./pitch/questions-and-answers.md)
 * [Placement draft and decisions](./pitch/tokenomics-placement-draft.md)
 * [Core consumption ledger](../../src/core/README.md) and [API consumption report](../../src/api/README.md)
+* [Cost per home versus value evidence](./pitch/tokenomics-cost-per-home-vs-value.md)
