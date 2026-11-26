@@ -15539,3 +15539,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] update | Issue 107 in-environment real-AI batch
 
 * Added [issue-107-live-r15-in-environment-real-ai-2026-11-25.md](research/issue-107-live-r15-in-environment-real-ai-2026-11-25.md): capped batch run once inside the demo API replica with its managed identity; 258 measured tokens across the five assistants, per-criterion status recorded.
+## [2026-11-25] add | Issue 1830 live r14 map check settle before scan (Refs #1830)
+
+* Added [issue-1830-live-r14-2026-11-25.md](research/issue-1830-live-r14-2026-11-25.md): the direct #1828 map check was intermittently red; one `settle_map_reads` call before the expanded-width scan took parallel-run failures from 5 of 30 to 0 of 18; criteria 1, 3 and 4 stay partly unproven or owner-gated.
