@@ -41,6 +41,8 @@ param useWebSockets bool = false
 @description('Chance 0 to 0.9 that a device sends nothing in a slot, so the demo shows missing readings (issue 2191). Seeded, so a slot repeats. 0 keeps every reading.')
 param failureRate string = '0'
 param location string = resourceGroup().location
+@description('Optional Action Group resource id. When set, a failed-execution alert is created for this job; empty creates no rule.')
+param failureAlertActionGroupId string = ''
 
 var jobName = 'job-live-simulator'
 var digestOk = contains(image, '@sha256:') && !contains(image, ' ') && startsWith(image, '${registryServer}/')
@@ -132,6 +134,35 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
     }
   }
   dependsOn: [guard]
+}
+
+resource failureAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = if (!empty(failureAlertActionGroupId)) {
+  name: 'alert-${jobName}-failed'
+  location: 'global'
+  properties: {
+    description: 'Simulator job failed execution. Owner: Digital service owner (proposed role, actual appointment pending). Runbook: https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md#job-live-simulator.'
+    severity: 2
+    enabled: true
+    scopes: [job.id]
+    evaluationFrequency: 'PT5M'
+    windowSize: 'PT15M'
+    criteria: {
+      'odata.type': 'Microsoft.Azure.Monitor.SingleResourceMultipleMetricCriteria'
+      allOf: [
+        {
+          name: 'failed-execution'
+          metricNamespace: 'Microsoft.App/jobs'
+          metricName: 'Executions'
+          dimensions: [{ name: 'state', operator: 'Include', values: ['Failed'] }]
+          operator: 'GreaterThan'
+          threshold: 0
+          timeAggregation: 'Total'
+          criterionType: 'StaticThresholdCriterion'
+        }
+      ]
+    }
+    actions: [{ actionGroupId: failureAlertActionGroupId }]
+  }
 }
 
 output jobName string = job.name

@@ -15612,3 +15612,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 146 live monitoring activation (Refs #146)
 
 * Added [issue-146-live9-monitoring-2026-11-26.md](research/issue-146-live9-monitoring-2026-11-26.md): demo candidate alerts enabled live, receiver failure alert created, workbook redeployed with 14 items, candidate gates set in `infra/main.test.bicepparam`. Firing of poison and IoT rules, named owners and Portal render remain unproven.
+## [2026-11-26] add | Issue 146 simulator failure rule (Refs #146)
+
+* Added [issue-146-live10-monitoring-2026-11-26.md](research/issue-146-live10-monitoring-2026-11-26.md): fresh read-only inventory, an opt-in failure alert for `job-live-simulator` with a runbook entry and owner role, and a per-criterion table.

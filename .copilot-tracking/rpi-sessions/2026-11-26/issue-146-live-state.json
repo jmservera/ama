@@ -1,5 +1,5 @@
 {
- "task_id": "issue-146-live-20261126T090517Z",
+ "task_id": "146-live-20261126T082114Z",
  "task_slug": "issue-146-live",
  "parent_task": null,
  "mode": "automatic",
@@ -7,47 +7,42 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-26-issue-146-live-20261126T090517Z-research.md",
-  "plan": ".copilot-tracking/plans/2026-11-26/issue-146-live-20261126T090517Z-plan.md",
-  "details": ".copilot-tracking/details/2026-11-26/issue-146-live-20261126T090517Z-details.md",
-  "critique": ".copilot-tracking/critique/2026-11-26/issue-146-live-20261126T090517Z-critique.md",
-  "changes": ".copilot-tracking/changes/2026-11-26/issue-146-live-20261126T090517Z-changes.md",
-  "review": ".copilot-tracking/reviews/2026-11-26-issue-146-live-20261126T090517Z-review.md"
+  "research": ".copilot-tracking/research/2026-11-26/issue-146-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-26/issue-146-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-26/issue-146-live-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-26/issue-146-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-26/issue-146-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-26/issue-146-live-review.md"
  },
  "confirmed_decisions": [
   {
-   "decision": "Research executed, Ready",
+   "decision": "Critique executed once, proceed, applied directly",
    "status": "done",
-   "evidence": ".copilot-tracking/research/2026-11-26-issue-146-live-20261126T090517Z-research.md"
+   "evidence": ".copilot-tracking/critique/2026-11-26/issue-146-live-critique.md"
   },
   {
-   "decision": "Critique executed once, proceed",
-   "status": "done",
-   "evidence": ".copilot-tracking/critique/2026-11-26/issue-146-live-20261126T090517Z-critique.md"
-  },
-  {
-   "decision": "Review executed once, conformant for changed scope; criteria partly unproven",
-   "status": "done",
-   "evidence": ".copilot-tracking/reviews/2026-11-26-issue-146-live-20261126T090517Z-review.md"
+   "decision": "Review executed once",
+   "status": "conformant for scope",
+   "evidence": ".copilot-tracking/reviews/2026-11-26/issue-146-live-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Commit locally and stop"
+  "action": "User selects follow-up"
  },
  "prioritized_follow_ups": [
   {
    "rank": 1,
-   "task": "Provoke poison and IoT alert firing",
-   "rationale": "firing unproven",
-   "evidence": "docs/reference/research/issue-146-live9-monitoring-2026-11-26.md"
+   "task": "Enable job/poison/IoT rules after owner approval",
+   "rationale": "only ledger digest enabled",
+   "evidence": "live10 note"
   },
   {
    "rank": 2,
-   "task": "Name owners; refresh four legacy alert descriptions",
-   "rationale": "owner criterion",
-   "evidence": "same"
+   "task": "Redeploy workbook",
+   "rationale": "stale deployed copy",
+   "evidence": "live8 note"
   }
  ]
 }

@@ -554,6 +554,18 @@ platform events; no console-content dumps. Response: the receiver is a telemetry
 reader, so keep manual routes and do not replay without audit. Recovery: next
 scheduled execution Succeeded.
 
+### Job live simulator
+
+Anchor: `job-live-simulator`. `alert-job-live-simulator-failed`, created by
+`infra/live-simulator-job.bicep` only when `failureAlertActionGroupId` is set:
+`Microsoft.App/jobs` `Executions` Total >0 with `state=Failed` over 15 minutes,
+every five minutes, severity 2. Proposed owner: Digital service owner (actual
+appointment pending). Triage: `az containerapp job execution list` status and
+start time, then platform events; no console-content dumps. Response: the
+simulator only publishes synthetic device messages, so pause the schedule and keep
+manual routes; do not replay without audit. Recovery: next scheduled execution
+Succeeded.
+
 ### API 5xx query
 
 The 5xx rule is the metric alert in the API errors entry. The same view as a query:
