@@ -1635,10 +1635,16 @@ class Assistants:
         hold = continuity.gate_hold(db, mssql=self.mssql)
         if hold is not None:
             return continuity.reason_text(hold)
-        s = continuity.active(
+        s = self.open_suspension(db, capability)
+        return continuity.reason_text(s) if s else None
+
+    def open_suspension(self, db, capability):
+        """The open suspension covering this task; the owner-directed demo override skips the hold, never the record."""
+        if continuity.demo_owner_override():
+            return None
+        return continuity.active(
             self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai)
         )
-        return continuity.reason_text(s) if s else None
 
     def admission(self, db, capability):
         """The retained denial for this task, or None when a matching release is in force. Read on the caller's connection."""
@@ -1782,8 +1788,8 @@ class Assistants:
                     ).fetchall()
                 ]
                 capability = continuity.record_task(body)
-                s = continuity.gate_hold(db, mssql=self.mssql) or continuity.active(
-                    self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai)
+                s = continuity.gate_hold(db, mssql=self.mssql) or self.open_suspension(
+                    db, capability
                 )
                 current = continuity.epoch_current(body, self.continuity(db))
                 row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
@@ -2222,8 +2228,8 @@ class Assistants:
         )
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
-        held = continuity.gate_hold(db, mssql=self.mssql) or continuity.active(
-            self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai)
+        held = continuity.gate_hold(db, mssql=self.mssql) or self.open_suspension(
+            db, body["capability"]
         )
         body["epoch_current"] = continuity.epoch_current(body, self.continuity(db))
         body["release_denial"] = self.admission(db, body["capability"])

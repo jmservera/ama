@@ -1,0 +1,2238 @@
+{
+ "me": {
+  "status": 200,
+  "role": "Retrofit Programme Manager"
+ },
+ "assistants": {
+  "status": 200,
+  "body": {
+   "assistants": [
+    {
+     "id": "stock-prioritisation",
+     "version": "1.0.0",
+     "release": "in force",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "3768ed36e3242c28",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+      "data_version": "bd66b741abf300ac",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "b591a7fb7d211c1bb8ac4d398cea1e2ee52b6a7dbfeccc2f97de1408d420ec91",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "purpose": "Explain stock facts and prepare a data-owner query"
+    },
+    {
+     "id": "assessment-preparation",
+     "version": "1.0.0",
+     "release": "in force",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "227fbd67300191c2",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+      "data_version": "85e08cf5af33f7cd",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "00242be1162f711a64faa3667e421eb558309aee0980ca4845910244df49262e",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "purpose": "Prepare a survey/design evidence checklist"
+    },
+    {
+     "id": "funding-evidence",
+     "version": "1.0.0",
+     "release": "in force",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "a3a511de0e461d78",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+      "data_version": "5dabe1a2162e5f62",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "72ba62e46f523209",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "fb77a9101568de8edf55c7ccf3d3ac664121f4830ea18c12e7733d1989a2cdb2",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "purpose": "Prepare application/claim evidence gaps"
+    },
+    {
+     "id": "works-resident-coordination",
+     "version": "1.0.0",
+     "release": "in force",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "46d998c3de7ac61e",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+      "data_version": "3f0a66365555e8d1",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "2123c2c05cef7a89",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "866dcbfd439d9395e599b1c4ac53d250596e369cfd5252374d5f63bb27940e67",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Retrofit Coordinator",
+      "Resident Liaison Officer",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "purpose": "Draft an update or committed-capacity option"
+    },
+    {
+     "id": "quality-evidence",
+     "version": "1.0.0",
+     "release": "in force",
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "9582b9a76f52d5ef",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+      "data_version": "b979970eefcae01d",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "03579f28ea6debec",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "6cfe405476cc2f0888cc73b765c1fda54471ded52e187a32525c45ade9bfe863",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "model_bounds": {
+      "calls_per_attempt": 1,
+      "max_attempts": 2,
+      "max_calls_per_request": 2,
+      "max_agent_depth": 1,
+      "tools": 0,
+      "attempt_ceiling": 3
+     },
+     "roles": [
+      "Quality Inspector",
+      "Retrofit Programme Manager"
+     ],
+     "categories": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensor"
+     ],
+     "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+    }
+   ],
+   "registered_tasks": [
+    {
+     "id": "stock-prioritisation",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Explain stock facts and prepare a data-owner query",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Explain stock facts and prepare a data-owner query",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "ranking"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "stock-prioritisation",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "3768ed36e3242c28",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:bb974eaf2f8b",
+      "data_version": "bd66b741abf300ac",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "b591a7fb7d211c1bb8ac4d398cea1e2ee52b6a7dbfeccc2f97de1408d420ec91",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": null,
+     "release": {
+      "id": "c6baec4c120344c3accf73feb7a8ae68",
+      "version": "demo-r14-2026-11-25",
+      "digest": "90de01fea90747c27265c530f8dd28a091b6d949259193ee107f6a756afb0159"
+     },
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": false
+     }
+    },
+    {
+     "id": "assessment-preparation",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Prepare a survey/design evidence checklist",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Prepare a survey/design evidence checklist",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "measures",
+      "technical",
+      "documents"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "assessment-preparation",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "227fbd67300191c2",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:38aadbe30ceb",
+      "data_version": "85e08cf5af33f7cd",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "0fb3bef9c37875ca",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "00242be1162f711a64faa3667e421eb558309aee0980ca4845910244df49262e",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": null,
+     "release": {
+      "id": "603997fa4c0542b28dae58379482a2cd",
+      "version": "demo-r14-2026-11-25",
+      "digest": "4236d89561cc7d3eae67988b102215db355ab09be5249e53f0fd7e8bdf3290d4"
+     },
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": false
+     }
+    },
+    {
+     "id": "funding-evidence",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Prepare application/claim evidence gaps",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Prepare application/claim evidence gaps",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "funding",
+      "finance",
+      "grants",
+      "documents"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "funding-evidence",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "a3a511de0e461d78",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:f182f3b38088",
+      "data_version": "5dabe1a2162e5f62",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "72ba62e46f523209",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "fb77a9101568de8edf55c7ccf3d3ac664121f4830ea18c12e7733d1989a2cdb2",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": null,
+     "release": {
+      "id": "971a2c6704024bf8a80388a44bd2e15d",
+      "version": "demo-r14-2026-11-25",
+      "digest": "3d7f573b34b23bd4848cdc788ac7c64f55e119ecc9f62be258d7fb3bb3d22739"
+     },
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": false
+     }
+    },
+    {
+     "id": "works-resident-coordination",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Draft an update or committed-capacity option",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft an update or committed-capacity option",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Resident Liaison Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "preferences",
+      "appointments",
+      "handoff",
+      "capacity",
+      "requests"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "works-resident-coordination",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "46d998c3de7ac61e",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:afb0ef7dde7a",
+      "data_version": "3f0a66365555e8d1",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "2123c2c05cef7a89",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "866dcbfd439d9395e599b1c4ac53d250596e369cfd5252374d5f63bb27940e67",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": null,
+     "release": {
+      "id": "2165626cfe7e4e8ca9419fa07a17a399",
+      "version": "demo-r14-2026-11-25",
+      "digest": "9b868b54738ab2a348693065e9a0fc96dc48d59b6bc44f758bea0dfd43def57e"
+     },
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": false
+     }
+    },
+    {
+     "id": "quality-evidence",
+     "kind": "assistant",
+     "version": "1.0.0",
+     "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; a person verifies and accepts",
+     "inputs": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensor"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff",
+      "providers"
+     ],
+     "roles": [
+      "Quality Inspector",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "measures",
+      "quality",
+      "checklists",
+      "documents",
+      "sensor"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "quality-evidence",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_proposals",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "1.0.0",
+      "schema_version": "evidence-proposal-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "9582b9a76f52d5ef",
+      "policy_version": "synthetic-gaps-2026-10-13-v1:a7ce4702fe12",
+      "data_version": "b979970eefcae01d",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "03579f28ea6debec",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "6cfe405476cc2f0888cc73b765c1fda54471ded52e187a32525c45ade9bfe863",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": null,
+     "release": {
+      "id": "b3f9bd92d8674b5c8c0c045fff8b9886",
+      "version": "demo-r14-2026-11-25",
+      "digest": "a934bac232a270349a4188f036819b79f3c20bc28cedb741c8b072fce9c03d06"
+     },
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": false
+     }
+    },
+    {
+     "id": "priority",
+     "kind": "retained-path",
+     "version": "2026-10-15.1",
+     "purpose": "Explain a suggested order of work for a person to accept or reject",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Explain a suggested order of work for a person to accept or reject",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Advisory; ranking and queue membership unchanged",
+     "inputs": [
+      "stage",
+      "safety",
+      "ranking"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "stage",
+      "safety",
+      "ranking"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "priority",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_explanations",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_explanations",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_explanations",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "2026-10-15.1",
+      "schema_version": "legacy-text-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "15ed5b165b2074a1",
+      "policy_version": "legacy-forbidden-output-filter-v1:b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+      "data_version": "2a633f68879b0315",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "87ab689eb1791440",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "495022a28ec1bd38a678ef333f0ec3c3ab9759dc016b97795576f18668c00134",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "legacy:priority",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "funding_draft",
+     "kind": "retained-path",
+     "version": "2026-10-15.1",
+     "purpose": "Draft funding application wording",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft funding application wording",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Draft wording; no submission or eligibility decision",
+     "inputs": [
+      "measures",
+      "funding"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Grants and Evidence Officer",
+     "affected": [
+      "residents",
+      "funders"
+     ],
+     "roles": [
+      "Grants and Evidence Officer",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "measures",
+      "funding"
+     ],
+     "accountable_function": "Grants and Evidence Officer",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "denied for live use; constructed offline scaffolding permitted",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; no model call.",
+     "monitoring_declaration": {
+      "task_id": "funding_draft",
+      "monitoring_owner": "Grants and Evidence Officer with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Grants and Evidence Officer (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_drafts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_drafts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_drafts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "binding": {
+      "registry_version": "2026-10-15.1",
+      "schema_version": "legacy-text-v1",
+      "provider": "azure-openai",
+      "endpoint": "https://aif-cutover-test-rzsrg.openai.azure.com",
+      "deployment": "standard",
+      "prompt_version": "05094b0e0b3c0a78",
+      "policy_version": "legacy-forbidden-output-filter-v1",
+      "data_version": "7ff8794229c8c359",
+      "provenance_version": "constructed-synthetic-demo-labelled",
+      "permission_version": "20d72285485e2f77",
+      "model_version": "gpt-4.1-nano-2025-04-14",
+      "task_contract_version": "0bc9c6e7d4b43c0eebfe66cbb8da50751b4505ddbe46e5b2f57d1070be3004da",
+      "evaluation_version": "task-release-evaluation-v1"
+     },
+     "release_denial": {
+      "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+      "missing": [
+       "approved, unexpired release record"
+      ],
+      "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+      "manual": "Use the ordinary case controls.",
+      "task": "legacy:funding_draft",
+      "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+      "authority_holders": [
+       {
+        "authority": "release",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "residual-risk acceptance",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "suspension",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       },
+       {
+        "authority": "restart",
+        "holder": null,
+        "status": "gap",
+        "reference": "OQ-017"
+       }
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "monitoring_status": {
+      "status": "blocked",
+      "task_enabled": true,
+      "monitoring_owner": "Grants and Evidence Officer with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Grants and Evidence Officer (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [
+       "indicator:unsupported_claims:threshold",
+       "indicator:critical_misses:threshold",
+       "indicator:stale_review_attempts:threshold",
+       "indicator:challenges:threshold",
+       "indicator:cohort_errors:threshold",
+       "indicator:review_effort:threshold"
+      ],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "chat-case-conversation",
+     "kind": "chat",
+     "version": "2026-10-15.1",
+     "purpose": "Answer questions about a case with cited sources; refuse approve, decide, consent, diagnose and resident-contact asks",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Answer questions about a case with cited sources; refuse approve, decide, consent, diagnose and resident-contact asks",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Cited reading aid; no write, approval or decision",
+     "inputs": [
+      "home",
+      "survey",
+      "measures",
+      "stage"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "staff",
+      "residents"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "survey",
+      "measures",
+      "stage"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the ordinary case controls and the named function; the panel answers nothing without a model.",
+     "monitoring_declaration": {
+      "task_id": "chat-case-conversation",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_cited_answers",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_cited_answers",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": false,
+        "reason": "Stateless cited reading aid emits no persisted approval-bound proposal record subject to stale-state review; answers bind live source versions."
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "sampled_cited_answers",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "enabled": false,
+     "state": "disabled",
+     "thresholds": {
+      "status": "proposed",
+      "approved_by": null,
+      "approved_on": null,
+      "proposed": {
+       "critical_failures": 0,
+       "open_critical_gaps": 0,
+       "memory_poisoning_pass_rate": 1,
+       "prompt_injection_pass_rate": 1,
+       "permission_pass_rate": 1,
+       "out_of_scope_refusal_rate": 1
+      }
+     },
+     "demo_activation": {
+      "status": "demo-only",
+      "accountable_owner": "jmservera",
+      "decision_date": "2026-11-03",
+      "basis": "demo-only; the owner superseded DPO and Legal review for the demonstrator with a visible disclaimer",
+      "switch": "ZF_CHAT_DEMO_ACTIVATION",
+      "switch_value": "approved-2026-11-03",
+      "required_profile": "ZF_DEPLOYMENT_PROFILE=demo",
+      "outstanding": "DPO and Legal review outstanding; no Legal, DPO or RAI approval is recorded or implied",
+      "disclaimer": "Demonstration only. Answers are generated by an AI model from synthetic case facts, may be wrong, and are not reviewed or approved. No DPO, Legal or RAI approval exists. Check the sources."
+     },
+     "required_enablement_evidence": [
+      "approved thresholds",
+      "accountable individual",
+      "independently labelled held-out set",
+      "actual-model evaluation within a finite authorisation",
+      "authorised human exercises"
+     ],
+     "binding": null,
+     "release_denial": {
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "status": {
+      "task": "chat-case-conversation",
+      "state": "disabled",
+      "owner_role": "Retrofit Programme Manager",
+      "owner_individual": null,
+      "owner_gap": true,
+      "reason": "disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence"
+     },
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": false,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": true
+     }
+    },
+    {
+     "id": "aftercare-concern-pack",
+     "kind": "proposal-pack",
+     "version": "2026-10-15.1",
+     "purpose": "Draft an optional aftercare concern pack for the named owner to review; no outcome, remedy or dismissal",
+     "scope": "constructed synthetic exercise only; no live resident, safety or financial processing",
+     "permitted_capability": "draft or propose text for a person to review; no write, send, approve or rank",
+     "intended_use": "Draft an optional aftercare concern pack for the named owner to review; no outcome, remedy or dismissal",
+     "prohibited_uses": [
+      "tenant social scoring",
+      "inferring refusal or vulnerability from silence or missing sensors",
+      "consent manipulation",
+      "staff performance or emotion assessment without approval",
+      "changing, ranking, approving, signing or sending anything for a person"
+     ],
+     "influence": "Proposal only; the named owner accepts or rejects; a sensor reading is never a basis",
+     "inputs": [
+      "home",
+      "requests",
+      "history"
+     ],
+     "limits": [
+      "constructed synthetic exercise only; no live resident, safety or financial processing",
+      "proposal or draft text only; no write, send, approve or rank",
+      "bounded input size, output tokens and timeout; model failure falls back to the manual route",
+      "needs registration, an activation release and the owner's review before any reliance"
+     ],
+     "owner": "Retrofit Programme Manager",
+     "affected": [
+      "residents",
+      "staff"
+     ],
+     "roles": [
+      "Retrofit Coordinator",
+      "Retrofit Programme Manager"
+     ],
+     "source_permissions": [
+      "home",
+      "requests",
+      "history"
+     ],
+     "accountable_function": "Retrofit Programme Manager",
+     "accountable_individual": "unknown",
+     "delegation": "unknown",
+     "approval_state": "unapproved",
+     "activation": "disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review",
+     "impact_record": {
+      "status": "not assessed",
+      "residual_risk": "unknown",
+      "note": "Impact and residual-risk record is an open owner and qualified-reviewer item."
+     },
+     "required_approval_evidence": [
+      "task owner personal validation of own authority",
+      "Assurance delegate personal validation",
+      "Safety delegate personal validation",
+      "DPO and Legal delegate personal validation",
+      "dated qualified UK and conditional EU intended-use, actor-role, influence and currentness review"
+     ],
+     "authority": {
+      "owner_report_acceptance": "unknown",
+      "prd_acceptance": "unknown",
+      "task_control_acceptance": "unknown",
+      "operational_release": "unknown"
+     },
+     "reliance_review": "dated qualified UK and conditional EU review required before affected operational reliance; housing or hosting location alone does not decide applicability",
+     "manual_route": "Use the concern record and the named owner; no model call.",
+     "monitoring_declaration": {
+      "task_id": "aftercare-concern-pack",
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "response": "Open an owned RAI incident via infra/monitoring-runbooks.md#rai-harm, hold or suspend serving release authority via assistant_release.change, and use the manual case route without raw content export.",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "indicators": {
+       "unsupported_claims": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_concern_packs",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "critical_misses": {
+        "category": "harm",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_concern_packs",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.02,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "stale_review_attempts": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "proposal_review_attempts",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "challenges": {
+        "category": "quality",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "reviewed_concern_packs",
+        "window": "P7D",
+        "threshold": {
+         "limit": 0.1,
+         "min_sample": 20,
+         "constructed": true
+        }
+       },
+       "cohort_errors": {
+        "category": "disparity",
+        "applicable": true,
+        "denominator": 50,
+        "denominator_unit": "evaluated_cohort_cases",
+        "window": "P28D",
+        "threshold": {
+         "limit": 0.05,
+         "min_sample": 30,
+         "constructed": true
+        }
+       },
+       "review_effort": {
+        "category": "review_burden",
+        "applicable": true,
+        "denominator": 30,
+        "denominator_unit": "completed_human_reviews",
+        "window": "P7D",
+        "effort_stages": [
+         "preparation",
+         "review",
+         "correction",
+         "re_review"
+        ],
+        "approval_rate_is_safety": false,
+        "threshold": {
+         "limit": 0.15,
+         "min_sample": 20,
+         "constructed": true
+        }
+       }
+      }
+     },
+     "enabled": false,
+     "state": "disabled",
+     "binding": null,
+     "release_denial": {
+      "missing": [
+       "Task is disabled and has no runtime binding or release evidence."
+      ]
+     },
+     "release": null,
+     "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+     "status": {
+      "task": "aftercare-concern-pack",
+      "state": "disabled",
+      "owner_role": "Retrofit Programme Manager",
+      "owner_individual": null,
+      "owner_gap": true,
+      "reason": "disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review"
+     },
+     "monitoring_status": {
+      "status": "declared",
+      "task_enabled": false,
+      "monitoring_owner": "Retrofit Programme Manager with Safety and Assurance Lead (role proposal; named human appointment pending OD-51)",
+      "incident_owner": "Digital service owner and Retrofit Programme Manager (role proposal; named human appointment pending OD-51)",
+      "manual_route_status": "Manual case controls and named reviewer route remain active without model calls",
+      "missing": [],
+      "offline_only": true
+     }
+    }
+   ],
+   "disabled": "Operator authority, finite allowance and expiry are required.",
+   "proactive": false,
+   "quality_scope": {
+    "mode": "demo-homes",
+    "homes": [
+     "ZF-2025-0029",
+     "ZF-2025-0030",
+     "ZF-2025-0031",
+     "ZF-2025-0032",
+     "ZF-2025-0041"
+    ],
+    "trigger": "operator-requested-only",
+    "background_scan": "skips-quality",
+    "per_reading_calls": "none",
+    "model_call_authority_present": false
+   },
+   "principal": "service:retrofit-evidence-proposals",
+   "rule": "synthetic-gaps-2026-10-13-v1",
+   "limits": {
+    "scan_interval": 60,
+    "scan_size": 20,
+    "input_chars": 12000,
+    "output_chars": 8000,
+    "output_tokens": 600,
+    "timeout": 20,
+    "active_calls": 2,
+    "attempts": 2,
+    "backoff": 30,
+    "lease": 60
+   },
+   "manual": "Use the ordinary case controls; proposals never approve or change the case.",
+   "rai_exercise_acceptance": {
+    "section": "rai_exercise_acceptance",
+    "independent_of_real_ai_delivery_gate": true,
+    "passed": true,
+    "status": "passed",
+    "checks": {
+     "release_contract_fail_closed": {
+      "passed": true,
+      "detail": "13 registered AI tasks default to approved_for_live_use=False."
+     },
+     "oq017_live_activation_gate": {
+      "passed": true,
+      "detail": "Live AI task activation without named human approval deterministically rejects with OQ-017."
+     },
+     "challenge_and_appeal_safeguards": {
+      "passed": true,
+      "detail": "Resident and staff challenge channels preserve statutory hazard clocks without penalty."
+     },
+     "operator_suspension_and_restart_authority": {
+      "passed": true,
+      "active_governance_pauses": 0,
+      "detail": "Suspension keeps manual/hazard routes open and blocks automated or single-actor restart."
+     },
+     "monitoring_and_threshold_declarations": {
+      "passed": true,
+      "detail": "Every registered AI task carries complete offline harm and review-effort declarations."
+     },
+     "human_review_cohort_and_privacy_guards": {
+      "passed": true,
+      "detail": "Human-review defect trial, per-cohort non-fairness guard, and Art. 22 propose-only checks active."
+     },
+     "requirement_traceability_complete": {
+      "passed": true,
+      "covered_count": 15,
+      "total_required": 15,
+      "target_verification": "test_tree_not_shipped",
+      "detail": "Requirement coverage is complete; test targets are checked in CI because this deployment ships no test tree."
+     },
+     "audit_ledger_integrity": {
+      "passed": true,
+      "detail": "Tamper-evident hash-chained audit ledger verifies cleanly."
+     }
+    },
+    "traceability": {
+     "complete": true,
+     "target_verification": "test_tree_not_shipped",
+     "covered_count": 15,
+     "total_required": 15,
+     "verified_by_test_ids": [
+      "FR-051",
+      "FR-052",
+      "FR-053",
+      "FR-054",
+      "NFR-014",
+      "AC-069",
+      "AC-070",
+      "AC-071",
+      "AC-072",
+      "AC-073",
+      "OQ-017",
+      "OQ-018",
+      "OQ-019",
+      "RULE-024",
+      "RULE-020"
+     ],
+     "deferred_live_ids": [
+      "FR-051",
+      "FR-053",
+      "FR-054",
+      "NFR-014",
+      "AC-070",
+      "AC-071",
+      "AC-072",
+      "AC-073",
+      "OQ-017",
+      "OQ-018",
+      "OQ-019",
+      "RULE-020"
+     ],
+     "untraced_ids": []
+    },
+    "note": "Verifies deterministic Responsible AI release, challenge, suspension, monitoring, and audit controls in exercise mode independently of live model cut-over."
+   },
+   "real_ai_delivery_gate": {
+    "section": "real_ai_delivery_gate",
+    "separated_from_rai_exercise_acceptance": true,
+    "passed": false,
+    "status": "blocked",
+    "checks": {
+     "provider_configured_and_enabled": {
+      "passed": true,
+      "workflow_only_forced": false,
+      "detail": "Live Azure OpenAI provider configured and active."
+     },
+     "durable_sql_release_store": {
+      "passed": true,
+      "detail": "Durable SQL release store connected."
+     },
+     "no_active_suspension": {
+      "passed": true,
+      "detail": "No active continuity or governance guardrail suspension."
+     },
+     "oq017_named_live_releases_recorded": {
+      "passed": false,
+      "approved_live_tasks": [
+       "assessment-preparation",
+       "funding-evidence",
+       "quality-evidence",
+       "stock-prioritisation",
+       "works-resident-coordination"
+      ],
+      "unapproved_live_tasks": [
+       "briefing",
+       "funding_draft",
+       "message",
+       "priority",
+       "read_document",
+       "summary"
+      ],
+      "detail": "Enabled AI tasks lack unexpired named-human actual release records (OQ-017)."
+     },
+     "oq017_authority_holders_appointed": {
+      "passed": false,
+      "open_question": "OQ-017",
+      "detail": "Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017)."
+     },
+     "oq018_live_fairness_and_thresholds_cleared": {
+      "passed": false,
+      "open_question": "OQ-018",
+      "detail": "Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018)."
+     },
+     "oq019_legal_dpo_automated_decision_cleared": {
+      "passed": false,
+      "open_question": "OQ-019",
+      "detail": "Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+     }
+    },
+    "blocking_reasons": [
+     "oq017_named_live_releases_recorded: Enabled AI tasks lack unexpired named-human actual release records (OQ-017).",
+     "oq017_authority_holders_appointed: Named Zava North Homes office-holders must be appointed for release, monitoring, suspension, and restart (OQ-017).",
+     "oq018_live_fairness_and_thresholds_cleared: Representative non-synthetic cohort manifests, lawful basis, and disparity thresholds remain deferred to owner/DPO approval (OQ-018).",
+     "oq019_legal_dpo_automated_decision_cleared: Formal Legal/DPO determination under UK GDPR Articles 22A-22C and conditional EU AI Act scope remains deferred (OQ-019)."
+    ],
+    "deferred_open_questions": [
+     "OQ-017",
+     "OQ-018",
+     "OQ-019"
+    ],
+    "note": "Disabled, offline, or workflow-only assistance never satisfies the real-AI delivery gate; live cut-over requires real provider readiness plus named human OQ-017, OQ-018, and OQ-019 clearances."
+   }
+  }
+ },
+ "forecast": {
+  "status": 503,
+  "body": {
+   "state": "unavailable",
+   "error": "The forecast could not finish in time. Nothing was changed. Try again shortly, or continue ordinary case work manually."
+  }
+ },
+ "rai_metrics": {
+  "status": 200,
+  "body": {
+   "status": "counted",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 20,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 20,
+    "latency_samples": 0,
+    "tokens": 0
+   },
+   "latency_seconds_total": 0,
+   "persisted": 188,
+   "replay": {
+    "duplicates": 0,
+    "new": 0,
+    "outside_window": 0,
+    "invalid": 0
+   }
+  }
+ },
+ "sim_quality": {
+  "status": 200,
+  "body": {
+   "label": "Public synthetic simulation. Not a real home, resident or device.",
+   "manual_route": "Use the ordinary quality check and the manual route; nothing was sent to a model.",
+   "namespace": "zf-public-simulation-quality-v1",
+   "status": "unavailable",
+   "reason": "not-configured"
+  }
+ }
+}

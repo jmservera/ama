@@ -15550,3 +15550,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 2245 recheck on revision 0000079 and hourly demo budget
 
 * Added [issue-2245-live-2026-11-26.md](research/issue-2245-live-2026-11-26.md): live probe (threads 8 of 8 200, one model answer in five asks, widget "Model calls: 1" with a grounding-rejected draft), the hourly demo budget slot (local, not deployed) and a per-criterion table.
+
+## [2026-11-26] add | Issue 1288 fifteenth Quality sensor audit (Refs #1288)
+
+* Added [issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md](research/issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md): live finite-allowance attempt found the owner demo suspension override never reached the assistants hold; fixed in source (test added), not deployed because the registry is private; criteria 4 and 8 stay unproven live, per-criterion table recorded.

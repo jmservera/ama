@@ -68,6 +68,22 @@ class Suspension(Base):
         self.assertFalse(v["actionable"])
         self.assertEqual(v["state"], "quarantined")
 
+    def test_owner_demo_override_lifts_the_assistant_hold_and_keeps_the_record_open(self):
+        queued = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.suspend()
+        demo = {"ZF_DEPLOYMENT_PROFILE": "demo", "ZF_ENV": "production",
+                "ZF_DEMO_AI_SUSPENSION_OVERRIDE": "owner-directed-2026-11-23"}
+        other = self.other()
+        with other.transaction() as db:
+            self.assertTrue(other.suspended(db, "quality-evidence"))
+        with mock.patch.dict(os.environ, demo), other.transaction() as db:
+            self.assertIsNone(other.suspended(db, "quality-evidence"))
+            self.assertEqual(other.continuity(db)["suspensions"][0]["status"], "Suspended")
+        with mock.patch.dict(os.environ, {k: v for k, v in demo.items() if k != "ZF_DEPLOYMENT_PROFILE"}):
+            self.assertFalse(other.detail(self.pm, queued["id"])["actionable"])
+        with other.transaction() as db:
+            self.assertTrue(other.suspended(db, "quality-evidence"))
+
     def test_sql_store_wires_the_ai_gate_and_flags_truncated_affected_list(self):
         fresh = self.open_store()
         self.addCleanup(fresh.db.close)

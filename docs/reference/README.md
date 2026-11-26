@@ -741,6 +741,8 @@ The [thirteenth audit](./research/issue-1288-live-r13-quality-sensor-evidence-20
 
 The [fourteenth audit](./research/issue-1288-live-r14-quality-sensor-evidence-2026-11-23.md) downgrades an autonomous flag when a cited reading is corrected to an impossible value after capture. Criteria 4 and 8 stay unproven.
 
+The [fifteenth audit](./research/issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md) found the owner demo override never reached the assistants hold (fixed in source, not deployed) and kept criteria 4 and 8 unproven live.
+
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
