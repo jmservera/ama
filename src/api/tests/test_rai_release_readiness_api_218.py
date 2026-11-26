@@ -135,7 +135,10 @@ class RaiReleaseReadinessApi218Tests(unittest.TestCase):
                 self.send_response(200)
                 self.send_header("Content-Length", str(len(body)))
                 self.end_headers()
-                self.wfile.write(body)
+                try:
+                    self.wfile.write(body)
+                except (BrokenPipeError, ConnectionResetError):
+                    pass  # the client timed out on purpose; keep the traceback out of the gate log
 
             def log_message(self, *_args: Any) -> None:
                 return

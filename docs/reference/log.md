@@ -15554,3 +15554,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 1288 fifteenth Quality sensor audit (Refs #1288)
 
 * Added [issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md](research/issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md): live finite-allowance attempt found the owner demo suspension override never reached the assistants hold; fixed in source (test added), not deployed because the registry is private; criteria 4 and 8 stay unproven live, per-criterion table recorded.
+
+## [2026-11-26] add | Issue 2190 gate flake re-verification (Refs #2190)
+
+* Added [issue-2190-live-20261126-note.md](research/issue-2190-live-20261126-note.md): three flake fixes re-run on the current head and a broken-pipe traceback in the 218 slow-server test handler silenced, with a per-criterion table.
