@@ -181,6 +181,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             expect(dialog).to_be_visible()
             question = page.get_by_label("Your work question", exact=True)
             expect(dialog.get_by_role("heading", name="Employee assistant")).to_be_focused()
+            expect(question).to_be_enabled(timeout=20_000)
             expect(dialog.locator("select option")).to_have_count(6)
             question.fill("What can chat do?")
             dialog.get_by_role("button", name="Send", exact=True).click()
