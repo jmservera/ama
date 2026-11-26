@@ -8,18 +8,18 @@ Working title: *Everything but the Software: Stable Retention, Missing Features 
 
 ## Final editorial pass, 26 November
 
-The [revision record](./anc/revision-report.md#final-editorial-pass-26-november)
-contains the change log, three title options, before/after metrics and author
-confirmations. The [complete numeric audit](./anc/editorial-audit-2026-11-26.json)
-preserves both extracted lists and explains every sequence difference.
-Sections 1--9 now contain 12,246 approximate words by the existing checker;
-Section 7 contains 4,979. The interval correction is the only change to
-numerical table cells.
+The [revision record](./anc/revision-report.md#final-arxiv-release-pass-26-november)
+contains the change log, three title options, before/after metrics and final
+release checks. The [complete numeric audit](./anc/editorial-audit-2026-11-26.json)
+and [final corrections audit](./anc/final-corrections-audit-2026-11-26.json)
+preserve the extracted lists and explain every sequence difference.
+Sections 1--9 now contain 12,491 approximate words by the existing checker,
+after moving the prediction-verdicts table into Section 7.
 
 The delivered [PDF](./main.pdf) includes the additive Supplement. Historical
-reviews and source pins are unchanged. Both repositories are public; both
-OSF registrations exist, with their actual public release still requiring
-author confirmation. Employer clearance also needs confirmation.
+reviews and source pins are unchanged. Both GitHub repositories and both OSF
+registrations (`ywsrv` and `xcpt4`) are verified public; the owner confirmed
+employer clearance and coauthor approval.
 
 To repeat the numeric and prose measurements against the saved intake:
 

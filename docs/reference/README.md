@@ -22,11 +22,13 @@ management: short pages that point to clusters of related material.
 ## How to Use This Knowledge Base
 
 The paper's [final editorial pass](../capstone/thought-leadership/everything-but-the-software/README.md#final-editorial-pass-26-november)
-shortens the article, moves audit history into the existing Supplement and
-corrects the authorised Gemini interval. Its
-[change log and numeric audit](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-editorial-pass-26-november)
-record the before/after metrics, every numeric difference and the two
-outstanding author confirmations. Earlier revision records below are historical.
+shortens the article, moves audit history into the existing Supplement,
+standardises the eight observed CR1 contrasts and moves the prediction-verdicts
+table into Section 7. Its
+[change log and numeric audit](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-arxiv-release-pass-26-november)
+record the before/after metrics, every numeric difference and the verified
+public status of both OSF registrations alongside owner-confirmed employer
+clearance and coauthor approval. Earlier revision records below are historical.
 
 The paper's [marked author-voice revision](../capstone/thought-leadership/everything-but-the-software/README.md#marked-author-voice-revision-26-november)
 starts with eight owner annotations, then applies the learned reader-context

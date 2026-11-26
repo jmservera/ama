@@ -86,7 +86,11 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         editorial = bindings[bindings["current_editorial_revision"]]
         self.assertEqual(
-            editorial["prior_delivery_revision"], "final_editorial_revision_2026_11_26"
+            editorial["prior_delivery_revision"], "final_source_corrections_2026_11_26"
+        )
+        self.assertEqual(
+            bindings["final_source_corrections_2026_11_26"]["prior_delivery_revision"],
+            "final_editorial_revision_2026_11_26",
         )
         for name, sha256 in {
             **current["evidence_sha256"], **editorial["source_sha256"],

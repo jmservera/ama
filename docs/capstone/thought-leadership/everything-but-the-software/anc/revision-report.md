@@ -3319,3 +3319,47 @@ commit, push, arXiv submission or OSF change was performed.
 Work execution: Complete for the source corrections and technical validation.
 Assessment: Public release of both OSF registrations is still pending and
 blocks submission; author clearance and final approval are human actions.
+
+## Final arXiv release pass, 26 November
+
+Both OSF registrations (`https://osf.io/ywsrv/overview` and `https://osf.io/xcpt4`)
+were checked through the unauthenticated OSF v2 registration API on
+26 November 2026 and returned HTTP 200 with `public: true` and `embargoed: false`.
+The owner also confirmed employer clearance and coauthor approval.
+
+### Targeted changes applied
+
+* Data availability, second paragraph: replaced the pending-release sentence
+  with "Both registrations are public." Verified that no `[CONFIRM`, `TODO` or
+  `pending` string appears in Data availability.
+* Supplement A.20.1: removed "Its metadata was not independently verified
+  (Data availability)."
+* Supplement A.20.17: replaced the HTTP 401 access-failure sentence with
+  "Both registrations are now publicly accessible."
+* Supplement A.20.12: replaced "The independent researcher completed" with
+  "Isabel Cabezas Martin completed", and scoped URL break rules around
+  `pilot-estimation-gpt-6.1-sol-C-20` and
+  `pilot-estimation-gemini-4-argon-E-15` so line breaks occur only at hyphens.
+* Supplement A.20.16: added "Table 36 lists the measurements in the active kit
+  and how each is produced." directly under the heading via `\ref{tab:measurementprovenance}`.
+* Section 7.8: merged the three one-sentence paragraphs on trajectory
+  completion, outcome completeness and billing holds into a single paragraph
+  without altering their wording.
+* Title-page date: unchanged (renders as November 26, 2026).
+
+### Validation
+
+All 37 numerical table bodies, all displayed equations, all citations, the
+bibliography and all main-text numbers are unchanged. The extracted arXiv
+archive compiles with PDFLaTeX (`-no-shell-escape`) in two passes to 78 pages
+with zero warnings, box diagnostics, missing characters or unresolved
+references. The current PDF SHA-256 recorded in
+[supplement-integration.json](./supplement-integration.json) under
+`final_arxiv_release_pass_2026_11_26` is:
+
+```text
+33f89fa43397e3954d95dace508313ff07ee2a0c22e36f52b0b7d50dbd1c017f
+```
+
+The validated submission archives are in `/tmp/ama-paper-final-pass-2-5256041a`.
+No commit, push or external upload was performed.
