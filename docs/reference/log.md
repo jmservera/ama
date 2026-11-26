@@ -15609,3 +15609,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] update | Issue 2186 rubric score files receipt-inert (Refs #2186)
 
 * Updated [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): `chore(rubric)` score commits (29 recent) no longer invalidate a full gate receipt; per-criterion table unchanged, real full-receipt verify still unproven.
+## [2026-11-26] add | Issue 146 live monitoring activation (Refs #146)
+
+* Added [issue-146-live9-monitoring-2026-11-26.md](research/issue-146-live9-monitoring-2026-11-26.md): demo candidate alerts enabled live, receiver failure alert created, workbook redeployed with 14 items, candidate gates set in `infra/main.test.bicepparam`. Firing of poison and IoT rules, named owners and Portal render remain unproven.

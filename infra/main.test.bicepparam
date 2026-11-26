@@ -50,3 +50,8 @@ param chatRetentionDays = 30
 // policy; the retention duration and its approval are a manual prerequisite, so no immutable release is claimed.
 param enableRankingArchiveBlob = false
 param rankingArchiveImmutabilityDays = 0
+// Synthetic demo only; owner decision 2026-11-18 (demo needs no further activation approval). Not a production approval.
+param enableCandidateMonitoringAlerts = true
+param monitoringApprovalReference = 'docs/reference/research/issue-146-live9-monitoring-2026-11-26.md'
+param enablePoisonQueueAlertCandidate = true
+param enableAiLimitAlertCandidate = true

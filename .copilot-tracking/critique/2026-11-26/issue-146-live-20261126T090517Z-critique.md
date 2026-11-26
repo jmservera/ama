@@ -1,0 +1,2 @@
+# Critique (executed once), Refs #146
+Verdict: proceed. Risks: enabling alerts needs named approval in source (mitigated: owner decision 2026-11-18 cited, demo only, not production); receiver alert created imperatively (mitigated: same shape as source Bicep); workbook PUT overwrites shared workbook (mitigated: read back 14 items). Tier: FULL applies only if src changed; only infra param and test changed, so focused tier; rpi-checks --all not run.

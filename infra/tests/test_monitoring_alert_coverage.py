@@ -124,5 +124,21 @@ class AlertCoverageTests(unittest.TestCase):
             self.assertRegex(MODULE, rf"param {gate} bool = false")
 
 
+class DemoParameterActivationTests(unittest.TestCase):
+    def test_test_parameters_enable_candidates_with_dated_reference(self) -> None:
+        params = (INFRA / "main.test.bicepparam").read_text(encoding="utf-8")
+        for gate in (
+            "enableCandidateMonitoringAlerts",
+            "enablePoisonQueueAlertCandidate",
+            "enableAiLimitAlertCandidate",
+        ):
+            self.assertRegex(params, rf"(?m)^param {gate} = true$")
+        match = re.search(r"(?m)^param monitoringApprovalReference = '([^']+)'$", params)
+        self.assertIsNotNone(match)
+        assert match is not None
+        self.assertTrue((INFRA.parent / match.group(1)).is_file())
+        self.assertIn("owner decision 2026-11-18", params)
+
+
 if __name__ == "__main__":
     unittest.main()

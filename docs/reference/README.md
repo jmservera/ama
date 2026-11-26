@@ -659,6 +659,8 @@ A [2026-11-23 ingress pass](./research/issue-146-live7-monitoring-2026-11-23.md)
 
 A [2026-11-25 live pass](./research/issue-146-live8-monitoring-2026-11-25.md) re-observes the installed alerts, executes every source workbook query live, finds the deployed workbook two items behind source and records a blocked poison-queue provocation.
 
+A [2026-11-26 live pass](./research/issue-146-live9-monitoring-2026-11-26.md) enables the demo candidate alerts, adds the receiver failure alert and redeploys the 14-item workbook; firing, named owners and Portal render stay unproven.
+
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
 
