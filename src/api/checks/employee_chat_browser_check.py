@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from playwright.sync_api import Error as PlaywrightError
-from playwright.sync_api import Page, Route, expect, sync_playwright
+from playwright.sync_api import Locator, Page, Route, expect, sync_playwright
 
 from checks.design_system_browser_check import main, synthetic_data
 from checks.regulatory_ux_check import AXE_SHA256
@@ -36,6 +36,12 @@ def settle_route(page: Page, destination: str | None) -> None:
             "() => document.getElementById('workspace-status').textContent.startsWith('Perspective:')"
         )
     page.wait_for_load_state("networkidle")
+
+
+def wait_for_skills(dialog: Locator, question: Locator) -> None:
+    """Wait for the skills load to finish before counting options; it is slow under load."""
+    expect(question).to_be_enabled(timeout=20_000)
+    expect(dialog.locator("select option")).to_have_count(6)
 
 
 def late_success(page: Page, pending: str, transition: str) -> None:
@@ -181,8 +187,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             expect(dialog).to_be_visible()
             question = page.get_by_label("Your work question", exact=True)
             expect(dialog.get_by_role("heading", name="Employee assistant")).to_be_focused()
-            expect(question).to_be_enabled(timeout=20_000)
-            expect(dialog.locator("select option")).to_have_count(6)
+            wait_for_skills(dialog, question)
             question.fill("What can chat do?")
             dialog.get_by_role("button", name="Send", exact=True).click()
             expect(dialog.get_by_role("log")).to_contain_text("ordinary case workflow")
