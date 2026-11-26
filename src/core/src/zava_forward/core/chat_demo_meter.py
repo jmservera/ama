@@ -78,7 +78,10 @@ def ensure(
             max_depth=1,
         )
     except Exception as error:
-        logging.getLogger(__name__).warning("Demo chat meter not seeded (%s)", type(error).__name__)
+        # Ledger refusals are fixed text without case data, so the cause can be logged.
+        logging.getLogger(__name__).warning(
+            "Demo chat meter not seeded (%s: %s)", type(error).__name__, error
+        )
         return False
     ledger.demo_chat_seeded = seeded
     return True
