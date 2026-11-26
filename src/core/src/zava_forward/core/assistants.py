@@ -3164,7 +3164,16 @@ class Assistants:
         row = db.execute(
             "SELECT pool,reserved FROM assistant_attempts WHERE id=?", (attempt,)
         ).fetchone()
-        if type(actual) is int and 0 <= actual <= row[1]:
+        # A finance hold taken before any meter reservation means no request, token or socket existed, so the
+        # whole call is returned and a held capability cannot drain the shared allowance for the others.
+        unsent = envelope.get("outcome") == "financial-held" and not envelope.get("meter_id")
+        if unsent:
+            db.execute(
+                "UPDATE assistant_allowance SET used_calls=used_calls-1,reserved_tokens=reserved_tokens-? WHERE id=?",
+                (row[1], row[0]),
+            )
+            actual = 0
+        elif type(actual) is int and 0 <= actual <= row[1]:
             db.execute(
                 "UPDATE assistant_allowance SET reserved_tokens=reserved_tokens-? WHERE id=?",
                 (row[1] - actual, row[0]),

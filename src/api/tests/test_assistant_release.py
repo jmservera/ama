@@ -536,6 +536,21 @@ class Release(Base):
         self.assertEqual(row[2], before[0])
         self.assertLessEqual(row[3], before[1])
 
+    def test_finance_hold_before_any_reservation_returns_the_allowance_call(self):
+        p = self.service.invoke(self.pm, CAP, "ZF-1")
+        task = self.service.claim(p["id"], "one")
+        with self.service.transaction() as db:
+            claimed = db.execute(
+                "SELECT used_calls,reserved_tokens FROM assistant_allowance"
+            ).fetchone()
+        self.assertEqual(claimed[0], 1)
+        held = dict(outcome="financial-held", source="unverified", usage=None, model=None)
+        self.assertTrue(self.service.complete(task, held, None))
+        with self.service.transaction() as db:
+            row = db.execute("SELECT used_calls,reserved_tokens FROM assistant_allowance").fetchone()
+        self.assertEqual((row[0], row[1]), (0, 0))
+        self.assertEqual(self.service.detail(self.pm, p["id"])["state"], "failed")
+
     def test_revocation_between_claim_and_completion_quarantines(self):
         p = self.service.invoke(self.pm, CAP, "ZF-1")
         task = self.service.claim(p["id"], "one")
