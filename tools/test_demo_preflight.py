@@ -45,6 +45,8 @@ class FakeAz:
             return json.dumps(self.revisions)
         if "execution" in argv:
             return json.dumps(self.executions)
+        if "logs" in argv:
+            return "build: commit=0123456789abcdef"
         if "show" in argv and any("ZF_CONTAINER_HARDENING" in part for part in argv):
             return json.dumps(self.deployment)
         if "show" in argv:
@@ -147,6 +149,24 @@ class Preflight(unittest.TestCase):
         names = [r.name for r in pf.collect(az, ok_get, None)]
         self.assertIn("deployment ca-cutover-test-demo-agents", names)
         self.assertIn("deployment job-live-receiver", names)
+
+    def test_build_commit_reads_last_startup_line_and_checks_expectation(self) -> None:
+        def logs(text: str):
+            return lambda argv: text
+
+        out = 'x build: commit=0123456789ab\n{"Log":"build: commit=abcdef1234567"}'
+        good = pf.check_build_commit(logs(out), "ama", "a", "abcdef1")
+        self.assertEqual(("PASS", "commit abcdef123456"), (good.status, good.detail))
+        self.assertEqual("FAIL", pf.check_build_commit(logs(out), "ama", "a", "9999999").status)
+        self.assertEqual(
+            "FAIL", pf.check_build_commit(logs("build: commit=unknown"), "ama", "a").status
+        )
+        self.assertEqual("UNAVAILABLE", pf.check_build_commit(logs("noise"), "ama", "a").status)
+
+        def boom(argv: list[str]) -> str:
+            raise RuntimeError("az exit 1")
+
+        self.assertEqual("UNAVAILABLE", pf.check_build_commit(boom, "ama", "a").status)
 
     def test_only_read_only_az_commands(self) -> None:
         az = FakeAz()
