@@ -412,7 +412,13 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
 
         def _same_origin(self) -> bool:
             origin = self.headers.get("Origin")
-            if not origin or urlsplit(origin).netloc != self.headers.get("Host"):
+            if not origin:
+                return False
+            try:
+                netloc = urlsplit(origin).netloc
+            except ValueError:
+                return False
+            if netloc != self.headers.get("Host"):
                 return False
             return self.headers.get("Sec-Fetch-Site", "same-origin") == "same-origin"
 
