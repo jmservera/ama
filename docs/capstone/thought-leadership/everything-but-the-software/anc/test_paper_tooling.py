@@ -10,8 +10,7 @@ import unittest
 from pathlib import Path
 
 ANC = Path(__file__).resolve().parent
-PAPER = r"""\resultsfalse
-\begin{abstract}Short abstract.\end{abstract}
+PAPER = r"""\begin{abstract}Short abstract.\end{abstract}
 \section{Introduction}
 Current body \cite{alpha}.\label{known}\ref{known}
 \begin{thebibliography}{1}
@@ -21,6 +20,29 @@ Current body \cite{alpha}.\label{known}\ref{known}
 
 
 class PaperCheckerTests(unittest.TestCase):
+    @unittest.skipUnless(shutil.which("chktex"), "ChkTeX is not installed")
+    def test_given_paper_macros_when_linted_then_prose_errors_remain_visible(self) -> None:
+        command = ["chktex", "-q", "-l", str(ANC.parent / ".chktexrc")]
+        valid = (
+            "\\section{Example}\n"
+            "\\FloatBarrier\n"
+            "\\newblock Valid B--D and Clopper--Pearson.\n"
+            "\\texttt{[Scheduled prompt \\#}\n"
+            "\\nolinkurl{2026-11-25}\n"
+        )
+        result = subprocess.run(
+            command, input=valid, capture_output=True, text=True, check=False, timeout=10,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+        invalid = "An alpha--beta compound and a reference \\ref{missing}.\n"
+        result = subprocess.run(
+            command, input=invalid, capture_output=True, text=True, check=False, timeout=10,
+        )
+        self.assertEqual(result.returncode, 2, result.stdout + result.stderr)
+        self.assertIn("Warning 8", result.stdout)
+        self.assertIn("Warning 2", result.stdout)
+
     def test_given_optional_acknowledgements_when_counted_then_back_matter_is_excluded(self) -> None:
         from check_paper import body_words
 
@@ -92,7 +114,9 @@ class PaperCheckerTests(unittest.TestCase):
             (PAPER + r"\begin{unclosed}", "unclosed environments"),
             (PAPER + "{", "brace imbalance"),
             (PAPER.replace("Short abstract.", "x" * 1920), "abstract is too long"),
-            (PAPER.replace(r"\resultsfalse", r"\resultstrue"), "results switch is not false"),
+            (PAPER + r"\resultstrue", "obsolete results switch"),
+            (PAPER + r"\resultsfalse", "obsolete results switch"),
+            (PAPER + r"\ifresults", "obsolete results switch"),
             (PAPER.replace(r"\section{Introduction}", ""), "Introduction section is missing"),
             (PAPER.replace("abstract}", "summary}"), "abstract environment is missing"),
         )

@@ -9,7 +9,7 @@ remeasured. The collection path is
 \nolinkurl{skeleton/tools/metrics_core.py}; pilot outcomes are derived in
 \nolinkurl{harness/pilot_analysis.py}, with consumption parsing in
 \nolinkurl{harness/analyze.py}.
-At this running-source pin, the numerical evaluator does not invoke an AI
+In the inspected collection code, the numerical evaluator does not invoke an AI
 judge. The separate post-run instrument below adds supplementary ratings
 without changing that collection path.
 
@@ -18,8 +18,8 @@ without changing that collection path.
 \centering
 \caption{Active raw fields, scales and scope. Missing measurements are not
 zero. Structural counts and model-generated notes are not independent
-efficacy outcomes.}
-\label{tab:measurementfields}
+efficacy outcomes.}\label{tab:measurementfields}
+
 \begin{tabularx}{\linewidth}{@{}L{0.28\linewidth}Y@{}}
 \toprule
 Field or record & Definition and reporting limit \\
@@ -42,7 +42,7 @@ Unweighted mean and maximum per-function cyclomatic complexity; fraction
 of source functions above 10, not percentage unless multiplied by 100.
 Mean and fraction are rounded to three and four decimals respectively. \\
 \texttt{dup\_pct} &
-The clone detector's duplicated-line percentage. jscpd's line denominator
+The clone detector's duplicated-line percentage\@. jscpd's line denominator
 is not automatically the independently counted source NLOC denominator. \\
 \texttt{lint\_warnings}, \texttt{lint\_per\_kloc} &
 Diagnostic count and $1000\times\mathrm{warnings}/\mathrm{source\ NLOC}$;
@@ -77,12 +77,14 @@ configuration and version records, not package presence alone, establish
 the tools actually used. The declared pins are Lizard 1.24.3, Ruff 0.17.3
 and jscpd 5.4.1. The code records backend names and supports explicitly
 different internal approximations; these are not interchangeable instruments.
-Lizard measures each Python source function. jscpd runs from an empty
+Lizard measures each Python source function\@. jscpd runs from an empty
 configuration directory in Python mode with minimum 50 tokens and five
 lines. Ruff runs with isolated configuration, fixed
 \texttt{E,F,W,C90,B,SIM} selection, JSON output, no cache and
 \texttt{--exit-zero}. The engine counts diagnostics; the exit code alone
-cannot establish a clean-lint result.
+cannot establish a clean-lint result. Sonnet B's 2.26 warnings per 1,000
+source lines, for example, remain nonzero despite successful report
+generation and the requested zero-warning target.
 
 The invocation omits \texttt{--ignore-noqa}, leaving inline suppressions
 effective. The dictionary contains neither a suppression count nor a
@@ -130,8 +132,8 @@ candidates or independently qualify the image.
 \begin{table}[!htbp]
 \centering\small
 \caption{Fixed supplementary workflow panel. Feature labels denote
-dependencies, not attribution of a failure to a particular feature.}
-\label{tab:judgingpanel}
+dependencies, not attribution of a failure to a particular feature.}\label{tab:judgingpanel}
+
 \begin{tabularx}{\linewidth}{@{}L{0.15\linewidth}Y@{}}
 \toprule
 Workflow & Exercised requirements \\
@@ -169,11 +171,14 @@ The numerator counts previously passing scenarios that fail at the
 selected endpoint. Dividing by the number of earlier witnessed passes
 gives a dimensionless fraction from zero to one. An empty risk set
 or any unavailable risk-set endpoint leaves the density undefined.
-Publish the witnessed risk-set size, losses and unavailable count with
-final scenario outcomes. Treatment can affect acquisition. A repository with few implemented
+The next-study reporting requirements in Section~\ref{app:futuredesign}
+cover witnessed risk sets and unavailable outcomes.
+Treatment can affect acquisition. A repository with few implemented
 capabilities can lose little while still failing many final requirements.
 This conditional loss density therefore cannot alone rank treatment efficacy
-or replace the hidden-contract loss measure.
+or replace the hidden-contract loss measure. A GPT repository that never
+acquired ranking could have zero witnessed ranking loss and still fail
+the final ranking workflow.
 
 The instrument distinguishes retained and observed-loss scenarios,
 endpoint passes without an earlier witness, complete histories with no
@@ -210,7 +215,9 @@ source trees, treatment notes, transcripts and usage logs.
 The inspected packet also includes an earlier passing witness and its
 retention label. Historical and final observations reuse scenario-local
 IDs; validation checks citation membership in final evidence, without
-establishing which occurrence influenced a rationale. Historical anchoring
+establishing which occurrence influenced a rationale. A citation to a
+scenario-local ID can therefore identify a final observation even though
+the judge also saw its earlier passing occurrence. Historical anchoring
 and dimension-specific support therefore need human inspection.
 Endpoint-only rating packets or checkpoint-qualified IDs would require
 a separately versioned instrument; they are not claimed implemented here.
@@ -224,9 +231,8 @@ The original plan called for a blinded human-reviewed calibration sample
 covering successful, incomplete and regressed workflows. The executed
 sample and its limits are recorded below: no witnessed-loss packets were
 available, the author review remained in progress and guidance changed
-after initial AI scoring. Multiple judge
-models can expose model-specific disagreement; overlap with development
-models and possible family preference require disclosure. Fresh repeated
+after initial AI scoring. The judge family overlaps the GPT development model; no between-model
+judge comparison was run. Fresh repeated
 sessions provide descriptive means and ranges, not established inter-rater
 reliability. The completed assessment used one judge model and two repeats;
 the proposal's three-repeat example remains historical. With one judge
@@ -268,7 +274,8 @@ and prior outcome exposure. The supplied completed-assessment record below
 retains the available provenance and the later guidance change.
 Local timestamps and hashes record when files were retained and identify
 their contents. They leave preregistration status to be independently verified.
-Preparation spends no AI credits. For $N$ complete trajectories with CR1,
+No preparation-cost measurement is reported; the formula counts judge calls
+only. For $N$ complete trajectories with CR1,
 $J$ judge configurations and $R$ repetitions, at most $2NJR$ sessions
 are scheduled for the two endpoints; wholly unavailable specimens trigger
 no calls. Paid judging needs separate explicit operator authorisation.
@@ -316,9 +323,9 @@ disclosed AI-assisted failure/mismatch triage.
 \endgroup
 
 \FloatBarrier
-\subsection{Final reporting disposition from existing exports}\label{app:reportingdisposition}
+\subsection{What the final exports can establish}\label{app:reportingdisposition}
 
-This post-collection reporting reconciliation uses only the public
+The checks below use only the public
 \nolinkurl{runs.csv}, \nolinkurl{retention.csv}, \nolinkurl{episodes.csv}
 and \nolinkurl{attempts.csv} under
 \nolinkurl{results/pilot-estimation/} at source \sourceref{R17}.
@@ -342,8 +349,8 @@ limitation for future incomplete histories.
 \centering\small
 \caption{Retained loss reconciliation. Each arm has 630 F and 630 P rows.
 Loss-checkpoints sum failing previously acquired contracts over time,
-counting a persisting failure again at each observed checkpoint.}
-\label{tab:retentionreconciliation}
+counting a persisting failure again at each observed checkpoint.}\label{tab:retentionreconciliation}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrr@{}}
 \toprule
 Arm & F loss-checkpoints & P loss-checkpoints & Affected trajectories & Episodes \\
@@ -381,8 +388,8 @@ adaptation effect.
 \caption{CR1 successes/allocated trajectories by pre-CR1 F9/F10
 completeness. Unknown outcomes remain in the denominator and are listed
 separately. A dash denotes an empty subgroup, for which a success rate
-is undefined.}
-\label{tab:crprerequisites}
+is undefined.}\label{tab:crprerequisites}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcllr@{}}
 \toprule
 Model & Arm & Both complete & Not both complete & Unknown (latter group) \\
@@ -393,11 +400,11 @@ Sonnet 5.5 & C & 13/13 & 8/8 & 0 \\
 Sonnet 5.5 & D & 11/11 & 9/10 & 0 \\
 Sonnet 5.5 & E & 17/17 & 3/4 & 0 \\
 \midrule
-Gemini 4 Argon & A & 6/21 & -- & 0 \\
-Gemini 4 Argon & B & 8/21 & -- & 0 \\
-Gemini 4 Argon & C & 16/21 & -- & 0 \\
-Gemini 4 Argon & D & 7/21 & -- & 0 \\
-Gemini 4 Argon & E & 11/21 & -- & 0 \\
+Gemini 4 Argon & A & 6/21 & \textendash{} & 0 \\
+Gemini 4 Argon & B & 8/21 & \textendash{} & 0 \\
+Gemini 4 Argon & C & 16/21 & \textendash{} & 0 \\
+Gemini 4 Argon & D & 7/21 & \textendash{} & 0 \\
+Gemini 4 Argon & E & 11/21 & \textendash{} & 0 \\
 \midrule
 GPT 6.1 Sol & A & 5/5 & 14/16 & 0 \\
 GPT 6.1 Sol & B & 12/12 & 5/9 & 1 \\
@@ -418,8 +425,9 @@ attestation and composite success bounds remain unchanged.
 
 \paragraph{PF3: incomplete all-attempt costs.}
 All 5,372 attempt rows remain included in the accounting frame.
-Table~\ref{tab:heldbillingcells} shows why a settled complete-case frontier
-cannot represent every allocation. Attempt holds can share a trajectory;
+Table~\ref{tab:heldbillingcells} shows why costs from fully billed runs
+cannot represent every allocated run. Several held charges can belong to
+the same trajectory;
 their counts are not counts of missing repositories. The 19,200 reserved
 credits do not cap the eventual invoice, and the 783.16186-credit partial
 lower bound does not resolve it. We report the already settled subset
@@ -431,8 +439,8 @@ retain this subset scope.
 \centering\small
 \caption{Attempts with held billing by development model and arm,
 including feature, post-step and CR1 attempts. Zero means no held attempt,
-not zero spending.}
-\label{tab:heldbillingcells}
+not zero spending.}\label{tab:heldbillingcells}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrrr@{}}
 \toprule
 Model & A & B & C & D & E & Total \\
@@ -450,8 +458,8 @@ No further experimental round, judge batch or retrospective registration
 is used to fill these gaps. Future work needs a calibrated task with
 headroom, explicit acquisition and adaptation denominators, retained and
 rejected failure measures, aligned randomisation/inference, fully reconciled
-costs and an independently reviewed rating instrument. The present paper
-reports what this completed exploratory study could measure.
+costs and an independently reviewed rating instrument. Those are requirements for a later study, not gaps that the present
+results can resolve.
 
 \FloatBarrier
 \subsection{Additional endpoint and resource statistics}\label{app:resultsdetail}
@@ -500,7 +508,7 @@ averages are $+1.19$, $+1.41$, $+0.66$ and $+0.04$ points. The pooled
 within-cell SD over all 315 completed endpoints is 3.1278 points with 300
 degrees of freedom (3.1119 points with 298 degrees of freedom across the
 313 pre-recovery endpoints). Within-model cell SD ranges are 0.47--0.94 for
-Sonnet, 0.39--0.98 for Gemini and 4.81--5.59 for GPT. The pooled SD may inform future planning, but does not establish a common
+Sonnet, 0.39--0.98 for Gemini and 4.81--5.59 for GPT\@. The pooled SD may inform future planning, but does not establish a common
 cell variance or calculate observed power.
 
 \begin{table}[!htbp]
@@ -509,8 +517,8 @@ cell variance or calculate observed power.
 equally weighting the three models across all 63 versus 63 completed
 unassisted trajectories per arm. Point differences and 95\% bootstrap
 intervals use 10,000 stratified draws (seed 2027); with zero missing
-endpoints, full-allocation bounds coincide with the point differences.}
-\label{tab:resultsh1contrasts}
+endpoints, full-allocation bounds coincide with the point differences.}\label{tab:resultsh1contrasts}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrll@{}}
 \toprule
 Contrast & Observed & Gain & 95\% interval & Allocation bounds \\
@@ -526,8 +534,8 @@ E -- B & 63/63 & +0.0375 & [-1.0749, +1.1374] & [+0.0375, +0.0375] \\
 \begin{table}[!htbp]
 \centering\small
 \caption{Model-specific coverage contrasts (\texttt{H1}), in percentage
-points, across all 21 versus 21 completed unassisted trajectories per arm.}
-\label{tab:resultsh1modelintervals}
+points, across all 21 versus 21 completed unassisted trajectories per arm.}\label{tab:resultsh1modelintervals}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrll@{}}
 \toprule
 Model & Contrast & Gain & 95\% interval & Allocation bounds \\
@@ -594,24 +602,24 @@ Equal-model & E -- B & [+6.35, +7.94] \\
 \begin{table}[!htbp]
 \centering\small
 \caption{CR1 success differences (\texttt{H6}) for cells with 21 observed
-Boolean outcomes in both arms, in percentage points. Intervals subtract
-opposite endpoints of 97.5\% equal-tailed Clopper--Pearson intervals for the
-two arms, giving at least 95\% coverage per comparison under the binomial
-model. Simultaneous coverage over all comparisons is unestablished.}
-\label{tab:resultscrintervals}
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrl@{}}
+Boolean outcomes in both arms, in percentage points. Every row reports a
+Newcombe hybrid-score 95\% interval and a two-sided Fisher exact $p$ value,
+conditional on independent binomial outcomes. All comparisons are exploratory
+and unadjusted for multiplicity.}\label{tab:resultscrintervals}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrl@{}}
 \toprule
-Model & Contrast & Gain & Conservative 95\% interval \\
+Model & Contrast & Gain & Fisher $p$ & 95\% interval \\
 \midrule
-Sonnet 5.5 & B -- D & +4.7619 & [-18.7736, +26.7692] \\
-Sonnet 5.5 & B -- A & 0.0000 & [-18.8335, +18.8335] \\
-Sonnet 5.5 & B -- C & 0.0000 & [-18.8335, +18.8335] \\
-Sonnet 5.5 & E -- B & -4.7619 & [-26.7692, +18.7736] \\
+Sonnet 5.5 & B -- D & +4.7619 & 1.00000 & [-11.1902, +22.6694] \\
+Sonnet 5.5 & B -- A & 0.0000 & 1.00000 & [-15.4639, +15.4639] \\
+Sonnet 5.5 & B -- C & 0.0000 & 1.00000 & [-15.4639, +15.4639] \\
+Sonnet 5.5 & E -- B & -4.7619 & 1.00000 & [-22.6694, +11.1902] \\
 \midrule
-Gemini 4 Argon & B -- D & +4.7619 & [-43.8776, +51.6701] \\
-Gemini 4 Argon & B -- A & +9.5238 & [-39.1648, +54.7328] \\
-Gemini 4 Argon & B -- C & -38.0952 & [-77.0464, +14.6925] \\
-Gemini 4 Argon & E -- B & +14.2857 & [-37.2441, +60.6678] \\
+Gemini 4 Argon & B -- D & +4.7619 & 1.00000 & [-22.7012, +31.2676] \\
+Gemini 4 Argon & B -- A & +9.5238 & 0.74421 & [-18.0105, +35.2120] \\
+Gemini 4 Argon & B -- C & -38.0952 & 0.02778 & [-59.8800, -8.1786] \\
+Gemini 4 Argon & E -- B & +14.2857 & 0.53590 & [-14.7411, +40.2154] \\
 \bottomrule
 \end{tabular*}
 \end{table}
@@ -625,7 +633,7 @@ Table~\ref{tab:resultscrintervals}, whose broad widths caution against
 treating single-task binomial differences as precise population estimates.
 
 The handoff's exploratory inspection identified a recurring Sonnet F10
-audit-target convention miss on
+failure to record the expected audit target on
 \nolinkurl{test_f10_hidden::test_h10_targets_and_actors}: 8 A, 7 B, 8 C,
 9 D and 4 E trajectories. A single miss corresponds to 126/127 passing
 tests (99.21\%); some trajectories had further misses, as the minimum
@@ -650,8 +658,8 @@ new annotation audit.
 \caption{Additional size and complexity companions at $P_{10}$ across all
 21/21 completed trajectories per cell. Complexity is the mean per function;
 source lines exclude blank/full-comment lines, and Markdown words exclude
-generated reports and dot directories.}
-\label{tab:resultssize}
+generated reports and dot directories.}\label{tab:resultssize}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrr@{}}
 \toprule
 Model & Arm & Mean complexity & Source lines & Markdown words \\
@@ -678,9 +686,11 @@ GPT 6.1 Sol & E & 2.60 & 545.6 & 1859.1 \\
 \end{table}
 
 Sonnet and Gemini retained the skeleton's 106 Markdown words in A, D
-and E; B/C added the design or review handover. GPT produced longer
+and E\@; B/C added the design or review handover. GPT produced longer
 documentation even without those post-steps. Word counts describe how much text was retained. Assessing its accuracy
-or use by later sessions requires separate evidence.
+or use by later sessions requires separate evidence. In particular, a
+\texttt{REVIEW.md} count cannot establish that the next feature session
+acted on a warning about write methods in a read-only view.
 Completely billed B consolidation sessions averaged 5.82 credits on
 Sonnet (210 sessions), 12.59 on Gemini (208) and 12.04 on GPT (208).
 These settled step means do not include unknown charges or identify a
@@ -689,7 +699,7 @@ stable, quality-matched long-run premium for the economic sensitivity model.
 \FloatBarrier
 \subsection{Detailed post-collection ratings and calibration}\label{app:judgingresultsdetail}
 
-Tables~\ref{tab:resultsjudgemeans} and \ref{tab:resultsjudgemeanscr1}
+Tables~\ref{tab:resultsjudgemeans} and~\ref{tab:resultsjudgemeanscr1}
 retain available-scenario cell means and all-scenario pass counts.
 Functional completeness, workflow coherence, error recovery and API
 usability remain separate 0--4 ordinal dimensions. Averaging is descriptive;
@@ -716,8 +726,8 @@ between treatments, and counting abstentions does not recover missing ratings.
 for complete trajectory pairs. All arms have 63 allocated and observed
 trajectories. NA counts are trajectories with any unrated scenario
 dimension, focal/comparator, not wholly missing trajectories. The 95\%
-bootstrap intervals resample trajectories, not individual ratings.}
-\label{tab:judgeobservedcontrasts}
+bootstrap intervals resample trajectories, not individual ratings.}\label{tab:judgeobservedcontrasts}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lllrlr@{}}
 \toprule
 Endpoint & Contrast & Dimension & Difference & 95\% interval & NA F/C \\
@@ -735,7 +745,7 @@ CR1 & B -- A & Recovery & -0.0069 & [-0.0227, +0.0079] & 8/18 \\
 \end{tabular*}
 \end{table}
 
-Tables~\ref{tab:judgepartialp10} and \ref{tab:judgepartialcr1} instead
+Tables~\ref{tab:judgepartialp10} and~\ref{tab:judgepartialcr1} instead
 retain the C/E missing trajectories. They calculate the lowest and highest possible contrasts by allowing
 each wholly missing trajectory score to range from 0 to 4, with 21
 allocations per model/arm and equal model weights. For coherence and recovery, this bounds only
@@ -751,8 +761,8 @@ are not substituted for the full-allocation bounds here.
 \caption{Partial-frame $P_{10}$ judge contrasts (0--4). B--C observes
 63/62 trajectories and E--B 62/63, from 63 allocated to each arm.
 Observed differences use available-scenario means. Bounds vary the wholly
-missing trajectory; NA F/C counts partly unrated observed trajectories.}
-\label{tab:judgepartialp10}
+missing trajectory; NA F/C counts partly unrated observed trajectories.}\label{tab:judgepartialp10}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrlr@{}}
 \toprule
 Contrast & Dimension & Observed difference & Allocation bounds & NA F/C \\
@@ -775,8 +785,8 @@ E -- B & API & +0.0051 & [-0.0584, +0.0051] & 0/0 \\
 \caption{Partial-frame CR1 judge contrasts, with the same allocation,
 scale, bounds and NA convention as Table~\ref{tab:judgepartialp10}.
 Neither the bounds nor the observed-scenario differences establish
-complete-scenario or population effects.}
-\label{tab:judgepartialcr1}
+complete-scenario or population effects.}\label{tab:judgepartialcr1}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrlr@{}}
 \toprule
 Contrast & Dimension & Observed difference & Allocation bounds & NA F/C \\
@@ -801,8 +811,8 @@ E -- B & API & +0.0046 & [-0.0589, +0.0046] & 0/0 \\
 \setlength{\tabcolsep}{4pt}
 \caption{Descriptive $P_{10}$ judge means and workflow passes over evaluable
 endpoints. Scores are functional completeness, coherence, recovery and
-API usability. ``Pass'' counts endpoints passing all eleven workflows.}
-\label{tab:resultsjudgemeans}
+API usability. ``Pass'' counts endpoints passing all eleven workflows.}\label{tab:resultsjudgemeans}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrrrr@{}}
 \toprule
 Model & Arm & Evaluable & Pass & Completeness & Coherence & Recovery & API \\
@@ -833,8 +843,8 @@ GPT 6.1 Sol & E & 21 & 12 & 3.747 & 3.793 & 3.939 & 3.758 \\
 \setlength{\tabcolsep}{4pt}
 \caption{Descriptive post-CR1 judge means and workflow passes. ``Pass''
 counts endpoints passing all twelve workflows, a different instrument
-from the hidden-contract CR1 composite in the main results.}
-\label{tab:resultsjudgemeanscr1}
+from the hidden-contract CR1 composite in the main results.}\label{tab:resultsjudgemeanscr1}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lcrrrrrr@{}}
 \toprule
 Model & Arm & Evaluable & Pass & Completeness & Coherence & Recovery & API \\
@@ -870,7 +880,7 @@ Sonnet E had one endpoint fail the newly eligible CR1 regions workflow
 and is distinct from loss of an acquired scenario.
 
 \paragraph{Human spot-check and repeated contexts.}
-Eight blinded packets (\texttt{S01..S08}) were selected before AI scoring:
+Eight anonymised packets (\texttt{S01..S08}) were selected before AI scoring:
 six $P_{10}$ packets with eleven scenarios and two CR1 packets with twelve,
 giving 90 rows. Four packets came from the incomplete/failing stratum and
 four from the passing stratum. No witnessed-loss packets were available.
@@ -893,8 +903,8 @@ not independent inter-rater reliability.
 \caption{Human-versus-AI agreement (\%). Each dimension has 158 scorable
 repeat comparisons over 79 rows; context weighting uses sixteen distinct
 contexts. Both sides abstained on all eleven unavailable rows. The last
-column counts null-versus-numeric disagreements on scorable rows.}
-\label{tab:resultscalibration}
+column counts null-versus-numeric disagreements on scorable rows.}\label{tab:resultscalibration}
+
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}lrrrrr@{}}
 \toprule
 Dimension & \shortstack{Raw\\exact} & \shortstack{Raw\\within 1} & \shortstack{Context\\exact} & \shortstack{Context\\within 1} & \shortstack{Null vs.\\numeric} \\
@@ -1004,6 +1014,10 @@ journal observations do not independently establish out-of-band intervention
 coverage.
 
 \paragraph{Owner attestation and updated report binding.}
+Isabel Cabezas Martin supplied the unassisted-run attestation. She executed
+and collected the experiment but did not conduct its analysis; as a
+coauthor, she was not an independent auditor. This attribution was
+confirmed by the corresponding author during the final editorial pass.
 The final \nolinkurl{results/pilot-estimation/provenance.json} records
 \nolinkurl{intervention-coverage/v1} as \texttt{owner-attested} at
 \nolinkurl{2026-11-15T09:08:12.811511+00:00}: all 315 covered trajectories,
@@ -1053,8 +1067,8 @@ handoff through E14 had 5,341 returned steps and 5,357 attempts across
 313 completed trajectories). At the historical 8 November checkpoint, E1--E3
 had 651, 227 and 369 reported steps (1,247 total). Source identifiers do
 not establish collection times or independent replicate counts. Record
-links resolve to full identifiers in the end register.}
-\label{tab:executionepochs}
+links resolve to full identifiers in the end register.}\label{tab:executionepochs}
+
 \begin{tabularx}{\textwidth}{@{}L{0.9cm}YL{1.6cm}L{1.6cm}@{}}
 \toprule
 Epoch & Execution source and operational correction & Returned steps & Total attempts \\
@@ -1082,7 +1096,7 @@ Total & Sixteen execution sources; 315 allocated trajectories, 315 complete & 5,
 \end{table}
 
 \FloatBarrier
-\subsection{Scheduling evidence and remaining chronology}\label{app:scheduling}
+\subsection{Execution order and what remains unknown}\label{app:scheduling}
 
 The 15 November read-only inspection used the public source and exports at
 \sourceref{R17}. In \nolinkurl{harness/study.py}, lines 286--323 shuffle
@@ -1136,8 +1150,8 @@ allow 7.5 hours and 6,000 credits. Thus calibration adds 240 sessions,
 \caption{Historical five-arm resource scenarios for the offered choices of $n$ per
 model per arm; the historical default column is bold. These are summed nominal
 session allowances and time ceilings, not expenditure or enlarged budgets.
-Every choice exceeds the aggregate envelope at nominal session caps.}
-\label{tab:pilotresources}
+Every choice exceeds the aggregate envelope at nominal session caps.}\label{tab:pilotresources}
+
 \begin{tabularx}{\textwidth}{@{}Y>{\bfseries}rrr@{}}
 \toprule
 Quantity & $n=12$ (default) & $n=21$ & $n=33$ \\
@@ -1182,7 +1196,7 @@ The provider request also contains session context outside these templates. The 
 Markdown heading, substitutes the configured post-step budget in minutes,
 and saves the actual supplied text as the step's \texttt{prompt.md}.
 The public configuration has a 900-second post-step budget, rendering
-``15 minutes''; this inspection does not verify every private run's rendered
+\textquotedblleft{}15 minutes\textquotedblright{}; this inspection does not verify every private run's rendered
 prompt or provider/system context. Each step is a fresh session under its
 assigned study model/effort. The model can reason qualitatively over the
 visible report and diff, but hidden outcomes are measured outside it.
@@ -1200,7 +1214,7 @@ cannot be assumed to be an inert placebo.
 The historical v4 prompt in Section~\ref{app:prompt} remains a separate
 unchanged source record.
 
-\paragraph{Arm B: consolidation.}
+\paragraph{Arm B\@: consolidation.}
 Source \nolinkurl{harness/prompts/consolidation-step.prompt.md}
 (\sourceref{R60}).
 Display wrapping does not change the retained template bytes.
@@ -1210,7 +1224,7 @@ Display wrapping does not change the retained template bytes.
   breaklines=true,breakatwhitespace=false]{anc/consolidation-active-e71037d9.prompt.txt}
 
 \noindent\begin{minipage}{\linewidth}
-\paragraph{Arm C: read-only review.}
+\paragraph{Arm C\@: read-only review.}
 Source \nolinkurl{harness/prompts/review-only-step.prompt.md}
 (\sourceref{R61}).
 This is a qualitative treatment instruction, not an outcome-grading rubric.
@@ -1219,3 +1233,567 @@ This is a qualitative treatment instruction, not an outcome-grading rubric.
   columns=fullflexible,keepspaces=true,showstringspaces=false,upquote=true,
   breaklines=true,breakatwhitespace=false]{anc/review-only-active-e71037d9.prompt.txt}
 \end{minipage}\par
+
+
+\subsection{Moved protocol and inspection detail}\label{app:editorialaudit}
+
+The following passages preserve the earlier execution and inspection account
+moved out of the main article during the final editorial pass. Dates,
+version-specific statements and historical requirements describe their
+original scope. The completed results and consolidated threats govern the
+paper's present interpretation. Unfulfilled reporting instructions are
+collected as requirements for the next study in
+Section~\ref{app:futuredesign}.
+
+\subsubsection{Registration and execution-version chronology}
+
+Isabel Cabezas Martin conducted the experiment and collected its data
+independently across the 315 allocated trajectories under the predefined
+exploratory protocol and disclosed amendments. Juan Manuel Servera Bondroit
+conceived and designed the study, defined the evaluation criteria, analysed
+the results, conducted the human-calibration spot-check and prepared the
+manuscript. This division of work was intended to reduce experimenter bias.
+Both authors are Microsoft employees; execution was separate from design
+and analysis, but not institutionally independent.
+
+An earlier three-arm protocol was registered at \url{https://osf.io/ywsrv/overview},
+and I, the repository maintainer, confirm a 7 November 2026 OSF-registered base at
+\url{https://osf.io/xcpt4}. Because the OSF registration could not be amended in
+place, the executed five-arm model-stratified design and mid-study resilience
+recoveries (short calibration, parallel execution, WebSocket/HTTP retry
+handling, VM restarts and quarantine-completion transitions) were publicly
+disclosed in version control, culminating in initial handoff commit
+\sourceref{R07} and final quarantine-recovery sources
+\sourceref{R22} and \sourceref{R23} in the end register.
+The completed study estimates exploratory differences under an evolving
+protocol. The registered base covers only part of that execution history.
+The public protocol leaves its formal hypothesis list empty and marks the
+current amendment's registration fields false or null. Those fields concern
+the amendment; the registered base remains based on my confirmation.
+
+The active profile is \nolinkurl{pilot-estimation.json},
+\texttt{model-stratified-v2-five-arm}, suite \texttt{s1-retrofit}.
+GPT~6.1 Sol, Claude Sonnet~5.5 and Gemini~4 Argon use medium effort across
+arms A--E, F1--F10 and held-out CR1, with seed 2027. The runtime selection
+I supplied is $n=21$ trajectories per model per arm despite the
+file default of 12: $3\times5\times21=315$ planned trajectories.
+A trajectory is the sequence of work on one repository. Its feature steps,
+sessions and completion counters describe work within that sequence and
+cannot be counted as additional independent replicates.
+
+Collection used sixteen successive execution-source versions.
+The first three were inspected on 8 November;
+the 13--14 November snapshot had 313 completed trajectories, and audited
+recovery completed all 315. Table~\ref{tab:executionepochs} links each version
+to its operational correction and step counts; the end register supplies
+the full identifiers. Failures and unknowns remain in the record.
+Implementation changes and scheduling can be confounded with time, arm
+and model; source-commit times alone do not establish collection times.
+The retained amendment records document decisions and source transitions,
+but do not provide a complete decision-by-decision record of outcomes
+already inspected when each change was made. That chronology is unavailable
+in the public exports used here. We retain the resulting descriptive
+comparisons without claiming prospective outcome-blind adaptation.
+
+The 1 November five-arm amendment, 2 November allocation revision and
+5 November v6 source findings below remain dated planning and inspection
+records. Historical v4/v6/v7 freezes and diagnostics retain their own
+scope. Earlier power/resource scenarios, including full ten-feature
+calibration, are preserved unchanged; they do not establish power or
+expenditure for the active F10/$n=21$ amendment.
+The results below retain all 315 allocated trajectories, historical
+quarantines, credit holds and execution-version boundaries.
+
+\subsubsection{Historical implementation inspection}
+
+The source-published v6 kit implemented all five arms and an immutable
+replicate selector, superseding an earlier A/B/C-only capability account.
+The source inspection, historical gate status and unchanged v4 freeze are
+retained in the dated revision record and source register.
+
+\subsubsection{Historical design diagram}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{fig-pilot-design.png}
+\caption{Historical v6 design diagram. Its default allocation, full
+calibration and pending-registration/launch labels describe that source
+record; current $n=21$ execution and amendments are in
+Section~\ref{sec:studyexecution}. Every model runs all five arms.
+The external evaluator is separate from candidate tools. CR1 content
+remains withheld until its session; privacy and isolation reduce exposure
+without proving that a model has no prior knowledge.}\label{fig:pilotdesign}
+\end{figure}
+
+\subsubsection{Container capabilities and collection dispositions}
+
+The broker's candidate-execution containers disable networking, use a
+read-only root filesystem and set \texttt{no-new-privileges}, with CPU,
+memory, process and time limits. Docker uses \texttt{--cap-drop=ALL}
+but re-adds four for its protected supervisor; the candidate child runs
+as UID/GID 1001 with cleared effective, permitted and inheritable
+capabilities. Those four supervisor capabilities remain at the container level even
+though they are cleared for the candidate child.
+Development workspace mounts remain writable; replay snapshot/evaluator
+mounts are read-only. Copilot authentication stays with the trusted host transport.
+An isolation or collection failure leaves the checkpoint unavailable.
+If collection succeeds and the candidate fails, that failure remains in
+the evidence. It does not automatically make the checkpoint unavailable
+or assign a zero judge rating. These boundaries describe the inspected
+source. Their enforcement was not adversarially proven or verified across
+every archived execution version.
+
+\subsubsection{Retention analyser inspections and reporting status}
+
+The v6 analyzer inspected on 5 November uses a stricter summary rule: incomplete prior
+acquisition or any unobserved eligible result makes its loss count and
+density unavailable, with completeness flags. Its standard export does
+not emit the observed-subset counts, missing-count fields and bounds
+specified above. Those are prospective reporting requirements retained
+from the earlier design. The 8 November read-only source inspection
+(\sourceref{R05}) confirms that the conservative rule remains in
+\texttt{pilot\_analysis.retention}; it does not establish the planned
+observed-subset export or amend the reporting rule.
+The final public export permits a bounded reporting disposition
+(Supplement Section~\ref{app:reportingdisposition}): all 6,300 F/P rows
+declare complete risk sets and observations, so no partial-observation
+bounds are needed for these retained feature checkpoints. This does not
+implement or validate the richer pipeline for future incomplete histories.
+
+\subsubsection{Graded adaptation reporting and prerequisite strata}
+
+The earlier reporting plan also requested results stratified by whether
+F9 and F10 were acquired before CR1. Less complete repositories have fewer
+passing contracts to preserve. Treatment can affect prerequisite acquisition,
+so conditioning on these strata introduces post-treatment selection.
+One fixed CR1 is task-specific. A prewritten, randomly selected request
+pool belongs to a separately registered subsequent study.
+The summary inspected on 5 November computes composite CR1 success. The
+active-source inspection on 8 November likewise finds composite
+\texttt{cr\_success}, not a completed graded or F9/F10-stratified CR1
+reporting pipeline. Supplement Section~\ref{app:reportingdisposition}
+adds descriptive F9/F10 strata from existing exports. A complete graded
+15-contract CR1 panel and prior-pass loss decomposition are unavailable in
+those summaries and deferred to the deeper study; composite outcomes and
+the two unknowns remain the reported endpoints. Retained raw vectors alone
+do not establish a completed reporting pipeline.
+
+\subsubsection{Accounting instruments, lint settings and telemetry}
+
+AI-credit accounting must include every delivery and CR1 attempt, including
+failures, assistance and infrastructure retries; phases are reported
+separately. Lower spending is useful only when read alongside what the
+agent delivered. Credits, tokens, elapsed
+time and currency are distinct. Lizard measures complexity, Ruff lint
+and jscpd duplication. The inspected Ruff invocation uses
+\texttt{--isolated} with the fixed \texttt{E,F,W,C90,B,SIM} rule selection,
+ignoring repository configuration files, but does not include
+\texttt{--ignore-noqa}. Inline \texttt{\# noqa} can therefore suppress
+diagnostics, and the active metric dictionary exports no separate suppression
+count. The omitted flag limits the lint measurement's protection against
+suppression, although the inspection did not establish that agents used it.
+The earlier description overstated the safeguard. The clarification
+changes no running instrumentation; a fix would require its own source,
+epoch and amendment disclosure.
+SDK request wall time and tool time are observable. Provider-active
+time and rate-limit waits require explicit telemetry; absent telemetry
+is not zero.
+
+\subsubsection{Allocation choices and minimum useful effect}
+
+The 2 November planning record offers $n\in\{12,21,33\}$ independent
+repository trajectories per model per arm, with \textbf{12 as the default};
+current execution selects 21. That record calls for the choice, rationale,
+planning SD, power/precision trade-off, date and source-bound configuration
+to be recorded before collection. It does not establish that the current
+amendments were prospectively registered. Selecting a sample size does not
+establish that its associated SD assumption is true.
+The saved allocation is immutable on resume. Outcome-driven sample-size
+changes, additions and replacements are prohibited; interim coverage,
+loss, CR1 success or other outcomes cannot determine $n$.
+
+Servera Bondroit selected a minimum useful absolute coverage gain of ten
+percentage points, approximately thirteen test-weighted contracts.
+
+\subsubsection{Conditional planning variance and sample-size calculation}
+
+For balanced cells of $n_{\mathrm{cell}}$ independent trajectories and a
+common within-cell variance $\sigma^2$, its planning variance is
+$2\sigma^2/(M n_{\mathrm{cell}})$, with $n_{\mathrm{cell}}=n$.
+For one two-sided comparison with $\alpha=0.05$, target power
+$1-\beta=0.80$ and target difference $\Delta_*=10$ points, the normal
+planning minimum, conditional on the assumed SD, is
+\begin{equation}
+n_{\mathrm{plan}}(\sigma)=
+\left\lceil\frac{2{(z_{1-\alpha/2}+z_{1-\beta})}^2\sigma^2}
+{M\Delta_*^2}\right\rceil.
+\label{eq:samplesize}
+\end{equation}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Historical conditional normal planning for the ten-point B--D contrast,
+three equally weighted models, $\alpha=0.05$ and target power 0.80.
+The SDs are planning assumptions; power remains conditional on their
+validity and the stated model.}\label{tab:replicationchoices}
+
+\begin{tabular}{@{}rr@{}}
+\toprule
+Assumed within-cell SD (points) & Planning minimum per model per arm \\
+\midrule
+15 & \textbf{12 (default allocation)} \\
+20 & 21 \\
+25 & 33 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Actual within-cell variability was unknown at planning. Target power
+depends on independent trajectories,
+the common variance, normal approximation and equal-model estimand; it is
+not guaranteed by any offered choice. In particular, default $n=12$ is
+\emph{not} an 80\%-power design under the existing SD of 25 points.
+The bounded score's worst-case SD is 50, requiring 131 per cell under
+the same approximation; that is outside the offered allocation choices.
+These planning requirements and assumptions are retained from the earlier
+record. Neither the registered base nor selection of $n=21$ establishes
+their validity for evolving-source exploratory data.
+
+\subsubsection{Analysis availability, dependence and historical reporting requirements}
+
+The inspected v6 code uses independent arm/model draws; it
+does not preserve joint scheduling-block draws.
+The inspected primary analysis requires metadata for every allocated
+trajectory across the five arms and all models, known unassisted status
+and observed final coverage for the contributing B/D trajectories.
+Otherwise it reports the primary estimate unavailable. All allocations and
+costs remain in the record; a secondary summary of only observed models or
+complete cases cannot replace the primary estimate. An earlier missing H2
+checkpoint can coexist with an observed final coverage or CR1 endpoint.
+This availability rule also needs explicit adoption or prospective
+revision in the approved study record.
+Model-specific estimates and other contrasts are secondary, with no
+family-wide coverage claim.
+ The earlier source-bound review
+identified an unresolved choice between this independent-trajectory
+variance/bootstrap scheme and model/replicate blocking.
+Trajectories with the same scheduling label may share execution conditions,
+but the label alone cannot establish their dependence or independence. Scheduling-only blocks with independent
+inference require justification; block-aware analysis would require a
+separately approved, disclosed choice and aligned planning variance.
+Shared block/service effects remain unmeasured; the v6 source freeze
+does not resolve this choice. We preserve the analysis actually performed
+as a conditional exploratory summary. Its nominal 95\% coverage depends
+on within-cell trajectory independence and does not account for
+execution-epoch confounding or shared provider conditions. An interval
+excluding zero is therefore not a confirmed causal or generalisable
+treatment effect.
+Public run identifiers allow the model/replicate scheduling groups and
+source epochs to be reconstructed. Retained operator metadata also contain
+start times and controller durations for every attempt (Supplement
+Section~\ref{app:executiondetail}). Those intervals describe controller activity. They do not show whether
+requests shared provider conditions or whether their errors were independent. The reported companion intervals retain the analysis actually
+performed; a dependence-sensitive comparison would be a separately
+disclosed post-collection analysis.
+No dependence-sensitive reanalysis or additional experimental round is
+included in this paper. The incomplete outcome-access chronology and
+dependence justification are recorded limitations; a deeper study needs
+prospective timing, source and exposure records and inference aligned
+with its randomisation. The present estimand covers only these three
+selected models, this task and this evolving execution.
+Chen, Zaharia and Zou's dated ChatGPT comparison motivates monitoring
+service drift despite exposed names~\cite{chen2023drift}; it does not
+measure drift in this roster or make a version pin an immutability guarantee.
+The completed pooled SD is reported in Supplement Section~\ref{app:resultsdetail}.
+
+
+\subsubsection{Resource admission, operational readiness and information access}
+
+The experiment distinguishes resources an agent could use from resources
+it actually consumed. A larger allowance may leave spending unchanged
+when a session exits early; a transport interruption may leave a charge
+unknown even after the development work is complete. The results report
+observations and unresolved liabilities separately. Historical planning
+scenarios remain in Supplement Section~\ref{app:resources}, including
+Table~\ref{tab:pilotresources}; they retain the earlier full-calibration
+assumption and do not establish that historical launch gates were met.
+
+The actual aggregate envelope remains 300,000 AI credits, with a
+270,000-credit local admission ceiling: the controller must stop admitting
+new work when spending and reserved liabilities reach that amount.
+Prior spending and provisions for
+unknown historical usage remain charged or held against remaining
+admission; unknown usage is never zero or free headroom.
+Original 300-credit sessions use a 270-credit soft limit; D's
+600-credit feature uses 540. A retry shares the original allowance.
+In-flight responses can overshoot; these are not provider billing caps.
+No verified dollar conversion is available.
+
+The historical plan required the selected allocation, calibration and
+all-attempt liabilities to fit the remaining envelope and deadline before
+collection. It prohibited outcome-driven resizing or silent reductions to
+fit the budget. Its detailed arithmetic remains in the Supplement.
+The launcher inspected on 5 November enforces attempt and aggregate admission but does
+not compute or approve that full-allocation forecast. A dated researcher
+forecast and approval are required separately; a nonempty calibration
+note is insufficient.
+Proposed progression criteria are infrastructure failures at
+most 5\%, no missing primary observations, complete billing/model/help
+records, zero oracle contradictions in triplicate reference checks,
+and no information-boundary failure. Hidden-test mutation assessment
+must report its actual mutant denominator and unresolved equivalence.
+These operational feasibility criteria cover infrastructure and measurement
+readiness before full collection.
+
+Only current and previous visible specifications and examples reach
+candidate tools. Hidden tests, scores, identifiers, messages, reference
+code and future CR1 remain external. Candidate commands use no-network
+containers; the trusted host SDK's provider connection is different.
+The earlier plan called for a researcher-managed protected workspace
+without the original case repositories, manuscript or session-context
+caches. Cabezas Martin's current execution role is separate from design
+and manuscript preparation; coauthorship supplies no evidence of blindness
+or actual access restrictions.
+The earlier repository-privacy and later approved-release plans remain
+historical intentions, not inspected current visibility.
+OSF status and GitHub privacy are separate; neither removes prior public
+or model exposure. The historical registered-freeze path and current
+disclosed unregistered path have different registration status.
+This manuscript update neither verifies operational approvals nor changes
+information boundaries, budgets, configuration or launch permissions.
+
+\subsubsection{Recovery completion, step counts and intervention coverage}
+
+Isabel Cabezas Martin completed two previously transport-quarantined
+trajectories through audited recovery (\sourceref{R22}, \sourceref{R23}),
+preserving prior unknown-charge holds. They were
+{\def\UrlBreaks{\do\-}\def\UrlBigBreaks{}\nolinkurl{pilot-estimation-gpt-6.1-sol-C-20}} and
+{\def\UrlBreaks{\do\-}\def\UrlBigBreaks{}\nolinkurl{pilot-estimation-gemini-4-argon-E-15}}. Both finished with 100.0\%
+(127/127) $P_{10}$ and 100.0\% (142/142) CR1 hidden pass rates.
+The interruption history, task roster and runtime record are in Supplement
+Section~\ref{app:executiondetail}.
+
+Collection produced all 5,355 of 5,355 (100.0\%) scheduled steps across
+5,372 attempts. The 17 extra attempts are historical recovery-interrupted
+holds, so attempts, measured steps and independent repository trajectories
+have different denominators. Execution spans sixteen source commits and
+disclosed unregistered amendments to the registered base
+(Section~\ref{sec:studyexecution}).
+
+The updated provenance records owner-attested intervention coverage
+(\nolinkurl{intervention-coverage/v1}) for all 315 completed trajectories,
+with none recorded as assisted. This is an operator account of intervention,
+corroborated by the 5,372-journal in-band SDK audit rather than an
+independent audit of out-of-band edits or hints.
+
+\subsubsection{Final billing-hold accounting}
+
+Billing remains partly held for interrupted provider calls. Across 5,372
+attempts, 5,317 settled with complete billing totaling 62,299.76 AI credits.
+The remaining 55 attempts retain 19,200.0 reserved credits against unknown
+final charges, with 783.16 credits
+certified as a partial lower bound. Reservations are not measured spending,
+and missing charges are not zero. The Supplement retains the exact amounts,
+hold categories and failure-adjudication record; no currency conversion is made.
+
+\subsubsection{Incomplete judging frames and scenario abstentions}
+
+\FloatBarrier
+In the frozen 626-packet Assessment~v3 archive, complete-frame judge
+contrasts for B--C and E--B remain bounded over $[0,4]$ because C and E
+each lacked one trajectory at the time of judging, and workflow-coherence
+and error-recovery complete-scenario contrasts remain unavailable where
+crashed ranking workflows left dimensions unrated. The companion bounds
+those four unjudged packets and reports means over each trajectory's
+available scenarios alongside counts of trajectories containing an
+abstention (Arm~B cut error-recovery crash abstentions from 16/63 in D and
+17/63 in A to 9/63 at $P_{10}$, and from 16/63 and 18/63 to 8/63 at CR1).
+Bounds for unjudged packets do not bound unrated scenarios within an
+observed trajectory; the Supplement keeps these summaries separate from
+complete-frame comparisons.
+
+\subsubsection{SDK interaction and permission-halt audit}
+
+The SDK audit found no interactive user-input RPCs across all 5,372 retained
+study-attempt journals, with those interfaces disabled. Of 42,952 tool
+requests, 42,878 (99.83\%) used \texttt{isolated\_exec}; all 74 other
+requests were rejected Sonnet \texttt{create}/\texttt{edit} attempts.
+Thirty-six sessions (0.67\%) across 29 trajectories (9.21\%) ended with a
+permission or environment question, leaving \texttt{src/} unchanged in
+35/36 cases. The Supplement retains the per-model breakdown and distinguishes
+the journal audit's invocation counts from the report summary and earlier
+snapshot. These observations describe recorded requests; owner attestation,
+including out-of-band intervention, remains a separate evidence source.
+
+
+\subsubsection{Detailed instrument table}
+
+Table~\ref{tab:measurementprovenance} lists the measurements in the active kit
+and how each is produced.
+
+\begin{table}[!htbp]
+\small
+\centering
+\caption{Measurements in the active kit (\sourceref{R05}).
+Programmatic scoring is distinct from model-generated treatment text.
+Deterministic means repeatable for fixed source, inputs, tools and environment,
+not identical across different generated repositories or runtime sessions.}\label{tab:measurementprovenance}
+
+\begin{tabularx}{\linewidth}{@{}L{0.22\linewidth}Y L{0.23\linewidth}@{}}
+\toprule
+Measure and role & Values and instrument & Provenance \\
+\midrule
+Final coverage; primary & Hidden feature contracts passed out of 127 at
+$P_{10}$, expressed on the 0--100 scale & Programmatic test oracles \\
+Retained-contract loss; secondary & Previously acquired unchanged
+contracts later failing; counts, density, episodes and accumulated test-cycles
+& Checkpoint calculations; incomplete history can be unavailable \\
+CR1 adaptation; secondary & All 15 CR1 contracts pass and previously
+passing feature contracts remain satisfied & Programmatic tests and
+documented disposition rules \\
+Complexity; structural proxy & Lizard function-level cyclomatic complexity:
+mean, maximum and share above 10 & Deterministic code analysis \\
+Duplication; structural proxy & jscpd duplicated-line percentage,
+Python mode, minimum 50 tokens and five lines & Deterministic clone detection \\
+Lint; structural proxy & Ruff diagnostic counts and warnings per
+1,000 source-code lines, frozen selected rules & Deterministic diagnostics;
+inline suppression caveat below \\
+Size and change; companions & Source/test code lines, files/functions,
+Markdown words, test/assertion counts and Git additions/deletions & Deterministic
+counts; not proof of code quality \\
+Resources; cost companions & Recorded credits, input/output/cache tokens,
+session seconds and available API-duration telemetry & Variable observations;
+aggregation is programmatic, not AI judgement \\
+Assistance and integrity; companions & Recorded help/dispositions,
+protected-file hashes, violations and leak indicators & Explicit records and
+checks; absent annotation is not zero \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth]{fig-experiment-measures.png}
+\caption{Historical measurement design: coverage, retained behaviour, adaptation and all-attempt cost
+are separate measures. Structural metrics targeted by B's stopping
+budget are treatment-fidelity checks, not independent efficacy outcomes.
+Unknown results and billing remain unknown. The observed-subset retention
+and graded CR1 panels describe planned reporting requirements; their
+implementation was unresolved in the 5 November v6 inspection.
+The active-source inspection confirms conservative loss and composite CR1
+summaries, not those planned richer exports.}\label{fig:experimentmeasures}
+\end{figure}
+
+\subsubsection{Historical deposit and access detail}
+
+This account preceded confirmation that both GitHub repositories are public;
+the current Data availability statement governs public and embargo status.
+
+
+The repository analysed was publicly accessible during the case at
+\url{https://github.com/jmservera/ama}. The original case and later follow-up
+use separate snapshots (\sourceref{R01}, \sourceref{R02}). The source package
+retains the case evidence index, repository observations and metrics, missing
+execution links, analysis scripts and supplementary participant-observer context.
+These records separate retained source from participant recollection,
+and live issue states can change independently. Full source identifiers and
+file digests for the core source records appear in
+Table~\ref{tab:source-register} at the end of the Supplement. The case
+evidence index supplies the recovered session/turn and instruction-version
+locators. A digest identifies retained content. Claim support requires examining
+that content.
+
+The experiment source and sanitized outputs are at
+\url{https://github.com/jmservera/ama-thought-mve}. Historical
+\href{https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4}
+{v4},
+\href{https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v6}
+{v6} and
+\href{https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v7}
+{v7 releases retain separate protocol archives} and checksum files. Dated
+source inspections (\sourceref{R03}--\sourceref{R06}) and the sixteen execution
+versions (Table~\ref{tab:executionepochs}) are distinct from those releases.
+The source's saved replicate selector permits 12, 21 or 33 trajectories per
+model/arm, default 12, and the executed selection was 21. The earlier inspections
+checked implementation identities. They did not check runtime-image qualification or
+source-declared test totals. Their registration and collection
+declarations, as current on the inspection dates, stay date-scoped in
+\nolinkurl{anc/revision-report.md}.
+
+The earlier three-arm protocol was registered at
+\url{https://osf.io/ywsrv/overview}; I confirm the registered base at
+\url{https://osf.io/xcpt4} on 7 November 2026. Both registrations are now
+publicly accessible. The five-arm design and resilience recoveries were
+publicly committed but unregistered. Source records \sourceref{R07}--\sourceref{R09}
+identify the 12 November execution disclosure, and \sourceref{R22}--\sourceref{R27}
+identify the final recovery and its state/attestation bindings. A disclosure in Git
+cannot retroactively amend an OSF registration.
+
+The completed report is \nolinkurl{results/EXPERIMENT_RESULTS.md}
+(\sourceref{R17}--\sourceref{R20}), supported by
+\nolinkurl{results/pilot-estimation/}. The judging outputs and companion
+contrasts are in \nolinkurl{results/pilot-estimation-judging/}
+(\sourceref{R21}). The earlier 13 and 14 November report versions
+(\sourceref{R10}--\sourceref{R16}) are retained, because completing the development
+dataset did not complete the earlier judging snapshot. The Supplement collects
+the outcome, missingness, billing and execution details in one place.
+
+The authors select the experiment GitHub repository as the deposit.
+The \href{https://github.com/jmservera/ama-thought-mve/releases/tag/results-exploratory-s1-v1}
+{results-exploratory-s1-v1 release} archives the 216 sanitized
+files from source \sourceref{R17} with checksum and manifest sidecars
+(excluding seven administrative tracking files and an endpoint DLP sidecar),
+and Supplement Section~\ref{app:reportingdisposition} binds the public
+analysis exports to their SHA-256 digests. No post-collection OSF deposit
+was created: the existing OSF registrations link to the repository and
+remain pre-collection records, while later amendments are disclosed in Git.
+Raw packets, private specimen-to-trajectory mappings and runtime workspaces
+stay off-Git in the evidence vault, with the intention of preserving future
+reviewer blinding.
+The public attempt and provenance exports retain actual arm/model/source
+assignments, failures and unknowns. Changing execution versions and service
+conditions limit homogeneous pooling. Current access and prior exposure
+need their own records, and no independent replication is claimed.
+
+
+
+
+\subsubsection{Detailed judge contrast intervals}
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Supplementary judge differences and companion 95\% bootstrap
+intervals on the 0--4 scale (10,000 whole-trajectory draws, seed 2027),
+equally weighting the three development models. B--D compares matched
+allowances; B--A adds the consolidation allowance. Both compared arms must
+have complete ratings for every allocated trajectory and scheduled scenario:
+63 versus 63 at each endpoint. Intervals are exploratory and unadjusted.}\label{tab:resultsjudgecontrasts}
+
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrr@{}}
+\toprule
+Endpoint & Contrast & Completeness (95\% CI) & API (95\% CI) \\
+\midrule
+$P_{10}$ & B -- D & $+0.0577\;[+0.0007,+0.1097]$ & $+0.0599\;[0.0000,+0.1154]$ \\
+$P_{10}$ & B -- A & $+0.0729\;[+0.0173,+0.1248]$ & $+0.0722\;[+0.0137,+0.1263]$ \\
+CR1 & B -- D & $+0.0351\;[-0.0046,+0.0741]$ & $+0.0357\;[-0.0040,+0.0747]$ \\
+CR1 & B -- A & $+0.0357\;[-0.0013,+0.0728]$ & $+0.0370\;[-0.0007,+0.0747]$ \\
+\bottomrule
+\end{tabular*}
+\end{table}
+
+
+\subsubsection{Collection and estimability detail}
+
+The final export records \texttt{primary\_estimates\_available=true};
+the machine-readable field name is \nolinkurl{primary_estimates_available=true}.
+
+The study completed all 315 of 315 (100.0\%) allocated repository trajectories, each starting from the same Python skeleton and receiving ten
+features, followed by regional access control as a withheld extension.
+Audited recovery completed the two interrupted trajectories without
+discarding their charge holds. All 5,355 scheduled steps completed across 5,372 attempts, with the additional attempts representing recovery work rather than independent replicates.
+
+With all 315 allocated trajectories complete and owner-attested unassisted,
+the primary and secondary coverage estimates are available
+and pooled comparisons use
+63 versus 63 trajectories and within-model comparisons use 21 versus 21, with regression counts also complete. Two completed GPT trajectories retain an unadjudicated CR1 test error, whereas exact binomial intervals describe sampling uncertainty for fully observed
+Sonnet and Gemini outcomes. GPT's identification bounds answer which success rates are possible if each unknown outcome is assigned first to failure and then to success, with both uncertainties identified in the detailed tables.

@@ -188,6 +188,29 @@ class ArxivPackageTests(unittest.TestCase):
         with self.assertRaisesRegex(tool.PackageError, "already exists"):
             tool.build_package(files, output)
 
+    def test_changed_labels_receive_a_third_pass_before_acceptance(self) -> None:
+        tool.write_archives(tool.collect_sources(self.paper), self.root)
+        extracted = self.root / "settling-labels"
+        passes = 0
+
+        def fake_latex(command: list[str], cwd: Path) -> bytes:
+            nonlocal passes
+            passes += 1
+            log = (
+                "LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right."
+                if passes < 3 else "Output written."
+            )
+            (cwd / "main.log").write_text(log, encoding="utf-8")
+            (cwd / "main.pdf").write_bytes(b"%PDF-preview")
+            return b""
+
+        with (
+            mock.patch("package_arxiv.shutil.which", return_value="/usr/bin/pdflatex"),
+            mock.patch.object(tool, "run", side_effect=fake_latex) as run,
+        ):
+            tool.compile_archive(self.root / tool.ARCHIVES[0], extracted)
+        self.assertEqual(run.call_count, 3)
+
     def test_unresolved_references_are_not_a_successful_build(self) -> None:
         tool.write_archives(tool.collect_sources(self.paper), self.root)
         extracted = self.root / "unresolved"
@@ -202,10 +225,11 @@ class ArxivPackageTests(unittest.TestCase):
 
         with (
             mock.patch("package_arxiv.shutil.which", return_value="/usr/bin/pdflatex"),
-            mock.patch.object(tool, "run", side_effect=fake_latex),
+            mock.patch.object(tool, "run", side_effect=fake_latex) as run,
             self.assertRaisesRegex(tool.PackageError, "unresolved references"),
         ):
             tool.compile_archive(self.root / tool.ARCHIVES[0], extracted)
+        self.assertEqual(run.call_count, 4)
 
     def test_publication_requires_clean_tracked_exact_bytes(self) -> None:
         files = {"main.tex": b"Exact source"}

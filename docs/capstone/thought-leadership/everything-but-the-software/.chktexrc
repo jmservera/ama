@@ -1,0 +1,24 @@
+# These commands intentionally consume following whitespace.
+Silent
+{
+    \FloatBarrier \newblock \raggedright
+    \endfirsthead \endhead \endfoot \endlastfoot
+}
+
+# Literal code, identifiers and URLs are not prose or bracket groups.
+WipeArg
+{
+    \texttt:{} \url:{} \nolinkurl:{} \sourceref:{}
+}
+
+# Apostrophes in possessives and punctuation inside quotations are intentional.
+QuoteStyle = Traditional
+
+# Arm contrasts, ranges and compound names use en dashes.
+DashExcpt
+{
+    A--B B--A B--C B--D E--B A--E F1--F10
+    "B -- A" "B -- C" "B -- D" "E -- B"
+    Research--Plan--Implement--Review
+    Clopper--Pearson Human--Computer work--until
+}

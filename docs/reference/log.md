@@ -15528,6 +15528,39 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 107 demo release records and capped batch blocked (Refs #107)
 
 * Added [issue-107-live-r14-release-records-2026-11-25.md](research/issue-107-live-r14-release-records-2026-11-25.md): five demo release records recorded after fixing the approver identity, harness admission shape corrected, live batch blocked by a private endpoint with zero tokens spent.
+
+## [2026-11-25] update | Whitepaper claims grounded in concrete examples
+
+* Revised all eight active TeX sources after reviewing 71 headed sections. Retained case, experiment and literature examples replace general explanations; numerical results, equations, prompts and figures are unchanged.
+* Added the [claim-to-example and validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#concrete-example-revision-25-november), refreshed active Supplement digests and preserved earlier bindings. The owner approved the directly coupled source-binding test update.
+* All 88 selected authoring checks pass. A separate 75-page PDF preview compiles without warnings; the delivered PDF is unchanged. Native-diagram regeneration lacks its required browser, automated prose scoring is unavailable, and no scientific or publication approval is implied.
+
+## [2026-11-26] update | Whitepaper unsupported claims sourced or cut
+
+* Reviewed all eight active TeX sources and revised six. Added named recommendations and case/evaluator locators; cut unsupported schedule, duration, causal and preparation-cost assertions. Scientific results, equations, prompts, figure inputs and bibliography are preserved.
+* Added the [claim dispositions and validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#unsupported-claim-revision-26-november), refreshed three active Supplement digests and extended the existing source-binding guard without replacing earlier records.
+* All 88 selected authoring checks pass. The separate 75-page preview compiles without warnings and passes all-page geometry/content checks. The owner approved retaining a concurrently committed delivered PDF; no source equivalence is asserted for it. Native-diagram regeneration and automated prose scoring remain unavailable; no independent scientific or publication approval is implied.
+
+## [2026-11-26] update | Marked author-voice examples and reusable reader-context skill
+
+* Revised the eight marked whitepaper examples first, preserved the annotations as TeX comments, then reviewed all 71 headed sections across the eight active inputs. Five sources changed; results, equations, numerical table data, prompts, bibliography and source records are preserved.
+* Added [ama-author-voice](../../.github/skills/ama-author-voice/SKILL.md) and connected it to the scientific-writing agent without changing frontmatter or scientific authority. The skill captures the owner's reader-context, personal-expectation and narrative lessons.
+* Added [marked-passage dispositions and validation](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#marked-author-voice-revision-26-november), refreshed two active Supplement digests and chained the new source binding after the earlier claim audit. All 88 selected authoring checks pass; baseline lint findings and the unchanged browser-dependent diagram check remain documented.
+* A separate 75-page preview compiles without warnings and passes all-page content/geometry checks. The delivered PDF is untouched. The skill received an assisted self-review, not an efficacy study or independent review. No commit, push, experiment, hosted check or publication ran.
+
+## [2026-11-26] update | Final preprint editorial pass and complete numeric audit
+
+* Shortened Sections 1--9 to 12,242 approximate words and Section 7 to 4,977; moved execution, billing and judging history into the existing Supplement. Added the harness hypothesis and boundary interpretation without treating either as an isolated experimental effect.
+* Applied the owner-authorised Gemini CR1 interval correction. The [revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-editorial-pass-26-november) and [complete numeric audit](../capstone/thought-leadership/everything-but-the-software/anc/editorial-audit-2026-11-26.json) explain all differences and preserve the intake measurements.
+* Updated the title, figures, references and statements. Both repositories are public; the existing OSF registrations' actual release and employer clearance still need author confirmation. No experiment, registration mutation, commit, push or publication was performed.
+* Final counter validation corrected sentence boundaries after numeric endings and joined seven related short-sentence pairs. The final counts, 12,246 article words and 4,979 in Section 7, supersede the interim counts above; the measured mean is 22.021 words. No scientific number changed in this follow-up.
+* The delivered 77-page PDF and extracted arXiv archive compile without warnings. All-page geometry/content checks pass; 98 of 99 authoring tests pass, with the unchanged historical pilot-diagram overflow still failing. Two pre-existing lint findings also remain. Current source/PDF bindings preserve earlier pins; no scientific or publication approval is implied.
+
+## [2026-11-26] update | Final preprint source corrections and verified public OSF release
+
+* Standardised all eight fully observed CR1 contrasts in Supplement Table 25 to Newcombe hybrid-score 95% intervals with two-sided Fisher exact p values, moved the prediction-verdicts table to Section 7 as Table 8, applied the requested prose and reference repairs, and recorded the [complete number diff](../capstone/thought-leadership/everything-but-the-software/anc/final-corrections-audit-2026-11-26.json).
+* Verified unauthenticated HTTP 200 public access (`public: true`, `embargoed: false`) for both OSF registrations (`ywsrv` and `xcpt4`), updated Data availability and Supplement A.20.1 and A.20.17 accordingly, named Isabel Cabezas Martin and enforced hyphen-only wrapping for the two recovered run IDs in A.20.12, added the Table 36 lead-in under A.20.16, and merged the three single-sentence paragraphs in Section 7.8; see the [release pass record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-arxiv-release-pass-26-november).
+* Rebuilt the 78-page [PDF](../capstone/thought-leadership/everything-but-the-software/main.pdf) and validated arXiv bundle without warnings; updated [README.md](../capstone/thought-leadership/everything-but-the-software/README.md), [supplement-integration.json](../capstone/thought-leadership/everything-but-the-software/anc/supplement-integration.json) and [docs/reference/README.md](README.md). Owner confirmed employer clearance and coauthor approval; no commit, push or upload was performed.
 ## [2026-11-25] update | Capstone deck Tokenomics slide B28 (#435)
 
 * Added appendix slide B28 (page 56) to the capstone deck and regenerated the PDF at the owner's request; recorded validation, the manifest and builder drift (no PowerShell here) and the per-criterion status in [capstone-pitch-435-live-2026-11-25.md](research/capstone-pitch-435-live-2026-11-25.md). Updated the [capstone README](../capstone/README.md).

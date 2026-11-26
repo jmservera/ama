@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-24
+ms.date: 2026-11-26
 ms.topic: overview
 ---
 
@@ -20,6 +20,42 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+The paper's [final editorial pass](../capstone/thought-leadership/everything-but-the-software/README.md#final-editorial-pass-26-november)
+shortens the article, moves audit history into the existing Supplement,
+standardises the eight observed CR1 contrasts and moves the prediction-verdicts
+table into Section 7. Its
+[change log and numeric audit](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-arxiv-release-pass-26-november)
+record the before/after metrics, every numeric difference and the verified
+public status of both OSF registrations alongside owner-confirmed employer
+clearance and coauthor approval. Earlier revision records below are historical.
+
+The paper's [marked author-voice revision](../capstone/thought-leadership/everything-but-the-software/README.md#marked-author-voice-revision-26-november)
+starts with eight owner annotations, then applies the learned reader-context
+and narrative checks across all 71 headed sections. The
+[revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#marked-author-voice-revision-26-november)
+tracks dispositions and validation. All 88 selected authoring tests pass;
+a separate 75-page preview is source-bound and the delivered PDF is untouched.
+Scientific results and original annotations are preserved.
+
+The paper's [26 November unsupported-claim revision](../capstone/thought-leadership/everything-but-the-software/README.md#unsupported-claim-revision-26-november)
+adds named-source and case-record anchors and cuts unsupported speed, cost
+and causal assertions. The
+[disposition table](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#unsupported-claim-revision-26-november)
+records the narrower claims and evidence limits. All 88 selected authoring
+checks pass; native-diagram regeneration remains unavailable. A separate
+75-page preview matches the final sources. The owner-approved concurrent
+delivered PDF is retained without claiming equivalence to those sources.
+
+The paper's [25 November concrete-example revision](../capstone/thought-leadership/everything-but-the-software/README.md#concrete-example-revision-25-november)
+reviews all 71 headed sections across eight active TeX sources. Generic
+explanations now use retained sign-in, staff-binding, prototype-approval,
+ranking and read-only-view examples. The
+[evidence map](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#claim-to-example-and-evidence-map)
+records source locators and verification limits. All 88 selected authoring
+checks pass; diagram regeneration lacks its browser. The separate preview
+has 75 pages, while the delivered PDF and scientific results remain unchanged.
+Human and publication approvals are still separate.
 
 The paper's [24 November publication revision](../capstone/thought-leadership/everything-but-the-software/README.md#publication-revision-24-november)
 uses the completed exploratory study to resolve the
@@ -1374,6 +1410,11 @@ For scientific-paper writing, revision or assisted review, use
 and [Scientific Paper Writing and Review](./method/scientific-paper-writing-and-review.md).
 The agent separates editing from read-only review and labels generic guidance
 when actual venue requirements or scientific evidence cannot be verified.
+For owner-voice revisions it loads
+[ama-author-voice](../../.github/skills/ama-author-voice/SKILL.md), which owns
+the blog-based voice profile, marked-first revision and whole-document
+reader-context/storytelling checks. Voice guidance cannot change evidence
+or widen edit and publication authority.
 
 The new #360 bounded RG loop records [actual publisher capacity refusals](../../infra/README.md#bounded-private-publisher-capacity-attempt-2026-10-19-refs-360)
 and the [dated acceptance delta](../architecture/cutover-evidence-pack.md#bounded-rg-publication-continuation-2026-10-19).

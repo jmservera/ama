@@ -1,10 +1,101 @@
 ---
 title: Everything but the Software - source package
 description: Completed exploratory findings, measurement lessons and publication checklist with preserved historical evidence
-ms.date: 2026-11-25
+ms.date: 2026-11-26
 ---
 
-Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and Experiment.*
+Working title: *Everything but the Software: Stable Retention, Missing Features and the Cost of Consolidation. An Exploratory Case Study and Experiment.*
+
+## Final editorial pass, 26 November
+
+The [revision record](./anc/revision-report.md#final-arxiv-release-pass-26-november)
+contains the change log, three title options, before/after metrics and final
+release checks. The [complete numeric audit](./anc/editorial-audit-2026-11-26.json)
+and [final corrections audit](./anc/final-corrections-audit-2026-11-26.json)
+preserve the extracted lists and explain every sequence difference.
+Sections 1--9 now contain 12,491 approximate words by the existing checker,
+after moving the prediction-verdicts table into Section 7.
+
+The delivered [PDF](./main.pdf) includes the additive Supplement. Historical
+reviews and source pins are unchanged. Both GitHub repositories and both OSF
+registrations (`ywsrv` and `xcpt4`) are verified public; the owner confirmed
+employer clearance and coauthor approval.
+
+To repeat the numeric and prose measurements against the saved intake:
+
+```bash
+python3 anc/editorial_audit.py \
+  --baseline-json anc/editorial-audit-2026-11-26.json \
+  --output /tmp/paper-editorial-audit-new.json
+```
+
+Choose a new output file. This command measures the current sources without
+rewriting the saved baseline or assigning editorial explanations to later edits.
+
+## Review-comment cleanup 26 November
+
+The owner requested removal of the eight review-comment blocks after the
+voice revision. All 40 comment lines were removed; every other manuscript
+byte is unchanged. Earlier revision records retain the feedback dispositions.
+`review_annotation_cleanup` binds the cleaned source without replacing
+historical hashes or PDFs.
+
+## Marked author-voice revision 26 November
+
+The eight marked examples were revised first, then the lessons were captured
+in [ama-author-voice](../../../../.github/skills/ama-author-voice/SKILL.md) and
+connected to the scientific-writing agent. The same reader-context and
+storytelling checks were applied across all 71 headed sections and eight
+active TeX sources. Five sources changed; the original annotations remain
+as comments and no longer render as prose.
+
+The [marked-passage dispositions and validation record](./anc/revision-report.md#marked-author-voice-revision-26-november)
+describe the product context, simpler explanations and narrative changes.
+Scientific results, equations, numerical tables, source records and literal
+prompts are preserved. All 88 selected authoring tests pass. ChkTeX,
+structure, skill frontmatter and link checks pass; existing lint findings
+and the browser-dependent diagram-regeneration exclusion remain documented.
+
+A separate 75-page preview compiles without warnings and passes all-page
+content and geometry checks. `author_context_revision` binds the revised
+sources and preview. The delivered PDF is untouched. No independent
+scientific, human or publication approval is implied.
+
+## Unsupported-claim revision 26 November
+
+The second pass reviewed all eight active TeX sources for claims without
+an example, number or source. It adds named recommendations and case-record
+locators, and cuts unsupported schedule, duration and cost assertions.
+Participant accounts, observed results and proposed follow-ups remain distinct.
+The [claim dispositions](./anc/revision-report.md#unsupported-claim-revision-26-november)
+record the source passages and verification limits.
+
+All 88 selected authoring checks pass; the unchanged native-diagram exporter
+remains excluded because its browser is unavailable. The separate 75-page
+PDF preview compiles without warnings and passes all-page content and geometry
+checks. Numerical results, equations, prompts, bibliography and figures are
+preserved. `unsupported_claims_revision` binds the sources and preview.
+The owner approved keeping a concurrently committed delivered PDF; this
+revision does not claim that file matches the final sources. No publication
+or independent scientific approval is implied.
+
+## Concrete-example revision 25 November
+
+The owner authorized a whole-paper revision of generic claims, including all
+seven active TeX inputs. The review covered 71 headed sections, including
+starred sections. General explanations now use the recorded sign-in failure,
+staff binding, prototype approval, ranking-test and read-only-view examples.
+Literature passages name the inspected procedures and trials; proposed
+mechanisms and future work remain proposals.
+
+The [claim-to-example record](./anc/revision-report.md#concrete-example-revision-25-november)
+identifies the sources, verification limits and checks. All 88 selected
+authoring regressions pass. Native-diagram regeneration remains blocked by
+its missing browser; the diagram sources and exports are unchanged.
+A separate 75-page PDF preview compiles without warnings. The delivered
+`main.pdf`, numerical results, equations, bibliography and literal prompts
+are unchanged. `generic_claims_revision` binds the revised sources and preview
+without replacing historical records or implying publication approval.
 
 ## Publication revision 24 November
 
@@ -128,8 +219,9 @@ that restriction.
 It writes `everything-but-the-software-arxiv.zip`, the equivalent `.tar.gz`,
 and `SHA256SUMS`. Both archives open directly to `main.tex` and its inputs,
 without an enclosing directory. The script extracts the ZIP and compiles
-it twice with shell escape disabled; compilation failures and unresolved
-references stop packaging.
+it with shell escape disabled, using at least two passes and up to four
+while references settle. Compilation failures, unresolved references or
+references still changing after four passes stop packaging.
 
 The local `main.pdf` is a fresh preview, not a submission or release asset.
 The archives exclude existing PDFs, logs, auxiliary files, unused images,
@@ -2517,12 +2609,22 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 
 ## Compile
 
-* Overleaf: upload the zip as a new project. The compiler is pdfLaTeX. The zip has `main.tex` and `anc/` at its root, the layout arXiv expects.
-* Locally: run `pdflatex main.tex` twice.
+* Overleaf: upload the submission ZIP as a new project and select pdfLaTeX. It contains `main.tex` at its root and compilation dependencies under `tex-inputs/`; arXiv reserves root-level `anc/` for non-compilation ancillary material.
+* Locally: run `pdflatex -no-shell-escape main.tex` at least twice, repeating until the final log has no unresolved or changing references. The packaging tool enforces a four-pass limit.
+* From this package directory, run `chktex main.tex`. The local [.chktexrc](./.chktexrc) recognizes whitespace-consuming commands, literal identifiers and valid arm-contrast en dashes without disabling warning categories. From another directory, pass its path with `chktex -l`. Use the retained external Tectonic build below to inspect compiler warnings.
 * Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, placeins, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
-* Keep `\resultsfalse` while experimental outcomes remain deferred. Before you publish results, you need checked runs and an analysis with registered-base, unregistered-amendment and implementation-epoch provenance, and the owner must authorize the update.
+* Completed exploratory results are unconditional; the former results switch and inactive reporting TODO branch have been removed. Historical requests and their dispositions remain in the revision record and Git history. Publishing further results requires checked runs, source-bound analysis and owner authorization.
+* The final article source retains its editor compiler directive and explicit author-confirmation comments. Dated editing and permission records remain in the revision report and historical source bindings; compiler guards, disclosures and the additive Supplement remain active.
 * Focused source checks: from this package, run `python3 -B -m unittest discover -s anc -p 'test_*.py' -q` and `python3 -B anc/check_paper.py`.
 * Tectonic also works. Keep compiler intermediates and logs, caches and rendered inspection pages in an explicit external build directory. Inspect its actual log and PDF before replacing only `main.pdf`. The optional `--check-latex-log` expects a pdfLaTeX-specific output marker, so it does not validate a Tectonic build.
+* Tectonic can report undefined forward references and changed citations, labels or bookmarks on its first pass. Its automatic reruns resolve them. The `-p` stream includes every pass, so `tectonic -p main.tex | grep '[Ww]arning'` also prints warnings that have already been resolved; that pipeline's exit status comes from `grep`, not the compiler. Check the final retained log after a successful build:
+
+  ```bash
+  tectonic -p --untrusted --keep-logs --keep-intermediates --outdir /path/to/build main.tex &&
+    grep -En 'Warning:|Overfull|Underfull|Missing character:|^!' /path/to/build/main.log
+  ```
+
+  No output from `grep`, with exit status 1, means no matching final-log diagnostics. Exit status 2 indicates a `grep` error, not a clean log. Any diagnostics that remain in the final log need investigation.
 
 ## What changed in draft v2
 

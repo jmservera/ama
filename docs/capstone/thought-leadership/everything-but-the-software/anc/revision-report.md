@@ -1,8 +1,332 @@
 ---
 title: Everything but the Software - Revision Record
 description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
-ms.date: 2026-11-24
+ms.date: 2026-11-26
 ---
+
+## Review-comment cleanup 26 November
+
+At the owner's request, the eight review-comment blocks were removed from
+`main.tex` after the author-voice revision. Exact byte comparison confirms
+that only those 40 fully commented lines changed. No review markers remain
+in the package's TeX files. The revised prose, other inputs and PDFs are
+unchanged; no new PDF build is claimed.
+
+The source binding and existing provenance guard now include
+`review_annotation_cleanup`. Earlier revision records and hashes below
+retain their original scope, including the feedback dispositions.
+
+## Marked author-voice revision 26 November
+
+### Marked passages and reader context
+
+The owner marked eight examples of wording that felt unnatural or assumed
+too much project knowledge. Those passages were revised first. The resulting
+lessons were written into
+[ama-author-voice](../../../../../.github/skills/ama-author-voice/SKILL.md),
+then applied across all 71 headed sections in the article and seven active
+TeX inputs. Five TeX sources changed. The other three inputs were reviewed
+and retained. The selected title and 29 November manuscript date are unchanged.
+
+Work continued from `aa62820383958c4ebfc9f2704eb6b1d026de4dff`, with
+owner-staged annotations already present. The original eight comment blocks
+were preserved. Some feedback lines lacked TeX comment prefixes; they are
+now fully commented so the notes do not render as manuscript prose.
+
+| Marked passage | Applied revision |
+| --- | --- |
+| Abstract, "rebuild a working demonstrator" | Describes taking an early prototype toward a fuller product. The Introduction explains the supplied retrofit use case and the author's intent to approach production readiness, without asserting that readiness was achieved. |
+| Abstract, "the replacement" | Names the new application and the failed action: signing in. |
+| Abstract, "realized controls" | Names the longer-session comparison group and explains its remaining room for improvement. The numerical ceiling and unmet target are unchanged. |
+| Introduction, "sustained conversation ... preceded autonomous delivery" | Describes weeks spent discussing requirements and recording decisions before asking the coordinator to implement the backlog. |
+| Introduction, "though I measured neither gain" | States the author's expectation that clearer requirements would help agents build faster and make fewer mistakes. The case method and Discussion retain the absence of a measured comparison. |
+| Introduction, "The paper contributes" | Explains how the investigation moves from earlier studies through the product-development case to a separate coding experiment. |
+| Case setting, unexplained internal-assessment disclaimer | Removes the orphan disclaimer and retains the automated scorer's implementation-completeness signal with its evidence cross-reference. Confidentiality and unresolved release linkage remain intact. |
+| Discussion, "In my participant account" and "Research assembled a corpus" | Uses first person, refers back to the introduced product, and describes research and role-based agents' actions. The account remains distinct from independently checked task execution. |
+
+### Reusable skill and whole-paper pass
+
+The skill owns the author-voice profile formerly embedded in the
+[scientific-writing agent](../../../../../.github/agents/ama-scientific-paper-writer-reviewer.agent.md).
+The agent now loads it on demand. Its scientific responsibilities,
+frontmatter and approval boundaries are unchanged.
+
+The learned rules concern missing meaning rather than forbidden words:
+introduce the object and purpose, name who acted, explain comparison groups
+and separate personal expectations from measured benefits. The skill requires
+a marked-first pass followed by a full reading and narrative check. Its eight
+editing examples are conditional, not replacement strings.
+
+The whole-paper pass introduces the housing-retrofit product before internal
+labels, explains the five experiment groups before the predictions, and
+defines runs, contracts, follow-up sessions, passing witnesses and complete-frame
+comparisons. Headings now describe their contents in ordinary language.
+The narrative follows preparation, implementation, blocked use and the narrower
+experiment, whose stable retention changed the original interpretation.
+Measurement details and historical qualifications remain in their existing
+records. Tables and literal prompts retain their scientific roles.
+
+The three blog samples linked in the skill informed voice, not current
+technical guidance. Relevant passages were read earlier in this revision;
+the second and third retrieved responses were truncated after those passages.
+No new literature finding or experiment is asserted.
+
+### Validation and remaining limits
+
+Classification: focused manuscript work, a repository-local prose skill and
+directly coupled authoring guards. No application, experiment, infrastructure,
+deployment, dependency, security control or repository-gate semantics changed.
+
+All 88 selected authoring tests pass after one correction batch for wording
+guards and a source-line wrap. The unchanged native-diagram regeneration test
+was excluded because its required Playwright browser was previously found
+unavailable; it was not rerun or counted as passed. The first command batch
+used the repository root instead of the package directory and was rerun from
+the correct directory.
+
+ChkTeX, structural and whitespace checks pass. The structural checker reports
+17,578 approximate body words and 1,879 abstract source characters against
+the strict limit of fewer than 1,920. Historical baseline `0d5dcb02` remains
+unavailable. Ruff reports no findings in the provenance test. The figure
+test's existing `I001` and planning test's existing `FURB167` were reproduced
+from HEAD; this revision introduces no new Ruff diagnostics.
+
+Exact comparisons preserve seven equations, 176 labels, eleven figure inputs,
+three literal prompt inputs, the embedded bibliography and all 61
+source-register rows. Numerical sequences match in all 43 table environments;
+all 28 instrument/result tabular bodies in the protocol and measurement
+inputs are byte-identical. Two active Supplement body digests were refreshed.
+Earlier revision bindings and adverse records remain unchanged.
+
+Two PDFLaTeX passes with shell escape disabled produced a separate 75-page
+preview. The final compiler log has no warnings, box warnings, missing
+characters or unresolved references. Every page has content and in-page
+words. Rendered pages 1, 2, 8, 13, 17, 35, 46, 55, 59 and 72 were inspected.
+The Supplement begins on page 46 and the source register on page 72.
+The preview digest is
+`cd2f86c40d030cd466e7021674038d8e0e75a76c4c90bdc66c389759c65455f1`.
+`author_context_revision` binds the final sources and preview.
+The delivered PDF remains unchanged at
+`ff263095ed331c8cdb0d91df7350f4772439b36fc3f986b7baa2612058f21233`;
+it is not claimed to match this revision.
+
+Skill frontmatter, name/path agreement, local links and unchanged agent
+frontmatter pass. An assisted self-review against the HVE Builder catalog
+and rubric found no required corrections. The reviewed skill digest is
+`e584ed7199c7aa604c9c1711a34f169c868efad81ff3143a1f28ba27c0b73884`;
+the agent digest is
+`8c47e7221356e30a94b5fedf46e0c0899854bc7615e9800a7b4ae4bb84f60805`.
+There is no root plugin or npm distribution manifest to synchronize, and
+the skill ships no scripts. New-session discovery was not independently
+exercised. This is a self-review, not an efficacy study or independent review.
+
+Automated prose scoring remains unavailable. A missing PDF-inspector import
+was resolved with a task-local installation used only for validation.
+No candidate, evaluator, judge, deployment or paid experimental run was
+executed. No assistant commit, push or publication ran.
+
+Work execution: Complete for the marked revisions, reusable skill,
+whole-document pass and separate preview. Assessment: assisted style/context
+review and selected authoring checks complete; the existing browser-dependent
+regeneration and baseline lint findings remain unresolved. Human author
+acceptance, independent scientific review, hosted CI and publication approval
+remain separate and unperformed.
+
+## Unsupported-claim revision 26 November
+
+### Scope and claim dispositions
+
+The owner requested a second whole-paper pass: add a real case or named source
+to claims without an example, number or source, or cut them. All 71 headed
+sections across the article and seven active inputs were reviewed. Six TeX
+sources changed. Definitions, explicit proposals, mathematical consequences
+and necessary uncertainty statements retain their distinct roles.
+
+Work began from clean commit `c953b07b5c48f506d51b0548ef35177fa28c481e`.
+The case and experiment pins remain
+`29c6b512f5e68733bb2cc1882343db39f5eb2cad` and
+`d097a10b090baefadf995ecd910eb96c324f0234`. The earlier
+[claim-to-example map](#claim-to-example-and-evidence-map) retains the inspected
+case-log and report passages. The table below records this stricter pass;
+source support is limited to the specified claim and passage.
+
+| Manuscript locator | Disposition | Evidence and verification limit |
+| --- | --- | --- |
+| Introduction, Cunningham paragraph | Retained the named WyCash account; cut the unsupported visible/hidden-debt taxonomy and generic maintenance opener. | Existing Cunningham citation. No new debt measurement or literature finding is asserted. |
+| Introduction, PhotoCraft and SWE-Maintain | Retained the reported project and benchmark results; cut the inference that agentic development compresses schedules and makes maintenance more pressing. | Existing cited results do not establish that schedule effect. |
+| Introduction, discovery chronology | Replaced the claim that preparation made hasty prompting hard to blame with the recorded sequence of discovery and delivery. | Case evidence index, author-review context and retained coordinator recovery. Preparation does not rule out rival explanations. |
+| Introduction and Background 2.3 | Replaced broad instruction-inheritance and maintenance claims with this experiment's repository/handover arrangement and named recommendations. | Protocol design; Nigh's "What works in practice" recommends runnable commands and explicit boundaries. Anthropic's "Compaction" and "Structured note-taking" describe context curation. Targeted relevant passages were inspected; this is practitioner guidance, not an efficacy estimate. |
+| Case narrative and constructs | Added case-index locators and named the author's approval responsibilities; removed repeated claims about the importance of complete workflows. | Case evidence index, `author_review_context.discovery_and_handoffs`, O1, O2 and O5. The participant account remains separate from independently executed journeys. |
+| Case contrast table and Supplement A.2 | Replaced causal wording about task framing with changed conditions whose effects were not isolated. Replaced unverified version changes with recorded model-selector changes. | Case evidence index, historical coordinator recovery and instruction versions. Actual backend identities remain unavailable. |
+| Supplement A.2, counter-evidence | Attributed healthy-revision reports to coordinator summaries and MVP use to the participant; retained human approval boundaries. | Case evidence index, adverse-outcome summary at turn 1022, O1 and coordinator instructions. Neither report supplies a verified paired sign-in trace. |
+| Discussion 8.2, "What worked" | Cut the uncorroborated durations "in days" and "in a day", and the exact claim of rejecting five agents. Retained the concrete consent, professional-judgement and prototype examples. | Author review and case-index discovery/handoff entries support revisions and prototypes, not measured speed benefits. No human-only comparison exists. |
+| Discussion 8.4 | Gave Darwin and SkillOpt their own existing citations instead of leaving Ng's citation to appear to support all three. | Existing named procedures; no source replacement or bibliography addition. |
+| Discussion 8.5 | Replaced a causal explanation of low loss with the endpoint's rollback/protected-test scope; tied unequal preservation burden to GPT's CR1 prerequisites. | Protocol, resource/information boundaries and CR1 prerequisite table. The policy's causal effect was not separately tested. |
+| Discussion 8.5, follow-up | Cut speculative benefits of full RPI and the unsupported prediction of substantially higher token needs. Retained discovery-disabled status and an explicitly proposed comparison subject to resource approval. | Runtime-boundary record and reported model/arm cells. No follow-up efficacy or spending estimate is claimed. |
+| Discussion, case follow-up | Cut the unevaluated squash-diff recommendation; retained archive/restore and approval requirements as conditions on any later retention change. | Explicit proposal and repository evidence-retention boundary, not an experimental result. |
+| Supplement A.3.4 | Replaced "checks caught bounded defects" with the specific size-limit correction and its interrupted gate. | Previously inspected PR 445. The interrupted gate did not pass; elapsed gate and review effort were not measured. |
+| Supplement economics and deferred measures | Cut nonlinear-cost speculation and the claim that rate definitions would prevent rewarding failure or discouraging judgement. | The assumed cost model, equations and intervention exclusions remain intact; their behavioural effects were not evaluated. |
+| Methods and Supplement A.12 | Replaced broad repeatability and cost-free preparation claims with evaluator/source boundaries and the judge-call formula's scope. Cut the generic claim that multiple judges expose disagreement where no between-model comparison ran. | R05 evaluator inventory and the completed judging record. Preparation cost was not measured; development-model overlap and the earlier 313-trajectory judging frame remain explicit. |
+
+The two newly rechecked public recommendations are
+[Nigh's agent-instruction article](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/)
+and [Anthropic's context-engineering article](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents),
+retrieved on 26 November 2026. Initial responses were truncated; a subsequent
+targeted retrieval included Anthropic's compaction and note-taking passages.
+Only those relevant passages support the added recommendations. This was not
+an exhaustive external-citation audit.
+
+### Checks and concurrent delivery
+
+Classification: focused manuscript work and directly coupled source-binding
+tests. No study design, experimental scoring, application, infrastructure,
+deployment, security control or repository-gate semantics changed.
+
+All 88 selected authoring tests pass. The one excluded test is
+`test_given_native_exporter_when_run_then_exports_without_rewriting_sources`;
+its earlier execution failed because Playwright browser build 1194 was absent.
+It was not rerun or counted as passed. Diagram sources and exports are
+unchanged. Ruff, ChkTeX, structural and whitespace checks pass. The structural
+checker reports 17,213 approximate body words and 1,823 abstract source
+characters against the strict limit of fewer than 1,920. Its historical
+comparison against `0d5dcb02` remains unavailable.
+
+Exact comparisons with the intake preserve seven equations, 176 labels,
+eleven figure inputs, three literal prompt inputs, 61 source-register rows
+and the embedded bibliography. Numerical sequences in all 43 table
+environments are unchanged; the result tables in the protocol and measurement
+input are byte-identical. Scientific results, unknowns, billing holds and
+dependence limits retain their existing meaning. Three changed active
+Supplement body digests were refreshed, with earlier revision records kept.
+
+Two PDFLaTeX passes with shell escape disabled produced a separate 75-page
+preview. The final compiler log has no warnings, box warnings, missing
+characters or unresolved references. Every page has content, and extracted
+words remain within page bounds. Rendered pages 1, 2, 6, 35, 36, 47, 49, 59
+and 72 were inspected. The Supplement starts on page 46 and the source
+register on page 72. The preview digest is
+`21a14331918ef957a9f26354cabfab674466bbd65ca5878a74bd344912d0514b`.
+
+During validation, another process committed most of the prose and a changed
+delivered PDF in `25463dd58d4aa3fbb3737f4ccee194cc21edae35`. The owner
+explicitly approved retaining that work and finishing the remaining sources,
+bindings and evidence records. The intake PDF digest was
+`3cd7f5c5db89b757128f5468e064241980c807060ce0de5558ffe96b365e948c`;
+the retained PDF is
+`ff263095ed331c8cdb0d91df7350f4772439b36fc3f986b7baa2612058f21233`.
+This build did not overwrite either delivered file. The retained PDF's
+equivalence to the final sources is not asserted; use the separate preview
+for this revision. `unsupported_claims_revision` binds the final sources and
+preview while preserving the previous delivery records.
+
+Automated prose scoring remains unavailable because the installed detector
+could not be found. No candidate, evaluator, judge, deployment or paid
+experimental run was executed. No assistant commit, push or publication ran.
+
+Work execution: Complete for the authorized manuscript, records and separate
+preview. Assessment: scoped claim grounding and selected authoring checks
+complete; native-diagram regeneration remains blocked. This assisted pass is
+not independent scientific review. Human approval, applicable hosted checks
+and publication acceptance remain separate and unperformed.
+
+## Concrete-example revision 25 November
+
+### Scope and applied changes
+
+The owner requested a review of the whole whitepaper for generic claims,
+with real examples replacing vague explanations. The approved outputs were
+all eight active TeX sources, existing revision records and a separate PDF
+preview. The owner subsequently approved the directly coupled source-binding
+test update. Work continued on `docs/remove-paper-results-switch` from
+`4538851406ef3945aa71c98dc202d926a3b618df`; no commit, push or submission ran.
+
+The review covered 71 section, subsection and subsubsection headings, including
+starred sections, across the article and seven active inputs. Changes name
+the observed task or inspected procedure instead of adding unsupported
+performance claims. Repeated summaries were shortened where the example
+already explained the point. The selected title and 29 November 2026
+manuscript date remain unchanged.
+
+Classification: focused manuscript work with directly coupled source bindings
+and one existing authoring-test update. No application, experimental scoring,
+dependency manifest, infrastructure, deployment, security control or repository
+gate semantics changed.
+
+### Claim-to-example and evidence map
+
+Case passages use the retained source pin
+`29c6b512f5e68733bb2cc1882343db39f5eb2cad`. Experiment passages use the
+[final report](https://github.com/jmservera/ama-thought-mve/blob/d097a10b090baefadf995ecd910eb96c324f0234/results/pilot-estimation/report.md)
+at `d097a10b090baefadf995ecd910eb96c324f0234`, with the existing
+[numerical snapshot](./study-results-2026-11-15.json) and
+[case evidence index](./case-evidence-matrix.json).
+Full-text support below means the inspected passage supports the stated
+example; it does not mean every source or external claim was audited.
+
+| Manuscript locator | Concrete replacement | Inspected source and locator | Evidence state and limit |
+| --- | --- | --- | --- |
+| Abstract; Sections 3.1 and 4.2 | Inability to sign in, followed by the difference between app-role assignment and an internal staff binding; the recorded error is "no staff record with this oid". | Case account and historical knowledge-base log, lines 1912-1916 at the case pin. | Full-text support for the recorded distinction; no paired release-linked sign-in execution was recovered. |
+| Introduction | Before another chat-app feature, start the server, create a chat, send a message and check its response. | [Anthropic harness article](https://www.anthropic.com/research/effective-harnesses-for-long-running-agents), "Getting up to speed". | Full-text support for the described startup check; no estimate of its effect on this case. |
+| Sections 3.2 and 4.1 | Photo/GPS provenance, professional assessment, structured-invoice, capacity and sensor what-ifs; the journey-atlas handoff to requirements. | Historical log, lines 334-381 and 468-477; [PR 71](https://github.com/jmservera/ama/pull/71), requirements and approval disposition. | Full-text support for recorded discovery and handoff; role answers remain exercise hypotheses. |
+| Section 3.2 and opening of Section 4 | "My cases today", case cards, call logs, manual paths and separately recorded resident decisions; a material handover change requiring fresh acceptance. | Historical log, lines 1202-1213; [PR 32](https://github.com/jmservera/ama/pull/32), prototype simplicity review; retained prototype review RV-001, re-acceptance after handover. | Full-text support for recorded affordances and review findings; fresh acceptance was a proposed remedy, not a completed staff usability study. |
+| Sections 3.3 and 4.4 | "build all new in src, but migrate what's needed first"; later, "provide a running website as soon as possible". | Case evidence index, retained coordinator user-message turns 66 and 1147. | Full-text support for owner steering; the messages do not establish deployment completion or actual historical worker identities. |
+| Section 5 and Supplement A.3 | Requirement handoffs, missing staff bindings, the file-size-limit correction and requests for a running site replace abstract mechanism indicators. | Case records above; [PR 445](https://github.com/jmservera/ama/pull/445), per-artifact size override and interrupted full gate. | Full-text support for the records. PR 445 did not pass that interrupted gate; mechanisms remain hypotheses, not measured causes. |
+| Sections 7.2-7.4 and 8.4; Supplement, "Additional endpoint and resource statistics" | Consent/hold precedence, contractor-field redaction, ranking consistency and regional handoff; `READ_METHODS`, `view.rank_cases()` and `NotAllowed`; known versus newly added writes through read-only views. | Final report, GPT F9 ranking and read-only test incompatibility; Gemini `privacy:3` and regional/handoff extension accounts. | Full-text support for report examples. The records do not identify the treatment action that caused a cell difference. |
+| Sections 7.9 and 7.11; Supplement, "Detailed post-collection ratings and calibration" | Different CR1 preservation burdens and a terminal `ValidationError` without a later recovery action explain endpoint and calibration limits. | Existing CR1 prerequisite table; final report, calibration disagreement on `ranking:3`. | Full-text support for the recorded distinction; the two GPT CR1 outcomes and incomplete calibration remain unresolved. |
+| Background Section 2.3 and engineering-rationale paragraph | SkillOpt retains validation-selected edits and rejected-edit feedback; AgentRx checks trace evidence against schema and policy; one Kiro bug fix expands to four stories and sixteen criteria. | [SkillOpt](https://www.microsoft.com/en-us/research/blog/skillopt-agent-skills-as-trainable-parameters/), "How SkillOpt works"; [AgentRx](https://www.microsoft.com/en-us/research/blog/systematic-debugging-for-ai-agents-introducing-the-agentrx-framework/), guarded diagnosis; [Böckeler's trial](https://martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html), Kiro example. | Full-text support for inspected procedures and trial details; external retrieval was targeted and partly truncated, not an exhaustive literature audit. |
+| Supplement opening and "Illustrative economics and sensitivity" | The existing cost-model example explains the assumed implementation premium beside the measured ten-feature spending. | Existing illustrative economics, equation definitions and figure inputs. | Illustrative assumption, not fitted evidence or measured currency savings. |
+| Supplement A.9 | Eighteen GPT F9 permission-request sessions are concrete annotation candidates. | Final report, execution/tool account; existing Supplement task and accounting record. | Full-text support for requests and unchanged-source records; received help, HIR and IDR are not inferred. |
+| Supplement A.1 and A.11-A.16 | Source-specific qualifications, nonzero Sonnet lint despite report generation, zero retained loss without acquiring ranking, citation-ID anchoring and the limits of note word counts. | Retained literature qualifications, final report, numerical snapshot and literal prompt records. | Full-text support for the stated examples and instrument rules; counts and generated reports do not establish usability or review quality. |
+
+### Validation and preview-only delivery
+
+The structural checker passes. The abstract has 1,823 normalized source
+characters against its strict limit of fewer than 1,920. The approximate
+main-body count is 17,428 words under the existing checker definition.
+Its historical comparison against `0d5dcb02` is unavailable.
+
+Exact comparisons with the intake commit preserve all seven displayed
+equations, 176 labels, eleven figure inputs, three literal prompt inputs,
+61 source-register bindings and the embedded bibliography. Numerical
+sequences in every table are unchanged. The reusable bibliography,
+experimental snapshot, diagram sources and figure exports are untouched.
+
+The initial 89-test authoring run found stale source bindings, the earlier
+record's PDF digest mismatch and a missing Playwright build 1194 browser.
+The authorized test update reads the new revision binding while retaining
+the historical chain and evidence checks. The subsequent focused selection
+passes all 88 tests; native-diagram regeneration was not selected because
+its required browser remains unavailable. Ruff passes for the modified
+test, and ChkTeX and the whitespace check pass.
+
+Two PDFLaTeX passes with shell escape disabled produced the separate
+75-page preview. The final compiler log has no warnings, box warnings,
+missing characters or unresolved references. Every page has content and
+all extracted words are within page bounds. Rendered pages 1, 4, 8, 9, 13,
+28, 36, 46, 69 and 72 were inspected; the Supplement starts on page 46 and
+the source register on page 72.
+
+The preview SHA-256 is
+`8e3110d7438b213bb6a7cf1d2831e984fca546f071be4708a43e90fb1ae1a421`.
+The unchanged delivered PDF remains
+`03695df517d118e6e6bbf8e022c4126e83806cd28db3e35aae434346d22c7a8b`.
+The older cleanup record's different PDF digest is preserved as history,
+not silently replaced. `generic_claims_revision` records the current source
+and preview bindings; four active Supplement body digests were refreshed.
+The preview and compiler evidence are in this session's files directory;
+they were not published or copied over the delivered PDF.
+
+Automated prose scoring is unavailable because the installed detector could
+not be found. No new candidate, evaluator, judge, deployment or paid run was
+executed. The 315 trajectories, conditional interval, original unmet target,
+two CR1 unknowns, 55 billing holds, unregistered amendments and dependence
+limits retain their existing meaning.
+
+Work execution: Complete for the authorized prose, records and preview.
+Assessment: scoped example grounding and selected authoring checks complete;
+native-diagram regeneration is blocked. Independent scientific review,
+human approval, applicable hosted checks and publication acceptance remain
+separate and were not performed in this revision.
 
 ## Publication revision and disposition 24 November
 
@@ -2593,3 +2917,449 @@ fresh complete local gate against current main. The final receipt must remain
 external. Any correction, commit, rebase or changed input after the gate requires
 a new complete gate. Push, hosted review and thread disposition are not proven
 by the pre-commit P02 acceptance.
+
+## Final editorial pass, 26 November
+
+### Authority and titles
+
+This pass follows the owner's final editorial brief, not the historical
+protocol TODOs above. The science was treated as finished. The sole authorised
+statistical correction concerns Gemini CR1 B versus C; no experiment, judge
+call, registration update, submission, commit or push was performed.
+The owner authorised continuing on the existing branch with the existing date
+deletion. That deletion is preserved.
+
+Three title options were considered; the first is used:
+
+1. Everything but the Software: Stable Retention, Missing Features and the Cost of Consolidation. An Exploratory Case Study and Experiment.
+2. Everything but the Software: Retained Behaviour and Permission-Boundary Failures under Agentic Consolidation. An Exploratory Case Study and Experiment.
+3. Everything but the Software: Cleaner Structure at Roughly Twice the Delivery Credits. An Exploratory Case Study and Experiment.
+
+### Change log
+
+| Section | Change | Reason |
+| --- | --- | --- |
+| Title and abstract | Replaced the decay-led title and rewrote the abstract around the motivating failure, executed design, results, harness hypothesis and limits. Defined an evaluable packet as one run at one endpoint. | The observed result was mostly preserved earlier behaviour, with acquisition and permission failures. |
+| 1, Introduction | Began with the product and failed sign-in; added the I/we footnote. Moved the Knight Capital, WyCash and PhotoCraft detail into the existing Supplement. | Give the reader the actual problem before the literature and audit history. |
+| 2, Background | Improved paragraph connections and explained repository inheritance, instruction maintenance and outcome checks through existing examples. | Preserve the literature's qualifications while reducing repetitive defensive phrasing. |
+| 3--5, Case | Used I for the participant account; moved the observation/contrast tables and detailed source context into existing supplementary records. Removed internal record identifiers and prose file paths from the article. | Keep the case readable without presenting the account as independently verified execution evidence. |
+| 6, Intervention | Kept the treatment and trade-offs; moved prompt-version history out of the article and pointed to the inspected templates. | Describe the intervention rather than its document history. |
+| 7, Design and reporting | Moved version chronology, analyser inspections, container capabilities, planning tables, recovery/billing ledgers and judge-version accounting to the existing Supplement. Moved the historical Figure 5 and measurement-plan figure there too. | Distinguish the executed experiment from historical plans and keep Section 7 below 5,000 words. |
+| 7, Reporting imperatives | Reported pooled within-cell SD 3.1278 percentage points with 300 degrees of freedom. Consolidated unfulfilled risk-set, loss/recovery, graded-CR1, scheduling and access/exposure requirements in existing A.7. | Replace instructions with observed values where available; do not invent unavailable analyses. |
+| 7.9, Ranking | Reported B/E 12/21 versus A 5/21, D 6/21 and C 8/21; described the restrictive earlier test and stated that successful routes were not traced run by run. | The observed difference does not identify a demonstrated repair mechanism. |
+| 7, Gemini CR1 | Recomputed B--C as -38.10 points, Newcombe hybrid-score 95% CI [-59.88, -8.18], two-sided Fisher exact p=0.02778; marked it unadjusted and exploratory. Updated the corresponding Supplement table, formerly Table 28 and now Table 24. | Apply the owner's specified interval correction without changing outcomes or other table rows. |
+| 7, Judging and attestation | Renamed judging anonymised, defined packets, disclosed earlier witnesses and GPT-family overlap. Named Isabel Cabezas Martin as the run attester, executor and data collector, not an independent auditor. | State what anonymity concealed and who supplied the attestation. |
+| 8, Discussion | Added the protective-harness hypothesis and its ranking trade-off, explicitly without an unprotected arm. Linked case identity/staff binding and CR1 write refusal as our interpretation of failures outside local checks. Explained the title phrase once. | Make the main interpretation visible without claiming it was experimentally isolated. |
+| 8, Threats | Consolidated case and experiment limitations, including amendments, dependence, unknown outcomes, billing holds, the earlier judging snapshot and incomplete human review. | Preserve disclosures in one full account rather than repeat them throughout the article. |
+| 9, Conclusion | Shortened the summary and included the harness hypothesis, acquisition/adaptation findings and cost result. | Match the conclusion to what the study actually observed. |
+| References | Initialised personal author names and removed access/inspection notes and the specified SAML/source-record/historical-verification notes. Preserved all 80 cited identities and arXiv version pins. Checked the requested YouTube and Anthropic URLs. | Keep bibliographic entries bibliographic; move access qualifications to source records. |
+| Figures | Removed repeated in-image headings and the conceptual banner; enlarged chart text, kept the outcomes chart full width and faceted its cost panel. Removed its duplicate billing-ledger footer, whose disclosures are in Threats and the Supplement. | Meet the 7 pt minimum and remove audit accounting from the article's figures. Original Figures 9/10 are now 7/8; original Figure 5 is Supplement Figure 10. |
+| Statements | Confirmed public repository/deposit access; distinguished the existing embargoed registrations from their pending public release. Halved AI disclosure from 404 to 202 measured words and included this pass. Added the clearance confirmation comment. | Report the current access and assistance status without inventing clearance or embargo release. |
+| Local authoring tools | Added the reproducible editorial audit and regression cases; allowed two to four archive compilation passes, still failing on unresolved or unsettled references. | A moved cross-reference needed a third pass. Shell-escape and publication controls were not relaxed. |
+
+### Before/after measurements
+
+The existing `check_paper.py` approximation counts TeX/body tokens, including
+tables and captions. It provides the baseline closest to the owner's
+approximately 17,500 words and is used for the section targets below.
+
+| Section | Intake words | Revised words |
+| --- | ---: | ---: |
+| 1, Introduction | 1,612 | 1,162 |
+| 2, Background | 1,359 | 1,360 |
+| 3, Case and method | 1,772 | 1,309 |
+| 4, Development | 1,026 | 885 |
+| 5, Explanations | 827 | 588 |
+| 6, Consolidation | 519 | 506 |
+| 7, Experiment | 8,400 | 4,979 |
+| 8, Discussion | 1,563 | 1,167 |
+| 9, Conclusion | 478 | 268 |
+| Total | 17,578 | 12,246 |
+
+The companion `editorial_audit.py` uses `detex` and an explicit word regex.
+Its all-section count is 16,535 to 11,326 words, with Section 7 at 7,603 to
+4,271; both counting methods meet the requested length limits. For sentence
+and tic measurements it excludes headings, floats and displayed/inline
+mathematics. It protects decimal points and common citation abbreviations
+before sentence splitting, and treats RQ labels as labels rather than
+standalone sentences. Full stops after integers and identifiers count as
+sentence boundaries; an exploratory splitter had incorrectly protected
+those as well as decimal points. Both versions below use the corrected
+method; its intake
+mean differs from the owner's approximate 19-word baseline.
+
+| Measure | Intake | Revised |
+| --- | ---: | ---: |
+| Prose words used for sentence/tic measurements | 14,275 | 10,372 |
+| Sentences | 866 | 471 |
+| Mean sentence words | 16.484 | 22.021 |
+| Sentence-length population SD | 7.375 | 8.768 |
+| Sentence-length range | 3--62 | 6--55 |
+| Abstract characters, normalised TeX source | 1,879 | 1,504 |
+| Abstract characters, plain extraction | 1,877 | 1,502 |
+| remain/remains, count (per 1,000 words) | 49 (3.433) | 4 (0.386) |
+| separate/separately, count (per 1,000 words) | 65 (4.553) | 7 (0.675) |
+| retained, count (per 1,000 words) | 46 (3.222) | 9 (0.868) |
+| establish, count (per 1,000 words) | 27 (1.891) | 4 (0.386) |
+
+The voice review distinguishes epistemic hedges from descriptions of ability:
+for example, "I could not sign in" reports a failed action rather than
+uncertainty. The harness paragraph uses one epistemic qualifier, "plausibly";
+its other "could not" describes the protected-test editing restriction.
+
+### Complete numeric-difference account
+
+The [machine-readable audit](./editorial-audit-2026-11-26.json) contains every
+before/after token with its section and context, all 48 ordered diff blocks,
+an explanation for each block, multiset differences and all 37 numerical-table
+body comparisons. The immutable intake corresponds to repository HEAD
+`129e3e63c11bd1fe75f4982a0f949eab098dae6f`, with the owner's pre-existing
+date deletion outside Sections 1--9.
+
+The extractor expands the active inputs, removes comments and takes
+Introduction through Conclusion. Its regex includes numbers inside citation
+keys, source identifiers, file names and formatting dimensions, not just
+rendered statistics. Thousands separators stay with their numbers, while
+comma-separated lists such as 12,21,33 are split. This complete parser
+supersedes the exploratory parser that could capture partial identifier
+suffixes or merge numeric lists.
+
+The lists contain 1,231 intake tokens and 845 revised tokens. Sequence matching
+can align unrelated repetitions, so a "replace" block is not necessarily a
+changed scientific value. The following table accounts for every block;
+the JSON preserves its complete exact lists.
+
+| Diff block | Explanation |
+| ---: | --- |
+| 1 | Moved the Knight Capital dates and quantities from Introduction into the existing additional-evidence source. |
+| 2 | Moved the WyCash and PhotoCraft comparison, including citation years and its unchanged quantities, into additional evidence. |
+| 3 | Condensed the roadmap and duplicate completion/attestation summary; the executed allocation and attestation are reported in Methods, Threats and the Supplement. |
+| 4 | Moved the literal historical worker-model selector into supplementary case context; the parsed minus sign belongs to a model name. |
+| 5 | Removed source IDs and the dated issue-export path from article prose; source snapshots, files and dates are in the supplementary records/register. |
+| 6 | Moved the unchanged case-observation table and its layout dimensions, plus detailed methodological source qualifications, into additional evidence. |
+| 7 | Removed internal observation IDs from the local-completion paragraph and moved the unchanged contrast table, including its layout dimension, into additional evidence. |
+| 8 | Removed the historical prompt-version number from the article; the frozen prompt and source-bound prompt history are in the Supplement. |
+| 9 | Moved registration/amendment chronology, source IDs and execution configuration history into measurement provenance; authorship is stated in the current statements. |
+| 10 | Condensed duplicate feature-range/change-request identifiers; the executed feature count is unchanged and the same seed is reported later. |
+| 11 | Moved the superseded default sample size into the historical planning record; the executed 21 per cell is unchanged. |
+| 12 | Moved source-version inspection dates, earlier completion counts and planning-history details into measurement provenance; the seed's apparent insertion is an ordering alignment. |
+| 13 | Moved the v6/v4 source-inspection account into measurement provenance; no frozen prompt was changed. |
+| 14 | Moved the historical pilot figure and container UID/capability detail into the Supplement. |
+| 15 | Removed the runtime figure caption's source-record ID; the register and supplementary execution record preserve the binding. |
+| 16 | Removed the evaluator's source-record ID from article prose; its source binding is in measurement provenance. |
+| 17 | Moved the unchanged measurement-instrument table and its numeric layout parameters into measurement provenance. |
+| 18 | Moved the dated analyser inspections into measurement provenance; unfulfilled reporting instructions are requirements in A.7. |
+| 19 | Moved the unimplemented graded 15-contract reporting requirement into A.7 without presenting it as an observed result. |
+| 20 | Moved the dated F8/F9/F10 analyser distinctions and unavailable graded-panel history into measurement provenance/A.7. |
+| 21 | Moved historical analyser and judging-proposal details into measurement provenance; current human-review counts stay in the results. |
+| 22 | Moved the dated sample-size planning record and its smallest option into measurement provenance. |
+| 23 | Moved the other sample-size options and prohibition/history detail into the same planning record; executed allocation is unchanged. |
+| 24 | Moved the unchanged planning equations, sensitivity table and resource implications into measurement provenance. Added the requested realised SD 3.1278 and its 300 degrees of freedom from the completed analysis. |
+| 25 | Moved analyser-version/missingness mechanics into measurement provenance and consolidated scheduling dependence in Threats/A.7. |
+| 26 | Moved the unchanged planned-resource table, progression thresholds and historical sampling qualifications into measurement provenance. |
+| 27 | Moved the recovery/completion ledger, exact trajectory identifiers and repeated perfect recovery-endpoint rates into measurement provenance. |
+| 28 | Moved the full scheduled-step, attempt, attestation and billing ledger into measurement provenance; holds and unknown charges remain disclosed. |
+| 29 | Removed a literal candidate identifier from the article; its model/version/run digits identify the same regression already documented in the Supplement. |
+| 30 | Removed model-name and cycle identifiers from a descriptive figure caption; ranking and trajectory interpretation are in the results and the unchanged chart data. |
+| 31 | Removed duplicate zero-hotspot/checkpoint/sample-size caption statistics already reported in results and numerical tables; plotted data are unchanged. |
+| 32 | Removed a repeated 1.19-point mention within the results commentary; its primary estimate and interval are unchanged. |
+| 33 | Added the authorised rounded Gemini B--C difference, -38.10 percentage points. |
+| 34 | Replaced the authorised Gemini interval with [-59.88, -8.18] and added exact p=0.02778; removed the duplicate verbal 16-versus-8 comparison. A parsed negative 8 in the old list is punctuation, not a negative outcome count. |
+| 35 | Moved the repeated count of 55 holds out of the resource paragraph; Threats and the detailed Supplement preserve it. |
+| 36 | Removed duplicate hold/reservation accounting from the main figure caption; the ledger is in the Supplement and its uncertainty in Threats. |
+| 37 | Moved judging version, pre-recovery snapshot and omitted-run identifiers into measurement provenance; Threats identifies the 313-run snapshot. |
+| 38 | Moved the repeated judge-version identifier into measurement provenance; calls and credits are unchanged. |
+| 39 | Moved the unchanged judge-contrast table and judge-version/rating-denominator accounting into measurement provenance. |
+| 40 | Moved SDK/tool-request attestation detail and the beginning of the prediction-verdict table into the Supplement. The new aligned tokens are the consolidated Discussion headline summary, not replacements for those audit quantities. |
+| 41 | Moved the unchanged prediction-verdict table and consolidated duplicate Discussion result/cost summaries into one headline paragraph; all numerical table bodies are preserved. |
+| 42 | Compressed repeated Discussion literature call sites; these years are citation-key tokens. All cited identities and version pins still appear in the paper/Supplement. |
+| 43 | Removed a repeated model-name digit while consolidating the permission-boundary interpretation; the model and observed failure are identified in results. |
+| 44 | Added the requested single Discussion comparison of Gemini 16/21 versus 8/21 and placed existing bias/provider-drift citations with consolidated Threats; no new reference identity was added. |
+| 45 | Consolidated repeated ceiling/effect summaries and moved the 55-hold/313-run limitations into Threats; the observed control mean and effect are unchanged in results. |
+| 46 | Removed a redundant CR1 identifier from the shortened conclusion; the withheld request is still described. |
+| 47 | Added the existing 1.84--2.25 delivery-credit ratio to the conclusion as requested; a raw minus token comes from range typography. |
+| 48 | Moved repeated allocation, model, hold, snapshot and CR1 limitations out of the conclusion into the consolidated Threats and supplementary detail. |
+
+Only seven token occurrences have no equal-value counterpart in the old
+main-text multiset: the requested SD, four authorised statistical-summary
+tokens, and two apparent `-2.25` tokens produced by TeX range typography.
+The latter still mean the positive upper endpoint 2.25. Existing headline
+values were moved or deduplicated, not recomputed.
+
+Across all 37 labelled numerical-table bodies in the complete article and
+Supplement, the only changed tokens are the Gemini B--C interval endpoints:
+`-77.0464,+14.6925` becomes `-59.8800,-8.1786`. The estimate `-38.0952`
+and every other numerical table-body token are identical. The source/digest
+register uses a longtable rather than one of those 37 numerical tables;
+its original record identifiers and pins are preserved.
+
+### Authorised statistical calculation
+
+`editorial_audit.py` reproduces Wilson score limits for 8/21 and 16/21,
+combines them with Newcombe's hybrid-score construction and sums exact
+hypergeometric probabilities no larger than the observed table's probability
+for two-sided Fisher inference. The standard library suffices.
+
+* Difference: -38.095238095238095 percentage points.
+* Newcombe hybrid-score 95% interval: [-59.8799673194237, -8.17858981347524].
+* Two-sided Fisher exact p: 0.027782670214640696.
+
+These match the owner's expected values. The reported comparison is
+unadjusted and exploratory among many comparisons; it does not support a
+confirmatory or general model-ranking claim.
+
+### Availability, references and author confirmations
+
+Both GitHub repositories were verified public and their contents inspected.
+The public experiment release `results-exploratory-s1-v1` resolves to
+`d097a10b090baefadf995ecd910eb96c324f0234` and lists the deposit identities
+and checksum material. The owner confirms that both OSF registrations
+exist and are embargoed; the public API returned 401, which does not
+contradict that account or prove release. No embargo was lifted here.
+
+The requested YouTube ID `F8fBgDCf2Y4` resolves through oEmbed to the Kent
+Beck Prodacity 2026 talk. The Anthropic long-running-agent harness article
+also resolves, and its opening was inspected. Bibliography checks establish
+80 active cited keys and 80 embedded entries; the unused BibTeX companion
+still contains 91 entries. This was not a new exhaustive literature audit.
+
+Isabel Cabezas Martin supplied the owner attestation and executed/collected
+the study data. The owner states that she did not analyse the study.
+She is a coauthor, not an independent auditor; the manuscript now says so.
+
+Every active author confirmation is listed here:
+
+| Location | Exact item | Author action |
+| --- | --- | --- |
+| Competing interests, TeX comment | `% CONFIRM: clearance obtained` | Confirm employer clearance before submission. |
+| Data availability, visible text | `[CONFIRM: public release of both OSF registrations before submission]` | Lift both embargoes when OSF works and verify actual public access. Registration existence is not in question. |
+
+Historical TODOs and dated review outcomes elsewhere in this file are
+preserved history, not additional active confirmation markers.
+
+### Validation and delivery
+
+Classification: focused editorial, figure and local authoring-tool work.
+No application, infrastructure, deployment, dependency, permission or
+repository-gate control changed. The archive helper's existing failure
+conditions still apply; it now permits bounded reference-settling reruns.
+
+The final source archive resolves 22 compilation inputs. Its extracted
+arXiv layout compiled with PDFLaTeX, shell escape disabled, in three retained
+passes to 77 pages. The final log has no warnings, overfull/underfull boxes,
+missing characters or unresolved references. Automated inspection checked
+every page for nonblank content, unresolved markers and text/image bounds.
+Visual spot checks covered the title/abstract, state diagram, both revised
+results charts and the corrected interval table. This is not an all-page
+visual proofread.
+
+At their final 16 cm width, minimum diagram/chart text sizes are 8.91 pt,
+7.56 pt and 7.56 pt. The full-width outcomes figure fits with its caption.
+Browser checks found no clipped or overlapping chart text; tests preserve
+all trajectory coordinates, estimates, intervals, outcome counts, cost
+pairs and billed denominators. The empirical chart input digest is unchanged.
+
+The complete authoring suite ran 99 tests: 98 passed and one failed.
+The failure is the existing all-diagram regeneration check,
+`test_given_native_exporter_when_run_then_exports_without_rewriting_sources`.
+It reports container-height/outside-container overflow in the unchanged
+historical pilot diagram's `arm-0-feature-label` through
+`arm-4-feature-label`. That source and its frozen exports were not changed
+to conceal the failure. The selected revised figures and all other tests,
+including archive settling, metric segmentation and numerical-table checks,
+passed. The suite's printed "HEAD changed while packaging" message is an
+expected mocked negative test; no real publication was attempted.
+
+Ruff passes for the new audit utility and the other changed authoring
+utilities/tests except `test_review_metrics.py`, which has two unchanged
+SIM117 nested-context findings. Running Ruff against that file at the intake
+HEAD reproduces both findings; no suppression was added. Both JavaScript
+syntax checks and `git diff --check` pass. The structural checker reports
+12,246 approximate article words, 1,504 abstract source characters and
+80 matching active citation/bibitem identities. Its historical object
+`0d5dcb02` is unavailable; the numerical/editorial comparison instead uses
+the preserved actual intake, not an invented historical baseline.
+
+All seven displayed equation blocks match the intake after whitespace
+normalisation. The source-register numeric tokens and arXiv version pins
+are unchanged. Tic rates also pass when table and caption text are included.
+The article contains no contractions, source-record calls or instances of
+the requested banned AI-tell words. These lexical checks do not certify
+human authorship or scientific quality.
+
+The active Supplement digests and current source/PDF bindings were refreshed
+without replacing prior dated pins. The final retained PDF SHA-256 is:
+
+```text
+7c3f99b108e47ff62f1ce6f57dcbbaa0b23bae82075920f9f67d89b583234c4d
+```
+
+The validated ZIP and tarball, with `SHA256SUMS`, are in the external build
+directory `/tmp/ama-paper-editorial-5256041a-verified`. They can be regenerated
+from the delivered sources with `anc/package_arxiv.py` and a new external
+output directory. No `--publish` action was used.
+
+Work execution: Complete for the authorised editorial source, Supplement,
+compiled PDF and audit deliverables. Assessment: technical validation is
+qualified by the inherited diagram/lint findings; scientific, human, hosted
+and publication approval are not supplied. Employer clearance and actual
+release of both OSF registrations require the author actions listed above.
+
+## Final source corrections, 26 November
+
+This follow-up uses the completed editorial pass above as its baseline.
+It changes only the requested source passages, directly dependent tests
+and generated delivery bindings. The
+[complete number-diff report](./final-corrections-audit-2026-11-26.json)
+contains both numeric lists for every active TeX file, with line locators,
+context and explanations for every sequence difference.
+
+### Changes
+
+| Location | Change | Reason |
+| --- | --- | --- |
+| Data availability and Section 7.1 | Removed the visible confirmation marker and service/API commentary; identified the registrations and stated that public release is pending and required before submission. | The owner confirmed that both registrations still have an embargo. No completed public release is claimed. |
+| Competing interests | Removed the clearance-confirmation comment, leaving the interests disclosure unchanged. | The owner will upload only after clearance. |
+| Former Supplement Table 24, now Table 25 | Applied Newcombe hybrid-score intervals and two-sided Fisher exact tests to all eight fully observed contrasts; kept estimates and GPT identification bounds unchanged. | One conditional, exploratory, unadjusted method now covers every observed contrast. |
+| Former Supplement Table 36, now Table 8 | Moved the verdicts to the end of Section 7, shortened cell wording and updated the Introduction reference. | The predictions and outcomes are visible together; all numeric tokens in the moved table are unchanged. The table fits on page 27. |
+| Sections 1-9 | Removed unrelated uses of "while", split the specified clause chains, joined related short sentences and absorbed or removed the listed leftover paragraphs. | Preserve meaning and sentence-length variation without unnecessary connectors. |
+| Sections 7.2 and 2.2 | Removed the false causal connector concerning replication; explicitly attributed Figure 1, Section 5.1 and Figure 5 to Pan et al. | Clarify inference and distinguish cited figures from this paper's figures. |
+| References 54 and 67 | Removed the two access-date notes, retaining publication dates, arXiv version pins and Section 3 in the Reflexion reference. | Apply the requested reference cleanup. |
+
+### Numerical changes
+
+All eight estimates below are unchanged. Intervals use percentage points;
+Fisher values are two-sided and unadjusted. The calculations use Wilson
+limits with the standard normal quantile, the Newcombe hybrid-score
+combination and exact rational hypergeometric probabilities.
+
+| Model | Contrast | Previous interval | Corrected interval | Fisher p |
+| --- | --- | --- | --- | --- |
+| Sonnet | B-D | [-18.7736, +26.7692] | [-11.1902, +22.6694] | 1.00000 |
+| Sonnet | B-A | [-18.8335, +18.8335] | [-15.4639, +15.4639] | 1.00000 |
+| Sonnet | B-C | [-18.8335, +18.8335] | [-15.4639, +15.4639] | 1.00000 |
+| Sonnet | E-B | [-26.7692, +18.7736] | [-22.6694, +11.1902] | 1.00000 |
+| Gemini | B-D | [-43.8776, +51.6701] | [-22.7012, +31.2676] | 1.00000 |
+| Gemini | B-A | [-39.1648, +54.7328] | [-18.0105, +35.2120] | 0.74421 |
+| Gemini | B-C | [-59.8800, -8.1786] | [-59.8800, -8.1786], unchanged | 0.02778 |
+| Gemini | E-B | [-37.2441, +60.6678] | [-14.7411, +40.2154] | 0.53590 |
+
+The exhaustive comparison covers all eight active TeX sources, including
+comments and numerical formatting arguments. Expanded numeric tokens change
+from 4,376 to 4,377:
+
+* Fourteen interval endpoints change as listed above. The Gemini B-C
+  interval does not change.
+* Seven Fisher values are new: five occurrences of 1.00000, plus 0.74421
+  and 0.53590. The existing 0.02778 moves from the caption into its row.
+* The old caption's 97.5% component-confidence level and one redundant
+  95% mention disappear when the mixed-method description is replaced.
+* Each of the two removed access notes contributes the deleted tokens
+  1 and 2026 from "1 November 2026". No publication date changes.
+
+All 85 numeric tokens in the verdict table, including its formatting
+dimensions, move unchanged. Sections 1-9 therefore contain 845 numeric
+tokens before and 930 after; no existing numeric value in those sections
+changes. All 36 other numerical table bodies and all seven displayed
+equations are unchanged. The audit asserts equality of the full numeric
+multisets outside the interval table and the explicitly requested access
+notes, so there are no unexplained additions, deletions or replacements.
+
+### Before and after metrics
+
+The same documented extraction and sentence segmentation measure both
+versions. Mean sentence length excludes floats, headings and displayed
+equations; the "while" count includes all of Sections 1-9.
+
+| Measure | Before | After |
+| --- | --- | --- |
+| "while" | 44 | 16 |
+| Mean sentence length, words | 22.021231 | 22.197849 |
+| Sentences | 471 | 465 |
+| Approximate article words, existing checker | 12,246 | 12,491 |
+| Abstract source characters | 1,504 | 1,504 |
+| remain/remains per 1,000 prose words | 0.386 | 0.388 |
+| separate/separately per 1,000 prose words | 0.675 | 0.678 |
+| retained per 1,000 prose words | 0.868 | 0.872 |
+| establish per 1,000 prose words | 0.386 | 0.388 |
+
+The requested sentence-length and tic-word thresholds pass. No sentence
+above 45 measured words chains clauses with "while", "with" or a semicolon.
+
+### Validation and release boundary
+
+The extracted final arXiv archive compiles with PDFLaTeX, shell escape
+disabled, in two passes to 78 pages. The final compiler log has no warnings,
+box diagnostics, missing characters or unresolved references. All pages
+contain content without unresolved markers or out-of-page blocks. The
+relocated verdict table and corrected interval table were visually checked;
+Table 8 fits on one page. Table numbering and references resolve, including
+Table 25 on page 57 and the source register, Table 38, starting on page 75.
+The delivered PDF is copied from that extracted-archive build.
+
+All 73 focused regressions pass, including calculations for all eight
+observed contrasts and the relocated verdict table. Ruff passes for the
+modified test; structural and whitespace checks pass. The unchanged
+historical all-diagram regeneration test was not rerun; its earlier failure
+is preserved above. This focused pass is not a full repository gate,
+hosted CI, independent scientific review or publication approval.
+
+The [source/PDF binding](./supplement-integration.json) appends
+`final_source_corrections_2026_11_26`, preserving earlier revision records.
+The current PDF SHA-256 is:
+
+```text
+6ea2b33d71b63381abd3bb3ea63f786756628a07824060de98056516eaebd499
+```
+
+The validated archives are in
+`/tmp/ama-paper-final-corrections-5256041a-verified`. No publication command,
+commit, push, arXiv submission or OSF change was performed.
+
+Work execution: Complete for the source corrections and technical validation.
+Assessment: Public release of both OSF registrations is still pending and
+blocks submission; author clearance and final approval are human actions.
+
+## Final arXiv release pass, 26 November
+
+Both OSF registrations (`https://osf.io/ywsrv/overview` and `https://osf.io/xcpt4`)
+were checked through the unauthenticated OSF v2 registration API on
+26 November 2026 and returned HTTP 200 with `public: true` and `embargoed: false`.
+The owner also confirmed employer clearance and coauthor approval.
+
+### Targeted changes applied
+
+* Data availability, second paragraph: replaced the pending-release sentence
+  with "Both registrations are public." Verified that no `[CONFIRM`, `TODO` or
+  `pending` string appears in Data availability.
+* Supplement A.20.1: removed "Its metadata was not independently verified
+  (Data availability)."
+* Supplement A.20.17: replaced the HTTP 401 access-failure sentence with
+  "Both registrations are now publicly accessible."
+* Supplement A.20.12: replaced "The independent researcher completed" with
+  "Isabel Cabezas Martin completed", and scoped URL break rules around
+  `pilot-estimation-gpt-6.1-sol-C-20` and
+  `pilot-estimation-gemini-4-argon-E-15` so line breaks occur only at hyphens.
+* Supplement A.20.16: added "Table 36 lists the measurements in the active kit
+  and how each is produced." directly under the heading via `\ref{tab:measurementprovenance}`.
+* Section 7.8: merged the three one-sentence paragraphs on trajectory
+  completion, outcome completeness and billing holds into a single paragraph
+  without altering their wording.
+* Title-page date: unchanged (renders as November 26, 2026).
+
+### Validation
+
+All 37 numerical table bodies, all displayed equations, all citations, the
+bibliography and all main-text numbers are unchanged. The extracted arXiv
+archive compiles with PDFLaTeX (`-no-shell-escape`) in two passes to 78 pages
+with zero warnings, box diagnostics, missing characters or unresolved
+references. The current PDF SHA-256 recorded in
+[supplement-integration.json](./supplement-integration.json) under
+`final_arxiv_release_pass_2026_11_26` is:
+
+```text
+33f89fa43397e3954d95dace508313ff07ee2a0c22e36f52b0b7d50dbd1c017f
+```
+
+The validated submission archives are in `/tmp/ama-paper-final-pass-2-5256041a`.
+No commit, push or external upload was performed.

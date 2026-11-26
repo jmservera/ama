@@ -1,10 +1,12 @@
-\subsection{Case rival-explanation register}\label{app:rivals}
+\subsection{Competing explanations for the case}\label{app:rivals}
 
 The case records support several competing explanations
 (Table~\ref{tab:rivals}). Other plausible alternatives lack discriminating
 evidence (Table~\ref{tab:rivalsadditional}). None is ruled out by missing
 records. In particular, the assessed release has not been linked to the
-failed deployment (Section~\ref{sec:audittrail}).
+failed deployment (Section~\ref{sec:audittrail}). The named issues,
+decisions, selector changes and participant accounts are indexed in
+\nolinkurl{anc/case-evidence-matrix.json}.
 
 \begin{table}[!htbp]
 \centering\footnotesize
@@ -14,21 +16,22 @@ failed deployment (Section~\ref{sec:audittrail}).
 Explanation & Case support & Counter-evidence or limits & Treatment \\
 \midrule
 Migration decision & ADR 0006 (issue \#196) froze feature work in the MVP and
-prioritised a new layout. & Health and restart checks passed; usability remained unverified. &
+prioritised a new layout. & A coordinator summary reported a healthy revision;
+sign-in remained unresolved. &
 Migration and coordination changed together; autonomy alone is not identified. \\
 Capstone rubric & Research and documentation are rewarded; full completeness
 marks coexist with blocked sign-in. & A working demonstrator is required;
 release/scope linkage is pending. & An incentive explanation remains a hypothesis. \\
 Owner overrides and priorities & Committed RPI records, full gates and delegated
-merging; PR \#445 required an exception. & The MVP used agents successfully;
-HVE Core defaults retain human stops. & Owner choices are part of the case. \\
-Model and tool changes & Versions changed during the study. & No matched rerun
+merging; PR \#445 required an exception. & The participant reports MVP use;
+coordinator instructions retained human approval boundaries. & Owner choices are part of the case. \\
+Model and tool changes & Recorded model selectors changed during the case. & No matched rerun
 under fixed versions. & Actual session configuration remains partly unknown. \\
 CI and cloud budgets & Issue \#413 moved validation locally; costs prompted
 a higher ceiling and reduced resources. & Merges continued without established
 deployed usability. & More budget is not proven to resolve delivery. \\
 Identity and sign-in setup & Missing registration/staff bindings; issue \#349
-distinguishes redirect from sign-in. & Those steps worked in the MVP. &
+distinguishes redirect from sign-in. & Those steps worked in the MVP\@. &
 A configuration obstacle is documented; decay and knowledge loss remain unproven. \\
 \bottomrule
 \end{tabularx}
@@ -43,7 +46,7 @@ A configuration obstacle is documented; decay and knowledge loss remain unproven
 Explanation & Reason considered & Counter-evidence or limits & Evidence still needed \\
 \midrule
 External services and deployment drift & Model/identity configuration differs
-from the MVP. & No provider outage is established; health checks were narrower. &
+from the MVP\@. & No provider outage is established; health checks were narrower. &
 Versioned deployment/configuration and dependency-health records for the journey. \\
 Scope expansion & RAI and consumption criteria added to issues; further
 resident-preview obligations. & Expansion predates autonomy; some controls
@@ -65,11 +68,11 @@ analysis distinguishing inherited debt from introduced faults. \\
 \end{table}
 \FloatBarrier
 
-\subsection{Candidate-mechanism evidence audits}\label{app:mechanismaudit}
+\subsection{Evidence checks for the five explanations}\label{app:mechanismaudit}
 
 Each candidate mechanism has a definition, counter-evidence and a proposed
 check against competing explanations. Tables~\ref{tab:mechanisms} and
-\ref{tab:audittrail} give the case indicators. The five-arm experiment did
+~\ref{tab:audittrail} give the case indicators. The five-arm experiment did
 not isolate these mechanisms, and their applicability to other settings
 remains untested.
 
@@ -83,7 +86,9 @@ Element & Audit \\
 \midrule
 Definition & Requirements and acceptance obligations expand faster than
 independently validated behaviour, without evidence that the added scope is
-needed for the next usable increment. Length alone is insufficient. \\
+needed for the next usable increment. The relevant comparison is added
+obligations versus accepted tasks, such as staff sign-in and case access;
+document length alone cannot supply either outcome. \\
 Counter-evidence & Growth began before autonomy and sometimes followed the
 owner's feedback; regulatory and consent controls can justify detail. \\
 Rival explanations & Genuine scope expansion, specification ambiguity,
@@ -106,8 +111,9 @@ mechanism, even if consolidation helps. \\
 Element & Audit \\
 \midrule
 Definition & A completion proxy becomes a decision criterion and remains
-positive when an independent test of the intended outcome is negative. Proxy
-use alone does not establish capture. \\
+positive when an independent test of the intended outcome is negative.
+Testing this case would require pairing a completion assessment with
+sign-in on the assessed release; that link remains unavailable. \\
 Counter-evidence & Agents explicitly reported unmet acceptance; neither
 fabricated approval nor deliberate deception is established. \\
 Rival explanations & An inadequate scorer or acceptance oracle, different
@@ -128,9 +134,11 @@ intentional test gaming or explain why a gate was chosen. \\
 \toprule
 Element & Audit \\
 \midrule
-Definition & A recorded lesson relevant to a later decision is absent from,
-unusable on, or not applied through that decision's effective context path,
-and the associated problem recurs. A missing citation alone is insufficient. \\
+Definition & A relevant recorded lesson does not reach a later worker in a
+usable form, or the worker does not apply it, and the same problem recurs.
+The staff-binding lesson would need to
+be traced into a later worker's inputs and deployment decisions;
+its absence from a citation list cannot establish lost knowledge. \\
 Counter-evidence & Important domain decisions survived; the lesson could have
 been known but deferred. Actual session attention was not measured. \\
 Rival explanations & Deliberate migration sequencing, deployment-specific
@@ -153,10 +161,12 @@ permissions differ. A matched-context study would be needed. \\
 Element & Audit \\
 \midrule
 Definition & Additional procedural obligations increase per-change burden
-without demonstrated proportional improvement in the targeted outcome. More
-gates alone are not evidence that their net benefit is negative. \\
-Counter-evidence & Checks caught bounded defects and enforced evidence
-integrity. Gate duration and human review effort were not measured per PR. \\
+without demonstrated proportional improvement in the targeted outcome.
+PR \#445's size-limit correction and interrupted gate identify a place
+to measure this burden, but neither elapsed gate time nor avoided defects
+was measured for the comparison. \\
+Counter-evidence & The size-limit correction addressed a bounded implementation
+defect; the interrupted gate did not establish a pass. Gate duration and human review effort were not measured per PR\@. \\
 Rival explanations & Legitimate safety and privacy requirements, budget
 constraints, new deployment complexity and owner-selected risk tolerance. \\
 Experimental implication & Measure gate time and accepted outcomes under
@@ -175,10 +185,11 @@ the effect of removing this repository's required gates remains untested. \\
 \toprule
 Element & Audit \\
 \midrule
-Definition & Independent outcome-level feedback is insufficient to correct
-delivery decisions despite abundant artefact-level validation. The defining
-gap concerns what the evaluated proxy reveals about the intended outcome;
-test counts alone leave that correspondence unknown. \\
+Definition & Delivery decisions receive too little feedback from attempts
+to use the product, despite extensive checks of code and documents.
+Here health and unauthenticated-request checks left the authorised
+staff journey untested. Measuring the gap requires the intended task and
+its release, not a count of tests. \\
 Counter-evidence & Human oversight continued; agents surfaced blockers;
 engineering checks provided real, though narrower, feedback. \\
 Rival explanations & Identity and service configuration, migration priority,
@@ -207,7 +218,8 @@ change?~\cite{sinha2025illusion,pan2026swemaintain} &
 Growing specifications and read path; previously working identity setup not preserved \\
 Selection and correction & Do review and tests expose the cumulative
 consequences before more work depends on them?~\cite{cohen2006review,yu2026habituation} &
-Proxy capture; process-gate inflation; feedback starvation \\
+Completion assessments, the interrupted PR \#445 gate and requests for
+a running website; their separate effects remain unmeasured \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -222,8 +234,8 @@ Word counts use whitespace tokenisation of the entry, heading included.
 
 \paragraph{Evidence-boundary phrases.} Each entry was searched, case-insensitively and
 on word boundaries, for these patterns: \emph{unmet}; \emph{not accepted};
-\emph{not inferred}; \emph{is inferred}; \emph{remain(s) open};
-\emph{remain(s) unproved}; \emph{remain(s) unverified}; \emph{not claimed};
+\emph{not inferred}; \emph{is inferred}; \emph{remain{(s)} open};
+\emph{remain{(s)} unproved}; \emph{remain{(s)} unverified}; \emph{not claimed};
 \emph{not established}; and \emph{no} followed, within forty letters, spaces,
 commas, slashes or hyphens, by \emph{is} or \emph{was} and then
 \emph{claimed} or \emph{inferred}. Density is matches per 1,000 words.
@@ -241,9 +253,9 @@ word counts at the original case snapshot (\sourceref{R01}).
 
 \paragraph{Proposed measures.} \emph{Time to first human use}: elapsed time
 from the start of a delivery cycle to the first time a person uses the running
-increment for its purpose. \emph{Age of the last usable increment}: time since
+increment for its purpose\@. \emph{Age of the last usable increment}: time since
 a person last verified that the deployed system could be used for its main
-journey. \emph{Behaviour-changing merge ratio}: the share of merged pull
+journey\@. \emph{Behaviour-changing merge ratio}: the share of merged pull
 requests that change what a user can observe in the running increment.
 \emph{Cost per accepted outcome}: total model, tool and cloud cost divided by
 the number of outcomes a human accepted in the same period. Predeclare the
@@ -263,11 +275,15 @@ Display wrapping does not alter its text. Braces mark runner parameters.
   breaklines=true,breakatwhitespace=false]{anc/consolidation-frozen-v4.prompt.txt}
 
 \FloatBarrier
-\subsection{Illustrative economics and sensitivity}\label{app:economics}
+\subsection{An assumed payback model}\label{app:economics}
 
 The earlier cost model assumes that consolidation reduces a growing
 implementation premium (Section~\ref{sec:costprojection}). Its parameters
-were not fitted to the ten-feature observations.
+were not fitted to the ten-feature observations. For example, its
+$k=5,\delta=0.5$ scenario means spending five credits on consolidation
+every cycle while the assumed excess implementation cost without it
+increases by half a credit per successive cycle. Those assumptions give
+break-even at cycle 21; the experiment does not estimate that growth rate.
 
 Let $N\geq1$ be an integer number of feature cycles, $k$ the assumed average consolidation
 investment in AI credits per cycle, and $\delta\cdot(t-1)$ the assumed excess
@@ -288,7 +304,7 @@ A positive value means A costs more within this assumed model.
 Experimental savings would require measured, quality-matched costs.
 For $k>0$ and $\delta>0$, the first cycle count with $\Delta C(N)\geq0$ is
 $N_{\mathrm{BE}}=\lceil1+2k/\delta\rceil$; when $\delta=0$, the investment never pays back in
-this credit-only model. Actual cost differences may grow nonlinearly, and B can retain debt too.
+this credit-only model.
 The parameter $\delta$ describes how the cost gap between A and B grows;
 it does not measure either arm's total debt.
 
@@ -314,8 +330,8 @@ Observed cost and quality effects require empirical estimates.}\label{fig:refact
 Equation~\ref{eq:costprojection}, with assumed $k=5$ credits/cycle.
 Negative values mean B's investment has not paid back; zero and positive
 values mean break-even and a conditional credit advantage.
-None of the scenarios is an observed or preferred estimate.}
-\label{tab:costscenario}
+None of the scenarios is an observed or preferred estimate.}\label{tab:costscenario}
+
 \begin{tabular}{@{}lrrr@{}}
 \toprule
 Assumed premium increase $\delta$ & 10 cycles & 20 cycles & 40 cycles \\
@@ -350,7 +366,7 @@ source lines) with persistent storage, cross-cutting permission invariants
 and scheduled interface migrations, recording retention and cost slopes at
 $P_{10},P_{20},P_{30}$ and $P_{40}$.
 
-\paragraph{Single terminal change request with prerequisite confounding.}
+\paragraph{One final change request and unequal starting functionality.}
 Evaluating adaptation on one held-out CR1 after $P_{10}$ produced wide
 binomial intervals ($\pm18.8$ to $\pm48.0$ percentage points within models)
 and coupled retention obligations to whether F9 ranking had been acquired.
@@ -361,7 +377,7 @@ so adaptation measurement does not alter the main delivery trajectory, and
 should be scored both unconditionally and on a core contract set whose
 prerequisites are verified before the fork.
 
-\paragraph{Bundled package treatments.}
+\paragraph{Separating the parts of consolidation.}
 Arm~B combined behaviour-preserving code refactoring, new agent-authored
 tests under an immutable test-file rule and \texttt{DESIGN.md} replacement,
 while Arm~C changed both editing rights and checklist content. A $2\times2$
@@ -374,7 +390,7 @@ distinguish test-rule effects from refactoring and boundary review.
 Component fidelity, interaction effects and other treatment differences
 would still need explicit controls.
 
-\paragraph{Falsification criteria, blocked inference and gate resilience.}
+\paragraph{Decision thresholds, dependence and recovery rules.}
 The earlier candidate thresholds were $\geq5\%$ open-regression loss among
 acquired contracts by $P_{30}$ or per-cycle implementation-credit growth
 of $\delta\geq0.5$ credits per cycle for P1, a task-calibrated minimum
@@ -395,6 +411,30 @@ Testing the package would not by itself identify review's contribution.
 A component comparison must specify instructions, editing and test rights,
 handover, context, sessions and budgets, and record actual resource use.
 No RPI variant, allocation, effect threshold or spending is approved here.
+
+\paragraph{Reporting requirements for the next study.}
+The completed study does not supply a graded CR1 panel, a full
+attempt-versus-retained loss decomposition, or a complete prior-exposure
+record. A new protocol must require the following before collection:
+\begin{itemize}[leftmargin=*]
+\item Publish each full risk set, observed subset and missing count
+$M^p_{r,t}=|\mathcal{R}_{r,t}|-|\mathcal{O}^p_{r,t}|$, with the
+corresponding full-risk loss bounds.
+\item Publish witnessed workflow risk-set sizes, losses and unavailable
+counts alongside final scenario outcomes.
+\item Retain onset, recovery, recurrence and uncertainty across missing
+checkpoints; distinguish same-cycle post-step losses, rejected attempts
+and losses in accepted code.
+\item Report CR1 contracts passed out of 15, previously passing contracts
+lost and observed/missing denominators, in addition to composite success.
+\item Preserve scheduling-block identifiers and align uncertainty analysis
+with the allocation and observed execution dependence.
+\item Record actual information access and prior exposure for executors,
+analysts and judges.
+\item Report per-model binary-success counts and stated interval methods,
+preserving model strata in aggregate contrasts.
+\end{itemize}
+These requirements do not retrospectively amend the executed design.
 
 \subsection{Untested hybrid practice candidate}\label{app:practicecandidate}
 

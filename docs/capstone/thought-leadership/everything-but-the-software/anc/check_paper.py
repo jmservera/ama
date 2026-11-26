@@ -200,12 +200,8 @@ def main() -> int:
     print(f"ABSTRACT_SOURCE_CHARACTERS {characters} (limit <1920; conservative source count)")
     if characters >= 1920:
         failures.append("abstract is too long")
-    has_authorized_results_block = r"\ifresults" in clean and r"\fi" in clean and r"\label{sec:resultsledger}" in clean
-    if (
-        (r"\resultsfalse" not in clean and not (r"\resultstrue" in clean and has_authorized_results_block))
-        or (r"\resultsfalse" in clean and r"\resultstrue" in clean)
-    ):
-        failures.append("results switch is not false")
+    if re.search(r"\\(?:ifresults|results(?:true|false))\b", clean):
+        failures.append("obsolete results switch")
     if args.check_latex_log:
         log = (PACKAGE / "main.log").read_text(encoding="utf-8")
         if re.search(r"(?m)^!|undefined|Rerun to get|Label\(s\) may have changed", log, re.I):
