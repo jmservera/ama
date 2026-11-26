@@ -3401,7 +3401,8 @@ os.fstat(3)
                 patch.object(runner, "command", side_effect=record),
                 patch.object(runner, "python", return_value="python3"),
                 patch.object(gate.shutil, "copytree"),
-                patch.object(Path, "chmod"),self.assertRaises(RuntimeError)
+                patch.object(Path, "chmod"),
+                self.assertRaises(RuntimeError),
             ):
                 runner.image("api", stress=stress)
             builds = [a for a in seen if a[:2] == ["docker", "build"]]
