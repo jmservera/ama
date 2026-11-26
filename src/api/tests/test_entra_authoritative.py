@@ -142,6 +142,21 @@ class EntraHttpTests(Base):
         self.assertEqual(self.call("/api/me", oid="not-a-guid")[0], 401)
         self.assertEqual(self.call("/api/me", oid=None)[0], 401)
 
+    def test_forged_non_entra_or_malformed_principals_are_denied_over_http(self) -> None:
+        for label, header in (
+            ("non-Entra issuer", make_principal(roles=(ADMIN,), typ="google")),
+            ("not base64", "forged@example.com"),
+            ("oversized", "A" * (auth.MAX_HEADER + 4)),
+        ):
+            for path in ("/api/me", "/api/cases"):
+                with self.subTest(label=label, path=path):
+                    req = urllib.request.Request(
+                        self.base + path, headers={"X-MS-CLIENT-PRINCIPAL": header}
+                    )
+                    with self.assertRaises(urllib.error.HTTPError) as error:
+                        urllib.request.urlopen(req)
+                    self.assertEqual(error.exception.code, 401)
+
     def test_admin_grants_no_approval_or_override_capability(self) -> None:
         user = Provider(self.store, ENV).authenticate(
             {"X-MS-CLIENT-PRINCIPAL": make_principal(roles=(ADMIN,))}

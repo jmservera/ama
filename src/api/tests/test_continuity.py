@@ -84,6 +84,37 @@ class Suspension(Base):
         with other.transaction() as db:
             self.assertTrue(other.suspended(db, "quality-evidence"))
 
+    def test_owner_demo_override_ignores_only_expired_ledger_rows_for_a_new_authority(self):
+        demo = {"ZF_DEPLOYMENT_PROFILE": "demo", "ZF_DEMO_AI_SUSPENSION_OVERRIDE": "owner-directed-2026-11-23"}
+        fresh = self.other(authority="later-finite-exercise")
+        with fresh.transaction() as db:
+            now = fresh.now(db)
+            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) "
+                       "VALUES ('old-expired',10,1000,?,10,1000)", (now - 60,))
+            self.assertEqual(fresh._pool(db)[3], 10)
+        with mock.patch.dict(os.environ, demo), fresh.transaction() as db:
+            self.assertIsNone(fresh._pool(db))
+            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) "
+                       "VALUES ('old-live',5,500,?,5,500)", (now + 3600,))
+            self.assertEqual(fresh._pool(db)[3], 5)
+
+    def test_quality_demo_meter_seeds_only_under_the_owner_override_and_keeps_chat(self):
+        from zava_forward.core import chat_demo_meter
+
+        ledger = mock.Mock()
+        ai = mock.Mock(fast="standard", model_version="m", synthetic_price_capabilities=frozenset({"chat-case-conversation"}))
+        ai.configuration.return_value = "cfg"
+        ai.consumption = ledger
+        store = mock.Mock(ai=ai)
+        self.assertFalse(chat_demo_meter.ensure_quality(store, 600, env={"ZF_DEPLOYMENT_PROFILE": "demo"}))
+        ledger.authorize.assert_not_called()
+        self.assertEqual(ai.synthetic_price_capabilities, {"chat-case-conversation"})
+        demo = {"ZF_DEPLOYMENT_PROFILE": "demo", "ZF_DEMO_AI_SUSPENSION_OVERRIDE": "owner-directed-2026-11-23"}
+        self.assertTrue(chat_demo_meter.ensure_quality(store, 600, env=demo))
+        self.assertEqual(ledger.authorize.call_args.kwargs["capability"], "quality-evidence")
+        self.assertTrue(ledger.price.call_args.kwargs["synthetic"])
+        self.assertEqual(ai.synthetic_price_capabilities, {"chat-case-conversation", "quality-evidence"})
+
     def test_sql_store_wires_the_ai_gate_and_flags_truncated_affected_list(self):
         fresh = self.open_store()
         self.addCleanup(fresh.db.close)
@@ -430,7 +461,7 @@ class ChatDemoMeterOnSqlStore(Base):
             chat_demo_meter.ensure(store, 600, now=first + timedelta(hours=1))
         with service.transaction() as db:
             records = [json.loads(row[0]) for row in db.execute("SELECT body FROM assistant_events")]
-        authorities = sorted((r for r in records if r["kind"] == "authority"), key=lambda r: r["start"])
+        authorities = [r for r in records if r["kind"] == "authority"]
         self.assertEqual(len(authorities), 2)
         self.assertNotEqual(authorities[0]["budgets"][0]["id"], authorities[1]["budgets"][0]["id"])
         self.assertEqual(authorities[0]["end"], authorities[1]["start"])

@@ -3088,8 +3088,14 @@ class Assistants:
         ).fetchone()
         if pool is not None:
             return tuple(pool)
+        # Owner-directed demo override: an expired earlier exercise cannot poison a newly authorised finite one.
+        live_only = (
+            " WHERE expires>?" if continuity.demo_owner_override() else ""
+        )
         prior = db.execute(
             "SELECT MIN(calls),MIN(tokens),MIN(expires),MAX(used_calls),MAX(reserved_tokens) FROM assistant_allowance"
+            + live_only,
+            (self.now(db),) if live_only else (),
         ).fetchone()
         if prior[0] is None:
             return None
@@ -3798,6 +3804,10 @@ class Assistants:
 
         def call():
             gate = self._dispatch_gate(task)
+            if task["capability"] == "quality-evidence":
+                from . import chat_demo_meter  # deferred: ai_registry imports this module
+
+                chat_demo_meter.ensure_quality(self.store, self.limits.output_tokens)
             try:
                 context = ai_consumption.CallContext(
                     ai_consumption.reference(task["id"]),

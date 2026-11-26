@@ -14,10 +14,11 @@ from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from . import ai_registry
+from . import ai_registry, continuity
 from .ai_consumption import reference
 
 TASK = ai_registry.CHAT_TASK
+QUALITY_TASK = "quality-evidence"
 OWNER = "synthetic-demo-owner-" + ai_registry.DEMO_ACTIVATION["accountable_owner"]
 PRICE_SOURCE = "https://azure.microsoft.com/pricing/details/azure-openai/"
 CALLS, TOKENS, AMOUNT = 20, 100000, "1"
@@ -31,9 +32,41 @@ def ensure(
     now: datetime | None = None,
 ) -> bool:
     """Idempotently seed this hour's synthetic authority; a no-op without the demo switch."""
-    ai = store.ai
     honoured = ai_registry.demo_activation_honoured(TASK, env)  # type: ignore[no-untyped-call]
-    ai.synthetic_price_capabilities = frozenset({TASK}) if honoured else frozenset()
+    return _seed(store, TASK, honoured, max_tokens, now, "chat", "demo_chat_seeded")
+
+
+def ensure_quality(
+    store: Any,
+    max_tokens: int,
+    env: Mapping[str, str] | None = None,
+    now: datetime | None = None,
+) -> bool:
+    """The same synthetic hourly meter for Quality, under the owner demo override only."""
+    return _seed(
+        store,
+        QUALITY_TASK,
+        continuity.demo_owner_override(env),
+        max_tokens,
+        now,
+        "quality",
+        "demo_quality_seeded",
+    )
+
+
+def _seed(
+    store: Any,
+    task: str,
+    honoured: bool,
+    max_tokens: int,
+    now: datetime | None,
+    kind: str,
+    flag: str,
+) -> bool:
+    ai = store.ai
+    ai.synthetic_price_capabilities = (ai.synthetic_price_capabilities - {task}) | (
+        {task} if honoured else frozenset()
+    )
     ledger = getattr(ai, "consumption", None)
     if not honoured or ledger is None:
         return False
@@ -41,11 +74,11 @@ def ensure(
     # One budget per hour: a settlement the ledger holds as liability-unknown stops the model for
     # the rest of that hour only. Authority windows may not overlap, so each slot abuts the next.
     start, end = moment.isoformat(), (moment + timedelta(hours=1)).isoformat()
-    label = f"synthetic-demo-chat-{moment.strftime('%Y-%m-%dT%H')}"
+    label = f"synthetic-demo-{kind}-{moment.strftime('%Y-%m-%dT%H')}"
     configuration = ai.configuration(ai.fast, TEMPERATURE, max_tokens)
     # Each ledger write opens a new SQL connection, takes the exclusive write lock and rereads it.
     seeded = (label, configuration, CALLS, TOKENS, AMOUNT)
-    if getattr(ledger, "demo_chat_seeded", None) == seeded:
+    if getattr(ledger, flag, None) == seeded:
         return True
     try:
         price = ledger.price(
@@ -67,7 +100,7 @@ def ensure(
             owner=OWNER,
             evidence=label + "-evidence",
             price=price,
-            capability=TASK,
+            capability=task,
             configuration=configuration,
             start=start,
             end=end,
@@ -78,10 +111,7 @@ def ensure(
             max_depth=1,
         )
     except Exception as error:
-        # Ledger refusals are fixed text without case data, so the cause can be logged.
-        logging.getLogger(__name__).warning(
-            "Demo chat meter not seeded (%s: %s)", type(error).__name__, error
-        )
+        logging.getLogger(__name__).warning("Demo chat meter not seeded (%s)", type(error).__name__)
         return False
-    ledger.demo_chat_seeded = seeded
+    setattr(ledger, flag, seeded)
     return True
