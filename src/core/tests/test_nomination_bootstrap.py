@@ -92,11 +92,11 @@ print(json.dumps({
 
 
 class NominationBootstrapIdentityTests(unittest.TestCase):
-    def _run(self, code: str, *roots: Path) -> dict[str, object]:
+    def _run(self, code: str, *roots: Path, isolated: bool = False) -> dict[str, object]:
         env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
         env["PYTHONPATH"] = os.pathsep.join(str(r) for r in roots)
         done = subprocess.run(
-            [sys.executable, "-c", code],
+            [sys.executable, *(["-S"] if isolated else []), "-c", code],
             cwd=_TESTS,
             env=env,
             capture_output=True,
@@ -149,6 +149,26 @@ class NominationBootstrapIdentityTests(unittest.TestCase):
         self.assertTrue(result["second_matches_first"])
         self.assertTrue(result["path_unchanged"])
         self.assertFalse(result["nomination_loaded"])
+
+    def test_editable_style_pth_layout_both_orders(self) -> None:
+        # An editable install exposes src/ through a .pth file in a site directory; -S keeps
+        # the ambient site-packages (possibly another checkout's editable install) out.
+        for nomination_first in (False, True):
+            with (
+                self.subTest(nomination_first=nomination_first),
+                tempfile.TemporaryDirectory() as tmp,
+            ):
+                (Path(tmp) / "zava-editable.pth").write_text(
+                    f"{_CORE_SRC}\n{_AGENTS_SRC}\n", encoding="utf-8"
+                )
+                code = _IDENTITY.format(first="")
+                if nomination_first:
+                    code = code.replace(
+                        "import test_bulk_edits as b\nimport test_nomination_route as n\n",
+                        "import test_nomination_route as n\nimport test_bulk_edits as b\n",
+                    )
+                code = f"import site; site.addsitedir({tmp!r})\n" + code
+                self._assert_source_identity(self._run(code, _TESTS, isolated=True))
 
     def _noneditable_copy(self, tmp: str) -> Path:
         shutil.copytree(
