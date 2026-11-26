@@ -783,6 +783,8 @@ The [issue 2245 budget-hold fix and revision 0000066 recheck](./research/issue-2
 
 The [issue 2245 live recheck of 2026-11-25](./research/issue-2245-live-2026-11-25.md) records the widget proof of "Model calls: 1" on revision 0000076 after midnight UTC, a ledger hold (`liability-unknown`) that showed misleading wording before it, a local wording fix, and the per-criterion table.
 
+The [issue 2245 recheck after revision 0000086](./research/issue-2245-live-20261126T052140Z.md) records 16 of 16 thread creates at 200, no model call because the call budget stayed held past the UTC hour boundary, the hourly wording fix and what stays unproven.
+
 The [issue 2245 live recheck of 2026-11-26](./research/issue-2245-live-2026-11-26.md) records revision 0000079 (threads 8 of 8, widget "Model calls: 1"), the hourly demo budget slot that stops one held settlement pausing the model all day, and the per-criterion table.
 
 The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.

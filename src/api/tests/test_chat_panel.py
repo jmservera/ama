@@ -298,7 +298,9 @@ class PanelTests(roles.Matrix):
         self.model = lambda _p: dict(envelope(None, "financial-held"), reason="call-budget-limit")
         d = self.ask(tid)[1]
         self.assertEqual((d["kind"], d["model"]), ("answer", "workflow-only"))
-        self.assertIn("daily demo allowance", d["reply"])
+        self.assertIn("hourly demo allowance", d["reply"])
+        self.assertIn("start of the next UTC hour", d["reply"])
+        self.assertNotIn("00:00 UTC", d["reply"])
         self.assertNotIn("assistant is not available", d["reply"])
         self.model = lambda _p: dict(envelope(None, "financial-held"), reason="liability-unknown")
         d = self.ask(tid)[1]
