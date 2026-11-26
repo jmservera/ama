@@ -4,6 +4,7 @@ import copy
 import json
 import os
 import unittest
+from datetime import UTC, datetime, timedelta
 from unittest import mock
 
 import test_mvp
@@ -403,6 +404,20 @@ class ChatDemoMeterOnSqlStore(Base):
                 chat_demo_meter.ensure(store, 600)
             self.assertEqual(price.call_count, 2)
         self.assertEqual(self.kinds(service).count("price"), 1)
+
+    def test_each_hour_gets_its_own_budget_so_a_held_hour_does_not_hold_the_day(self):
+        store, service, _ = self.chat_model(self.DEMO_ON)
+        first = datetime(2026, 11, 25, 9, 40, tzinfo=UTC)
+        with mock.patch.dict(os.environ, self.DEMO_ON):
+            chat_demo_meter.ensure(store, 600, now=first)
+            chat_demo_meter.ensure(store, 600, now=first.replace(minute=5))
+            chat_demo_meter.ensure(store, 600, now=first + timedelta(hours=1))
+        with service.transaction() as db:
+            records = [json.loads(row[0]) for row in db.execute("SELECT body FROM assistant_events")]
+        authorities = [r for r in records if r["kind"] == "authority"]
+        self.assertEqual(len(authorities), 2)
+        self.assertNotEqual(authorities[0]["budgets"][0]["id"], authorities[1]["budgets"][0]["id"])
+        self.assertEqual(authorities[0]["end"], authorities[1]["start"])
 
     def test_without_the_switch_nothing_is_seeded_and_the_call_is_refused(self):
         service, reply, sent = self.ask(self.ENV)

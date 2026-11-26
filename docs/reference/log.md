@@ -15546,3 +15546,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] update | Issue 2245 live recheck and spending-hold wording
 
 * Added [issue-2245-live-2026-11-25.md](research/issue-2245-live-2026-11-25.md): widget proof of "Model calls: 1" on revision 0000076, evidence that a `liability-unknown` ledger hold showed "assistant is not available" beside the AI banner, a local wording fix (not deployed) and the per-criterion table with unproven items.
+
+## [2026-11-26] add | Issue 2245 recheck on revision 0000079 and hourly demo budget
+
+* Added [issue-2245-live-2026-11-26.md](research/issue-2245-live-2026-11-26.md): live probe (threads 8 of 8 200, one model answer in five asks, widget "Model calls: 1" with a grounding-rejected draft), the hourly demo budget slot (local, not deployed) and a per-criterion table.
