@@ -4,6 +4,134 @@ description: Narrative and author-TODO reconciliation, remaining evidence plan a
 ms.date: 2026-11-26
 ---
 
+## Review-comment cleanup 26 November
+
+At the owner's request, the eight review-comment blocks were removed from
+`main.tex` after the author-voice revision. Exact byte comparison confirms
+that only those 40 fully commented lines changed. No review markers remain
+in the package's TeX files. The revised prose, other inputs and PDFs are
+unchanged; no new PDF build is claimed.
+
+The source binding and existing provenance guard now include
+`review_annotation_cleanup`. Earlier revision records and hashes below
+retain their original scope, including the feedback dispositions.
+
+## Marked author-voice revision 26 November
+
+### Marked passages and reader context
+
+The owner marked eight examples of wording that felt unnatural or assumed
+too much project knowledge. Those passages were revised first. The resulting
+lessons were written into
+[ama-author-voice](../../../../../.github/skills/ama-author-voice/SKILL.md),
+then applied across all 71 headed sections in the article and seven active
+TeX inputs. Five TeX sources changed. The other three inputs were reviewed
+and retained. The selected title and 29 November manuscript date are unchanged.
+
+Work continued from `aa62820383958c4ebfc9f2704eb6b1d026de4dff`, with
+owner-staged annotations already present. The original eight comment blocks
+were preserved. Some feedback lines lacked TeX comment prefixes; they are
+now fully commented so the notes do not render as manuscript prose.
+
+| Marked passage | Applied revision |
+| --- | --- |
+| Abstract, "rebuild a working demonstrator" | Describes taking an early prototype toward a fuller product. The Introduction explains the supplied retrofit use case and the author's intent to approach production readiness, without asserting that readiness was achieved. |
+| Abstract, "the replacement" | Names the new application and the failed action: signing in. |
+| Abstract, "realized controls" | Names the longer-session comparison group and explains its remaining room for improvement. The numerical ceiling and unmet target are unchanged. |
+| Introduction, "sustained conversation ... preceded autonomous delivery" | Describes weeks spent discussing requirements and recording decisions before asking the coordinator to implement the backlog. |
+| Introduction, "though I measured neither gain" | States the author's expectation that clearer requirements would help agents build faster and make fewer mistakes. The case method and Discussion retain the absence of a measured comparison. |
+| Introduction, "The paper contributes" | Explains how the investigation moves from earlier studies through the product-development case to a separate coding experiment. |
+| Case setting, unexplained internal-assessment disclaimer | Removes the orphan disclaimer and retains the automated scorer's implementation-completeness signal with its evidence cross-reference. Confidentiality and unresolved release linkage remain intact. |
+| Discussion, "In my participant account" and "Research assembled a corpus" | Uses first person, refers back to the introduced product, and describes research and role-based agents' actions. The account remains distinct from independently checked task execution. |
+
+### Reusable skill and whole-paper pass
+
+The skill owns the author-voice profile formerly embedded in the
+[scientific-writing agent](../../../../../.github/agents/ama-scientific-paper-writer-reviewer.agent.md).
+The agent now loads it on demand. Its scientific responsibilities,
+frontmatter and approval boundaries are unchanged.
+
+The learned rules concern missing meaning rather than forbidden words:
+introduce the object and purpose, name who acted, explain comparison groups
+and separate personal expectations from measured benefits. The skill requires
+a marked-first pass followed by a full reading and narrative check. Its eight
+editing examples are conditional, not replacement strings.
+
+The whole-paper pass introduces the housing-retrofit product before internal
+labels, explains the five experiment groups before the predictions, and
+defines runs, contracts, follow-up sessions, passing witnesses and complete-frame
+comparisons. Headings now describe their contents in ordinary language.
+The narrative follows preparation, implementation, blocked use and the narrower
+experiment, whose stable retention changed the original interpretation.
+Measurement details and historical qualifications remain in their existing
+records. Tables and literal prompts retain their scientific roles.
+
+The three blog samples linked in the skill informed voice, not current
+technical guidance. Relevant passages were read earlier in this revision;
+the second and third retrieved responses were truncated after those passages.
+No new literature finding or experiment is asserted.
+
+### Validation and remaining limits
+
+Classification: focused manuscript work, a repository-local prose skill and
+directly coupled authoring guards. No application, experiment, infrastructure,
+deployment, dependency, security control or repository-gate semantics changed.
+
+All 88 selected authoring tests pass after one correction batch for wording
+guards and a source-line wrap. The unchanged native-diagram regeneration test
+was excluded because its required Playwright browser was previously found
+unavailable; it was not rerun or counted as passed. The first command batch
+used the repository root instead of the package directory and was rerun from
+the correct directory.
+
+ChkTeX, structural and whitespace checks pass. The structural checker reports
+17,578 approximate body words and 1,879 abstract source characters against
+the strict limit of fewer than 1,920. Historical baseline `0d5dcb02` remains
+unavailable. Ruff reports no findings in the provenance test. The figure
+test's existing `I001` and planning test's existing `FURB167` were reproduced
+from HEAD; this revision introduces no new Ruff diagnostics.
+
+Exact comparisons preserve seven equations, 176 labels, eleven figure inputs,
+three literal prompt inputs, the embedded bibliography and all 61
+source-register rows. Numerical sequences match in all 43 table environments;
+all 28 instrument/result tabular bodies in the protocol and measurement
+inputs are byte-identical. Two active Supplement body digests were refreshed.
+Earlier revision bindings and adverse records remain unchanged.
+
+Two PDFLaTeX passes with shell escape disabled produced a separate 75-page
+preview. The final compiler log has no warnings, box warnings, missing
+characters or unresolved references. Every page has content and in-page
+words. Rendered pages 1, 2, 8, 13, 17, 35, 46, 55, 59 and 72 were inspected.
+The Supplement begins on page 46 and the source register on page 72.
+The preview digest is
+`cd2f86c40d030cd466e7021674038d8e0e75a76c4c90bdc66c389759c65455f1`.
+`author_context_revision` binds the final sources and preview.
+The delivered PDF remains unchanged at
+`ff263095ed331c8cdb0d91df7350f4772439b36fc3f986b7baa2612058f21233`;
+it is not claimed to match this revision.
+
+Skill frontmatter, name/path agreement, local links and unchanged agent
+frontmatter pass. An assisted self-review against the HVE Builder catalog
+and rubric found no required corrections. The reviewed skill digest is
+`e584ed7199c7aa604c9c1711a34f169c868efad81ff3143a1f28ba27c0b73884`;
+the agent digest is
+`8c47e7221356e30a94b5fedf46e0c0899854bc7615e9800a7b4ae4bb84f60805`.
+There is no root plugin or npm distribution manifest to synchronize, and
+the skill ships no scripts. New-session discovery was not independently
+exercised. This is a self-review, not an efficacy study or independent review.
+
+Automated prose scoring remains unavailable. A missing PDF-inspector import
+was resolved with a task-local installation used only for validation.
+No candidate, evaluator, judge, deployment or paid experimental run was
+executed. No assistant commit, push or publication ran.
+
+Work execution: Complete for the marked revisions, reusable skill,
+whole-document pass and separate preview. Assessment: assisted style/context
+review and selected authoring checks complete; the existing browser-dependent
+regeneration and baseline lint findings remain unresolved. Human author
+acceptance, independent scientific review, hosted CI and publication approval
+remain separate and unperformed.
+
 ## Unsupported-claim revision 26 November
 
 ### Scope and claim dispositions

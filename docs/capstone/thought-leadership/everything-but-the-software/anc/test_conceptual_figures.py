@@ -128,7 +128,7 @@ class ConceptualFigureTests(unittest.TestCase):
         abstract = " ".join(abstract.split())
         normalized = " ".join(narrative.split())
 
-        self.assertIn("a solution I could not use", abstract)
+        self.assertIn("I could not sign in", abstract)
         self.assertIn("separate evaluator", abstract)
         self.assertIn("hidden tests in isolated containers", abstract)
         self.assertIn("I could inspect completed issues", normalized)

@@ -6,6 +6,35 @@ ms.date: 2026-11-26
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and Experiment.*
 
+## Review-comment cleanup 26 November
+
+The owner requested removal of the eight review-comment blocks after the
+voice revision. All 40 comment lines were removed; every other manuscript
+byte is unchanged. Earlier revision records retain the feedback dispositions.
+`review_annotation_cleanup` binds the cleaned source without replacing
+historical hashes or PDFs.
+
+## Marked author-voice revision 26 November
+
+The eight marked examples were revised first, then the lessons were captured
+in [ama-author-voice](../../../../.github/skills/ama-author-voice/SKILL.md) and
+connected to the scientific-writing agent. The same reader-context and
+storytelling checks were applied across all 71 headed sections and eight
+active TeX sources. Five sources changed; the original annotations remain
+as comments and no longer render as prose.
+
+The [marked-passage dispositions and validation record](./anc/revision-report.md#marked-author-voice-revision-26-november)
+describe the product context, simpler explanations and narrative changes.
+Scientific results, equations, numerical tables, source records and literal
+prompts are preserved. All 88 selected authoring tests pass. ChkTeX,
+structure, skill frontmatter and link checks pass; existing lint findings
+and the browser-dependent diagram-regeneration exclusion remain documented.
+
+A separate 75-page preview compiles without warnings and passes all-page
+content and geometry checks. `author_context_revision` binds the revised
+sources and preview. The delivered PDF is untouched. No independent
+scientific, human or publication approval is implied.
+
 ## Unsupported-claim revision 26 November
 
 The second pass reviewed all eight active TeX sources for claims without

@@ -66,20 +66,28 @@ expenditure for the active F10/$n=21$ amendment.
 The results below retain all 315 allocated trajectories, historical
 quarantines, credit holds and execution-version boundaries.
 
-\subsection{Design and estimands}\label{sec:protocolsummary}
+\subsection{Task and comparison groups}\label{sec:protocolsummary}
 
-One fresh repository developed through ten ordered features and CR1 is the
-experimental unit, called a \emph{trajectory}. The analysis treats
-trajectories as independent within cells; shared execution conditions limit
-that assumption (Section~\ref{sec:protocollimits}).
-S1 is a standard-library Python workbench covering lifecycle, handoffs,
-consent, permissions, ranking and audit. A resident's withdrawal of
+Each run starts with a fresh repository. An agent develops it through
+ten ordered features, then receives the withheld change request, CR1.
+That complete development run is the experimental unit, called a
+\emph{trajectory}. A \emph{cell} contains runs using the same model and
+comparison group, or arm. The analysis treats trajectories as independent
+within cells; shared execution conditions limit that assumption
+(Section~\ref{sec:protocollimits}).
+
+The task, S1, is a standard-library Python package called \texttt{workbench}.
+It represents synthetic retrofit cases through an API, rather than the
+deployed application's browser and sign-in path. Its features cover lifecycle,
+handoffs, consent, permissions, ranking and audit. A resident's withdrawal of
 consent pauses installation; a safety hold takes precedence over that
 pause. Contractor views must hide contact and vulnerability fields and
 refuse every write. CR1 adds postcode-prefix regions, region-scoped users
 and manager-approved cross-region handoffs.
-The notation $F_t$ denotes the state after feature $t$, and $P_t$ the state
-after its assigned post-step; these coincide in feature-only arms A and D.
+The notation $F_t$ denotes the state after feature $t$. In B, C and E,
+a consolidation, review or repair session follows; $P_t$ denotes the
+state after that follow-up, called a \emph{post-step}. These states
+coincide in feature-only arms A and D, which have no follow-up session.
 Thus $P_{10}$ is the final ten-feature repository before the withheld extension.
 Every selected model, GPT~6.1 Sol, Sonnet~5.5 and Gemini~4 Argon,
 runs every arm. The scheduler randomises model order within each replicate, then arm order
@@ -92,7 +100,7 @@ would overstate the sample size. The selected number $n$ applies
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Five-arm comparison retained from the earlier design. D is the matched-resource A+
+\caption{Five-arm comparison retained from the earlier design. D is the matched-allowance A+
 control; E tests visible regression repair, not hidden-test feedback.}\label{tab:protocolsummary}
 
 \begin{tabularx}{\textwidth}{@{}L{1cm}YL{3.6cm}@{}}
@@ -155,8 +163,8 @@ without proving that a model has no prior knowledge.}\label{fig:pilotdesign}
 
 \subsection{Development and evaluation execution boundaries}\label{sec:runtimeboundaries}
 
-The pinned runtime separates model transport from candidate-code execution
-(Figure~\ref{fig:runtimeboundaries}). The trusted host runs the Python
+The runtime separates the model connection from execution of the code
+an agent produces (Figure~\ref{fig:runtimeboundaries}). The trusted host runs the Python
 experiment controller and JavaScript Copilot SDK/CLI transport. Prompt
 preparation and the authenticated model connection remain on that host.
 The development model can request \texttt{isolated\_exec}; a Python broker
@@ -177,8 +185,9 @@ The supplementary post-run path begins with a stopped local study archive.
 Host Python selects recorded checkpoint HEADs and asks the broker to replay
 fixed API workflows through \nolinkurl{judging/execute.py}.
 Candidate snapshots and evaluator code are mounted read-only.
-Bounded observations, failures and errors become anonymised evidence
-packets. Host Python then invokes the configured adapter; the JavaScript
+The replay collects bounded observations, failures and errors in anonymised
+evidence packets, each a record for one trajectory at one endpoint.
+Host Python then invokes the configured adapter; the JavaScript
 \nolinkurl{copilot-judge.mjs} establishes a separate tool-free Copilot
 session. The judge receives the packet and returns ordinal ratings,
 rationales and evidence citations for host-side validation and reporting.
@@ -427,10 +436,12 @@ runtime and assessment lineage are recorded in Supplement
 Section~\ref{app:postrunjudging}.
 
 The panel exercised ten feature workflows, a delivery/reopening journey
-and a separate CR1 workflow. Earlier eligible end-of-cycle checkpoints
-supplied witnesses of working behaviour. A failing final scenario counted
-as witnessed loss only if it had passed earlier. A scenario that never
-passed remained an acquisition failure. Post-CR1 loss could include a
+and a separate CR1 workflow. For each scenario, the evaluator looked for an
+earlier successful execution at an eligible end-of-cycle checkpoint in the
+same development run. The report calls that passing execution a
+\emph{witness}. A failing final scenario counted as witnessed loss only
+if it had passed earlier. A scenario that never passed remained an
+acquisition failure. Post-CR1 loss could include a
 failure already present at $P_{10}$, so it did not isolate damage caused
 by CR1. These scenarios complemented the hidden contracts by exercising
 longer workflows with a different, narrower set of checks.
@@ -448,9 +459,10 @@ worked earlier before rating its final state. The judge shares a provider/model 
 with the development model \texttt{gpt-6.1-sol}.
 
 The assessment provides supplementary exploratory evidence. Development-time
-review remained an intervention, separate from outcome judging. Complete-frame
-contrasts required all allocated trajectories in both arms for every
-development model, with equal model weights. Repeated ratings, scenarios
+review remained an intervention, separate from outcome judging. A
+\emph{complete-frame contrast} requires observations for all allocated
+trajectories in both compared arms for every development model; each model
+contributes equally. Repeated ratings, scenarios
 and checkpoints remained nested within trajectories. Results, missingness
 and the human spot-check are reported in Section~\ref{sec:resultsjudging};
 judging costs are accounted for separately.
@@ -528,11 +540,12 @@ trajectories with replacement within each model/arm cell.
 The 2.5th and 97.5th percentiles of 10,000 resulting estimates give each
 95\% interval. The inspected v6 code uses independent arm/model draws; it
 does not preserve joint scheduling-block draws.
-The inspected primary requires a complete allocated five-arm/model metadata
-frame, known unassisted status and observed contributing B/D final coverage.
-When that frame is unmet it reports the primary unavailable. Retain the
-allocated frame and costs; secondary outputs cannot replace it with an
-observed-model pooled or complete-case primary. An earlier missing H2
+The inspected primary analysis requires metadata for every allocated
+trajectory across the five arms and all models, known unassisted status
+and observed final coverage for the contributing B/D trajectories.
+Otherwise it reports the primary estimate unavailable. All allocations and
+costs remain in the record; a secondary summary of only observed models or
+complete cases cannot replace the primary estimate. An earlier missing H2
 checkpoint can coexist with an observed final coverage or CR1 endpoint.
 This availability rule also needs explicit adoption or prospective
 revision in the approved study record.
@@ -587,7 +600,9 @@ Table~\ref{tab:pilotresources}; they retain the earlier full-calibration
 assumption and do not establish that historical launch gates were met.
 
 The actual aggregate envelope remains 300,000 AI credits, with a
-270,000-credit local admission ceiling. Prior spending and provisions for
+270,000-credit local admission ceiling: the controller must stop admitting
+new work when spending and reserved liabilities reach that amount.
+Prior spending and provisions for
 unknown historical usage remain charged or held against remaining
 admission; unknown usage is never zero or free headroom.
 Original 300-credit sessions use a 270-credit soft limit; D's

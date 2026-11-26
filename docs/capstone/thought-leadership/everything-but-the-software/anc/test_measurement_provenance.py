@@ -73,6 +73,14 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertEqual(
             unsupported_revision["prior_delivery_revision"], "generic_claims_revision"
         )
+        author_context_revision = bindings["author_context_revision"]
+        self.assertEqual(
+            author_context_revision["prior_delivery_revision"], "unsupported_claims_revision"
+        )
+        annotation_cleanup = bindings["review_annotation_cleanup"]
+        self.assertEqual(
+            annotation_cleanup["prior_delivery_revision"], "author_context_revision"
+        )
         for name, sha256 in {
             **current["source_sha256"], **current["evidence_sha256"],
             **cleanup["source_sha256"],
@@ -80,12 +88,14 @@ class MeasurementProvenanceTests(unittest.TestCase):
             **comment_cleanup["source_sha256"],
             **example_revision["source_sha256"],
             **unsupported_revision["source_sha256"],
+            **author_context_revision["source_sha256"],
+            **annotation_cleanup["source_sha256"],
         }.items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
         self.assertEqual(
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
-            unsupported_revision["retained_pdf_sha256"],
+            author_context_revision["retained_pdf_sha256"],
         )
 
     def test_measurement_slice_and_prompt_examples_are_active(self):

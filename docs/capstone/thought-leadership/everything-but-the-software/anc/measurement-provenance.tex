@@ -9,7 +9,7 @@ remeasured. The collection path is
 \nolinkurl{skeleton/tools/metrics_core.py}; pilot outcomes are derived in
 \nolinkurl{harness/pilot_analysis.py}, with consumption parsing in
 \nolinkurl{harness/analyze.py}.
-At this running-source pin, the numerical evaluator does not invoke an AI
+In the inspected collection code, the numerical evaluator does not invoke an AI
 judge. The separate post-run instrument below adds supplementary ratings
 without changing that collection path.
 
@@ -322,9 +322,9 @@ disclosed AI-assisted failure/mismatch triage.
 \endgroup
 
 \FloatBarrier
-\subsection{Final reporting disposition from existing exports}\label{app:reportingdisposition}
+\subsection{What the final exports can establish}\label{app:reportingdisposition}
 
-This post-collection reporting reconciliation uses only the public
+The checks below use only the public
 \nolinkurl{runs.csv}, \nolinkurl{retention.csv}, \nolinkurl{episodes.csv}
 and \nolinkurl{attempts.csv} under
 \nolinkurl{results/pilot-estimation/} at source \sourceref{R17}.
@@ -424,8 +424,9 @@ attestation and composite success bounds remain unchanged.
 
 \paragraph{PF3: incomplete all-attempt costs.}
 All 5,372 attempt rows remain included in the accounting frame.
-Table~\ref{tab:heldbillingcells} shows why a settled complete-case frontier
-cannot represent every allocation. Attempt holds can share a trajectory;
+Table~\ref{tab:heldbillingcells} shows why costs from fully billed runs
+cannot represent every allocated run. Several held charges can belong to
+the same trajectory;
 their counts are not counts of missing repositories. The 19,200 reserved
 credits do not cap the eventual invoice, and the 783.16186-credit partial
 lower bound does not resolve it. We report the already settled subset
@@ -456,8 +457,8 @@ No further experimental round, judge batch or retrospective registration
 is used to fill these gaps. Future work needs a calibrated task with
 headroom, explicit acquisition and adaptation denominators, retained and
 rejected failure measures, aligned randomisation/inference, fully reconciled
-costs and an independently reviewed rating instrument. The present paper
-reports what this completed exploratory study could measure.
+costs and an independently reviewed rating instrument. Those are requirements for a later study, not gaps that the present
+results can resolve.
 
 \FloatBarrier
 \subsection{Additional endpoint and resource statistics}\label{app:resultsdetail}
@@ -631,7 +632,7 @@ Table~\ref{tab:resultscrintervals}, whose broad widths caution against
 treating single-task binomial differences as precise population estimates.
 
 The handoff's exploratory inspection identified a recurring Sonnet F10
-audit-target convention miss on
+failure to record the expected audit target on
 \nolinkurl{test_f10_hidden::test_h10_targets_and_actors}: 8 A, 7 B, 8 C,
 9 D and 4 E trajectories. A single miss corresponds to 126/127 passing
 tests (99.21\%); some trajectories had further misses, as the minimum
@@ -1090,7 +1091,7 @@ Total & Sixteen execution sources; 315 allocated trajectories, 315 complete & 5,
 \end{table}
 
 \FloatBarrier
-\subsection{Scheduling evidence and remaining chronology}\label{app:scheduling}
+\subsection{Execution order and what remains unknown}\label{app:scheduling}
 
 The 15 November read-only inspection used the public source and exports at
 \sourceref{R17}. In \nolinkurl{harness/study.py}, lines 286--323 shuffle

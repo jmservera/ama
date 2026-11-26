@@ -15,13 +15,13 @@
       "content_sha256": "5e3e353e2a7eb5de5bd147fb096dc9b67cc51e3c3f6d8e63450b69608c3d998e"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "825527549822b99676260b8b92bce83d11b6d840bca19e19168eecb1974d9496"
+      "content_sha256": "4a6cc6ea4db41c034c92699205192c319d0a3961072d9d52b0656e56e16b9545"
     },
     "anc/deferred-measures.tex": {
       "content_sha256": "14869291dd3e6d9da01da5c930f6bfee5bf007a64f02aaee69096c46d7d697a9"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "89040b745ed2d16b43f39a57b41904ec045dd1d25da6ac67fafbd7cb3932e21f"
+      "content_sha256": "df8ca04405d8cd39e95b5e5131361dca4797348e7317125abbc3800d23fb17f3"
     }
   },
   "author_review_revision": {
@@ -713,6 +713,64 @@
     "authoring_tests": "88 selected tests pass; the single native-diagram regeneration test is excluded for its previously observed missing Playwright build 1194 browser. No full-suite pass is claimed.",
     "validation_tier": "Focused manuscript and directly coupled source-binding checks; no experiment, application, infrastructure, deployment, security control or repository-gate change.",
     "limits": "Named-source retrieval is targeted, not exhaustive. Earlier binding records are historical. The native-diagram browser and historical checker baseline remain unavailable. Automated prose scoring, independent scientific review, human approval, hosted CI and publication acceptance are not established."
+  },
+  "author_context_revision": {
+    "date": "2026-11-26",
+    "scope": "Revised eight owner-marked passages first, then reviewed all 71 headed sections across the article and seven active inputs for reader context, author voice and narrative flow. Five TeX sources changed. Results, equations, numerical table data, prompts, bibliography, figure inputs and scientific qualifications preserved.",
+    "prior_delivery_revision": "unsupported_claims_revision",
+    "baseline_commit": "aa62820383958c4ebfc9f2704eb6b1d026de4dff",
+    "delivery_status": "Uncommitted source revision and separate preview only; delivered main.pdf retained without claiming equivalence to these sources.",
+    "retained_pdf_sha256": "ff263095ed331c8cdb0d91df7350f4772439b36fc3f986b7baa2612058f21233",
+    "review_blocks": 8,
+    "owner_notes": "All original annotations retained as TeX comments; uncommented feedback lines no longer render as manuscript prose.",
+    "voice_skill": "../../../../../.github/skills/ama-author-voice/SKILL.md",
+    "evidence_map": "anc/revision-report.md#marked-author-voice-revision-26-november",
+    "customization_review": {
+      "skill_sha256": "e584ed7199c7aa604c9c1711a34f169c868efad81ff3143a1f28ba27c0b73884",
+      "agent_sha256": "8c47e7221356e30a94b5fedf46e0c0899854bc7615e9800a7b4ae4bb84f60805",
+      "mechanical_validation": "Pass: supported frontmatter, name/path match, local links, unchanged agent frontmatter; repository-local skill has no npm/plugin distribution manifest or scripts.",
+      "review": "Assisted self-review against HVE Builder catalog/rubric: Pass, no required findings, no correction cycles.",
+      "limits": "New-session discovery not independently exercised; no efficacy experiment or independent human review."
+    },
+    "preview": {
+      "filename": "main.pdf",
+      "sha256": "cd2f86c40d030cd466e7021674038d8e0e75a76c4c90bdc66c389759c65455f1",
+      "pages": 75,
+      "supplement_start_page": 46,
+      "source_register_start_page": 72,
+      "build": "Two PDFLaTeX passes with shell escape disabled. Final log has no warnings, box warnings, missing characters or unresolved references. All pages have content and in-page words; owner annotations do not render.",
+      "reviewed_pages": [1, 2, 8, 13, 17, 35, 46, 55, 59, 72]
+    },
+    "authoring_tests": "88 selected tests pass; the unchanged native-diagram regeneration test is excluded for the previously observed missing Playwright browser. No full-suite pass is claimed.",
+    "lint": "ChkTeX and structure pass; changed Python guards introduce no new Ruff findings. Existing I001 in the figure test and FURB167 in the planning test reproduce from HEAD.",
+    "preservation": "Seven equations, 176 labels, eleven figure inputs, three literal prompt inputs, 61 source-register rows and embedded bibliography preserved. All 43 table numeric sequences match; 28 instrument/result tabular bodies are byte-identical. Eight owner review blocks remain fully commented.",
+    "limits": "Automated prose scoring and historical comparison baseline remain unavailable. No experiment, deployment, hosted CI, independent scientific review, human approval or publication is established.",
+    "prior_active_content_sha256": {
+      "anc/case-audits.tex": "825527549822b99676260b8b92bce83d11b6d840bca19e19168eecb1974d9496",
+      "anc/measurement-provenance.tex": "89040b745ed2d16b43f39a57b41904ec045dd1d25da6ac67fafbd7cb3932e21f"
+    },
+    "source_sha256": {
+      "main.tex": "4315ea1a695931c4c69cbeddb9d33c3f15a7eb5d85690d80618e483e82932106",
+      "anc/background.tex": "5f21f6d7aa30ffe6f942a9f4ecc8dfc44a2c8821549ca3f1a8dbd0ae5abfa698",
+      "anc/experiment-protocol.tex": "104434180fc65ed33cd24e41e97174b2298fcf89b4e113bb74dd745a85fc59f3",
+      "anc/supplement-section.tex": "166d69d00068f1dae0011fe13a6e7eaf7ac1393d00226335740b114591a5e937",
+      "anc/additional-evidence.tex": "642180fb6284cfbb4b4dde9b02a93ed001f0dd55ff4fd3a83749bfe1d9a16721",
+      "anc/case-audits.tex": "069122947b4d158a4f285775f6fa8f7d0990f9f68e9195252c3f60679242428b",
+      "anc/deferred-measures.tex": "95826e6632b5889c7838b612daa57b13528ed658549c7013ebb5892208a6162b",
+      "anc/measurement-provenance.tex": "42fd7758c9f2d9148b25f26b950c5eaa5610d04c54fc4e1654b451d645aee415"
+    },
+    "validation_tier": "Focused manuscript, repository-local customization and directly coupled source-binding checks. No application, experiment, infrastructure, deployment, dependency, security control or repository-gate change."
+  },
+  "review_annotation_cleanup": {
+    "date": "2026-11-26",
+    "scope": "Removed eight owner-authorized REVIEW START/REVIEW END comment blocks, totalling 40 lines, from main.tex. Every other manuscript byte is unchanged.",
+    "prior_delivery_revision": "author_context_revision",
+    "intake_main_sha256": "4315ea1a695931c4c69cbeddb9d33c3f15a7eb5d85690d80618e483e82932106",
+    "source_sha256": {
+      "main.tex": "db38f2fdb3fd57478e8e94ade30b8c0787e72eafa2a85f3ff9a20622b26a399a"
+    },
+    "validation": "Exact byte comparison confirms only the eight fully commented blocks were removed. No REVIEW START or REVIEW END markers remain in the package's TeX files. Historical revision records and source bindings are retained.",
+    "delivery_status": "Comment-only source cleanup; no PDF rebuild or replacement."
   },
   "restored_citation_keys": [
     "bacchelli2013review",

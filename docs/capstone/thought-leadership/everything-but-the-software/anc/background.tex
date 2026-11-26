@@ -1,6 +1,6 @@
 \section{Background}\label{sec:background}
 
-\subsection{Accumulation and inherited state}\label{sec:decay}
+\subsection{What later changes inherit}\label{sec:decay}
 
 Maintenance alongside growth is a recurring concern in software evolution
 ~\cite{lehman1980laws,lehman1997metrics,parnas1994aging}. Lehman's 1997
@@ -143,7 +143,7 @@ repository evaluation~\cite{mhatre2025swesharp}. CRBugBench examines the
 limits of automated review~\cite{yang2026crbugbench}; observations of
 developer-agent collaboration describe practice without isolating its
 causal effects~\cite{kumar2025agents}. In Building to the Test, seven of
-twelve oracle-in-the-loop runs left a required library dead or absent
+twelve runs using test-oracle feedback left a required library unused or absent
 ~\cite{ma2026building}. ImpossibleBench examines test exploitation more
 broadly~\cite{zhong2026impossiblebench}. Protecting tests against edits is
 therefore separate from checking that they cover the intended behaviour.
@@ -166,8 +166,8 @@ Ng's reflection design-pattern letter explicitly recommends Self-Refine,
 Reflexion and CRITIC~\cite{ng2024reflection}, attributing methods developed
 by their respective authors. Self-Refine iterates feedback and revision with the same model
 without training~\cite[Sec.~2]{madaan2023selfrefine}. Reflexion retains
-linguistic feedback in episodic memory for subsequent trials rather than
-updating model weights~\cite[Sec.~3]{shinn2023reflexion}. CRITIC uses
+written feedback in memory for subsequent trials rather than updating
+model weights~\cite[Sec.~3]{shinn2023reflexion}. CRITIC uses
 external tools to check and revise an output
 ~\cite[Sec.~3]{gou2024critic}. These methods provide ways to revise work using feedback. Their
 repeated-trial budgets and feedback differ from this experiment: hidden

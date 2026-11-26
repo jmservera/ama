@@ -168,77 +168,14 @@ timing, and acceptance criteria.
 
 ## Humanize the output
 
-When humanizing the owner's prose, use the `humanizer` skill if available and
-apply the voice profile below. If the skill is unavailable, apply this section
-directly and disclose the limitation. Keep the communication archetype,
-audience, factual core and approval boundaries defined above. A newer
-user-supplied writing sample takes precedence over this profile for voice only.
+For owner-voice revisions, load
+[ama-author-voice](../skills/ama-author-voice/SKILL.md). It owns the voice
+profile, blog references, marked-passage workflow and whole-document
+reader-context/storytelling checks. Use `humanizer` when available for
+generic AI-writing patterns. If either skill cannot be loaded, disclose
+the gap and apply the available guidance without claiming the missing review.
 
-### Owner's voice
-
-Write as a practical engineer explaining a problem to another person who wants
-to get something working.
-
-* Start with the actual problem and the reason for tackling it. The Windows
-  series weighs the cost of a rewrite against keeping an old application
-  running; the camera post explains why buying more hardware was undesirable.
-  Use an equivalent motivation only when the draft or evidence supplies it.
-* Use "you" for the reader's actions and "we" for a shared walkthrough.
-  Keep first-person choices and experiences when the owner supplied them;
-  never invent something the owner tried, bought, observed or believes.
-  Reference and regulatory prose stays neutral.
-* Mix short directions with longer explanations of causes and consequences.
-  Use contractions naturally. Connect steps with ordinary words such as
-  "so", "but", "because", "once" and "now"; avoid making every paragraph
-  follow the same rhythm.
-* In tutorials and speaker notes, explain why a step is needed, show the
-  action, then describe the expected result or a useful diagnostic. Use
-  concrete examples, commands and numbers when supported. Keep slides short;
-  put walkthrough detail in notes rather than expanding every slide.
-* Ask an occasional question the reader would actually have, then answer it
-  directly. The series asks whether running VB6 in a container is possible
-  and how to upload the image. Do not turn every heading into a question or
-  add a staged introduction before the answer.
-* Be candid about alternatives, limits and trade-offs. Say when a simpler
-  option is enough and what it loses. Place consequential warnings beside
-  the relevant action; preserve security warnings and named human approvals.
-  Describe a temporary workaround as temporary.
-* Keep supplied dry humour, self-deprecation and small asides when they suit
-  the audience. The Kubernetes post uses a Jurassic Park comparison; the
-  camera post jokes about a smart toaster while explaining local-network
-  risks. Do not force jokes, stock analogies or friendliness into formal
-  material, and do not turn a joke into a technical claim.
-* End with what works, what remains limited, or the next concrete step.
-  Avoid an inflated lesson or a generic upbeat closing. Correct grammar and
-  spelling without flattening the conversational cadence; do not reproduce
-  the samples' typos or treat dated technical instructions as current advice.
-
-### Plain-language guardrails
-
-Use active voice and specific advice. Avoid empty "not just X, but Y",
-"That's not X. It's Y" and "From X to Y" structures, cliches, decorative
-bolding and em dashes. Do not add emojis unless asked or a "Why it matters"
-section.
-
-Avoid generic promotional uses of these words and phrases: elevate, hustle,
-revolutionize, fostering, reimagine, subsequently, showcase, profound,
-groundbreaking, to bridge, highlight, whispering, delve, it's like having,
-synergies, insights, whisper, enablement, meanwhile, there's no denying,
-game changer, deep dive, leverage, unleash, harness, paradigm, ecosystem,
-cross-functional, think outside the box, touch point and across different.
-Preserve accurate technical terms, proper names and quotations. Describe
-who reviews or approves an action instead of using vague "human oversight";
-never remove the approval requirement to simplify the wording.
-
-Before returning a rewrite, check that facts, names, numbers, dates, citations,
-code and approval requirements are unchanged. Then check the voice against
-the profile and the intended audience. Return the requested material without
-editing-process commentary unless the user asks for a critique.
-
-### Voice sources
-
-These English blog posts were read on 2026-11-24 as writing samples of the same author, do not use them as current technical guidance, just for style:
-
-* [Windows applications and Kubernetes, part I (2021-09-20)](https://jmblog.servezas.org/en/2021/09/how-to-use-kubernetes-to-modernize-windows-applications-i/)
-* [Windows applications and Kubernetes, part II (2021-10-11)](https://jmblog.servezas.org/en/2021/10/how-to-use-kubernetes-to-modernize-windows-applications-ii/)
-* [Unifi cameras and Home Assistant (2021-05-30)](https://jmblog.servezas.org/en/2021/05/how-to-use-unifi-cameras-in-home-assistant-after-nvr-being-deprecated/)
+Keep the communication archetype, audience, factual core and approval boundaries
+defined above. The voice skill does not widen edit or action authority.
+Newer author feedback controls voice, not project facts. Return the requested
+material without editing-process commentary unless the user asks for a critique.
