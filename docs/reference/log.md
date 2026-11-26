@@ -15562,3 +15562,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 2245 recheck after revision 0000086 (Refs #2245)
 
 * Added [issue-2245-live-20261126T052140Z.md](research/issue-2245-live-20261126T052140Z.md): 16 of 16 thread creates 200, no model call because the call budget stayed held after the UTC hour boundary, reply wording corrected from daily to hourly (local, not deployed) and a per-criterion table.
+
+## [2026-11-26] add | Issue 2190 skills-load wait (Refs #2190)
+
+* Added [issue-2190-live-20261126T062859Z-note.md](research/issue-2190-live-20261126T062859Z-note.md): a load-dependent option-count race in the employee chat browser check (1 of 7 runs) fixed by waiting for the enabled input, with a per-criterion table.
