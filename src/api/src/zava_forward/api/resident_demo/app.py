@@ -447,6 +447,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if (
                 ctype != "application/json"
                 or not (length.isascii() and length.isdigit())
+                or len(length) > len(str(MAX_BODY))
                 or int(length) > MAX_BODY
             ):
                 return None
