@@ -15542,3 +15542,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-25] add | Issue 1830 live r14 map check settle before scan (Refs #1830)
 
 * Added [issue-1830-live-r14-2026-11-25.md](research/issue-1830-live-r14-2026-11-25.md): the direct #1828 map check was intermittently red; one `settle_map_reads` call before the expanded-width scan took parallel-run failures from 5 of 30 to 0 of 18; criteria 1, 3 and 4 stay partly unproven or owner-gated.
+
+## [2026-11-26] update | Issue 2245 live recheck and spending-hold wording
+
+* Added [issue-2245-live-2026-11-25.md](research/issue-2245-live-2026-11-25.md): widget proof of "Model calls: 1" on revision 0000076, evidence that a `liability-unknown` ledger hold showed "assistant is not available" beside the AI banner, a local wording fix (not deployed) and the per-criterion table with unproven items.
