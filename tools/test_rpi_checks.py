@@ -3401,10 +3401,9 @@ os.fstat(3)
                 patch.object(runner, "command", side_effect=record),
                 patch.object(runner, "python", return_value="python3"),
                 patch.object(gate.shutil, "copytree"),
-                patch.object(Path, "chmod"),
+                patch.object(Path, "chmod"),self.assertRaises(RuntimeError)
             ):
-                with self.assertRaises(RuntimeError):
-                    runner.image("api", stress=stress)
+                runner.image("api", stress=stress)
             builds = [a for a in seen if a[:2] == ["docker", "build"]]
             self.assertEqual(len(builds), 1)
             self.assertEqual("--no-cache" in builds[0], cache == "fresh" and not stress)
@@ -4100,17 +4099,23 @@ os.fstat(3)
 
     def test_exact_base_option_never_relaxes(self) -> None:
         self.commit("pr", "docs/pr.md")
-        partial = self.relaxed_receipt("partial")
-        moved = self.move_main("docs/other.md")
-        with patch.object(gate, "base_relaxation") as relax:
-            with self.assertRaises(gate.GateError):
-                gate.validate_receipt(self.root, partial, moved, relax_base=False)
-            relax.assert_not_called()
-        with (
-            patch.object(gate, "tool_identity", side_effect=gate.GateError("reached identity")),
-            self.assertRaisesRegex(gate.GateError, "reached identity"),
-        ):
-            gate.validate_receipt(self.root, partial, moved)
+        for scope in ("partial", "full"):
+            with self.subTest(scope=scope):
+                receipt = self.relaxed_receipt(scope)
+                moved = self.move_main("support/other.md")
+                with patch.object(gate, "base_relaxation") as relax:
+                    with self.assertRaises(gate.GateError):
+                        gate.validate_receipt(self.root, receipt, moved, relax_base=False)
+                    relax.assert_not_called()
+                with (
+                    patch.object(
+                        gate, "tool_identity", side_effect=gate.GateError("reached identity")
+                    ),
+                    self.assertRaisesRegex(gate.GateError, "reached identity"),
+                ):
+                    gate.validate_receipt(self.root, receipt, moved)
+                self.git("branch", "-qD", "side-main")
+                self.git("update-ref", "refs/remotes/origin/main", self.base)
 
     def test_full_receipt_survives_only_inert_main_moves(self) -> None:
         self.commit("pr", "src/api/src/zava_forward/api/server.py")
