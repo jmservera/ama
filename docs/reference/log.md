@@ -15606,3 +15606,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 2302 AI economics proof (Refs #2302)
 
 * Added [issue-2302-live-20261126T232328Z.md](research/issue-2302-live-20261126T232328Z.md): where the Overview renders AI consumption economics with denominators, live screenshots showing Unknown not zero, the existing tests that prove it, and a per-criterion table.
+## [2026-11-26] update | Issue 2186 rubric score files receipt-inert (Refs #2186)
+
+* Updated [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): `chore(rubric)` score commits (29 recent) no longer invalidate a full gate receipt; per-criterion table unchanged, real full-receipt verify still unproven.
