@@ -1,4 +1,6 @@
 {
+ "version": "serving-region-record-2026-11-26",
+ "note": "Constructed evidence record of the demo model serving region and deployments; no personal or resident data.",
  "region": "uksouth",
  "account": "aif-cutover-test-rzsrg (AIServices, uksouth)",
  "retrieved_on": "2026-11-26",
