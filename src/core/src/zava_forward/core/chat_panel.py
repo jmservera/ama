@@ -69,8 +69,8 @@ SUSPENDED_FALLBACK = (
     "A person with restart authority must lift the suspension."
 )
 ALLOWANCE_FALLBACK = (
-    "The daily demo allowance for AI answers is used up, so no model was called. "
-    "It resets at 00:00 UTC. Continue with the ordinary case workflow; "
+    "The hourly demo allowance for AI answers is used up, so no model was called. "
+    "It renews at the start of the next UTC hour. Continue with the ordinary case workflow; "
     "nothing is lost and nothing has been changed."
 )
 SPEND_HELD_FALLBACK = (
@@ -90,8 +90,8 @@ SUSPENDED_NOTE = (
     "called. No record was changed. A person decides next steps."
 )
 ALLOWANCE_NOTE = (
-    "This reply uses rules only because the daily demo allowance for AI answers is used up, "
-    "so no model was called. It resets at 00:00 UTC. No record was changed. "
+    "This reply uses rules only because the hourly demo allowance for AI answers is used up, "
+    "so no model was called. It renews at the start of the next UTC hour. No record was changed. "
     "A person decides next steps."
 )
 SPEND_HELD_NOTE = (
