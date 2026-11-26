@@ -1,9 +1,6 @@
 ---
-title: Issue 146 review, live (2026-11-26)
+title: Issue 146 live review (2026-11-26)
+ms.date: 2026-11-26
 ---
 
-Review executed once. Outcome: conformant for scope (focused tier, no `src/` change).
-
-* Rule mirrors the receiver rule; opt-in, so no estate change. Anchor and owner role present and test-enforced.
-* Claims bounded: no criterion is ticked; the per-criterion table keeps three of four unproven or partial.
-* Routed follow-ups: enable job/poison/IoT rules after named-human approval; redeploy workbook; wire `failureAlertActionGroupId` for receiver and simulator on next deployment.
+One review, executed. Boundary: runbook paragraph, note, index, log. Outcome: conformant for a documentation-only change. Checked: claims match recorded outputs; no secrets or recipient addresses; unproven items not stated as proven; 43 tests pass. Routed follow-ups: cover or exempt two jobs; retire four orphaned legacy rules (owner decision).

@@ -1,9 +1,11 @@
 ---
-title: Issue 146 critique, live (2026-11-26)
+title: Issue 146 live critique (2026-11-26)
+ms.date: 2026-11-26
 ---
 
-Executed once on the final-candidate plan. Verdict: proceed.
+One final-candidate critique. Verdict: proceed.
 
-* Risk: rule left opt-in (empty action group creates nothing) so deployed estate is unchanged; accepted.
-* Risk: runbook anchor must exist and name an owner; the coverage test enforces it. Applied.
-* Rejected: enabling candidate rules live (needs named-human approval; no production change).
+* Risk: claiming alerts "proven" from enablement. Disposition: accepted; the note must say installed and enabled, not fired or delivered.
+* Risk: deleting the orphaned legacy rules is a production change. Disposition: accepted; report only.
+* Risk: runbook edit breaks test-enforced strings. Disposition: add a status paragraph only and run the infra monitoring tests.
+* Risk: printing the recipient address. Disposition: counts only.

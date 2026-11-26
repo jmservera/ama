@@ -1,9 +1,11 @@
 ---
-title: Issue 146 plan, live (2026-11-26)
+title: Issue 146 live plan (2026-11-26)
+ms.date: 2026-11-26
 ---
 
-* [x] Phase 1: research and live inventory
-* [ ] Phase 2: add `failureAlert` to `infra/live-simulator-job.bicep`; runbook entry `job-live-simulator`; extend `test_monitoring_alert_coverage.py`
-* [ ] Phase 3: validate (bicep build, infra unit tests, ruff), live note, changes record, review
+* [ ] Add a dated live-installation paragraph to the Status section of `infra/monitoring-runbooks.md`.
+* [ ] Run the infra monitoring tests.
+* [ ] Write `docs/reference/research/issue-146-live10-monitoring-2026-11-26.md` with per-criterion table, index and log entries.
+* [ ] Write the changes and review records, commit locally.
 
-Tier: focused (no `src/` change). Details: `.copilot-tracking/details/2026-11-26/issue-146-live-details.md`.
+Details: [details](../../details/2026-11-26/issue-146-live-details.md). Tier: focused (documentation only; no src, workflow or Bicep change).

@@ -15615,3 +15615,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 146 simulator failure rule (Refs #146)
 
 * Added [issue-146-live10-monitoring-2026-11-26.md](research/issue-146-live10-monitoring-2026-11-26.md): fresh read-only inventory, an opt-in failure alert for `job-live-simulator` with a runbook entry and owner role, and a per-criterion table.
+## [2026-11-26] add | Issue 146 live monitoring pass (Refs #146)
+
+* Added [issue-146-live10-monitoring-2026-11-26.md](research/issue-146-live10-monitoring-2026-11-26.md): live inventory shows alerts enabled for ledger, poison, IoT and four of six jobs, all eight workbook queries execute, four legacy rules lack owner and runbook; per-criterion table. Runbook status text corrected.

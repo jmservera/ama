@@ -20,6 +20,12 @@ backup appointees, acknowledgement/escalation limits and coverage, approved
 thresholds/windows/recipients and dated signal verification. Missing appointments
 or approvals mean Blocked. Do not send resident/case data in alerts or Teams.
 
+Live note (2026-11-26): a read-only inventory of resource group `ama` found the
+job, IoT, poison-queue and AI-limit rules installed and enabled in the demo
+estate, so the "disabled candidate" wording below describes the source default,
+not that estate. Installed and enabled is not fired or delivered. See
+[the 2026-11-26 note](../docs/reference/research/issue-146-live10-monitoring-2026-11-26.md).
+
 New rules in [operationalMonitoring.bicep](./modules/operationalMonitoring.bicep)
 are disabled by default. `enableCandidateMonitoringAlerts=true` only enables
 them when `monitoringApprovalReference` is nonempty after trimming; this is a

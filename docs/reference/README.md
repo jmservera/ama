@@ -661,6 +661,8 @@ A [2026-11-25 live pass](./research/issue-146-live8-monitoring-2026-11-25.md) re
 
 A [2026-11-26 live pass](./research/issue-146-live9-monitoring-2026-11-26.md) enables the demo candidate alerts, adds the receiver failure alert and redeploys the 14-item workbook; firing, named owners and Portal render stay unproven.
 
+A [2026-11-26 live pass](./research/issue-146-live10-monitoring-2026-11-26.md) finds the job, poison-queue, IoT and ledger alerts now installed and enabled (two jobs uncovered, four legacy rules orphaned), executes all eight workbook queries live and records a proven or unproven result per criterion.
+
 For #1258, the [archive ancestor durability evidence](./research/issue-1258-archive-ancestor-durability-2026-11-18.md)
 records that main already syncs new archive ancestors before confirming; criteria 1-4 are proven offline and criterion 5 is a process gate.
 

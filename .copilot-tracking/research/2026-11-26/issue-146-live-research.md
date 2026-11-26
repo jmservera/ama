@@ -1,23 +1,19 @@
 ---
-title: Issue 146 research, live (2026-11-26)
+title: Issue 146 live research (2026-11-26)
+ms.date: 2026-11-26
 ---
 
-Refs #146. Research disposition: executed. Builds on live8 and live9 notes (2026-11-25).
+Refs #146. Read-only Azure CLI observation, resource group `ama`, 2026-11-26 about 11:07 UTC. Disposition: executed. Planning Readiness: Ready.
 
-## Findings so far
+## Evidence
 
-* Source already uses Total aggregation for job-failure rules; live8 shows only ledger digest enabled.
-* `job-live-simulator` has no failure alert and no runbook entry; `job-live-receiver` has both (opt-in via `failureAlertActionGroupId`).
-* Planning Readiness: Ready for one source gap (simulator rule + runbook entry + test) plus a fresh read-only live inventory.
-
-## Live inventory (2026-11-26, read-only, resource group ama)
-
-* Enabled metric alerts: Foundry throttle, SQL CPU, API 5xx and restarts (legacy and demo). Disabled: demo audit/orch/load job failure (Total), four IoT rules.
-* Scheduled-query: Key Vault expiry/denied, ledger digest and verify (legacy and demo) enabled; AI limits and agent-tasks poison disabled.
-* Jobs: load, audit, orch, live-simulator, live-receiver, 184-bodyscan. No failure rule for live-simulator, live-receiver or 184-bodyscan.
-* Workbook modified 2026-11-21 (stale vs source per live8). No `tmp146` resource.
-* Same state as live8/live9; no drill, no estate change.
+* Live inventory through `infra/scripts/monitoring_live_inventory.py`: job_failure `partial` (4 rules enabled; `job-184-bodyscan` and `job-live-simulator` have none), poison_queue enabled, ledger_digest enabled, iot_ingestion enabled. Earlier notes (live7, live9) recorded these as disabled; the estate changed since.
+* Every one of the 22 alert rules has one action group; the action group has one email receiver (address not printed).
+* 18 of 22 rules carry an owner and runbook anchor in the description. The four without are the legacy `alert-cutover-test-api-5xx`, `-api-restarts`, `-ledger-digest-mismatch`, `-ledger-verify-missing`; the api pair scopes to `ca-cutover-test-api`, a container app that no longer exists (orphaned rule).
+* The deployed workbook has every source tile name; all eight data queries execute with exit code 0 against the workspace: ingress 170529 requests, 1449 server errors, p95 4509 ms (7 days); AppRequests and AppAvailabilityResults 0 rows (Insufficient); cost Unknown/Unreconciled; AI usage 75 attributed calls by capability; three AI limit breach rows with owner and runbook.
+* Poison alert query executes: 13 `PutMessage` rows in 7 days, none on `agent-tasks-poison`, so no match and no firing proof; a drill is not permitted.
+* `infra/monitoring-runbooks.md` still calls the job, IoT, poison and AI rules "disabled candidates", which no longer matches the live estate.
 
 ## Decision
 
-Add the opt-in failure rule to `infra/live-simulator-job.bicep` (mirrors receiver), a runbook entry with owner, and test coverage. 184-bodyscan is a separate legacy job outside this module set.
+No src change is warranted. Defect found: stale runbook status text. Fix in documentation only (focused tier). Enabling/deleting alerts and Portal rendering are outside the authorisation or credentials.

@@ -1,27 +1,26 @@
 ---
-title: Issue 146 changes, live (2026-11-26)
+title: Issue 146 live changes (2026-11-26)
+ms.date: 2026-11-26
 ---
 
-Refs #146. Tier: focused (no `src/` change; infra Bicep, runbook and infra test). Basis: opt-in rule, no deployment, no gate or permission change.
+Status: complete. Tier: focused (documentation only; no src, Bicep or workflow change; `rpi-checks.py --all` not run).
 
-## Planned files
+## Files
 
-* `infra/live-simulator-job.bicep`: opt-in `failureAlert`.
-* `infra/monitoring-runbooks.md`: `Job live simulator` entry with owner.
-* `infra/tests/test_monitoring_alert_coverage.py`: coverage of the new rule.
-* `docs/reference/research/issue-146-live10-monitoring-2026-11-26.md` and `docs/reference/log.md`.
+* `infra/monitoring-runbooks.md`: live-note paragraph in Status and Authority.
+* `docs/reference/research/issue-146-live10-monitoring-2026-11-26.md`: evidence note.
+* `docs/reference/README.md`, `docs/reference/log.md`: index and log.
 
 ## Validation
 
-* `az bicep build --file infra/live-simulator-job.bicep`: OK.
-* From `infra`: `test_monitoring*` 44 OK; `test_alert_runbook_signal_matrix`, `test_bicep_policy`, `test_ai_alert_runbook_ownership` 77 OK. First run failed on the matrix test (rule name `${job.name}`); fixed to `${jobName}`.
-* `ruff check` clean. Not run: deployment, hosted CI, `rpi-checks.py --all`.
+* 43 infra monitoring tests pass (`unittest discover -s infra/tests -p "test_monitoring*.py"`).
+* Live read-only Azure queries as recorded in the note; hosted CI not observed.
 
 ## Per-criterion table
 
-| Criterion | Status | Evidence |
+| Criterion | Status | Why |
 | --- | --- | --- |
-| Alerts cover job failures, poison queue, ledger digest, IoT ingestion | Unproven as a whole (ledger digest proven) | Live inventory in the live10 note; others disabled or uninstalled, enabling needs named-human approval |
-| Workbook with availability, errors, latency, cost vs budget | Unproven | Deployed copy stale; no Portal render; redeploy not authorised |
-| Each alert has runbook entry with owner | Partly proven (roles proposed, no named person) | New `job-live-simulator` entry; tests pass |
-| Metered AI usage beside Azure cost record, variance visible | Proven for the demo (live8) | Not re-run |
+| Alerts: job failures, poison, ledger digest, IoT | Unproven as a whole | Enabled for all classes; 2 of 6 jobs uncovered; no firing or delivery observed (drills not authorised) |
+| Workbook: availability, errors, latency, cost vs budget | Unproven as a whole | Queries execute; errors and latency real; availability 0 rows; cost Unknown; no Portal render |
+| Each alert has runbook entry with owner | Unproven | 18 of 22 name role and runbook; 4 legacy rules lack both; no named person |
+| Tokenomics: AI usage beside Azure cost, variance visible | Proven for the demo | Executed live, variance unreconciled |
