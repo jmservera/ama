@@ -2410,6 +2410,7 @@ Further 2026-11-22 evidence: [issue 2190 re-verification](./research/issue-2190-
 Re-verification r2: [issue 2190 merged flake fixes](./research/issue-2190-live-20261123T071426Z-note.md). Further 2026-11-23 evidence: [issue 2190 regression tests](./research/issue-2190-live-20261123-note.md), a behavioural slow-server test, a deterministic settle wait for the chat check and a stricter `_region_passed`, with a per-criterion verdict.
 Browser regression test: [issue 2190 late_success browser test](./research/issue-2190-live-20261123T080144Z-browser-test-note.md), a real-browser reproduction of the gap before the list status.
 Glued header: [issue 2190 log text before the next test header](./research/issue-2190-live-20261123T202218Z-glued-header-note.md), a parser fix with a regression test.
+Re-verification 2026-11-26: [issue 2190 broken-pipe log noise](./research/issue-2190-live-20261126-note.md), three flake fixes re-run on current head and a test-handler traceback silenced.
 
 A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
 
