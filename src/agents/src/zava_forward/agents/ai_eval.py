@@ -41,6 +41,9 @@ from zava_forward.core.store import Store
 GOLDEN = Path(os.environ.get("ZF_AI_GOLDEN") or Path(__file__).resolve().parents[3] / "evals" / "ai_priority_golden.json")
 
 
+SERVING_REGION_ENV = "ZF_AI_SERVING_REGION"
+
+
 class GoldenFileError(FileNotFoundError):
     """The AI golden file is missing; a non-editable install must set ZF_AI_GOLDEN."""
 
@@ -693,7 +696,25 @@ def cohort_report():
                 note="synthetic, unapproved developer fixture (OQ-018); not fairness evidence and never averaged across cohorts")
 
 
+def load_serving_region(env=os.environ):
+    """The retrieved serving-region record named by ZF_AI_SERVING_REGION, or None.
+
+    An unset variable, an unreadable file or a non-object document yields None, so the report
+    keeps the region open item instead of failing or claiming a confirmation.
+    """
+    path = env.get(SERVING_REGION_ENV)
+    if not path:
+        return None
+    try:
+        record = json.loads(Path(path).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    return record if isinstance(record, dict) else None
+
+
 def run_eval(golden=GOLDEN, serving_region=None):
+    if serving_region is None:
+        serving_region = load_serving_region()
     raw = load_golden(golden)
     spec = json.loads(raw.decode("utf-8"))
     results = []

@@ -17,6 +17,7 @@ class CutoverAuditTests(unittest.TestCase):
                 "!agents/evals",
                 "!agents/evals/ai_priority_golden.json",
                 "!agents/evals/chat_golden.json",
+                "!agents/evals/serving_region_record.json",
             ],
         )
         self.assertLess(lines.index("!agents/evals"), lines.index("agents/evals/*"))
@@ -37,7 +38,9 @@ class CutoverAuditTests(unittest.TestCase):
         self.assertEqual(
             envs, {"ZF_AI_GOLDEN": "ai_priority_golden.json", "ZF_CHAT_GOLDEN": "chat_golden.json"}
         )
-        for name in envs.values():
+        record = "serving_region_record.json"
+        self.assertIn(f"ZF_AI_SERVING_REGION=/app/evals/{record}", dockerfile)
+        for name in (*envs.values(), record):
             self.assertTrue((ROOT / "src/agents/evals" / name).is_file(), name)
             self.assertIn(f"COPY agents/evals/{name} ./evals/{name}", dockerfile)
             for lines in ignores:

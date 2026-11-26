@@ -13,3 +13,4 @@
 agents/evals/*
 !agents/evals/ai_priority_golden.json
 !agents/evals/chat_golden.json
+!agents/evals/serving_region_record.json
