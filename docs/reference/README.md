@@ -779,6 +779,8 @@ The [issue 2245 revision 0000060 recheck](./research/issue-2245-live-101805-2026
 
 The [issue 2245 budget-hold fix and revision 0000066 recheck](./research/issue-2245-live-151955-2026-11-24.md) records thread creation 8/8 live 200, the spent daily allowance, a local fix that replaces the misleading "assistant is not available" reply for budget holds, and a per-criterion table.
 
+The [issue 2245 live recheck of 2026-11-25](./research/issue-2245-live-2026-11-25.md) records the widget proof of "Model calls: 1" on revision 0000076 after midnight UTC, a ledger hold (`liability-unknown`) that showed misleading wording before it, a local wording fix, and the per-criterion table.
+
 The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.
 
 The [issue 2245 SQL store override note](./research/issue-2245-override-sqlstore-2026-11-23.md) records that the owner-directed AI suspension override did not reach the SQL store, the local fix, and a live probe on revision 0000057 with a per-criterion table.
@@ -1969,6 +1971,7 @@ or infra acceptance claimed.
 | [Issue 1830 Live r11, Map Check Race (#1830)](./research/issue-1830-live-r11-2026-11-24.md) | Direct #1828 map check failed 5 of 5 at head on a sensor loading race; waits added, 3 of 4 reruns pass under load; one unrelated 390x568 flake |
 | [Issue 1830 Live r12, Map Check Sub-pixel Flake (#1830)](./research/issue-1830-live-r12-2026-11-24.md) | The 390x568 focus-fit flake was a 0.17 px overshoot; 1 px tolerance passes 6 of 6 reruns at load 9 to 12 |
 | [Issue 1830 Live r13, Owned-Server Health Window (#1830)](./research/issue-1830-live-r13-2026-11-24.md) | Preflight and map check re-proved; the fixed 10 s server health wait became a 60 s deadline, not measured before and after |
+| [Issue 1830 Live r14, Map Check Settle Before Scan (#1830)](./research/issue-1830-live-r14-2026-11-25.md) | Preflight re-proved; the direct map check was intermittently red and a settle wait before the expanded scan took failures from 5 of 30 to 0 of 18 parallel runs |
 | [Issue 2188 Live, Gate Speed-up Criteria](./research/issue-2188-live-gate-speed-2026-11-21.md) | Per-criterion evidence: layer cache 80.7 s to 1.3 s on one image, retry not implemented, tamper rejection tests pass |
 | [Issue 2188 Live, Gate Speed-up Criteria Refresh](./research/issue-2188-live-gate-speed-2026-11-22.md) | Supersedes the retry finding: shard retry and receipt retries implemented, image build 70.5 s to 7.2 s, images still serial, gate-level pair unproven |
 | [Issue 2187 Live, Gate Heavy Lock Scope](./research/issue-2187-live-gate-lock-2026-11-23.md) | Heavy lock only for browser, SQL and image groups already merged in #2215; #2286 did not touch it; no remainder; per-criterion table |

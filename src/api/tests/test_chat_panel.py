@@ -302,7 +302,9 @@ class PanelTests(roles.Matrix):
         self.assertNotIn("assistant is not available", d["reply"])
         self.model = lambda _p: dict(envelope(None, "financial-held"), reason="liability-unknown")
         d = self.ask(tid)[1]
-        self.assertIn("assistant is not available", d["reply"])
+        self.assertIn("spending control is holding AI answers", d["reply"])
+        self.assertNotIn("assistant is not available", d["reply"])
+        self.assertNotIn("allowance", d["reply"])
 
     def test_every_turn_rechecks_role_and_case(self) -> None:
         tid = self.thread()
