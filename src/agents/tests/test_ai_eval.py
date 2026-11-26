@@ -238,7 +238,7 @@ class AiEvalTests(unittest.TestCase):
     def test_serving_region_record_matches_infra_model_pins(self):
         import re
         root = Path(__file__).resolve().parents[3]
-        record = json.loads((root / "docs/reference/research/issue-108-live-20261124-2026-11-24/serving_region_record.json").read_text())
+        record = json.loads((root / "src/agents/evals/serving_region_record.json").read_text())
         recorded = {(d["model"], d["version"]) for d in record["deployments"]}
 
         def pin(path, name_param, version_param):
@@ -252,7 +252,7 @@ class AiEvalTests(unittest.TestCase):
     def test_resident_deployment_names_match_serving_record(self):
         import re
         root = Path(__file__).resolve().parents[3]
-        record = json.loads((root / "docs/reference/research/issue-108-live-20261124-2026-11-24/serving_region_record.json").read_text())
+        record = json.loads((root / "src/agents/evals/serving_region_record.json").read_text())
         names = {d["name"] for d in record["deployments"]}
         code = (root / "src/api/src/zava_forward/api/resident_demo/aoai.py").read_text()
         bicep = (root / "infra/resident-assistant.bicep").read_text()
@@ -261,14 +261,27 @@ class AiEvalTests(unittest.TestCase):
         self.assertEqual(in_code, in_bicep)
         self.assertIn(in_code, names)
 
+    def test_run_eval_loads_the_record_named_by_the_environment(self):
+        record_path = Path(__file__).resolve().parents[1] / "evals" / "serving_region_record.json"
+        with tempfile.TemporaryDirectory() as tmp:
+            bad = Path(tmp) / "bad.json"
+            bad.write_text("[1]")
+            cases = {record_path: "confirmed", bad: "none", Path(tmp) / "absent.json": "none"}
+            for path, status in cases.items():
+                with mock.patch.dict("os.environ", {ai_eval.SERVING_REGION_ENV: str(path)}):
+                    self.assertEqual(ai_eval.run_eval()["evidence"]["serving_region"]["status"], status)
+        with mock.patch.dict("os.environ", {}, clear=False) as env:
+            env.pop(ai_eval.SERVING_REGION_ENV, None)
+            self.assertEqual(ai_eval.run_eval()["evidence"]["serving_region"]["status"], "none")
+
     def test_recorded_rate_limits_follow_capacity(self):
-        record = json.loads((Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-20261124-2026-11-24/serving_region_record.json").read_text())
+        record = json.loads((Path(__file__).resolve().parents[3] / "src/agents/evals/serving_region_record.json").read_text())
         for d in record["deployments"]:
             self.assertEqual(d["rate_limits"]["requests_per_minute"], d["capacity"], d["name"])
             self.assertEqual(d["rate_limits"]["tokens_per_minute"], d["capacity"] * 1000, d["name"])
 
     def test_gate_keeps_region_open_item_until_headroom_is_confirmed(self):
-        record = json.loads((Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-20261124-2026-11-24/serving_region_record.json").read_text())
+        record = json.loads((Path(__file__).resolve().parents[3] / "src/agents/evals/serving_region_record.json").read_text())
         ev = ai_eval.run_eval(serving_region=record)["evidence"]
         self.assertEqual(ev["serving_region"]["status"], "confirmed")
         self.assertFalse(any("names, versions and quotas" in o for o in ev["open_items"]))

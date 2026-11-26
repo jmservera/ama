@@ -1,0 +1,37 @@
+{
+ "version": "serving-region-record-2026-11-26",
+ "note": "Constructed evidence record of the demo model serving region and deployments; no personal or resident data.",
+ "region": "uksouth",
+ "account": "aif-cutover-test-rzsrg (AIServices, uksouth)",
+ "retrieved_on": "2026-11-26",
+ "source": "az cognitiveservices account deployment list, model list and usage list, resource group ama; see docs/reference/research/issue-108-live-2026-11-26/",
+ "deployments": [
+  {
+   "name": "resident-mini",
+   "model": "gpt-4.1-mini",
+   "version": "2025-04-14",
+   "sku": "Standard",
+   "capacity": 10,
+   "rate_limits": {"requests_per_minute": 10, "tokens_per_minute": 10000},
+   "state": "Succeeded"
+  },
+  {
+   "name": "standard",
+   "model": "gpt-4.1-nano",
+   "version": "2025-04-14",
+   "sku": "GlobalStandard",
+   "capacity": 10,
+   "rate_limits": {"requests_per_minute": 10, "tokens_per_minute": 10000},
+   "state": "Succeeded"
+  }
+ ],
+ "quota_headroom": {
+  "status": "confirmed",
+  "source": "az cognitiveservices usage list -l uksouth, 2026-11-26",
+  "scope": "subscription quota rows for the two served SKUs; not a live call, accuracy or benefit claim",
+  "rows": [
+   {"name": "OpenAI.Standard.gpt4.1-mini", "current": 10, "limit": 5000, "deployment": "resident-mini"},
+   {"name": "OpenAI.GlobalStandard.gpt4.1-nano", "current": 10, "limit": 16000, "deployment": "standard"}
+  ]
+ }
+}

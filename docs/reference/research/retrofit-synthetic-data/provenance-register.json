@@ -301,6 +301,18 @@
       "personal_data": "Scripted questions, replies, citations and expected outcomes; not real conversations."
     },
     {
+      "id": "DS-SERVING-REGION-RECORD",
+      "name": "Constructed demo model serving-region record (#108)",
+      "visibility": "public",
+      "location": "src/agents/evals/serving_region_record.json",
+      "validation": {
+        "marker_field": "note"
+      },
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "Deployment names, model versions and quota figures only; no personal data."
+    },
+    {
       "id": "DS-EVAL-HARNESS-FIXTURES",
       "name": "Frozen evaluation harness synthetic manifest and scripted predictions (#2312)",
       "visibility": "public",
