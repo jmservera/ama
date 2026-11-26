@@ -631,6 +631,34 @@ class ConsumptionTests(unittest.TestCase):
         self.assertEqual(result["reconciliation"], "variance-alert")
         self.assertEqual(result["evidence_label"], "synthetic")
 
+    def test_a_nested_synthetic_slot_takes_over_from_an_exhausted_enclosing_authority(self) -> None:
+        self.authorize(budgets=[dict(id=reference("day"), calls=1, tokens=100000, amount="100")])
+        self.complete(self.ledger.reserve(self.context("first"), MODEL, 1000, 100))
+        with self.assertRaisesRegex(DispatchHeld, "call-budget-limit"):
+            self.ledger.reserve(self.context("second", root=reference("r2")), MODEL, 1000, 100)
+        hour_start, hour_end = "2026-10-31T12:00:00Z", "2026-10-31T13:00:00Z"
+        slot_price = self.add_price(start=hour_start, end=hour_end, version="slot")
+        slot = dict(
+            authority="slot-authority",
+            price=slot_price,
+            start=hour_start,
+            end=hour_end,
+            budgets=[dict(id=reference("slot"), calls=5, tokens=100000, amount="100")],
+        )
+        self.authorize(**slot)
+        reserved = self.ledger.reserve(
+            self.context("third", root=reference("r3")), MODEL, 1000, 100
+        )
+        self.assertTrue(reserved)
+        with self.assertRaisesRegex(ValueError, "Overlapping authority"):
+            self.authorize(
+                authority="partial-authority",
+                price=slot_price,
+                start="2026-10-31T12:30:00Z",
+                end="2026-10-31T14:00:00Z",
+                budgets=[dict(id=reference("partial"), calls=5, tokens=100000, amount="100")],
+            )
+
     def test_duplicate_overlap_partial_currency_billing_fail_closed(self) -> None:
         self.accepted()
         self.bill(complete=False, currency="GBP")

@@ -650,11 +650,21 @@ class Consumption:
                         old = next((v for v in r["budgets"] if v["id"] == b["id"]), None)
                         if old is not None and old != b:
                             raise ValueError("Existing budget limits are immutable.")
+            new_synthetic = bool(known and known["synthetic"])
+            # A synthetic demo slot may sit inside an enclosing synthetic authority (a legacy
+            # day-wide one); admission picks the latest recorded authority covering the instant.
             if any(
                 r["kind"] == "authority"
                 and r["capability"] == capability
                 and r["configuration"] == configuration
                 and max(begin, r["start"]) < min(finish, r["end"])
+                and not (
+                    new_synthetic
+                    and prices.get(r["price"], {}).get("synthetic")
+                    and r["start"] <= begin
+                    and finish <= r["end"]
+                    and (begin, finish) != (r["start"], r["end"])
+                )
                 for r in records
             ):
                 raise ValueError("Overlapping authority for one configuration is ambiguous.")

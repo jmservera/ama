@@ -1425,7 +1425,7 @@ class DemoActivationGuardrailPersistenceTests(Base):
         self.assertEqual(self.sent, [])
         self.assertNotIn("reserved", self.kinds())
 
-    def test_a_legacy_day_wide_authority_blocks_the_hour_and_the_log_names_it(self) -> None:
+    def test_a_legacy_day_wide_authority_does_not_block_the_hourly_slot(self) -> None:
         ledger, ai = self.live.ai.consumption, self.live.ai
         configuration = ai.configuration(ai.fast, chat_demo_meter.TEMPERATURE, 600)
         day = datetime(2031, 5, 4, tzinfo=UTC)
@@ -1457,10 +1457,9 @@ class DemoActivationGuardrailPersistenceTests(Base):
             max_calls=1,
             max_depth=1,
         )
-        with self.assertLogs(chat_demo_meter.__name__, "WARNING") as logged:
-            seeded = chat_demo_meter.ensure(self.live, 600, now=day + timedelta(hours=9))
-        self.assertFalse(seeded)
-        self.assertIn("ValueError: Overlapping authority", logged.output[0])
+        self.assertTrue(chat_demo_meter.ensure(self.live, 600, now=day + timedelta(hours=9)))
+        starts = [e["start"] for e in self.events() if e["kind"] == "authority"]
+        self.assertIn((day + timedelta(hours=9)).timestamp(), starts)
 
     def test_b_token_budget_holds_before_live_dispatch(self) -> None:
         self.assert_budget_holds_before_dispatch("TOKENS", 10, "token-budget-limit")
