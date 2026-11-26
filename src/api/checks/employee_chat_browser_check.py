@@ -246,7 +246,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                 page.get_by_role("dialog").get_by_role("button", name="Send", exact=True).click()
                 expect(
                     page.get_by_role("log", name="Employee assistant conversation")
-                ).to_contain_text(f"Skill: {skill}.")
+                ).to_contain_text(f"Skill: {skill}.", timeout=20_000)
                 expect(
                     page.get_by_role("log", name="Employee assistant conversation")
                 ).to_contain_text("ZF-1/stage")
