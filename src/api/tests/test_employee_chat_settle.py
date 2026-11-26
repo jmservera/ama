@@ -6,7 +6,7 @@ import unittest
 from collections.abc import Callable
 from typing import Any
 
-from checks.employee_chat_browser_check import settle_route
+from checks.employee_chat_browser_check import settle_route, wait_for_skills
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page, sync_playwright
 
@@ -77,6 +77,37 @@ class SettleRouteBrowserTests(unittest.TestCase):
     def test_settle_route_returns_after_the_list_status(self) -> None:
         status = self.run_route(lambda page: settle_route(page, "#/"))
         self.assertTrue(status.startswith("Perspective:"), status)
+
+
+DELAYED_SKILLS = """
+<div role="dialog"><textarea id="q" disabled></textarea><select id="s"></select></div>
+<script>
+  // The question enables and the options arrive only after the skills read ends.
+  setTimeout(() => {
+    document.getElementById('q').disabled = false;
+    document.getElementById('s').innerHTML = '<option>a</option>'.repeat(6);
+  }, 1200);
+</script>
+"""
+
+
+class WaitForSkillsTests(unittest.TestCase):
+    """The option count is read only after the delayed skills load (issue 2190, fourth race)."""
+
+    def test_wait_for_skills_returns_after_the_options_load(self) -> None:
+        with sync_playwright() as playwright:
+            try:
+                browser = playwright.chromium.launch()
+            except PlaywrightError as error:
+                self.skipTest(f"Chromium is not installed: {error}")
+            try:
+                page = browser.new_page()
+                page.set_content(DELAYED_SKILLS)
+                self.assertEqual(page.locator("select option").count(), 0)
+                wait_for_skills(page.locator("[role=dialog]"), page.locator("#q"))
+                self.assertEqual(page.locator("select option").count(), 6)
+            finally:
+                browser.close()
 
 
 if __name__ == "__main__":
