@@ -1,0 +1,32 @@
+landed: https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app
+AI consumption economics
+
+Price source: Unknown. Unknown means no price source or no accepted outcome exists to divide by; it is not zero.
+
+AI proposals
+5
+Accepted outcomes
+0
+Metered calls
+231
+Unmetered calls
+0
+Unreviewed proposals
+5
+Rejected or withdrawn proposals
+0
+Cost figures
+Token cost
+Unknown
+Total cost of AI
+Unknown
+Token cost per accepted outcome
+Unknown
+Cost per accepted outcome
+Unknown
+Quality-qualified cost per accepted outcome
+Unknown
+Booked value
+Unknown
+
+Token count or token cost alone is not Total Cost of AI and is never evidence of efficiency or cash benefit; released staff time is capacity unless booked cash value is Finance-confirmed.
