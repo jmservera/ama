@@ -164,7 +164,11 @@ def compile_archive(archive: Path, destination: Path) -> Path:
     destination.mkdir()
     with zipfile.ZipFile(archive) as source:
         source.extractall(destination)
-    for _ in range(2):
+    unsettled = re.compile(
+        r"(?:Reference|Citation) .+ undefined|There were undefined|"
+        r"Rerun to get cross-references right|Label\(s\) may have changed"
+    )
+    for pass_index in range(4):
         run(
             [
                 compiler,
@@ -176,12 +180,10 @@ def compile_archive(archive: Path, destination: Path) -> Path:
             ],
             destination,
         )
-    log = (destination / "main.log").read_text(encoding="utf-8", errors="replace")
-    if re.search(
-        r"(?:Reference|Citation) .+ undefined|There were undefined|"
-        r"Rerun to get cross-references right|Label\(s\) may have changed",
-        log,
-    ):
+        log = (destination / "main.log").read_text(encoding="utf-8", errors="replace")
+        if pass_index >= 1 and not unsettled.search(log):
+            break
+    if unsettled.search(log):
         raise PackageError(
             "Extracted bundle still has unresolved references; inspect the TeX source."
         )

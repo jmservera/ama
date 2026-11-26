@@ -6,12 +6,28 @@
   "diagrams": [
     {
       "stem": "fig-state-inheritance",
-      "source_sha256": "9d34a1e672297d924379e73808fe4db9bb995821f71db1115d90a85b50fcf6b0",
-      "svg_sha256": "857f5959f07aa631415fee62716d8332510cadd7c487bc041897161bc3f2c333",
-      "png_sha256": "eb5cae30a1ad45781e2ba99bc89a1ed0bc566dd68996f4d19e497ddb61352718",
+      "source_sha256": "71455e57f0bf4ad84585c11c190e290fa566ed1cc22465a98db63ac11a129357",
+      "svg_sha256": "a7b042673e8a272775355e42000842f0a3a60663433f2524f6ccdf10e26741c2",
+      "png_sha256": "ef92659b9f20fa4f0ce507a82055b6c6e3a1b2eaa0cc16614a14b07e6566a925",
       "width": 1120,
-      "height": 727.5,
-      "elements": 17
+      "height": 637.5,
+      "elements": 16,
+      "renderer": "@excalidraw/excalidraw 0.18.1",
+      "browser": "156.0.8078.4",
+      "previous_exports": [
+        {
+          "stem": "fig-state-inheritance",
+          "source_sha256": "9d34a1e672297d924379e73808fe4db9bb995821f71db1115d90a85b50fcf6b0",
+          "svg_sha256": "857f5959f07aa631415fee62716d8332510cadd7c487bc041897161bc3f2c333",
+          "png_sha256": "eb5cae30a1ad45781e2ba99bc89a1ed0bc566dd68996f4d19e497ddb61352718",
+          "width": 1120,
+          "height": 727.5,
+          "elements": 17,
+          "renderer": "@excalidraw/excalidraw 0.18.1",
+          "browser": "141.0.7390.37",
+          "png_scale": 3
+        }
+      ]
     },
     {
       "stem": "fig-pilot-design",

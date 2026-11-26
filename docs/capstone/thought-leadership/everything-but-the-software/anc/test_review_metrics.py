@@ -10,10 +10,33 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
+import editorial_audit
 import review_metrics
 
 
 class ReviewMetricsTests(unittest.TestCase):
+    def test_editorial_numbers_include_citation_years_and_split_numeric_lists(self) -> None:
+        self.assertEqual(
+            editorial_audit.NUMBER.findall(
+                r"\cite{pan2026swemaintain}, R28, n={12,21,33}, 6,300, [0.10,2.22], -38.10"
+            ),
+            ["2026", "28", "12", "21", "33", "6,300", "0.10", "2.22", "-38.10"],
+        )
+
+    def test_authorised_cr1_recalculation_uses_score_and_exact_intervals(self) -> None:
+        result = editorial_audit.gemini_cr1_comparison()
+        self.assertAlmostEqual(result["difference_percentage_points"], -38.095238095238095)
+        lower, upper = result["newcombe_hybrid_score_95_ci_percentage_points"]
+        self.assertAlmostEqual(lower, -59.8799673194237)
+        self.assertAlmostEqual(upper, -8.17858981347524)
+        self.assertAlmostEqual(result["two_sided_fisher_exact_p"], 0.027782670214640696)
+
+    def test_editorial_sentences_distinguish_numeric_endings_decimals_and_question_labels(self) -> None:
+        sentences = editorial_audit.sentence_words(
+            "RQ1. Does it work? We used 21. Next, 3.14 was observed."
+        )
+        self.assertEqual(list(map(len, sentences)), [5, 3, 4])
+
     def run_report(self, output: Path, during_measurement: Callable[[], None] | None = None) -> int:
         tool = output.parent.parent / "jscpd"
         tool.write_text("Not executed: version subprocess is mocked.\n", encoding="utf-8")

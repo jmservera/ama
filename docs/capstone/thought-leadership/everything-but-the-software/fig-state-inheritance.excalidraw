@@ -4,12 +4,6 @@
   "source": "ama-paper",
   "elements": [
     {
-      "id": "heading", "type": "text", "x": 0, "y": 0, "width": 1080, "height": 80,
-      "text": "CONCEPTUAL | What survives a fresh session?",
-      "fontSize": 32, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",
-      "textAlign": "left", "verticalAlign": "top", "containerId": null
-    },
-    {
       "id": "reset-note", "type": "text", "x": 0, "y": 90, "width": 1080, "height": 60,
       "text": "A conversation reset is not a repository reset.",
       "fontSize": 24, "fontFamily": 2, "lineHeight": 1.25, "strokeColor": "#000000",

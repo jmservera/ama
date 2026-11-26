@@ -4,7 +4,33 @@ description: Completed exploratory findings, measurement lessons and publication
 ms.date: 2026-11-26
 ---
 
-Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and Experiment.*
+Working title: *Everything but the Software: Stable Retention, Missing Features and the Cost of Consolidation. An Exploratory Case Study and Experiment.*
+
+## Final editorial pass, 26 November
+
+The [revision record](./anc/revision-report.md#final-editorial-pass-26-november)
+contains the change log, three title options, before/after metrics and author
+confirmations. The [complete numeric audit](./anc/editorial-audit-2026-11-26.json)
+preserves both extracted lists and explains every sequence difference.
+Sections 1--9 now contain 12,246 approximate words by the existing checker;
+Section 7 contains 4,979. The interval correction is the only change to
+numerical table cells.
+
+The delivered [PDF](./main.pdf) includes the additive Supplement. Historical
+reviews and source pins are unchanged. Both repositories are public; both
+OSF registrations exist, with their actual public release still requiring
+author confirmation. Employer clearance also needs confirmation.
+
+To repeat the numeric and prose measurements against the saved intake:
+
+```bash
+python3 anc/editorial_audit.py \
+  --baseline-json anc/editorial-audit-2026-11-26.json \
+  --output /tmp/paper-editorial-audit-new.json
+```
+
+Choose a new output file. This command measures the current sources without
+rewriting the saved baseline or assigning editorial explanations to later edits.
 
 ## Review-comment cleanup 26 November
 
@@ -193,8 +219,9 @@ that restriction.
 It writes `everything-but-the-software-arxiv.zip`, the equivalent `.tar.gz`,
 and `SHA256SUMS`. Both archives open directly to `main.tex` and its inputs,
 without an enclosing directory. The script extracts the ZIP and compiles
-it twice with shell escape disabled; compilation failures and unresolved
-references stop packaging.
+it with shell escape disabled, using at least two passes and up to four
+while references settle. Compilation failures, unresolved references or
+references still changing after four passes stop packaging.
 
 The local `main.pdf` is a fresh preview, not a submission or release asset.
 The archives exclude existing PDFs, logs, auxiliary files, unused images,
@@ -2582,12 +2609,12 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 
 ## Compile
 
-* Overleaf: upload the zip as a new project. The compiler is pdfLaTeX. The zip has `main.tex` and `anc/` at its root, the layout arXiv expects.
-* Locally: run `pdflatex main.tex` twice.
+* Overleaf: upload the submission ZIP as a new project and select pdfLaTeX. It contains `main.tex` at its root and compilation dependencies under `tex-inputs/`; arXiv reserves root-level `anc/` for non-compilation ancillary material.
+* Locally: run `pdflatex -no-shell-escape main.tex` at least twice, repeating until the final log has no unresolved or changing references. The packaging tool enforces a four-pass limit.
 * From this package directory, run `chktex main.tex`. The local [.chktexrc](./.chktexrc) recognizes whitespace-consuming commands, literal identifiers and valid arm-contrast en dashes without disabling warning categories. From another directory, pass its path with `chktex -l`. Use the retained external Tectonic build below to inspect compiler warnings.
 * Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, placeins, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
 * Completed exploratory results are unconditional; the former results switch and inactive reporting TODO branch have been removed. Historical requests and their dispositions remain in the revision record and Git history. Publishing further results requires checked runs, source-bound analysis and owner authorization.
-* The final article source retains only its editor compiler directive as a comment. Dated editing and permission records remain in the revision report and historical source bindings; compiler guards, disclosures and the additive Supplement remain active.
+* The final article source retains its editor compiler directive and explicit author-confirmation comments. Dated editing and permission records remain in the revision report and historical source bindings; compiler guards, disclosures and the additive Supplement remain active.
 * Focused source checks: from this package, run `python3 -B -m unittest discover -s anc -p 'test_*.py' -q` and `python3 -B anc/check_paper.py`.
 * Tectonic also works. Keep compiler intermediates and logs, caches and rendered inspection pages in an explicit external build directory. Inspect its actual log and PDF before replacing only `main.pdf`. The optional `--check-latex-log` expects a pdfLaTeX-specific output marker, so it does not validate a Tectonic build.
 * Tectonic can report undefined forward references and changed citations, labels or bookmarks on its first pass. Its automatic reruns resolve them. The `-p` stream includes every pass, so `tectonic -p main.tex | grep '[Ww]arning'` also prints warnings that have already been resolved; that pipeline's exit status comes from `grep`, not the compiler. Check the final retained log after a successful build:

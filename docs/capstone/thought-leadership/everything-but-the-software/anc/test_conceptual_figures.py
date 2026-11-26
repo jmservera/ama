@@ -7,9 +7,8 @@ import struct
 import subprocess
 import tempfile
 import unittest
-from pathlib import Path
-
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 PACKAGE = Path(__file__).resolve().parent.parent
 STEMS = (
@@ -41,6 +40,31 @@ def supplement_content_digest(text: str) -> str:
 
 
 class ConceptualFigureTests(unittest.TestCase):
+    def test_given_state_inheritance_when_rendered_then_only_redundant_heading_is_removed(self):
+        scene = json.loads((PACKAGE / "fig-state-inheritance.excalidraw").read_text())
+        labels = {e["id"]: e["text"] for e in scene["elements"] if e["type"] == "text"}
+        self.assertNotIn("heading", labels)
+        self.assertEqual(
+            labels["reset-note"], "A conversation reset is not a repository reset."
+        )
+        self.assertEqual(
+            labels["evidence-note"],
+            "Correct or faulty state can transfer; transport alone is not decay.",
+        )
+        svg = ET.fromstring((PACKAGE / "fig-state-inheritance.svg").read_bytes())
+        self.assertNotIn("CONCEPTUAL", " ".join(svg.itertext()))
+        width = float(svg.get("width"))
+        for node in svg.findall(".//{http://www.w3.org/2000/svg}text"):
+            self.assertGreaterEqual(
+                float(node.get("font-size").removesuffix("px")) * 16 / 2.54 * 72 / width, 7
+            )
+        receipt = json.loads((PACKAGE / "diagram-exports.json").read_text())
+        current = next(e for e in receipt["diagrams"] if e["stem"] == "fig-state-inheritance")
+        self.assertIn(
+            "9d34a1e672297d924379e73808fe4db9bb995821f71db1115d90a85b50fcf6b0",
+            {entry["source_sha256"] for entry in current["previous_exports"]},
+        )
+
     def test_given_native_diagrams_when_checked_then_labels_and_bindings_are_editable(self) -> None:
         for stem in STEMS:
             with self.subTest(stem=stem):
@@ -88,7 +112,7 @@ class ConceptualFigureTests(unittest.TestCase):
         self.check_exports(PACKAGE)
 
     def test_given_native_exporter_when_run_then_exports_without_rewriting_sources(self) -> None:
-        with tempfile.TemporaryDirectory(prefix="paper-figures-") as directory:
+        with tempfile.TemporaryDirectory(prefix=".paper-figures-", dir=PACKAGE / "anc") as directory:
             output = Path(directory)
 
             result = subprocess.run(
@@ -105,6 +129,32 @@ class ConceptualFigureTests(unittest.TestCase):
             self.check_exports(output)
             self.check_exports(PACKAGE)
 
+    def test_given_one_selected_diagram_when_exported_then_other_bindings_are_preserved(self):
+        baseline = json.loads((PACKAGE / "diagram-exports.json").read_text())
+        with tempfile.TemporaryDirectory(prefix=".paper-figures-", dir=PACKAGE / "anc") as directory:
+            output = Path(directory)
+            result = subprocess.run(
+                ["node", str(PACKAGE / "anc/export_diagrams.mjs"), str(output),
+                 "fig-state-inheritance"],
+                capture_output=True, text=True, check=False, timeout=90,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(
+                {path.name for path in output.iterdir()},
+                {"fig-state-inheritance.svg", "fig-state-inheritance.png", "diagram-exports.json"},
+            )
+            receipt = json.loads((output / "diagram-exports.json").read_text())
+            self.assertEqual(
+                [e for e in receipt["diagrams"] if e["stem"] != "fig-state-inheritance"],
+                [e for e in baseline["diagrams"] if e["stem"] != "fig-state-inheritance"],
+            )
+            current = next(e for e in receipt["diagrams"] if e["stem"] == "fig-state-inheritance")
+            for extension in ("svg", "png"):
+                self.assertEqual(
+                    hashlib.sha256((output / f"fig-state-inheritance.{extension}").read_bytes())
+                    .hexdigest(), current[f"{extension}_sha256"],
+                )
+
     def check_manuscript(self, source: str) -> None:
         narrative = source.split(r"\begin{thebibliography}", 1)[0]
         narrative = re.sub(r"(?m)^%.*$", "", narrative)
@@ -112,8 +162,9 @@ class ConceptualFigureTests(unittest.TestCase):
 
         for stem in STEMS:
             self.assertIn(f"{{{stem}.png}}", source)
-        for label in ("sec:resultsledger", "tab:resultsadaptation", "tab:predictionverdicts"):
+        for label in ("sec:resultsledger", "tab:resultsadaptation"):
             self.assertIn(r"\label{" + label + "}", narrative)
+        self.assertIn(r"\label{tab:predictionverdicts}", source)
         self.assertNotRegex(narrative, r"\\(?:ifresults|results(?:true|false))\b")
         self.assertIn("ten ordered features", narrative)
         self.assertNotIn("Regional access scope change", narrative)
@@ -129,8 +180,8 @@ class ConceptualFigureTests(unittest.TestCase):
         normalized = " ".join(narrative.split())
 
         self.assertIn("I could not sign in", abstract)
-        self.assertIn("separate evaluator", abstract)
-        self.assertIn("hidden tests in isolated containers", abstract)
+        self.assertIn("hidden tests after each step", abstract)
+        self.assertIn("626 evaluable packets", abstract)
         self.assertIn("I could inspect completed issues", normalized)
         self.assertIn("I selected the case after encountering", normalized)
         case = narrative.split(r"\section{Case and method}", 1)[1].split(

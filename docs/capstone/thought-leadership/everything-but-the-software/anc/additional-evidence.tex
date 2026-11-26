@@ -69,3 +69,209 @@ task-specific context with provenance and access controls
 a sign-in worker the relevant role/staff-binding decision and its source,
 while preserving the larger discovery record for other tasks.
 Its effect on the AMA case was not tested.
+
+
+\subsubsection{Case detail moved from the main article}
+
+\paragraph{Historical deployment example}
+Software development had this problem long before coding agents existed, as
+public post-mortems and classic maintenance accounts show. On the 1st of
+August 2012, for instance, Knight Capital's automated router sent millions
+of orders and obtained more than four million executions while processing
+212 customer orders, costing the firm more than USD~460 million. The SEC
+traced that public incident to a defective function left in the router after
+a 2005 change, an incomplete deployment for a new trading programme across
+one of eight servers, and inadequate controls; the new deployment activated
+old code that was no longer meant to run~\cite{sec2013knight}. The failure
+crossed a feature boundary and a seven-year interval, so understanding it
+required examining the code and deployment state that the new programme
+inherited.
+
+\paragraph{Original article roadmap}
+\noindent The investigation moves from earlier studies to my project and
+then to a separate coding experiment:
+
+\begin{enumerate}[leftmargin=*]
+\item We review earlier studies of errors carried through conversations,
+inherited code and maintained instructions, including published comparisons
+of agent-written and developer-written histories (Section~\ref{sec:background}).
+\item We trace the move from questioning requirements with agents to
+coordinated feature delivery, then my return to trying the product and
+requesting fixes. Five possible explanations are examined against episodes
+in the delivery record
+(Sections~\ref{sec:method}--\ref{sec:mechanisms}).
+\item We test scheduled consolidation in a 315-trajectory, five-arm
+exploratory study, then replay earlier workflows and have a separate AI
+judge rate the execution evidence. The results distinguish implementing a
+feature from preserving it and adapting it later. The study also exposed
+a task too easy to demonstrate the planned coverage gain and incomplete
+billing. Its earlier planning drew on the registered-report example of
+Lulla et~al.~\cite{lulla2026protocol} and HVE Core's Minimum Viable Experiment method
+(Sections~\ref{sec:harness} and~\ref{sec:experiment}).
+\end{enumerate}
+
+\paragraph{Coordinator-history recovery and model selectors}
+Read-only recovery of the original coordinator history corroborates my
+requests for RPI tracking, tmux workers and recurring checks, followed by
+migration, budget and functional-checkpoint decisions. Later committed
+instructions selected \texttt{claude-sonnet-5.5} for worker launches while
+leaving the coordinator on Automatic. Actual historical CLI versions,
+reviewer models and backend builds remain unavailable in the inspected
+records. The evidence index distinguishes prescribed selectors, stored
+instructions and assistant-reported outcomes.
+
+\paragraph{Case extraction and analysis scope}
+The original analysis and later follow-up use separate repository snapshots
+(source records \sourceref{R01} and \sourceref{R02} in the end register).
+Sources include the knowledge-base
+log and index, requirements, architecture decisions, coordinator definition,
+issues, pull requests and retained RPI records. My review adds
+process clarification and an export of project issue states, retained as
+\nolinkurl{anc/project-insights-2026-11-01.csv}. Source dates, historical
+counts and extraction rules remain in the ancillary records. The main
+account uses them to reconstruct the sequence and handoffs.
+
+I analysed descriptive measures, traced references to recorded lessons and
+used AI assistance to interpret selected episodes. I did not systematically
+code every log entry or review every specification. Early entries were
+reconstructed from history; later entries were written during the project.
+The evidence record distinguishes my recollection from committed source and
+execution observations. It also records missing links between assessment
+scores, releases and deployed tasks.
+
+External repositories and literature were selected for relevance to
+inherited faults, instruction maintenance and outcome verification.
+They supply contextual comparisons and a focused narrative synthesis.
+The published-evidence figures reproduce reported values with source
+locators; the external applications and original studies were not rerun.
+The ancillary observation record preserves its purposive issue sample,
+exclusions and retrieval boundaries. These sources are analysed separately
+from the motivating project.
+
+\paragraph{Participant-observer analysis and independent checking}
+I selected the episodes, designed the coordinator and had an interest in
+successful delivery. Those roles favour a coherent retrospective
+explanation. Experience-based beliefs can differ from project
+evidence~\cite{devanbu2016belief}; the same caution applies to AI-written
+records and AI-assisted synthesis. Independent checking of O1--O5 against
+retained source and execution records remains outstanding.
+Jiang et~al.\ make mechanism analysis inspectable through matched trajectories,
+evidence-linked labels and a separate human check of taxonomy construction,
+while distinguishing that check from exhaustive human coding~\cite[Sec.~4, App.~A.2]{jiang2026skills}.
+Here the five mechanisms organise selected episodes.
+Their prevalence and causal effects require a different
+design. The evidence index retains null release or execution identifiers
+where a link still needs checking.
+
+\paragraph{Original case validity and rival-explanation account}
+
+
+The five categories overlap in this case. Missing identity and staff
+bindings could reflect deferred migration, incomplete deployment acceptance
+or a lesson that workers did not apply. The deployment comparison and
+session-input trace in Table~\ref{tab:audittrail} could help distinguish
+these explanations, while document and citation counts cannot. The available
+evidence also cannot establish context overflow from a growing read path, or
+disproportionate cost from an expensive gate alone. I did not measure
+per-change gate time, avoided defects or human effort.
+
+The source-layout migration, owner-selected priorities and delegated merging
+changed alongside coordination. Scope additions, budget constraints, model/tool
+changes and deployment conditions also differ between periods. Any of these
+could help explain the outcome attributed to autonomy. The
+\hyperref[sec:supplement]{supplementary rival-explanation register} retains the full
+register, separating recorded circumstances from plausible but untested
+alternatives.
+
+Construct validity is limited by whitespace counts, lexical indicators and
+selectively reviewed records. Appropriate caution can raise boundary-phrase
+density, and the records cannot show whether a missing reference reflects
+absent knowledge or missing documentation. I was coordinator designer,
+participant and analyst, so I selected the episodes and may favour a coherent
+retrospective explanation. AI-assisted synthesis shares these source limits
+and needs independent checking.
+Public records support recomputation but not independent corroboration of
+every statement. The single exercise I designed and the purposively selected
+external examples do not establish prevalence or general causal effects.
+The separate experiment has its own identification limits in
+Section~\ref{sec:protocollimits}.
+
+
+\subsubsection{Case observation and contrast tables}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Evidence relevant to the delivery transition and checks that would
+distinguish the candidate explanations.}\label{tab:audittrail}
+\begin{tabularx}{\textwidth}{@{}L{0.7cm}L{4.7cm}YY@{}}
+\toprule
+ID & Observation and provenance & Interpretation & Discriminating evidence \\
+\midrule
+O1 & The log and participant account describe a used MVP followed by a
+replacement lacking identity, staff and model prerequisites. & Delivery
+failed to preserve a complete working journey. & Execute the same journey
+against versioned deployments and configurations. \\
+O2 & Pull requests and automated assessments recorded completion while
+my sign-in remained blocked. & The completion signals covered a
+different or insufficiently linked outcome. & Link the assessed capability
+and release to the failed deployed task. \\
+O3 & Requirements and process records expanded through discovery and delivery;
+PR \#445's small source correction carried a separate evidence record. &
+Documented context may outgrow what a worker or reviewer can use effectively.
+& Compare actual context access and review effort with validated behaviour. \\
+O4 & Simplicity and deployment lessons were recorded, but later replacement
+work lacked registration and staff bindings. & Lesson availability and
+application may diverge. & Trace the relevant session inputs and whether
+the lesson was actionable or deliberately deferred. \\
+O5 & Coordinator rules formalised gates and delegated merging; I continued
+resolving blockers and later requested stabilization. & Approval
+activity and product-use feedback served different functions. & Compare
+outcome checks, steering decisions and subsequent implementation changes. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[!htbp]
+\centering\footnotesize
+\caption{Contrasts relevant to context, completion and feedback.}\label{tab:contrasts}
+
+\begin{tabularx}{\textwidth}{@{}L{3.1cm}YY@{}}
+\toprule
+Contrast & Recorded difference & Analytical consequence \\
+\midrule
+Interactive MVP versus autonomous replacement & Product use supported short
+feedback cycles; the replacement could not support the same task. & Feedback
+is a candidate explanation alongside the changed migration and environment. \\
+Requirements before versus during autonomy & Expansion and review obligations
+already existed during discovery. & The burden has a longer history than the
+coordinator, and some detail preserves important controls. \\
+Engineering checks versus participant task & Bounded checks passed while
+real-user sign-in remained blocked. & Acceptance needs coverage of the whole
+journey and its deployment dependencies. \\
+Exploratory challenge versus backlog execution & Role agents questioned the
+initial proposal; delivery workers implemented specified stories. & Task
+framing changed with the tools and environment; its contribution was not isolated. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+\paragraph{Contextual comparisons from the opening.}
+
+The migration instruction at coordinator turn 66 was ``build all new in
+src, but migrate what's needed first''. The article paraphrases this
+instruction; the case evidence index supplies the original locator.
+
+Cunningham's 1992 account of WyCash described a financial product
+continually adapted to market demands, where mature code was repeatedly
+revised and rewritten; his technical-debt metaphor explained why shipping a
+first-time implementation required later rewriting as understanding
+improved~\cite{cunningham1992wycash}.
+
+The external PhotoCraft project, an early-alpha reimplementation of
+Photoshop, reports 631 of 631 menu items live, while its dated
+assessment estimates about 76\% feature breadth and 45\%
+readiness for real work~\cite{photocraft2026}. SWE-Maintain finds that agents solve
+fewer later tasks when starting from their own earlier changes than from
+the developers' changes, even though each task starts in a fresh
+session~\cite{pan2026swemaintain}.

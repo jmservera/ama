@@ -16,6 +16,10 @@ const stems = [
   "fig-refactoring-economics",
   "fig-runtime-boundaries",
 ];
+const selectedStems = process.argv.slice(3);
+if (selectedStems.some(stem => !stems.includes(stem))) {
+  throw new Error(`Unknown diagram selection: ${selectedStems.join(", ")}`);
+}
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const renderScript = join(here, ".diagram-export-render.js");
 const renderPage = join(here, ".diagram-export-render.html");
@@ -93,6 +97,7 @@ try {
   browser = await chromium.launch({
     headless: true,
     channel: process.env.PAPER_BROWSER_CHANNEL || undefined,
+    executablePath: process.env.PAPER_BROWSER_EXECUTABLE || undefined,
   });
   const context = await browser.newContext();
   await context.route(/^https?:/, route => route.abort());
@@ -102,15 +107,9 @@ try {
   await page.goto(pathToFileURL(renderPage).href);
   await page.waitForFunction(() => typeof window.exportScene === "function");
   await mkdir(output, { recursive: true });
-  const receipt = {
-    renderer: "@excalidraw/excalidraw 0.18.1",
-    browser: browser.version(),
-    export: "Native offline SVG and 3x PNG; source files are never overwritten.",
-    png_scale: 3,
-    diagrams: [],
-  };
   const existingReceipt = JSON.parse(await readFile(join(paper, "diagram-exports.json"), "utf8"));
-  for (const stem of stems) {
+  const receipt = structuredClone(existingReceipt);
+  for (const stem of selectedStems.length ? selectedStems : stems) {
     const source = await readFile(join(paper, `${stem}.excalidraw`));
     const sourceHash = sha256(source);
     const rendered = await page.evaluate(
@@ -125,14 +124,27 @@ try {
     }
     await writeFile(join(output, `${stem}.svg`), rendered.svg);
     await writeFile(join(output, `${stem}.png`), png);
-    const qualification = stem === "fig-runtime-boundaries"
-      ? existingReceipt.diagrams.find(entry => entry.stem === stem) : {};
-    receipt.diagrams.push({
-      ...qualification,
+    const previous = existingReceipt.diagrams.find(entry => entry.stem === stem);
+    const { previous_exports: history = [], ...previousExport } = previous || {};
+    const current = {
+      ...previous,
       stem, source_sha256: sourceHash,
       svg_sha256: sha256(rendered.svg), png_sha256: sha256(png),
       width: rendered.width, height: rendered.height, elements: rendered.elements,
-    });
+      renderer: "@excalidraw/excalidraw 0.18.1", browser: browser.version(),
+    };
+    if (previous && (previous.source_sha256 !== current.source_sha256
+        || previous.svg_sha256 !== current.svg_sha256 || previous.png_sha256 !== current.png_sha256)) {
+      current.previous_exports = [...history, {
+        ...previousExport,
+        renderer: previous.renderer || existingReceipt.renderer,
+        browser: previous.browser || existingReceipt.browser,
+        png_scale: previous.png_scale || existingReceipt.png_scale,
+      }];
+    }
+    const index = receipt.diagrams.findIndex(entry => entry.stem === stem);
+    if (index < 0) receipt.diagrams.push(current);
+    else receipt.diagrams[index] = current;
     console.log(`Exported ${stem}: ${rendered.width}x${rendered.height}, ${rendered.elements} native elements`);
   }
   await writeFile(join(output, "diagram-exports.json"), JSON.stringify(receipt, null, 2) + "\n");

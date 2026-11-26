@@ -3,15 +3,15 @@
 \subsection{What later changes inherit}\label{sec:decay}
 
 Maintenance alongside growth is a recurring concern in software evolution
-~\cite{lehman1980laws,lehman1997metrics,parnas1994aging}. Lehman's 1997
+~\cite{lehman1980laws,lehman1997metrics,parnas1994aging}, and Lehman's 1997
 formulation states that quality declines without maintenance, but supplies
 no data for or against that law. Eick et~al.\ found mixed evidence in more
 than fifteen years of change history~\cite{eick2001decay}; a systematic
 review likewise found uneven support across systems~\cite{herraiz2013laws}.
-Counting features or changed lines cannot establish decay. A regression
+Counting features or changed lines cannot establish decay: a regression
 requires previously working behaviour that is still required to fail.
 In our study, GPT trajectories that never implemented priority ranking
-had an acquisition failure. The Gemini consent contract that first failed
+had an acquisition failure, whereas the Gemini consent contract that first failed
 at $P_7$ and remained failing through $P_{10}$ instead records one
 persistent regression (Section~\ref{app:reportingdisposition}).
 Showing that it caused a distinct later defect would require tracing
@@ -19,8 +19,7 @@ that dependency.
 
 Cunningham describes shipping first-time code and rewriting it as
 understanding improves~\cite{cunningham1992wycash}. Fowler's design
-stamina is explicitly a hypothesis~\cite{fowler2007stamina}.
-Reported debt costs depend on setting and measurement method: a
+stamina is explicitly a hypothesis~\cite{fowler2007stamina}, and reported debt costs depend on setting and measurement method: a
 vendor-associated 39-codebase study reports 124\% longer issue resolution in
 low-quality files~\cite{tornhill2022codered}.
 
@@ -32,15 +31,15 @@ B and C also permitted design and review handover files
 ninth feature after the session that wrote it had ended
 (Section~\ref{sec:resultscorrectness}).
 Figure~\ref{fig:stateinheritance} distinguishes the software and instruction
-paths. ``Software entropy'' is used here only
+paths; ``software entropy'' is used here only
 as an analogy for maintenance burden; the measured outcomes are retained
 behaviour, adaptation and resource use.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-state-inheritance.png}
-\caption{Conceptual read/write paths available between sessions. Arrows identify state-carrying paths
-whose effects require measurement.}\label{fig:stateinheritance}
+\caption{Conceptual read/write paths available between sessions. Arrows identify
+state-carrying paths.}\label{fig:stateinheritance}
 \end{figure}
 
 \subsection{Evidence within and between features}\label{sec:empirical}
@@ -54,8 +53,7 @@ state updates in a controlled execution task
 Pan et~al.'s SWE-Maintain more directly tests repository inheritance:
 100 sequences of three maintenance tasks from 50 Python repositories.
 Later tasks are matched across developer-written and agent-written histories,
-with a fresh session for each task.
-Across 1,996 paired later events, agent history reduces current-task
+with a fresh session for each task; across 1,996 paired later events, agent history reduces current-task
 resolution by 5.6 points; requiring both current and earlier tests to pass gives
 a 14.0-point gap. Unweighted mean current-task gaps grow from 4.0 to
 7.2 points between the second and third events. In the selected
@@ -65,8 +63,8 @@ differs by $+2.7$, interval $[-0.5,+6.1]$
 ~\cite[Secs.~4.1--4.2, Tables~2--3]{pan2026swemaintain}.
 The smaller difference in the clean-history subset is consistent with
 inherited behavioural failures contributing more than complexity alone.
-However, the authors selected that subset; they did not randomly repair
-the repositories. The comparison therefore cannot estimate the benefit of
+Because the authors selected that subset rather than randomly repairing
+the repositories, the comparison cannot estimate the benefit of
 a repair intervention or establish how widely the pattern applies.
 
 \begin{figure}[!htbp]
@@ -81,11 +79,11 @@ the published estimates and intervals.}\label{fig:inheritedhistory}
 \end{figure}
 
 Their \texttt{python\_unidiff} example reuses line-splitting logic that
-loses terminators in a later constructor; Figure~1's caption introduces
-it and Section~5.1/Figure~5 supplies the detail
+loses terminators in a later constructor; Pan et~al.'s Figure~1 caption introduces
+it, and their Section~5.1 and Figure~5 supply the detail
 ~\cite{pan2026swemaintain}. SlopCodeBench and SWE-CI also evaluate agents over successive changes
-~\cite{orlanski2026slopcodebench,chen2026sweci}. Evidence of downstream harm
-is not uniform. Borg et~al.\ found no significant maintainability difference
+~\cite{orlanski2026slopcodebench,chen2026sweci}, but evidence of downstream harm
+is not uniform: Borg et~al.\ found no significant maintainability difference
 for late-2024 assistants in a two-phase study where the second phase was
 randomised~\cite[Secs.~1, 4]{borg2025echoes}. Differences in tool generation and collaboration
 setting limit direct comparison.
@@ -98,16 +96,16 @@ instruction files~\cite{nigh2025agentsmd}; Anthropic's context-engineering
 guide recommends compacting history and retaining structured notes
 ~\cite{rajasekaran2025context}.
 Anthropic's harness asks each coding session to update
-\texttt{claude-progress.txt} and leaves the next one a startup script,
+a progress note and leaves the next one a startup script,
 feature list and Git history to inspect~\cite{anthropic2025harness}.
-Mohsenimofidi et~al.\ assign 242 labels across nine categories to 169 commits.
-A commit can receive several labels: 78 include instruction additions,
+Mohsenimofidi et~al.\ assign 242 labels across nine categories to 169 commits,
+with several labels possible per commit: 78 include instruction additions,
 59 modifications and 23 removals
 ~\cite[Sec.~4.3, Table~2]{mohsenimofidi2026context}.
 Chatlatanagulchai et~al.'s sampled maintenance labels likewise include
-addition and pruning~\cite{chatlatanagulchai2026readmes}.
-I use \emph{instruction debt} for obsolete, duplicated, conflicting or poorly
-routed directives. This names a possible maintenance burden; the commit
+addition and pruning~\cite{chatlatanagulchai2026readmes};
+we use \emph{instruction debt} for obsolete, duplicated, conflicting or poorly
+routed directives, naming a possible maintenance burden; the commit
 counts alone do not measure its effect on development.
 
 \begin{figure}[!htbp]
@@ -120,31 +118,27 @@ count edit types, not net token growth or effects on agent success.}\label{fig:i
 \end{figure}
 
 In their two benchmark comparisons, Gloaguen et~al.\ report 20\% and 23\%
-higher inference cost with LLM-written context files. Success was lower by
+higher inference cost with LLM-written context files and success lower by
 0.5 and 2 percentage points, respectively; the success differences from
 the no-file baselines were not statistically significant. Developer-written files outperform
 LLM-written ones on CTXbench ($p=0.038$)
 ~\cite[Sec.~4.2, Tables~2--3]{gloaguen2026agentsmd}.
 SkillOpt uses a more selective update rule: a proposed skill edit survives
 only if it improves the held-out validation score, while rejected edits
-remain feedback for later proposals~\cite[How SkillOpt works]{microsoft2026skillopt}.
-Its target model's weights remain fixed.
-Jiang et~al.\ separately evaluate skill retrieval and downstream execution
+remain feedback for later proposals~\cite[How SkillOpt works]{microsoft2026skillopt};
+its target model's weights stay fixed.
+Jiang et~al.\ distinguish skill retrieval from downstream execution
 ~\cite{jiang2026skills}; loading the intended file does not by itself
 show that the agent applied it successfully.
 
 \paragraph{Tests and review.}\label{sec:evaluationwork}
-In our study, a view could refuse \texttt{open\_case} in the workflow
-panel while permitting the later \texttt{approve\_handoff} write.
-The two tests covered different parts of the requested read-only rule.
-RefactorBench tests refactoring tasks
-~\cite{gautam2025refactorbench}, and SWE-Sharp-Bench supplies reproducible
-repository evaluation~\cite{mhatre2025swesharp}. CRBugBench examines the
+In our study, a view could refuse \texttt{open\_case} in the workflow panel while permitting the later \texttt{approve\_handoff} write, illustrating how the tests covered different parts of the requested read-only rule.
+RefactorBench tests refactoring tasks ~\cite{gautam2025refactorbench} and SWE-Sharp-Bench supplies reproducible repository evaluation~\cite{mhatre2025swesharp}; CRBugBench examines the
 limits of automated review~\cite{yang2026crbugbench}; observations of
 developer-agent collaboration describe practice without isolating its
 causal effects~\cite{kumar2025agents}. In Building to the Test, seven of
 twelve runs using test-oracle feedback left a required library unused or absent
-~\cite{ma2026building}. ImpossibleBench examines test exploitation more
+~\cite{ma2026building}, and ImpossibleBench examines test exploitation more
 broadly~\cite{zhong2026impossiblebench}. Protecting tests against edits is
 therefore separate from checking that they cover the intended behaviour.
 AgentRx provides a precedent for traceable failure diagnosis
@@ -158,35 +152,35 @@ before the judge attributes the failure.
 Pavlenko et~al.'s factory optimises human-architected systems against
 measurable objectives; productivity estimates cover application work,
 excluding infrastructure and onboarding
-~\cite{pavlenko2026factory}. That evaluation does not isolate the present
+~\cite{pavlenko2026factory}, but that evaluation does not isolate the present
 between-feature intervention and later change probe.
 
 \paragraph{Reflection and self-improvement.}
 Ng's reflection design-pattern letter explicitly recommends Self-Refine,
 Reflexion and CRITIC~\cite{ng2024reflection}, attributing methods developed
 by their respective authors. Self-Refine iterates feedback and revision with the same model
-without training~\cite[Sec.~2]{madaan2023selfrefine}. Reflexion retains
+without training~\cite[Sec.~2]{madaan2023selfrefine}; Reflexion retains
 written feedback in memory for subsequent trials rather than updating
 model weights~\cite[Sec.~3]{shinn2023reflexion}. CRITIC uses
 external tools to check and revise an output
-~\cite[Sec.~3]{gou2024critic}. These methods provide ways to revise work using feedback. Their
+~\cite[Sec.~3]{gou2024critic}; these methods revise work using feedback, but their
 repeated-trial budgets and feedback differ from this experiment: hidden
 evaluator outputs never reach the development agents. Whether a retained
-revision helps with a different, later feature remains an empirical question.
-Here that later request added regional access and cross-region handoff
+revision helps with a different, later feature is an empirical question;
+here that request added regional access and cross-region handoff
 approval to an already developed read-only view.
 
 Ng coauthored MedAgentBench, which evaluates task completion in an
 interactive medical-record environment rather than chatbot answers alone
-~\cite[arXiv v2, Secs.~2.3--2.4]{jiang2025medagentbench}.
-Its evaluation of observable action outcomes informs the measurement focus
+~\cite[arXiv v2, Secs.~2.3--2.4]{jiang2025medagentbench};
+its evaluation of observable action outcomes informs the measurement focus
 of this protocol.
 
 \paragraph{Engineering rationale.}\label{sec:practitioners}\label{sec:theory}
 Beck's alternation of features and tidying aims to restore future
-options~\cite{beck2023tidy,beck2025devslow,beck2026prodacity}.
-Extending that metaphor to acceptance criteria is my interpretation.
-Beck separates producing code from learning
+options~\cite{beck2023tidy,beck2025devslow,beck2026prodacity},
+and we extend that metaphor to acceptance criteria as an interpretation.
+Beck distinguishes producing code from learning
 through working software~\cite{beck2026prodacity}.
 For the case, the proposed checkpoint is concrete: let a staff member
 sign in and complete an assigned-case task before the coordinator advances
@@ -208,7 +202,7 @@ Spec-driven handoffs still need checks of the resulting behaviour
 
 \paragraph{HVE Core.}\label{sec:hve}
 Microsoft's Hypervelocity Engineering Core supplies file-based
-Research--Plan--Implement--Review handovers. My coordinator added autonomous
+Research--Plan--Implement--Review handovers, to which my coordinator added autonomous
 dispatch. The reported case snapshot is
 \texttt{plugins-v3.3.106}; its installation date remains unverified
 ~\cite{hvecore}. Additional source qualifications and reproducibility detail

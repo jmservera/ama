@@ -2,8 +2,11 @@
 
 import hashlib
 import json
+import math
 import re
 import struct
+import subprocess
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -81,21 +84,18 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertEqual(
             annotation_cleanup["prior_delivery_revision"], "author_context_revision"
         )
+        editorial = bindings[bindings["current_editorial_revision"]]
+        self.assertEqual(
+            editorial["prior_delivery_revision"], "final_editorial_revision_2026_11_26"
+        )
         for name, sha256 in {
-            **current["source_sha256"], **current["evidence_sha256"],
-            **cleanup["source_sha256"],
-            **warning_cleanup["source_sha256"],
-            **comment_cleanup["source_sha256"],
-            **example_revision["source_sha256"],
-            **unsupported_revision["source_sha256"],
-            **author_context_revision["source_sha256"],
-            **annotation_cleanup["source_sha256"],
+            **current["evidence_sha256"], **editorial["source_sha256"],
         }.items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
         self.assertEqual(
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
-            author_context_revision["retained_pdf_sha256"],
+            editorial["retained_pdf_sha256"],
         )
 
     def test_measurement_slice_and_prompt_examples_are_active(self):
@@ -109,17 +109,19 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_current_measurements_are_not_described_as_ai_judge_scores(self):
         protocol = (ANC / "experiment-protocol.tex").read_text()
-        self.assertIn("does not call a separate LLM-as-judge", protocol)
-        self.assertIn(r"\label{tab:measurementprovenance}", protocol)
-        self.assertIn("not instrumented", protocol)
-        self.assertIn("comprehension is not measured", protocol)
+        supplement = (ANC / "measurement-provenance.tex").read_text()
+        self.assertIn("without calling an LLM-as-judge", protocol)
+        self.assertIn(r"\label{tab:measurementprovenance}", supplement)
+        self.assertIn("distinct from instrumented", protocol)
+        self.assertIn("comprehension was not measured", protocol)
 
     def test_current_ruff_limit_is_explicit_not_claimed_remedied(self):
         protocol = (ANC / "experiment-protocol.tex").read_text()
-        self.assertIn(r"but does not include", protocol)
-        self.assertIn(r"\texttt{--ignore-noqa}", protocol)
-        self.assertIn("exports no separate suppression", protocol)
-        self.assertIn("changes no running instrumentation", protocol)
+        supplement = (ANC / "measurement-provenance.tex").read_text()
+        self.assertIn("Inline lint suppressions were not independently counted", protocol)
+        self.assertIn(r"\texttt{--ignore-noqa}", supplement)
+        self.assertIn("exports no separate suppression", supplement)
+        self.assertIn("changes no running instrumentation", supplement)
 
     def test_active_fields_and_units_remain_named(self):
         text = (ANC / "measurement-provenance.tex").read_text()
@@ -151,7 +153,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         methods = protocol.split(r"\label{sec:postrunjudging}", 1)[1].split(
             r"\subsection{Replication and uncertainty}", 1
         )[0]
-        self.assertIn("designed and run after", methods)
+        self.assertIn("Designed after development", methods)
         self.assertNotIn("will receive", methods)
         self.assertNotIn("will replay", methods)
 
@@ -361,7 +363,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("not uniformly achieved", protocol)
         self.assertIn("2.26 lint warnings", protocol)
         self.assertIn("did not satisfy every B target", protocol)
-        self.assertIn("50\\% more time and twice A's credit allowance", manuscript)
+        self.assertIn("Matching resource ceilings did not match spending", manuscript)
         self.assertNotIn("baseline code already satisfied", manuscript)
         self.assertNotIn("enforced its structural stopping targets", protocol)
 
@@ -370,12 +372,13 @@ class MeasurementProvenanceTests(unittest.TestCase):
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
         supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
 
-        self.assertIn("all 315 completed trajectories", protocol)
-        self.assertIn("operator account of intervention", protocol)
-        self.assertIn("primary_estimates_available=true", protocol)
-        self.assertIn("two completed GPT trajectories", protocol)
-        self.assertIn("63 versus 63", protocol)
-        self.assertIn("estimates exploratory differences", protocol)
+        self.assertIn("All 315 allocated trajectories completed", protocol)
+        self.assertIn("Isabel Cabezas Martin supplied the attestation", protocol)
+        self.assertIn("was not an independent auditor", protocol)
+        self.assertIn("primary_estimates_available=true", supplement)
+        self.assertIn("Two completed GPT trajectories", supplement)
+        self.assertIn("63 versus 63", supplement)
+        self.assertIn("exploratory", protocol)
         self.assertNotIn("attestation remains absent", protocol)
         self.assertNotIn("missing intervention attestation", manuscript)
         self.assertIn("have not been independently verified", supplement)
@@ -383,6 +386,9 @@ class MeasurementProvenanceTests(unittest.TestCase):
         self.assertIn("not multiplicity-adjusted", supplement)
 
     def test_given_report_refresh_when_coverage_compared_then_intervals_and_bounds_stay_separate(self):
+        from fractions import Fraction
+        from statistics import NormalDist
+
         from test_protocol_planning import table_rows
 
         supplement = (ANC / "measurement-provenance.tex").read_text()
@@ -391,6 +397,20 @@ class MeasurementProvenanceTests(unittest.TestCase):
         }
         model_rows = table_rows(supplement, "tab:resultsh1modelintervals")
         cr_rows = table_rows(supplement, "tab:resultscrintervals")
+        observed = {
+            (row[0].removeprefix(r"\midrule").strip(), row[1]): int(row[2])
+            for row in table_rows((ANC / "experiment-protocol.tex").read_text(),
+                                  "tab:resultsadaptation")
+            if "GPT" not in row[0]
+        }
+        z = NormalDist().inv_cdf(0.975)
+
+        def wilson(successes):
+            p, n = successes / 21, 21
+            denominator = 1 + z * z / n
+            centre = (p + z * z / (2 * n)) / denominator
+            radius = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denominator
+            return centre - radius, centre + radius
 
         self.assertEqual(pooled, {
             "B -- D": ["63/63", "+1.1874", "[+0.1000, +2.2247]", "[+1.1874, +1.1874]"],
@@ -405,9 +425,42 @@ class MeasurementProvenanceTests(unittest.TestCase):
         for row in cr_rows:
             with self.subTest(model=row[0], contrast=row[1]):
                 lower, upper = [float(value) for value in row[-1].strip("[]").split(",")]
+                model = row[0].removeprefix(r"\midrule").strip()
+                left, right = (arm.strip() for arm in row[1].split("--"))
+                x, y = observed[(model, left)], observed[(model, right)]
+                l1, u1 = wilson(x)
+                l2, u2 = wilson(y)
+                difference = (x - y) / 21
+                expected_lower = 100 * (difference - math.hypot(x / 21 - l1, u2 - y / 21))
+                expected_upper = 100 * (difference + math.hypot(u1 - x / 21, y / 21 - l2))
+                self.assertAlmostEqual(float(row[2]), 100 * difference, places=4)
+                self.assertAlmostEqual(lower, expected_lower, places=4)
+                self.assertAlmostEqual(upper, expected_upper, places=4)
+
+                successes, failures = x + y, 42 - x - y
+
+                def probability(k, successes=successes, failures=failures):
+                    return Fraction(
+                        math.comb(successes, k) * math.comb(failures, 21 - k),
+                        math.comb(42, 21),
+                    )
+
+                observed_probability = probability(x)
+                fisher = sum(
+                    (probability(k)
+                     for k in range(max(0, 21 - failures), min(21, successes) + 1)
+                     if probability(k) <= observed_probability),
+                    Fraction(),
+                )
+                self.assertAlmostEqual(float(row[-2]), float(fisher), places=5)
                 self.assertLessEqual(lower, 0)
-                self.assertGreaterEqual(upper, 0)
-        self.assertIn("Simultaneous coverage over all comparisons is unestablished", supplement)
+                if (model, row[1]) == ("Gemini 4 Argon", "B -- C"):
+                    self.assertLess(upper, 0)
+                else:
+                    self.assertGreaterEqual(upper, 0)
+        self.assertIn("Newcombe hybrid-score", supplement)
+        self.assertIn("two-sided Fisher exact", supplement)
+        self.assertIn("unadjusted for multiplicity", supplement)
 
     def test_given_reporting_reconciliation_when_tabulated_then_denominators_and_holds_match(self):
         from test_protocol_planning import table_rows
@@ -485,31 +538,30 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_given_finalization_when_metadata_recovered_then_history_is_not_rerun(self):
         supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
-        protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
 
         self.assertIn("all 5,357 attempts", supplement)
         self.assertIn(".study/pilot-estimation/state.json", supplement)
         self.assertIn("no separate finish or boot/launch IDs", supplement)
         self.assertIn("human-calibration completion flag remains false", supplement)
         self.assertIn("recover an unlogged historical version", supplement)
-        self.assertIn("retain the analysis actually performed", protocol)
-        self.assertIn("separately disclosed post-collection analysis", protocol)
+        self.assertIn("retain the analysis actually performed", supplement)
+        self.assertIn("separately disclosed post-collection analysis", supplement)
 
     def test_given_finalization_when_deposit_selected_then_lineage_and_privacy_remain_explicit(self):
         manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
         source_review = " ".join((ANC / "additional-evidence.tex").read_text().split())
         revision_report = " ".join((ANC / "revision-report.md").read_text().split())
 
-        self.assertIn("select the experiment GitHub repository as the deposit", manuscript)
+        supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
+        self.assertIn("provides the selected public deposit with checksums", manuscript)
         for version in ("v4", "v6", "v7"):
             with self.subTest(version=version):
-                self.assertIn(f"protocol-frozen-{version}", manuscript)
-        self.assertIn("releases retain separate protocol archives", manuscript)
+                self.assertIn(f"protocol-frozen-{version}", supplement)
+        self.assertIn("releases retain separate protocol archives", supplement)
         self.assertIn("results-exploratory-s1-v1", manuscript)
         self.assertIn("No post-collection OSF deposit was created", manuscript)
         self.assertIn(
-            "Raw packets, private specimen-to-trajectory mappings and runtime workspaces "
-            "stay off-Git in the evidence vault", manuscript,
+            "Raw packets, specimen mappings and runtime workspaces stay outside Git", manuscript,
         )
         self.assertIn(
             "Historical/raw records and newly released excerpts require confidentiality review.",
@@ -529,7 +581,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
         manuscript = " ".join(expand_inputs((PACKAGE / "main.tex").read_text()).split())
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
-        rows = table_rows((ANC / "experiment-protocol.tex").read_text(), "tab:predictionverdicts")
+        rows = table_rows(protocol, "tab:predictionverdicts")
 
         self.assertEqual(len(rows), 4)
         self.assertEqual(
@@ -553,19 +605,21 @@ class MeasurementProvenanceTests(unittest.TestCase):
 
     def test_runtime_flow_separates_development_commands_from_tool_free_judging(self):
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
+        supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
 
         self.assertIn(r"\label{sec:runtimeboundaries}", protocol)
         self.assertIn(r"{fig-runtime-boundaries.png}", protocol)
-        self.assertIn(r"\texttt{isolated\_exec}", protocol)
-        self.assertIn("fresh isolated container", protocol)
-        self.assertIn("restores validated filesystem/Git state", protocol)
-        self.assertIn("no surviving candidate processes or process memory", protocol)
-        self.assertIn("no command tools or candidate-repository access", protocol)
+        self.assertIn(r"\texttt{isolated\_exec}", supplement)
+        self.assertIn("fresh container", protocol)
+        self.assertIn("Validated filesystem and Git state", protocol)
+        self.assertIn("candidate processes and process memory do not", protocol)
+        self.assertIn("without command tools or", protocol)
+        self.assertIn("candidate-repository access", protocol)
         self.assertIn("outside the replay container", protocol)
-        self.assertIn("isolation or collection failure", protocol)
-        self.assertIn("collection succeeds and the candidate fails", protocol)
-        self.assertIn("re-adds four for its protected supervisor", protocol)
-        self.assertIn("capabilities remain at the container level", protocol)
+        self.assertIn("Isolation failures made a checkpoint unavailable", protocol)
+        self.assertIn("observed candidate failures stayed", protocol)
+        self.assertIn("re-adds four for its protected supervisor", supplement)
+        self.assertIn("capabilities remain at the container level", supplement)
 
     def test_given_final_results_when_tables_checked_then_snapshot_values_and_unknowns_match(self):
         from test_protocol_planning import table_rows
@@ -604,8 +658,16 @@ class MeasurementProvenanceTests(unittest.TestCase):
     def test_given_empirical_charts_when_checked_then_full_rasters_and_data_binding_match(self):
         payload = (ANC / "study-results-2026-11-15.json").read_bytes()
         expected_hash = hashlib.sha256(payload).hexdigest()
-        sizes = {"fig-study-trajectories": (3240, 1680), "fig-study-outcomes-costs": (3360, 1410)}
-        bindings = json.loads((ANC / "supplement-integration.json").read_text())["chart_interpretation_revision"]
+        sizes = {"fig-study-trajectories": (2880, 2400), "fig-study-outcomes-costs": (2880, 2940)}
+        manifest = json.loads((ANC / "supplement-integration.json").read_text())
+        bindings = manifest[manifest["current_figure_revision"]]
+        previous = manifest["chart_interpretation_revision"]
+        self.assertEqual(bindings["prior_figure_revision"], "chart_interpretation_revision")
+        self.assertEqual(
+            previous["source_sha256"]["anc/study-results-2026-11-15.json"], expected_hash
+        )
+        for name, digest in bindings["source_sha256"].items():
+            self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), digest)
 
         for stem, size in sizes.items():
             with self.subTest(chart=stem):
@@ -618,6 +680,134 @@ class MeasurementProvenanceTests(unittest.TestCase):
                     name = f"{stem}.{extension}"
                     self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(),
                                      bindings["charts"][name])
+
+    def test_given_results_charts_at_sixteen_cm_when_read_then_all_text_is_at_least_seven_pt(self):
+        manifest = json.loads((ANC / "supplement-integration.json").read_text())
+        bindings = manifest[manifest["current_figure_revision"]]
+        excluded_titles = {
+            "fig-study-trajectories": "Mean Hidden-Test Pass Rate and Complexity Hotspots",
+            "fig-study-outcomes-costs": "Complete 315/315 Benchmark Outcomes:",
+        }
+        for stem, title in excluded_titles.items():
+            svg = ET.fromstring((PACKAGE / f"{stem}.svg").read_bytes())
+            self.assertNotIn(title, " ".join(svg.itertext()))
+            if stem == "fig-study-outcomes-costs":
+                self.assertNotIn("Settled ledger:", " ".join(svg.itertext()))
+            width = float(svg.get("width"))
+            measured = []
+            for node in svg.findall(".//{http://www.w3.org/2000/svg}text"):
+                points = float(node.get("font-size")) * 16 / 2.54 * 72 / width
+                with self.subTest(chart=stem, text=node.text):
+                    self.assertGreaterEqual(points, 7)
+                measured.append(points)
+            self.assertAlmostEqual(min(measured), bindings["minimum_text_pt"][stem])
+
+    def test_given_relaid_out_trajectories_when_plotted_then_all_source_points_are_preserved(self):
+        data = json.loads((ANC / "study-results-2026-11-15.json").read_bytes())
+        models = ["claude-sonnet-5.5", "gemini-4-argon", "gpt-6.1-sol"]
+        maximum = math.ceil(max(
+            point["share_ccn_over_10_pct"]
+            for arms in data["series_means"].values()
+            for points in arms.values() for point in points
+        ))
+        svg = ET.fromstring((PACKAGE / "fig-study-trajectories.svg").read_bytes())
+        paths = {
+            (node.get("data-model"), node.get("data-arm"), node.get("data-metric")): node
+            for node in svg.findall(".//{http://www.w3.org/2000/svg}path")
+        }
+        self.assertEqual(set(paths), {
+            (model, arm, metric) for model in models for arm in "ABCDE"
+            for metric in ("pass_rate", "share_ccn_over_10_pct")
+        })
+        for (model, arm, metric), node in paths.items():
+            y0, low, high = (145, 88, 100.5) if metric == "pass_rate" else (484, 0, maximum)
+            actual = re.findall(r"[ML]([-\d.]+),([-\d.]+)", node.get("d"))
+            source = data["series_means"][model][arm]
+            self.assertEqual(len(actual), len(source))
+            for (x, y), point in zip(actual, source):
+                with self.subTest(model=model, arm=arm, metric=metric, k=point["k"]):
+                    self.assertAlmostEqual(
+                        float(x), 85 + models.index(model) * 300 + (point["k"] - 1) / 9 * 250,
+                        delta=0.051,
+                    )
+                    self.assertAlmostEqual(
+                        float(y), y0 + 180 - (point[metric] - low) / (high - low) * 180,
+                        delta=0.051,
+                    )
+
+    def test_given_relaid_out_outcomes_when_plotted_then_estimates_counts_and_costs_are_preserved(self):
+        data = json.loads((ANC / "study-results-2026-11-15.json").read_bytes())
+        svg = ET.fromstring((PACKAGE / "fig-study-outcomes-costs.svg").read_bytes())
+        ns = {"s": "http://www.w3.org/2000/svg"}
+        forest = svg.findall(".//s:g[@data-contrast]", ns)
+        self.assertEqual(len(forest), 11)
+        for node in forest:
+            model, contrast = node.get("data-model"), node.get("data-contrast")
+            estimate = (data["pooled_contrasts"][contrast] if model == "pooled"
+                        else data["within_model_contrasts"][model][contrast])
+            value = (estimate["h1_pass_rate_diff_pct_points"] if model == "pooled"
+                     else estimate["h1_diff"])
+            interval = (estimate["h1_bootstrap_95_ci"] if model == "pooled"
+                        else estimate["h1_ci"])
+            point = node.find("s:circle", ns)
+            whisker = node.find("s:line", ns)
+            self.assertAlmostEqual(float(point.get("cx")), 215 + (value + 3.8) / 14.4 * 215)
+            self.assertAlmostEqual(float(whisker.get("x1")), 215 + (interval[0] + 3.8) / 14.4 * 215)
+            self.assertAlmostEqual(float(whisker.get("x2")), 215 + (interval[1] + 3.8) / 14.4 * 215)
+        bars = {
+            (node.get("data-model"), node.get("data-arm")): node
+            for node in svg.findall(".//s:g[@data-metric='cr1']", ns)
+        }
+        points = {
+            (node.get("data-model"), node.get("data-arm")): node
+            for node in svg.findall(".//s:circle[@data-metric='cost-coverage']", ns)
+        }
+        identities = {(cell["model"], cell["arm"]) for cell in data["cells"]}
+        self.assertEqual(set(bars), identities)
+        self.assertEqual(set(points), identities)
+        models = ["claude-sonnet-5.5", "gemini-4-argon", "gpt-6.1-sol"]
+        for cell in data["cells"]:
+            key = cell["model"], cell["arm"]
+            start = 590
+            for field in ("cr1_pass", "cr1_fail", "cr1_missing"):
+                rect = bars[key].find(f"s:rect[@data-outcome='{field}']", ns)
+                if not cell[field]:
+                    self.assertIsNone(rect)
+                    continue
+                self.assertAlmostEqual(float(rect.get("x")), start)
+                self.assertAlmostEqual(float(rect.get("width")), cell[field] / 21 * 340)
+                start += cell[field] / 21 * 340
+            self.assertAlmostEqual(float(points[key].get("cx")),
+                85 + models.index(cell["model"]) * 300 + (cell["delivery_credits_mean"] - 35) / 290 * 250)
+            self.assertAlmostEqual(float(points[key].get("cy")),
+                800 - (cell["p10_mean"] - 90.5) / 9.9 * 200)
+        labels = {"".join(node.itertext()) for node in svg.findall(".//s:text", ns)}
+        for model in models:
+            counts = " ".join(
+                f"{cell['arm']}[{cell['delivery_credits_n']}]"
+                for cell in data["cells"] if cell["model"] == model
+            )
+            self.assertIn(f"n: {counts}", labels)
+
+    def test_given_chart_generator_when_run_then_layout_checks_pass_without_changing_data(self):
+        source = (ANC / "study-results-2026-11-15.json").read_bytes()
+        with tempfile.TemporaryDirectory(prefix=".paper-charts-", dir=ANC) as directory:
+            result = subprocess.run(
+                ["node", str(ANC / "export_results_charts.mjs"), directory],
+                capture_output=True, text=True, check=False, timeout=90,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(result.stdout.count("no clipped or overlapping text"), 2)
+            for stem in ("fig-study-trajectories", "fig-study-outcomes-costs"):
+                self.assertEqual(
+                    (Path(directory) / f"{stem}.svg").read_bytes(),
+                    (PACKAGE / f"{stem}.svg").read_bytes(),
+                )
+                self.assertEqual(
+                    (Path(directory) / f"{stem}.png").read_bytes()[16:24],
+                    (PACKAGE / f"{stem}.png").read_bytes()[16:24],
+                )
+        self.assertEqual((ANC / "study-results-2026-11-15.json").read_bytes(), source)
 
     def test_given_chart_reading_cues_when_rendered_then_directions_and_limits_are_explicit(self):
         cues = {
@@ -636,8 +826,9 @@ class MeasurementProvenanceTests(unittest.TestCase):
                     self.assertIn(cue, text)
         protocol = " ".join((ANC / "experiment-protocol.tex").read_text().split())
         self.assertIn("contract sets expand across cycles", protocol)
-        self.assertIn("cheap failure is not efficiency", protocol)
-        self.assertIn("Statistical uncertainty appears in the intervals", protocol)
+        manuscript = " ".join((PACKAGE / "main.tex").read_text().split())
+        self.assertIn("treating cheap failure as efficiency", manuscript)
+        self.assertIn("95\\% bootstrap intervals", protocol)
 
     def test_given_full_identifiers_when_read_then_register_is_unique_linked_and_last(self):
         from check_paper import expand_inputs
@@ -682,11 +873,12 @@ class MeasurementProvenanceTests(unittest.TestCase):
             with self.subTest(table=label):
                 self.assertIn(r"\armlegend", table)
         self.assertIn("final ten-feature repository before the withheld extension", prose)
-        self.assertIn("acquisition means implementing a required capability", prose)
-        self.assertIn("assigned first to failure and then to success", prose)
-        self.assertIn("sampling uncertainty", prose)
-        self.assertIn("offer design inputs for a future study", manuscript)
-        self.assertIn("require separate development and review", manuscript)
+        self.assertIn("acquisition of a new feature from retention", prose)
+        supplement = " ".join((ANC / "measurement-provenance.tex").read_text().split())
+        self.assertIn("assigned first to failure and then to success", supplement)
+        self.assertIn("sampling uncertainty", supplement)
+        self.assertIn("prospectively registered study", manuscript)
+        self.assertIn("until its design and resources are approved", manuscript)
         self.assertNotIn("those options execution", manuscript)
 
 if __name__ == "__main__":

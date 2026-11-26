@@ -27,7 +27,7 @@ ARM_SESSIONS = {
 def table_rows(source: str, label: str) -> list[list[str]]:
     tables = [
         table for table in re.findall(
-            r"\\begin\{table\}(?:\[[^]]*\])?(.*?)\\end\{table\}", source, re.S
+            r"\\begin\{table\}(?:\[[^]]*\])?(.*?)\\end\{table\}", source, re.DOTALL
         ) if f"\\label{{{label}}}" in table
     ]
     if len(tables) != 1:
@@ -89,6 +89,9 @@ class ProtocolPlanningTests(unittest.TestCase):
         cls.manuscript = strip_comments(
             (PACKAGE / "main.tex").read_text(encoding="utf-8")
         )
+        cls.supplement = strip_comments(
+            (PACKAGE / "anc/measurement-provenance.tex").read_text(encoding="utf-8")
+        )
 
     def test_given_arm_schedules_when_compared_then_declared_ceilings_match(self) -> None:
         rows = table_rows(self.protocol, "tab:protocolsummary")
@@ -118,7 +121,7 @@ class ProtocolPlanningTests(unittest.TestCase):
                     )
 
     def test_given_assumed_sds_when_sized_then_conditional_planning_rows_match(self) -> None:
-        rows = table_rows(self.protocol, "tab:replicationchoices")
+        rows = table_rows(self.supplement, "tab:replicationchoices")
         self.assertEqual(len(rows), len(ALLOCATIONS))
         quantiles = NormalDist().inv_cdf(0.975) + NormalDist().inv_cdf(0.80)
         for row, sd, n in zip(rows, (15, 20, 25), ALLOCATIONS):
@@ -131,7 +134,7 @@ class ProtocolPlanningTests(unittest.TestCase):
             r"\frac{2{(z_{1-\alpha/2}+z_{1-\beta})}^2\sigma^2}"
             r"{M\Delta_*^2}"
         )
-        self.assertIn(equation, re.sub(r"\s+", "", self.protocol))
+        self.assertIn(equation, re.sub(r"\s+", "", self.supplement))
 
     def test_given_default_n_and_sd_25_when_planned_then_power_is_below_80_percent(self) -> None:
         normal = NormalDist()
@@ -143,7 +146,7 @@ class ProtocolPlanningTests(unittest.TestCase):
         self.assertLess(power, 0.80)
 
     def test_given_session_caps_when_totaled_then_no_allocation_fits_the_envelope(self) -> None:
-        prose = " ".join(self.protocol.split())
+        prose = " ".join(self.supplement.split())
         self.assertIn("aggregate envelope remains 300,000 AI credits", prose)
         self.assertIn("270,000-credit local admission ceiling", prose)
         for n in ALLOCATIONS:
@@ -157,15 +160,15 @@ class ProtocolPlanningTests(unittest.TestCase):
         self.assertEqual(sum(minutes for minutes, _ in b), sum(minutes for minutes, _ in d))
         self.assertEqual(sum(credits for _, credits in b), sum(credits for _, credits in d))
         self.assertNotEqual(len(b), len(d))
-        self.assertIn("D also has fewer fresh sessions", self.protocol)
+        self.assertIn("with fewer fresh starts", " ".join(self.protocol.split()))
 
     def test_given_selected_allocation_when_rendered_then_current_sample_and_historical_labels_agree(self) -> None:
         abstract = self.manuscript.split(r"\begin{abstract}", 1)[1].split(
             r"\end{abstract}", 1
         )[0]
         abstract_prose = " ".join(abstract.split())
-        self.assertIn("21 development runs in every condition", abstract_prose)
-        self.assertIn("All 315 allocated runs finished", abstract_prose)
+        self.assertIn("21 runs per cell", abstract_prose)
+        self.assertIn("one of 315 runs", abstract_prose)
         labels = {}
         for stem in ("fig-pilot-design", "fig-experiment-measures"):
             scene = json.loads((PACKAGE / f"{stem}.excalidraw").read_text())
@@ -178,7 +181,10 @@ class ProtocolPlanningTests(unittest.TestCase):
             self.assertIn("12 (default), 21 or 33 trajectories per model per arm", text)
 
     def test_given_current_kit_source_when_described_then_capability_and_reporting_limits_agree(self) -> None:
-        availability = self.manuscript.split(r"\section*{Data availability}", 1)[1]
+        availability = (
+            self.manuscript.split(r"\section*{Data availability}", 1)[1]
+            + self.supplement
+        )
         for marker in (
             "protocol-frozen-v6",
             "5ab24be4556876500a40e56201f6efc3930cc8b8",
@@ -187,7 +193,7 @@ class ProtocolPlanningTests(unittest.TestCase):
             with self.subTest(marker=marker):
                 self.assertIn(marker, availability)
         self.assertNotIn("only A/B/C are implemented", availability)
-        prose = " ".join(self.protocol.split())
+        prose = " ".join((self.protocol + self.supplement).split())
         self.assertNotIn("implements only A/B/C", prose)
         for marker in (
             "prospective reporting requirements",
