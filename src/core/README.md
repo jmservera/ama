@@ -5011,6 +5011,7 @@ witnessed restore, real-model, qualified human or application acceptance.
   bound versions and need no entry. The allowance ledger is SQL only and a restore rewinds it, so
   `close_allowance_after_restore(db)` marks every pool exhausted (fail closed; idempotent; a rotated
   authority inherits the highest consumption) until an operator reviews and re-seeds. Tested on SQLite only.
+  `reconcile_after_restore(store, db, now)` runs the three steps in that order and returns the changed erasure case ids, release ids and the closed pool count; a failing step raises and later steps do not run.
 * Unverified: the Azure SQL point-in-time restore drill (DH-005) has not been run;
   the register has not been run against a real storage account, nor has its
   retention or immutability policy been configured or tested; the Blob container

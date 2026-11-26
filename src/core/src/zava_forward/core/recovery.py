@@ -135,6 +135,17 @@ def close_allowance_after_restore(db):
     return cur.rowcount
 
 
+def reconcile_after_restore(store, db, now, actor="system-restore"):
+    """The one post-restore entry point: reapply erasures, reapply suspended and revoked releases, then close the
+    allowance pools. A failing step raises and the later steps do not run, so a half-applied restore is never
+    reported as reconciled; the operator fixes the cause and runs it again (every step is idempotent)."""
+    return dict(
+        erasures=reapply_deletions(store, actor),
+        releases=reapply_release_changes(db, now, store, actor),
+        allowance_pools=close_allowance_after_restore(db),
+    )
+
+
 def backup(store, dest):
     """Consistent copy of the SQLite database (online backup API)."""
     with store.dblock:

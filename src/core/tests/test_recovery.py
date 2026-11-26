@@ -391,6 +391,23 @@ class RecoveryTests(unittest.TestCase):
         self.assertEqual([tuple(r) for r in rows], [("p1", 10, 1000, 10, 1000), ("p2", 10, 1000, 10, 1000)])
         self.assertEqual(recovery.close_allowance_after_restore(db), 0)
 
+    def test_reconcile_after_restore_runs_every_step_once_and_fails_closed(self):
+        from zava_forward.core import assistants
+        db = self._release_db()
+        db.execute(next(d for d in assistants.SQLITE_DDL if "assistant_allowance" in d))
+        db.execute("INSERT INTO assistant_allowance VALUES ('p1', 10, 1000, 9e9, 2, 200)")
+        self.assertTrue(recovery.record_release_change(self.store, db, "r1", "suspended"))
+        rel.change(db, 1.0, None, "r1", "suspended", "incident", system=True)
+        db.execute("UPDATE assistant_releases SET status='active'")
+        got = recovery.reconcile_after_restore(self.store, db, 2.0)
+        self.assertEqual(got, dict(erasures=[], releases=["r1"], allowance_pools=1))
+        self.assertEqual(recovery.reconcile_after_restore(self.store, db, 3.0), dict(erasures=[], releases=[], allowance_pools=0))
+        db.execute("UPDATE assistant_allowance SET used_calls=0, reserved_tokens=0")
+        self.store.docstore.list_ids = lambda case: (_ for _ in ()).throw(DocumentStoreError("down"))
+        with self.assertRaises(DocumentStoreError):
+            recovery.reconcile_after_restore(self.store, db, 4.0)
+        self.assertEqual(db.execute("SELECT used_calls FROM assistant_allowance").fetchone()[0], 0)
+
     def test_release_register_writes_nothing_for_unchanged_unknown_or_invalid_change(self):
         db = self._release_db()
         self.assertFalse(recovery.record_release_change(self.store, db, "nope", "suspended"))
