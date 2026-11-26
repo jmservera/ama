@@ -15,13 +15,13 @@
       "content_sha256": "5e3e353e2a7eb5de5bd147fb096dc9b67cc51e3c3f6d8e63450b69608c3d998e"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "5d5db6b92cf9366e94f0080086a227f659e00e4cf91c2719281f8a76fa9918c4"
+      "content_sha256": "825527549822b99676260b8b92bce83d11b6d840bca19e19168eecb1974d9496"
     },
     "anc/deferred-measures.tex": {
-      "content_sha256": "648cc785600c76fcdc2f96c348a941b1e8e52333405d6cea22232da59b0c2872"
+      "content_sha256": "14869291dd3e6d9da01da5c930f6bfee5bf007a64f02aaee69096c46d7d697a9"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "66e01f4d46b567bf61a4442862d757e4f95bb1fbf4bc84a9025de973bac0a659"
+      "content_sha256": "89040b745ed2d16b43f39a57b41904ec045dd1d25da6ac67fafbd7cb3932e21f"
     }
   },
   "author_review_revision": {
@@ -677,6 +677,42 @@
     "evidence_map": "anc/revision-report.md#concrete-example-revision-25-november",
     "validation_tier": "Focused manuscript and directly coupled source-binding checks; no experimental, application, infrastructure, deployment, security or repository-gate change.",
     "limits": "Historical source/PDF bindings retained unchanged. Native-diagram regeneration lacks its required Playwright browser. Automated prose scoring and historical checker baseline 0d5dcb02 are unavailable; human, independent scientific, hosted and publication approvals remain separate."
+  },
+  "unsupported_claims_revision": {
+    "date": "2026-11-26",
+    "scope": "Stricter whole-paper claim audit across all eight active TeX sources. Added case and instrument locators and named-source recommendations; removed unsupported schedule, duration, causal, instruction-inheritance and preparation-cost assertions. Six TeX inputs changed; scientific results, equations, prompts, bibliography, figure inputs and original records are preserved.",
+    "prior_delivery_revision": "generic_claims_revision",
+    "baseline_commit": "c953b07b5c48f506d51b0548ef35177fa28c481e",
+    "case_commit": "29c6b512f5e68733bb2cc1882343db39f5eb2cad",
+    "experiment_results_commit": "d097a10b090baefadf995ecd910eb96c324f0234",
+    "delivery_status": "Separate preview only. Concurrently committed main.pdf retained with explicit owner approval, not overwritten by this build.",
+    "version_status": "Concurrent commit 25463dd58d4aa3fbb3737f4ccee194cc21edae35 captured most prose changes and the delivered PDF during validation. Remaining prose, bindings and records are uncommitted; no assistant commit, push or publication.",
+    "intake_pdf_sha256": "3cd7f5c5db89b757128f5468e064241980c807060ce0de5558ffe96b365e948c",
+    "retained_pdf_sha256": "ff263095ed331c8cdb0d91df7350f4772439b36fc3f986b7baa2612058f21233",
+    "retained_pdf_relation": "The retained PDF changed outside this build. Its equivalence to the final sources is not asserted; the separate preview is source-bound below.",
+    "source_sha256": {
+      "main.tex": "cb1aa780c462f3c38d06bba59a96b448239b23d57a61d73cec320781442e4830",
+      "anc/background.tex": "882e05f19a5641aae436f68e664705f47d10304cf03cba7a80c6f210c3c46ab3",
+      "anc/experiment-protocol.tex": "1485dabbdb2539dc7f18d7ad53e95ec20e8376d528c4ce65a2a0fb66bdd58b35",
+      "anc/supplement-section.tex": "166d69d00068f1dae0011fe13a6e7eaf7ac1393d00226335740b114591a5e937",
+      "anc/additional-evidence.tex": "642180fb6284cfbb4b4dde9b02a93ed001f0dd55ff4fd3a83749bfe1d9a16721",
+      "anc/case-audits.tex": "2623fcaaf022afa9c8e5ccf6590b260089b5a8e40acb7d114438315e140d36a1",
+      "anc/deferred-measures.tex": "95826e6632b5889c7838b612daa57b13528ed658549c7013ebb5892208a6162b",
+      "anc/measurement-provenance.tex": "e438599f9277343946ba7c4e9818127a6617904b5578df26dd9cef1f82e16aa6"
+    },
+    "preview": {
+      "filename": "main.pdf",
+      "sha256": "21a14331918ef957a9f26354cabfab674466bbd65ca5878a74bd344912d0514b",
+      "pages": 75,
+      "supplement_start_page": 46,
+      "source_register_start_page": 72,
+      "build": "Two PDFLaTeX passes with shell escape disabled. Final log has no warnings, box warnings, missing characters or unresolved references. All pages have content and in-page words.",
+      "reviewed_pages": [1, 2, 6, 35, 36, 47, 49, 59, 72]
+    },
+    "evidence_map": "anc/revision-report.md#unsupported-claim-revision-26-november",
+    "authoring_tests": "88 selected tests pass; the single native-diagram regeneration test is excluded for its previously observed missing Playwright build 1194 browser. No full-suite pass is claimed.",
+    "validation_tier": "Focused manuscript and directly coupled source-binding checks; no experiment, application, infrastructure, deployment, security control or repository-gate change.",
+    "limits": "Named-source retrieval is targeted, not exhaustive. Earlier binding records are historical. The native-diagram browser and historical checker baseline remain unavailable. Automated prose scoring, independent scientific review, human approval, hosted CI and publication acceptance are not established."
   },
   "restored_citation_keys": [
     "bacchelli2013review",

@@ -1,8 +1,105 @@
 ---
 title: Everything but the Software - Revision Record
 description: Narrative and author-TODO reconciliation, remaining evidence plan and preserved dated review records
-ms.date: 2026-11-25
+ms.date: 2026-11-26
 ---
+
+## Unsupported-claim revision 26 November
+
+### Scope and claim dispositions
+
+The owner requested a second whole-paper pass: add a real case or named source
+to claims without an example, number or source, or cut them. All 71 headed
+sections across the article and seven active inputs were reviewed. Six TeX
+sources changed. Definitions, explicit proposals, mathematical consequences
+and necessary uncertainty statements retain their distinct roles.
+
+Work began from clean commit `c953b07b5c48f506d51b0548ef35177fa28c481e`.
+The case and experiment pins remain
+`29c6b512f5e68733bb2cc1882343db39f5eb2cad` and
+`d097a10b090baefadf995ecd910eb96c324f0234`. The earlier
+[claim-to-example map](#claim-to-example-and-evidence-map) retains the inspected
+case-log and report passages. The table below records this stricter pass;
+source support is limited to the specified claim and passage.
+
+| Manuscript locator | Disposition | Evidence and verification limit |
+| --- | --- | --- |
+| Introduction, Cunningham paragraph | Retained the named WyCash account; cut the unsupported visible/hidden-debt taxonomy and generic maintenance opener. | Existing Cunningham citation. No new debt measurement or literature finding is asserted. |
+| Introduction, PhotoCraft and SWE-Maintain | Retained the reported project and benchmark results; cut the inference that agentic development compresses schedules and makes maintenance more pressing. | Existing cited results do not establish that schedule effect. |
+| Introduction, discovery chronology | Replaced the claim that preparation made hasty prompting hard to blame with the recorded sequence of discovery and delivery. | Case evidence index, author-review context and retained coordinator recovery. Preparation does not rule out rival explanations. |
+| Introduction and Background 2.3 | Replaced broad instruction-inheritance and maintenance claims with this experiment's repository/handover arrangement and named recommendations. | Protocol design; Nigh's "What works in practice" recommends runnable commands and explicit boundaries. Anthropic's "Compaction" and "Structured note-taking" describe context curation. Targeted relevant passages were inspected; this is practitioner guidance, not an efficacy estimate. |
+| Case narrative and constructs | Added case-index locators and named the author's approval responsibilities; removed repeated claims about the importance of complete workflows. | Case evidence index, `author_review_context.discovery_and_handoffs`, O1, O2 and O5. The participant account remains separate from independently executed journeys. |
+| Case contrast table and Supplement A.2 | Replaced causal wording about task framing with changed conditions whose effects were not isolated. Replaced unverified version changes with recorded model-selector changes. | Case evidence index, historical coordinator recovery and instruction versions. Actual backend identities remain unavailable. |
+| Supplement A.2, counter-evidence | Attributed healthy-revision reports to coordinator summaries and MVP use to the participant; retained human approval boundaries. | Case evidence index, adverse-outcome summary at turn 1022, O1 and coordinator instructions. Neither report supplies a verified paired sign-in trace. |
+| Discussion 8.2, "What worked" | Cut the uncorroborated durations "in days" and "in a day", and the exact claim of rejecting five agents. Retained the concrete consent, professional-judgement and prototype examples. | Author review and case-index discovery/handoff entries support revisions and prototypes, not measured speed benefits. No human-only comparison exists. |
+| Discussion 8.4 | Gave Darwin and SkillOpt their own existing citations instead of leaving Ng's citation to appear to support all three. | Existing named procedures; no source replacement or bibliography addition. |
+| Discussion 8.5 | Replaced a causal explanation of low loss with the endpoint's rollback/protected-test scope; tied unequal preservation burden to GPT's CR1 prerequisites. | Protocol, resource/information boundaries and CR1 prerequisite table. The policy's causal effect was not separately tested. |
+| Discussion 8.5, follow-up | Cut speculative benefits of full RPI and the unsupported prediction of substantially higher token needs. Retained discovery-disabled status and an explicitly proposed comparison subject to resource approval. | Runtime-boundary record and reported model/arm cells. No follow-up efficacy or spending estimate is claimed. |
+| Discussion, case follow-up | Cut the unevaluated squash-diff recommendation; retained archive/restore and approval requirements as conditions on any later retention change. | Explicit proposal and repository evidence-retention boundary, not an experimental result. |
+| Supplement A.3.4 | Replaced "checks caught bounded defects" with the specific size-limit correction and its interrupted gate. | Previously inspected PR 445. The interrupted gate did not pass; elapsed gate and review effort were not measured. |
+| Supplement economics and deferred measures | Cut nonlinear-cost speculation and the claim that rate definitions would prevent rewarding failure or discouraging judgement. | The assumed cost model, equations and intervention exclusions remain intact; their behavioural effects were not evaluated. |
+| Methods and Supplement A.12 | Replaced broad repeatability and cost-free preparation claims with evaluator/source boundaries and the judge-call formula's scope. Cut the generic claim that multiple judges expose disagreement where no between-model comparison ran. | R05 evaluator inventory and the completed judging record. Preparation cost was not measured; development-model overlap and the earlier 313-trajectory judging frame remain explicit. |
+
+The two newly rechecked public recommendations are
+[Nigh's agent-instruction article](https://github.blog/ai-and-ml/github-copilot/how-to-write-a-great-agents-md-lessons-from-over-2500-repositories/)
+and [Anthropic's context-engineering article](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents),
+retrieved on 26 November 2026. Initial responses were truncated; a subsequent
+targeted retrieval included Anthropic's compaction and note-taking passages.
+Only those relevant passages support the added recommendations. This was not
+an exhaustive external-citation audit.
+
+### Checks and concurrent delivery
+
+Classification: focused manuscript work and directly coupled source-binding
+tests. No study design, experimental scoring, application, infrastructure,
+deployment, security control or repository-gate semantics changed.
+
+All 88 selected authoring tests pass. The one excluded test is
+`test_given_native_exporter_when_run_then_exports_without_rewriting_sources`;
+its earlier execution failed because Playwright browser build 1194 was absent.
+It was not rerun or counted as passed. Diagram sources and exports are
+unchanged. Ruff, ChkTeX, structural and whitespace checks pass. The structural
+checker reports 17,213 approximate body words and 1,823 abstract source
+characters against the strict limit of fewer than 1,920. Its historical
+comparison against `0d5dcb02` remains unavailable.
+
+Exact comparisons with the intake preserve seven equations, 176 labels,
+eleven figure inputs, three literal prompt inputs, 61 source-register rows
+and the embedded bibliography. Numerical sequences in all 43 table
+environments are unchanged; the result tables in the protocol and measurement
+input are byte-identical. Scientific results, unknowns, billing holds and
+dependence limits retain their existing meaning. Three changed active
+Supplement body digests were refreshed, with earlier revision records kept.
+
+Two PDFLaTeX passes with shell escape disabled produced a separate 75-page
+preview. The final compiler log has no warnings, box warnings, missing
+characters or unresolved references. Every page has content, and extracted
+words remain within page bounds. Rendered pages 1, 2, 6, 35, 36, 47, 49, 59
+and 72 were inspected. The Supplement starts on page 46 and the source
+register on page 72. The preview digest is
+`21a14331918ef957a9f26354cabfab674466bbd65ca5878a74bd344912d0514b`.
+
+During validation, another process committed most of the prose and a changed
+delivered PDF in `25463dd58d4aa3fbb3737f4ccee194cc21edae35`. The owner
+explicitly approved retaining that work and finishing the remaining sources,
+bindings and evidence records. The intake PDF digest was
+`3cd7f5c5db89b757128f5468e064241980c807060ce0de5558ffe96b365e948c`;
+the retained PDF is
+`ff263095ed331c8cdb0d91df7350f4772439b36fc3f986b7baa2612058f21233`.
+This build did not overwrite either delivered file. The retained PDF's
+equivalence to the final sources is not asserted; use the separate preview
+for this revision. `unsupported_claims_revision` binds the final sources and
+preview while preserving the previous delivery records.
+
+Automated prose scoring remains unavailable because the installed detector
+could not be found. No candidate, evaluator, judge, deployment or paid
+experimental run was executed. No assistant commit, push or publication ran.
+
+Work execution: Complete for the authorized manuscript, records and separate
+preview. Assessment: scoped claim grounding and selected authoring checks
+complete; native-diagram regeneration remains blocked. This assisted pass is
+not independent scientific review. Human approval, applicable hosted checks
+and publication acceptance remain separate and unperformed.
 
 ## Concrete-example revision 25 November
 

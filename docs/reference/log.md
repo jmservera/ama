@@ -15534,3 +15534,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Revised all eight active TeX sources after reviewing 71 headed sections. Retained case, experiment and literature examples replace general explanations; numerical results, equations, prompts and figures are unchanged.
 * Added the [claim-to-example and validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#concrete-example-revision-25-november), refreshed active Supplement digests and preserved earlier bindings. The owner approved the directly coupled source-binding test update.
 * All 88 selected authoring checks pass. A separate 75-page PDF preview compiles without warnings; the delivered PDF is unchanged. Native-diagram regeneration lacks its required browser, automated prose scoring is unavailable, and no scientific or publication approval is implied.
+
+## [2026-11-26] update | Whitepaper unsupported claims sourced or cut
+
+* Reviewed all eight active TeX sources and revised six. Added named recommendations and case/evaluator locators; cut unsupported schedule, duration, causal and preparation-cost assertions. Scientific results, equations, prompts, figure inputs and bibliography are preserved.
+* Added the [claim dispositions and validation record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#unsupported-claim-revision-26-november), refreshed three active Supplement digests and extended the existing source-binding guard without replacing earlier records.
+* All 88 selected authoring checks pass. The separate 75-page preview compiles without warnings and passes all-page geometry/content checks. The owner approved retaining a concurrently committed delivered PDF; no source equivalence is asserted for it. Native-diagram regeneration and automated prose scoring remain unavailable; no independent scientific or publication approval is implied.

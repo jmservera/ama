@@ -85,7 +85,7 @@ class MeasurementProvenanceTests(unittest.TestCase):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
         self.assertEqual(
             hashlib.sha256((PACKAGE / "main.pdf").read_bytes()).hexdigest(),
-            unsupported_revision["unchanged_pdf_sha256"],
+            unsupported_revision["retained_pdf_sha256"],
         )
 
     def test_measurement_slice_and_prompt_examples_are_active(self):

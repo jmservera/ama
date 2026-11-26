@@ -1,10 +1,28 @@
 ---
 title: Everything but the Software - source package
 description: Completed exploratory findings, measurement lessons and publication checklist with preserved historical evidence
-ms.date: 2026-11-25
+ms.date: 2026-11-26
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and Experiment.*
+
+## Unsupported-claim revision 26 November
+
+The second pass reviewed all eight active TeX sources for claims without
+an example, number or source. It adds named recommendations and case-record
+locators, and cuts unsupported schedule, duration and cost assertions.
+Participant accounts, observed results and proposed follow-ups remain distinct.
+The [claim dispositions](./anc/revision-report.md#unsupported-claim-revision-26-november)
+record the source passages and verification limits.
+
+All 88 selected authoring checks pass; the unchanged native-diagram exporter
+remains excluded because its browser is unavailable. The separate 75-page
+PDF preview compiles without warnings and passes all-page content and geometry
+checks. Numerical results, equations, prompts, bibliography and figures are
+preserved. `unsupported_claims_revision` binds the sources and preview.
+The owner approved keeping a concurrently committed delivered PDF; this
+revision does not claim that file matches the final sources. No publication
+or independent scientific approval is implied.
 
 ## Concrete-example revision 25 November
 

@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-25
+ms.date: 2026-11-26
 ms.topic: overview
 ---
 
@@ -20,6 +20,15 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+The paper's [26 November unsupported-claim revision](../capstone/thought-leadership/everything-but-the-software/README.md#unsupported-claim-revision-26-november)
+adds named-source and case-record anchors and cuts unsupported speed, cost
+and causal assertions. The
+[disposition table](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#unsupported-claim-revision-26-november)
+records the narrower claims and evidence limits. All 88 selected authoring
+checks pass; native-diagram regeneration remains unavailable. A separate
+75-page preview matches the final sources. The owner-approved concurrent
+delivered PDF is retained without claiming equivalence to those sources.
 
 The paper's [25 November concrete-example revision](../capstone/thought-leadership/everything-but-the-software/README.md#concrete-example-revision-25-november)
 reviews all 71 headed sections across eight active TeX sources. Generic
