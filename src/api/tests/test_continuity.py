@@ -430,7 +430,7 @@ class ChatDemoMeterOnSqlStore(Base):
             chat_demo_meter.ensure(store, 600, now=first + timedelta(hours=1))
         with service.transaction() as db:
             records = [json.loads(row[0]) for row in db.execute("SELECT body FROM assistant_events")]
-        authorities = [r for r in records if r["kind"] == "authority"]
+        authorities = sorted((r for r in records if r["kind"] == "authority"), key=lambda r: r["start"])
         self.assertEqual(len(authorities), 2)
         self.assertNotEqual(authorities[0]["budgets"][0]["id"], authorities[1]["budgets"][0]["id"])
         self.assertEqual(authorities[0]["end"], authorities[1]["start"])

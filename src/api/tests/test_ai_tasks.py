@@ -552,8 +552,19 @@ class TasksMixin:
             recs[rid]["review_evidence"] = {"review_seconds": secs}
         eff = self.store.ai_live_report()["review_effort"]["summary"]
         self.assertEqual(
-            eff, dict(reviewed=4, timed=2, total_seconds=120.0, mean_seconds=60.0)
+            eff,
+            dict(
+                reviewed=4,
+                timed=2,
+                total_seconds=120.0,
+                mean_seconds=60.0,
+                by_source={"ai": dict(timed=2, total_seconds=120.0, mean_seconds=60.0)},
+            ),
         )
+        recs[ids[0]]["source"] = "workflow"
+        split = self.store.ai_live_report()["review_effort"]["summary"]["by_source"]
+        self.assertEqual(split["workflow"], dict(timed=1, total_seconds=30.0, mean_seconds=30.0))
+        self.assertEqual(split["ai"], dict(timed=1, total_seconds=90.0, mean_seconds=90.0))
         for rid in ids:
             recs[rid].pop("review_evidence")
         self.assertEqual(self.store.ai_live_report()["review_effort"], {})
