@@ -844,7 +844,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 except Exception:
                     logging.getLogger(__name__).warning("http-error %s %s 503 response not delivered", method, _printable(path))
                 return
-            logging.getLogger(__name__).error("http-error %s %s status=500 exc=%s at=%s response_started=%s", method, _printable(path), name, where, sent)
+            cause = " cause=sql-write-lock-busy" if is_write_lock_busy(exc) else ""
+            logging.getLogger(__name__).error("http-error %s %s status=500 exc=%s at=%s response_started=%s%s", method, _printable(path), name, where, sent, cause)
             if not sent:
                 self._headers_buffer = []
                 try:

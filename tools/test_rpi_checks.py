@@ -334,6 +334,30 @@ class GateTests(unittest.TestCase):
         self.assertEqual(len(baseline), 1)
         self.assertLess(settle[0], baseline[0])
 
+    def test_first_chat_reply_wait_is_bounded_for_loaded_hosts(self) -> None:
+        source = (
+            Path(__file__).resolve().parents[1] / "src/api/checks/employee_chat_browser_check.py"
+        ).read_text(encoding="utf-8")
+        waits = [
+            call
+            for call in ast.walk(ast.parse(source))
+            if isinstance(call, ast.Call)
+            and isinstance(call.func, ast.Attribute)
+            and call.func.attr == "to_contain_text"
+            and call.args
+            and isinstance(call.args[0], ast.Constant)
+            and call.args[0].value == "ordinary case workflow"
+        ]
+        self.assertEqual(len(waits), 1)
+        self.assertEqual(
+            [
+                kw.value.value
+                for kw in waits[0].keywords
+                if kw.arg == "timeout" and isinstance(kw.value, ast.Constant)
+            ],
+            [20_000],
+        )
+
     def test_employee_chat_checker_is_linted_in_planned_and_executed_browser_contracts(
         self,
     ) -> None:
