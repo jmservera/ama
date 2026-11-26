@@ -127,6 +127,7 @@ def driver_sqlstate(exc: BaseException | None) -> str:
 LOCK_RETRY_ATTEMPTS = 8
 LOCK_RETRY_BASE = 1.0
 LOCK_RETRY_CAP = 30.0
+LINK_RETRY_ATTEMPTS = 4  # extra reconnects, with backoff, while the store starts
 _sleep = time.sleep
 _log = logging.getLogger(__name__)
 
@@ -231,7 +232,9 @@ class _Conn:
         # One statement runs and its rows are read at a time (issue #2195: live chat 500s).
         guard = self.__dict__.setdefault("guard", threading.RLock())
         with guard:
-            for attempt in (0, 1):
+            starting = bool(getattr(self, "startup_retries", 0))
+            attempts = 2 + (LINK_RETRY_ATTEMPTS if starting else 0)
+            for attempt in range(attempts):
                 try:
                     if self.raw is None:
                         self._connect()
@@ -245,8 +248,11 @@ class _Conn:
                     dead = bool(_PROGRESS.search(str(e)))
                     if dead:
                         self.raw = None
-                    if attempt or not dead or self.in_tran:
+                    if attempt == attempts - 1 or not dead or self.in_tran:
                         raise
+                    if attempt and starting:
+                        # A link that is still down right after a reconnect (a brief SQL outage) needs time, not another immediate try.
+                        _sleep(min(LOCK_RETRY_CAP, LOCK_RETRY_BASE * 2 ** (attempt - 1)))
 
     def execute(self, sql, args=()):
         key = sql.strip().upper()
