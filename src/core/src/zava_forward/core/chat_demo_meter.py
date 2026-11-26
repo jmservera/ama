@@ -3,7 +3,7 @@
 The meter admits a model call only when the ledger holds an authority and a
 price for the exact chat configuration. Under the owner-approved demo switch
 (ZF_CHAT_DEMO_ACTIVATION with ZF_DEPLOYMENT_PROFILE=demo) this module records
-a synthetic, low-cap, one-day authority and price so the demonstration can make
+a synthetic, low-cap authority for each UTC hour and price so the demonstration can make
 one call per question. Nothing is recorded without the switch, and the records
 are labelled synthetic: they are not a finance approval, a real price or a
 budget decision.
@@ -30,16 +30,18 @@ def ensure(
     env: Mapping[str, str] | None = None,
     now: datetime | None = None,
 ) -> bool:
-    """Idempotently seed today's synthetic authority; a no-op without the demo switch."""
+    """Idempotently seed this hour's synthetic authority; a no-op without the demo switch."""
     ai = store.ai
     honoured = ai_registry.demo_activation_honoured(TASK, env)  # type: ignore[no-untyped-call]
     ai.synthetic_price_capabilities = frozenset({TASK}) if honoured else frozenset()
     ledger = getattr(ai, "consumption", None)
     if not honoured or ledger is None:
         return False
-    day = (now or datetime.now(UTC)).replace(hour=0, minute=0, second=0, microsecond=0)
-    start, end = day.isoformat(), (day + timedelta(days=1)).isoformat()
-    label = f"synthetic-demo-chat-{day.date().isoformat()}"
+    moment = (now or datetime.now(UTC)).replace(minute=0, second=0, microsecond=0)
+    # One budget per hour: a settlement the ledger holds as liability-unknown stops the model for
+    # the rest of that hour only. Authority windows may not overlap, so each slot abuts the next.
+    start, end = moment.isoformat(), (moment + timedelta(hours=1)).isoformat()
+    label = f"synthetic-demo-chat-{moment.strftime('%Y-%m-%dT%H')}"
     configuration = ai.configuration(ai.fast, TEMPERATURE, max_tokens)
     # Each ledger write opens a new SQL connection, takes the exclusive write lock and rereads it.
     seeded = (label, configuration, CALLS, TOKENS, AMOUNT)
