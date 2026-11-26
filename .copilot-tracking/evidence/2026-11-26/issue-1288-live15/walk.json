@@ -1,0 +1,3751 @@
+{
+ "polls": [
+  {
+   "t": "00:36:55Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 20,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 20,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:37:44Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 20,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 20,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:38:32Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 20,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 20,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:39:24Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 22,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 22,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:40:15Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 23,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 23,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:41:04Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 24,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 24,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:41:53Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 25,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 25,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:42:42Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 25,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 25,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:43:31Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 25,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 25,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  },
+  {
+   "t": "00:44:20Z",
+   "metrics": {
+    "invocation": 3,
+    "refusal": 0,
+    "withheld": 0,
+    "validation_failure": 0,
+    "fallback": 25,
+    "human_review": 0,
+    "override": 0,
+    "consumption": 25,
+    "latency_samples": 0,
+    "tokens": 0
+   }
+  }
+ ],
+ "sensors": {
+  "ZF-2025-0029": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0029",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is declined; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-26T00:36:43Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is declined; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is declined; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-26T00:36:43Z",
+     "input_digest": "b60ecfc4b40ca69696894252e8b30fd1a7c8fe0286cf169094db8fd3a4802b81",
+     "output_digest": "26f6c8bfc5abde131bb1055a802285e37d0706caa7287cdae2c4ba43873c1de3",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0029",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0030": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0030",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2230Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T22:30:00Z",
+      "temperature_c": "7.02",
+      "humidity_pct": "91.63",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2235Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T22:35:00Z",
+      "temperature_c": "6.95",
+      "humidity_pct": "91.97",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2245Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T22:45:00Z",
+      "temperature_c": "6.94",
+      "humidity_pct": "92.95",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2250Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T22:50:00Z",
+      "temperature_c": "6.96",
+      "humidity_pct": "93.43",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2305Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T23:05:00Z",
+      "temperature_c": "6.96",
+      "humidity_pct": "93.79",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2315Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T23:15:00Z",
+      "temperature_c": "6.69",
+      "humidity_pct": "93.17",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2335Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T23:35:00Z",
+      "temperature_c": "6.20",
+      "humidity_pct": "92.90",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261125T2345Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-25T23:45:00Z",
+      "temperature_c": "6.16",
+      "humidity_pct": "93.05",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261126T0000Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-26T00:00:00Z",
+      "temperature_c": "6.17",
+      "humidity_pct": "93.05",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261126T0005Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-26T00:05:00Z",
+      "temperature_c": "6.15",
+      "humidity_pct": "93.06",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261126T0015Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-26T00:15:00Z",
+      "temperature_c": "6.04",
+      "humidity_pct": "93.10",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-STQEOYP62W2-20261126T0030Z",
+      "sensor_id": "STQEOYP62W2",
+      "observed_at": "2026-11-26T00:30:00Z",
+      "temperature_c": "5.82",
+      "humidity_pct": "93.38",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-STQEOYP62W2-20261126T0030Z",
+     "sensor_id": "STQEOYP62W2",
+     "observed_at": "2026-11-26T00:30:00Z",
+     "temperature_c": "5.82",
+     "humidity_pct": "93.38",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No retained readings before the first quality evidence record.",
+    "after_absent": "No retained readings from the first quality evidence record onward.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2230Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2235Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2245Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2250Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2305Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2315Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2335Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2345Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261126T0000Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261126T0005Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261126T0015Z",
+     "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261126T0030Z"
+    ],
+    "generated_at": "2026-11-26T00:36:46Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261126T0030Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "5.82",
+      "humidity_pct": "93.38",
+      "observed_at": "2026-11-26T00:30:00Z"
+     },
+     "text": "[sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261126T0030Z] temperature_c 5.82 degC, humidity_pct 93.38 %RH (relative humidity), observed 2026-11-26T00:30:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "STQEOYP62W2",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "steady",
+       "change": 0.49,
+       "unit": "degC",
+       "text": "Temperature is steady over the last 7 days (+0.5 degC)."
+      },
+      "humidity_pct": {
+       "direction": "falling",
+       "change": -2.5,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is falling over the last 7 days (-2.5 %RH)."
+      }
+     },
+     "summary": "Temperature is steady over the last 7 days (+0.5 degC). Moisture (relative humidity) is falling over the last 7 days (-2.5 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "223c6d25ce96f15e824e49a19cc3930f709479b4911bbc5231fdee0ab1f45182"
+    },
+    "age_seconds": 406,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-26T00:36:46Z",
+     "input_digest": "b1a8f7063d2b4995e5acbde81ccf150548bf918e6b141e2156a03346221df1b6",
+     "output_digest": "ed8b6f7fb9495c7d8dbd481c267d9135f6dc4373bf6af5d67eb5d9e684eaca58",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0030",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0031": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0031",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "consent-withheld",
+    "detail": "Monitoring consent is unknown; no values are shown.",
+    "readings": [],
+    "before": [],
+    "after": [],
+    "latest": null,
+    "provenance": {},
+    "citation_keys": [],
+    "generated_at": "2026-11-26T00:36:47Z",
+    "freshness": "unknown",
+    "freshness_text": "Monitoring consent is unknown; no values are shown.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "none",
+     "text": "No reading is available to check."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": null,
+     "values": null,
+     "text": "No retained reading is available."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": null,
+     "readings_used": 0,
+     "reason": "Monitoring consent is unknown; no values are shown.",
+     "variables": {
+      "temperature_c": {
+       "direction": "insufficient",
+       "text": "Temperature: not enough retained readings to show a 7-day direction."
+      },
+      "humidity_pct": {
+       "direction": "insufficient",
+       "text": "Moisture (relative humidity): not enough retained readings to show a 7-day direction."
+      }
+     },
+     "summary": "Insufficient readings for a 7-day trend. Use the ordinary quality check; no one is waiting on sensor values."
+    },
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-26T00:36:47Z",
+     "input_digest": "94de7fbf98003947576a017409aa29646bd3e0f6ba500acc684b20faa82b4d73",
+     "output_digest": "f03003e027e8974e4d13fad696f039800bec7a5bbbfa6bed1557549c835fa629",
+     "reading_count": 0
+    },
+    "case_id": "ZF-2025-0031",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "withheld",
+      "label": "Withheld",
+      "text": "Readings are withheld because monitoring consent is not granted."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Use the ordinary quality check. Do not ask for the readings without consent."
+   }
+  },
+  "ZF-2025-0032": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0032",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2230Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T22:30:00Z",
+      "temperature_c": "7.58",
+      "humidity_pct": "93.18",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2235Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T22:35:00Z",
+      "temperature_c": "7.50",
+      "humidity_pct": "93.33",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2250Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T22:50:00Z",
+      "temperature_c": "7.39",
+      "humidity_pct": "93.04",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2300Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T23:00:00Z",
+      "temperature_c": "7.37",
+      "humidity_pct": "92.84",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2305Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T23:05:00Z",
+      "temperature_c": "7.38",
+      "humidity_pct": "93.00",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2320Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T23:20:00Z",
+      "temperature_c": "7.36",
+      "humidity_pct": "94.53",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2330Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T23:30:00Z",
+      "temperature_c": "7.27",
+      "humidity_pct": "95.37",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2335Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T23:35:00Z",
+      "temperature_c": "7.19",
+      "humidity_pct": "95.49",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261125T2345Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-25T23:45:00Z",
+      "temperature_c": "7.02",
+      "humidity_pct": "95.37",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261126T0005Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-26T00:05:00Z",
+      "temperature_c": "6.84",
+      "humidity_pct": "95.10",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261126T0015Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-26T00:15:00Z",
+      "temperature_c": "6.57",
+      "humidity_pct": "95.38",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-SDR52ASLZXU-20261126T0030Z",
+      "sensor_id": "SDR52ASLZXU",
+      "observed_at": "2026-11-26T00:30:00Z",
+      "temperature_c": "6.18",
+      "humidity_pct": "95.94",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-SDR52ASLZXU-20261126T0030Z",
+     "sensor_id": "SDR52ASLZXU",
+     "observed_at": "2026-11-26T00:30:00Z",
+     "temperature_c": "6.18",
+     "humidity_pct": "95.94",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No retained readings before the first quality evidence record.",
+    "after_absent": "No retained readings from the first quality evidence record onward.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2230Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2235Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2250Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2300Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2305Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2320Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2330Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2335Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261125T2345Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261126T0005Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261126T0015Z",
+     "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261126T0030Z"
+    ],
+    "generated_at": "2026-11-26T00:36:48Z",
+    "freshness": "fresh",
+    "freshness_text": "Latest reading is recent (within 15 minutes).",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261126T0030Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "6.18",
+      "humidity_pct": "95.94",
+      "observed_at": "2026-11-26T00:30:00Z"
+     },
+     "text": "[sensor:SDR52ASLZXU:LIVE-SDR52ASLZXU-20261126T0030Z] temperature_c 6.18 degC, humidity_pct 95.94 %RH (relative humidity), observed 2026-11-26T00:30:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "SDR52ASLZXU",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "rising",
+       "change": 1.1,
+       "unit": "degC",
+       "text": "Temperature is rising over the last 7 days (+1.1 degC)."
+      },
+      "humidity_pct": {
+       "direction": "falling",
+       "change": -4.09,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is falling over the last 7 days (-4.1 %RH)."
+      }
+     },
+     "summary": "Temperature is rising over the last 7 days (+1.1 degC). Moisture (relative humidity) is falling over the last 7 days (-4.1 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "21f0b93c19ba79aa8ba6e4518569a964ec535db95b981c06910dc047e1c6754f"
+    },
+    "age_seconds": 408,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-26T00:36:48Z",
+     "input_digest": "987316f3f40542d8408e2b3ad1758f7e7e2456a8b2bbc733f2c4062807debd3a",
+     "output_digest": "f5f7259226237ffe264c351d016ff9cbeb2952074f86f6c98bd5df274bd31879",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0032",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "fresh",
+      "label": "Fresh",
+      "text": "The latest reading is within 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": null
+   }
+  },
+  "ZF-2025-0041": {
+   "status": 200,
+   "body": {
+    "version": "retained-reading-view-v2",
+    "kind": "synthetic-retained-readings",
+    "units": {
+     "temperature_c": "degC",
+     "humidity_pct": "%RH"
+    },
+    "home_id": "ZF-2025-0041",
+    "max_readings": {
+     "window": 12,
+     "context_each": 4
+    },
+    "calibrated": false,
+    "retrofit_context": {
+     "available": false,
+     "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+    },
+    "anchor": {
+     "name": "quality_record_anchor",
+     "at": "2026-10-13T09:00:00Z",
+     "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect."
+    },
+    "state": "ok",
+    "readings": [
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2230Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T22:30:00Z",
+      "temperature_c": "7.33",
+      "humidity_pct": "89.49",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2235Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T22:35:00Z",
+      "temperature_c": "7.26",
+      "humidity_pct": "89.74",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2245Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T22:45:00Z",
+      "temperature_c": "7.19",
+      "humidity_pct": "90.21",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2300Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T23:00:00Z",
+      "temperature_c": "7.18",
+      "humidity_pct": "90.57",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2305Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T23:05:00Z",
+      "temperature_c": "7.14",
+      "humidity_pct": "90.73",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2315Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T23:15:00Z",
+      "temperature_c": "6.90",
+      "humidity_pct": "91.71",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2330Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T23:30:00Z",
+      "temperature_c": "6.51",
+      "humidity_pct": "93.15",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2335Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T23:35:00Z",
+      "temperature_c": "6.47",
+      "humidity_pct": "93.37",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261125T2345Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-25T23:45:00Z",
+      "temperature_c": "6.51",
+      "humidity_pct": "93.81",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261126T0000Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-26T00:00:00Z",
+      "temperature_c": "6.62",
+      "humidity_pct": "94.15",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261126T0005Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-26T00:05:00Z",
+      "temperature_c": "6.58",
+      "humidity_pct": "94.12",
+      "provenance_class": "synthetic-weather-derived"
+     },
+     {
+      "reading_id": "LIVE-S33JPMEGDQW-20261126T0015Z",
+      "sensor_id": "S33JPMEGDQW",
+      "observed_at": "2026-11-26T00:15:00Z",
+      "temperature_c": "6.32",
+      "humidity_pct": "93.99",
+      "provenance_class": "synthetic-weather-derived"
+     }
+    ],
+    "before": [],
+    "after": [],
+    "latest": {
+     "reading_id": "LIVE-S33JPMEGDQW-20261126T0015Z",
+     "sensor_id": "S33JPMEGDQW",
+     "observed_at": "2026-11-26T00:15:00Z",
+     "temperature_c": "6.32",
+     "humidity_pct": "93.99",
+     "provenance_class": "synthetic-weather-derived"
+    },
+    "before_absent": "No retained readings before the first quality evidence record.",
+    "after_absent": "No retained readings from the first quality evidence record onward.",
+    "future_dated_excluded": false,
+    "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+    "provenance": {
+     "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+    },
+    "citation_keys": [
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2230Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2235Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2245Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2300Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2305Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2315Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2330Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2335Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261125T2345Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261126T0000Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261126T0005Z",
+     "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261126T0015Z"
+    ],
+    "generated_at": "2026-11-26T00:36:50Z",
+    "freshness": "stale",
+    "freshness_text": "Latest reading is older than 15 minutes. Treat it as out of date.",
+    "manual_route": "Use the ordinary quality check; no one is waiting on sensor values.",
+    "advisory": "Advisory telemetry \u2014 officer review required",
+    "health": {
+     "state": "ok",
+     "text": "The latest reading is within the possible range."
+    },
+    "grounding": {
+     "origin": "decision_rule",
+     "not_retained": [
+      "dew_point_c",
+      "mould_risk_index"
+     ],
+     "not_retained_text": "Dew point (dew_point_c) and mould risk index (mould_risk_index) are not retained for this home and are not shown or estimated.",
+     "citation": "sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261126T0015Z",
+     "provenance_class": "synthetic-weather-derived",
+     "source_text": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement.",
+     "values": {
+      "temperature_c": "6.32",
+      "humidity_pct": "93.99",
+      "observed_at": "2026-11-26T00:15:00Z"
+     },
+     "text": "[sensor:S33JPMEGDQW:LIVE-S33JPMEGDQW-20261126T0015Z] temperature_c 6.32 degC, humidity_pct 93.99 %RH (relative humidity), observed 2026-11-26T00:15:00Z."
+    },
+    "trend": {
+     "version": "retained-reading-view-v2",
+     "window_days": 7,
+     "advisory_only": true,
+     "provenance": {
+      "advisory_only": true,
+      "affects_stage_gates": false,
+      "basis": "Deterministic comparison of earlier and later retained synthetic readings.",
+      "calibrated": false,
+      "note": "Directionality only. It is not a verified indoor measurement, a hazard decision or quality acceptance."
+     },
+     "steady_within": {
+      "temperature_c": 0.5,
+      "humidity_pct": 2
+     },
+     "sensor_id": "S33JPMEGDQW",
+     "readings_used": 24,
+     "reason": null,
+     "variables": {
+      "temperature_c": {
+       "direction": "rising",
+       "change": 0.84,
+       "unit": "degC",
+       "text": "Temperature is rising over the last 7 days (+0.8 degC)."
+      },
+      "humidity_pct": {
+       "direction": "falling",
+       "change": -2.53,
+       "unit": "%RH",
+       "text": "Moisture (relative humidity) is falling over the last 7 days (-2.5 %RH)."
+      }
+     },
+     "summary": "Temperature is rising over the last 7 days (+0.8 degC). Moisture (relative humidity) is falling over the last 7 days (-2.5 %RH). Advisory only; synthetic and not calibrated.",
+     "input_digest": "154a7f6d2c2279f9cce7a40a759f1cfc5e6fef118e1a7dd96b0081bdcbf1a7fe"
+    },
+    "age_seconds": 1310,
+    "reproducibility": {
+     "analysis_version": "sensor-view-analysis-exercise-v1",
+     "as_of": "2026-11-26T00:36:50Z",
+     "input_digest": "d5d75df10f9bdb20cdcc442b95899de132a6a265ae4b5657d6369ba737f734f0",
+     "output_digest": "14ae76521d305e2349bcb19403363877bb33629cbf6c3dad6dc7cb71a2bfbcff",
+     "reading_count": 12
+    },
+    "case_id": "ZF-2025-0041",
+    "badges": [
+     {
+      "kind": "freshness",
+      "state": "stale",
+      "label": "Stale",
+      "text": "The latest reading is older than 15 minutes."
+     },
+     {
+      "kind": "calibration",
+      "state": "uncalibrated",
+      "label": "Uncalibrated",
+      "text": "Not calibrated. Not a verified indoor measurement."
+     }
+    ],
+    "next_action": "Treat the reading as out of date. Use the ordinary quality check for now."
+   }
+  }
+ },
+ "tasks": {
+  "ZF-2025-0029 /api/assistants/proposals?case_id=ZF-2025-0029": {
+   "status": 200,
+   "body": {
+    "proposals": [],
+    "disabled": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+    "manual": "Open the case for ordinary human work.",
+    "next_after": null
+   }
+  },
+  "ZF-2025-0030 /api/assistants/proposals?case_id=ZF-2025-0030": {
+   "status": 200,
+   "body": {
+    "proposals": [
+     {
+      "attempts": 0,
+      "capability": "quality-evidence",
+      "case_id": "ZF-2025-0030",
+      "continuity_epoch": 1,
+      "created_at": 1795650802.526,
+      "envelope": null,
+      "fence": 0,
+      "id": "1f7d22f72cbb63709a3f1293b9f33126a91005934380e896c5939100c7c90236",
+      "lease_until": 0,
+      "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "not_before": 0,
+      "output": null,
+      "owner": "",
+      "proposal_identity": {
+       "capability": "quality-evidence",
+       "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": {
+       "digest": "a934bac232a270349a4188f036819b79f3c20bc28cedb741c8b072fce9c03d06",
+       "id": "b3f9bd92d8674b5c8c0c045fff8b9886",
+       "version": "demo-r14-2026-11-25"
+      },
+      "review": null,
+      "revision": 3,
+      "snapshot": {
+       "citations": {
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2200Z": {
+         "content_hash": "c0420508657f6c33734a943083ea4d539034e6c6d08d200e0241dcd4d1b0ff41",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2200Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2205Z": {
+         "content_hash": "da53aa3555bfa74339118fb0e1430d2310b8214e87118e0039a7df34754d2373",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2205Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2215Z": {
+         "content_hash": "98c1e38051bbbb537e86abfbf9666ebdd6ba77b5b194580fd45e894186e7ec5d",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2215Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2220Z": {
+         "content_hash": "5ee5c1c05cf97aaa39adfd794549f59c9b2ffb1e65ed535856fd051bb1208443",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2220Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2230Z": {
+         "content_hash": "b429bcb5d4793f81befb71d2307dacc15e9e8248ecb71ae423e34fef0ba7d33d",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2230Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2235Z": {
+         "content_hash": "a4a8e6102d96e071afb473023df53f7f2eb46cfc237e071a86b67c4f25a1caec",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2235Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2245Z": {
+         "content_hash": "a5482afe5e8e39cfeccef4d3eb2e0198fdc7e33e01462a5782df556d0ab61eb9",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2245Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2250Z": {
+         "content_hash": "814db3bdde1c18c5c870b6687a9ae73b69418ab5553040c167f6516adf438611",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2250Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2305Z": {
+         "content_hash": "2416e0ceec6d7ff0b31632ed5ebb8be20e8ced1542e3d5b4e73c0544d578a340",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2305Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2315Z": {
+         "content_hash": "e42f4b9887b2052b1169b289b2819417b5c61bdd20c82adeb77f67f9daafc281",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2315Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2335Z": {
+         "content_hash": "1ed55e5e18dbe1fc7d80c3d193eede11cdedcb003cf8b27dee9d239cb7ed7066",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2335Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2345Z": {
+         "content_hash": "0e9e64b9912d2e69270e689928a5bf4027c438437ef87254eb03a178f3874a39",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261125T2345Z"
+        },
+        "source:checklists": {
+         "content_hash": "99227ada94c5938332572eeb6be600c9bda3bc6ba89f331f867122ee9dcd96c0",
+         "locator": "case:ZF-2025-0030/checklists"
+        },
+        "source:documents": {
+         "content_hash": "07e66ae55df7eb00bcf0099eff911e80d1b082ff94a32035cd1d51183ef83698",
+         "locator": "case:ZF-2025-0030/documents"
+        },
+        "source:home": {
+         "content_hash": "044a3f4c1b4ef96806c1d9a7488b45292cf4de1b64a8f4b56b9fe91fe42f46a0",
+         "locator": "case:ZF-2025-0030/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0030/measures"
+        },
+        "source:quality": {
+         "content_hash": "163087a7b405b35ff01d1406c8bdfb2dfdd86ff2e8a5a432d78a61bfcc48bbcd",
+         "locator": "case:ZF-2025-0030/quality"
+        },
+        "source:sensors": {
+         "content_hash": "e8a98c9fbbac6674e5d0ae8ddb8a0def084ebdf8b2fafac59ca702230783e9ec",
+         "locator": "case:ZF-2025-0030/sensors"
+        }
+       },
+       "exercise_predicate": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "cd41b913d6f4e5e45adaaca6c63eb1e92b7faffdbb96aa38b8ff13d38a4ff1da",
+       "rule_hash": "ac83a8e5833e428836360555b95161152f8071820bbf3529a738ad601ce06683",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "checklists": {
+         "External wall insulation (block); dMEV ventilation": {
+          "items": [
+           "Wall surface checked before fitting",
+           "Fixings and thickness match the design",
+           "Vents, meters and sills finished",
+           "Finish clean and sealed",
+           "Guarantee issued"
+          ],
+          "name": "Wall insulation",
+          "version": "QC-WALL v1"
+         }
+        },
+        "documents": [
+         {
+          "at": "2026-01-18",
+          "content_sha256": null,
+          "id": "D3",
+          "kind": "Design",
+          "version": null
+         }
+        ],
+        "home": {
+         "address": "Flat 2, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "E",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ],
+        "quality": [
+         {
+          "checklist_version": "QC-WALL v1",
+          "evidence_version": null,
+          "items": [
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Wall surface checked before fitting"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Fixings and thickness match the design"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Vents, meters and sills finished"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Finish clean and sealed"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Guarantee issued"
+           }
+          ],
+          "measure": "External wall insulation (block); dMEV ventilation",
+          "state": "Submitted"
+         }
+        ],
+        "sensors": {
+         "after": [],
+         "after_absent": "No retained readings from the first quality evidence record onward.",
+         "anchor": {
+          "at": "2026-10-13T09:00:00Z",
+          "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect.",
+          "name": "quality_record_anchor"
+         },
+         "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+         "before": [],
+         "before_absent": "No retained readings before the first quality evidence record.",
+         "calibrated": false,
+         "citation_keys": [
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2200Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2205Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2215Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2220Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2230Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2235Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2245Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2250Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2305Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2315Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2335Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261125T2345Z"
+         ],
+         "future_dated_excluded": false,
+         "home_id": "ZF-2025-0030",
+         "kind": "synthetic-retained-readings",
+         "latest": {
+          "humidity_pct": "93.05",
+          "observed_at": "2026-11-25T23:45:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-STQEOYP62W2-20261125T2345Z",
+          "sensor_id": "STQEOYP62W2",
+          "temperature_c": "6.16"
+         },
+         "max_readings": {
+          "context_each": 4,
+          "window": 12
+         },
+         "provenance": {
+          "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+         },
+         "readings": [
+          {
+           "humidity_pct": "92.42",
+           "observed_at": "2026-11-25T22:00:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2200Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "7.44"
+          },
+          {
+           "humidity_pct": "92.33",
+           "observed_at": "2026-11-25T22:05:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2205Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "7.43"
+          },
+          {
+           "humidity_pct": "91.84",
+           "observed_at": "2026-11-25T22:15:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2215Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "7.30"
+          },
+          {
+           "humidity_pct": "91.62",
+           "observed_at": "2026-11-25T22:20:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2220Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "7.21"
+          },
+          {
+           "humidity_pct": "91.63",
+           "observed_at": "2026-11-25T22:30:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2230Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "7.02"
+          },
+          {
+           "humidity_pct": "91.97",
+           "observed_at": "2026-11-25T22:35:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2235Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.95"
+          },
+          {
+           "humidity_pct": "92.95",
+           "observed_at": "2026-11-25T22:45:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2245Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.94"
+          },
+          {
+           "humidity_pct": "93.43",
+           "observed_at": "2026-11-25T22:50:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2250Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.96"
+          },
+          {
+           "humidity_pct": "93.79",
+           "observed_at": "2026-11-25T23:05:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2305Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.96"
+          },
+          {
+           "humidity_pct": "93.17",
+           "observed_at": "2026-11-25T23:15:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2315Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.69"
+          },
+          {
+           "humidity_pct": "92.90",
+           "observed_at": "2026-11-25T23:35:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2335Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.20"
+          },
+          {
+           "humidity_pct": "93.05",
+           "observed_at": "2026-11-25T23:45:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261125T2345Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.16"
+          }
+         ],
+         "retrofit_context": {
+          "available": false,
+          "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+         },
+         "state": "ok",
+         "units": {
+          "humidity_pct": "%RH",
+          "temperature_c": "degC"
+         },
+         "version": "retained-reading-view-v2"
+        }
+       },
+       "unknowns": [
+        "source.documents.0.version",
+        "source.documents.0.content_sha256",
+        "source.quality.0.evidence_version",
+        "source.sensors.before",
+        "source.sensors.after"
+       ]
+      },
+      "source_signature": "1d412ef594e7266a277fc03fa50111883a8dbe75502f68d8e17bfd7df36c596f",
+      "state": "disabled",
+      "verification": null,
+      "version": "1.0.0",
+      "stale": true,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": {
+         "digest": "a934bac232a270349a4188f036819b79f3c20bc28cedb741c8b072fce9c03d06",
+         "id": "b3f9bd92d8674b5c8c0c045fff8b9886",
+         "version": "demo-r14-2026-11-25"
+        },
+        "release_denial": null,
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       },
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": {
+         "digest": "a934bac232a270349a4188f036819b79f3c20bc28cedb741c8b072fce9c03d06",
+         "id": "b3f9bd92d8674b5c8c0c045fff8b9886",
+         "version": "demo-r14-2026-11-25"
+        },
+        "release_denial": null,
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       },
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": {
+         "digest": "a934bac232a270349a4188f036819b79f3c20bc28cedb741c8b072fce9c03d06",
+         "id": "b3f9bd92d8674b5c8c0c045fff8b9886",
+         "version": "demo-r14-2026-11-25"
+        },
+        "release_denial": null,
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 3,
+      "display_state": "suspended",
+      "epoch_current": true,
+      "release_denial": null,
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "review_flag": null
+     },
+     {
+      "capability": "quality-evidence",
+      "case_id": "ZF-2025-0030",
+      "continuity_epoch": 1,
+      "created_at": 1795527648.323,
+      "envelope": null,
+      "id": "206288b013831a2f2818977d1e305cf05eb15c3d2e3ebaeebd0b18b9716b9802",
+      "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "output": null,
+      "proposal_identity": {
+       "capability": "quality-evidence",
+       "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+      },
+      "reason": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+      "release": {
+       "digest": "55d0feea273a2978ae66128f1478b2d7f56336c855c772021db66c700050066a",
+       "id": "7b7628b8b21d4ced8a9e805a0249289a",
+       "version": "demo-owner-2026-11-24-r15"
+      },
+      "review": null,
+      "snapshot": {
+       "citations": {
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1205Z": {
+         "content_hash": "3e502302f08588c52a8d6d83234a02a39fad4d8ca79365183b0805d35d89fd03",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1205Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1215Z": {
+         "content_hash": "1d4a5e3fdd1d38d827729e9de0477448c4f1b191cada3d00a33edf9713718da4",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1215Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1220Z": {
+         "content_hash": "be84c3be2cebe683bd6fc2c88a7795645c5083c910ebf7fcc233088377d717b1",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1220Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1230Z": {
+         "content_hash": "6df897796cf6161bc58bcbc058c4ca6b6080f831d726af639cf321f0a783dd5e",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1230Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1235Z": {
+         "content_hash": "92c0d5a32f39c450a44cba574df51f0662c4e2c84351042cadd3126539eae424",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1235Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1245Z": {
+         "content_hash": "37cd5e11e600b1a7679ee3f6b630f20fdd0ef2d6e734e0a0208c41b85d0c32ca",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1245Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1250Z": {
+         "content_hash": "5a08a55ee353b2f1e32ef359825ff19571fd134c6dc17f5c8bca922b7185f61e",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1250Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1300Z": {
+         "content_hash": "0ff5ea23fb7aa14705ca503c71b82d3baed08e34b2e622334ba51ba2ce0efd4c",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1300Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1305Z": {
+         "content_hash": "e5cf50c56119095d6351015be595e9a276615c593168368c455f601ceb7dd7b6",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1305Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1320Z": {
+         "content_hash": "ce8f6d68d9194da8b15417917c4fc6eda5f17b61b148f8ca80cfb66801a323df",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1320Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1330Z": {
+         "content_hash": "6fb37869ea0d23faaae6b87f5ff199a49d604b37b5c434e4334e03153801b432",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1330Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1335Z": {
+         "content_hash": "0f87d2c7ca2b1963ae3e2ce7686344c32b0db7732b9b6fc4a5b85a01d1907f69",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261124T1335Z"
+        },
+        "source:checklists": {
+         "content_hash": "99227ada94c5938332572eeb6be600c9bda3bc6ba89f331f867122ee9dcd96c0",
+         "locator": "case:ZF-2025-0030/checklists"
+        },
+        "source:documents": {
+         "content_hash": "07e66ae55df7eb00bcf0099eff911e80d1b082ff94a32035cd1d51183ef83698",
+         "locator": "case:ZF-2025-0030/documents"
+        },
+        "source:home": {
+         "content_hash": "044a3f4c1b4ef96806c1d9a7488b45292cf4de1b64a8f4b56b9fe91fe42f46a0",
+         "locator": "case:ZF-2025-0030/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0030/measures"
+        },
+        "source:quality": {
+         "content_hash": "163087a7b405b35ff01d1406c8bdfb2dfdd86ff2e8a5a432d78a61bfcc48bbcd",
+         "locator": "case:ZF-2025-0030/quality"
+        },
+        "source:sensors": {
+         "content_hash": "eb286675a18288a0b5bf1d7c337ce8e1ff2d30e379486e31f01d6de97fd58ff4",
+         "locator": "case:ZF-2025-0030/sensors"
+        }
+       },
+       "exercise_predicate": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "cd41b913d6f4e5e45adaaca6c63eb1e92b7faffdbb96aa38b8ff13d38a4ff1da",
+       "rule_hash": "ac83a8e5833e428836360555b95161152f8071820bbf3529a738ad601ce06683",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "checklists": {
+         "External wall insulation (block); dMEV ventilation": {
+          "items": [
+           "Wall surface checked before fitting",
+           "Fixings and thickness match the design",
+           "Vents, meters and sills finished",
+           "Finish clean and sealed",
+           "Guarantee issued"
+          ],
+          "name": "Wall insulation",
+          "version": "QC-WALL v1"
+         }
+        },
+        "documents": [
+         {
+          "at": "2026-01-18",
+          "content_sha256": null,
+          "id": "D3",
+          "kind": "Design",
+          "version": null
+         }
+        ],
+        "home": {
+         "address": "Flat 2, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "E",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ],
+        "quality": [
+         {
+          "checklist_version": "QC-WALL v1",
+          "evidence_version": null,
+          "items": [
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Wall surface checked before fitting"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Fixings and thickness match the design"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Vents, meters and sills finished"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Finish clean and sealed"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Guarantee issued"
+           }
+          ],
+          "measure": "External wall insulation (block); dMEV ventilation",
+          "state": "Submitted"
+         }
+        ],
+        "sensors": {
+         "after": [],
+         "after_absent": "No retained readings from the first quality evidence record onward.",
+         "anchor": {
+          "at": "2026-10-13T09:00:00Z",
+          "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect.",
+          "name": "quality_record_anchor"
+         },
+         "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+         "before": [],
+         "before_absent": "No retained readings before the first quality evidence record.",
+         "calibrated": false,
+         "citation_keys": [
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1205Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1215Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1220Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1230Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1235Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1245Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1250Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1300Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1305Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1320Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1330Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261124T1335Z"
+         ],
+         "future_dated_excluded": false,
+         "home_id": "ZF-2025-0030",
+         "kind": "synthetic-retained-readings",
+         "latest": {
+          "humidity_pct": "81.25",
+          "observed_at": "2026-11-24T13:35:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-STQEOYP62W2-20261124T1335Z",
+          "sensor_id": "STQEOYP62W2",
+          "temperature_c": "11.09"
+         },
+         "max_readings": {
+          "context_each": 4,
+          "window": 12
+         },
+         "provenance": {
+          "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+         },
+         "readings": [
+          {
+           "humidity_pct": "82.55",
+           "observed_at": "2026-11-24T12:05:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1205Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "10.68"
+          },
+          {
+           "humidity_pct": "82.52",
+           "observed_at": "2026-11-24T12:15:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1215Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "10.55"
+          },
+          {
+           "humidity_pct": "82.47",
+           "observed_at": "2026-11-24T12:20:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1220Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "10.50"
+          },
+          {
+           "humidity_pct": "82.25",
+           "observed_at": "2026-11-24T12:30:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1230Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "10.50"
+          },
+          {
+           "humidity_pct": "82.21",
+           "observed_at": "2026-11-24T12:35:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1235Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "10.60"
+          },
+          {
+           "humidity_pct": "82.58",
+           "observed_at": "2026-11-24T12:45:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1245Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "10.96"
+          },
+          {
+           "humidity_pct": "82.84",
+           "observed_at": "2026-11-24T12:50:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1250Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "11.14"
+          },
+          {
+           "humidity_pct": "83.14",
+           "observed_at": "2026-11-24T13:00:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1300Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "11.33"
+          },
+          {
+           "humidity_pct": "83.02",
+           "observed_at": "2026-11-24T13:05:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1305Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "11.31"
+          },
+          {
+           "humidity_pct": "81.91",
+           "observed_at": "2026-11-24T13:20:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1320Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "11.07"
+          },
+          {
+           "humidity_pct": "81.36",
+           "observed_at": "2026-11-24T13:30:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1330Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "11.02"
+          },
+          {
+           "humidity_pct": "81.25",
+           "observed_at": "2026-11-24T13:35:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261124T1335Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "11.09"
+          }
+         ],
+         "retrofit_context": {
+          "available": false,
+          "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+         },
+         "state": "ok",
+         "units": {
+          "humidity_pct": "%RH",
+          "temperature_c": "degC"
+         },
+         "version": "retained-reading-view-v2"
+        }
+       },
+       "unknowns": [
+        "source.documents.0.version",
+        "source.documents.0.content_sha256",
+        "source.quality.0.evidence_version",
+        "source.sensors.before",
+        "source.sensors.after"
+       ]
+      },
+      "source_signature": "f18bff4fe107d193a7964f1c7a404eb853251d22fc7654665bcb62c9a7f4b70a",
+      "verification": null,
+      "version": "1.0.0",
+      "state": "disabled",
+      "fence": 0,
+      "owner": "",
+      "lease_until": 0,
+      "attempts": 0,
+      "not_before": 0,
+      "revision": 1,
+      "stale": true,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": {
+         "digest": "55d0feea273a2978ae66128f1478b2d7f56336c855c772021db66c700050066a",
+         "id": "7b7628b8b21d4ced8a9e805a0249289a",
+         "version": "demo-owner-2026-11-24-r15"
+        },
+        "release_denial": null,
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 1,
+      "display_state": "suspended",
+      "epoch_current": true,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "quality-evidence",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "review_flag": null
+     },
+     {
+      "capability": "quality-evidence",
+      "case_id": "ZF-2025-0030",
+      "continuity_epoch": 1,
+      "created_at": 1795310869.287,
+      "envelope": null,
+      "id": "50ba33745bdf079f1b9d6cc9a44a9cd8d7b28f6b54c301ba25fc98ba18892184",
+      "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "output": null,
+      "proposal_identity": {
+       "capability": "quality-evidence",
+       "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": null,
+      "review": null,
+      "snapshot": {
+       "citations": {
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2340Z": {
+         "content_hash": "9bd76f7c7ca695ecea97be2734fc9db79755cbccc4ff7a05af0ffdac0847b77f",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261121T2340Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2345Z": {
+         "content_hash": "ae9f19756697439bf0d37d50e0981c1c712760007a867d4795bd3d28f48f3cd6",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261121T2345Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2350Z": {
+         "content_hash": "10876e0293cfdbe18f79af114ab578e6287954ada6f2237aa94cffc3eb30e765",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261121T2350Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2355Z": {
+         "content_hash": "19df92d4c6755a342cabdc38f653094201e8c82047aa462cf1264be8a50d8ed2",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261121T2355Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0005Z": {
+         "content_hash": "c6a74e3217ca5b5ccdf01011c26ea223c8de1567852084af96d3537d1c1743f7",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0005Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0010Z": {
+         "content_hash": "4dba7759c5526522317a472c917d15da85e0a491b5479bc34b59e8f82eeae393",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0010Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0015Z": {
+         "content_hash": "224be473f5bb2ba3f54c259f5bbdbb899bfa4062cba638f23e2497f82f6715f3",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0015Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0020Z": {
+         "content_hash": "c11f9eb8bc7eeb8e26001b300317d4c9e5bd87f244aec088c8457c43bad625b5",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0020Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0025Z": {
+         "content_hash": "2f1626fd2f0bcd82fd51dc9a82e23486974fe48da603d861df1f0714eca39a64",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0025Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0030Z": {
+         "content_hash": "c517ed41ecdcf8c2489b98ac5dc9c98cc28cdde1229b1b79591751d678733572",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0030Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0035Z": {
+         "content_hash": "22ce38ea625c655603f2175e1239fde4d0d50d598df87e33e8029860b0d0bdd8",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0035Z"
+        },
+        "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0040Z": {
+         "content_hash": "94b92b9c366587a63b6a598dc7ebbc66ccdc1ffc1315a6e879f3202710361999",
+         "locator": "sensor_reading/STQEOYP62W2/LIVE-STQEOYP62W2-20261122T0040Z"
+        },
+        "source:checklists": {
+         "content_hash": "99227ada94c5938332572eeb6be600c9bda3bc6ba89f331f867122ee9dcd96c0",
+         "locator": "case:ZF-2025-0030/checklists"
+        },
+        "source:documents": {
+         "content_hash": "07e66ae55df7eb00bcf0099eff911e80d1b082ff94a32035cd1d51183ef83698",
+         "locator": "case:ZF-2025-0030/documents"
+        },
+        "source:home": {
+         "content_hash": "044a3f4c1b4ef96806c1d9a7488b45292cf4de1b64a8f4b56b9fe91fe42f46a0",
+         "locator": "case:ZF-2025-0030/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0030/measures"
+        },
+        "source:quality": {
+         "content_hash": "163087a7b405b35ff01d1406c8bdfb2dfdd86ff2e8a5a432d78a61bfcc48bbcd",
+         "locator": "case:ZF-2025-0030/quality"
+        },
+        "source:sensors": {
+         "content_hash": "042bacf049ec4028e082b92fd45c4ab00a4bac4247e2c37783c4aad1f1de787d",
+         "locator": "case:ZF-2025-0030/sensors"
+        }
+       },
+       "exercise_predicate": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "cd41b913d6f4e5e45adaaca6c63eb1e92b7faffdbb96aa38b8ff13d38a4ff1da",
+       "rule_hash": "ac83a8e5833e428836360555b95161152f8071820bbf3529a738ad601ce06683",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "checklists": {
+         "External wall insulation (block); dMEV ventilation": {
+          "items": [
+           "Wall surface checked before fitting",
+           "Fixings and thickness match the design",
+           "Vents, meters and sills finished",
+           "Finish clean and sealed",
+           "Guarantee issued"
+          ],
+          "name": "Wall insulation",
+          "version": "QC-WALL v1"
+         }
+        },
+        "documents": [
+         {
+          "at": "2026-01-18",
+          "content_sha256": null,
+          "id": "D3",
+          "kind": "Design",
+          "version": null
+         }
+        ],
+        "home": {
+         "address": "Flat 2, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "E",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ],
+        "quality": [
+         {
+          "checklist_version": "QC-WALL v1",
+          "evidence_version": null,
+          "items": [
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Wall surface checked before fitting"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Fixings and thickness match the design"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Vents, meters and sills finished"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Finish clean and sealed"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Guarantee issued"
+           }
+          ],
+          "measure": "External wall insulation (block); dMEV ventilation",
+          "state": "Submitted"
+         }
+        ],
+        "sensors": {
+         "after": [],
+         "after_absent": "No retained readings from the first quality evidence record onward.",
+         "anchor": {
+          "at": "2026-10-13T09:00:00Z",
+          "meaning": "Time of the first active quality evidence record. It is not an installation date and readings around it are not a retrofit effect.",
+          "name": "quality_record_anchor"
+         },
+         "as_of_rule": "The newest readings are those observed at or before the time of this request and within the last 366 days. Context readings (up to four each side) are those within 30 days of the quality evidence record time and never after this request, so they may be older than 366 days. Later-dated readings are excluded and are never treated as recent. Current freshness is not asserted by this evidence.",
+         "before": [],
+         "before_absent": "No retained readings before the first quality evidence record.",
+         "calibrated": false,
+         "citation_keys": [
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2340Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2345Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2350Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261121T2355Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0005Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0010Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0015Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0020Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0025Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0030Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0035Z",
+          "sensor:STQEOYP62W2:LIVE-STQEOYP62W2-20261122T0040Z"
+         ],
+         "future_dated_excluded": false,
+         "home_id": "ZF-2025-0030",
+         "kind": "synthetic-retained-readings",
+         "latest": {
+          "humidity_pct": "96.21",
+          "observed_at": "2026-11-22T00:40:00Z",
+          "provenance_class": "synthetic-weather-derived",
+          "reading_id": "LIVE-STQEOYP62W2-20261122T0040Z",
+          "sensor_id": "STQEOYP62W2",
+          "temperature_c": "5.76"
+         },
+         "max_readings": {
+          "context_each": 4,
+          "window": 12
+         },
+         "provenance": {
+          "synthetic-weather-derived": "Synthetic simulator reading derived from outdoor weather. Not calibrated. These values are not a verified indoor measurement."
+         },
+         "readings": [
+          {
+           "humidity_pct": "95.69",
+           "observed_at": "2026-11-21T23:40:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261121T2340Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.32"
+          },
+          {
+           "humidity_pct": "95.58",
+           "observed_at": "2026-11-21T23:45:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261121T2345Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.16"
+          },
+          {
+           "humidity_pct": "95.44",
+           "observed_at": "2026-11-21T23:50:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261121T2350Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "6.02"
+          },
+          {
+           "humidity_pct": "95.31",
+           "observed_at": "2026-11-21T23:55:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261121T2355Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.91"
+          },
+          {
+           "humidity_pct": "95.26",
+           "observed_at": "2026-11-22T00:05:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0005Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.87"
+          },
+          {
+           "humidity_pct": "95.25",
+           "observed_at": "2026-11-22T00:10:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0010Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.87"
+          },
+          {
+           "humidity_pct": "95.26",
+           "observed_at": "2026-11-22T00:15:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0015Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.86"
+          },
+          {
+           "humidity_pct": "95.30",
+           "observed_at": "2026-11-22T00:20:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0020Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.85"
+          },
+          {
+           "humidity_pct": "95.37",
+           "observed_at": "2026-11-22T00:25:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0025Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.81"
+          },
+          {
+           "humidity_pct": "95.50",
+           "observed_at": "2026-11-22T00:30:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0030Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.77"
+          },
+          {
+           "humidity_pct": "95.78",
+           "observed_at": "2026-11-22T00:35:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0035Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.74"
+          },
+          {
+           "humidity_pct": "96.21",
+           "observed_at": "2026-11-22T00:40:00Z",
+           "provenance_class": "synthetic-weather-derived",
+           "reading_id": "LIVE-STQEOYP62W2-20261122T0040Z",
+           "sensor_id": "STQEOYP62W2",
+           "temperature_c": "5.76"
+          }
+         ],
+         "retrofit_context": {
+          "available": false,
+          "text": "No installation date or marker is recorded, so no before or after retrofit comparison is made."
+         },
+         "state": "ok",
+         "units": {
+          "humidity_pct": "%RH",
+          "temperature_c": "degC"
+         },
+         "version": "retained-reading-view-v2"
+        }
+       },
+       "unknowns": [
+        "source.documents.0.version",
+        "source.documents.0.content_sha256",
+        "source.quality.0.evidence_version",
+        "source.sensors.before",
+        "source.sensors.after"
+       ]
+      },
+      "source_signature": "f9e8a4261bf900442e368bbae07fcb894ab52db6a821e6f507f7d9635ec20c4e",
+      "verification": null,
+      "version": "1.0.0",
+      "state": "disabled",
+      "fence": 0,
+      "owner": "",
+      "lease_until": 0,
+      "attempts": 0,
+      "not_before": 0,
+      "revision": 1,
+      "stale": true,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "quality-evidence"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 1,
+      "display_state": "suspended",
+      "epoch_current": true,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "quality-evidence",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "review_flag": null
+     }
+    ],
+    "disabled": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+    "manual": "Open the case for ordinary human work.",
+    "next_after": null
+   }
+  },
+  "ZF-2025-0031 /api/assistants/proposals?case_id=ZF-2025-0031": {
+   "status": 200,
+   "body": {
+    "proposals": [
+     {
+      "capability": "quality-evidence",
+      "case_id": "ZF-2025-0031",
+      "continuity_epoch": 1,
+      "created_at": 1795007301.386,
+      "envelope": null,
+      "id": "0082dd95d2b152b23359a05d223458f89343e4cd46555ac1cc944dfafc4d80a7",
+      "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "output": null,
+      "proposal_identity": {
+       "capability": "quality-evidence",
+       "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": null,
+      "review": null,
+      "snapshot": {
+       "citations": {
+        "source:checklists": {
+         "content_hash": "99227ada94c5938332572eeb6be600c9bda3bc6ba89f331f867122ee9dcd96c0",
+         "locator": "case:ZF-2025-0031/checklists"
+        },
+        "source:documents": {
+         "content_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+         "locator": "case:ZF-2025-0031/documents"
+        },
+        "source:home": {
+         "content_hash": "1090c91d3b864dffcb3687b6b14126860c1b5a3e2139041f9f240cdf6b13e9f8",
+         "locator": "case:ZF-2025-0031/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0031/measures"
+        },
+        "source:quality": {
+         "content_hash": "163087a7b405b35ff01d1406c8bdfb2dfdd86ff2e8a5a432d78a61bfcc48bbcd",
+         "locator": "case:ZF-2025-0031/quality"
+        },
+        "source:sensors": {
+         "content_hash": "e5c5ec3b41d7815005137ee203ee2ec27e6adceb69a2331235ad4505fd9d5848",
+         "locator": "case:ZF-2025-0031/sensors"
+        }
+       },
+       "exercise_predicate": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "82843a26ab6e78e807acfcb91da2bcb2da386264a624a3398a49c3cfacea2259",
+       "rule_hash": "ac83a8e5833e428836360555b95161152f8071820bbf3529a738ad601ce06683",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "checklists": {
+         "External wall insulation (block); dMEV ventilation": {
+          "items": [
+           "Wall surface checked before fitting",
+           "Fixings and thickness match the design",
+           "Vents, meters and sills finished",
+           "Finish clean and sealed",
+           "Guarantee issued"
+          ],
+          "name": "Wall insulation",
+          "version": "QC-WALL v1"
+         }
+        },
+        "documents": [],
+        "home": {
+         "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "D",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ],
+        "quality": [
+         {
+          "checklist_version": "QC-WALL v1",
+          "evidence_version": null,
+          "items": [
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Wall surface checked before fitting"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Fixings and thickness match the design"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Vents, meters and sills finished"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Finish clean and sealed"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Guarantee issued"
+           }
+          ],
+          "measure": "External wall insulation (block); dMEV ventilation",
+          "state": "Submitted"
+         }
+        ],
+        "sensors": {
+         "state": "consent-withheld",
+         "detail": "Monitoring consent is not granted now; retained readings are withheld.",
+         "readings": [],
+         "before": [],
+         "after": [],
+         "latest": null,
+         "citation_keys": []
+        }
+       },
+       "unknowns": [
+        "source.documents",
+        "source.quality.0.evidence_version",
+        "source.sensors.before",
+        "source.sensors.after"
+       ]
+      },
+      "source_signature": "8d718f278800c9480a8f539db80421d5c79162f434a09fafcc7d9126dd19640d",
+      "verification": null,
+      "version": "1.0.0",
+      "state": "disabled",
+      "fence": 0,
+      "owner": "",
+      "lease_until": 0,
+      "attempts": 0,
+      "not_before": 0,
+      "revision": 1,
+      "stale": true,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "quality-evidence"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 1,
+      "display_state": "suspended",
+      "epoch_current": true,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "quality-evidence",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "sensor_withheld": true,
+      "review_flag": null
+     },
+     {
+      "capability": "works-resident-coordination",
+      "case_id": "ZF-2025-0031",
+      "continuity_epoch": 0,
+      "created_at": 1794995954.496,
+      "envelope": null,
+      "id": "7458e5b6262f444a3739f1702a29c8a45ca90bec3b0982f207e5bafa8024d13c",
+      "manual": "Review the ordinary case with Retrofit Coordinator, Resident Liaison Officer, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "output": null,
+      "proposal_identity": {
+       "capability": "works-resident-coordination",
+       "purpose": "Draft an update or committed-capacity option"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": null,
+      "review": null,
+      "snapshot": {
+       "citations": {
+        "source:appointments": {
+         "content_hash": "2eeb45ed4ba01ec4340bcf3c9386243dd15fdc73519971b59016edfd87de7bf5",
+         "locator": "case:ZF-2025-0031/appointments"
+        },
+        "source:capacity": {
+         "content_hash": "282683b32942c4a1d7fe0fee7463826c24d0adefe7a5b1fb488fecee2354da23",
+         "locator": "case:ZF-2025-0031/capacity"
+        },
+        "source:handoff": {
+         "content_hash": "fdb34058c688f19fe0eff2d491ca0292480e0f56861c495e3c5c5f13ddaeba35",
+         "locator": "case:ZF-2025-0031/handoff"
+        },
+        "source:home": {
+         "content_hash": "1090c91d3b864dffcb3687b6b14126860c1b5a3e2139041f9f240cdf6b13e9f8",
+         "locator": "case:ZF-2025-0031/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0031/measures"
+        },
+        "source:preferences": {
+         "content_hash": "a20addca1f8be5968aea1ee657222513a64df49abd4b7cabccbb931423336aea",
+         "locator": "case:ZF-2025-0031/preferences"
+        },
+        "source:requests": {
+         "content_hash": "0c1bc8e493cf9377071d677174ba48919deca61b6573c5bca18a33f884b18bc1",
+         "locator": "case:ZF-2025-0031/requests"
+        }
+       },
+       "exercise_predicate": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "6ce18e69a48fa69e818cc586fa24ec7b7657a35263e7e9aeebece8669bb9dbf3",
+       "rule_hash": "b5bf9497fa2c1d450ed3ac53b881fd955a62b69f1fd92b11e124dafbaceca0c0",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "appointments": [
+         {
+          "date": "2025-12-16",
+          "outcome": "Held for roles with a recorded need",
+          "slot": "AM",
+          "type": "Retrofit assessment"
+         },
+         {
+          "date": "2026-10-15",
+          "outcome": "Booked",
+          "slot": "AM",
+          "type": "Assessment"
+         }
+        ],
+        "capacity": [
+         {
+          "committed": 170,
+          "contractor": "Northern Facade Systems Ltd",
+          "evidence": "SYNTHETIC simulation issued-order allocation; not a verified contract.",
+          "package": "PKG-SYN-001",
+          "period_from": "2025-09-18",
+          "period_to": "2026-11-12"
+         }
+        ],
+        "handoff": {
+         "at": null,
+         "state": "Offered",
+         "to_code": "E-52744c178b82"
+        },
+        "home": {
+         "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "D",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ],
+        "preferences": {
+         "preferred": "Text message",
+         "unavailable": ""
+        },
+        "requests": [
+         {
+          "id": "SR-SYN-001",
+          "next_update": "2026-10-14",
+          "status": "Open"
+         }
+        ]
+       },
+       "unknowns": [
+        "source.preferences.unavailable",
+        "source.handoff.at"
+       ]
+      },
+      "source_signature": "6dffa685ada37fe4c5b3161c20a3d3afedaa635fbb4db0ae31e1767181b24bc8",
+      "verification": null,
+      "version": "1.0.0",
+      "state": "disabled",
+      "fence": 0,
+      "owner": "",
+      "lease_until": 0,
+      "attempts": 0,
+      "not_before": 0,
+      "revision": 1,
+      "stale": false,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "works-resident-coordination"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 1,
+      "display_state": "suspended",
+      "epoch_current": false,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "works-resident-coordination",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "review_flag": null
+     },
+     {
+      "capability": "stock-prioritisation",
+      "case_id": "ZF-2025-0031",
+      "continuity_epoch": 0,
+      "created_at": 1794995951.969,
+      "envelope": null,
+      "id": "76ae894b9c3fab34add78d652a774e4a56ae4b6e2561eea6d67f3cc5c9fda38f",
+      "manual": "Review the ordinary case with Retrofit Coordinator, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "output": null,
+      "proposal_identity": {
+       "capability": "stock-prioritisation",
+       "purpose": "Explain stock facts and prepare a data-owner query"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": null,
+      "review": null,
+      "snapshot": {
+       "citations": {
+        "source:home": {
+         "content_hash": "1090c91d3b864dffcb3687b6b14126860c1b5a3e2139041f9f240cdf6b13e9f8",
+         "locator": "case:ZF-2025-0031/home"
+        },
+        "source:ranking": {
+         "content_hash": "7155a9137d4fbd9a91bd4fc5f45f3b52af2979968a511228c4e6e6e413a93704",
+         "locator": "case:ZF-2025-0031/ranking"
+        },
+        "source:survey": {
+         "content_hash": "898af8eae5f9915e3344fa6b0f555ee5b2fa78d6a44f04ac5e0a89a4d546e60d",
+         "locator": "case:ZF-2025-0031/survey"
+        }
+       },
+       "exercise_predicate": "Missing/unknown home.epc, home.type or home.built; supplied survey.epc/type/built conflicts with home.",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "5ee997ca1bfec544880003067e8e768b3b89bdca24d9b05500fd4dbe0743d6b0",
+       "rule_hash": "47eb19a0837bada00c8ad8c25834be9825059266fe16d20d89b623dca45ef401",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "home": {
+         "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "D",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "ranking": {
+         "disclosure": "Resident support and safety ranking inputs are not disclosed to this audience.",
+         "policy": {
+          "content_hash": "b66fdaccdcbd46a0eb257572a2b8f0fb98e7eafd53b468b67084d9a19761be2c",
+          "effective_date": "2026-10-09",
+          "owner": "to be named",
+          "policy_id": "zava-forward-home-ranking",
+          "rules": [
+           {
+            "code": "safety_open",
+            "label": "Open safety issue first",
+            "order": 1
+           },
+           {
+            "code": "support",
+            "label": "Residents needing priority support or an adjustment next",
+            "order": 2
+           },
+           {
+            "code": "waiting_days",
+            "label": "Longest time in the current stage next",
+            "order": 3
+           },
+           {
+            "code": "stage_order",
+            "label": "Earlier programme stage next",
+            "order": 4
+           },
+           {
+            "code": "case_id",
+            "label": "Case id as the final fixed tie-break",
+            "order": 5
+           }
+          ],
+          "status": "Draft rule order, not yet signed off by an owner",
+          "version": "1.0.0"
+         },
+         "reasons": [
+          {
+           "code": "waiting_days",
+           "text": "Waiting 212 days in this stage"
+          },
+          {
+           "code": "stage_order",
+           "text": "At 'Waiting for block programme'"
+          }
+         ],
+         "stage": "Waiting for block programme",
+         "waiting_days": 212
+        },
+        "survey": {
+         "built": null,
+         "epc": null,
+         "evidence_hash": null,
+         "status": null,
+         "type": null,
+         "version": null
+        }
+       },
+       "unknowns": [
+        "source.survey.epc",
+        "source.survey.type",
+        "source.survey.built",
+        "source.survey.version",
+        "source.survey.status",
+        "source.survey.evidence_hash"
+       ]
+      },
+      "source_signature": "b5eb206afc4e30d73b9473e9383a626f06c96a2f957cabd4315ef6ea47c423f5",
+      "verification": null,
+      "version": "1.0.0",
+      "state": "disabled",
+      "fence": 0,
+      "owner": "",
+      "lease_until": 0,
+      "attempts": 0,
+      "not_before": 0,
+      "revision": 1,
+      "stale": false,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "stock-prioritisation"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 1,
+      "display_state": "suspended",
+      "epoch_current": false,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "stock-prioritisation",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "review_flag": null
+     },
+     {
+      "attempts": 0,
+      "capability": "quality-evidence",
+      "case_id": "ZF-2025-0031",
+      "continuity_epoch": 0,
+      "created_at": 1794995955.613,
+      "envelope": null,
+      "fence": 0,
+      "id": "80c4346eae7779606a96328e2883d9fe4af2c3938b9250595fdefedc3890de39",
+      "lease_until": 0,
+      "manual": "Review the ordinary case with Quality Inspector, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "not_before": 0,
+      "output": null,
+      "owner": "",
+      "proposal_identity": {
+       "capability": "quality-evidence",
+       "purpose": "Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": null,
+      "review": null,
+      "revision": 2,
+      "snapshot": {
+       "citations": {
+        "source:checklists": {
+         "content_hash": "99227ada94c5938332572eeb6be600c9bda3bc6ba89f331f867122ee9dcd96c0",
+         "locator": "case:ZF-2025-0031/checklists"
+        },
+        "source:documents": {
+         "content_hash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+         "locator": "case:ZF-2025-0031/documents"
+        },
+        "source:home": {
+         "content_hash": "1090c91d3b864dffcb3687b6b14126860c1b5a3e2139041f9f240cdf6b13e9f8",
+         "locator": "case:ZF-2025-0031/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0031/measures"
+        },
+        "source:quality": {
+         "content_hash": "163087a7b405b35ff01d1406c8bdfb2dfdd86ff2e8a5a432d78a61bfcc48bbcd",
+         "locator": "case:ZF-2025-0031/quality"
+        },
+        "source:sensors": {
+         "content_hash": "69793e3cec3672de8efba16b8e7e3751967bcb166f1d3bba7f7525b947cd0923",
+         "locator": "case:ZF-2025-0031/sensors"
+        }
+       },
+       "exercise_predicate": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "82843a26ab6e78e807acfcb91da2bcb2da386264a624a3398a49c3cfacea2259",
+       "rule_hash": "ac83a8e5833e428836360555b95161152f8071820bbf3529a738ad601ce06683",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "checklists": {
+         "External wall insulation (block); dMEV ventilation": {
+          "items": [
+           "Wall surface checked before fitting",
+           "Fixings and thickness match the design",
+           "Vents, meters and sills finished",
+           "Finish clean and sealed",
+           "Guarantee issued"
+          ],
+          "name": "Wall insulation",
+          "version": "QC-WALL v1"
+         }
+        },
+        "documents": [],
+        "home": {
+         "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "D",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ],
+        "quality": [
+         {
+          "checklist_version": "QC-WALL v1",
+          "evidence_version": null,
+          "items": [
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Wall surface checked before fitting"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Fixings and thickness match the design"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Vents, meters and sills finished"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Finish clean and sealed"
+           },
+           {
+            "evidence": "Missing/unverified synthetic evidence",
+            "label": "Guarantee issued"
+           }
+          ],
+          "measure": "External wall insulation (block); dMEV ventilation",
+          "state": "Submitted"
+         }
+        ],
+        "sensors": {
+         "state": "consent-withheld",
+         "detail": "Monitoring consent is not granted now; retained readings are withheld.",
+         "readings": [],
+         "before": [],
+         "after": [],
+         "latest": null,
+         "citation_keys": []
+        }
+       },
+       "unknowns": [
+        "source.documents",
+        "source.quality.0.evidence_version",
+        "source.sensors.before",
+        "source.sensors.after"
+       ]
+      },
+      "source_signature": "30a3050deff5ed4e4daf5c8a9931b59e06dace8267db44be36dfc66be2d49e5c",
+      "state": "disabled",
+      "verification": null,
+      "version": "1.0.0",
+      "stale": true,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "quality-evidence"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       },
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "quality-evidence"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 2,
+      "display_state": "suspended",
+      "epoch_current": false,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "quality-evidence",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "sensor_withheld": true,
+      "review_flag": null
+     },
+     {
+      "capability": "assessment-preparation",
+      "case_id": "ZF-2025-0031",
+      "continuity_epoch": 0,
+      "created_at": 1794995952.878,
+      "envelope": null,
+      "id": "f8daefcd09f23a1e135afe48487bd28ed966060663befedd9f1ded4748d93c88",
+      "manual": "Review the ordinary case with Retrofit Coordinator, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "output": null,
+      "proposal_identity": {
+       "capability": "assessment-preparation",
+       "purpose": "Prepare a survey/design evidence checklist"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": null,
+      "review": null,
+      "snapshot": {
+       "citations": {
+        "source:documents": {
+         "content_hash": "f6171f983753896ecf838ca864837f6466a8464deb8a705cc9f149ad81e028b4",
+         "locator": "case:ZF-2025-0031/documents"
+        },
+        "source:home": {
+         "content_hash": "1090c91d3b864dffcb3687b6b14126860c1b5a3e2139041f9f240cdf6b13e9f8",
+         "locator": "case:ZF-2025-0031/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0031/measures"
+        },
+        "source:survey": {
+         "content_hash": "898af8eae5f9915e3344fa6b0f555ee5b2fa78d6a44f04ac5e0a89a4d546e60d",
+         "locator": "case:ZF-2025-0031/survey"
+        },
+        "source:technical": {
+         "content_hash": "1e5b112fc164746595b06e1ec0f263aaaf7d06ef9e1ed93fa381b4666a5be1eb",
+         "locator": "case:ZF-2025-0031/technical"
+        }
+       },
+       "exercise_predicate": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "dc5e94b4eda8ea2bd86f1e03a4673c383384831c1e92a8ab3004c0c1737ea989",
+       "rule_hash": "c9d0d86fecd463250276cd77f0c3c3f96e00c0f246e54385b9352a4b4fe3b4e0",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "documents": [
+         {
+          "at": "2025-07-20",
+          "content_sha256": null,
+          "id": "D1",
+          "kind": "EPC",
+          "version": null
+         },
+         {
+          "at": "2025-12-16",
+          "content_sha256": null,
+          "id": "D2",
+          "kind": "Survey",
+          "version": null
+         }
+        ],
+        "home": {
+         "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "D",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ],
+        "survey": {
+         "built": null,
+         "epc": null,
+         "evidence_hash": null,
+         "status": null,
+         "type": null,
+         "version": null
+        },
+        "technical": {
+         "design_version": null
+        }
+       },
+       "unknowns": [
+        "source.survey.epc",
+        "source.survey.type",
+        "source.survey.built",
+        "source.survey.version",
+        "source.survey.status",
+        "source.survey.evidence_hash",
+        "source.technical.design_version",
+        "source.documents.0.version",
+        "source.documents.0.content_sha256",
+        "source.documents.1.version",
+        "source.documents.1.content_sha256"
+       ]
+      },
+      "source_signature": "8646f4fd722c33b38c4b632713c95941f6b5368acc9452fef6cfca2535a54ae0",
+      "verification": null,
+      "version": "1.0.0",
+      "state": "disabled",
+      "fence": 0,
+      "owner": "",
+      "lease_until": 0,
+      "attempts": 0,
+      "not_before": 0,
+      "revision": 1,
+      "stale": false,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "assessment-preparation"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 1,
+      "display_state": "suspended",
+      "epoch_current": false,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "assessment-preparation",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "review_flag": null
+     },
+     {
+      "capability": "funding-evidence",
+      "case_id": "ZF-2025-0031",
+      "continuity_epoch": 0,
+      "created_at": 1794995953.74,
+      "envelope": null,
+      "id": "f9d6d98a2b8e89558c7a1c663e932dec9cb1cc05cfe7825f05f1e3587f2a5b22",
+      "manual": "Review the ordinary case with Grants and Evidence Officer, Retrofit Programme Manager.",
+      "manual_requested": true,
+      "output": null,
+      "proposal_identity": {
+       "capability": "funding-evidence",
+       "purpose": "Prepare application/claim evidence gaps"
+      },
+      "reason": "Operator authority, finite allowance and expiry are required.",
+      "release": null,
+      "review": null,
+      "snapshot": {
+       "citations": {
+        "source:documents": {
+         "content_hash": "f6171f983753896ecf838ca864837f6466a8464deb8a705cc9f149ad81e028b4",
+         "locator": "case:ZF-2025-0031/documents"
+        },
+        "source:finance": {
+         "content_hash": "497ae68e688f127674021ba823a3516cdfc547b2080f8e0390c09ba9ee7f8c8f",
+         "locator": "case:ZF-2025-0031/finance"
+        },
+        "source:funding": {
+         "content_hash": "44ba44b3063f706f893f27312c578f9f2455ad78ee6b33a8d75c6438f02f8d49",
+         "locator": "case:ZF-2025-0031/funding"
+        },
+        "source:grants": {
+         "content_hash": "ea7cbf059d96e98674e68f09a3260b5fce239c6adb2798573dbab73c2bafad5c",
+         "locator": "case:ZF-2025-0031/grants"
+        },
+        "source:home": {
+         "content_hash": "1090c91d3b864dffcb3687b6b14126860c1b5a3e2139041f9f240cdf6b13e9f8",
+         "locator": "case:ZF-2025-0031/home"
+        },
+        "source:measures": {
+         "content_hash": "017d98232dad16a53c7b78ab5de3a289911e378e8e98320fee2aade7353db9aa",
+         "locator": "case:ZF-2025-0031/measures"
+        }
+       },
+       "exercise_predicate": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
+       "exercise_rule": "Selected synthetic gap predicates, not approved company rules.",
+       "registry": "1.0.0",
+       "registry_hash": "c5c302d52abd6234a0cd61d80e08ebd165f409abe773d7067630720163a50abb",
+       "rule_hash": "01f7832e2c4a3135929baf5e4fc487505da78b5c578fcabedd6de0d99c54faa9",
+       "rules": "synthetic-gaps-2026-10-13-v1",
+       "schema": "evidence-proposal-v1",
+       "schema_hash": "5d68d00482ffba212e66121e41e6792c1cad03a7a71e5ad8f907028984a113ab",
+       "sources": {
+        "documents": [
+         {
+          "at": "2025-07-20",
+          "content_sha256": null,
+          "id": "D1",
+          "kind": "EPC",
+          "version": null
+         },
+         {
+          "at": "2025-12-16",
+          "content_sha256": null,
+          "id": "D2",
+          "kind": "Survey",
+          "version": null
+         }
+        ],
+        "finance": {
+         "budget": {
+          "amount": 10200,
+          "status": "Proposed"
+         },
+         "commitments": [],
+         "invoices": [
+          {
+           "evidence_hash": null,
+           "id": "INV-SYN-001",
+           "kind": "Invoice",
+           "lines": [
+            {
+             "amount": 500,
+             "measure": "External wall insulation (block); dMEV ventilation",
+             "milestone_ref": "",
+             "quantity": 1
+            }
+           ],
+           "ref": "SYNTHETIC-ZF-2025-0031",
+           "status": "Received",
+           "supplier": "Northern Facade Systems Ltd",
+           "version": null,
+           "work_order": "UNKNOWN-SOURCE-ORDER"
+          }
+         ]
+        },
+        "funding": {
+         "reference": "",
+         "route": "Not decided",
+         "status": "Not started",
+         "terms_hash": null,
+         "terms_version": null
+        },
+        "grants": [
+         {
+          "evidence": [],
+          "id": "GR-SYN-001",
+          "scheme": "Zava Forward Exercise Fund",
+          "state": "Not recorded"
+         }
+        ],
+        "home": {
+         "address": "Flat 3, 157,159,161,163,165,167 Tebay Drive",
+         "built": 1974,
+         "epc": "D",
+         "postcode": "NE5 2XH",
+         "tenure": "Social rent",
+         "town": "Newcastle upon Tyne",
+         "type": "Low-rise flat"
+        },
+        "measures": [
+         "External wall insulation (block); dMEV ventilation"
+        ]
+       },
+       "unknowns": [
+        "source.documents.0.version",
+        "source.documents.0.content_sha256",
+        "source.documents.1.version",
+        "source.documents.1.content_sha256",
+        "source.funding.reference",
+        "source.funding.terms_version",
+        "source.funding.terms_hash",
+        "source.finance.commitments",
+        "source.finance.invoices.0.version",
+        "source.finance.invoices.0.evidence_hash",
+        "source.finance.invoices.0.lines.0.milestone_ref",
+        "source.grants.0.evidence"
+       ]
+      },
+      "source_signature": "dab9029e95e58f416274b99b912a8c598046917b59dcb707f27e7c6805f5b402",
+      "verification": null,
+      "version": "1.0.0",
+      "state": "disabled",
+      "fence": 0,
+      "owner": "",
+      "lease_until": 0,
+      "attempts": 0,
+      "not_before": 0,
+      "revision": 1,
+      "stale": false,
+      "provenance": [
+       {
+        "actor": "[email]",
+        "kind": "invocation",
+        "mode": "reactive",
+        "purpose": null,
+        "release": null,
+        "release_denial": {
+         "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+         "authority_holders": [
+          {
+           "authority": "release",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "residual-risk acceptance",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "suspension",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          },
+          {
+           "authority": "restart",
+           "holder": null,
+           "reference": "OQ-017",
+           "status": "gap"
+          }
+         ],
+         "manual": "Use the ordinary case controls.",
+         "missing": [
+          "approved, unexpired release record"
+         ],
+         "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+         "reason": "Release admission denied: no approved release matches (approved, unexpired release record). Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+         "task": "funding-evidence"
+        },
+        "rules": "synthetic-gaps-2026-10-13-v1"
+       }
+      ],
+      "history_next_offset": null,
+      "history_count": 1,
+      "display_state": "suspended",
+      "epoch_current": false,
+      "release_denial": {
+       "reason": "Release admission denied: activation release changed. Owner: RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera). Manual route: use the ordinary case controls.",
+       "missing": [
+        "original activation release"
+       ],
+       "owner": "RAI task owner not appointed (OQ-017; project contact: Juan Manuel Servera)",
+       "manual": "Use the ordinary case controls.",
+       "task": "funding-evidence",
+       "authority_gap": "OQ-017: named live release, residual-risk acceptance, suspension and restart holders and competent-review delegations are not evidenced.",
+       "authority_holders": [
+        {
+         "authority": "release",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "residual-risk acceptance",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "suspension",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        },
+        {
+         "authority": "restart",
+         "holder": null,
+         "status": "gap",
+         "reference": "OQ-017"
+        }
+       ]
+      },
+      "actionable": false,
+      "relied_on": false,
+      "suspension": "SUS-1",
+      "review_flag": null
+     }
+    ],
+    "disabled": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+    "manual": "Open the case for ordinary human work.",
+    "next_after": null
+   }
+  },
+  "ZF-2025-0032 /api/assistants/proposals?case_id=ZF-2025-0032": {
+   "status": 200,
+   "body": {
+    "proposals": [],
+    "disabled": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+    "manual": "Open the case for ordinary human work.",
+    "next_after": null
+   }
+  },
+  "ZF-2025-0041 /api/assistants/proposals?case_id=ZF-2025-0041": {
+   "status": 200,
+   "body": {
+    "proposals": [],
+    "disabled": "Suspended (SUS-1): use the manual route. Manual case work, resident challenge and hazard response continue outside any suspension; emergency and statutory hazard duties are never paused.",
+    "manual": "Open the case for ordinary human work.",
+    "next_after": null
+   }
+  }
+ }
+}

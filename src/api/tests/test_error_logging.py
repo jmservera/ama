@@ -90,7 +90,7 @@ class ErrorLoggingTests(Base):
             },
         )
         with (
-            patch.object(self.store, "audit", audit_fails),
+            patch.object(self.store, "retention_due", audit_fails),
             self.assertLogs("zava_forward.api.server", "WARNING") as logs,
         ):
             try:
@@ -109,7 +109,7 @@ class ErrorLoggingTests(Base):
             self.assertIn(part, line)
         self.assertNotIn(SECRET, line)
 
-    def test_retention_listing_recovers_with_200_on_the_request_after_a_busy_lock_503(self) -> None:
+    def test_retention_listing_answers_200_unrecorded_while_lock_busy(self) -> None:
         busy = self.busy_error()
         real_audit = self.store.audit
         calls: list[int] = []
@@ -133,16 +133,14 @@ class ErrorLoggingTests(Base):
             except urllib.error.HTTPError as e:
                 return e.code, e.read(), e.headers.get("Retry-After")
 
-        with (
-            patch.object(self.store, "audit", audit_busy_once),
-            self.assertLogs("zava_forward.api.server", "WARNING"),
-        ):
+        with patch.object(self.store, "audit", audit_busy_once):
             first = retention()
             second = retention()
-        self.assertEqual((first[0], first[2]), (503, "5"))
+        self.assertEqual(first[0], 200)
+        self.assertIs(json.loads(first[1])["recorded"], False)
         self.assertNotIn(SECRET, first[1].decode())
         self.assertEqual(second[0], 200)
-        self.assertIn("records", json.loads(second[1]))
+        self.assertNotIn("recorded", json.loads(second[1]))
         self.assertEqual(len(calls), 2)
 
     def post(self, path: str, body: dict[str, Any]) -> tuple[int, bytes, str | None]:

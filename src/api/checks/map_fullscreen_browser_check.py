@@ -1309,6 +1309,7 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                           && document.querySelector('.leafmap').clientWidth > 80"""
                     ),
                 )
+                settle_map_reads(page)
                 scan(page, axe, reports, f"expanded-{width}")
                 if width != 1280:
                     page.screenshot(path=str(out / f"expanded-{width}.png"))

@@ -1,0 +1,59 @@
+{
+ "task_id": "issue-2245-live-20261125T231506Z",
+ "task_slug": "issue-2245-live",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-25-issue-2245-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-25/issue-2245-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-25/issue-2245-live-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-25/issue-2245-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-25/issue-2245-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-25-issue-2245-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Research executed (reuse plus live re-probe), Ready",
+   "status": "done",
+   "evidence": ".copilot-tracking/research/2026-11-25-issue-2245-live-research.md"
+  },
+  {
+   "decision": "Critique executed once, proceed",
+   "status": "done",
+   "evidence": ".copilot-tracking/critique/2026-11-25/issue-2245-live-critique.md"
+  },
+  {
+   "decision": "Review executed once, conformant for changed scope",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-25-issue-2245-live-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Commit locally and stop"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Settle or expire stale ledger reservations",
+   "rationale": "liability-unknown poisons a day budget",
+   "evidence": "docs/reference/research/issue-2245-live-2026-11-25.md"
+  },
+  {
+   "rank": 2,
+   "task": "Identify SQL lock holder",
+   "rationale": "sql-write-lock-busy 503 and slow asks",
+   "evidence": "docs/reference/research/issue-2320-live-r8-2026-11-25.md"
+  },
+  {
+   "rank": 3,
+   "task": "Deploy and re-probe wording",
+   "rationale": "live proof of the fix",
+   "evidence": "docs/reference/research/issue-2245-live-2026-11-25.md"
+  }
+ ]
+}

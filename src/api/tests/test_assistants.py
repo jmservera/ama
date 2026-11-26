@@ -1105,6 +1105,24 @@ class ReviewTests(Base):
         set_row(areas=[area + "-other"])
         self.assertIsNone(authorized(user))
 
+    def test_bound_entra_malformed_row_scope_fails_closed(self):
+        user = self.bound_entra()
+
+        def authorized(**change):
+            with self.service.transaction() as db:
+                row = json.loads(db.execute("SELECT body FROM staff WHERE email=?", (user["email"],)).fetchone()[0])
+                db.execute("UPDATE staff SET body=? WHERE email=?", (canonical(dict(row, **change)), user["email"]))
+                try:
+                    self.service.authorize(db, user, "stock-prioritisation", "ZF-1")
+                    return True
+                except PermissionError:
+                    return False
+
+        for change in (dict(case_ids="ZF-1"), dict(case_ids=["ZF-1", 7]), dict(case_ids=["ZF-1"] * 1001),
+                       dict(case_ids=["x" * 129]), dict(areas=[""]), dict(areas="north")):
+            self.assertFalse(authorized(**change), change)
+        self.assertTrue(authorized(case_ids=["ZF-1"], areas=None))
+
     def test_challenge_staff_gate_bound_entra_row(self):
         user = self.bound_entra()
         other = "33333333-3333-4333-8333-333333333333"

@@ -4,11 +4,15 @@ import json
 import re
 import shutil
 import subprocess
+import tempfile
 import unittest
 from pathlib import Path
 from typing import Any, cast
 
 from zava_forward.core import tokenomics
+from zava_forward.core.store import Store
+
+from test_management_tokenomics_api_100 import _api_fixture, _ServerHarness
 
 WEB = Path(__file__).resolve().parents[1] / "src" / "zava_forward" / "api" / "web"
 APP = (WEB / "app.js").read_text()
@@ -113,3 +117,25 @@ class OverviewAiEconomicsTests(unittest.TestCase):
         self.assertEqual(dict(rows["denominators"])["AI proposals"], "1,200")
         self.assertIn("overviewView", APP)
         self.assertIn("aiEconomicsCard(st.ai_consumption_economics)", APP)
+
+    def test_http_stats_body_renders_denominators_and_unknown_costs(self) -> None:
+        # Real /api/stats body (one accepted outcome, no price source) through the real renderer.
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "store.json"
+            path.write_text(json.dumps(_api_fixture()), encoding="utf-8")
+            store_cls: Any = Store
+            srv = _ServerHarness(store_cls(path))
+            try:
+                stats = srv.get_json("/api/stats", "pam@example.test")
+            finally:
+                srv.close()
+        self.assertIn("ai_consumption_economics", stats)
+        rows = _rows(stats["ai_consumption_economics"])
+        self.assertTrue(rows["available"])
+        denominators = dict(rows["denominators"])
+        self.assertEqual(denominators["AI proposals"], "3")
+        self.assertEqual(denominators["Accepted outcomes"], "3")
+        self.assertNotIn("Unknown", denominators.values())
+        self.assertEqual(len(rows["costs"]), 6)
+        self.assertEqual({value for _, value in rows["costs"]}, {"Unknown"})
+        self.assertEqual(rows["priceSource"], "Unknown")

@@ -458,6 +458,31 @@ class RetentionTests(Base):
         with self.assertRaises(ValueError):
             st.place_legal_hold(PAM, "ZF-1", "Resident Pat Test, 1 Test Road")
 
+    def test_retention_listing_survives_a_busy_write_lock_unrecorded(self):
+        from zava_forward.core.mssqlstore import LOCK_FAILED
+
+        st = self.make()
+        doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))
+        st.cases["ZF-1"]["retention_trigger"] = "not-a-date"
+        busy = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
+            f"[SQL Server]{LOCK_FAILED}")
+        real = st.audit
+
+        def audit_fails(*_a, **_k):
+            raise busy
+
+        st.audit = audit_fails
+        try:
+            out = st.retention_due(PAM, AS_OF)
+            self.assertEqual([r["doc_id"] for r in out["records"]], [doc["id"]])
+            self.assertIs(out["recorded"], False)
+            st.audit = lambda *a, **k: (_ for _ in ()).throw(ValueError("other"))
+            with self.assertRaises(ValueError):
+                st.retention_due(PAM, AS_OF)
+        finally:
+            st.audit = real
+        self.assertNotIn("recorded", st.retention_due(PAM, AS_OF))
+
     def test_unreadable_trigger_date_is_listed_for_review_not_a_failure(self):
         st = self.make()
         doc = st.add_document(SAM, "ZF-1", "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, "ZF-1"))

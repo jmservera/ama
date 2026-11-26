@@ -7,8 +7,10 @@ ms.topic: how-to
 
 ## Start Here
 
-Use the 55-slide Cowork v2 presentation. There is one current deck, not a
-choice between the older executive and Cowork routes.
+Use the Cowork v2 presentation (55 manifest slides plus appendix card B28, page 56, added 2026-11-25). There is one current deck, not a
+choice between the older executive and Cowork routes. B28 (Tokenomics) was added to the
+delivered PPTX and PDF by direct package edit; the [manifest](./source/slides.json) and builder do not yet
+include it (see the [research note](../reference/research/capstone-pitch-435-live-2026-11-25.md)).
 
 | Work | Current material |
 | --- | --- |

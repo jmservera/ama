@@ -15561,3 +15561,41 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Standardised all eight fully observed CR1 contrasts in Supplement Table 25 to Newcombe hybrid-score 95% intervals with two-sided Fisher exact p values, moved the prediction-verdicts table to Section 7 as Table 8, applied the requested prose and reference repairs, and recorded the [complete number diff](../capstone/thought-leadership/everything-but-the-software/anc/final-corrections-audit-2026-11-26.json).
 * Verified unauthenticated HTTP 200 public access (`public: true`, `embargoed: false`) for both OSF registrations (`ywsrv` and `xcpt4`), updated Data availability and Supplement A.20.1 and A.20.17 accordingly, named Isabel Cabezas Martin and enforced hyphen-only wrapping for the two recovered run IDs in A.20.12, added the Table 36 lead-in under A.20.16, and merged the three single-sentence paragraphs in Section 7.8; see the [release pass record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#final-arxiv-release-pass-26-november).
 * Rebuilt the 78-page [PDF](../capstone/thought-leadership/everything-but-the-software/main.pdf) and validated arXiv bundle without warnings; updated [README.md](../capstone/thought-leadership/everything-but-the-software/README.md), [supplement-integration.json](../capstone/thought-leadership/everything-but-the-software/anc/supplement-integration.json) and [docs/reference/README.md](README.md). Owner confirmed employer clearance and coauthor approval; no commit, push or upload was performed.
+## [2026-11-25] update | Capstone deck Tokenomics slide B28 (#435)
+
+* Added appendix slide B28 (page 56) to the capstone deck and regenerated the PDF at the owner's request; recorded validation, the manifest and builder drift (no PowerShell here) and the per-criterion status in [capstone-pitch-435-live-2026-11-25.md](research/capstone-pitch-435-live-2026-11-25.md). Updated the [capstone README](../capstone/README.md).
+## [2026-11-25] update | Issue 2237 retention listing tolerates a busy write lock
+
+* Added [issue-2237-retention-unrecorded-listing-2026-11-25.md](research/issue-2237-retention-unrecorded-listing-2026-11-25.md): the retention listing audit write took the global SQL write lock and caused the 503s; source and test change (not deployed) returns the list unrecorded when the lock is busy.
+* Added [issue-2253-live-r11-2026-11-25.md](research/issue-2253-live-r11-2026-11-25.md): live probe on API 0000076 (0 overlaps, 5 circles; forecast hidden by data age), deployed assets match the repository, new per-metric chart test.
+
+## [2026-11-25] update | Issue 107 in-environment real-AI batch
+
+* Added [issue-107-live-r15-in-environment-real-ai-2026-11-25.md](research/issue-107-live-r15-in-environment-real-ai-2026-11-25.md): capped batch run once inside the demo API replica with its managed identity; 258 measured tokens across the five assistants, per-criterion status recorded.
+## [2026-11-25] add | Issue 1830 live r14 map check settle before scan (Refs #1830)
+
+* Added [issue-1830-live-r14-2026-11-25.md](research/issue-1830-live-r14-2026-11-25.md): the direct #1828 map check was intermittently red; one `settle_map_reads` call before the expanded-width scan took parallel-run failures from 5 of 30 to 0 of 18; criteria 1, 3 and 4 stay partly unproven or owner-gated.
+
+## [2026-11-26] update | Issue 2245 live recheck and spending-hold wording
+
+* Added [issue-2245-live-2026-11-25.md](research/issue-2245-live-2026-11-25.md): widget proof of "Model calls: 1" on revision 0000076, evidence that a `liability-unknown` ledger hold showed "assistant is not available" beside the AI banner, a local wording fix (not deployed) and the per-criterion table with unproven items.
+
+## [2026-11-26] add | Issue 2245 recheck on revision 0000079 and hourly demo budget
+
+* Added [issue-2245-live-2026-11-26.md](research/issue-2245-live-2026-11-26.md): live probe (threads 8 of 8 200, one model answer in five asks, widget "Model calls: 1" with a grounding-rejected draft), the hourly demo budget slot (local, not deployed) and a per-criterion table.
+
+## [2026-11-26] add | Issue 1288 fifteenth Quality sensor audit (Refs #1288)
+
+* Added [issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md](research/issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md): live finite-allowance attempt found the owner demo suspension override never reached the assistants hold; fixed in source (test added), not deployed because the registry is private; criteria 4 and 8 stay unproven live, per-criterion table recorded.
+
+## [2026-11-26] add | Issue 2190 gate flake re-verification (Refs #2190)
+
+* Added [issue-2190-live-20261126-note.md](research/issue-2190-live-20261126-note.md): three flake fixes re-run on the current head and a broken-pipe traceback in the 218 slow-server test handler silenced, with a per-criterion table.
+
+## [2026-11-26] add | Issue 2245 recheck after revision 0000086 (Refs #2245)
+
+* Added [issue-2245-live-20261126T052140Z.md](research/issue-2245-live-20261126T052140Z.md): 16 of 16 thread creates 200, no model call because the call budget stayed held after the UTC hour boundary, reply wording corrected from daily to hourly (local, not deployed) and a per-criterion table.
+
+## [2026-11-26] add | Issue 2190 skills-load wait (Refs #2190)
+
+* Added [issue-2190-live-20261126T062859Z-note.md](research/issue-2190-live-20261126T062859Z-note.md): a load-dependent option-count race in the employee chat browser check (1 of 7 runs) fixed by waiting for the enabled input, with a per-criterion table.

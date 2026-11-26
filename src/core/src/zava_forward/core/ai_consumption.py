@@ -87,6 +87,18 @@ def timestamp(value: str) -> float:
     return result.timestamp()
 
 
+def _covering(authorities: list[dict[str, Any]], clock: Any) -> dict[str, Any] | None:
+    """The narrowest authority covering the instant; equal spans resolve to the latest recorded.
+
+    Recorded order is not stable when events share a timestamp, so a nested slot wins by span.
+    """
+    covering = [r for r in authorities if r["start"] <= clock < r["end"]]
+    if not covering:
+        return None
+    narrowest: dict[str, Any] = min(reversed(covering), key=lambda r: r["end"] - r["start"])
+    return narrowest
+
+
 def report_period(start: str, end: str, as_of: str) -> tuple[float, float, float]:
     begin, finish, cutoff = timestamp(start), timestamp(end), timestamp(as_of)
     if begin >= finish or cutoff < finish:
@@ -650,11 +662,21 @@ class Consumption:
                         old = next((v for v in r["budgets"] if v["id"] == b["id"]), None)
                         if old is not None and old != b:
                             raise ValueError("Existing budget limits are immutable.")
+            new_synthetic = bool(known and known["synthetic"])
+            # A synthetic demo slot may sit inside an enclosing synthetic authority (a legacy
+            # day-wide one); admission picks the latest recorded authority covering the instant.
             if any(
                 r["kind"] == "authority"
                 and r["capability"] == capability
                 and r["configuration"] == configuration
                 and max(begin, r["start"]) < min(finish, r["end"])
+                and not (
+                    new_synthetic
+                    and prices.get(r["price"], {}).get("synthetic")
+                    and r["start"] <= begin
+                    and finish <= r["end"]
+                    and (begin, finish) != (r["start"], r["end"])
+                )
                 for r in records
             ):
                 raise ValueError("Overlapping authority for one configuration is ambiguous.")
@@ -699,9 +721,7 @@ class Consumption:
                 and r["capability"] == capability
                 and (configuration is None or r["configuration"] == configuration)
             ]
-            authority = next(
-                (r for r in reversed(authorities) if r["start"] <= clock < r["end"]), None
-            )
+            authority = _covering(authorities, clock)
             if authority is None:
                 reasons.append("authority-expired" if authorities else "authority-unknown")
                 return dict(allowed=False, capability=capability, reasons=reasons)
@@ -798,9 +818,7 @@ class Consumption:
                 and r["capability"] == context.capability
                 and r["configuration"] == context.configuration
             ]
-            authority = next(
-                (r for r in reversed(authorities) if r["start"] <= now < r["end"]), None
-            )
+            authority = _covering(authorities, now)
             owner = (
                 authority.get("alert_owner", authority["owner"])
                 if authority

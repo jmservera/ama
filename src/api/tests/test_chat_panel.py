@@ -298,11 +298,15 @@ class PanelTests(roles.Matrix):
         self.model = lambda _p: dict(envelope(None, "financial-held"), reason="call-budget-limit")
         d = self.ask(tid)[1]
         self.assertEqual((d["kind"], d["model"]), ("answer", "workflow-only"))
-        self.assertIn("daily demo allowance", d["reply"])
+        self.assertIn("hourly demo allowance", d["reply"])
+        self.assertIn("start of the next UTC hour", d["reply"])
+        self.assertNotIn("00:00 UTC", d["reply"])
         self.assertNotIn("assistant is not available", d["reply"])
         self.model = lambda _p: dict(envelope(None, "financial-held"), reason="liability-unknown")
         d = self.ask(tid)[1]
-        self.assertIn("assistant is not available", d["reply"])
+        self.assertIn("spending control is holding AI answers", d["reply"])
+        self.assertNotIn("assistant is not available", d["reply"])
+        self.assertNotIn("allowance", d["reply"])
 
     def test_every_turn_rechecks_role_and_case(self) -> None:
         tid = self.thread()
@@ -1420,6 +1424,42 @@ class DemoActivationGuardrailPersistenceTests(Base):
         self.assertEqual((held["outcome"], held["reason"]), ("financial-held", hold))
         self.assertEqual(self.sent, [])
         self.assertNotIn("reserved", self.kinds())
+
+    def test_a_legacy_day_wide_authority_does_not_block_the_hourly_slot(self) -> None:
+        ledger, ai = self.live.ai.consumption, self.live.ai
+        configuration = ai.configuration(ai.fast, chat_demo_meter.TEMPERATURE, 600)
+        day = datetime(2031, 5, 4, tzinfo=UTC)
+        start, end = day.isoformat(), (day + timedelta(days=1)).isoformat()
+        price = ledger.price(
+            source=chat_demo_meter.PRICE_SOURCE,
+            source_hash=reference("legacy-price"),
+            retrieved=start,
+            version="legacy-day",
+            model=ai.model_version,
+            currency="USD",
+            start=start,
+            end=end,
+            input_rate="1",
+            output_rate="2",
+            cached_rate="0.5",
+            synthetic=True,
+        )
+        ledger.authorize(
+            authority="legacy-day-authority",
+            owner=chat_demo_meter.OWNER,
+            evidence="legacy-day-evidence",
+            price=price,
+            capability=chat_demo_meter.TASK,
+            configuration=configuration,
+            start=start,
+            end=end,
+            budgets=[dict(id=reference("legacy-day-budget"), calls=20, tokens=100000, amount="1")],
+            max_calls=1,
+            max_depth=1,
+        )
+        self.assertTrue(chat_demo_meter.ensure(self.live, 600, now=day + timedelta(hours=9)))
+        starts = [e["start"] for e in self.events() if e["kind"] == "authority"]
+        self.assertIn((day + timedelta(hours=9)).timestamp(), starts)
 
     def test_b_token_budget_holds_before_live_dispatch(self) -> None:
         self.assert_budget_holds_before_dispatch("TOKENS", 10, "token-budget-limit")

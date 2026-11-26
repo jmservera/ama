@@ -1,0 +1,4 @@
+REPORT_BEGIN
+{"blocked": {}, "calls": [{"assistant": "stock-prioritisation", "cached": 0, "completion": 10, "prompt": 44}, {"assistant": "assessment-preparation", "cached": 0, "completion": 8, "prompt": 42}, {"assistant": "funding-evidence", "cached": 0, "completion": 8, "prompt": 42}, {"assistant": "works-resident-coordination", "cached": 0, "completion": 10, "prompt": 44}, {"assistant": "quality-evidence", "cached": 0, "completion": 8, "prompt": 42}], "label": "measured held-out batch", "mode": "live", "outcome": "completed", "problems": [], "tokens": 258, "usd": "0.0000390"}
+REPORT_END
+$ exit

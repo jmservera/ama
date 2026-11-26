@@ -4,6 +4,7 @@ import copy
 import json
 import os
 import unittest
+from datetime import UTC, datetime, timedelta
 from unittest import mock
 
 import test_mvp
@@ -66,6 +67,53 @@ class Suspension(Base):
         v = other.detail(self.pm, queued["id"])
         self.assertFalse(v["actionable"])
         self.assertEqual(v["state"], "quarantined")
+
+    def test_owner_demo_override_lifts_the_assistant_hold_and_keeps_the_record_open(self):
+        queued = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.suspend()
+        demo = {"ZF_DEPLOYMENT_PROFILE": "demo", "ZF_ENV": "production",
+                "ZF_DEMO_AI_SUSPENSION_OVERRIDE": "owner-directed-2026-11-23"}
+        other = self.other()
+        with other.transaction() as db:
+            self.assertTrue(other.suspended(db, "quality-evidence"))
+        with mock.patch.dict(os.environ, demo), other.transaction() as db:
+            self.assertIsNone(other.suspended(db, "quality-evidence"))
+            self.assertEqual(other.continuity(db)["suspensions"][0]["status"], "Suspended")
+        with mock.patch.dict(os.environ, {k: v for k, v in demo.items() if k != "ZF_DEPLOYMENT_PROFILE"}):
+            self.assertFalse(other.detail(self.pm, queued["id"])["actionable"])
+        with other.transaction() as db:
+            self.assertTrue(other.suspended(db, "quality-evidence"))
+
+    def test_owner_demo_override_ignores_only_expired_ledger_rows_for_a_new_authority(self):
+        demo = {"ZF_DEPLOYMENT_PROFILE": "demo", "ZF_DEMO_AI_SUSPENSION_OVERRIDE": "owner-directed-2026-11-23"}
+        fresh = self.other(authority="later-finite-exercise")
+        with fresh.transaction() as db:
+            now = fresh.now(db)
+            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) "
+                       "VALUES ('old-expired',10,1000,?,10,1000)", (now - 60,))
+            self.assertEqual(fresh._pool(db)[3], 10)
+        with mock.patch.dict(os.environ, demo), fresh.transaction() as db:
+            self.assertIsNone(fresh._pool(db))
+            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) "
+                       "VALUES ('old-live',5,500,?,5,500)", (now + 3600,))
+            self.assertEqual(fresh._pool(db)[3], 5)
+
+    def test_quality_demo_meter_seeds_only_under_the_owner_override_and_keeps_chat(self):
+        from zava_forward.core import chat_demo_meter
+
+        ledger = mock.Mock()
+        ai = mock.Mock(fast="standard", model_version="m", synthetic_price_capabilities=frozenset({"chat-case-conversation"}))
+        ai.configuration.return_value = "cfg"
+        ai.consumption = ledger
+        store = mock.Mock(ai=ai)
+        self.assertFalse(chat_demo_meter.ensure_quality(store, 600, env={"ZF_DEPLOYMENT_PROFILE": "demo"}))
+        ledger.authorize.assert_not_called()
+        self.assertEqual(ai.synthetic_price_capabilities, {"chat-case-conversation"})
+        demo = {"ZF_DEPLOYMENT_PROFILE": "demo", "ZF_DEMO_AI_SUSPENSION_OVERRIDE": "owner-directed-2026-11-23"}
+        self.assertTrue(chat_demo_meter.ensure_quality(store, 600, env=demo))
+        self.assertEqual(ledger.authorize.call_args.kwargs["capability"], "quality-evidence")
+        self.assertTrue(ledger.price.call_args.kwargs["synthetic"])
+        self.assertEqual(ai.synthetic_price_capabilities, {"chat-case-conversation", "quality-evidence"})
 
     def test_sql_store_wires_the_ai_gate_and_flags_truncated_affected_list(self):
         fresh = self.open_store()
@@ -403,6 +451,20 @@ class ChatDemoMeterOnSqlStore(Base):
                 chat_demo_meter.ensure(store, 600)
             self.assertEqual(price.call_count, 2)
         self.assertEqual(self.kinds(service).count("price"), 1)
+
+    def test_each_hour_gets_its_own_budget_so_a_held_hour_does_not_hold_the_day(self):
+        store, service, _ = self.chat_model(self.DEMO_ON)
+        first = datetime(2026, 11, 25, 9, 40, tzinfo=UTC)
+        with mock.patch.dict(os.environ, self.DEMO_ON):
+            chat_demo_meter.ensure(store, 600, now=first)
+            chat_demo_meter.ensure(store, 600, now=first.replace(minute=5))
+            chat_demo_meter.ensure(store, 600, now=first + timedelta(hours=1))
+        with service.transaction() as db:
+            records = [json.loads(row[0]) for row in db.execute("SELECT body FROM assistant_events")]
+        authorities = sorted((r for r in records if r["kind"] == "authority"), key=lambda r: r["start"])
+        self.assertEqual(len(authorities), 2)
+        self.assertNotEqual(authorities[0]["budgets"][0]["id"], authorities[1]["budgets"][0]["id"])
+        self.assertEqual(authorities[0]["end"], authorities[1]["start"])
 
     def test_without_the_switch_nothing_is_seeded_and_the_call_is_refused(self):
         service, reply, sent = self.ask(self.ENV)

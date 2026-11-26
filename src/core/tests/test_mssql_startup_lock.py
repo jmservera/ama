@@ -35,9 +35,19 @@ class FakeDriver:
                 raise DriverError(self.message)
 
 
+class LinkDriver(FakeDriver):
+    """Drops the link on the first N statements, as a brief SQL outage does."""
+
+    def execute(self, sql: str, args: Any = ()) -> None:
+        self.calls += 1
+        if self.calls <= self.failures:
+            raise DriverError("Communication link failure; TCP Provider: Error code 0x68")
+
+
 def conn(driver: FakeDriver, retries: int) -> Any:
     c: Any = _Conn.__new__(_Conn)
     c.driver, c.raw, c.in_tran, c.attrs, c.startup_retries = driver, driver, False, {}, retries
+    c.conn_str = ""
     return c
 
 
@@ -55,6 +65,23 @@ class StartupLockRetryTests(unittest.TestCase):
         self.assertTrue(c.in_tran)
         self.assertEqual(d.calls, 4)
         self.assertEqual(self.sleeps, [1.0, 2.0, 4.0])
+
+    def test_dead_link_at_start_up_is_retried_with_backoff(self) -> None:
+        d = LinkDriver(3)
+        conn(d, 7).execute("SELECT 1")
+        self.assertEqual((d.calls, self.sleeps), (4, [1.0, 2.0]))
+
+    def test_dead_link_after_start_up_keeps_one_immediate_reconnect(self) -> None:
+        d = LinkDriver(2)
+        with self.assertRaises(DriverError):
+            conn(d, 0).execute("SELECT 1")
+        self.assertEqual((d.calls, self.sleeps), (2, []))
+
+    def test_dead_link_at_start_up_gives_up_after_the_bounded_attempts(self) -> None:
+        d = LinkDriver(99)
+        with self.assertRaises(DriverError):
+            conn(d, 7).execute("SELECT 1")
+        self.assertEqual(d.calls, 2 + mssqlstore.LINK_RETRY_ATTEMPTS)
 
     def test_write_wait_caps_this_threads_lock_timeout_then_restores_it(self) -> None:
         sent: list[str] = []

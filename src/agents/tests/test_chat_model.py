@@ -221,7 +221,12 @@ class ChatModelTests(unittest.TestCase):
                 finally:
                     self.assertEqual(transport.call_count, 0)
             self.assertEqual((caught.exception.calls, caught.exception.usage), (0, None))
-            self.assertEqual(caught.exception.outcome, "provider-unavailable")
+            self.assertEqual(
+                caught.exception.outcome,
+                "provider-unavailable"
+                if label in ("prompt-output guard denial", "token failure after reservation")
+                else "spend-held",
+            )
             self.assertNotIn("PRIVATE", str(caught.exception))
 
     def test_real_input_refusal_is_zero_calls(self) -> None:
@@ -252,7 +257,7 @@ class ChatModelTests(unittest.TestCase):
         for reason, expected in (
             ("call-budget-limit", "allowance-used"),
             ("money-budget-limit", "allowance-used"),
-            ("liability-unknown", "provider-unavailable"),
+            ("liability-unknown", "spend-held"),
         ):
             envelope = dict(outcome="financial-held", reason=reason, text="")
             with self.subTest(reason), self.assertRaises(ModelUnavailable) as caught:
@@ -363,7 +368,7 @@ class ChatModelTests(unittest.TestCase):
                 self.assertNotIn("PRIVATE", json.dumps(answer))
                 self.assertEqual(receipt["model_calls"], transport.call_count)
                 self.assertEqual(receipt["model_calls"], expected)
-                self.assertEqual(receipt["provider_outcome"], "provider-unavailable")
+                self.assertEqual(receipt["provider_outcome"], "spend-held")
                 turns = [r for r in store.audit_entries() if r["action"] == "chat.turn"]
                 self.assertEqual(json.loads(turns[-1]["detail"]), receipt)
 

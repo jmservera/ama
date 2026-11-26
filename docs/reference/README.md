@@ -777,6 +777,8 @@ The [thirteenth audit](./research/issue-1288-live-r13-quality-sensor-evidence-20
 
 The [fourteenth audit](./research/issue-1288-live-r14-quality-sensor-evidence-2026-11-23.md) downgrades an autonomous flag when a cited reading is corrected to an impossible value after capture. Criteria 4 and 8 stay unproven.
 
+The [fifteenth audit](./research/issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md) found the owner demo override never reached the assistants hold (fixed in source, not deployed) and kept criteria 4 and 8 unproven live.
+
 The [receiver failure diagnosis](./research/issue-2201-live-receiver-failure-2026-11-21.md) records why `job-live-receiver` failed every run and the bounded-window fix; deployment and the store/map proof stay open (#2201).
 
 The [receiver proof](./research/issue-2201-live-receiver-proof-2026-11-21.md) adds the captured failure code `SENSOR_SQL_UNAVAILABLE`, the SQL retry fix, the live store and map readings proof and the per-criterion table (#2201).
@@ -814,6 +816,12 @@ The [issue 2245 end-to-end override test](./research/issue-2245-live-010431-2026
 The [issue 2245 revision 0000060 recheck](./research/issue-2245-live-101805-2026-11-24.md) shows thread creation 8/8 live 200, live model calls in the logs, and that the demo chat meter's 20 calls per UTC day cap then holds questions with a misleading "assistant is not available" reply; it adds a cap-exhaustion regression test and a per-criterion table.
 
 The [issue 2245 budget-hold fix and revision 0000066 recheck](./research/issue-2245-live-151955-2026-11-24.md) records thread creation 8/8 live 200, the spent daily allowance, a local fix that replaces the misleading "assistant is not available" reply for budget holds, and a per-criterion table.
+
+The [issue 2245 live recheck of 2026-11-25](./research/issue-2245-live-2026-11-25.md) records the widget proof of "Model calls: 1" on revision 0000076 after midnight UTC, a ledger hold (`liability-unknown`) that showed misleading wording before it, a local wording fix, and the per-criterion table.
+
+The [issue 2245 recheck after revision 0000086](./research/issue-2245-live-20261126T052140Z.md) records 16 of 16 thread creates at 200, no model call because the call budget stayed held past the UTC hour boundary, the hourly wording fix and what stays unproven.
+
+The [issue 2245 live recheck of 2026-11-26](./research/issue-2245-live-2026-11-26.md) records revision 0000079 (threads 8 of 8, widget "Model calls: 1"), the hourly demo budget slot that stops one held settlement pausing the model all day, and the per-criterion table.
 
 The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.
 
@@ -1740,6 +1748,7 @@ or infra acceptance claimed.
 | [Capstone pitch Tokenomics status, sixth pass (#435)](./research/capstone-pitch-435-live-2026-11-23.md) | Comparison with main 342fad401d and live revisions 0000054 and 0000026: placement decision and spend authority proven, mentor confirmation unproven; 56 batch adapter tests pass | 2026-11-23 |
 | [Capstone pitch Tokenomics status, seventh pass with regression tests (#435)](./research/capstone-pitch-435-live-2026-11-23b.md) | Criteria 1 and 4 proven for the demo, criterion 2 unproven; new deck-placement and batch-authority tests | 2026-11-23 |
 | [Capstone pitch model-tier comparison, ninth pass (#435)](./research/capstone-pitch-435-live-2026-11-24.md) | Decision model versus small GPT model versus large LLM for yes/no document checks with dated public sources and evidence labels, slide 22 lead-in placement and computed timing; no saving claimed, mentor and timed rehearsal unproven |
+| [Capstone Tokenomics slide B28 and per-criterion status (#435)](./research/capstone-pitch-435-live-2026-11-25.md) | Owner-directed appendix slide B28 added to the capstone deck (56 slides), validation by reload and render, manifest drift and unproven criteria stated | 2026-11-25 |
 | [Anonymous protected API 401 proof (#2310)](./research/2026-11-25-issue-2310-anonymous-api-401-proof.md) | Existing tests for 401 on browser-style anonymous API requests and Entra page redirect pass locally (45 tests); live demo app redirects anonymous API requests at the platform layer, unproven live |
 | [Capstone pitch Tokenomics status, eighth pass (#435)](./research/capstone-pitch-435-live-2026-11-23c.md) | Stale "batch not run" wording fixed in the spoken script and Q&A brief, computed timing check, criterion 3 tick still unsupported | 2026-11-23 |
 | [Five assistants live demo evidence (#107)](./research/issue-107-live-assistants-evidence-2026-11-18.md) | Two unticked criteria: independent-worker revocation, restart and allowance races proven on local disposable SQL Server 2022 (7 tests) plus SQLite proxies; live demo denies all five assistants with no provider call, approved-release and delivered-build criterion unproven (OQ-017 approver gap) |
@@ -1752,6 +1761,7 @@ or infra acceptance claimed.
 | [Issue 107 separate-process provider, endpoint and deployment tests and live gate proof (#107)](./research/issue-107-live-r12-endpoint-deployment-2026-11-25.md) | Three more bound fields moved in separate processes; SQLite and disposable SQL Server runs; read-only live denial proof; per-criterion table |
 | [Issue 107 capped real-AI acceptance harness, prepared and not run (#107)](./research/issue-107-live-r13-real-ai-harness-2026-11-25.md) | Fail-closed dry-run harness and eight offline tests for the owner-capped five-assistant batch; no tokens spent; both open criteria remain unproven |
 | [Issue 107 demo release records recorded, capped batch blocked (#107)](./research/issue-107-live-r14-release-records-2026-11-25.md) | Five actual release records in force on the demo API; harness admission shape fixed; zero tokens spent because the AI account is private-endpoint only |
+| [Issue 107 measured real-AI tokens from inside the demo environment (#107)](./research/issue-107-live-r15-in-environment-real-ai-2026-11-25.md) | The capped batch ran inside the demo API replica: 258 measured tokens across all five assistants, no estate change; older-image criterion still unproven |
 | [Five assistants live demo re-verification, fourth pass (#107)](./research/issue-107-live-r4-assistants-evidence-2026-11-23.md) | Actual SQL Server 2022 run of the release, restart and old-image tests: 95 OK, 0 skipped; live revision 0000055 read-only; approved-release criterion stays unproven |
 | [Five assistants first unmet criterion, actual SQL coverage (#107)](./research/issue-107-live-r4-criteria-2026-11-19.md) | Mismatch and allowance race tests now run on actual SQL Server; composite old-image-after-mismatch test added; second criterion unproven. |
 | [Five assistants sixth pass, per-criterion table (#107)](./research/issue-107-live-r6-criteria-2026-11-19.md) | Fresh targeted run (95 tests OK on SQLite); criterion 1 proven for the demo, criterion 2 needs a human release record. |
@@ -2008,6 +2018,7 @@ or infra acceptance claimed.
 | [Issue 1830 Live r11, Map Check Race (#1830)](./research/issue-1830-live-r11-2026-11-24.md) | Direct #1828 map check failed 5 of 5 at head on a sensor loading race; waits added, 3 of 4 reruns pass under load; one unrelated 390x568 flake |
 | [Issue 1830 Live r12, Map Check Sub-pixel Flake (#1830)](./research/issue-1830-live-r12-2026-11-24.md) | The 390x568 focus-fit flake was a 0.17 px overshoot; 1 px tolerance passes 6 of 6 reruns at load 9 to 12 |
 | [Issue 1830 Live r13, Owned-Server Health Window (#1830)](./research/issue-1830-live-r13-2026-11-24.md) | Preflight and map check re-proved; the fixed 10 s server health wait became a 60 s deadline, not measured before and after |
+| [Issue 1830 Live r14, Map Check Settle Before Scan (#1830)](./research/issue-1830-live-r14-2026-11-25.md) | Preflight re-proved; the direct map check was intermittently red and a settle wait before the expanded scan took failures from 5 of 30 to 0 of 18 parallel runs |
 | [Issue 2188 Live, Gate Speed-up Criteria](./research/issue-2188-live-gate-speed-2026-11-21.md) | Per-criterion evidence: layer cache 80.7 s to 1.3 s on one image, retry not implemented, tamper rejection tests pass |
 | [Issue 2188 Live, Gate Speed-up Criteria Refresh](./research/issue-2188-live-gate-speed-2026-11-22.md) | Supersedes the retry finding: shard retry and receipt retries implemented, image build 70.5 s to 7.2 s, images still serial, gate-level pair unproven |
 | [Issue 2187 Live, Gate Heavy Lock Scope](./research/issue-2187-live-gate-lock-2026-11-23.md) | Heavy lock only for browser, SQL and image groups already merged in #2215; #2286 did not touch it; no remainder; per-criterion table |
@@ -2040,6 +2051,7 @@ or infra acceptance claimed.
 | [Issue 2237 Live Re-proof on 0000061](./research/issue-2237-live-reproof-2026-11-24.md) | Issue 2237: retention 200 in 55 of 55 calls on revision 0000061, the lock timeout answering 503 (30 times, no 500) on 0000058 to 0000060, and a per-criterion table |
 | [Issue 2237 Live Re-proof on 0000067](./research/issue-2237-live-reproof-2026-11-24b.md) | Issue 2237: retention 200 in 56 of 56 calls on revision 0000067, only 503 lock timeouts (no 500) in 36 h of console logs, and a per-criterion table |
 | [Issue 2237 Live Re-proof on 0000068 (2026-11-25)](./research/issue-2237-live-reproof-2026-11-25.md) | Issue 2237: retention 200 as Programme Manager on revision 0000068 (35 of 35 sequential and parallel calls), the 503 lock mapping firing live, no retention 500 in 48 h of console logs, and a per-criterion table |
+| [Issue 2237 Retention Listing Tolerates a Busy Write Lock (2026-11-25)](./research/issue-2237-retention-unrecorded-listing-2026-11-25.md) | Issue 2237: why /api/retention still answered 503 under lock contention, the failing-first test and fix that return the list unrecorded, and a per-criterion table |
 
 
 
@@ -2441,6 +2453,8 @@ Further 2026-11-22 evidence: [issue 2190 re-verification](./research/issue-2190-
 Re-verification r2: [issue 2190 merged flake fixes](./research/issue-2190-live-20261123T071426Z-note.md). Further 2026-11-23 evidence: [issue 2190 regression tests](./research/issue-2190-live-20261123-note.md), a behavioural slow-server test, a deterministic settle wait for the chat check and a stricter `_region_passed`, with a per-criterion verdict.
 Browser regression test: [issue 2190 late_success browser test](./research/issue-2190-live-20261123T080144Z-browser-test-note.md), a real-browser reproduction of the gap before the list status.
 Glued header: [issue 2190 log text before the next test header](./research/issue-2190-live-20261123T202218Z-glued-header-note.md), a parser fix with a regression test.
+Re-verification 2026-11-26: [issue 2190 broken-pipe log noise](./research/issue-2190-live-20261126-note.md), three flake fixes re-run on current head and a test-handler traceback silenced.
+Skills-load wait: [issue 2190 option-count race](./research/issue-2190-live-20261126T062859Z-note.md), a load-dependent race in the employee chat browser check fixed by waiting for the loaded state.
 
 A [live receipt for issue 2202](./research/issue-2202-live-receipt-2026-11-21.md) records the deployed demo images, replica hardening receipts, the resident consent writer configuration and the owner checks for charts, gauges, consent and chat routing, with the half-of-homes target and resident hardening still unproven.
 

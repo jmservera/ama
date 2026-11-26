@@ -1,0 +1,47 @@
+{
+ "task_id": "issue-1288-live-20261126T003312Z",
+ "task_slug": "issue-1288-live-r15",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Review",
+ "status": "active",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-26/issue-1288-live-r15-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-26/issue-1288-live-r15-plan.md",
+  "details": ".copilot-tracking/details/2026-11-26/issue-1288-live-r15-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-26/issue-1288-live-r15-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-26/issue-1288-live-r15-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-26/issue-1288-live-r15-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Demo desktop only; live Azure authorised (rg ama, USD 700); no push; tier FULL only if src changes; never rpi-checks --all",
+   "status": "confirmed",
+   "evidence": "brief"
+  },
+  {
+   "decision": "critique executed once, compatible",
+   "status": "done",
+   "evidence": ".copilot-tracking/critique/2026-11-26/issue-1288-live-r15-critique.md"
+  },
+  {
+   "decision": "review executed once, conformant for scope",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-26/issue-1288-live-r15-review.md"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "deploy fixed build then rerun finite walkthrough"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Deploy build with assistants override fix, set finite allowance, run walkthrough",
+   "rationale": "only remaining blocker for criteria 4 and 8",
+   "evidence": "r15 research note"
+  }
+ ]
+}

@@ -1635,10 +1635,16 @@ class Assistants:
         hold = continuity.gate_hold(db, mssql=self.mssql)
         if hold is not None:
             return continuity.reason_text(hold)
-        s = continuity.active(
+        s = self.open_suspension(db, capability)
+        return continuity.reason_text(s) if s else None
+
+    def open_suspension(self, db, capability):
+        """The open suspension covering this task; the owner-directed demo override skips the hold, never the record."""
+        if continuity.demo_owner_override():
+            return None
+        return continuity.active(
             self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai)
         )
-        return continuity.reason_text(s) if s else None
 
     def admission(self, db, capability):
         """The retained denial for this task, or None when a matching release is in force. Read on the caller's connection."""
@@ -1782,8 +1788,8 @@ class Assistants:
                     ).fetchall()
                 ]
                 capability = continuity.record_task(body)
-                s = continuity.gate_hold(db, mssql=self.mssql) or continuity.active(
-                    self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai)
+                s = continuity.gate_hold(db, mssql=self.mssql) or self.open_suspension(
+                    db, capability
                 )
                 current = continuity.epoch_current(body, self.continuity(db))
                 row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
@@ -2222,8 +2228,8 @@ class Assistants:
         )
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
-        held = continuity.gate_hold(db, mssql=self.mssql) or continuity.active(
-            self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai)
+        held = continuity.gate_hold(db, mssql=self.mssql) or self.open_suspension(
+            db, body["capability"]
         )
         body["epoch_current"] = continuity.epoch_current(body, self.continuity(db))
         body["release_denial"] = self.admission(db, body["capability"])
@@ -3082,8 +3088,14 @@ class Assistants:
         ).fetchone()
         if pool is not None:
             return tuple(pool)
+        # Owner-directed demo override: an expired earlier exercise cannot poison a newly authorised finite one.
+        live_only = (
+            " WHERE expires>?" if continuity.demo_owner_override() else ""
+        )
         prior = db.execute(
             "SELECT MIN(calls),MIN(tokens),MIN(expires),MAX(used_calls),MAX(reserved_tokens) FROM assistant_allowance"
+            + live_only,
+            (self.now(db),) if live_only else (),
         ).fetchone()
         if prior[0] is None:
             return None
@@ -3152,7 +3164,16 @@ class Assistants:
         row = db.execute(
             "SELECT pool,reserved FROM assistant_attempts WHERE id=?", (attempt,)
         ).fetchone()
-        if type(actual) is int and 0 <= actual <= row[1]:
+        # A finance hold taken before any meter reservation means no request, token or socket existed, so the
+        # whole call is returned and a held capability cannot drain the shared allowance for the others.
+        unsent = envelope.get("outcome") == "financial-held" and not envelope.get("meter_id")
+        if unsent:
+            db.execute(
+                "UPDATE assistant_allowance SET used_calls=used_calls-1,reserved_tokens=reserved_tokens-? WHERE id=?",
+                (row[1], row[0]),
+            )
+            actual = 0
+        elif type(actual) is int and 0 <= actual <= row[1]:
             db.execute(
                 "UPDATE assistant_allowance SET reserved_tokens=reserved_tokens-? WHERE id=?",
                 (row[1] - actual, row[0]),
@@ -3792,6 +3813,10 @@ class Assistants:
 
         def call():
             gate = self._dispatch_gate(task)
+            if task["capability"] == "quality-evidence":
+                from . import chat_demo_meter  # deferred: ai_registry imports this module
+
+                chat_demo_meter.ensure_quality(self.store, self.limits.output_tokens)
             try:
                 context = ai_consumption.CallContext(
                     ai_consumption.reference(task["id"]),

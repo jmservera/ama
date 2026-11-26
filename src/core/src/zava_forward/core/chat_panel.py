@@ -69,9 +69,13 @@ SUSPENDED_FALLBACK = (
     "A person with restart authority must lift the suspension."
 )
 ALLOWANCE_FALLBACK = (
-    "The daily demo allowance for AI answers is used up, so no model was called. "
-    "It resets at 00:00 UTC. Continue with the ordinary case workflow; "
+    "The hourly demo allowance for AI answers is used up, so no model was called. "
+    "It renews at the start of the next UTC hour. Continue with the ordinary case workflow; "
     "nothing is lost and nothing has been changed."
+)
+SPEND_HELD_FALLBACK = (
+    "The demo spending control is holding AI answers, so no model was called. "
+    "Continue with the ordinary case workflow; nothing is lost and nothing has been changed."
 )
 UNSTORED_NOTE = (
     "This reply uses rules only. Nothing you typed was saved and no record was changed. "
@@ -86,9 +90,13 @@ SUSPENDED_NOTE = (
     "called. No record was changed. A person decides next steps."
 )
 ALLOWANCE_NOTE = (
-    "This reply uses rules only because the daily demo allowance for AI answers is used up, "
-    "so no model was called. It resets at 00:00 UTC. No record was changed. "
+    "This reply uses rules only because the hourly demo allowance for AI answers is used up, "
+    "so no model was called. It renews at the start of the next UTC hour. No record was changed. "
     "A person decides next steps."
+)
+SPEND_HELD_NOTE = (
+    "This reply uses rules only because the demo spending control is holding AI answers, "
+    "so no model was called. No record was changed. A person decides next steps."
 )
 WITHHELD = (
     "That reply was withheld because it asked for an action or exposed content "
@@ -1006,6 +1014,8 @@ class ChatPanel:
                     if exc.outcome == "ai-suspended"
                     else ALLOWANCE_FALLBACK
                     if exc.outcome == "allowance-used"
+                    else SPEND_HELD_FALLBACK
+                    if exc.outcome == "spend-held"
                     else FALLBACK,
                 )
             except Exception as error:
@@ -1067,7 +1077,7 @@ class ChatPanel:
                 model_name, source = "workflow-only", "decision-rules-fallback"
         if (
             kind == "fallback"
-            and text in (FALLBACK, SUSPENDED_FALLBACK, ALLOWANCE_FALLBACK)
+            and text in (FALLBACK, SUSPENDED_FALLBACK, ALLOWANCE_FALLBACK, SPEND_HELD_FALLBACK)
             and case_id
         ):
             facts = iso.case_facts(iso.current_user(user), case_id)
@@ -1075,9 +1085,11 @@ class ChatPanel:
                 grounded = {f"{case_id}/{path}": value for path, value in facts.items()}
                 kind, body, cites = grounded_answer(case_id, normalise_policy_text(masked), facts)
                 outcome = receipt.get("provider_outcome")
-                note = {"ai-suspended": SUSPENDED_NOTE, "allowance-used": ALLOWANCE_NOTE}.get(
-                    str(outcome), RULES_NOTE
-                )
+                note = {
+                    "ai-suspended": SUSPENDED_NOTE,
+                    "allowance-used": ALLOWANCE_NOTE,
+                    "spend-held": SPEND_HELD_NOTE,
+                }.get(str(outcome), RULES_NOTE)
                 text = redact(body)[0] + "\n" + note
                 sources = {
                     key: value

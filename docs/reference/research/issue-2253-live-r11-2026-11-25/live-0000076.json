@@ -1,0 +1,28 @@
+{
+ "scale": 1.3958333333333333,
+ "body_px": 16,
+ "text": [
+  [
+   "-10",
+   12
+  ],
+  [
+   "17.5",
+   12
+  ],
+  [
+   "45",
+   12
+  ]
+ ],
+ "text_overlaps": 0,
+ "circles": 5,
+ "touching_circles": 0,
+ "forecast_squares": 0,
+ "latest_label": false,
+ "legend": "Temperature history (\u00b0C)\n-10\n17.5\n45\n\nAcross 48 readings: lowest 5.65\u00a0\u00b0C, highest 11.73\u00a0\u00b0C. The latest value is higher than the first.\n\nTime (UK time): 21 Nov 2026, 19:45 to 24 Nov 2026, 17:45",
+ "figcaption": "Across 48 readings: lowest 5.65\u00a0\u00b0C, highest 11.73\u00a0\u00b0C. The latest value is higher than the first.\n\nTime (UK time): 21 Nov 2026, 19:45 to 24 Nov 2026, 17:45",
+ "forecast_heading": [
+  "No 24-hour forecast is shown because the latest stored reading is more than 24 hours old."
+ ]
+}

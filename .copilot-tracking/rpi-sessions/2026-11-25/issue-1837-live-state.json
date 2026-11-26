@@ -1,0 +1,30 @@
+{
+ "task_id": "issue-1837-live-20261125T232631Z",
+ "task_slug": "issue-1837-live-nomination-negative-tests",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-25-issue-1837-live-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-25-issue-1837-live-plan.md",
+  "details": ".copilot-tracking/details/2026-11-25-issue-1837-live-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-25-issue-1837-live-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-25-issue-1837-live-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-25-issue-1837-live-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Owner 2026-11-18 demo scope: synthetic, desktop only, no push or PR",
+   "status": "confirmed",
+   "evidence": "worker brief"
+  }
+ ],
+ "blockers": [],
+ "next_action": {
+  "phase": "Implement",
+  "action": "critique then plan a test-only negative-boundary test for correction and challenge"
+ },
+ "prioritized_follow_ups": [{"rank":1,"task":"Independent exact-head review and hosted CI once publication is permitted","rationale":"owner-gated criterion","evidence":"review note"}]
+}

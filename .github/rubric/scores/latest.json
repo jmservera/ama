@@ -2,17 +2,17 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-25T19:17:34+00:00",
-  "commit": "6c8c2f7c4fa4713647bc5e92c91223dd93eaeb39",
+  "scored_at": "2026-11-26T18:22:39+00:00",
+  "commit": "b24e081cc9289e9de043b1eeef53c70f59c9a130",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/45682700206",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/45874607021",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
     "adr": "b57f49945945ec4ca2cbe1be00a5aa090b0d70bdfe09dfa1c601f27da28e3f48",
-    "solution-code": "826096df522b7af40653648400d4a7b81716d57faa8512b84eba5ef4af06966c",
-    "infrastructure": "6d6756812c2b4d1c61390df9dad3f084cf35544b032c964b560487f51a56d24c",
-    "capstone-deck": "b97119f4cd4a717eb21eb78ca274dd030fe0495726d2de31987568eb33171d49",
+    "solution-code": "cd1c1b5dd8656caccfa809aaf5467dd1450064566fe979401290638395757e52",
+    "infrastructure": "2876e100bf63384d8066ffe2ebb8991b60737be4a3823bdc98f2e0bcdeff5ae9",
+    "capstone-deck": "2621b14b2b9eea5489078c506330c58082752f178e98d7d1dc03b051d43c7e53",
     "pitch": "22f929c884c0a23938472aad8bc3b3ce21b67359e6436b3ab064f5ee3a7a0399",
     "thought-leadership": "27f68b1c976e53a2283525f4114a4127538e49ff1d820b39ae8e7b5f4f8606b2"
   },
@@ -43,10 +43,9 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/finance.py:37-68",
-        "src/core/src/zava_forward/core/gates.py:128-205"
+        "src/api/tests/test_assistants.py:1108-1125"
       ],
-      "rationale": "Diff adds fail-closed handling of malformed/non-string identity and reason fields across finance and gates, tightening existing RAI/security control surface. Reinforces ceiling (5), unchanged."
+      "rationale": "Ceiling (5) unchanged; new fail-closed authorization test for malformed Entra row scope reinforces existing control, no new mechanism."
     },
     "A4": {
       "score": 5,
@@ -59,10 +58,10 @@
     "A5": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:770-868",
-        "src/agents/src/zava_forward/agents/paired_trial.py:135-168"
+        "infra/scripts/monitoring_live_inventory.py:26-57",
+        "infra/tests/test_monitoring_live_inventory.py:99-109"
       ],
-      "rationale": "Spend is now reconciled per call against a shared ledger and cost inputs reject non-finite/overflowing numbers; strengthens cost measurement at existing ceiling (5), unchanged."
+      "rationale": "Ceiling (5) unchanged; new monitoring-inventory job-coverage check adds granularity but does not raise an already-maxed observability score."
     },
     "A6": {
       "score": 5,
@@ -83,7 +82,7 @@
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live readiness; diff only renumbers pitch slide-page references and records a draft owner decision, no rehearsal or narrative-structure evidence changed. Baseline retained."
+      "rationale": "Diff touches solution-code test fixes and a retention fail-closed fallback plus a deck binary update; no narrative-arc or argument-structure evidence changed. Baseline retained."
     },
     "B2": {
       "score": 4,
@@ -95,7 +94,7 @@
     "B3": {
       "score": 2,
       "evidence": [],
-      "rationale": "No demo/executive-hook content changed in this diff. Needs Improvement retained."
+      "rationale": "No demo/executive-hook content changed in this diff; code change is a backend retention-listing resilience fix, not demo material. Needs Improvement retained."
     },
     "B4": {
       "score": 3,
@@ -105,14 +104,12 @@
     "B5": {
       "score": 2,
       "evidence": [],
-      "rationale": "Diff only renumbers S17/S18 page references for the now-55-slide deck; no pacing/delivery or rehearsal evidence changed. Unrehearsed pacing retained."
+      "rationale": "Diff contains no pacing/delivery or rehearsal evidence; deck binary differs but no slide-count or timing-page change is cited in this run. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 4,
-      "evidence": [
-        "src/agents/README.md:401-421"
-      ],
-      "rationale": "This diff touches no README or documentation file; baseline documentation gap (undocumented nomination routes) is unchanged. Retained at Good (4)."
+      "evidence": [],
+      "rationale": "This diff touches test files and a core module, not documentation; baseline documentation gap (undocumented nomination routes) is unchanged. Retained at Good (4)."
     },
     "B7": {
       "score": 5,

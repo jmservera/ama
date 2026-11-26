@@ -802,6 +802,85 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertEqual(json.loads(refused.exception.read())["error"], "Could not read that.")
         self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
+    def test_correction_and_challenge_writes_refuse_unsafe_requests_and_write_nothing(
+        self,
+    ) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        proposal = self.seed_priority_proposal()
+        detail = self.call_json("/api/cases/ZF-1", "sam")[1]
+        nom_id = detail["nomination_records"][0]["id"]
+        target = next(t for t in detail["challenge_targets"] if t["proposal_id"] == proposal["id"])
+        before = detail
+        correct: dict[str, Any] = {
+            "action": "nomination_correct",
+            "case_id": "ZF-1",
+            "id": nom_id,
+            "expected_version": 1,
+            "channel": "digital",
+            "owner": "sam@example.test",
+            "account": "SYN corrected account",
+            "source": "SYN-NEG-CORRECT",
+            "reported_subject_ref": "SYN-SUBJ-130",
+            "non_digital_route": "Phone Sam or visit the local housing office",
+            "next_update": "2099-03-02",
+            "hazard_concern": False,
+        }
+        challenge: dict[str, Any] = {
+            "action": "challenge_open",
+            "proposal_id": proposal["id"],
+            "proposal_version": target["proposal_version"],
+            "decision_version": target["decision_version"],
+            "target_kind": "proposal",
+            "channel": "digital",
+            "source": "SYN-NEG-CHALLENGE",
+            "request": "SYN challenge request",
+            "explanation": "SYN challenge explanation",
+            "owner": "sam@example.test",
+            "non_digital_route": "Phone Sam or visit the local housing office",
+            "next_update": "2099-03-03",
+            "hazard_concern": False,
+        }
+        path = "/api/cases/ZF-1/resident"
+
+        def native(payload: dict[str, Any]) -> int:
+            from urllib.parse import urlencode
+
+            req = Request(
+                self.base + path,
+                urlencode({k: str(v) for k, v in payload.items()}).encode(),
+                headers={
+                    "Cookie": self._login_cookie("sam"),
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-ZF-CSRF": "1",
+                },
+            )
+            try:
+                urlopen(req, timeout=10)
+            except HTTPError as err:
+                return err.code
+            return 200
+
+        for payload in (correct, challenge):
+            action = payload["action"]
+            self.assertEqual(self.request_raw(path, "", payload)[0], 401, action)
+            self.assertEqual(self.call_json(path, "kim", payload)[0], 403, action)
+            self.assertEqual(self.request_raw(path, "sam", [payload])[0], 400, action)
+            self.assertEqual(native(payload), 400, action)
+            with patch.object(self.app.provider, "name", "trusted-proxy"):
+                status, body = self.call_json(path, "sam", payload)
+                self.assertEqual((status, body["error"]), (403, "Missing request header."))
+        self.assertGreaterEqual(
+            self.call_json(path, "sam", dict(correct, expected_version=99))[0], 400
+        )
+        self.assertGreaterEqual(
+            self.call_json(path, "sam", dict(challenge, proposal_version=99))[0], 400
+        )
+        self.assertGreaterEqual(self.call_json(path, "sam", dict(correct, case_id="ZF-2"))[0], 400)
+        self.assertEqual(self.call_json("/api/cases/ZF-NOPE/resident", "sam", challenge)[0], 404)
+        self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+
     def test_trusted_proxy_route_write_requires_csrf_header_and_writes_nothing_without_it(
         self,
     ) -> None:

@@ -302,6 +302,77 @@ console.log(JSON.stringify({
         self.assertEqual(out["plain"]["labelAnchor"], None)
         self.assertEqual(out["plain"]["squares"], 0)
 
+    @unittest.skipUnless(shutil.which("node"), "node is required to execute the chart code")
+    def test_resident_sensor_chart_every_metric_in_node(self) -> None:
+        js: str = read(API / "resident_demo" / "web" / "demo.js")
+        helpers = js[js.index("  function el(") : js.index("  function card(")]
+        chart = js[js.index("  var sensorMetrics") : js.index("  function renderConsent(")]
+        harness = r"""
+const vm = require("vm");
+const src = JSON.parse(process.argv[1]);
+function node(tag) {
+  return { tag, attrs: {}, children: [], textContent: "", className: "",
+    setAttribute(k, v) { this.attrs[k] = String(v); },
+    appendChild(c) { this.children.push(c); return c; },
+    removeChild(c) { this.children.splice(this.children.indexOf(c), 1); return c; },
+    insertBefore(c) { this.children.push(c); return c; }, querySelector() { return node("x"); } };
+}
+const document = { createElement: node, createElementNS: (ns, tag) => node(tag) };
+const ctx = vm.createContext({ document, Intl, Date });
+vm.runInContext(src.helpers + src.chart
+  + "\nthis.sensorChart = sensorChart; this.metrics = sensorMetrics;", ctx);
+function walk(n, out) { out.push(n); n.children.forEach((c) => walk(c, out)); return out; }
+const t0 = Date.parse("2026-11-20T00:00:00Z");
+const result = ctx.metrics.map((metric) => {
+  const history = Array.from({ length: 289 }, (_, i) => ({
+    observed_at: new Date(t0 + i * 300000).toISOString(),
+    [metric.key]: i === 5 ? metric.max + 50 : metric.min + (metric.max - metric.min) * 0.4,
+    [metric.status]: "ok" }));
+  const last = t0 + 288 * 300000;
+  const forecast = { points: [1, 6, 24].map((h) => ({
+    forecast_at: new Date(last + h * 3600000).toISOString(), [metric.key]: metric.min - 40 })) };
+  const all = walk(ctx.sensorChart(history, metric, forecast), []);
+  const svg = all.find((n) => n.tag === "svg");
+  const label = all.find((n) => n.textContent === "Latest stored");
+  const ticks = all.filter((n) => n.tag === "text"
+    && n.attrs["text-anchor"] === "end" && n.attrs.x === "50");
+  const ys = [];
+  all.forEach((n) => {
+    if (n.tag === "circle") ys.push(Number(n.attrs.cy));
+    if (n.tag === "rect") ys.push(Number(n.attrs.y) + 3.5);
+    if (n.tag === "polyline") {
+      n.attrs.points.split(" ").forEach((p) => ys.push(Number(p.split(",")[1])));
+    }
+  });
+  return { name: metric.name, ticks: ticks.length, ys,
+    xs: all.filter((n) => n.tag === "circle").map((n) => Number(n.attrs.cx)),
+    labelX: Number(label.attrs.x), anchor: label.attrs["text-anchor"],
+    labelY: Number(label.attrs.y), viewBox: svg.attrs.viewBox };
+});
+console.log(JSON.stringify(result));
+"""
+        done = subprocess.run(
+            ["node", "-e", harness, json.dumps({"helpers": helpers, "chart": chart})],
+            capture_output=True,
+            text=True,
+            timeout=60,
+            check=False,
+        )
+        self.assertEqual(done.returncode, 0, done.stderr)
+        results = json.loads(done.stdout)
+        self.assertEqual([r["name"] for r in results], ["Temperature", "Humidity"])
+        for r in results:
+            with self.subTest(metric=r["name"]):
+                self.assertEqual(r["ticks"], 3)
+                self.assertTrue(all(10 <= y <= 150 for y in r["ys"]), "values stay in the plot")
+                gaps = [b - a for a, b in zip(r["xs"], r["xs"][1:], strict=False)]
+                self.assertGreaterEqual(min(gaps), 9 - 1e-9)
+                # End-anchored label (about 80 units wide) must clear the tick column at x=50.
+                self.assertEqual(r["anchor"], "end")
+                self.assertGreater(r["labelX"] - 80, 50)
+                self.assertLess(r["labelX"], 470)
+                self.assertLess(r["labelY"], 180)
+
 
 class HumanEvidenceNotFabricated(unittest.TestCase):
     def test_no_automated_surface_claims_human_sign_off(self) -> None:

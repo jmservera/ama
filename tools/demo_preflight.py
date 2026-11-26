@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import struct
 import subprocess
 import sys
@@ -33,6 +34,7 @@ JOBS = [
 AGENTS_APP = "ca-cutover-test-demo-agents"
 SQL_SERVER = "sql-cutover-test-rzsrg.database.windows.net"
 SQL_DATABASE = "retrofit"
+BUILD_COMMIT_LINE = re.compile(r"build: commit=([0-9a-f]{7,40}|unknown)")
 READ_ONLY_VERBS = {"list", "show", "get-access-token"}
 
 Runner = Callable[[list[str]], str]
@@ -103,6 +105,40 @@ def check_deployment(runner: Runner, group: str, kind: str, name: str) -> Result
     hardening = body.get("hardening")
     detail = f"digest {digest or 'none'}; ZF_CONTAINER_HARDENING={hardening}"
     return Result(label, "PASS" if hardening == "enforced" and digest else "FAIL", detail)
+
+
+def check_build_commit(runner: Runner, group: str, app: str, expected: str | None = None) -> Result:
+    """Read the source commit the running image reports at start-up; keep only that token."""
+    label = f"build commit {app}"
+    try:
+        out = runner(
+            [
+                "containerapp",
+                "logs",
+                "show",
+                "-g",
+                group,
+                "-n",
+                app,
+                "--tail",
+                "300",
+                "--type",
+                "console",
+            ]
+        )
+    except Exception as exc:  # noqa: BLE001 - any failure is reported
+        return Result(label, "UNAVAILABLE", str(exc))
+    found = BUILD_COMMIT_LINE.findall(out or "")
+    if not found:
+        return Result(label, "UNAVAILABLE", "no start-up build line in the recent log")
+    commit = found[-1]
+    if commit == "unknown":
+        return Result(label, "FAIL", "commit=unknown: image built without ZF_BUILD_COMMIT")
+    if expected and not (
+        commit.startswith(expected.lower()) or expected.lower().startswith(commit)
+    ):
+        return Result(label, "FAIL", f"commit {commit[:12]} is not the expected {expected[:12]}")
+    return Result(label, "PASS", f"commit {commit[:12]}")
 
 
 def check_job(runner: Runner, group: str, job: str) -> Result:
@@ -193,6 +229,7 @@ def collect(
     group: str = "ama",
     apps: list[str] | None = None,
     jobs: list[str] | None = None,
+    expected_commit: str | None = None,
 ) -> list[Result]:
     results: list[Result] = []
     for app in apps or APPS:
@@ -203,6 +240,7 @@ def collect(
     )
     results.extend(check_deployment(runner, group, "job", job) for job in jobs or JOBS)
     results.extend(check_job(runner, group, job) for job in jobs or JOBS)
+    results.append(check_build_commit(runner, group, (apps or APPS)[0], expected_commit))
     results.append(check_counts(reader))
     return results
 
@@ -230,9 +268,16 @@ def exit_code(results: list[Result], strict: bool) -> int:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--resource-group", default="ama")
+    parser.add_argument("--expect-commit", help="source commit the API image must report")
     parser.add_argument("--strict", action="store_true")
     args = parser.parse_args(argv)
-    results = collect(run_az, http_get, sql_reader(run_az), args.resource_group)
+    results = collect(
+        run_az,
+        http_get,
+        sql_reader(run_az),
+        args.resource_group,
+        expected_commit=args.expect_commit,
+    )
     print(render(results, datetime.now(UTC), args.resource_group))
     return exit_code(results, args.strict)
 
