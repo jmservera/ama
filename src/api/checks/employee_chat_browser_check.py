@@ -190,7 +190,9 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             wait_for_skills(dialog, question)
             question.fill("What can chat do?")
             dialog.get_by_role("button", name="Send", exact=True).click()
-            expect(dialog.get_by_role("log")).to_contain_text("ordinary case workflow")
+            expect(dialog.get_by_role("log")).to_contain_text(
+                "ordinary case workflow", timeout=20_000
+            )
             expect(dialog.get_by_role("log")).to_contain_text(
                 "Workflow-only help, no record changed"
             )

@@ -12,6 +12,7 @@ from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 from unittest.mock import patch
 
+from zava_forward.core import diagnostic_logging
 from zava_forward.core.mssqlstore import LOCK_FAILED
 
 from test_auth import ENV, OID_SAM, Base, principal
@@ -237,6 +238,11 @@ class ErrorLoggingTests(Base):
         self.assertNotIn(SECRET, line)
 
     def test_busy_sql_write_lock_on_other_post_still_answers_500(self) -> None:
+        # The container installs the process-wide log redaction at start; install it here so the
+        # result does not depend on which earlier test module did.
+        if diagnostic_logging._original is None:
+            diagnostic_logging.install_diagnostic_redaction(console=False)
+            self.addCleanup(diagnostic_logging.uninstall_diagnostic_redaction)
         busy = self.busy_error()
 
         def add_fails(*_a: object, **_k: object) -> None:
@@ -249,7 +255,10 @@ class ErrorLoggingTests(Base):
         ):
             code, _, retry = self.post("/api/chat/threads/CT-x/ask", {"content": "hello"})
         self.assertEqual((code, retry), (500, None))
-        self.assertIn("status=500", "\n".join(logs.output))
+        line = "\n".join(logs.output)
+        self.assertIn("status=500", line)
+        self.assertIn("cause=sql-write-lock-busy", line)
+        self.assertNotIn(SECRET, line)
 
     def test_other_driver_error_on_retention_still_answers_500(self) -> None:
         other = type("ProgrammingError", (Exception,), {"__module__": "mssql_python.exceptions"})(
