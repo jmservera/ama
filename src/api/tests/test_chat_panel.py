@@ -1425,6 +1425,43 @@ class DemoActivationGuardrailPersistenceTests(Base):
         self.assertEqual(self.sent, [])
         self.assertNotIn("reserved", self.kinds())
 
+    def test_a_legacy_day_wide_authority_blocks_the_hour_and_the_log_names_it(self) -> None:
+        ledger, ai = self.live.ai.consumption, self.live.ai
+        configuration = ai.configuration(ai.fast, chat_demo_meter.TEMPERATURE, 600)
+        day = datetime(2031, 5, 4, tzinfo=UTC)
+        start, end = day.isoformat(), (day + timedelta(days=1)).isoformat()
+        price = ledger.price(
+            source=chat_demo_meter.PRICE_SOURCE,
+            source_hash=reference("legacy-price"),
+            retrieved=start,
+            version="legacy-day",
+            model=ai.model_version,
+            currency="USD",
+            start=start,
+            end=end,
+            input_rate="1",
+            output_rate="2",
+            cached_rate="0.5",
+            synthetic=True,
+        )
+        ledger.authorize(
+            authority="legacy-day-authority",
+            owner=chat_demo_meter.OWNER,
+            evidence="legacy-day-evidence",
+            price=price,
+            capability=chat_demo_meter.TASK,
+            configuration=configuration,
+            start=start,
+            end=end,
+            budgets=[dict(id=reference("legacy-day-budget"), calls=20, tokens=100000, amount="1")],
+            max_calls=1,
+            max_depth=1,
+        )
+        with self.assertLogs(chat_demo_meter.__name__, "WARNING") as logged:
+            seeded = chat_demo_meter.ensure(self.live, 600, now=day + timedelta(hours=9))
+        self.assertFalse(seeded)
+        self.assertIn("ValueError: Overlapping authority", logged.output[0])
+
     def test_b_token_budget_holds_before_live_dispatch(self) -> None:
         self.assert_budget_holds_before_dispatch("TOKENS", 10, "token-budget-limit")
 
