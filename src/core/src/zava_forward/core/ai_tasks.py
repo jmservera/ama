@@ -584,6 +584,10 @@ def review(store, user, rec_id, action, reason="", text=None):
         return _record_view(store, user, rec)
 
 
+def _mean_seconds(bucket):
+    return round(bucket["total_seconds"] / bucket["timed"], 2) if bucket["timed"] else None
+
+
 def live_report(store, user=None, *, start=None, end=None, as_of=None, assistants_service=None):
     """Reviewer outcomes, fallback reasons and AI consumption economics recorded so far."""
     from . import rai_control_plane
@@ -612,12 +616,16 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None, assistant
         t[status] += 1
         ev = r.get("review_evidence")
         if isinstance(ev, dict):
-            e = effort.setdefault(task, dict(reviewed=0, timed=0, total_seconds=0.0))
+            e = effort.setdefault(task, dict(reviewed=0, timed=0, total_seconds=0.0, by_source={}))
             e["reviewed"] += 1
             secs = ev.get("review_seconds")
             if isinstance(secs, (int, float)) and not isinstance(secs, bool) and secs >= 0:
-                e["timed"] += 1
-                e["total_seconds"] = round(e["total_seconds"] + secs, 2)
+                src = e["by_source"].setdefault(
+                    "ai" if r["source"] == "ai" else "workflow", dict(timed=0, total_seconds=0.0)
+                )
+                for bucket in (e, src):
+                    bucket["timed"] += 1
+                    bucket["total_seconds"] = round(bucket["total_seconds"] + secs, 2)
         why = r.get("fallback_reason")
         if why:
             fallbacks[why] = fallbacks.get(why, 0) + 1
@@ -644,7 +652,11 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None, assistant
         prompt_version=PROMPT_VERSION,
         tasks=tasks,
         review_effort={
-            k: dict(v, mean_seconds=round(v["total_seconds"] / v["timed"], 2) if v["timed"] else None)
+            k: dict(
+                v,
+                mean_seconds=_mean_seconds(v),
+                by_source={s: dict(b, mean_seconds=_mean_seconds(b)) for s, b in v["by_source"].items()},
+            )
             for k, v in effort.items()
         },
         fallback_reasons=fallbacks,
