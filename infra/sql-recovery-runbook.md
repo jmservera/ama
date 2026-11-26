@@ -44,7 +44,7 @@ EXEC sp_verify_database_ledger_from_digest_storage @locations;
 SELECT COUNT(*) FROM <audit ledger table>;
 ```
 
-Compare row counts and latest version against the source at the restore point. Reapply erasure tombstones and legal holds with `recovery.reapply_deletions`, and reapply suspended and revoked releases with `recovery.reapply_release_changes` (register `_release_changes`, written before each release change). Confirm that revoked permissions, suspended proposals and spent allowance are not resurrected; after a restore run `recovery.close_allowance_after_restore`, which marks every assistant allowance pool exhausted (fail closed) because the SQL-only ledger is rewound; an operator reviews and re-seeds before assistant calls resume. Delete the copy afterwards. Publish only hashes, status and counts.
+Compare row counts and latest version against the source at the restore point. Run `recovery.reconcile_after_restore(store, db, now)`, which performs the three steps below in order and stops at the first failure (run it again after fixing the cause). Reapply erasure tombstones and legal holds with `recovery.reapply_deletions`, and reapply suspended and revoked releases with `recovery.reapply_release_changes` (register `_release_changes`, written before each release change). Confirm that revoked permissions, suspended proposals and spent allowance are not resurrected; after a restore run `recovery.close_allowance_after_restore`, which marks every assistant allowance pool exhausted (fail closed) because the SQL-only ledger is rewound; an operator reviews and re-seeds before assistant calls resume. Delete the copy afterwards. Publish only hashes, status and counts.
 
 ## Reassessment 2026-11-17
 
