@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import contextlib
 import hashlib
+import http.client
 import importlib.util
 import io
 import tarfile
@@ -97,6 +98,13 @@ class FetchTests(unittest.TestCase):
     def test_truncated_body_is_retried_and_never_returned(self) -> None:
         result, _ = self.run_fetch({"github.com": [self.body[:4], self.body]})
         self.assertEqual(result, self.body)
+
+    def test_incomplete_read_is_retried_then_exhausts_fail_closed(self) -> None:
+        cut = http.client.IncompleteRead(b"par", 10)
+        result, _ = self.run_fetch({"github.com": [cut, self.body]})
+        self.assertEqual(result, self.body)
+        with self.assertRaisesRegex(mod.InstallError, "IncompleteRead"):
+            self.run_fetch({"github.com": [cut] * 3, "api.github.com": [cut] * 3})
 
     def test_wrong_checksum_on_every_source_exhausts(self) -> None:
         wrong = b"x" * len(self.body)

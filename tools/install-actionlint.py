@@ -10,6 +10,7 @@ exits non-zero and leaves no binary behind.
 from __future__ import annotations
 
 import hashlib
+import http.client
 import io
 import os
 import sys
@@ -111,7 +112,7 @@ def fetch(
                 failures.append(f"{host} HTTP {error.code}")
                 if error.code < 500 and error.code != 429:
                     break
-            except (OSError, InstallError) as error:
+            except (OSError, http.client.HTTPException, InstallError) as error:
                 failures.append(f"{host} {type(error).__name__}: {error}")
             if attempt < ATTEMPTS:
                 sleep(DELAYS[min(attempt - 1, len(DELAYS) - 1)])
