@@ -15671,3 +15671,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 2245 live model-call proof on revision 0000149 (Refs #2245)
 
 * Added [issue-2245-live-20261127T174551Z.md](research/issue-2245-live-20261127T174551Z.md): a free-form case question routed to the general agent and made a model call (API model azure-openai; widget "Model calls: 1"); the widget draft failed the source check and the rules answer was shown. 13 of 13 thread creates at 200 but 5 to 11 s each. Lock holder and deployed-fix mapping stay unproven. No source change.
+## [2026-11-27] update | Issue 2061 live pass 3 (Refs #2061)
+
+* Added [issue-2061-live-evidence-2026-11-27.md](research/issue-2061-live-evidence-2026-11-27.md): live shape and role inventory re-read; `infra/resident-demo.bicep` gains opt-in sensor-consent parameters. Fresh what-if, sign-in re-run and the full receipt stay open.
