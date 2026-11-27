@@ -166,8 +166,13 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
-assert.match(source, /path === "\/api\/chat\/threads" \? postThreadRetryingBusy : fetch/, "only thread creation is wired");
-const start = source.indexOf("const BUSY_RETRY_MESSAGE"), end = source.indexOf("async function fetchReadRetrying");
+assert.match(
+  source,
+  /path === "\/api\/chat\/threads" \? postThreadRetryingBusy : fetch/,
+  "only thread creation is wired",
+);
+const start = source.indexOf("const BUSY_RETRY_MESSAGE");
+const end = source.indexOf("async function fetchReadRetrying");
 assert.ok(start >= 0 && end > start);
 const code = source.slice(start, end);
 const reply = (status, retryAfter = null, type = "application/json") => ({status, ok: status < 400,
@@ -177,12 +182,18 @@ async function run(responses, signal) {
   let calls = 0;
   const context = vm.createContext({
     workspaceStatus: status,
-    setTimeout(fn, delay) { delays.push(delay); shown.push(status.textContent); queueMicrotask(fn); return 1; },
+    setTimeout(fn, delay) {
+      delays.push(delay);
+      shown.push(status.textContent);
+      queueMicrotask(fn);
+      return 1;
+    },
     fetch: async () => { calls++; return responses.shift(); },
   });
   vm.runInContext(code, context);
   context.options = {signal};
-  const res = await vm.runInContext('postThreadRetryingBusy("/api/chat/threads", options)', context);
+  const res = await vm.runInContext(
+    'postThreadRetryingBusy("/api/chat/threads", options)', context);
   return {res, calls, delays, shown, status: status.textContent};
 }
 (async () => {
@@ -190,7 +201,10 @@ async function run(responses, signal) {
   assert.equal(out.res.status, 200);
   assert.equal(out.calls, 2);
   assert.deepEqual(out.delays, [5000]);
-  assert.ok(/busy saving other work/.test(out.shown[0]) && !/503|error/i.test(out.shown[0]), "plain-language status");
+  assert.ok(
+    /busy saving other work/.test(out.shown[0]) && !/503|error/i.test(out.shown[0]),
+    "plain-language status",
+  );
   assert.equal(out.status, "Ready", "status restored");
 
   out = await run([reply(503, "2"), reply(200)]);
