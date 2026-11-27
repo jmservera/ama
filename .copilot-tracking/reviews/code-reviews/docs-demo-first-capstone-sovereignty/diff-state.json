@@ -1,0 +1,27 @@
+{
+  "schema_version": "1",
+  "repository": "/home/jmservera/source/ama",
+  "branch": "docs/demo-first-capstone",
+  "head_commit": "90672b574dadd26e10107179cc88f77affa60964",
+  "base_commit": "92c61f991a7701b1c6fc6a207aa400c639415499",
+  "scope": "All 18 changed follow-up files; 16 complete text diffs and two binary deliveries. Earlier and inherited manuscript changes excluded.",
+  "mode": "non-interactive",
+  "reviewStateProvenance": {
+    "scope": "automation-derived",
+    "changeRiskEvidence": "automation-derived",
+    "recommendedDepth": "automation-derived",
+    "depthTier": "automation-derived",
+    "depthRationale": "automation-derived"
+  },
+  "changeRiskEvidence": {
+    "change-scope": {"signal": "Bounded presentation, analysis and native authoring increment.", "availability": "observed", "evidence": "18-file exact-head diff."},
+    "path-criticality": {"signal": "Protected financial guard, custom-show order and generated delivery bindings require scrutiny.", "availability": "observed", "evidence": "Invoke-Capstone.ps1 and native package/receipt."},
+    "history": {"signal": "Earlier navigation and timing findings; current fit, EOF and B10 mapping failures retained with corrections.", "availability": "observed", "evidence": "Existing review records and native-fit-iterations.json."},
+    "test-presence": {"signal": "Focused pitch, native, preview and refusal tests exist.", "availability": "observed", "evidence": "Changed tests and current receipt."},
+    "coverage": {"signal": "Fourteen pitch tests and eleven bindings rerun; native/PDF/official-source evidence independently inspected.", "availability": "observed", "evidence": "Completed independent reviewer response. PowerShell/preview/Ruff not independently rerun."},
+    "rollback": {"signal": "Prior committed delivery and immutable baseline retained; no deployed state changed.", "availability": "observed", "evidence": "Reviewed base commit and baseline.pptx."}
+  },
+  "recommendedDepth": "standard",
+  "depthTier": "standard",
+  "depthRationale": "Read the full bounded diff and inspect financial, route, rendering and evidence contracts; no application or operational control change."
+}
