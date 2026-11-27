@@ -1,0 +1,92 @@
+{
+  "outcome": "passed",
+  "browser": "156.0.8078.4",
+  "axe_version": "4.10.3",
+  "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+  "non_get_requests_while_viewing": [],
+  "api_requests_while_viewing": [
+    "GET /api/assistants",
+    "GET /api/assistants/proposals",
+    "GET /api/cases/ZF-1",
+    "GET /api/cases/ZF-4",
+    "GET /api/chat/regulatory/status",
+    "GET /api/checklists"
+  ],
+  "scans": [
+    {
+      "state": "nomination-stale-320",
+      "target_sizes": [
+        {
+          "control": "<summary>Self-referral NOM-ce9d2c7c9d7d4702b9a4751fba83bc91, version 2. Re-review required; no priority or consent change</summary>",
+          "width": 236,
+          "height": 160,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record acknowledgement for NOM-ce9d2c7c9d7d4702b9a4751fba83bc91</summary>",
+          "width": 236,
+          "height": 112,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record competing correction for NOM-ce9d2c7c9d7d4702b9a4751fba83bc91</summary>",
+          "width": 236,
+          "height": 112,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 12
+    },
+    {
+      "state": "nomination-stale-1280",
+      "target_sizes": [
+        {
+          "control": "<summary>Self-referral NOM-ce9d2c7c9d7d4702b9a4751fba83bc91, version 2. Re-review required; no priority or consent change</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record acknowledgement for NOM-ce9d2c7c9d7d4702b9a4751fba83bc91</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record competing correction for NOM-ce9d2c7c9d7d4702b9a4751fba83bc91</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 12
+    },
+    {
+      "state": "nomination-current",
+      "target_sizes": [
+        {
+          "control": "<summary>Self-referral NOM-ce9d2c7c9d7d4702b9a4751fba83bc91, version 2. Human review recorded: Accepted for human eligibility review; no priority, consent or sanction change</summa",
+          "width": 1172,
+          "height": 64,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record competing correction for NOM-ce9d2c7c9d7d4702b9a4751fba83bc91</summary>",
+          "width": 1172,
+          "height": 44,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 12
+    }
+  ],
+  "screen_reader": "Not run",
+  "human_acceptance": "Not run",
+  "scope": "Constructed synthetic nomination view only; no whole-system conformance"
+}
