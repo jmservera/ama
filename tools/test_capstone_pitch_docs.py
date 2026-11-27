@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import re
 import unittest
 from decimal import Decimal
@@ -18,10 +19,90 @@ def pitch_documents() -> list[Path]:
     return sorted(CAPSTONE.joinpath("pitch").glob("*.md")) + [
         CAPSTONE / "tokenomics-qa-brief.md",
         CAPSTONE / "README.md",
+        CAPSTONE / "demo" / "runbook.md",
+        CAPSTONE / "source" / "README.md",
+        CAPSTONE / "source" / "review-2026-11-27.md",
     ]
 
 
 class CapstonePitchDocsTest(unittest.TestCase):
+    def test_demo_first_script_embeds_runbook_and_uses_manifest_route(self) -> None:
+        manifest = json.loads((CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8"))
+        route = manifest["presentation_route"]
+        script = (CAPSTONE / "pitch" / "speaker-script.md").read_text(encoding="utf-8")
+        runbook = (CAPSTONE / "demo" / "runbook.md").read_text(encoding="utf-8")
+        self.assertEqual(
+            900,
+            sum(step["seconds"] for step in route["steps"])
+            + route["demo_seconds"]
+            + route["reserve_seconds"],
+        )
+        self.assertGreaterEqual(route["reserve_seconds"], 120)
+        self.assertEqual(["S01", "S22"], [step["code"] for step in route["steps"][:2]])
+        self.assertEqual("S23", route["steps"][-1]["code"])
+        for step in route["steps"]:
+            self.assertIn("SAY: " + step["say"], script)
+        # Rebase relative demo links before comparing the entire embedded text.
+        body = re.sub(r"\A---\n.*?\n---\n", "", runbook, count=1, flags=re.DOTALL)
+
+        def relative(match: re.Match[str]) -> str:
+            target = match.group(1)
+            if re.match(r"[a-zA-Z][a-zA-Z0-9+.-]*:|#|/", target):
+                return match.group(0)
+            path, marker, fragment = target.partition("#")
+            absolute = (CAPSTONE / "demo" / path).resolve()
+            result = os.path.relpath(absolute, CAPSTONE / "pitch")
+            return "](" + result + (marker + fragment if marker else "") + ")"
+
+        body = re.sub(r"\]\(([^)]+)\)", relative, body)
+        self.assertIn(body.strip(), script)
+        hook = re.search(r"(?ms)^## Executive Hook\n(.*?)(?=^## |\Z)", body)
+        self.assertIsNotNone(hook)
+        demo = script.split("### 00:30-02:20", 1)[1].split("### 02:20-", 1)[0]
+        self.assertIn(hook.group(1).strip(), demo)
+        self.assertIn("00:30-02:20", script)
+        self.assertIn("12:10-15:00", script)
+
+    def test_pitch_custom_show_matches_delivered_slide_order(self) -> None:
+        import zipfile
+        from xml.etree import ElementTree as ET
+
+        manifest = json.loads((CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8"))
+        namespace = {
+            "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+            "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+        }
+        with zipfile.ZipFile(CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx") as archive:
+            presentation = ET.fromstring(archive.read("ppt/presentation.xml"))
+            children = [node.tag for node in presentation]
+            self.assertLess(
+                children.index(f"{{{namespace['p']}}}custShowLst"),
+                children.index(f"{{{namespace['p']}}}defaultTextStyle"),
+            )
+            relationships = ET.fromstring(archive.read("ppt/_rels/presentation.xml.rels"))
+            targets = {node.attrib["Id"]: node.attrib["Target"] for node in relationships}
+            slides = {slide["code"]: slide["part_number"] for slide in manifest["slides"]}
+            show = presentation.find("p:custShowLst/p:custShow", namespace)
+            self.assertIsNotNone(show)
+            self.assertEqual(manifest["presentation_route"]["name"], show.attrib["name"])
+            actual = [
+                targets[node.attrib[f"{{{namespace['r']}}}id"]]
+                for node in show.findall("p:sldLst/p:sld", namespace)
+            ]
+            expected = [
+                f"slides/slide{slides[step['code']]}.xml"
+                for step in manifest["presentation_route"]["steps"]
+            ]
+            self.assertEqual(expected, actual)
+            properties = ET.fromstring(archive.read("ppt/presProps.xml"))
+            self.assertEqual(
+                show.attrib["id"], properties.find("p:showPr/p:custShow", namespace).attrib["id"]
+            )
+            self.assertEqual(56, len(presentation.findall("p:sldIdLst/p:sldId", namespace)))
+            notes = archive.read("ppt/notesSlides/notesSlide56.xml").decode()
+            self.assertIn("2,522", notes)
+            self.assertIn("not a billing record", notes)
+
     def test_relative_links_resolve(self) -> None:
         broken = []
         for doc in pitch_documents():

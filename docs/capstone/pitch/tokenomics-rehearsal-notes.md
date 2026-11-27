@@ -8,6 +8,12 @@ ms.topic: how-to
 
 ## Status
 
+The [27 November demo-first speaker script](./speaker-script.md) supersedes
+the planning cut below. It includes the 1:50 demo within a 15-minute slot,
+with B28's 55-second measurement/method answer and S18's 35-second scenario
+answer. Rehearse that script; preserve the blank record below until a real
+run. The old cut and its arithmetic are historical, not the operative route.
+
 Prepared for [#435](https://github.com/jmservera/ama/issues/435) criterion 3.
 This is a run sheet, not a result. No rehearsal has been performed, no time has
 been observed and criterion 3 stays open until a presenter completes the

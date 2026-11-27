@@ -26,13 +26,26 @@ try {
         if ($Slide.notes -cne (Get-SlideInventory $Original $Slide.baseline_number).notes) { throw 'Captured original notes changed' }
     }
     $Structural = Get-InsertionParts $Original $Definition
-    if ($Structural.Count -ne 6) { throw 'Insertion structural member allowlist changed' }
+    $ExpectedParts = 6
+    if ($Definition.schema_version -eq 3) { $ExpectedParts = 9 }
+    if ($Structural.Count -ne $ExpectedParts) { throw 'Insertion structural member allowlist changed' }
+    if ($Definition.schema_version -eq 3) {
+        $Legacy = $Definition | ConvertTo-Json -Depth 60 | ConvertFrom-Json
+        $Legacy.schema_version = 2
+        $Legacy.slide_count = 55
+        $Legacy.slides = @($Legacy.slides | Where-Object number -LE 55)
+        $Legacy.PSObject.Properties.Remove('presentation_route')
+        Assert-DeckDefinition $Legacy
+        if ((Get-InsertionParts $Original $Legacy).Count -ne 6) {
+            throw 'Schema 2 insertion compatibility changed'
+        }
+    }
 } finally { $Original.Dispose() }
 foreach ($Mutation in @('template', 'count', 'mapping', 'asset', 'timing', 'note-timing')) {
     $Mutant = $Definition | ConvertTo-Json -Depth 60 | ConvertFrom-Json
     switch ($Mutation) {
         'template' { $Mutant.insertion.template_slide = 11 }
-        'count' { $Mutant.slide_count = 56 }
+        'count' { $Mutant.slide_count++ }
         'mapping' { $Mutant.slides[13].part_number = 14 }
         'asset' { $Mutant.slides[12].images[0].asset = 'arbitrary' }
         'timing' { $Mutant.insertion.narration_seconds = 46 }
@@ -73,6 +86,25 @@ foreach ($Slide in $Definition.slides | Where-Object { $_.number -lt 28 }) {
 }
 if (($UniqueTimings.Values | Measure-Object -Sum).Sum -ne 1470) { throw 'Expected 24:30 narration including added 45 seconds' }
 if ($Definition.slides[27].code -cne 'QX' -or $Definition.slides[28].code -cne 'B01' -or $Definition.slides[54].code -cne 'B27') { throw 'Question-index or answer order changed' }
+if ($Definition.schema_version -eq 3) {
+    foreach ($Mutation in @('missing-slide', 'duplicate-slide', 'missing-demo', 'overrun', 'no-reserve', 'fractional-slot', 'missing-say', 'appendix-template')) {
+        $Mutant = $Definition | ConvertTo-Json -Depth 60 | ConvertFrom-Json
+        switch ($Mutation) {
+            'missing-slide' { $Mutant.presentation_route.steps[2].code = 'MISSING' }
+            'duplicate-slide' { $Mutant.presentation_route.steps[2].code = 'S22' }
+            'missing-demo' { $Mutant.presentation_route.demo_seconds = 0 }
+            'overrun' { $Mutant.presentation_route.steps[2].seconds += 1 }
+            'no-reserve' { $Mutant.presentation_route.reserve_seconds = 0 }
+            'fractional-slot' { $Mutant.presentation_route.steps[2].seconds = 35.5 }
+            'missing-say' { $Mutant.presentation_route.steps[2].say = '' }
+            'appendix-template' { $Mutant.slides[55].baseline_number = 53 }
+        }
+        $Refused = $false
+        try { Assert-DeckDefinition $Mutant } catch { $Refused = $true }
+        if (-not $Refused) { throw "Pitch mutation was not refused: $Mutation" }
+    }
+    Write-Output 'Demo-first route checks pass: eight denied mutations, B28 is rebuildable, demo and question reserve fit inside 15 minutes.'
+}
 Write-Output 'Insertion source checks pass: original notes, six denied mutations, baseline mapping, literal navigation-number table, 24:30 shared-build timing, QX28 and answers29-55.'
 if (-not $CandidatePath) { return }
 $Baseline = [IO.Compression.ZipFile]::OpenRead((Join-Path $RepoRoot 'docs/capstone/source/baseline.pptx'))
@@ -89,6 +121,16 @@ try {
     $SectionNew = $After.SelectSingleNode("//p14:section/p14:sldIdLst/p14:sldId[@id='$($NewId.GetAttribute('id'))']", $NS)
     if (-not $SectionNew -or $SectionNew.ParentNode.ParentNode.name -cne '3 · The product') { throw 'New slide is not in the product section' }
     [void]$SectionNew.ParentNode.RemoveChild($SectionNew)
+    if ($Definition.schema_version -eq 3) {
+        $AppendixId = $Ids[55]
+        [void]$AppendixId.ParentNode.RemoveChild($AppendixId)
+        $SectionAppendix = $After.SelectSingleNode("//p14:section/p14:sldIdLst/p14:sldId[@id='$($AppendixId.GetAttribute('id'))']", $NS)
+        if (-not $SectionAppendix) { throw 'B28 appendix section missing' }
+        [void]$SectionAppendix.ParentNode.RemoveChild($SectionAppendix)
+        $Custom = $After.SelectSingleNode('/p:presentation/p:custShowLst', $NS)
+        if (-not $Custom) { throw 'Demo-first custom show missing' }
+        [void]$Custom.ParentNode.RemoveChild($Custom)
+    }
     if ((Get-ByteHash (Get-XmlBytes $Before)) -cne (Get-ByteHash (Get-XmlBytes $After))) { throw 'Existing presentation IDs/sections/metadata changed' }
     $ActionCount = 0
     foreach ($Number in 1..54) {
@@ -107,7 +149,7 @@ try {
     if ($ActionCount -ne 108) { throw 'Expected all 108 original fixed actions' }
     $Index = Get-PartDocument $Candidate 'ppt/slides/slide27.xml'
     $IndexText = @($Index.SelectNodes('//a:t', (Get-Namespaces $Index)) | ForEach-Object InnerText)
-    foreach ($Answer in $Definition.slides | Where-Object code -match '^B\d\d$') {
+    foreach ($Answer in $Definition.slides | Where-Object { $_.code -match '^B\d\d$' -and $_.code -cne 'B28' }) {
         if (@($IndexText | Where-Object { $_ -match ("^" + $Answer.code + " · " + $Answer.number + "\s") }).Count -ne 1) {
             throw "Visible index number differs from the physical destination: $($Answer.code)"
         }

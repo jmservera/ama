@@ -1,29 +1,33 @@
 ---
 title: Capstone Working Set
 description: Current presentation, reproducible sources, pitch, demo and rubric inputs
-ms.date: 2026-11-21
+ms.date: 2026-11-27
 ms.topic: how-to
 ---
 
 ## Start Here
 
-Use the Cowork v2 presentation (55 manifest slides plus appendix card B28, page 56, added 2026-11-25). There is one current deck, not a
-choice between the older executive and Cowork routes. B28 (Tokenomics) was added to the
-delivered PPTX and PDF by direct package edit; the [manifest](./source/slides.json) and builder do not yet
-include it (see the [research note](../reference/research/capstone-pitch-435-live-2026-11-25.md)).
+Use the current Cowork v2 presentation and select its "Demo-first pitch"
+custom show. It contains 16 selected slides, begins the employee-site demo
+at 00:30 and returns to the business argument at 02:20. Prepared narration
+and demo finish at 12:10; questions and recovery have 2:50 within 15 minutes.
+The full 56-page deck and PDF remain the source-backed reference package.
+B28 is now part of the [manifest](./source/slides.json) and builder, so a
+clean rebuild preserves the measured Tokenomics evidence.
 
 | Work | Current material |
 | --- | --- |
 | Present or review | [PowerPoint](./deck/zava-forward-cowork-v2-draft.pptx) and [matching PDF](./deck/zava-forward-cowork-v2-draft.pdf) |
-| Edit and rebuild | [Source guide](./source/README.md), [55-slide manifest](./source/slides.json) and [immutable 54-slide native baseline](./source/baseline.pptx) |
+| Edit and rebuild | [Source guide](./source/README.md), [56-slide manifest and pitch route](./source/slides.json) and [immutable 54-slide native baseline](./source/baseline.pptx) |
 | Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json), [retained media](./source/assets/media/) and [official Fabric/Power BI sources](./source/assets/official/README.md) |
-| Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md), [Tokenomics Q&A brief](./tokenomics-qa-brief.md) and [pitch folder](./pitch/) |
+| Prepare the pitch | [Timed speaker script with embedded demo runbook](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md) and [Tokenomics Q&A brief](./tokenomics-qa-brief.md) |
 | Prepare the demo | [Timed demo script](./demo/runbook.md): complete 1:50 panel route, optional eight-minute walkthrough and two-minute question/recovery reserve |
 | Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 14 |
 | Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 24-25 |
 | Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 17 and deeper appendix comparisons |
 | Understand the application and full Azure topology | [CxO concept](./source/diagrams/architecture/cxo-architecture.svg), [new main-route deployment projection](./source/diagrams/architecture/azure-deployment.svg), [full reference](./source/diagrams/architecture/azure-architecture.svg) and [editable sources/text equivalent](./source/diagrams/architecture/text-equivalent.md); main 12/13 and B10/core frame 38 |
 | Improve the story and challenged criteria | [CxO/story review](./source/review-2026-11-08-cxo.md); main-route recommendation/state-flow/autonomy, appendix alignment and real rehearsal evidence still needed |
+| Review the demo-first refresh | [27 November evidence, narrative and full assessment review](./source/review-2026-11-27.md); retained history, current-source/detailed-live distinctions, costs, study findings and validation gaps |
 | Explain brief fidelity and the evolving product | [8 November autonomy/story review](./source/review-2026-11-08.md): exact requested/current levels, three help modes, historical Decision 1, optional resident access, design-thinking decisions and refreshable progress snapshot |
 | Inspect findings and checks | [30 October illustrated visual refresh](./source/review-2026-10-30.md#illustrated-visual-refresh-on-linux), earlier roadmap findings on the same page and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
@@ -33,17 +37,17 @@ The PPTX and PDF are drafts for owner review. Prepared notes, native rendering
 and local extraction do not establish rehearsal, human acceptance, measured
 benefits or a fresh rubric score.
 
-The revised story compares the case's explicit L2-L4 levels with the current
-proposal-first implementation. Human/resident rights were already in the
-brief; full task breadth, automatic invocation and higher authority are
-separate claims. Pages 7/10 use the dated 8 November activity snapshot,
-not final project results. Refresh it and the live-demo evidence before the
-final presentation.
+The revised story moves from a visible owned next action to its business
+purpose, resident choice, architecture, task autonomy, controls and cost.
+It then connects the delivery failures and completed exploratory study to a
+bounded validation decision. Original L2-L4 responsibilities, full task
+breadth, trigger mode and accepted live behaviour remain distinct.
+No faster retrofit, grant award or resident saving is claimed.
 
 ## What To Keep
 
 Keep the complete source package and its builder dependencies. The JSON covers
-all 55 slide records and notes; the pinned 54-slide native baseline owns unchanged
+all 56 slide records and notes; the pinned 54-slide native baseline owns unchanged
 layouts, relationships, themes and embedded graphics. JSON alone does not
 reconstruct those native designs. Keep the 36 captured media inputs and the
 two official future-roadmap icons, each with original SVG and PNG derivative,
@@ -113,19 +117,12 @@ is integrated. No recorded score is manually changed.
 
 ## Next Work
 
-Rehearse the revised 24:30 narration plan within the 30-minute presentation
-slot, leaving 5:30 for questions and contingency. The repository plan reserves
-a separate ten-minute demo, but the
-[assessment guide](../reference/method/ama-capstone-assessment-guide.md)
-asks for an under-two-minute demo as well as an under-two-minute outcome hook.
-Use the runbook's complete 1:50 route by default; add its extension only when
-the panel confirms the separate slot, stopping navigation at eight minutes
-with two minutes for questions or recovery. The added full deployment slide
-on page 13 has a 45-second slot.
-Original `TIMING` lines retain the 23:45 source clock for provenance;
-`CURRENT ROUTE TIMING` gives the operative shifted windows. Build variants share their timing;
-appendix answers are optional depth. Confirm the actual panel slot before
-the final rehearsal rather than reviving a historical timing route.
+Rehearse the generated script and its complete 1:50 demo. The default
+15-minute pitch includes the demo and question reserve; no ten-minute demo
+is added to it. Use the longer runbook only when a longer slot is confirmed,
+finishing navigation at eight minutes and preserving its two-minute reserve.
+The original slide timing lines are historical reference provenance.
+Record actual timings, questions and failures only after a run.
 
 Resolve the original image URL/prompt/licence gaps before new external reuse.
 Complete the actual live-demo preflight, direct accessibility/navigation and

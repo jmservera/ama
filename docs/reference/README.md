@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-26
+ms.date: 2026-11-27
 ms.topic: overview
 ---
 
@@ -20,6 +20,17 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+The [27 November demo-first presentation review](../capstone/source/review-2026-11-27.md)
+indexes the retained RPI/GitHub history and investigates eight delivery
+decisions and adverse outcomes. It distinguishes whole-corpus indexing from
+individual reads, current source from dated live observations and measured
+Tokenomics from unknown accepted-outcome cost. The
+[speaker script](../capstone/pitch/speaker-script.md) embeds the complete
+[demo runbook](../capstone/demo/runbook.md). Its native custom show begins
+the demo at 00:30 and fits the prepared route plus reserve inside fifteen
+minutes. The review corrects the completed-study and source-coded Quality
+flag story without claiming live model acceptance or a performed rehearsal.
 
 The paper's [final editorial pass](../capstone/thought-leadership/everything-but-the-software/README.md#final-editorial-pass-26-november)
 shortens the article, moves audit history into the existing Supplement,

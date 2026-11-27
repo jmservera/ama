@@ -1,7 +1,7 @@
 ---
 title: Current Capstone Pitch Preparation
 description: Audience strategy, current narration route, delivery cues and honest preparation boundaries
-ms.date: 2026-11-08
+ms.date: 2026-11-27
 ms.topic: how-to
 ---
 
@@ -47,6 +47,22 @@ Lead with the decision, connect it to people, establish the evidence, then
 describe the conditional future. Keep one factual core across those registers.
 
 ## Current Route
+
+The current route is the native "Demo-first pitch" custom show, not physical
+pages 1-27 in sequence. The [speaker script](./speaker-script.md) gives the
+spoken text, deliberate jumps and complete embedded runbook. Demo at 00:30,
+slides again at 02:20, prepared close at 12:10, questions through 15:00.
+B28/page 56 presents measured synthetic usage before S18/page 22's older
+planning scenario. All non-inference and acceptance-denominator gaps stay
+explicit. See the [27 November review](../source/review-2026-11-27.md) for the
+current claims, source reconciliation and full assessment challenge.
+
+### Earlier full-reference route
+
+The remaining route descriptions below are the dated November reference
+plan. They retain useful appendix and audience pointers, but their late demo,
+24:30 timing, running-study status and blanket L2 Quality description are
+superseded for the current pitch.
 
 Physical pages 1-27 are the main story, page 28 is the question index and
 pages 29-55 are 27 optional appendix answers. Progressive builds share their

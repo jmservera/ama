@@ -15660,3 +15660,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 2245 live recheck on revision 0000136 (Refs #2245)
 
 * Added [issue-2245-live-20261127T125527Z.md](research/issue-2245-live-20261127T125527Z.md): no 500 on 13 thread creates, rules-only replies state the spending hold, and chat_panel now retries the chat.answer and chat.turn audit writes on a SQL write-lock timeout. Live effect of the fix and the lock holder stay unproven.
+
+## [2026-11-27] update | Demo-first capstone presentation and embedded runbook (Refs #435, #432)
+
+* Added the [presentation evidence review](../capstone/source/review-2026-11-27.md): retained-history coverage, eight delivery decisions/adverse outcomes, current source versus dated live evidence, completed-study denominator limits and all twenty assessment criteria.
+* Updated the source-owned native custom show to start the complete 1:50 demo at 00:30, then return to architecture, costs and a bounded validation decision. Restored B28 to the builder, retained the original destinations and protected financial evidence, and embedded the complete operational runbook in the generated speaker script.
+* Distinguished homepage illustrations from actual cases, Quality's source-coded L4 review flag from its unproved live model leg, and measured token usage from full accepted-outcome cost. Prepared timing and local rendering are not rehearsal, human acceptance, deployment or a new spending authority.

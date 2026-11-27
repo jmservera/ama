@@ -2,7 +2,7 @@
 title: Tokenomics Q&A Brief for the Capstone Presenter
 description: Concise presenter answer separating the labelled USD 0.44 per home planning scenario, the live consumption ledger and the authorised held-out measurement batch; supports #435 AC1 without a deck change
 author: AMA programme
-ms.date: 2026-11-13
+ms.date: 2026-11-27
 ms.topic: how-to
 ---
 
@@ -21,13 +21,14 @@ outcomes). The module named in the decision is
 
 | Moment | Page | Use |
 | --- | --- | --- |
-| Pitch, 50 s slot | 22 (S18) | Say the labelled planning scenario and the gap; do not expand |
+| Pitch, 55 s slot | 56 (B28) | Measured synthetic usage, dated list-rate estimate, full-cost method and unknown accepted-outcome count |
+| Pitch, 35 s slot | 22 (S18) | Distinguish the older inference planning scenario from measured usage and full project cost |
 | Cost or runaway-bill question | 53 (B25) | Workings, accepted-outcome method, controls and limits |
 | Hidden calls or agent sprawl question | 55 (B27) | One selected skill, one bounded call, admission limits |
 
 Pages are in the [question bank](./pitch/questions-and-answers.md) and the
 [speaker script](./pitch/speaker-script.md). Return to the interrupted page
-deliberately; native buttons use fixed jumps. The S18 notes cite B25 and B27
+deliberately; native buttons use fixed jumps. The historical S18 notes cite B25 and B27
 as slides 52 and 54 (earlier numbering); use pages 53 and 55. S18 says controls
 "remain proposed"; B27 corrects that to source-coded but not live-proved, so
 prefer the B27 wording if asked.
@@ -58,7 +59,7 @@ claim a price, a saving or a payback."
 ## Do Not Say
 
 * Any price, saving or payback as fact, or USD 0.44 as the cost of the project.
-* That the held-out batch has run, passed or reconciled to an invoice.
+* That the held-out batch proved quality, acceptance or reconciled billing.
 * That Tokenomics has been rehearsed or timed; no rehearsal is recorded.
 
 ## Sources
