@@ -1,6 +1,8 @@
 """Behaviour tests for tools/check-legacy-references.py (Issue #203)."""
 
+import contextlib
 import importlib.util
+import io
 import subprocess
 import tempfile
 import unittest
@@ -61,6 +63,23 @@ class ReferenceTests(unittest.TestCase):
         self.assertEqual(checker.check_references(root), [])
 
 
+class WorkflowWiringTests(unittest.TestCase):
+    def setUp(self):
+        root = Path(__file__).resolve().parents[1]
+        self.text = (root / ".github/workflows/legacy-references.yml").read_text(encoding="utf-8")
+
+    def test_pull_requests_of_any_path_run_the_checker_and_its_tests(self):
+        self.assertRegex(self.text, r"(?m)^  pull_request:\n(?!    paths)")
+        self.assertIn("python3 tools/check-legacy-references.py --files", self.text)
+        self.assertIn("tools/test_check_legacy_references.py", self.text)
+
+    def test_workflow_is_read_only_and_pinned(self):
+        self.assertIn("permissions:\n  contents: read", self.text)
+        self.assertRegex(self.text, r"actions/checkout@[0-9a-f]{40}")
+        self.assertIn("persist-credentials: false", self.text)
+        self.assertNotIn("secrets.", self.text)
+
+
 class LinkTests(unittest.TestCase):
     def test_relative_links_resolve_or_fail(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -101,6 +120,38 @@ class LinkTests(unittest.TestCase):
             self.assertEqual(checker.added_lines(root, "main", "old.md"), {2})
             (root / "old.md").write_text("[old](nope.md)\nold\n[gone](nope.md)\n", encoding="utf-8")
             self.assertEqual(len(checker.check_links(root, ["old.md"], "main")), 2)
+
+
+class MainExitCodeTests(unittest.TestCase):
+    def run_main(self, files, *args):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            (root / "docs").mkdir()
+            for name, text in files.items():
+                (root / "docs" / name).write_text(text, encoding="utf-8")
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                code = checker.main(["--root", str(root), *args])
+            return code, out.getvalue()
+
+    def test_clean_repository_exits_zero(self):
+        code, out = self.run_main({"a.md": "plain\n"}, "--files", "docs/a.md")
+        self.assertEqual(code, 0)
+        self.assertIn("references: 0 violation(s); links: 0 violation(s)", out)
+
+    def test_reference_violation_exits_one(self):
+        code, out = self.run_main({"a.md": "Code lives in `mvp/web/`.\n"}, "--files")
+        self.assertEqual(code, 1)
+        self.assertIn("docs/a.md:1: retired path without archive tag", out)
+
+    def test_broken_link_fails_unless_all_links_is_informational(self):
+        files = {"a.md": "[gone](missing.md)\n"}
+        code, out = self.run_main(files, "--files", "docs/a.md")
+        self.assertEqual(code, 1)
+        self.assertIn("unresolved link missing.md", out)
+        code, _ = self.run_main(files, "--all-links")
+        self.assertEqual(code, 0)
 
 
 if __name__ == "__main__":
