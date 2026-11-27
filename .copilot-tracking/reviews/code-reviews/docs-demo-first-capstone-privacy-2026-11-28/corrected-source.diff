@@ -1,0 +1,1930 @@
+diff --git a/.copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/native-fit-iterations.json b/.copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/native-fit-iterations.json
+new file mode 100644
+index 000000000..0cb37ded1
+--- /dev/null
++++ b/.copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/native-fit-iterations.json
+@@ -0,0 +1,497 @@
++{
++  "first_candidate_sha256": "f412a3f003e7c7588376fda32d20f44e2b24690239e109f21f3f30988d0810a6",
++  "first_focused_warnings": [
++    {
++      "slide": 1,
++      "name": "Decision line",
++      "text": "Not-for-profit: resident benefit and accountable spending\r\u00a0",
++      "bound_height": 58.8,
++      "available_height": 42.18582630157471,
++      "bound_width": 501.87503,
++      "available_width": 552.4874515533447,
++      "overflow": true,
++      "revised": true
++    }
++  ],
++  "correction": "Shortened the opening stewardship line without changing its frame or font.",
++  "final_candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
++  "final_focused_frames": [
++    {
++      "slide": 1,
++      "name": "Decision line",
++      "text": "Not-for-profit: resident benefit, accountable spend\r\u00a0",
++      "bound_height": 30.0,
++      "available_height": 42.18582630157471,
++      "bound_width": 533.87506,
++      "available_width": 552.4874515533447,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 13,
++      "name": "Slide title",
++      "text": "UK processing is the target. Proof comes before release.",
++      "bound_height": 35.17504,
++      "available_height": 36.000000953674316,
++      "bound_width": 816.62506,
++      "available_width": 859.1976566314697,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Slide title",
++      "text": "Responsible AI: models suggest. People decide.",
++      "bound_height": 35.17504,
++      "available_height": 44.640000343322754,
++      "bound_width": 697.635,
++      "available_width": 858.9599857330322,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Footer sources",
++      "text": "Brief -> current proposal authority. Full task scope and activation remain separate; B03 / page 31.",
++      "bound_height": 14.075039,
++      "available_height": 14.40000057220459,
++      "bound_width": 557.73505,
++      "available_width": 684.0000247955322,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-0-icon",
++      "text": "S",
++      "bound_height": 22.28,
++      "available_height": 44.64000177383423,
++      "bound_width": 17.87504,
++      "available_width": 43.20000171661377,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-0-title",
++      "text": "Stock",
++      "bound_height": 21.11,
++      "available_height": 23.760000705718994,
++      "bound_width": 54.0,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-0-detail",
++      "text": "L2 -> L2 recommend\rRules + stock facts",
++      "bound_height": 36.49,
++      "available_height": 44.64000177383423,
++      "bound_width": 143.12495,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-1-icon",
++      "text": "A",
++      "bound_height": 22.28,
++      "available_height": 44.64000177383423,
++      "bound_width": 19.0,
++      "available_width": 43.20000171661377,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-1-title",
++      "text": "Assessment",
++      "bound_height": 21.11,
++      "available_height": 23.760000705718994,
++      "bound_width": 111.0,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-1-detail",
++      "text": "L3 -> L2 preparation\rSurvey/design checklist",
++      "bound_height": 36.49,
++      "available_height": 44.64000177383423,
++      "bound_width": 161.12495,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-2-icon",
++      "text": "F",
++      "bound_height": 22.28,
++      "available_height": 44.64000177383423,
++      "bound_width": 16.87504,
++      "available_width": 43.20000171661377,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-2-title",
++      "text": "Funding",
++      "bound_height": 21.11,
++      "available_height": 23.760000705718994,
++      "bound_width": 76.0,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-2-detail",
++      "text": "L3 -> L2 preparation\rApplication/claim gaps",
++      "bound_height": 36.49,
++      "available_height": 44.64000177383423,
++      "bound_width": 153.75,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-3-icon",
++      "text": "C",
++      "bound_height": 22.28,
++      "available_height": 44.64000177383423,
++      "bound_width": 19.0,
++      "available_width": 43.20000171661377,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-3-title",
++      "text": "Works + residents",
++      "bound_height": 21.11,
++      "available_height": 23.760000705718994,
++      "bound_width": 160.17496,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-3-detail",
++      "text": "L3 acts -> L2 options\rNo auto-book or send",
++      "bound_height": 36.49,
++      "available_height": 44.64000177383423,
++      "bound_width": 148.62495,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-4-icon",
++      "text": "Q",
++      "bound_height": 22.28,
++      "available_height": 44.64000177383423,
++      "bound_width": 20.0,
++      "available_width": 43.20000171661377,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-4-title",
++      "text": "Quality",
++      "bound_height": 21.11,
++      "available_height": 23.760000705718994,
++      "bound_width": 66.0,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-assist-4-detail",
++      "text": "L4 review flags (source)\rLive model leg unproved",
++      "bound_height": 36.49,
++      "available_height": 44.64000177383423,
++      "bound_width": 168.0,
++      "available_width": 171.79196643829346,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-authority-0-title",
++      "text": "RULES ENFORCE",
++      "bound_height": 16.41504,
++      "available_height": 17.279999256134033,
++      "bound_width": 123.75,
++      "available_width": 249.8400011062622,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-authority-0-body",
++      "text": "Ranking, arithmetic,\rexplicit state-flow gates",
++      "bound_height": 38.92,
++      "available_height": 40.319998264312744,
++      "bound_width": 169.87505,
++      "available_width": 249.8400011062622,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-authority-1-title",
++      "text": "NAMED HUMAN REVIEW",
++      "bound_height": 16.41504,
++      "available_height": 17.279999256134033,
++      "bound_width": 170.5,
++      "available_width": 249.8400011062622,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-authority-1-body",
++      "text": "Evidence review + correction\rDecision owner + reason",
++      "bound_height": 38.92,
++      "available_height": 40.319998264312744,
++      "bound_width": 209.37505,
++      "available_width": 249.8400011062622,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-authority-2-title",
++      "text": "GENERATIVE AI DRAFTS",
++      "bound_height": 16.41504,
++      "available_height": 17.279999256134033,
++      "bound_width": 171.94,
++      "available_width": 249.8400011062622,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-authority-2-body",
++      "text": "Five proposals + chat\rSource + meaning review",
++      "bound_height": 38.92,
++      "available_height": 40.319998264312744,
++      "bound_width": 185.37505,
++      "available_width": 249.8400011062622,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 17,
++      "name": "Story-17-people-decide",
++      "text": "PEOPLE DECIDE  |  Consent. Technical sign-off. Finance approval. Independent quality acceptance.",
++      "bound_height": 17.59,
++      "available_height": 24.480000019073486,
++      "bound_width": 713.01,
++      "available_width": 838.7999925613403,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 21,
++      "name": "Slide title",
++      "text": "UK GDPR and Responsible AI:\rPeople remain accountable.",
++      "bound_height": 76.8,
++      "available_height": 79.20000171661377,
++      "bound_width": 471.18503,
++      "available_width": 540.0000247955322,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 21,
++      "name": "Statement 1",
++      "text": "Protect residents' data; a named person decides.\r\u00a0",
++      "bound_height": 22.8,
++      "available_height": 34.985825538635254,
++      "bound_width": 424.25,
++      "available_width": 540.0000247955322,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 21,
++      "name": "Checkpoint 6 text",
++      "text": "Named human checks evidence; corrects or rejects with a reason\r\u00a0",
++      "bound_height": 19.2,
++      "available_height": 31.38582706451416,
++      "bound_width": 439.0,
++      "available_width": 488.8799991607666,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 21,
++      "name": "Band text",
++      "text": "UK GDPR: lawful purpose, minimal data, retention and rights\rReal personal data needs Legal/DPO approval\rUnknown, stale, disabled or over-allowance \u2192 owned manual work \u00b7 hazards go straight to people",
++      "bound_height": 52.8,
++      "available_height": 52.80000019073486,
++      "bound_width": 523.25,
++      "available_width": 532.800012588501,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Eyebrow",
++      "text": "FULL AZURE COST / THE CFO QUESTION",
++      "bound_height": 14.075039,
++      "available_height": 18.000000953674316,
++      "bound_width": 243.84,
++      "available_width": 633.6000003814697,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Slide title",
++      "text": "The Azure bill continues when the apps sleep",
++      "bound_height": 35.17504,
++      "available_height": 44.640000343322754,
++      "bound_width": 656.135,
++      "available_width": 858.9599857330322,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Footer sources",
++      "text": "Sources and evidence limits in notes. Updated 27 November 2026.",
++      "bound_height": 14.075039,
++      "available_height": 14.40000057220459,
++      "bound_width": 380.75,
++      "available_width": 684.0000247955322,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Footer navigation",
++      "text": "B28 / Index: slide 28",
++      "bound_height": 14.075039,
++      "available_height": 14.40000057220459,
++      "bound_width": 118.12504,
++      "available_width": 275.9999942779541,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Appendix topic destination",
++      "text": "Topic: S18 / slide 22",
++      "bound_height": 14.075039,
++      "available_height": 21.59999942779541,
++      "bound_width": 117.36,
++      "available_width": 187.20000648498535,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Story-56-batch-status",
++      "text": "PUBLIC AZURE / 30-DAY PLANNING / NOT A BILL",
++      "bound_height": 19.93504,
++      "available_height": 20.160000324249268,
++      "bound_width": 405.37,
++      "available_width": 838.7999925613403,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Story-56-batch-number",
++      "text": "USD 335",
++      "bound_height": 42.21504,
++      "available_height": 48.96000146865845,
++      "bound_width": 156.0,
++      "available_width": 403.91998767852783,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Story-56-batch-tokens",
++      "text": "USD 435-1,260",
++      "bound_height": 42.21504,
++      "available_height": 48.96000146865845,
++      "bound_width": 258.0,
++      "available_width": 403.91998767852783,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Story-56-batch-list-price",
++      "text": "Persistent-service subtotal\rbefore usage and allowances",
++      "bound_height": 43.79,
++      "available_height": 46.08000040054321,
++      "bound_width": 239.0,
++      "available_width": 403.91998767852783,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Story-56-monthly-envelope-label",
++      "text": "Full illustrative Azure envelope / month\rAI included: USD 0-50",
++      "bound_height": 43.79,
++      "available_height": 46.08000040054321,
++      "bound_width": 313.00504,
++      "available_width": 403.91998767852783,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Story-56-unit-method",
++      "text": "Zero replicas remove app compute charges; persistent services remain.\rScheduled jobs continue overnight. Storage, logs and security included.",
++      "bound_height": 48.65504,
++      "available_height": 54.71999979019165,
++      "bound_width": 639.5,
++      "available_width": 838.7999925613403,
++      "overflow": false,
++      "revised": true
++    },
++    {
++      "slide": 56,
++      "name": "Story-56-unit-gap",
++      "text": "Illustrative, not a bill cap. QA, future services and human work extra.\rGlobal nano is not a UK-resident rate; UK-only inference needs repricing.",
++      "bound_height": 41.355038,
++      "available_height": 50.40000009536743,
++      "bound_width": 597.0,
++      "available_width": 870.4799852371216,
++      "overflow": false,
++      "revised": true
++    }
++  ],
++  "pixel_changes_vs_published_delivery": [
++    1,
++    13,
++    17,
++    21,
++    56
++  ],
++  "all_six_protected_slide_and_note_pairs_unchanged_from_previous_delivery": true,
++  "pdf_navigation": {
++    "slides": 56,
++    "fixed_slide_jumps": 111,
++    "all_destinations_and_hit_regions_verified": true,
++    "unambiguous_hit_regions": true
++  },
++  "limits": "Native bounds and rendered output, not rehearsal, projector, keyboard/AT acceptance, legal approval or live residency/RAI attestation."
++}
+diff --git a/.copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/validation-results.json b/.copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/validation-results.json
+new file mode 100644
+index 000000000..acd140bb0
+--- /dev/null
++++ b/.copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/validation-results.json
+@@ -0,0 +1,72 @@
++{
++  "date": "2026-11-28",
++  "scope": "Presentation-only privacy/UK target/RAI increment; no operational control activation",
++  "tier": "focused",
++  "tier_basis": "Presentation data and generated delivery, prose-only architecture/regulatory findings and targeted document regressions; no infrastructure/security/permission/dependency/deployment/CI semantics change",
++  "original_new_regression_result": {
++    "status": "expected_fail",
++    "count": 2,
++    "failures": [
++      "Previously delivered opening lacked visible not-for-profit stewardship",
++      "Previously delivered main narration lacked the qualified UK Standard target"
++    ]
++  },
++  "native": {
++    "build_verify_render": "pass",
++    "physical_pages": 56,
++    "final_candidate": "privacy-build-2",
++    "first_candidate": "privacy-build-1",
++    "original_fit_failure": "Opening stewardship line wrapped beyond its measured frame",
++    "correction": "Shortened opening copy, preserving frame and font",
++    "focused_revised_frames": 42,
++    "focused_revised_warnings": 0,
++    "other_source_revised_warnings": 28,
++    "inherited_warnings": 179,
++    "visual_and_text_checked_pages": [1, 13, 17, 21, 56],
++    "pixel_changed_pages_vs_prior_published_delivery": [1, 13, 17, 21, 56],
++    "six_protected_slide_note_pairs_unchanged_for_this_increment": true,
++    "pdf_jumps_and_hit_regions_read_back": 111
++  },
++  "targeted_tests": {
++    "command": "PYTHONPATH=tools/capstone /home/jmservera/.copilot/session-state/e8515bdf-8697-4e5e-817f-f1620e418f1d/files/deck-venv/bin/python -m pytest -q tools/test_capstone_pitch_docs.py tools/capstone/test_render_preview.py",
++    "status": "pass",
++    "pitch_tests": 16,
++    "preview_tests": 10,
++    "subtests": 3,
++    "native_shape_checks": 32,
++    "insertion_refusal_mutations": 6,
++    "primary_route_refusal_mutations": 8,
++    "optional_route_refusal_mutations": 6,
++    "financial_refusal_checks": "pass",
++    "canonical_source_bindings": 4,
++    "delivery_hash_binding": "pass",
++    "ruff_and_format": "pass",
++    "whitespace": "pass",
++    "local_links_source_documents": 7,
++    "initial_preview_import_failure": "unittest import required existing tools/capstone module path; final pytest run collected all function-based preview tests"
++  },
++  "preserved_routes": {
++    "main_slides": 17,
++    "prepared_seconds": 780,
++    "demo_start_seconds": 30,
++    "demo_seconds": 110,
++    "reserve_seconds": 120,
++    "optional_seconds": 360,
++    "optional_slot_requires_confirmation": true
++  },
++  "independent_review_correction": {
++    "finding": "R1: stale runbook SHA-256 in the compact receipt",
++    "original_verdict": "approve_with_comments at 01ad9aeb8eae5ad72b33f20882fab3997384b979",
++    "new_binding_assertion_before_correction": "expected_fail",
++    "correction": "Refreshed canonical runbook digest; retained original review; extended existing parity regression",
++    "delivery_and_spoken_content_changed": false,
++    "followup_validation": "26 tests and 3 subtests passed; canonical source/delivery bindings, Ruff and whitespace passed"
++  },
++  "not_established": [
++    "Performed rehearsal, projector or keyboard/assistive-technology acceptance",
++    "Live UK residency or whole-project privacy/RAI acceptance",
++    "Legal/DPO real-data approval, deployment or paid inference",
++    "A UK-resident Global nano quotation or actual maximum Azure bill",
++    "Independent exact-head, hosted CI or human approval from these local checks"
++  ]
++}
+diff --git a/.copilot-tracking/research/2026-11-28/capstone-privacy-residency-rai-research.md b/.copilot-tracking/research/2026-11-28/capstone-privacy-residency-rai-research.md
+new file mode 100644
+index 000000000..4faeddc29
+--- /dev/null
++++ b/.copilot-tracking/research/2026-11-28/capstone-privacy-residency-rai-research.md
+@@ -0,0 +1,295 @@
++---
++title: Capstone Privacy, UK Residency and Responsible AI Story
++description: Evidence for a not-for-profit customer, UK GDPR, regional inference and accountable human decisions in the main pitch
++ms.date: 2026-11-28
++ms.topic: reference
++---
++
++## Executive Summary
++
++Research supports a main-route privacy and Responsible AI story. Zava North
++Homes is an owner-confirmed not-for-profit customer. The pitch should explain
++resident trust, accountable use of resources, personal-data protection and
++named human decisions, while leaving fully local sovereignty in the appendix.
++
++UK GDPR does not impose a blanket UK-only storage rule. A UK processing
++boundary is the proposed customer architecture policy, subject to approval
++and verification, not a consequence of not-for-profit status or a compliance
++certificate. The retained source includes GlobalStandard and a Sweden Central
++option; no new live UK-only deployment proof was collected.
++
++## What You May Not Know
++
++Microsoft's official Standard/Regional catalog lists gpt-4.1-mini for UK South.
++The nano entry in the Global Standard table is not evidence of UK-only
++processing. Regional model availability and quota are separate checks.
++
++Current UK GDPR uses Articles 22A-22D rather than the superseded blanket
++Article 22 formulation. Meaningful human involvement needs influence before
++a decision affects a person. A review button does not prove that influence.
++The ICO's refreshed detailed ADM guidance is still marked draft consultation.
++
++The RSH transparency standard was updated on 1 October 2026 and includes
++STAIRs. Its duties attach to applicable registered providers, not every
++not-for-profit entity. Transparency does not mean publishing residents'
++personal records.
++
++## Findings
++
++### Mission and transparency have different evidence bases
++
++The company profile confirms not-for-profit status on 26 September 2026
++while leaving corporate and charitable status unknown (C11). Mission and
++stewardship belong in the opening. Current RSH expectations for registered
++providers support understandable service information, next steps, roles,
++decision criteria and appeals, and tenant scrutiny (W18). UK GDPR Article 5
++also requires fair, transparent processing and confidentiality (W16).
++
++Evidence state: evidence-backed for those source claims; actual provider
++registration, company legal form and regulatory applicability require the
++qualified human owner. Confidence comes from owner-confirmed case evidence
++and the current official standard, not comparator practice.
++
++### UK GDPR protection is broader than a location label
++
++Articles 5, 6, 9, 25 and 35 cover principles, lawful basis, additional
++special-category conditions, protection by design/default and DPIA where
++processing is likely high risk (W16). Health information can be
++special-category data; no claim is made that every vulnerability field is.
++Works consent, monitoring choice and the lawful basis for processing are
++separate. Not-for-profit status does not grant a general Article 9 exception.
++
++The ICO transfer guidance permits covered restricted transfers through
++adequacy, appropriate safeguards with the data protection test, or applicable
++derogations (W17). It therefore contradicts a blanket GDPR-only UK-residency
++claim. Proposed UK storage and regional inference reduce transfer exposure;
++identity, provider operations, remote access, logs and backups still need
++mapping and contractual review. A UK location is not compliance.
++
++Evidence state: evidence-backed as a statement of the checked provisions
++and guidance; the specific lawful basis, DPIA and processing/transfer position
++remain unapproved in the project's draft DPIA (C13).
++
++### UK regional inference is a target, not a delivered guarantee
++
++Standard and Regional Provisioned process prompts/responses within the
++selected Azure geography, potentially across its regions. Global can process
++anywhere; EU DataZone is not the UK (W19). The catalog's `data-pivot=standard`,
++`Standard/Regional` section, Europe tab lists gpt-4.1-mini/UK South (W20).
++The Global Standard table separately lists nano. No matching Standard nano
++availability, target-subscription quota, deployment attestation or successor
++approval is inferred.
++
++The existing Bicep default remains GlobalStandard and the retained prototype
++option is Sweden Central (C14). Existing chat provider-position controls
++distinguish constructed references from actual-mode DPO/Legal approval
++(C13). A presentation edit must describe the UK South app/data and UK
++Standard-model target, not claim a migrated, completely UK-only live system.
++The previous cost model's regional mini rate can inform planning, but its
++global nano low rate is not a UK-resident-model quotation.
++
++Evidence state: evidence-backed catalog/provider/source findings; actual
++UK-only operation is unproved. A new managed-model version requires quality,
++price, quota, retirement and provider-terms checks. Updated provider terms
++also say modified abuse monitoring for models released on/after 1 November
++2026 will cease to be available from a future announced date, with notice
++(W22); do not promise that modification as a universal residency solution.
++
++### Responsible AI requires accountable decisions and effective review
++
++Current product policy keeps models on recommendations, drafts and review
++flags. People retain works consent, professional sign-off, financial approval,
++safety judgement and independent quality acceptance (C12/C15). Source-coded
++Quality L4 flags do not accept works. The Responsible AI assessment provides
++bounded engineering evidence but no accepted fairness or whole-project
++operational assurance.
++
++Article 22A defines solely automated significant decisions by the absence
++of meaningful human involvement; Article 22C supplies safeguards for such
++decisions. The refreshed ICO draft explains timely influence, discretion
++and authority to change a recommendation (W16/W21). The product's
++suggestion-only policy is a stronger design boundary, not a claim that the
++law bans every automated decision. Reviewers need evidence, authority,
++competence and time; challenge, correction, accessible manual service and
++tested fairness remain part of the intended service.
++
++Evidence state: evidence-backed for current policy and legislation; effective
++human oversight, real resident outcomes and operational RAI acceptance remain
++unproved.
++
++## Recommendation and Alternatives
++
++Use the opening and demo to establish not-for-profit stewardship, constructed
++data and human decision rights. Replace the main deployment slide's spare
++caption with a visible privacy summary and speak the UK regional-model target
++and current evidence gap. Make Responsible AI explicit on the five-helper
++slide, replacing its historical-model box with named human review while
++preserving exact role/autonomy evidence in notes. Keep the short route and
++its reserve unchanged.
++
++Retain the sovereign appendix and its service matrix. Reject an unqualified
++"entire deployment is UK GDPR compliant and entirely in the UK" statement.
++Also reject moving privacy entirely into the appendix or silently changing
++infrastructure to make the requested claim true.
++
++## Scope and Questions
++
++The mixed executive/technical capstone panel needs the privacy and Responsible
++AI story in the main demo-first presentation, with fully local sovereignty
++remaining an optional appendix. The owner requests a UK-only deployment story;
++research must distinguish the proposed processing boundary from demonstrated
++deployment and from what UK GDPR requires.
++
++* Q1: What not-for-profit facts and transparency obligations are supported,
++  without inferring charitable status or unrestricted disclosure?
++* Q2: Does UK GDPR require all resident personal data to remain in the UK,
++  and which privacy controls must the pitch explain regardless of geography?
++* Q3: What regional model deployment contract supports UK processing, and
++  what do the retained source/configuration and observations actually prove?
++* Q4: Which Responsible AI/human decision boundaries are current and how
++  should the main-route script explain them?
++
++Output mode: convergence for presentation wording, not a deployment decision.
++Criteria: official current sources for consequential legal/provider claims;
++dated source evidence; no compliance certification, residency guarantee,
++model availability, customer legal form or live authority inferred.
++Non-goals: changing infrastructure, budgets, identity, safety controls,
++real resident data, paid inference or professional/legal approval.
++
++## Decisions and Feedback
++
++* D13: Put mission, privacy, UK processing policy and Responsible AI in the
++  main route rather than relying on optional appendix time.
++* D14: Use the official `Standard` term for UK regional inference. Treat a
++  catalogued mini model as a candidate, not a selected/live deployment.
++  Preserve Global/Sweden source evidence and require explicit preflight;
++  no residency or compliance guarantee is asserted.
++* D15: Preserve suggestion/draft/flag scope with a named accountable human,
++  evidence review, correction/rejection, challenge and manual paths. Do not
++  mistake legal source retrieval for Legal/DPO or operational approval.
++
++Decisions are evidence-supported presentation choices under the active
++automatic mode. There is no unresolved wording decision requiring owner
++acknowledgement.
++
++## Risks and Open Questions
++
++Actual UK-only app/data/model deployment, identity/provider operations,
++processor contracts, lawful basis, health-data conditions, DPIA, retention,
++rights handling, model quota/lifecycle and effective human/fairness evaluation
++remain separate acceptance work. Current catalog availability is not spare
++capacity or a successful deployment.
++
++Two guessed guidance URLs returned 404. The current RSH publication and
++legislation/ICO transfer sources supplied the necessary evidence. The ICO
++ADM URL redirected to its current draft; its draft status is preserved.
++No failed or partial retrieval is treated as a complete legal audit.
++
++## Planning Readiness and Next Step
++
++Research completed; ready for bounded presentation authoring and native
++validation. The parent continues automatically with source-owned slide,
++script and runbook changes. No infrastructure, privacy approval, RAI release
++or sovereign procurement handoff is authorized.
++
++## Research Record
++
++Root: /home/jmservera/source/ama/.copilot-tracking/research.
++Date source: owner's supplied current date, 28 November 2026.
++Primary file: research/2026-11-28/capstone-privacy-residency-rai-research.md.
++Numbering continues capstone-cost-discovery-sovereignty-research.md:
++next C11, W16, D13; current cycle 3.
++
++Method and boundaries: balanced, narrowed to four material storytelling
++claims and their deployment implications. Prior-knowledge gate: the owner
++confirmed not-for-profit status in the addendum and company profile;
++charitable/legal form is unknown. The previous sovereign study and current
++presentation receipt already distinguish UK intent, Global inference,
++identity/provider geography and local sovereignty. Reuse those findings
++but refresh official sources that control the new GDPR/residency claim.
++
++Participation: agent-owned under the active automatic session, continuing
++the explicitly requested presentation workstream. No clarification is
++needed to preserve unsupported deployment/compliance claims as unproved.
++
++Extensions: repository immutable-snapshot/current-use/legal-review rules,
++HVE Slides and RPI Research selected. Owner voice guidance applies to later
++prose authoring. A full privacy planner, new RAI assessment, infrastructure
++implementation, security scan and generic presentation redesign are skipped
++because no new processing or operational authority is being activated.
++
++Starting internal evidence: case-study original/addendum, company profile,
++regulatory register/current UK GDPR and existing ADM/DPIA/RAI evidence,
++capstone main-route source/notes, regional model configuration.
++Starting external evidence: ICO, current legislation, RSH transparency
++standard and Microsoft regional deployment/data-processing contracts.
++No helper is dispatched; the bounded research is directly owned.
++
++Cycle 3 wider wave: read the company, regulatory register, draft DPIA, whole-
++project RAI assessment, main-route narrative and recent UK-model PR search.
++Retrieved official ICO transfer guidance, RSH transparency standard and
++Microsoft deployment/privacy contracts. Secondary search results were used
++only for discovery, not legal claims.
++
++Cycle 3 deeper wave: read current UK GDPR provisions and exact source
++contracts. Resolved the official model catalog's HTML pivot/heading/tab
++identity rather than conflating Global Standard with Standard/Regional.
++The Standard/Regional Europe table lists gpt-4.1-mini for UK South; target
++subscription capacity and lifecycle admission remain separate.
++
++Cycle 3 contrarian wave: tested non-profit-implies-unrestricted-transparency,
++GDPR-implies-UK-only, UK-resource-implies-UK-inference, consent-is-every-lawful-
++basis and approval-button-implies-meaningful-human-review. Rejected those
++unsupported implications. Preserved regional/geography/provider distinctions,
++current source exceptions, the ICO draft status and new abuse-monitoring
++change notice. No further cycle is needed for bounded wording; deployment or
++approval evidence would require a separately authorized investigation.
++
++Internal evidence:
++
++* C11: docs/reference/research/company/company-profile-research.md,
++  Confirmed Company Information; docs/case_study_48_addendum.md,
++  Additions Since the Original.
++* C12: docs/capstone/source/slides.json, S01/S04/S11A/S15/S17 and
++  presentation_route; docs/capstone/demo/runbook.md, requested/built autonomy.
++* C13: docs/reference/research/chat-memory-dpia.md, Status, Data Map,
++  Model Provider and Region, Runtime Residency Enforcement; actual-mode
++  approval remains false.
++* C14: infra/main.bicep, chatModelSku/modelDeployments and independent
++  aiModelLocation/sqlLocation; infra/resident-assistant.bicep, Sweden Central.
++* C15: docs/reference/research/rai/project-rai-review.md, Result, Scope
++  and Autonomy, NIST AI RMF assessment and oversight/fairness gaps.
++
++External evidence, checked on the owner's 2026-11-28 local date:
++
++* W16: https://www.legislation.gov.uk/eur/2016/679/article/5 and Articles
++  6, 9, 25, 35, 22A and 22C at their corresponding article URLs.
++  Latest revised provision text; Article 22A/C amendment notes identify
++  2026-02-05 commencement so far as not already in force. The checked pages
++  showed no known outstanding effects where that status was read.
++* W17: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/international-transfers/a-guide-to-international-transfers/
++  and its how-do-we-comply-with-the-transfer-rules-if-were-initiating-the-restricted-transfer/
++  chapter; guide updated 2026-01-15. Current guidance, not legislation.
++* W18: https://www.gov.uk/government/publications/transparency-influence-and-accountability-standard,
++  published 2024-04-02, updated 2026-10-01; required outcomes and specific
++  expectations 2.1/2.3 plus STAIRs. England registered-provider standard.
++* W19: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/deployment-types,
++  source date 2026-08-06, updated 2026-08-12; Important and deployment-type
++  table. Vendor contract description, not deployment proof.
++* W20: https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability,
++  Standard/Regional, Azure OpenAI, Europe, gpt-4.1-mini/uksouth cell.
++  Public catalog only; prior W12 retirement evidence remains applicable.
++* W21: https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/
++  and what-does-the-uk-gdpr-say-about-adm/ chapter, refreshed 2026-03-31;
++  explicitly draft consultation guidance, not final operational authority.
++* W22: https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy,
++  source date 2026-05-18; Inferencing, Preventing Abuse and What's Changing
++  with Modified Abuse Monitoring. Regional inference/storage, possible
++  human review, EEA-only reviewer-location wording and future change notice.
++
++Synthesis: accepted the main-route mission/privacy/RAI wording with explicit
++UK target and evidence limits. Deferred every live/privacy/contract/model
++approval. Research disposition: executed and completed. Planning readiness:
++Ready for presentation only. Self-check: all four questions answered, all
++three waves completed, current source/draft classifications retained,
++no infrastructure or operational authority changed.
+diff --git a/docs/architecture/environment-region-quota-strategy.md b/docs/architecture/environment-region-quota-strategy.md
+index ef1211088..23328d7fa 100644
+--- a/docs/architecture/environment-region-quota-strategy.md
++++ b/docs/architecture/environment-region-quota-strategy.md
+@@ -163,6 +163,43 @@ retention and contract review. The statement that prompts do not train
+ foundation models without permission or instruction is a separate assurance
+ from where inference occurs [M4, M8].
+ 
++### Privacy and accountable human review (2026-11-28)
++
++The proposed real-data design combines UK application/storage with UK
++Standard-model inference. The [dated official-source review](../reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
++confirms a UK South gpt-4.1-mini listing in Microsoft's Standard/Regional
++Europe table. It does not establish subscription quota, model quality,
++lifecycle suitability or active deployment. Standard processes within the
++selected geography; "Local Deployment" must not imply on-premises execution.
++The [current source](../../infra/main.bicep) still defaults to GlobalStandard,
++and the retained resident option is Sweden Central. A UK-only model choice
++requires repricing: Global nano's low rate is not a UK-resident quotation.
++
++Not-for-profit stewardship supports useful resident-facing accountability,
++while own-case access protects other households. UK GDPR permits appropriately
++safeguarded international transfers; a UK residency policy is a customer/design
++choice, not a blanket consequence of non-profit status. RSH obligations depend
++on relevant registered-provider status and jurisdiction, which remain unknown.
++
++UK location does not replace lawful purpose/basis, minimisation, retention,
++rights handling or a required DPIA. Health information can need an additional
++special-category condition. Works consent and optional monitoring choice are
++separate from the lawful basis for processing. Legal and DPO approval of the
++data map and real-data processing remains pending. Identity, remote access,
++support, provider monitoring, logs/backups and control-plane terms require
++their own location and contract checks. Microsoft's checked reviewer-location
++assurance covers EEA resources, not UK resources; Modified Abuse Monitoring
++must not be promised as universal or permanent.
++
++Responsible AI preserves meaningful human authority before a consequential
++decision is applied. A competent, authorised reviewer needs evidence, time
++and discretion to correct or reject, with reasons and challenge routes.
++AI prepares proposals or flags; it cannot supply consent, professional/safety
++judgement, funding approval or independent quality acceptance. Current UK GDPR
++Articles 22A-22D do not prohibit all automation. The product's suggestion-only
++policy and [partial RAI evidence](../reference/research/rai/project-rai-review.md)
++are distinct from operational acceptance.
++
+ ### Public and private options
+ 
+ Sovereign Public Cloud applies supported controls to the existing public
+diff --git a/docs/capstone/deck/zava-forward-cowork-v2-draft.pdf b/docs/capstone/deck/zava-forward-cowork-v2-draft.pdf
+index fdbe7d1f0..0fe5e8e74 100755
+Binary files a/docs/capstone/deck/zava-forward-cowork-v2-draft.pdf and b/docs/capstone/deck/zava-forward-cowork-v2-draft.pdf differ
+diff --git a/docs/capstone/deck/zava-forward-cowork-v2-draft.pptx b/docs/capstone/deck/zava-forward-cowork-v2-draft.pptx
+index 414b661c6..e3cf85893 100644
+Binary files a/docs/capstone/deck/zava-forward-cowork-v2-draft.pptx and b/docs/capstone/deck/zava-forward-cowork-v2-draft.pptx differ
+diff --git a/docs/capstone/demo/runbook.md b/docs/capstone/demo/runbook.md
+index acc52d22d..5abb684c6 100644
+--- a/docs/capstone/demo/runbook.md
++++ b/docs/capstone/demo/runbook.md
+@@ -1,7 +1,7 @@
+ ---
+ title: Capstone Demo and Recovery Runbook
+ description: Demo-first panel route, preflight and recovery with dated live evidence and a complete optional deeper walkthrough
+-ms.date: 2026-11-27
++ms.date: 2026-11-28
+ ms.topic: how-to
+ ---
+ 
+@@ -61,6 +61,21 @@ and Quality Inspector responsibilities; the other employee, contractor and
+ resident roles are available for questions. The source is
+ [welcome.html](../../../src/api/src/zava_forward/api/web/welcome.html).
+ 
++The main pitch now connects the not-for-profit mission to accountable spending
++and resident privacy. Use constructed data only. AI prepares recommendations,
++drafts or review flags; a named, authorised person checks the evidence and can
++correct or reject before a decision affects a resident. The homepage's example
++buttons do not demonstrate meaningful human oversight by themselves.
++
++The proposed real-data design uses UK application/storage and UK Standard-model
++inference. UK GDPR permits safeguarded international transfers; UK residency is
++the proposed customer policy, not a blanket consequence of not-for-profit
++status or proof of compliance. The retained drawing includes Global and Sweden
++Central options, so do not describe the demo as wholly UK-resident. Explain
++lawful purpose, case-scoped access, retention and rights on S17/page 21; S11A/page
++13 covers the UK target and S15/page 17 covers Responsible AI. Fully local
++sovereignty stays in the optional appendix.
++
+ * Choose one synthetic case with an inspectable missing check and next role.
+   A Quality-stage case fits the installer/inspection example only if its
+   actual records show that gap. Otherwise use the real blocker in the chosen
+@@ -276,10 +291,10 @@ are presenter notes. State route E or L before starting the clock.
+ 
+ | Clock | Show | Say |
+ | --- | --- | --- |
+-| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This homepage illustrates the product. The manager owns the programme; an independent inspector accepts finished work. The next action has an owner. AI prepares evidence; people keep their decisions." |
++| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This is a not-for-profit's workflow, illustrated with constructed data. The programme manager owns delivery; an independent inspector accepts work. AI prepares evidence. People retain the decisions." |
+ | 00:20-00:50 | Open the preflight-selected actual case; show its own reference, unresolved check and next responsible role | "Now this is the actual synthetic case. Here is the check that cannot pass and the next responsible person. Other useful work can continue. Progress means resolving an owned handoff, not hiding the missing evidence." |
+ | 00:50-01:20 | Same-case prepared model answer or proposal beside its source, only if one exists. Otherwise show the actual rules/held state and ordinary next action | "I check the answer's origin, source and what it cannot verify. Accepting a draft doesn't accept the works. A held or unavailable model doesn't clear the check or stop the person following the ordinary action." |
+-| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident can ask for help without giving up their choice. Record permission, monitoring permission and works consent are separate. Assisted service stays. The business test is less handling effort and fewer lost handoffs; this demo hasn't measured that." |
++| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident controls works consent and monitoring choice, with assisted help available. Own-case access protects other households. Data use still needs a lawful basis. We are testing less handling effort and fewer lost handoffs, not claiming it." |
+ 
+ For route L, show only equivalent pre-arranged, authorized behaviour. Identify
+ a prepared model output as recorded evidence, with its actual date and source.
+@@ -522,6 +537,14 @@ operator, route and safe evidence reference. A written checklist is not a pass.
+ * Intended SQL state and permitted persistence/restart evidence, without reseeding
+ * Exact allowed AI task, sources, model/version, finite calls/tokens, expiry,
+   processing terms, price/cost scope and current owner authorization
++* For any UK-residency claim, verify the actual application, SQL, Blob, log and
++  backup locations and UK Standard-model inference deployment type; a UK
++  endpoint, GlobalStandard or EU DataZone does not establish UK-only inference.
++  Record model/version, subscription quota and processing terms. Map identity,
++  provider access and abuse monitoring separately; do not expose private settings.
++* For real personal data, require Legal/DPO-approved purpose, lawful basis,
++  special-category condition where applicable, retention, rights/transfer
++  handling and DPIA where required. Synthetic-demo authorization is not approval.
+ * Independent manual work and human safety routes; no actual emergency test
+ * Reversible prepared action, disposable fixture where necessary and recovery owner
+ * Clean sharing profile, no notifications, private identities, endpoints,
+diff --git a/docs/capstone/pitch/questions-and-answers.md b/docs/capstone/pitch/questions-and-answers.md
+index 591f08c94..df82e9813 100644
+--- a/docs/capstone/pitch/questions-and-answers.md
++++ b/docs/capstone/pitch/questions-and-answers.md
+@@ -1,14 +1,14 @@
+ ---
+ title: Current Capstone Question Bank
+ description: Generated from the current 56-slide source; preparation, not a rehearsal transcript
+-ms.date: 2026-11-27
++ms.date: 2026-11-28
+ ms.topic: reference
+ ---
+ 
+ ## Authority
+ 
+ Generated by tools/capstone/Invoke-Capstone.ps1 from the current deck. Edit the source manifest, not this generated copy.
+-Candidate SHA-256: `36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40`.
++Candidate SHA-256: `3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687`.
+ 
+ These are reference notes, including evidence and caveats, not a claim that every paragraph fits the spoken slot.
+ Build variants share their stated narration slot. Native buttons use the retained fixed slide-jump links, not dynamic caller return.
+@@ -735,6 +735,7 @@ OBSERVABILITY SOURCES: .copilot-tracking/research/2026-11-16/agent-observability
+ KNOWN / ASSUMED / NEXT: known source contracts are one selected-skill call and serialized monetary admission. Public prices and illustrative allocations are in docs/capstone/source/azure-cost-model-2026-11-27.json. Live budget isolation, named owners/approval, complete path attribution and billing/accepted-value reconciliation are still required; do not infer saving or permission from bounded arithmetic.
+ SOURCES: src/api/README.md:707-734, Employee chat with bounded skills; src/core/README.md:94-144, AI consumption ledger; src/core/src/zava_forward/core/ai_consumption.py. All are source evidence, not a current production control attestation.
+ NAVIGATION: B27/page 55; index 28; fixed Topic S18/page 22. Native destinations remain unchanged. Return to the actual interrupted page deliberately.
++UK PRICE SCOPE, 28 NOVEMBER: the retained USD 0.0008 Global nano attempt is not a UK-resident rate. Regional mini is the separately priced example; actual UK eligibility, quota and lifecycle need checks. Allocation isolation never overrides privacy, safety, authority or aggregate liability holds. Known documentary gap rules use no model tokens; interpretive judging still needs an eligible bounded model and professional review.
+ DEMO-FIRST PITCH: 45 seconds. SAY: Model usage can cost zero. This illustrative USD 50 monthly ceiling gives recommendations twenty, document judging ten and chat twenty, with daily limits too. Chat cannot borrow the protected business allocations. Known gap checks use no model tokens; interpretation may need a bounded judge and professional acceptance. Source-coded admission reserves worst-case cost before dispatch. These allocations need configuration and testing; they aren't live spending authority. Known chat exhaustion leaves priority funds, but unknown liability, safety or aggregate holds can stop all model work. Azure budget alerts only notify.
+ 
+ ## Page 56 / B28
+@@ -753,4 +754,5 @@ METHOD: total attributable cost divided by human-accepted proposals above an agr
+ COMPARISON LIMIT: the batch uses short synthetic prompts on a different model from the older S18 scenario. Do not infer a saving from their difference. Earlier failed/unmeasured attempt remains in the batch evidence.
+ SOURCES: docs/capstone/source/azure-cost-model-2026-11-27.json; docs/reference/resources/ai-tokenomics.md; https://prices.azure.com/api/retail/prices; https://learn.microsoft.com/en-us/azure/container-apps/billing; docs/reference/research/ai-heldout-batch-432-live-2026-11-18.md; docs/capstone/pitch/tokenomics-cost-per-home-vs-value.md. No deployment, billing export, new spending authority or paid call.
+ NAVIGATION: physical page 56; included in Demo-first pitch before B27 and S18. The fixed Topic button goes to page 22 and Index to page 28; return deliberately after an appendix answer.
+-DEMO-FIRST PITCH: 60 seconds. SAY: Tokens are only one line in the Azure bill. The identified persistent services are about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. Add app and job compute, storage, logs, security, operations and AI, and this illustrative demo envelope is about USD 435-1,260 a month. The assumptions are in the notes; this isn't an invoice or a maximum bill. The apps can scale to zero, but SQL is currently provisioned S3 and scheduled jobs continue overnight. Five temporary QA databases are extra. For AI, the measured synthetic batch used 2,522 tokens; that still doesn't give a cost per accepted outcome. Human implementation, review and support belong in that wider denominator-based comparison.
++UK PRICE SCOPE, 28 NOVEMBER: the dated model prices the observed public-cloud configuration. Global nano's low rate is not a UK-resident-inference quotation; Standard nano availability was not established. A UK-only target requires an eligible regional model, quota, quality/lifecycle checks and repricing. The existing USD 0-50 AI allowance is a proposed budget allocation, not permission for a non-UK call or a maximum bill.
++DEMO-FIRST PITCH: 60 seconds. SAY: Tokens are one line in the Azure bill. Identified persistent services cost about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. With compute, storage, logs, security and AI, this illustrative envelope is USD 435-1,260 a month. It prices the observed public-cloud configuration; a UK-only model choice needs repricing. Apps can scale to zero, but provisioned SQL and scheduled jobs remain. Five temporary QA databases are extra. The notes hold assumptions; this isn't a maximum bill. The measured synthetic AI batch used 2,522 tokens, without an accepted-outcome denominator. Human implementation, review and support belong in that wider comparison.
+diff --git a/docs/capstone/pitch/speaker-script.md b/docs/capstone/pitch/speaker-script.md
+index b9a63374c..daa94d2b1 100644
+--- a/docs/capstone/pitch/speaker-script.md
++++ b/docs/capstone/pitch/speaker-script.md
+@@ -1,7 +1,7 @@
+ ---
+ title: Demo-first capstone speaker script
+ description: Timed pitch with the complete demo runbook embedded; prepared, not rehearsed
+-ms.date: 2026-11-27
++ms.date: 2026-11-28
+ ms.topic: how-to
+ ---
+ 
+@@ -12,7 +12,7 @@ The 15-minute slot includes 13:00 of planned narration/demo and 2:00 for questio
+ Only the SAY paragraphs are spoken. Actions, source notes and the embedded operational runbook are presenter aids.
+ Physical page numbers stay stable; the PDF contains the full deck, not the custom-show sequence.
+ The shorter route replaces the former 24:30 narration plan. Original slide TIMING lines are historical reference only.
+-Candidate SHA-256: `36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40`. No performed rehearsal or current live acceptance is claimed.
++Candidate SHA-256: `3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687`. No performed rehearsal or current live acceptance is claimed.
+ 
+ ## Audience and decision
+ 
+@@ -25,13 +25,13 @@ Ask for one bounded same-home validation, named Programme/Finance/Quality/Engage
+ 
+ More homes ready. Faster. With control intact.
+ 
+-SAY: Our fictional housing association has 60,000 homes and a retrofit programme behind plan. I recommend an owned case workflow, with AI preparing evidence. I'll show one next action first, then explain the design and cost.
++SAY: Our fictional, not-for-profit housing association has 60,000 homes and a retrofit programme behind plan. The aim is resident benefit and accountable spending. I recommend an owned workflow with AI preparing evidence; let's start with one next action.
+ 
+ ### 00:20-00:30 | page 26 / S22
+ 
+ One home. The next action has an owner.
+ 
+-SAY: This is constructed data. Watch the unresolved check, its owner and the decisions people retain.
++SAY: This is constructed data, not residents' personal information. Watch the missing check and its owner: AI suggests; people decide.
+ 
+ ### 00:30-02:20 | embedded 1:50 demo
+ 
+@@ -43,10 +43,10 @@ are presenter notes. State route E or L before starting the clock.
+ 
+ | Clock | Show | Say |
+ | --- | --- | --- |
+-| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This homepage illustrates the product. The manager owns the programme; an independent inspector accepts finished work. The next action has an owner. AI prepares evidence; people keep their decisions." |
++| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This is a not-for-profit's workflow, illustrated with constructed data. The programme manager owns delivery; an independent inspector accepts work. AI prepares evidence. People retain the decisions." |
+ | 00:20-00:50 | Open the preflight-selected actual case; show its own reference, unresolved check and next responsible role | "Now this is the actual synthetic case. Here is the check that cannot pass and the next responsible person. Other useful work can continue. Progress means resolving an owned handoff, not hiding the missing evidence." |
+ | 00:50-01:20 | Same-case prepared model answer or proposal beside its source, only if one exists. Otherwise show the actual rules/held state and ordinary next action | "I check the answer's origin, source and what it cannot verify. Accepting a draft doesn't accept the works. A held or unavailable model doesn't clear the check or stop the person following the ordinary action." |
+-| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident can ask for help without giving up their choice. Record permission, monitoring permission and works consent are separate. Assisted service stays. The business test is less handling effort and fewer lost handoffs; this demo hasn't measured that." |
++| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident controls works consent and monitoring choice, with assisted help available. Own-case access protects other households. Data use still needs a lawful basis. We are testing less handling effort and fewer lost handoffs, not claiming it." |
+ 
+ For route L, show only equivalent pre-arranged, authorized behaviour. Identify
+ a prepared model output as recorded evidence, with its actual date and source.
+@@ -60,7 +60,7 @@ After the demo, return to page 4 / S04. Use one recovery within the existing win
+ 
+ Homes don't stall on ambition. They stall between teams.
+ 
+-SAY: That next action is the product's unit of progress. The brief asks for faster retrofit delivery and safer homes, but a start isn't an accepted handover. Survey evidence, funding, capacity and the resident's choice must agree. Our design makes the blocker and owner visible. The proposed business test is fewer unresolved handoffs and less total preparation and review effort; we haven't measured that benefit yet.
++SAY: That next action is the unit of progress. As a not-for-profit provider, Zava's value test is safer homes and resident benefit with accountable spending. Residents should understand the service, the next step and how to challenge a decision; transparency never means exposing another household's records. Survey evidence, funding, capacity and the resident's choice must agree before handover. Reduced handoffs and review effort are proposed benefits, not measured results.
+ 
+ ### 02:55-03:30 | page 14 / S12
+ 
+@@ -82,27 +82,27 @@ SAY: The employee and resident surfaces have separate identity and scope. The ca
+ 
+ ### 05:10-05:55 | page 13 / S11A
+ 
+-Azure connects home evidence to owned action.
++UK processing is the target. Proof comes before release.
+ 
+-SAY: Here is the receiving chain: home evidence enters through IoT, is validated, and becomes retained SQL history before a colleague reviews it. The employee workbench and optional resident site have separate access rights. UK South is the application and data target, but GlobalStandard inference can leave the UK; the retained resident model option is Sweden Central. Identity and provider operations need separate checks too. Private endpoints do not prove UK-only processing. The appendix explains the sovereign options and which services would have to change.
++SAY: Home evidence reaches validated SQL history through the IoT receiving chain. For real resident data, our proposed boundary is UK application, storage and Standard-model inference. A UK South mini model is catalogued; quota, quality and lifecycle still need checks. This retained drawing includes Global and Sweden Central options, so it doesn't prove a UK-only deployment. Identity, provider access and backups need separate review. Legal and the Data Protection Officer must approve the data map and processing before real data enters. Full local sovereignty is an appendix option.
+ 
+ ### 05:55-06:45 | page 17 / S15
+ 
+-Five responsibilities. Autonomy is not one switch.
++Responsible AI: models suggest. People decide.
+ 
+-SAY: Stock, Assessment, Funding, Coordination and Quality have different responsibilities. Trigger, output and authority are separate questions. Quality now has a source-coded proactive L4 review flag when a current model finding cites captured readings. It cannot accept work; the latest twenty-six-November model leg was blocked. Decision 1 was historical supplied-candidate scoring, not this helper engine. Known checks stay in rules. Choose a generative model by comparing the same cases, quality floor, latency and complete review cost with the simpler route. A successful call alone settles none of that.
++SAY: Responsible AI means that a named, authorised person keeps the decision. Models prepare recommendations, drafts or review flags; they cannot consent, diagnose hazards, commit funding or accept completed works. The reviewer needs evidence, competence, time and authority to correct or reject before anything affects a resident. We keep the reason and a way to challenge the decision, with assisted service when AI is unavailable. We also need fairness and error testing, including households with missing data. These are release criteria; today's synthetic demo does not establish operational RAI acceptance.
+ 
+ ### 06:45-07:20 | page 21 / S17
+ 
+-Seven checkpoints between an AI draft and a real-world decision.
++UK GDPR and Responsible AI: people remain accountable.
+ 
+-SAY: The model receives a permitted, versioned evidence projection. Dispatch has a finite allowance; output checks reject broken structure or stale sources. A person checks meaning and current permissions. Accepting a proposal is separate from consenting to works, submitting funding or accepting quality. A valid citation can still support a wrong claim, so meaningful review is an evaluation question. Failures leave an owned manual route; safety reports bypass AI.
++SAY: UK GDPR, the UK's General Data Protection Regulation, needs more than UK hosting: lawful purpose, minimal case-scoped data, approved retention and rights handling. A data-protection impact assessment addresses likely high-risk processing; health data needs an additional legal condition. Works consent is separate. A named person checks the model's evidence and owns the consequential decision. Legal and the DPO must approve real-data processing. Missing authority or evidence leaves an owned manual route.
+ 
+ ### 07:20-08:20 | page 56 / B28
+ 
+ The Azure bill continues when the apps sleep
+ 
+-SAY: Tokens are only one line in the Azure bill. The identified persistent services are about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. Add app and job compute, storage, logs, security, operations and AI, and this illustrative demo envelope is about USD 435-1,260 a month. The assumptions are in the notes; this isn't an invoice or a maximum bill. The apps can scale to zero, but SQL is currently provisioned S3 and scheduled jobs continue overnight. Five temporary QA databases are extra. For AI, the measured synthetic batch used 2,522 tokens; that still doesn't give a cost per accepted outcome. Human implementation, review and support belong in that wider denominator-based comparison.
++SAY: Tokens are one line in the Azure bill. Identified persistent services cost about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. With compute, storage, logs, security and AI, this illustrative envelope is USD 435-1,260 a month. It prices the observed public-cloud configuration; a UK-only model choice needs repricing. Apps can scale to zero, but provisioned SQL and scheduled jobs remain. Five temporary QA databases are extra. The notes hold assumptions; this isn't a maximum bill. The measured synthetic AI batch used 2,522 tokens, without an accepted-outcome denominator. Human implementation, review and support belong in that wider comparison.
+ 
+ ### 08:20-09:05 | page 55 / B27
+ 
+@@ -217,6 +217,21 @@ and Quality Inspector responsibilities; the other employee, contractor and
+ resident roles are available for questions. The source is
+ [welcome.html](../../../src/api/src/zava_forward/api/web/welcome.html).
+ 
++The main pitch now connects the not-for-profit mission to accountable spending
++and resident privacy. Use constructed data only. AI prepares recommendations,
++drafts or review flags; a named, authorised person checks the evidence and can
++correct or reject before a decision affects a resident. The homepage's example
++buttons do not demonstrate meaningful human oversight by themselves.
++
++The proposed real-data design uses UK application/storage and UK Standard-model
++inference. UK GDPR permits safeguarded international transfers; UK residency is
++the proposed customer policy, not a blanket consequence of not-for-profit
++status or proof of compliance. The retained drawing includes Global and Sweden
++Central options, so do not describe the demo as wholly UK-resident. Explain
++lawful purpose, case-scoped access, retention and rights on S17/page 21; S11A/page
++13 covers the UK target and S15/page 17 covers Responsible AI. Fully local
++sovereignty stays in the optional appendix.
++
+ * Choose one synthetic case with an inspectable missing check and next role.
+   A Quality-stage case fits the installer/inspection example only if its
+   actual records show that gap. Otherwise use the real blocker in the chosen
+@@ -432,10 +447,10 @@ are presenter notes. State route E or L before starting the clock.
+ 
+ | Clock | Show | Say |
+ | --- | --- | --- |
+-| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This homepage illustrates the product. The manager owns the programme; an independent inspector accepts finished work. The next action has an owner. AI prepares evidence; people keep their decisions." |
++| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This is a not-for-profit's workflow, illustrated with constructed data. The programme manager owns delivery; an independent inspector accepts work. AI prepares evidence. People retain the decisions." |
+ | 00:20-00:50 | Open the preflight-selected actual case; show its own reference, unresolved check and next responsible role | "Now this is the actual synthetic case. Here is the check that cannot pass and the next responsible person. Other useful work can continue. Progress means resolving an owned handoff, not hiding the missing evidence." |
+ | 00:50-01:20 | Same-case prepared model answer or proposal beside its source, only if one exists. Otherwise show the actual rules/held state and ordinary next action | "I check the answer's origin, source and what it cannot verify. Accepting a draft doesn't accept the works. A held or unavailable model doesn't clear the check or stop the person following the ordinary action." |
+-| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident can ask for help without giving up their choice. Record permission, monitoring permission and works consent are separate. Assisted service stays. The business test is less handling effort and fewer lost handoffs; this demo hasn't measured that." |
++| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident controls works consent and monitoring choice, with assisted help available. Own-case access protects other households. Data use still needs a lawful basis. We are testing less handling effort and fewer lost handoffs, not claiming it." |
+ 
+ For route L, show only equivalent pre-arranged, authorized behaviour. Identify
+ a prepared model output as recorded evidence, with its actual date and source.
+@@ -678,6 +693,14 @@ operator, route and safe evidence reference. A written checklist is not a pass.
+ * Intended SQL state and permitted persistence/restart evidence, without reseeding
+ * Exact allowed AI task, sources, model/version, finite calls/tokens, expiry,
+   processing terms, price/cost scope and current owner authorization
++* For any UK-residency claim, verify the actual application, SQL, Blob, log and
++  backup locations and UK Standard-model inference deployment type; a UK
++  endpoint, GlobalStandard or EU DataZone does not establish UK-only inference.
++  Record model/version, subscription quota and processing terms. Map identity,
++  provider access and abuse monitoring separately; do not expose private settings.
++* For real personal data, require Legal/DPO-approved purpose, lawful basis,
++  special-category condition where applicable, retention, rights/transfer
++  handling and DPIA where required. Synthetic-demo authorization is not approval.
+ * Independent manual work and human safety routes; no actual emergency test
+ * Reversible prepared action, disposable fixture where necessary and recovery owner
+ * Clean sharing profile, no notifications, private identities, endpoints,
+diff --git a/docs/capstone/source/review-2026-11-27.md b/docs/capstone/source/review-2026-11-27.md
+index 24e5cea53..cba4959f1 100644
+--- a/docs/capstone/source/review-2026-11-27.md
++++ b/docs/capstone/source/review-2026-11-27.md
+@@ -461,3 +461,77 @@ Independent exact-head assessment and actual hosted observations remain
+ separate. No invoice, live budget, sovereign deployment, contractual UK
+ assurance, legal approval, rehearsal or human/assistive-technology acceptance
+ is claimed.
++
++## Privacy, not-for-profit stewardship and Responsible AI (2026-11-28)
++
++The owner requested privacy and Responsible AI on the main route. The new
++[official-source review](../../reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
++and [research record](../../../.copilot-tracking/research/2026-11-28/capstone-privacy-residency-rai-research.md)
++support the wording. Not-for-profit status is owner-confirmed; charitable form
++and registered-provider applicability remain unknown. UK GDPR permits
++safeguarded transfers and does not impose a blanket UK-only rule.
++
++S01/S04 connect resident value and accountability to the mission. The demo
++labels constructed data, own-case access and retained human decisions. S11A
++names the proposed UK application/storage and Standard inference policy,
++without converting the retained Global/Sweden drawing into live residency
++proof. S15 names Responsible AI and a human reviewer with authority to change
++the outcome. S17 makes lawful purpose, minimisation, retention, rights and
++Legal/DPO real-data approval visible alongside the existing seven technical
++checks. B28 qualifies the unchanged public-cloud cost scenario and Global nano
++price; UK-only inference needs repricing.
++
++The complete 17-page main route remains 780 prepared seconds with a 110-second
++demo and 120-second reserve. Full local sovereignty remains in the separately
++confirmed six-minute appendix. The full deployment diagram is not shrunk or
++covered; only its native title changes. Historical notes, financial evidence,
++navigation and earlier review outcomes remain preserved.
++
++Before authoring, both new pitch regressions failed against the published
++delivery: not-for-profit stewardship was absent from the visible opening and
++the main narration lacked the qualified UK Standard target. Final generation,
++fit, package/link, parity and source-binding results are recorded below after
++execution. These tests concern presentation evidence, not privacy compliance.
++
++Validation tier: focused. Changes are presentation source, generated delivery,
++prose-only architecture/regulatory analysis and targeted document tests; no
++infrastructure, security control, permission, deployment, dependency or CI/gate
++semantics change. Legal/DPO, resident, professional, live privacy/RAI acceptance,
++rehearsal, projector and assistive-technology checks remain separate.
++
++Final local evidence: native Build/Verify/Render passed for all 56 pages.
++The first candidate wrapped the opening stewardship line beyond its measured
++frame; shortening that line preserved its meaning, font and geometry. The
++second candidate has zero warnings across 42 focused revised frames. Only
++pages 1, 13, 17, 21 and 56 changed pixels versus the published delivery; all six
++protected slide/note pairs are byte-identical for this increment. The 28 other
++source-revised and 179 inherited bound warnings remain historical limitations,
++not a fresh clean whole-deck claim.
++
++All 111 PDF jumps and hit regions were restored and read back; the changed
++pages passed text extraction. Sixteen pitch and ten preview tests passed under
++pytest, with three subtests. Native geometry, insertion, malformed-route,
++financial-refusal and four canonical source/delivery bindings passed. Ruff,
++format, whitespace and local links across seven source documents passed.
++The initial unittest preview import failure was corrected with the existing
++module import path; pytest collected all ten preview tests rather than silently
++omitting function-based tests. No new dependency or execution-policy change
++was needed. Independent exact-head review and actual hosted observations are
++recorded separately from these local results.
++
++### Independent review and binding correction
++
++The [original main-story review](../../../.copilot-tracking/reviews/code-reviews/docs-demo-first-capstone-privacy-2026-11-28/review.md)
++returned `approve_with_comments` at implementation head
++`01ad9aeb8eae5ad72b33f20882fab3997384b979`. It independently inspected the five
++changed native pages, spoken/embedded script, current public-source
++qualifications, delivery bindings and timing. Its one Low finding, R1,
++identified a stale runbook digest in the compact receipt; actual script/runbook
++content parity passed.
++
++The existing parity test now rejects that stale receipt field. It failed before
++correction and passes with the current canonical digest. All 26 selected tests
++and three subtests, canonical source/delivery checks, Ruff and whitespace pass
++after correction. No slide, runbook, narration or binary delivery changed.
++The original review and finding remain intact; broader readiness and final-head
++confirmation are separate records, not inferred from that original verdict.
+diff --git a/docs/capstone/source/slides.json b/docs/capstone/source/slides.json
+index 71868d303..0d74bc997 100644
+--- a/docs/capstone/source/slides.json
++++ b/docs/capstone/source/slides.json
+@@ -25,19 +25,22 @@
+         {
+           "id": 59781,
+           "from": "Decision today: fund the validation gate, then scale",
+-          "to": "Decision today: scope, owners, then a costed plan"
++          "to": "Not-for-profit: resident benefit, accountable spend"
+         }
+       ],
+       "revised_notes": [
+         "S01 | More homes ready. Faster. With control intact.",
+-        "SAY: Our fictional housing association has 60,000 homes and a retrofit programme behind plan. I recommend an owned case workflow, with AI preparing evidence. I'll show one next action first, then explain the design and cost.",
++        "SAY: Our fictional, not-for-profit housing association has 60,000 homes and a retrofit programme behind plan. The aim is resident benefit and accountable spending. I recommend an owned workflow with AI preparing evidence; let's start with one next action.",
+         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
+         "SOURCES: docs/capstone/source/review-2026-11-27.md",
+         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
+-        "TIMING: 40 s for this slide (all builds together) · 00:00-00:40 on the 23:45 narration clock.\r"
++        "TIMING: 40 s for this slide (all builds together) · 00:00-00:40 on the 23:45 narration clock.\r",
++        "STEWARDSHIP UPDATE, 28 NOVEMBER: not-for-profit status is owner-confirmed in docs/reference/research/company/company-profile-research.md; exact legal form, charitable status and registration remain unknown. Resident-facing accountability is not unrestricted disclosure of personal records. Not-for-profit status alone creates neither a blanket UK-only residency duty nor a special-category processing condition."
+       ],
+       "sources": [
+-        "docs/capstone/source/review-2026-11-27.md"
++        "docs/capstone/source/review-2026-11-27.md",
++        "docs/reference/research/company/company-profile-research.md",
++        "docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md"
+       ]
+     },
+     {
+@@ -1212,7 +1215,7 @@
+       "part_number": 55,
+       "baseline_number": 12,
+       "code": "S11A",
+-      "title": "Azure connects home evidence to owned action.",
++      "title": "UK processing is the target. Proof comes before release.",
+       "layout": "native",
+       "keep_ids": [
+         37905,
+@@ -1223,7 +1226,7 @@
+       "headers": [
+         {
+           "id": 37907,
+-          "text": "Azure connects home evidence to owned action.",
++          "text": "UK processing is the target. Proof comes before release.",
+           "size": 30,
+           "box": [
+             0.6,
+@@ -1281,14 +1284,16 @@
+       ],
+       "notes": "S11A | Azure connects home evidence to owned action.\nTIMING: 45 s for this added main-route slide · 11:40-12:25 on the 24:30 narration clock.",
+       "revised_notes": [
+-        "S11A | Azure connects home evidence to owned action.",
+-        "SAY: Home sensors feed IoT Hub, Event Hubs, validated intake and SQL history. Read-only derivation doesn't certify damp or retrofit success. The synthetic simulator is separate from the resident's monitoring choice. Registry, identity, Vault, private endpoints and monitoring support the application. This is the retained eight-November drawing, not today's cloud inventory. Later audits observed the simulator, transport, SQL and UI; the twenty-six-November Quality model leg was blocked. Check the selected revision rather than assuming the whole chain works.",
++        "S11A | UK processing is the target. Proof comes before release.",
++        "SAY: Home evidence reaches validated SQL history through the IoT receiving chain. For real resident data, our proposed boundary is UK application, storage and Standard-model inference. A UK South mini model is catalogued; quota, quality and lifecycle still need checks. This retained drawing includes Global and Sweden Central options, so it doesn't prove a UK-only deployment. Identity, provider access and backups need separate review. Legal and the Data Protection Officer must approve the data map and processing before real data enters. Full local sovereignty is an appendix option.",
+         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
+         "SOURCES: infra/modules/iothub.bicep; src/api/src/zava_forward/api/iot_stream.py; src/api/src/zava_forward/api/sensor_ingestion.py; src/core/src/zava_forward/core/store.py; src/core/src/zava_forward/core/sensor_analysis_store.py; src/core/src/zava_forward/core/assistants.py; docs/capstone/source/diagrams/architecture/text-equivalent.md; docs/capstone/source/review-2026-11-27.md",
+         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
+         "TIMING: 45 s for this added main-route slide · 11:40-12:25 on the 24:30 narration clock.",
+         "DRAWING TEXT EQUIVALENT / DATED DESIGN: home sensors -> IoT Hub -> Event Hubs -> validated, idempotent intake -> SQL accepted observations and retained history. Aggregates are derived on read. Workbench consumes the case API; five current helpers include Quality Verification evidence. The separate resident site needs identity and explicit own-case scope; assisted service remains. SQL/Blob, Foundry, private endpoints, DNS, registry, Vault and Monitor support the design. Optional edge, token, background queue, model and simulator paths are separately gated. This retained 8 November drawing is not a fresh deployed inventory or proof that every depicted service link is released. See the 27 November review for current source versus dated execution evidence.",
+-        "UK BOUNDARY UPDATE, 27 NOVEMBER: UK South is the primary application/data target, not proof that all data stays in the UK. SQL and AI locations are independently selectable. The retained resident-model option is Sweden Central and GlobalStandard can process outside the UK. The picture's outer application box is not a country or provider boundary. Entra identity, abuse monitoring, support, telemetry and control-plane access require separate approved data maps. Synthetic demo permission does not approve real resident data. The dated sovereign service matrix is in docs/architecture/environment-region-quota-strategy.md."
++        "UK BOUNDARY UPDATE, 27 NOVEMBER: UK South is the primary application/data target, not proof that all data stays in the UK. SQL and AI locations are independently selectable. The retained resident-model option is Sweden Central and GlobalStandard can process outside the UK. The picture's outer application box is not a country or provider boundary. Entra identity, abuse monitoring, support, telemetry and control-plane access require separate approved data maps. Synthetic demo permission does not approve real resident data. The dated sovereign service matrix is in docs/architecture/environment-region-quota-strategy.md.",
++        "PRIVACY UPDATE, 28 NOVEMBER: the proposed real-data design uses UK application/storage and UK Standard-model inference, subject to service-specific data maps and Legal/DPO approval. Microsoft's official Standard/Regional Europe table lists gpt-4.1-mini in UK South; catalog availability is not subscription quota, quality acceptance or deployment attestation. Standard processes within the selected Azure geography, potentially across its regions. GlobalStandard is not UK-only and EU DataZone is not UK. Use Standard/regional terminology; Foundry Local/private infrastructure is a different appendix option. The retained drawing still records Global and Sweden Central options and is deliberately not rewritten as a deployed UK guarantee.",
++        "PROVIDER LIMITS: identity, support/remote access, abuse monitoring, logs, backups and the control plane need separate contract/location checks. The checked provider privacy page's reviewer-location guarantee covers EEA resources, not UK resources. Modified Abuse Monitoring is not a universal or permanent UK-processing guarantee. The dated GPT-4.1 lifecycle requires successor quality, price, location, quota and terms evaluation. See docs/architecture/environment-region-quota-strategy.md and docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md."
+       ],
+       "sources": [
+         "infra/modules/iothub.bicep",
+@@ -2028,7 +2033,7 @@
+       "part_number": 16,
+       "baseline_number": 16,
+       "notes": "S15 | AI where it earns its place: five assistants, one workbench, people decide.\r\nTIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r\n\r\nSAY\r\nWe put AI exactly where it earns its keep, and nowhere else.\r\n\r\nKnown policy and arithmetic stay in rules: eligibility, freshness, consent and release gates are deterministic, fast and repeatable. Where the task is choosing between supplied candidates, a learned decision model scores them and can abstain. Where the job is explaining evidence or drafting a letter, generative AI writes a cited draft.\r\n\r\nThe original brief asked for five agents. We kept all five responsibilities as five assistants on one proposal service: prioritisation, assessment, funding evidence, coordination and quality evidence. The task registry and the accept-or-reject flow are delivered; the five assistants are being built on top.\r\n\r\nEvery suggestion is accepted or rejected with a reason, which means we learn from every decision, and if the AI is switched off the workflow keeps running.\r\n\r\nSOURCES AND CALCULATIONS\r\nAI placement diagram and Decision 1 research (E04); five-assistant runtime and proposal lifecycle (E09); AMA Plan #105 AI task registry and proposal envelope (Done), #106 suggestions, accept or reject with reason, workflow-only fallback (Done), #107 five reactive and proactive assistants on one proposal service (In Progress), #214 home-specific cited chat (In Progress).\r\n\r\nRELATED ANSWERS: B04 = slide 31; B11 = slide 38. Question index = slide 27.\r\n",
+-      "title": "Five responsibilities. Autonomy is not one switch.",
++      "title": "Responsible AI: models suggest. People decide.",
+       "layout": "native",
+       "keep_ids": [
+         52590,
+@@ -2038,7 +2043,7 @@
+       "headers": [
+         {
+           "id": 52592,
+-          "text": "Five responsibilities. Autonomy is not one switch.",
++          "text": "Responsible AI: models suggest. People decide.",
+           "size": 30,
+           "box": [
+             0.6,
+@@ -2329,7 +2334,7 @@
+             3.51,
+             0.26
+           ],
+-          "text": "DECISION 1 / HISTORICAL",
++          "text": "NAMED HUMAN REVIEW",
+           "size": 14,
+           "bold": true,
+           "color": "173F35"
+@@ -2342,7 +2347,7 @@
+             3.51,
+             0.58
+           ],
+-          "text": "Candidate / support scoring\nNot today's helper engine",
++          "text": "Evidence review + correction\nDecision owner + reason",
+           "size": 16
+         },
+         {
+@@ -2413,12 +2418,14 @@
+         "docs/capstone/source/review-2026-11-27.md"
+       ],
+       "revised_notes": [
+-        "S15 | Five responsibilities. Autonomy is not one switch.",
+-        "SAY: Stock, Assessment, Funding, Coordination and Quality have different responsibilities. Trigger, output and authority are separate questions. Quality now has a source-coded proactive L4 review flag when a current model finding cites captured readings. It cannot accept work; the latest twenty-six-November model leg was blocked. Decision 1 was historical supplied-candidate scoring, not this helper engine. Known checks stay in rules. Choose a generative model by comparing the same cases, quality floor, latency and complete review cost with the simpler route. A successful call alone settles none of that.",
++        "S15 | Responsible AI: models suggest. People decide.",
++        "SAY: Responsible AI means that a named, authorised person keeps the decision. Models prepare recommendations, drafts or review flags; they cannot consent, diagnose hazards, commit funding or accept completed works. The reviewer needs evidence, competence, time and authority to correct or reject before anything affects a resident. We keep the reason and a way to challenge the decision, with assisted service when AI is unavailable. We also need fairness and error testing, including households with missing data. These are release criteria; today's synthetic demo does not establish operational RAI acceptance.",
+         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
+         "SOURCES: docs/adrs/0002-pilot-readiness-architecture.md; docs/ideas/typesafe-system-one-agent-fit.md; src/agents/README.md; src/api/README.md; docs/capstone/source/review-2026-11-27.md",
+         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
+-        "TIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r"
++        "TIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r",
++        "RAI UPDATE, 28 NOVEMBER: the visible authority card now names human evidence review, correction and accountable decisions. Meaningful review requires competence, time, relevant evidence and discretion before applying a consequential decision. The five responsibility levels and independent consent, technical sign-off, Finance and quality acceptance remain unchanged. Fairness/error testing, resident challenge and assisted-service acceptance are release criteria, not observed outcomes.",
++        "MODEL AND EXECUTION CONTEXT: Decision 1 remains historical supplied-candidate/support scoring, not today's helper engine. Quality's source-coded L4 review flag is a recommendation to a person, never independent acceptance; the latest 26 November live model leg was blocked. Model selection still needs same-case quality, latency, complete review-cost and simpler-route comparison. See docs/reference/research/rai/project-rai-review.md and docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md."
+       ]
+     },
+     {
+@@ -2477,19 +2484,33 @@
+       "code": "S17",
+       "part_number": 20,
+       "baseline_number": 20,
+-      "title": "Seven checkpoints between an AI draft and a real-world decision.\r",
+-      "layout": "baseline",
++      "title": "UK GDPR and Responsible AI: people remain accountable.",
++      "layout": "text",
++      "replacements": [
++        {"id": 63201, "from": "Seven checkpoints between an AI", "to": "UK GDPR and Responsible AI:"},
++        {"id": 63201, "from": "draft and a real-world decision.", "to": "People remain accountable."},
++        {"id": 63213, "from": "The model prepares. The system checks. A person decides.", "to": "Protect residents' data; a named person decides."},
++        {"id": 63726, "from": "Human review with current permissions: accept or reject with a reason", "to": "Named human checks evidence; corrects or rejects with a reason"},
++        {"id": 63864, "from": "Failure never becomes approval: the work falls back to its owner", "to": "UK GDPR: lawful purpose, minimal data, retention and rights"},
++        {"id": 63864, "from": "Hazards bypass the AI path entirely", "to": "Real personal data needs Legal/DPO approval"}
++      ],
+       "notes": "S17 | Seven checkpoints between an AI draft and a real-world decision.\r\nTIMING: 60 s for this slide (all builds together) · 17:40-18:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nHere is how we keep AI useful and safe at the same time. Seven checkpoints sit between an AI draft and anything that happens in the real world.\r\n\r\nThe user is signed in. Their role and case scope are checked. The model only sees permitted evidence, with source and version IDs. The call is bounded, with a finite allowance and an expiry. The output is checked for schema, citations and freshness, and anything stale or broken stops. A person with current permissions accepts it or rejects it with a reason. And the real decision, consent, quality acceptance or a Finance approval, is a separate step with its own audit trail.\r\n\r\nIf anything fails, the work falls back to its owner, never to an approval. And safety hazards bypass the AI path entirely: they go straight to the people who own them.\r\n\r\nSOURCES AND CALCULATIONS\r\nControlled AI flow text alternative (diagram 04); five-assistant runtime, scoped evidence, finite allowances, unreviewed output (E09); AMA Plan #105 task registry and proposal envelope, #106 accept or reject with reason and workflow-only fallback (Done).\r\n\r\nRELATED ANSWERS: B07 = slide 34; B16 = slide 43; B21 = slide 48. Question index = slide 27.",
+       "revised_notes": [
+-        "S17 | Seven checkpoints between an AI draft and a real-world decision.",
+-        "SAY: The model receives a permitted, versioned evidence projection. Dispatch has a finite allowance; output checks reject broken structure or stale sources. A person checks meaning and current permissions. Accepting a proposal is separate from consenting to works, submitting funding or accepting quality. A valid citation can still support a wrong claim, so meaningful review is an evaluation question. Failures leave an owned manual route; safety reports bypass AI.",
++        "S17 | UK GDPR and Responsible AI: people remain accountable.",
++        "SAY: UK GDPR, the UK's General Data Protection Regulation, needs more than UK hosting: lawful purpose, minimal case-scoped data, approved retention and rights handling. A data-protection impact assessment addresses likely high-risk processing; health data needs an additional legal condition. Works consent is separate. A named person checks the model's evidence and owns the consequential decision. Legal and the DPO must approve real-data processing. Missing authority or evidence leaves an owned manual route.",
+         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
+         "SOURCES: docs/capstone/source/review-2026-11-27.md",
+         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
+-        "TIMING: 60 s for this slide (all builds together) · 17:40-18:40 on the 23:45 narration clock.\r"
++        "TIMING: 60 s for this slide (all builds together) · 17:40-18:40 on the 23:45 narration clock.\r",
++        "PRIVACY AND RAI UPDATE, 28 NOVEMBER: UK GDPR Articles 5, 6, 9, 25 and 35 concern principles, lawful basis, special-category conditions, protection by design and likely-high-risk DPIAs. Works consent, monitoring choice and a lawful basis for data use are distinct. Health data can be special category; not every vulnerability datum is. Article 9(2)(d) does not automatically cover a not-for-profit housing association. No real-data lawful-basis, DPIA or operational privacy acceptance is recorded.",
++        "MEANINGFUL OVERSIGHT: current Articles 22A-22D distinguish solely automated significant decisions from meaningful human involvement; Article 22C provides safeguards for covered decisions. The product's suggestion-only policy is a stronger design choice, not a claim that UK GDPR prohibits all automation. A competent, authorised reviewer needs evidence and time to influence the decision before it is applied, with discretion to change it. An accept button or later spot check is insufficient. Preserve information, representations, intervention and challenge routes where applicable. The current ICO ADM guidance is draft consultation, not final law.",
++        "EVIDENCE: docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md; docs/reference/research/chat-memory-dpia.md; docs/reference/research/rai/project-rai-review.md. Current whole-project RAI review is partial engineering evidence, not fairness, safety or privacy acceptance."
+       ],
+       "sources": [
+-        "docs/capstone/source/review-2026-11-27.md"
++        "docs/capstone/source/review-2026-11-27.md",
++        "docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md",
++        "docs/reference/research/chat-memory-dpia.md",
++        "docs/reference/research/rai/project-rai-review.md"
+       ]
+     },
+     {
+@@ -5542,7 +5563,8 @@
+         "OBSERVABILITY SOURCES: .copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md F1, F4-F6, W2-W10 (official documentation retrieved 16 November); owner OTLP-first/exporter-deferral decision. Research reuse is not tenant inspection, operational acceptance or authority to adopt.",
+         "KNOWN / ASSUMED / NEXT: known source contracts are one selected-skill call and serialized monetary admission. Public prices and illustrative allocations are in docs/capstone/source/azure-cost-model-2026-11-27.json. Live budget isolation, named owners/approval, complete path attribution and billing/accepted-value reconciliation are still required; do not infer saving or permission from bounded arithmetic.",
+         "SOURCES: src/api/README.md:707-734, Employee chat with bounded skills; src/core/README.md:94-144, AI consumption ledger; src/core/src/zava_forward/core/ai_consumption.py. All are source evidence, not a current production control attestation.",
+-        "NAVIGATION: B27/page 54; index 27; fixed Topic S18/page 21. Native destinations remain unchanged. Return to the actual interrupted page deliberately."
++        "NAVIGATION: B27/page 54; index 27; fixed Topic S18/page 21. Native destinations remain unchanged. Return to the actual interrupted page deliberately.",
++        "UK PRICE SCOPE, 28 NOVEMBER: the retained USD 0.0008 Global nano attempt is not a UK-resident rate. Regional mini is the separately priced example; actual UK eligibility, quota and lifecycle need checks. Allocation isolation never overrides privacy, safety, authority or aggregate liability holds. Known documentary gap rules use no model tokens; interpretive judging still needs an eligible bounded model and professional review."
+       ],
+       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
+     },
+@@ -5637,7 +5659,7 @@
+             11.69,
+             0.3
+           ],
+-          "text": "UK SOUTH / 30-DAY PLANNING / PUBLIC RATES / NOT A BILL",
++          "text": "PUBLIC AZURE / 30-DAY PLANNING / NOT A BILL",
+           "size": 17,
+           "color": "FFFFFF",
+           "bold": true
+@@ -5718,9 +5740,9 @@
+             0.6,
+             6.12,
+             12.13,
+-            0.38
++            0.72
+           ],
+-          "text": "Illustrative, not a maximum bill. Temporary QA, future services and human work extra.",
++          "text": "Illustrative, not a bill cap. QA, future services and human work extra.\nGlobal nano is not a UK-resident rate; UK-only inference needs repricing.",
+           "size": 17,
+           "color": "885500",
+           "bold": true
+@@ -5744,13 +5766,14 @@
+         "METHOD: total attributable cost divided by human-accepted proposals above an agreed quality floor. Unknown or zero denominator means not measurable. Include non-inference and human handling costs; time released is capacity until Finance confirms where value falls.",
+         "COMPARISON LIMIT: the batch uses short synthetic prompts on a different model from the older S18 scenario. Do not infer a saving from their difference. Earlier failed/unmeasured attempt remains in the batch evidence.",
+         "SOURCES: docs/capstone/source/azure-cost-model-2026-11-27.json; docs/reference/resources/ai-tokenomics.md; https://prices.azure.com/api/retail/prices; https://learn.microsoft.com/en-us/azure/container-apps/billing; docs/reference/research/ai-heldout-batch-432-live-2026-11-18.md; docs/capstone/pitch/tokenomics-cost-per-home-vs-value.md. No deployment, billing export, new spending authority or paid call.",
+-        "NAVIGATION: physical page 56; included in Demo-first pitch before B27 and S18. The fixed Topic button goes to page 22 and Index to page 28; return deliberately after an appendix answer."
++        "NAVIGATION: physical page 56; included in Demo-first pitch before B27 and S18. The fixed Topic button goes to page 22 and Index to page 28; return deliberately after an appendix answer.",
++        "UK PRICE SCOPE, 28 NOVEMBER: the dated model prices the observed public-cloud configuration. Global nano's low rate is not a UK-resident-inference quotation; Standard nano availability was not established. A UK-only target requires an eligible regional model, quota, quality/lifecycle checks and repricing. The existing USD 0-50 AI allowance is a proposed budget allocation, not permission for a non-UK call or a maximum bill."
+       ],
+       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
+     }
+   ],
+-  "content_date": "2026-11-27",
+-  "visual_revision": "2026-11-27 / demo-first custom show with full Azure planning and protected priority-budget proposal; stable physical pages, measured batch and protected historical cost arithmetic",
++  "content_date": "2026-11-28",
++  "visual_revision": "2026-11-28 / not-for-profit stewardship, UK privacy target and Responsible AI on the demo-first main route; stable pages, timing and protected financial evidence",
+   "presentation_route": {
+     "name": "Demo-first pitch",
+     "slot_seconds": 900,
+@@ -5762,17 +5785,17 @@
+       {
+         "code": "S01",
+         "seconds": 20,
+-        "say": "Our fictional housing association has 60,000 homes and a retrofit programme behind plan. I recommend an owned case workflow, with AI preparing evidence. I'll show one next action first, then explain the design and cost."
++        "say": "Our fictional, not-for-profit housing association has 60,000 homes and a retrofit programme behind plan. The aim is resident benefit and accountable spending. I recommend an owned workflow with AI preparing evidence; let's start with one next action."
+       },
+       {
+         "code": "S22",
+         "seconds": 10,
+-        "say": "This is constructed data. Watch the unresolved check, its owner and the decisions people retain."
++        "say": "This is constructed data, not residents' personal information. Watch the missing check and its owner: AI suggests; people decide."
+       },
+       {
+         "code": "S04",
+         "seconds": 35,
+-        "say": "That next action is the product's unit of progress. The brief asks for faster retrofit delivery and safer homes, but a start isn't an accepted handover. Survey evidence, funding, capacity and the resident's choice must agree. Our design makes the blocker and owner visible. The proposed business test is fewer unresolved handoffs and less total preparation and review effort; we haven't measured that benefit yet."
++        "say": "That next action is the unit of progress. As a not-for-profit provider, Zava's value test is safer homes and resident benefit with accountable spending. Residents should understand the service, the next step and how to challenge a decision; transparency never means exposing another household's records. Survey evidence, funding, capacity and the resident's choice must agree before handover. Reduced handoffs and review effort are proposed benefits, not measured results."
+       },
+       {
+         "code": "S12",
+@@ -5792,22 +5815,22 @@
+       {
+         "code": "S11A",
+         "seconds": 45,
+-        "say": "Here is the receiving chain: home evidence enters through IoT, is validated, and becomes retained SQL history before a colleague reviews it. The employee workbench and optional resident site have separate access rights. UK South is the application and data target, but GlobalStandard inference can leave the UK; the retained resident model option is Sweden Central. Identity and provider operations need separate checks too. Private endpoints do not prove UK-only processing. The appendix explains the sovereign options and which services would have to change."
++        "say": "Home evidence reaches validated SQL history through the IoT receiving chain. For real resident data, our proposed boundary is UK application, storage and Standard-model inference. A UK South mini model is catalogued; quota, quality and lifecycle still need checks. This retained drawing includes Global and Sweden Central options, so it doesn't prove a UK-only deployment. Identity, provider access and backups need separate review. Legal and the Data Protection Officer must approve the data map and processing before real data enters. Full local sovereignty is an appendix option."
+       },
+       {
+         "code": "S15",
+         "seconds": 50,
+-        "say": "Stock, Assessment, Funding, Coordination and Quality have different responsibilities. Trigger, output and authority are separate questions. Quality now has a source-coded proactive L4 review flag when a current model finding cites captured readings. It cannot accept work; the latest twenty-six-November model leg was blocked. Decision 1 was historical supplied-candidate scoring, not this helper engine. Known checks stay in rules. Choose a generative model by comparing the same cases, quality floor, latency and complete review cost with the simpler route. A successful call alone settles none of that."
++        "say": "Responsible AI means that a named, authorised person keeps the decision. Models prepare recommendations, drafts or review flags; they cannot consent, diagnose hazards, commit funding or accept completed works. The reviewer needs evidence, competence, time and authority to correct or reject before anything affects a resident. We keep the reason and a way to challenge the decision, with assisted service when AI is unavailable. We also need fairness and error testing, including households with missing data. These are release criteria; today's synthetic demo does not establish operational RAI acceptance."
+       },
+       {
+         "code": "S17",
+         "seconds": 35,
+-        "say": "The model receives a permitted, versioned evidence projection. Dispatch has a finite allowance; output checks reject broken structure or stale sources. A person checks meaning and current permissions. Accepting a proposal is separate from consenting to works, submitting funding or accepting quality. A valid citation can still support a wrong claim, so meaningful review is an evaluation question. Failures leave an owned manual route; safety reports bypass AI."
++        "say": "UK GDPR, the UK's General Data Protection Regulation, needs more than UK hosting: lawful purpose, minimal case-scoped data, approved retention and rights handling. A data-protection impact assessment addresses likely high-risk processing; health data needs an additional legal condition. Works consent is separate. A named person checks the model's evidence and owns the consequential decision. Legal and the DPO must approve real-data processing. Missing authority or evidence leaves an owned manual route."
+       },
+       {
+         "code": "B28",
+         "seconds": 60,
+-        "say": "Tokens are only one line in the Azure bill. The identified persistent services are about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. Add app and job compute, storage, logs, security, operations and AI, and this illustrative demo envelope is about USD 435-1,260 a month. The assumptions are in the notes; this isn't an invoice or a maximum bill. The apps can scale to zero, but SQL is currently provisioned S3 and scheduled jobs continue overnight. Five temporary QA databases are extra. For AI, the measured synthetic batch used 2,522 tokens; that still doesn't give a cost per accepted outcome. Human implementation, review and support belong in that wider denominator-based comparison."
++        "say": "Tokens are one line in the Azure bill. Identified persistent services cost about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. With compute, storage, logs, security and AI, this illustrative envelope is USD 435-1,260 a month. It prices the observed public-cloud configuration; a UK-only model choice needs repricing. Apps can scale to zero, but provisioned SQL and scheduled jobs remain. Five temporary QA databases are extra. The notes hold assumptions; this isn't a maximum bill. The measured synthetic AI batch used 2,522 tokens, without an accepted-outcome denominator. Human implementation, review and support belong in that wider comparison."
+       },
+       {
+         "code": "B27",
+diff --git a/docs/capstone/source/validation.json b/docs/capstone/source/validation.json
+index bb8fe3833..ca3b41ead 100644
+--- a/docs/capstone/source/validation.json
++++ b/docs/capstone/source/validation.json
+@@ -1,7 +1,7 @@
+ {
+-  "source_as_of": "2026-11-27",
++  "source_as_of": "2026-11-28",
+   "status": "partial",
+-  "revision": "Additive Azure costs on physical page 6; single-line native activity counters on page 7; optional six-minute discovery/UK-sovereignty show; unchanged primary 13:00 demo-first route and 2:00 reserve.",
++  "revision": "Not-for-profit stewardship, UK privacy target and Responsible AI on the main route; constructed-data demo; qualified regional-model and public-cloud cost scope. Stable 56 pages, 13:00 preparation, early 1:50 demo and 2:00 reserve.",
+   "status_limit": "Local source/package/rendering checks passed. Prepared, not rehearsed or human-accepted. Retained diagrams have dated provenance failures; exact-head independent and hosted review are separate PR evidence.",
+   "package": {
+     "status": "pass",
+@@ -56,13 +56,13 @@
+       37
+     ],
+     "full_manifest_and_media_verified": true,
+-    "candidate_sha256": "36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40",
++    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
+     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
+-    "manifest_sha256": "d2887e40b6df2e42f78767937739fe9133c05ceb726d7cd100e1117783a1171b",
++    "manifest_sha256": "57a12b2f7702320bfb5b72ac8cf575581fbcb658baaeb5c595a7711cd10621c3",
+     "asset_catalog_sha256": "c9743882738e54f90e3332036ff26bfe0898a88091cbe68323bb5b16ce02693c",
+     "builder_sha256": "bae8eb2ec82ccb6edd526732dff53cfc18c17da579c416729e65d4fe187f6313",
+     "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068",
+-    "unchanged_baseline_members": 184
++    "unchanged_baseline_members": 183
+   },
+   "source_verification": {
+     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
+@@ -91,13 +91,15 @@
+     },
+     "revised_appendix_navigation_physical_pages": "pass",
+     "pitch_document_tests_status": "pass",
+-    "pitch_document_tests_passed": 14,
++    "pitch_document_tests_passed": 16,
+     "optional_appendix_refusal_mutations": 6,
+     "both_native_custom_shows_and_default_verified": true,
+     "five_other_protected_slide_and_note_pairs_byte_identical_to_previous_delivery": true,
+     "original_page_six_financial_shape_subtrees_preserved": true,
+     "approved_summary_and_original_financial_mutations_refused": true,
+-    "native_progress_counts_single_line_and_in_bounds": true
++    "native_progress_counts_single_line_and_in_bounds": true,
++    "privacy_increment_all_six_protected_pairs_unchanged_from_published_head": true,
++    "privacy_rai_main_route_and_uk_price_scope": "pass"
+   },
+   "pdf_navigation": {
+     "slides": 56,
+@@ -105,34 +107,34 @@
+     "all_destinations_and_hit_regions_verified": true,
+     "unambiguous_hit_regions": true,
+     "text_extraction_checked_pages": [
+-      6,
+-      7,
+-      38,
+-      50,
+-      55,
++      1,
++      13,
++      17,
++      21,
+       56
+     ],
+     "all_checked_text_present": true,
+     "renderer": "Microsoft PowerPoint 16.0 COM; existing PyMuPDF link reconstruction/readback",
+-    "raw_native_pdf_sha256": "f765c7b3cf2ca3c14e6a70a8d5def8e54fc5de91a990d9f9e9c968a0e73a9e7b",
+-    "delivered_pdf_sha256": "227c72896404f6702a59a4411a5790aa28a857bf8284e08f347f7f56a0bf5cb7"
++    "raw_native_pdf_sha256": "ef8e4647f7d46b6d7bf048d6e0f09a14b2152ba2e266f7ed79f6135464752fd8",
++    "delivered_pdf_sha256": "a48be8ca10007be21e94c2455cc59b4dad7626f0b4476e14bddd6810dbff7805"
+   },
+   "native": {
+     "status": "render_pass",
+     "renderer": "Microsoft PowerPoint 16.0 COM",
+     "slides": 56,
+-    "candidate_sha256": "36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40",
++    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
+     "render_size": [
+       1600,
+       900
+     ],
+     "focused_pages": [
+-      6,
+-      7,
+-      38,
+-      50
++      1,
++      13,
++      17,
++      21,
++      56
+     ],
+-    "focused_revised_frames": 46,
++    "focused_revised_frames": 42,
+     "focused_revised_bound_warnings": 0,
+     "other_source_revised_bound_warnings": 28,
+     "inherited_bound_warnings": 179,
+@@ -142,10 +144,11 @@
+     "historical_note_only_correction_pixels_identical": true,
+     "historical_note_only_correction_bounds_identical": true,
+     "followup_pixel_changes_vs_previous_delivery": [
+-      6,
+-      7,
+-      38,
+-      50
++      1,
++      13,
++      17,
++      21,
++      56
+     ],
+     "historical_full_cost_pixel_changes_vs_previous_delivery": [
+       28,
+@@ -241,7 +244,23 @@
+         "overflow": false,
+         "revised": true
+       }
+-    ]
++    ],
++    "historical_sovereignty_followup": {
++      "focused_pages": [
++        6,
++        7,
++        38,
++        50
++      ],
++      "focused_revised_frames": 46,
++      "focused_revised_bound_warnings": 0,
++      "followup_pixel_changes_vs_previous_delivery": [
++        6,
++        7,
++        38,
++        50
++      ]
++    }
+   },
+   "pitch": {
+     "custom_show": "Demo-first pitch",
+@@ -270,9 +289,9 @@
+     "reserve_seconds": 120,
+     "demo_window": "00:30-02:20",
+     "question_reserve": "13:00-15:00",
+-    "speaker_script_sha256": "33be8d91159b9918fa55e3227788f2eda94764aee893b69ac1b06b9caaa37da4",
+-    "questions_and_answers_sha256": "7798e33c0f304f6f2fdbe7cb7d1e10ded870a27321248d0df66dfd1924a15f26",
+-    "runbook_sha256": "0adeb77b8533df19f3fc4c90a79d1f4998a4ceb96df0b69c8bee74d7599f6f12",
++    "speaker_script_sha256": "1be6fcf0334510fc78cbe973c1ec97b890c791af7b6d4a4daf6b4248fe22b34a",
++    "questions_and_answers_sha256": "6b0a48888ef56814effec29ff49bbfe56797121936168eb905cdd19f21a1e5b9",
++    "runbook_sha256": "31deb5a6f423460280b480aef7993ab87b4c0a163bbefbf58c4e3f02bd12500f",
+     "rehearsal_performed": false,
+     "optional_story": {
+       "name": "Discovery and UK sovereignty",
+diff --git a/docs/reference/README.md b/docs/reference/README.md
+index 0cb02f30b..3f294697b 100644
+--- a/docs/reference/README.md
++++ b/docs/reference/README.md
+@@ -1,7 +1,7 @@
+ ---
+ title: Project Knowledge Base
+ description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
+-ms.date: 2026-11-27
++ms.date: 2026-11-28
+ ms.topic: overview
+ ---
+ 
+@@ -21,6 +21,14 @@ management: short pages that point to clusters of related material.
+ 
+ ## How to Use This Knowledge Base
+ 
++The [28 November privacy/residency/Responsible AI review](./regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
++supports the main capstone story: not-for-profit stewardship, resident privacy,
++a proposed UK Standard-model processing target and accountable human decisions.
++The [architecture analysis](../architecture/environment-region-quota-strategy.md#privacy-and-accountable-human-review-2026-11-28)
++keeps current Global/Sweden options, provider-location exceptions and optional
++local sovereignty distinct. Real-data, legal and operational RAI acceptance
++remain pending; the low Global nano rate is not a UK-resident quotation.
++
+ The [27 November demo-first presentation review](../capstone/source/review-2026-11-27.md)
+ indexes the retained RPI/GitHub history and investigates eight delivery
+ decisions and adverse outcomes. It distinguishes whole-corpus indexing from
+diff --git a/docs/reference/log.md b/docs/reference/log.md
+index c44a80ec3..987d86865 100644
+--- a/docs/reference/log.md
++++ b/docs/reference/log.md
+@@ -15685,3 +15685,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
+ * Added a separate six-minute "Discovery and UK sovereignty" custom show and timed speaker-script chapters. The main demo-first route stays at 13:00 with a 2:00 reserve. Corrected the resident canvas notes; desk-research hypotheses and learning protocols are not resident interviews or experimental outcomes.
+ * Extended the [region architecture document](../architecture/environment-region-quota-strategy.md#uk-data-boundary-and-sovereign-migration-options-2026-11-27) with official-source public/connected/disconnected service comparisons, UK inference/identity/provider exceptions, preview limitations, model retirement and possible migration gates. No platform, contract, spending or real-data approval is inferred.
+ * Retained the original native-fit failures and corrections in the [presentation review](../capstone/source/review-2026-11-27.md) and compact receipt. Local rendering and engineering checks remain separate from exact-head review, hosted checks and human acceptance.
++
++## [2026-11-28] update | Not-for-profit privacy, UK processing target and Responsible AI pitch
++
++* Added a [dated official-source review](./regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md) for UK GDPR principles/current ADM provisions, RSH transparency, safeguarded transfers, draft ICO guidance and Microsoft Standard-model/provider limits. Preserved immutable snapshots and earlier adverse evidence; Legal/DPO applicability and real-data acceptance remain pending.
++* Integrated privacy and meaningful human decision authority into the main presentation and short demo cues. The not-for-profit mission connects resident benefit with accountable spending, without unrestricted disclosure or a blanket UK-only legal claim. The main 13:00 route, early 1:50 demo and 2:00 reserve remain unchanged.
++* Updated the [architecture synthesis](../architecture/environment-region-quota-strategy.md#privacy-and-accountable-human-review-2026-11-28) and cost scope: UK Standard processing is proposed, current Global/Sweden options remain explicit, and Global nano's low rate is not a UK-resident quotation. Full local sovereignty stays optional. No deployment, paid inference, personal-data use or operational control activation occurred.
+diff --git a/docs/reference/regulatory/README.md b/docs/reference/regulatory/README.md
+index 164f72334..72023af06 100644
+--- a/docs/reference/regulatory/README.md
++++ b/docs/reference/regulatory/README.md
+@@ -1,7 +1,7 @@
+ ---
+ title: Regulatory Context Reference Documents
+ description: Authoritative reference documents for the Case Study 48 regulatory context
+-ms.date: 2026-11-01
++ms.date: 2026-11-28
+ ms.topic: reference
+ ---
+ 
+@@ -100,6 +100,17 @@ risk tier or compliance is inferred.
+ 
+ ## Managed Update Workflow
+ 
++The [28 November privacy/residency/RAI update](./reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
++checks current UK GDPR, RSH transparency, ICO transfer/draft ADM guidance and
++Microsoft regional-model/provider contracts. It distinguishes a proposed UK
++processing policy from legal compliance and current deployment attestation.
++Legal/DPO real-data acceptance remains pending; snapshots and earlier findings
++are preserved.
++
++| Reviewed update | Current-use status | Change likelihood | Official monitoring cadence |
++| --- | --- | --- | --- |
++| [Privacy, residency and RAI (2026-11-28)](./reviewed-updates/2026-11-28-privacy-residency-rai-review.md) | Dated presentation interpretation; no operational/legal acceptance | High for ADM/model/provider changes; Medium for transfer/RSH interpretation | Monthly and before real-data deployment or external assurance; weekly around announced changes |
++
+ The production solution should maintain a regulatory source register separate
+ from the searchable document index. Each source record needs:
+ 
+diff --git a/docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md b/docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md
+new file mode 100644
+index 000000000..1e03ec274
+--- /dev/null
++++ b/docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md
+@@ -0,0 +1,81 @@
++---
++title: Privacy, UK Residency and Responsible AI Presentation Review
++description: Dated official-source checks and proposed presentation interpretations, with legal and operational acceptance pending
++ms.date: 2026-11-28
++ms.topic: reference
++---
++
++## Status and scope
++
++This reviewed update supports the capstone presentation. It preserves the
++September snapshots and the [1 November applicability review](./2026-11-01-adm-ai-act-applicability-review.md).
++Legal and DPO applicability, lawful-basis and real-data acceptance remain
++pending. No live control or deployment changes follow from this document.
++
++The [company profile](../../research/company/company-profile-research.md)
++records owner-confirmed not-for-profit status. Exact legal form, charity status
++and registration remain unknown. RSH duties depend on registered-provider and
++jurisdictional applicability, not simply on being not-for-profit.
++
++## Sources checked on 28 November 2026
++
++| Source | Classification, section and source date | Current reading and limits |
++| --- | --- | --- |
++| [UK GDPR](https://www.legislation.gov.uk/eur/2016/679/contents), [Article 5](https://www.legislation.gov.uk/eur/2016/679/article/5), [6](https://www.legislation.gov.uk/eur/2016/679/article/6), [9](https://www.legislation.gov.uk/eur/2016/679/article/9), [25](https://www.legislation.gov.uk/eur/2016/679/article/25), [35](https://www.legislation.gov.uk/eur/2016/679/article/35), [22A](https://www.legislation.gov.uk/eur/2016/679/article/22A) and [22C](https://www.legislation.gov.uk/eur/2016/679/article/22C) | Consolidated legislation; Regulation 2016/679 as amended, checked 2026-11-28. The earlier review records ADM commencement on 2026-02-05 | Principles, lawful basis, special-category conditions, protection by design and likely-high-risk DPIAs apply. Current ADM provisions distinguish solely automated significant decisions from meaningful human involvement and provide covered-decision safeguards. No approval of Zava's processing follows |
++| [RSH Transparency, Influence and Accountability Standard](https://www.gov.uk/government/publications/transparency-influence-and-accountability-standard) | Regulatory standard for relevant registered providers in England; publication updated 2026-10-01, including STAIRs | Accessible service/decision information and tenant accountability do not mean unrestricted resident-record disclosure. Zava's exact applicability remains unconfirmed |
++| [ICO international-transfer guide](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/international-transfers/a-guide-to-international-transfers/) and its restricted-transfer compliance chapter | Official guidance; updated 2026-01-15 | Restricted transfers may use adequacy, appropriate safeguards with the required data protection test/TRA, or an applicable derogation. UK GDPR is not a blanket UK-only storage/processing rule |
++| [ICO automated-decision guidance](https://ico.org.uk/for-organisations/uk-gdpr-guidance-and-resources/individual-rights/automated-decision-making/) | Draft consultation at retrieval; publication date not established in this check | Useful review context, not final guidance or a replacement for current legislation. Earlier failure/unknown-guidance evidence remains historical |
++| [Microsoft deployment types](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/deployment-types) and [regional model catalog](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability) | Provider technical documentation; current pages checked 2026-11-28, not a contract or quota receipt | Standard and regional provisioned inference process within the selected geography. The Standard/Regional Europe table lists gpt-4.1-mini for UK South; subscription quota and activation were not established. Global Standard is separate; EU DataZone is not UK |
++| [Microsoft model data privacy](https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy) | Provider processing/monitoring documentation; current page checked 2026-11-28 | Model training restrictions, inference location and provider access are separate assurances. The stated reviewer-location guarantee covers EEA resources, not UK. Modified Abuse Monitoring has a future-change notice for models made available on/after 2026-11-01, with at least 30 days notice; do not promise permanent coverage |
++
++Source and retrieval dates are distinct. Dynamic consolidated legislation and
++provider pages do not establish the publication date of every displayed change.
++The original checks and table-context evidence are retained in the
++[research record](../../../../.copilot-tracking/research/2026-11-28/capstone-privacy-residency-rai-research.md).
++
++## Presentation interpretation
++
++Useful transparency means that residents can understand the service, who owns
++the next action and how to challenge a decision. Own-case access must protect
++other households. Not-for-profit status alone creates neither unrestricted
++disclosure nor a universal Article 9 condition.
++
++The proposed customer policy is UK application/storage and UK Standard-model
++inference. Standard is public-Azure regional processing, potentially across
++regions within the selected geography; it is not on-premises Foundry Local.
++The [architecture analysis](../../../architecture/environment-region-quota-strategy.md)
++retains the GlobalStandard default, independently selectable SQL/AI locations
++and Sweden Central option. No current UK-only deployment was attested.
++Identity, support/remote access, logs, backups, abuse monitoring and the control
++plane need separate data maps and contract checks.
++
++UK hosting does not establish lawful processing. A real service needs a
++documented lawful basis, data minimisation, approved retention and rights
++handling, with a DPIA where likely high risk requires it. Health information
++can be special category; not every vulnerability datum is. Works consent and
++monitoring choice are distinct from the lawful basis for data use. The
++[draft DPIA](../../research/chat-memory-dpia.md) does not approve real data.
++
++AI prepares suggestions, drafts and review flags. A competent, authorised
++human needs relevant evidence, time and discretion to correct or reject before
++applying a consequential decision, with reasons and applicable challenge
++routes. An accept button or later spot check alone is insufficient. Resident
++consent, professional/safety judgement, funding approval and independent
++quality acceptance remain separate. The suggestion-only product policy is a
++stronger design choice, not a claim that UK GDPR prohibits all automation.
++The [RAI review](../../research/rai/project-rai-review.md) is partial engineering
++evidence, not operational fairness, safety or privacy acceptance.
++
++## Review and activation gates
++
++Change likelihood is High for ADM guidance, model availability/lifecycle and
++provider monitoring; Medium for transfer guidance and RSH interpretation.
++Check monthly and before real-data deployment or external assurance. Increase
++to weekly around announced changes or consultation deadlines.
++
++Legal and the DPO must confirm jurisdiction, processing purpose/basis,
++special-category conditions, transfers, rights and DPIA outcomes. Digital must
++attest the actual service/model locations and provider terms; Programme,
++Engagement, Safety, Finance and Quality must accept the human review and
++resident routes within their decision rights. Until then, presentation
++wording is a proposal and the demo remains constructed-data evidence.
+diff --git a/tools/test_capstone_pitch_docs.py b/tools/test_capstone_pitch_docs.py
+index 445cc28a1..d4d7c70c0 100644
+--- a/tools/test_capstone_pitch_docs.py
++++ b/tools/test_capstone_pitch_docs.py
+@@ -34,6 +34,16 @@ class CapstonePitchDocsTest(unittest.TestCase):
+         route = manifest["presentation_route"]
+         script = (CAPSTONE / "pitch" / "speaker-script.md").read_text(encoding="utf-8")
+         runbook = (CAPSTONE / "demo" / "runbook.md").read_text(encoding="utf-8")
++        receipt = json.loads((CAPSTONE / "source/validation.json").read_text())
++        canonical = (
++            (CAPSTONE / "demo/runbook.md")
++            .read_bytes()
++            .replace(b"\r\n", b"\n")
++            .replace(b"\r", b"\n")
++        )
++        self.assertEqual(
++            hashlib.sha256(canonical).hexdigest(), receipt["pitch"]["runbook_sha256"]
++        )
+         self.assertEqual(
+             900,
+             sum(step["seconds"] for step in route["steps"])
+@@ -73,6 +83,75 @@ class CapstonePitchDocsTest(unittest.TestCase):
+         self.assertIn("00:30-02:20", script)
+         self.assertIn(f"{prepared // 60:02}:{prepared % 60:02}-15:00", script)
+ 
++    def test_privacy_and_responsible_ai_are_visible_on_the_main_route(self) -> None:
++        import zipfile
++        from xml.etree import ElementTree as ET
++
++        manifest = json.loads((CAPSTONE / "source/slides.json").read_text())
++        slides = {slide["code"]: slide for slide in manifest["slides"]}
++        spoken = {
++            step["code"]: step["say"]
++            for step in manifest["presentation_route"]["steps"]
++        }
++        expected = {
++            "S01": ("Not-for-profit", "resident benefit"),
++            "S11A": ("UK processing is the target", "Proof comes before release"),
++            "S15": ("Responsible AI", "NAMED HUMAN REVIEW"),
++            "S17": ("UK GDPR", "retention", "rights", "Legal/DPO approval"),
++        }
++        with zipfile.ZipFile(
++            CAPSTONE / "deck/zava-forward-cowork-v2-draft.pptx"
++        ) as deck:
++            for code, phrases in expected.items():
++                self.assertIn(code, spoken)
++                page = ET.fromstring(
++                    deck.read(f"ppt/slides/slide{slides[code]['part_number']}.xml")
++                )
++                visible = " ".join(
++                    node.text or ""
++                    for node in page.iter(
++                        "{http://schemas.openxmlformats.org/drawingml/2006/main}t"
++                    )
++                )
++                for phrase in phrases:
++                    self.assertIn(phrase, visible)
++        self.assertIn("before anything affects a resident", spoken["S15"])
++        self.assertIn("Works consent is separate", spoken["S17"])
++        self.assertIn("release criteria", spoken["S15"])
++        self.assertIn("synthetic demo", spoken["S15"])
++
++    def test_uk_target_and_model_price_scope_do_not_claim_live_residency(self) -> None:
++        from pptx import Presentation
++
++        manifest = json.loads((CAPSTONE / "source/slides.json").read_text())
++        spoken = {
++            step["code"]: step["say"]
++            for step in manifest["presentation_route"]["steps"]
++        }
++        self.assertIn("proposed boundary", spoken["S11A"])
++        self.assertIn("Standard-model inference", spoken["S11A"])
++        self.assertIn("doesn't prove a UK-only deployment", spoken["S11A"])
++        self.assertIn("Identity, provider access and backups", spoken["S11A"])
++        self.assertIn("UK-only model choice needs repricing", spoken["B28"])
++        cost_page = next(
++            slide["number"] - 1
++            for slide in manifest["slides"]
++            if slide["code"] == "B28"
++        )
++        copy = "\n".join(
++            shape.text
++            for shape in Presentation(
++                CAPSTONE / "deck/zava-forward-cowork-v2-draft.pptx"
++            )
++            .slides[cost_page]
++            .shapes
++            if shape.has_text_frame
++        )
++        self.assertIn("Global nano is not a UK-resident rate", copy)
++        runbook = (CAPSTONE / "demo/runbook.md").read_text()
++        self.assertIn("UK Standard-model inference", runbook)
++        self.assertIn("UK GDPR permits safeguarded international transfers", runbook)
++
+     def test_full_azure_cost_arithmetic_and_delivery_binding(self) -> None:
+         model_path = CAPSTONE / "source" / "azure-cost-model-2026-11-27.json"
+         model = json.loads(model_path.read_text(encoding="utf-8"))
