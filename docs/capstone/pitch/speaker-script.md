@@ -173,7 +173,7 @@ does not allocate a ten-minute demo slot. B3 requires the outcome to land in
 under two minutes; its preparation advice also says to rehearse the demo to
 under two minutes. B5 requires finishing inside the slot with room for questions.
 The [current capstone plan](../README.md) includes the demo inside the
-15-minute pitch: 12:10 prepared narration/demo and 2:50 questions/recovery.
+15-minute pitch: 13:00 prepared narration/demo and 2:00 questions/recovery.
 The native custom show "Demo-first pitch" starts on page 1, moves to page 26,
 then returns to page 4 after the demo. The physical deck remains a reference
 package; do not present all 56 pages in sequence.

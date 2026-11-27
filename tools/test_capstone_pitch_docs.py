@@ -40,6 +40,13 @@ class CapstonePitchDocsTest(unittest.TestCase):
             + route["demo_seconds"]
             + route["reserve_seconds"],
         )
+        prepared = route["slot_seconds"] - route["reserve_seconds"]
+        reserve = route["reserve_seconds"]
+        allocation = (
+            f"{prepared // 60}:{prepared % 60:02} prepared narration/demo and "
+            f"{reserve // 60}:{reserve % 60:02} questions/recovery."
+        )
+        self.assertIn(allocation, runbook)
         self.assertGreaterEqual(route["reserve_seconds"], 120)
         self.assertEqual(["S01", "S22"], [step["code"] for step in route["steps"][:2]])
         self.assertEqual("S23", route["steps"][-1]["code"])
@@ -64,7 +71,6 @@ class CapstonePitchDocsTest(unittest.TestCase):
         demo = script.split("### 00:30-02:20", 1)[1].split("### 02:20-", 1)[0]
         self.assertIn(hook.group(1).strip(), demo)
         self.assertIn("00:30-02:20", script)
-        prepared = route["slot_seconds"] - route["reserve_seconds"]
         self.assertIn(f"{prepared // 60:02}:{prepared % 60:02}-15:00", script)
 
     def test_full_azure_cost_arithmetic_and_delivery_binding(self) -> None:

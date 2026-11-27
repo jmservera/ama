@@ -95,6 +95,7 @@
     "six_protected_slide_and_note_parts_byte_identical_to_previous_delivery": true,
     "ruff_check": "pass",
     "complete_embedded_runbook_parity": "pass",
+    "runbook_timing_matches_manifest_allocation": "pass",
     "hook_inline_before_S04": "pass",
     "native_schema_custom_show_order": "pass",
     "diagram_source_checks": {
@@ -175,9 +176,9 @@
     "reserve_seconds": 120,
     "demo_window": "00:30-02:20",
     "question_reserve": "13:00-15:00",
-    "speaker_script_sha256": "9cb77029e937f2218dac8c478080d634dd43ad946107b2e9ddef5997b872cd02",
+    "speaker_script_sha256": "f164ea338c1174a652b9145ff894700bf6c829678adfbb1d5ef2e9e308441456",
     "questions_and_answers_sha256": "3827eecdad3f158639026b5d2fbf5f9dd184ebfcc6e595c7575f33a41bf9cf2b",
-    "runbook_sha256": "e747a1fe01ab421be92d5e70770611cdb9913653f2c49e351d8a2f61fa996a86",
+    "runbook_sha256": "0adeb77b8533df19f3fc4c90a79d1f4998a4ceb96df0b69c8bee74d7599f6f12",
     "rehearsal_performed": false
   },
   "publication": {
