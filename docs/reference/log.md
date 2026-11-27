@@ -15637,3 +15637,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 1830 preflight rejects ignored gate options (Refs #1830)
 
 * Added [issue-1830-live-r16-2026-11-27.md](research/issue-1830-live-r16-2026-11-27.md): `--preflight` accepted and ignored `--extra-test`, `--base`, `--out` and similar, so an invalid extra selector passed; it now fails closed, with a test and a README sentence.
+
+## [2026-11-27] add | Issue 2188 forged retry records (Refs #2188)
+
+* Added [issue-2188-live-retry-verify-2026-11-27.md](research/issue-2188-live-retry-verify-2026-11-27.md): receipt verify accepted a retry row with a null hash and no log; it now requires a 64-hex hash matching a hashed log, with a regression test. Wall-time pair still unproven.

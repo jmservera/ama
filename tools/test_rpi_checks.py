@@ -3860,6 +3860,9 @@ os.fstat(3)
             dict(receipt, retries=[dict(good, exit_code=124)]),
             dict(receipt, commands=[{"log": good["log"]}]),
             dict(receipt, retries=[dict(good, extra=1)]),
+            dict(receipt, retries=[dict(good, sha256=None)], files={}),
+            dict(receipt, retries=[dict(good, sha256="abc")], files={good["log"]: "abc"}),
+            dict(receipt, files={}),
         ):
             with self.assertRaises(gate.GateError):
                 gate.validate_retries(bad)

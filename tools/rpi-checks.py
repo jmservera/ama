@@ -809,6 +809,8 @@ def validate_retries(receipt: dict[str, Any]) -> None:
             or not isinstance(row["log"], str)
             or row["log"] in seen
             or not re.fullmatch(r"[0-9]{4}-[a-zA-Z0-9_.:-]+\.log", row["log"])
+            or not isinstance(row["sha256"], str)
+            or not re.fullmatch(r"[0-9a-f]{64}", row["sha256"])
             or files.get(row["log"]) != row["sha256"]
             or not isinstance(row["exit_code"], int)
             or row["exit_code"] <= 0
