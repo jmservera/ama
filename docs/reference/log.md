@@ -15674,3 +15674,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] update | Issue 2061 live pass 3 (Refs #2061)
 
 * Added [issue-2061-live-evidence-2026-11-27.md](research/issue-2061-live-evidence-2026-11-27.md): live shape and role inventory re-read; `infra/resident-demo.bicep` gains opt-in sensor-consent parameters. Fresh what-if, sign-in re-run and the full receipt stay open.
+## [2026-11-27] update | Issue 1830 live r18 critical-chain hang
+
+* Added [issue-1830-live-r18-2026-11-27.md](research/issue-1830-live-r18-2026-11-27.md): `rpi-gate-timing.py` critical-chain walk looped forever on two zero-length commands at one instant; fixed with a regression test. The only receipts retained on this host are partial or unsealed, so multi-receipt measurement stays unproven.

@@ -104,6 +104,20 @@ class ReportTests(unittest.TestCase):
         self.assertEqual([w["seconds"] for w in waits], [10.0])
         self.assertEqual(report["concurrency_seconds"]["2"], 10.0)
 
+    def test_coincident_zero_length_commands_do_not_hang_the_chain(self) -> None:
+        path = write_receipt(self.root / "z", [("c", 0, 3), ("a", 5, 5), ("b", 5, 5)])
+        done = subprocess.run(
+            ["python3", str(Path(timing.__file__)), "report", str(path)],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        self.assertEqual(done.returncode, 0, done.stderr)
+        report = json.loads(done.stdout)
+        self.assertEqual(report["chain_seconds"], report["span_seconds"])
+        self.assertIn("c", [s["group"] for s in report["critical_chain"]])
+
     def test_idle_gap_inside_a_group_and_queue_wait_from_the_log(self) -> None:
         commands = [("g", 0, 10), ("g", 30, 40)]
         path = write_receipt(self.root / "a", commands)
