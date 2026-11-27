@@ -82,7 +82,7 @@ async function api(path, body, signal) {
   }
   if (key) pendingMutations.add(key);
   try {
-    const res = body === undefined ? await fetchReadRetrying(path, { signal }) : await fetch(path, {
+    const res = body === undefined ? await fetchReadRetrying(path, { signal }) : await (path === "/api/chat/threads" ? postThreadRetryingBusy : fetch)(path, {
       method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
     });
     const data = await res.json().catch(error => {
@@ -321,6 +321,26 @@ function startupFailure(res) {
   if (![500, 502, 503, 504].includes(res.status)) return false;
   if (!res.headers) return false;
   return !(res.headers.get("content-type") || "").includes("json");
+}
+
+const BUSY_RETRY_MESSAGE = "The service is busy saving other work. Trying again, this can take a few seconds.";
+const BUSY_RETRY_MAX_MS = 5000;
+
+// Chat thread creation is one insert and commit, so the server answers a write-lock timeout with a handled 503 that leaves nothing saved. Repeating the POST once is safe for that path only.
+async function postThreadRetryingBusy(path, options) {
+  const res = await fetch(path, options);
+  if (res.status !== 503 || !(res.headers?.get("content-type") || "").includes("json")) return res;
+  const seconds = Number(res.headers.get("retry-after"));
+  const delay = Number.isFinite(seconds) && seconds > 0 ? Math.min(seconds * 1000, BUSY_RETRY_MAX_MS) : BUSY_RETRY_MAX_MS;
+  const previous = workspaceStatus.textContent;
+  workspaceStatus.textContent = BUSY_RETRY_MESSAGE;
+  try {
+    await new Promise((resolve) => setTimeout(resolve, delay));
+    options.signal?.throwIfAborted();
+    return await fetch(path, options);
+  } finally {
+    if (workspaceStatus.textContent === BUSY_RETRY_MESSAGE) workspaceStatus.textContent = previous;
+  }
 }
 
 async function fetchReadRetrying(path, options = {}) {

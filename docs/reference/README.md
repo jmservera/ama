@@ -829,6 +829,8 @@ The [issue 2245 recheck after revision 0000086](./research/issue-2245-live-20261
 
 The [issue 2245 recheck on revision 0000136](./research/issue-2245-live-20261127T125527Z.md) records 13 of 13 thread creates at 200, rules-only asks that state the spending hold plainly, and a bounded retry of the two chat audit writes.
 
+The [issue 2245 client retry of a busy thread create](./research/issue-2245-live-20261127T220700Z.md) maps the demo image tag demo-337d3999d5 to a commit that holds the audit-write retry and records the browser retry of a handled lock-busy 503 on chat thread creation.
+
 The [issue 2245 live model-call proof on revision 0000149](./research/issue-2245-live-20261127T174551Z.md) records a free-form case question that called the model ("Model calls: 1", API model azure-openai), a widget answer replaced by the rules answer after the source check, and slow but successful thread creates.
 
 The [issue 2245 live recheck of 2026-11-26](./research/issue-2245-live-2026-11-26.md) records revision 0000079 (threads 8 of 8, widget "Model calls: 1"), the hourly demo budget slot that stops one held settlement pausing the model all day, and the per-criterion table.

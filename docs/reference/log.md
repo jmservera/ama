@@ -15677,3 +15677,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] update | Issue 1830 live r18 critical-chain hang
 
 * Added [issue-1830-live-r18-2026-11-27.md](research/issue-1830-live-r18-2026-11-27.md): `rpi-gate-timing.py` critical-chain walk looped forever on two zero-length commands at one instant; fixed with a regression test. The only receipts retained on this host are partial or unsealed, so multi-receipt measurement stays unproven.
+
+## [2026-11-27] update | Issue 2245 busy thread-create retry
+
+* Added [issue-2245-live-20261127T220700Z.md](research/issue-2245-live-20261127T220700Z.md): the live image tag maps to a commit holding the audit-write retry; the workspace script now repeats a handled lock-busy 503 on chat thread creation once. Deployed behaviour, the 2026-11-22 500 cause and the lock holder stay unproven.
