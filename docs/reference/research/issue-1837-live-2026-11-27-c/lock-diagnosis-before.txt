@@ -1,0 +1,10 @@
+SAVE-FAIL database is locked
+CONN in_tx= True 125928234725152
+CONN in_tx= False 125928233758496
+THREAD 125928196724416   File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T140112Z/src/api/src/zava_forward/api/server.py", line 1127, in do_GET
+    return self._json(200, app.assistants.registry(u))
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T140112Z/src/core/src/zava_forward/core/assistants.py", line 1919, in registry
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T140112Z/src/core/src/zava_forward/core/assistant_release.py", line 139, in assessment
+RUN-FAIL TimeoutError
+probe2 run 1: SAVE-FAIL count 0
+probe2 run 3: SAVE-FAIL count 1
