@@ -52,6 +52,7 @@ from zava_forward.core.chat_isolation import (
 from zava_forward.core.chat_privacy import MEMORY_LIMIT, MEMORY_MAX, redact
 from zava_forward.core.chat_routing import route_question
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
+from zava_forward.core.mssqlstore import is_write_lock_busy
 from zava_forward.core.regulatory_output_guard import GuardTelemetry, inspect_regulatory_output
 
 LABEL = "AI suggestion, not approved"
@@ -321,6 +322,7 @@ MAX_CITATIONS = 12
 TASK = "chat-case-conversation"
 MAX_INPUT_CHARS = 16000
 MAX_HISTORY_CHARS = 4000
+SAVE_LOCK_RETRIES = 2
 MAX_QUESTION_CHARS = 1000
 MAX_THREAD_TURNS = 30
 OUTPUT_TOKENS = 600
@@ -881,17 +883,32 @@ class ChatPanel:
                     kind, text, cites, model_name = "fallback", FALLBACK, [], "workflow-only"
                     message.update(content=text, evidence=[], model=model_name)
 
+            sql = hasattr(store, "assistant_connection")
+            attempt = 0
+            while True:
+                try:
+                    with store.lock:
+                        message = store.chat_add_message(
+                            user,
+                            tid,
+                            "assistant",
+                            text,
+                            evidence=cites,
+                            model=model_name,
+                            _finalize=finalize if sql else None,
+                        )
+                    break
+                except Exception as exc:
+                    # The model has already answered. The save is one transaction that takes the SQL
+                    # write lock first, so a lock timeout wrote nothing and repeating it is safe
+                    # (issue #2245).
+                    attempt += 1
+                    if attempt > SAVE_LOCK_RETRIES or not is_write_lock_busy(exc):
+                        raise
+                    logging.getLogger(__name__).warning(
+                        "Chat answer save waited for the SQL write lock; retry %d", attempt
+                    )
             with store.lock:
-                sql = hasattr(store, "assistant_connection")
-                message = store.chat_add_message(
-                    user,
-                    tid,
-                    "assistant",
-                    text,
-                    evidence=cites,
-                    model=model_name,
-                    _finalize=finalize if sql else None,
-                )
                 if not sql:
                     finalize(message)
                     if receipt.get("financial_attribution"):

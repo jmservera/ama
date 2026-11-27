@@ -1,0 +1,286 @@
+{
+ "revision_note": "recorded separately from az",
+ "creates": [
+  {
+   "status": 200,
+   "ms": 8305,
+   "error": null
+  },
+  {
+   "status": 503,
+   "ms": 20000,
+   "error": "The service is busy saving other work. Owner: application support. Next action: wait a few seconds and try again, and if it continues report the time of the failure to application support."
+  },
+  {
+   "status": 200,
+   "ms": 10289,
+   "error": null
+  },
+  {
+   "status": 200,
+   "ms": 7495,
+   "error": null
+  },
+  {
+   "status": 200,
+   "ms": 10386,
+   "error": null
+  },
+  {
+   "status": 200,
+   "ms": 10005,
+   "error": null
+  },
+  {
+   "status": 200,
+   "ms": 10150,
+   "error": null
+  },
+  {
+   "status": 200,
+   "ms": 12732,
+   "error": null
+  }
+ ],
+ "asks": [
+  {
+   "label": "rules-first claim",
+   "create_status": 503,
+   "create_error": "The service is busy saving other work. Owner: application support. Next action: wait a few seconds and try again, and if it continues report the time of the failure to application support."
+  },
+  {
+   "label": "rules-first sensor",
+   "create_status": 200,
+   "create_error": null,
+   "status": 200,
+   "ms": 32859,
+   "kind": "answer",
+   "model": "workflow-only",
+   "skill": null,
+   "receipt": null,
+   "origin": null,
+   "text_head": "{'kind': 'answer', 'reply': 'No retained sensor reading is shown for this case. Monitoring consent is unknown; no values are shown.\\n[Origin: decision_rule] Recorded case fields and fixed rules, not generative AI.\\nA survey document is on the record.\\nGrant eligibility, PAS 2035 sign-off and sensor "
+  },
+  {
+   "label": "free-form case",
+   "create_status": 503,
+   "create_error": "The service is busy saving other work. Owner: application support. Next action: wait a few seconds and try again, and if it continues report the time of the failure to application support."
+  },
+  {
+   "label": "free-form case 2",
+   "create_status": 200,
+   "create_error": null,
+   "status": 500,
+   "ms": 67539,
+   "kind": null,
+   "model": null,
+   "skill": null,
+   "receipt": null,
+   "origin": null,
+   "text_head": "{'error': 'The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to application support.'}"
+  },
+  {
+   "label": "general no case",
+   "create_status": 200,
+   "create_error": null,
+   "status": 200,
+   "ms": 27027,
+   "kind": "abstain",
+   "model": "workflow-only",
+   "skill": null,
+   "receipt": null,
+   "origin": null,
+   "text_head": "{'kind': 'abstain', 'reply': 'I cannot answer that from the sources you are permitted to see for this case. Check the case card or ask the data owner.', 'answer_source': 'abstain', 'answer_origin': 'withheld', 'answer_source_label': 'No answer was given. The permitted sources do not cover the questi"
+  }
+ ],
+ "status": {
+  "status": 200,
+  "ms": 4608,
+  "json": {
+   "warning": "Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, financial hardship or other special-category details, and do not paste resident contact details. Use the case record instead. Matching text is masked before it is saved, but masking can miss things.",
+   "retention": "30 days",
+   "storage_approved": true,
+   "provider_position": {
+    "valid": true,
+    "provider": "Azure OpenAI through the existing Foundry deployments (ADR 0001 to ADR 0003)",
+    "region": "uksouth",
+    "residency_zone": "uk_south",
+    "deployment_type": "Standard",
+    "deployment_attested": false,
+    "primary_region": "uksouth",
+    "eu_data_zone_regions": [
+     "swedencentral",
+     "westeurope",
+     "northeurope",
+     "francecentral",
+     "germanywestcentral",
+     "italynorth",
+     "polandcentral",
+     "spaincentral"
+    ],
+    "approved_deployment_types": [
+     "Standard",
+     "DataZoneStandard"
+    ],
+    "zava_stores_prompts": false,
+    "foundry_agent_memory": false,
+    "zero_model_training": true,
+    "customer_data_training": false,
+    "content_filtering": {
+     "service": "Azure AI Content Safety",
+     "mode": "synchronous_stateless_harm_filtering",
+     "stores_prompts": false,
+     "trains_models": false,
+     "summary": "Prompts and completions pass through synchronous Azure AI Content Safety classifiers in transit without persisting customer content or training models."
+    },
+    "abuse_monitoring": {
+     "mode": "platform_default_unverified",
+     "modified_abuse_monitoring_recorded": false,
+     "modified_abuse_monitoring_verified": false,
+     "default_sample_retention_days": 30,
+     "human_review_possible": true,
+     "eea_reviewer_residency_documented": true,
+     "uk_reviewer_residency_verified": false,
+     "summary": "Unless Microsoft approves modified abuse monitoring (ContentLogging disabled) and DPO and Legal verify that subscription state alongside CHAT_ABUSE_MONITORING_MODIFIED_REF, flagged prompts and completions may be stored encrypted in the resource geography for up to 30 days and reviewed by authorised Microsoft personnel; vendor documentation guarantees EEA reviewer location for EEA resources only, leaving uksouth reviewer location unverified."
+    },
+    "cross_border_transfer": false,
+    "transfer_signoff_required": false,
+    "transfer_ref_recorded": false,
+    "cross_border_transfer_policy": {
+     "prohibited_without_dpo_legal_signoff": true,
+     "transfer_ref_env": "CHAT_TRANSFER_REF",
+     "primary_domestic_region": "uksouth",
+     "eu_data_zone_requires_transfer_signoff": true,
+     "global_deployments_permitted": false,
+     "summary": "Inference outside domestic uksouth Standard (including EU data-zone regions or DataZoneStandard) is prohibited unless DPO and Legal transfer sign-off is recorded in CHAT_TRANSFER_REF; GlobalStandard and non-UK/non-EU regions are always rejected."
+    },
+    "retention_policy": {
+     "active_before_dpo_legal_approval": false,
+     "required_approval_refs": [
+      "CHAT_DPIA_REF",
+      "CHAT_LAWFUL_BASIS_REF",
+      "CHAT_NOTICE_REF"
+     ],
+     "retention_ref_env": "CHAT_RETENTION_REF",
+     "retention_days_env": "CHAT_RETENTION_DAYS",
+     "summary": "No chat or memory retention period is active before DPIA, lawful-basis, staff-notice and provider/region checks pass alongside CHAT_RETENTION_REF and CHAT_RETENTION_DAYS."
+    },
+    "actual_data_mode": false,
+    "dpo_legal_approved": false,
+    "human_gate": "DPO and Legal sign-off is not recorded; environment reference pointers enforce runtime gates only and never establish legal acceptance.",
+    "documented_terms": {
+     "source": "https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy",
+     "source_date": "2026-06-05",
+     "retrieved": "2026-11-01",
+     "status": "vendor_documentation_not_dpo_accepted",
+     "dpo_accepted": false,
+     "summary": "Prompts and completions are not shared with other customers or used to train or improve models without permission; models are stateless; standard processing stays in the resource geography, Global and DataZone deployments may process elsewhere; abuse monitoring may store and human-review flagged samples unless modified monitoring is approved; processing is governed by the Microsoft Data Protection Addendum."
+    },
+    "violations": []
+   },
+   "activation": "demo-only",
+   "demo_activation": true,
+   "demo_disclaimer": "Demonstration only. Answers are generated by an AI model from synthetic case facts, may be wrong, and are not reviewed or approved. No DPO, Legal or RAI approval exists. Check the sources.",
+   "role_limits": {
+    "Retrofit Coordinator": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Resident Liaison Officer": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Building Safety Liaison": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Grants and Evidence Officer": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Quality Inspector": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Retrofit Programme Manager": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Programme Support Officer": {
+     "access": true,
+     "calls_per_request": 1,
+     "turns_per_thread": 30,
+     "output_tokens": 600
+    },
+    "Contractor": {
+     "access": false,
+     "calls_per_request": 0,
+     "turns_per_thread": 0,
+     "output_tokens": 0
+    },
+    "Application Administrator": {
+     "access": false,
+     "calls_per_request": 0,
+     "turns_per_thread": 0,
+     "output_tokens": 0
+    }
+   },
+   "your_role_limits": {
+    "access": true,
+    "calls_per_request": 1,
+    "turns_per_thread": 30,
+    "output_tokens": 600
+   },
+   "output_guard": {
+    "guard_version": "regulatory-non-advice-guard-v1",
+    "deterministic": true,
+    "model_calls": 0,
+    "checked_total": 0,
+    "passed_total": 0,
+    "flagged_total": 0,
+    "rewritten_total": 0,
+    "rejected_total": 0,
+    "by_category": {
+     "duty_satisfied": 0,
+     "legal_advice": 0,
+     "future_law_applied_as_active": 0
+    },
+    "last_decision": null
+   },
+   "limits": {
+    "calls_per_turn": 1,
+    "calls_per_request": 1,
+    "retries": 0,
+    "output_tokens": 600,
+    "turns_per_thread": 30,
+    "context_chars": 16000,
+    "history_chars": 4000,
+    "memory_used": false,
+    "memory_caps": {
+     "max_items": 50,
+     "max_item_chars": 1000,
+     "prompt_injection": false
+    },
+    "agent_depth": 1,
+    "calls_per_request_basis": "Cap of one model call per question. A question refused before the model is called uses none. When the provider reports no call count, one call is assumed.",
+    "authority": "engineering caps, not spend authorization"
+   }
+  }
+ },
+ "me": {
+  "status": 200,
+  "role": null
+ }
+}
