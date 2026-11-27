@@ -341,16 +341,26 @@ safe-outputs:
             # lease on the observed head so a concurrent newer publication makes this push fail.
             REMOTE="https://x-access-token:${GH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git"
             LEASE="$(git ls-remote "$REMOTE" "refs/heads/${REFRESH_BRANCH}" | cut -f1)"
+            # GitHub read endpoints return transient HTTP 5xx under load (run 45659656937); retry them so a
+            # blip does not fail the job. A persistent failure still aborts, which keeps publication fail-closed.
+            gh_retry() {
+              local attempt
+              for attempt in 1 2 3 4 5; do
+                if "$@"; then return 0; fi
+                if [ "$attempt" -lt 5 ]; then sleep $((attempt * 5)); fi
+              done
+              return 1
+            }
             newer_than_scored() {
               # Sets NEWER and must be called as a plain statement so a failed lookup aborts under errexit.
               local other="$1" relation
               NEWER=no
               if [ -z "$other" ] || [ "$other" = "$SCORED_SHA" ]; then return 0; fi
-              relation="$(gh api "repos/${GITHUB_REPOSITORY}/compare/${SCORED_SHA}...${other}" --jq .status)"
+              relation="$(gh_retry gh api "repos/${GITHUB_REPOSITORY}/compare/${SCORED_SHA}...${other}" --jq .status)"
               if [ "$relation" = "ahead" ]; then NEWER=yes; fi
             }
             main_baseline_commit() {
-              gh api "repos/${GITHUB_REPOSITORY}/contents/.github/rubric/scores/latest.json?ref=main" --jq .content | base64 -d | jq -r '.commit // empty'
+              gh_retry gh api "repos/${GITHUB_REPOSITORY}/contents/.github/rubric/scores/latest.json?ref=main" --jq .content | base64 -d | jq -r '.commit // empty'
             }
             MAIN_SCORED="$(main_baseline_commit)"
             newer_than_scored "$MAIN_SCORED"
@@ -359,7 +369,7 @@ safe-outputs:
               exit 0
             fi
             if [ -n "$LEASE" ]; then
-              PENDING_SCORED="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${LEASE}" --jq .commit.message | sed -n 's/^Scored commit: \([0-9a-f]\{40\}\)$/\1/p;T;q')"
+              PENDING_SCORED="$(gh_retry gh api "repos/${GITHUB_REPOSITORY}/commits/${LEASE}" --jq .commit.message | sed -n 's/^Scored commit: \([0-9a-f]\{40\}\)$/\1/p;T;q')"
               newer_than_scored "$PENDING_SCORED"
               if [ "$NEWER" = yes ]; then
                 echo "::notice::The pending baseline refresh already records newer commit ${PENDING_SCORED}; not replacing it with the score for ${SCORED_SHA}."
@@ -374,15 +384,15 @@ safe-outputs:
             git -c core.hooksPath=/dev/null commit -q -m "$TITLE" -m "Scored commit: ${SCORED_SHA}"
             NEW_SHA="$(git rev-parse HEAD)"
             git -c core.hooksPath=/dev/null push --force-with-lease="refs/heads/${REFRESH_BRANCH}:${LEASE}" "$REMOTE" "HEAD:refs/heads/${REFRESH_BRANCH}"
-            PR="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$REFRESH_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
+            PR="$(gh_retry gh pr list --repo "$GITHUB_REPOSITORY" --head "$REFRESH_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
             if [ -z "$PR" ]; then
               gh pr create --repo "$GITHUB_REPOSITORY" --base main --head "$REFRESH_BRANCH" --title "$TITLE" --body "$BODY"
-              PR="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$REFRESH_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
+              PR="$(gh_retry gh pr list --repo "$GITHUB_REPOSITORY" --head "$REFRESH_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
             else
-              gh pr edit "$PR" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY"
+              gh_retry gh pr edit "$PR" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --body "$BODY"
             fi
             # A newer run may have replaced the branch; only the run that owns the current head may merge it.
-            HEAD_OID="$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)"
+            HEAD_OID="$(gh_retry gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)"
             if [ "$HEAD_OID" != "$NEW_SHA" ]; then
               echo "::notice::Refresh pull request #${PR} head moved to ${HEAD_OID}; a newer run owns the baseline refresh."
               exit 0
