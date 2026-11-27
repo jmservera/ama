@@ -407,31 +407,31 @@
         {"id": 33476, "from": "Six weeks of product work", "to": "Discovery grew scope."},
         {"id": 33476, "from": "sit under these slides.", "to": "Delivery keeps learning."},
         {"id": 33487, "from": "What you see: this deck", "to": "Activity and scope, not outcomes"},
-        {"id": 33494, "from": "480", "to": "1147", "box": [6.5, 2.457, 1.75, 1.0859]},
+        {"id": 33494, "from": "480", "to": "2023", "box": [6.5, 2.457, 1.75, 1.0859]},
         {"id": 33502, "from": "commits", "to": "non-merge commits"},
-        {"id": 33511, "from": "233", "to": "982"},
-        {"id": 33532, "from": "6", "to": "260"},
+        {"id": 33511, "from": "233", "to": "2038"},
+        {"id": 33532, "from": "6", "to": "358"},
         {"id": 33544, "from": "architecture decisions", "to": "tracked project items"},
-        {"id": 33557, "from": "142", "to": "126"},
+        {"id": 33557, "from": "142", "to": "264"},
         {"id": 33571, "from": "requirements", "to": "completed issues"},
-        {"id": 33586, "from": "196", "to": "125"},
+        {"id": 33586, "from": "196", "to": "85"},
         {"id": 33602, "from": "acceptance criteria", "to": "open issues"},
         {"id": 33619, "from": "34", "to": "9"},
         {"id": 33637, "from": "research documents", "to": "not planned"},
         {"id": 33676, "from": "journey maps", "to": "journey hypotheses"},
         {"id": 33697, "from": "189", "to": "5"},
         {"id": 33719, "from": "backlog items", "to": "proposal capabilities"},
-        {"id": 33742, "from": "Since 11 Sep 2026", "to": "Snapshot: 8 Nov 2026"},
+        {"id": 33742, "from": "Since 11 Sep 2026", "to": "Snapshot: 27 Nov 2026"},
         {"id": 33742, "from": "one architect, GitHub Copilot and automation", "to": "Ongoing build; activity is not customer benefit"},
-        {"id": 33766, "from": "Sources: public repository jmservera/ama at 140d8f4 (23 Oct 2026) · BRD v0.19.0 · PRD v0.18.0 · AMA Plan board", "to": "Sources: git bcd86707; GitHub merged PRs; AMA Plan 7, 8 Nov 2026, 14:12 UTC. Refresh before final delivery."}
+        {"id": 33766, "from": "Sources: public repository jmservera/ama at 140d8f4 (23 Oct 2026) · BRD v0.19.0 · PRD v0.18.0 · AMA Plan board", "to": "Sources: git a9667a8f5d; GitHub merged PRs; AMA Plan 7, 27 Nov 2026, 09:21 UTC. 66 of the 85 open are deferred for production."}
       ],
       "notes": "S06 | Six weeks of product work sit under these slides.\n\r\nTIMING: 60 s for this slide (all builds together) · 05:20-06:20 on the 23:45 narration clock.\n\r\n\n\r\nSAY\n\r\nThese counts show activity, not accepted value; the lesson is to preserve short, usable feedback loops.\n\r\n\n\r\nThese slides sit on six weeks of product work: 480 commits, 233 merged pull requests and six architecture decision records. A business requirements document and a product requirements document with 142 requirements and 196 acceptance criteria. 34 research documents, 28 journey maps, a what-if study with 20 scenarios and a backlog of 189 items generated from all of it.\n\r\n\n\r\nThe recorded contributors are one architect, GitHub Copilot and automation. These activity counts do not validate a long coordinator loop or establish accepted delivery for Zava.\n\r\n\n\r\nThis is a product-management story first: understand the problem, test the assumptions, then build.\n\r\n\n\r\nSOURCES AND CALCULATIONS\n\r\nRepository home page and pull request search, 23 Oct 2026: 480 commits on main, 233 merged pull requests, 3 contributors; docs/adrs (6 ADRs); BRD v0.19.0 (52 FR, 12 NFR, 103 AC) and PRD v0.18.0 (61 FR, 17 NFR, 93 AC); docs/reference/research (34 documents); journey atlas (28 maps); agent what-if study (20 scenarios); AMA Plan board (189 items). BRD created 11 Sep 2026; first pull request 20 Sep 2026.\n\r\n",
       "revised_notes": [
         "S06 | Discovery grew scope. Delivery keeps learning.",
-        "SAY in the retained 60-second slot: The project is still moving. On 8 November, AMA Plan has 260 tracked items: 125 open, 126 completed and nine not planned. The board's 135 Done items include those nine cancellations, so I do not call them 135 delivered capabilities. The October scope jump coincides with decomposing requirements, journeys, sensors and assurance into testable work. Later growth includes resident access and hardening. The repository now has 1,147 non-merge commits and 982 merged pull requests. Those are activity, not housing results. The product story is the learning each iteration preserved, and the remaining proof: complete journeys, useful reviewed assistance and resident choice.",
-        "SNAPSHOT: Project 7 GraphQL read at 2026-11-08T14:12:52Z retrieved all 260 non-archived issue members: OPEN 125, CLOSED/COMPLETED 126, CLOSED/NOT_PLANNED 9; Status Todo 101, In Progress 24, Done 135. These are overlapping views of the same denominator, not extra items. The supplied Insights chart is stacked: its upper boundary is not 260 open issues. We verified endpoint counts, not every historical chart transition.",
+        "SAY in the retained 60-second slot: The project is still moving. On 27 November, AMA Plan has 358 tracked items: 85 open, 264 completed and nine not planned. The board's 273 Done items include those nine cancellations, so I do not call them 273 delivered capabilities. Of the 85 open items, 66 sit in a Deferred column because they need production approvals or testing this demo does not claim; 19 remain active. The October scope jump coincides with decomposing requirements, journeys, sensors and assurance into testable work. Later growth includes resident access and hardening. The repository now has 2,023 non-merge commits and 2,038 merged pull requests. Those are activity, not housing results. The product story is the learning each iteration preserved, and the remaining proof: complete journeys, useful reviewed assistance and resident choice.",
+        "SNAPSHOT: Project 7 REST read at 2026-11-27T09:21Z retrieved all 358 non-archived issue members (rows equal totalCount): OPEN 85 (83 open, 2 reopened), CLOSED/COMPLETED 264, CLOSED/NOT_PLANNED 9; Status Todo 2, In Progress 17, Deferred 66, Done 273. These are overlapping views of the same denominator, not extra items. The supplied Insights chart is stacked: its upper boundary is not 358 open issues. We verified endpoint counts, not every historical chart transition.",
         "HISTORY: 131 currently tracked issues were created on 14 October; 172 current members existed by 15 October. This is current-membership issue history, not a complete historical membership or status-transition export. Scope expansion is not a measured failure rate or causal productivity finding. Epics, features, stories and assurance items are not interchangeable units.",
-        "SOURCES: docs/capstone/source/review-2026-11-08.md, Progress snapshot and refresh; git rev-list --count --no-merges bcd86707542af59cf8fb6978090a2559c037e33d; gh pr list --state merged, 982 records at this snapshot; AMA Plan project 7. Commits include automation. Twenty-seven companion maps plus one atlas map remain 28 hypotheses, not interviews. Refresh all changing counts and evidence before final presentation."
+        "SOURCES: docs/capstone/source/review-2026-11-08.md, Progress snapshot and refresh; git rev-list --count --no-merges origin/main at a9667a8f5d; GitHub search is:pr is:merged total_count 2038 at this snapshot (the 8 November figure of 982 used gh pr list); AMA Plan project 7. Commits include automation. Twenty-seven companion maps plus one atlas map remain 28 hypotheses, not interviews. Refresh all changing counts and evidence before final presentation."
       ]
     },
     {
@@ -888,9 +888,9 @@
         {"id": 35461, "from": "14 Oct", "to": "27 Oct"},
         {"id": 35461, "from": "five assistants, real proposals, 73 SQL tests, survived a restart", "to": "Optional resident site, own-case help and synthetic sensors"},
         {"id": 35461, "from": "the proposal service holds", "to": "assisted routes remain"},
-        {"id": 35480, "from": "23 Oct", "to": "8 Nov"},
+        {"id": 35480, "from": "23 Oct", "to": "27 Nov"},
         {"id": 35480, "from": "PR #433 Tokenomics", "to": "Source and release hardening"},
-        {"id": 35480, "from": "AI is managed by cost per accepted outcome", "to": "125 tracked issues still open; final evidence refresh ahead"},
+        {"id": 35480, "from": "AI is managed by cost per accepted outcome", "to": "85 issues open, 66 deferred to production"},
         {"id": 35521, "from": "From a requirements review to five real AI assistants in 25 days", "to": "Brief -> options -> prototypes -> backlog -> build -> review"},
         {"id": 35566, "from": "Owner feedback reshaped the screen: my cases, next owner, plain status", "to": "Scope growth records discovery; closed issues are not housing outcomes"},
         {"id": 35615, "from": "Every lesson became a requirement, a decision or a test", "to": "Next: accepted journeys, useful assistance and tested autonomy"}
