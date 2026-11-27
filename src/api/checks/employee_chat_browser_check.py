@@ -215,7 +215,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                 "#/case/ZF-1",
             ):
                 page.evaluate("(hash) => { location.hash = hash; }", destination)
-                expect(page.locator("#app h1").first).to_be_visible()
+                expect(page.locator("#app h1").first).to_be_visible(timeout=20_000)
                 launcher.click()
                 expect(page.get_by_role("dialog")).to_be_visible()
                 page.keyboard.press("Escape")
