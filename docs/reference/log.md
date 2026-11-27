@@ -15667,3 +15667,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] update | Capstone deck rebuilt with 27 November figures (Refs #435)
 
 * Rebuilt `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` and the LibreOffice preview PDF from `origin/main` 337d3999d5, verified 55 slides with notes, and widened the merged pull request figure frame on slide 7 so 2038 no longer wraps. The preview is not native PowerPoint validation and carries no human acceptance.
+
+## [2026-11-27] add | Issue 2245 live model-call proof on revision 0000149 (Refs #2245)
+
+* Added [issue-2245-live-20261127T174551Z.md](research/issue-2245-live-20261127T174551Z.md): a free-form case question routed to the general agent and made a model call (API model azure-openai; widget "Model calls: 1"); the widget draft failed the source check and the rules answer was shown. 13 of 13 thread creates at 200 but 5 to 11 s each. Lock holder and deployed-fix mapping stay unproven. No source change.
