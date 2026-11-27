@@ -409,7 +409,7 @@
         {"id": 33487, "from": "What you see: this deck", "to": "Activity and scope, not outcomes"},
         {"id": 33494, "from": "480", "to": "2023", "box": [6.5, 2.457, 1.75, 1.0859]},
         {"id": 33502, "from": "commits", "to": "non-merge commits"},
-        {"id": 33511, "from": "233", "to": "2038"},
+        {"id": 33511, "from": "233", "to": "2038", "box": [8.06, 2.457, 1.75, 1.0859]},
         {"id": 33532, "from": "6", "to": "358"},
         {"id": 33544, "from": "architecture decisions", "to": "tracked project items"},
         {"id": 33557, "from": "142", "to": "264"},
