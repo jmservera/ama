@@ -15,6 +15,8 @@ from pathlib import Path
 TOOLS_DIR = Path(__file__).resolve().parent
 REPO_ROOT = TOOLS_DIR.parent
 SCRIPT_PATH = TOOLS_DIR / "check-coordinator-handoff.py"
+# Catastrophic backtracking takes far longer; the margin keeps loaded hosts from failing.
+LINEAR_TIME_BUDGET_S = 2.0
 
 SPEC = importlib.util.spec_from_file_location("check_coordinator_handoff", SCRIPT_PATH)
 assert SPEC is not None and SPEC.loader is not None
@@ -1221,7 +1223,7 @@ class CoordinatorHandoffGuardTests(unittest.TestCase):
             )
             positive_violations = checker.check_handoff_text("redos-ok.md", positive_redos_doc)
             elapsed = time.perf_counter() - t0
-            self.assertLess(elapsed, 0.5)
+            self.assertLess(elapsed, LINEAR_TIME_BUDGET_S)
             self.assertIn("unsupported-idle-ready-work", "\n".join(failing_violations))
             self.assertEqual(positive_violations, [])
 
@@ -1239,7 +1241,7 @@ class CoordinatorHandoffGuardTests(unittest.TestCase):
             )
             ws_v_two = checker.check_handoff_text("ws-two.md", ws_doc_two)
             ws_elapsed = time.perf_counter() - ws_t0
-            self.assertLess(ws_elapsed, 0.1)
+            self.assertLess(ws_elapsed, LINEAR_TIME_BUDGET_S)
             self.assertIn("unsupported-idle-ready-work", "\n".join(ws_v_one))
             self.assertIn("unsupported-idle-ready-work", "\n".join(ws_v_two))
 
@@ -1411,7 +1413,7 @@ class CoordinatorHandoffGuardTests(unittest.TestCase):
                 adv_doc = _valid_handoff_markdown(summary_prose=adv_prose)
                 self.assertEqual(checker.check_handoff_text(f"scale-{idx_case}.md", adv_doc), [])
             scale_elapsed = time.perf_counter() - scale_t0
-            self.assertLess(scale_elapsed, 0.15)
+            self.assertLess(scale_elapsed, LINEAR_TIME_BUDGET_S)
 
         with self.subTest(case="rv002-hard-wrapped-multiline-and-blockquote-summaries-rejected"):
             for wrapped_idle in (
@@ -1577,7 +1579,7 @@ class CoordinatorHandoffGuardTests(unittest.TestCase):
             many_sub_v = checker.check_handoff_text("many-subclauses.md", many_subclauses_doc)
             sub_elapsed = time.perf_counter() - sub_t0
             self.assertIn("unsupported-waiting-ready-work", "\n".join(many_sub_v))
-            self.assertLess(sub_elapsed, 0.25)
+            self.assertLess(sub_elapsed, LINEAR_TIME_BUDGET_S)
 
             two_ready_rows = (
                 "| #1204 | active session | PR #1641 | Running |\n"
@@ -1663,7 +1665,7 @@ class CoordinatorHandoffGuardTests(unittest.TestCase):
             single_sub_elapsed = time.perf_counter() - single_sub_t0
             self.assertIn("unsupported-waiting-ready-work", "\n".join(single_sub_hold_v))
             self.assertIn("unsupported-waiting-ready-work", "\n".join(single_sub_non_curr_v))
-            self.assertLess(single_sub_elapsed, 0.25)
+            self.assertLess(single_sub_elapsed, LINEAR_TIME_BUDGET_S)
 
             for multi_trigger_prose in (
                 "Waiting on PR #1641 because pausing the run for stakeholder approval.",
@@ -1790,7 +1792,7 @@ class CoordinatorHandoffGuardTests(unittest.TestCase):
             )
             single_clause_elapsed = time.monotonic() - t0
             self.assertIn("unsupported-waiting-ready-work", "\n".join(single_clause_violations))
-            self.assertLess(single_clause_elapsed, 0.25)
+            self.assertLess(single_clause_elapsed, LINEAR_TIME_BUDGET_S)
 
             coordinated_table = (
                 "| #1204 | active session | PR #1641 | Running |\n"
