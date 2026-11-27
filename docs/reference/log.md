@@ -15663,3 +15663,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 1830 timing analyzer header validation (Refs #1830)
 
 * Added [issue-1830-live-r17-2026-11-27.md](research/issue-1830-live-r17-2026-11-27.md): `rpi-gate-timing.py` now refuses hash-valid receipts lacking `jobs`, `image_cache` or an aware `sealed` instead of raising KeyError. Criteria 1, 3 and 4 stay partly proven or owner-gated.
+
+## [2026-11-27] update | Capstone deck rebuilt with 27 November figures (Refs #435)
+
+* Rebuilt `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` and the LibreOffice preview PDF from `origin/main` 337d3999d5, verified 55 slides with notes, and widened the merged pull request figure frame on slide 7 so 2038 no longer wraps. The preview is not native PowerPoint validation and carries no human acceptance.
