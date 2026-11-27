@@ -126,7 +126,32 @@ function Assert-DeckDefinition {
             throw 'Only the declared native Tokenomics appendix is supported'
         }
     }
-    if ($Definition.schema_version -eq 3) { Assert-PresentationRoute $Definition }
+    if ($Definition.schema_version -eq 3) {
+        Assert-PresentationRoute $Definition
+        if ($Definition.appendix_route) { Assert-AppendixRoute $Definition }
+    }
+}
+
+function Assert-AppendixRoute {
+    param($Definition)
+    $Route = $Definition.appendix_route
+    $Codes = @($Route.steps.code)
+    if ($Route.name -cne 'Discovery and UK sovereignty' -or $Route.slot_seconds -ne 360 -or
+        @($Codes | Select-Object -Unique).Count -ne $Codes.Count -or
+        'B12' -notin $Codes -or 'B22' -notin $Codes) {
+        throw 'Invalid optional appendix route'
+    }
+    $Seconds = 0
+    foreach ($Step in $Route.steps) {
+        if ($Step.code -notmatch '^B\d+$' -or
+            @($Definition.slides | Where-Object code -CEQ $Step.code).Count -ne 1 -or
+            ($Step.seconds -isnot [long] -and $Step.seconds -isnot [int]) -or
+            $Step.seconds -le 0 -or -not $Step.say.Trim()) {
+            throw 'Invalid optional appendix step'
+        }
+        $Seconds += $Step.seconds
+    }
+    if ($Seconds -ne $Route.slot_seconds) { throw 'Optional appendix timing differs from its separate slot' }
 }
 
 function Assert-PresentationRoute {
@@ -264,21 +289,25 @@ function Get-InsertionParts {
         [void]$Titles.AppendChild($Title)
         $Titles.SetAttribute('size', '59')
         $Shows = $Presentation.CreateElement('p', 'custShowLst', $Namespaces.LookupNamespace('p'))
-        $Show = $Presentation.CreateElement('p', 'custShow', $Namespaces.LookupNamespace('p'))
-        $Show.SetAttribute('name', $Definition.presentation_route.name)
-        $Show.SetAttribute('id', '0')
-        $ShowSlides = $Presentation.CreateElement('p', 'sldLst', $Namespaces.LookupNamespace('p'))
-        foreach ($Step in $Definition.presentation_route.steps) {
-            $Spec = @($Definition.slides | Where-Object code -CEQ $Step.code)[0]
-            $Target = "slides/slide$(Get-DeckPartNumber $Spec).xml"
-            $Ref = @($Relationships.DocumentElement.ChildNodes | Where-Object Target -CEQ $Target)
-            if ($Ref.Count -ne 1) { throw 'Custom show target ambiguous' }
-            $Node = $Presentation.CreateElement('p', 'sld', $Namespaces.LookupNamespace('p'))
-            [void]$Node.SetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', $Ref[0].Id)
-            [void]$ShowSlides.AppendChild($Node)
+        $Routes = @($Definition.presentation_route)
+        if ($Definition.appendix_route) { $Routes += $Definition.appendix_route }
+        for ($Index = 0; $Index -lt $Routes.Count; $Index++) {
+            $Show = $Presentation.CreateElement('p', 'custShow', $Namespaces.LookupNamespace('p'))
+            $Show.SetAttribute('name', $Routes[$Index].name)
+            $Show.SetAttribute('id', [string]$Index)
+            $ShowSlides = $Presentation.CreateElement('p', 'sldLst', $Namespaces.LookupNamespace('p'))
+            foreach ($Step in $Routes[$Index].steps) {
+                $Spec = @($Definition.slides | Where-Object code -CEQ $Step.code)[0]
+                $Target = "slides/slide$(Get-DeckPartNumber $Spec).xml"
+                $Ref = @($Relationships.DocumentElement.ChildNodes | Where-Object Target -CEQ $Target)
+                if ($Ref.Count -ne 1) { throw 'Custom show target ambiguous' }
+                $Node = $Presentation.CreateElement('p', 'sld', $Namespaces.LookupNamespace('p'))
+                [void]$Node.SetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', $Ref[0].Id)
+                [void]$ShowSlides.AppendChild($Node)
+            }
+            [void]$Show.AppendChild($ShowSlides)
+            [void]$Shows.AppendChild($Show)
         }
-        [void]$Show.AppendChild($ShowSlides)
-        [void]$Shows.AppendChild($Show)
         $ShowAnchor = $Presentation.SelectSingleNode('/p:presentation/p:defaultTextStyle', $Namespaces)
         if (-not $ShowAnchor) { throw 'Pinned baseline default text style is missing' }
         [void]$Presentation.DocumentElement.InsertBefore($Shows, $ShowAnchor)
@@ -417,6 +446,41 @@ function Test-CostStatusRevision {
     return $true
 }
 
+function Get-AzureCostSummaryElements {
+    param($Definition)
+    $Slide = @($Definition.slides | Where-Object { (Get-DeckPartNumber $_) -eq 6 })[0]
+    if (-not $Slide.azure_cost_summary) { return @() }
+    if ($Slide.azure_cost_summary -cne 'owner-requested-2026-11-27' -or
+        $Slide.layout -cne 'baseline' -or $Slide.replacements -or $Slide.elements -or
+        $Slide.images -or $Slide.revised_notes) {
+        throw 'Only the fixed additive Azure summary is approved on the forecast slide'
+    }
+    $ModelPath = Resolve-LocalInput (Join-Path $RepoRoot 'docs/capstone/source') 'azure-cost-model-2026-11-27.json'
+    $Model = Get-Content -LiteralPath $ModelPath -Raw | ConvertFrom-Json
+    return @(
+        [pscustomobject]@{
+            key = 'azure-monthly-summary'; box = @(6.9, 6.16, 5.833, 0.28)
+            text = "Azure: $($Model.display.monthly)/month, AI included"
+            size = 16; bold = $true; color = '173F35'
+        }
+        [pscustomobject]@{
+            key = 'azure-monthly-limit'; box = @(6.9, 6.46, 5.833, 0.23)
+            text = "Planning, not a bill. Persistent: $($Model.display.persistent)/month. Detail: B28."
+            size = 12; color = '50655E'
+        }
+    )
+}
+
+function Update-AzureCostSummaryNote {
+    param([string]$Text, [int]$Number, $Definition)
+    if ($Number -ne 6 -or -not $Definition) { return $Text }
+    $Elements = @(Get-AzureCostSummaryElements $Definition)
+    if (-not $Elements.Count) { return $Text }
+    return $Text + "`nAZURE PLANNING UPDATE, 27 NOVEMBER: " +
+        ($Elements.text -join '. ') +
+        ' Public retail thirty-day scenario, not full project TCO, production forecast, approved spending or a maximum invoice. Scale-to-zero reduces app compute; provisioned SQL and other persistent services remain, and scheduled jobs continue overnight. Historical whole-cohort inference and GBP works/grants above retain their original assumptions and must not be added or compared without compatible periods and approved FX. Source: docs/capstone/source/azure-cost-model-2026-11-27.json.'
+}
+
 function Get-CostStatusReplacements {
     param([int]$Number)
     if ($Number -eq 21) {
@@ -476,6 +540,11 @@ function Assert-CostSlide {
         $Expected = Set-TargetedPart $BaselineArchive $Name $Replacements @() $Number
     }
     $StatusUpdated = ((Get-ByteHash $Before) -cne (Get-ByteHash $Expected))
+    $Summary = @()
+    if ($Number -eq 6 -and $Definition) {
+        $Summary = @(Get-AzureCostSummaryElements $Definition)
+        if ($Summary.Count) { $Expected = Set-TargetedPart $BaselineArchive $Name @() $Summary $Number }
+    }
     $BeforeNavigation = $Expected
     $Expected = Update-VisibleNavigation $Expected $Number $Definition
     $Actual = Get-PartBytes $CandidateArchive $Name
@@ -486,6 +555,7 @@ function Assert-CostSlide {
     $AfterCost = Get-SlideInventory $CandidateArchive $Number
     $ExpectedNotes = Update-CostStatusNote (Update-NavigationNote $BeforeCost.notes) $Number $StatusRevision
     $ExpectedNotes = Update-RouteNote $ExpectedNotes $Number $Definition
+    $ExpectedNotes = Update-AzureCostSummaryNote $ExpectedNotes $Number $Definition
     if ($AfterCost.notes -cne $ExpectedNotes) {
         throw "Protected cost note changed beyond fixed navigation/status corrections: $Number"
     }
@@ -493,6 +563,7 @@ function Assert-CostSlide {
         status_updated = $StatusUpdated
         navigation_labels_updated = ((Get-ByteHash $BeforeNavigation) -cne (Get-ByteHash $Expected))
         notes_updated = ($AfterCost.notes -cne $BeforeCost.notes)
+        azure_summary_added = ($Summary.Count -gt 0)
     }
 }
 
@@ -537,6 +608,10 @@ function Assert-CostSlide {
             }
         }
         elseif ($Slide.layout -ne 'baseline') { throw "Unsupported slide layout: $($Slide.layout)" }
+        if ($PartNumber -eq 6) {
+            $Summary = @(Get-AzureCostSummaryElements $Definition)
+            if ($Summary.Count) { $Parts[$Name] = Set-TargetedPart $Archive $Name @() $Summary $Slide.number }
+        }
         if ($CostStatusRevision -and $PartNumber -in @(21, 52)) {
             if ($Slide.layout -cne 'baseline' -or $Slide.images) {
                 throw 'Protected cost-status pages must retain their complete baseline layouts'
@@ -561,6 +636,7 @@ function Assert-CostSlide {
             elseif (($Timing -join "`n") -cne ($NewTiming -join "`n")) { throw "Timing changed on slide $($Slide.number)" }
         }
         $Text = Update-RouteNote $Text $PartNumber $Definition
+        $Text = Update-AzureCostSummaryNote $Text $PartNumber $Definition
         if ($Definition.presentation_route -and $PartNumber -notin @(6, 11, 21, 32, 36, 52)) {
             $Step = @($Definition.presentation_route.steps | Where-Object code -CEQ $Slide.code)
             if ($Step.Count) { $Text += "`nDEMO-FIRST PITCH: $($Step[0].seconds) seconds. SAY: $($Step[0].say)" }
@@ -723,15 +799,24 @@ function Test-DeckCandidate {
         $ExpectedOrder = @($Definition.slides | ForEach-Object { "slides/slide$(Get-DeckPartNumber $_).xml" })
         if (($Order -join ',') -cne ($ExpectedOrder -join ',')) { throw 'Physical presentation order differs from manifest' }
         if ($Definition.presentation_route) {
-            $ActualRoute = @($Presentation.SelectNodes('/p:presentation/p:custShowLst/p:custShow/p:sldLst/p:sld', $Namespaces) | ForEach-Object {
-                $Ref = $_.GetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
-                @($Relationships.DocumentElement.ChildNodes | Where-Object Id -CEQ $Ref)[0].Target
-            })
-            $ExpectedRoute = @($Definition.presentation_route.steps | ForEach-Object {
-                $Spec = @($Definition.slides | Where-Object code -CEQ $_.code)[0]
-                "slides/slide$(Get-DeckPartNumber $Spec).xml"
-            })
-            if (($ActualRoute -join ',') -cne ($ExpectedRoute -join ',')) { throw 'Demo-first custom show differs from pitch route' }
+            $Routes = @($Definition.presentation_route)
+            if ($Definition.appendix_route) { $Routes += $Definition.appendix_route }
+            $Shows = @($Presentation.SelectNodes('/p:presentation/p:custShowLst/p:custShow', $Namespaces))
+            if ($Shows.Count -ne $Routes.Count) { throw 'Custom show count differs from source routes' }
+            for ($Index = 0; $Index -lt $Routes.Count; $Index++) {
+                if ($Shows[$Index].name -cne $Routes[$Index].name -or $Shows[$Index].id -cne [string]$Index) {
+                    throw 'Custom show identity differs from source'
+                }
+                $ActualRoute = @($Shows[$Index].SelectNodes('p:sldLst/p:sld', $Namespaces) | ForEach-Object {
+                    $Ref = $_.GetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+                    @($Relationships.DocumentElement.ChildNodes | Where-Object Id -CEQ $Ref)[0].Target
+                })
+                $ExpectedRoute = @($Routes[$Index].steps | ForEach-Object {
+                    $Spec = @($Definition.slides | Where-Object code -CEQ $_.code)[0]
+                    "slides/slide$(Get-DeckPartNumber $Spec).xml"
+                })
+                if (($ActualRoute -join ',') -cne ($ExpectedRoute -join ',')) { throw 'Custom show differs from source route' }
+            }
             $Properties = Get-PartDocument $Candidate 'ppt/presProps.xml'
             if ($Properties.SelectSingleNode('//p:showPr/p:custShow', (Get-Namespaces $Properties)).id -cne '0') {
                 throw 'Default custom show is not selected'
@@ -740,12 +825,14 @@ function Test-DeckCandidate {
         $CostNavigationUpdates = @()
         $CostStatusUpdates = @()
         $CostLabelUpdates = @()
+        $CostSummaryUpdates = @()
         $CostStatusRevision = Test-CostStatusRevision $Definition
         foreach ($Number in @(6, 11, 21, 32, 36, 52)) {
             $CostResult = Assert-CostSlide $BaselineArchive $Candidate $Number $CostStatusRevision $Definition
             $Physical = $Number
             if ($Definition.insertion -and $Number -ge 13) { $Physical++ }
             if ($CostResult.status_updated) { $CostStatusUpdates += $Physical }
+            if ($CostResult.azure_summary_added) { $CostSummaryUpdates += $Physical }
             if ($CostResult.navigation_labels_updated) { $CostLabelUpdates += $Physical }
             if ($CostResult.notes_updated -and $Physical -notin $CostStatusUpdates) { $CostNavigationUpdates += $Physical }
         }
@@ -764,7 +851,8 @@ function Test-DeckCandidate {
             inserted_main_slide = $(if ($Definition.insertion) { 13 } else { $null })
             narration_seconds = $(if ($Definition.presentation_route) { 900 - $Definition.presentation_route.reserve_seconds } elseif ($Definition.insertion) { 1470 } else { 1425 })
             presentation_route = $Definition.presentation_route
-            native_navigation_preserved = $true; six_cost_slide_bytes_preserved = ($CostStatusUpdates.Count -eq 0 -and $CostLabelUpdates.Count -eq 0)
+            native_navigation_preserved = $true; six_cost_slide_bytes_preserved = ($CostStatusUpdates.Count -eq 0 -and $CostLabelUpdates.Count -eq 0 -and $CostSummaryUpdates.Count -eq 0)
+            approved_additive_azure_summary_pages = $CostSummaryUpdates
             cost_financial_evidence_preserved = $true; approved_cost_status_updates = $CostStatusUpdates
             cost_navigation_label_updates = $CostLabelUpdates
             cost_note_calculations_preserved = $true; cost_note_navigation_and_route_updates = $CostNavigationUpdates
@@ -910,10 +998,24 @@ function Export-PitchMaterials {
                 }
                 $Lines += @("### $PreparedClock-15:00 | questions and recovery", '', 'Let the question finish. Restate the concern, answer directly, then open one appendix or identify the missing evidence and its owner. Do not repeat the pitch.', '', '## Delivery cues', '', '* Stand still for the opening and final decision; look at the room rather than the screen.', '* In the demo, point to the evidence and next owner. Stop moving the cursor while speaking.', '* Slow down for costs and denominators. An unknown accepted-outcome count is a result to disclose, not a number to fill in.', '* Use one gesture along the architecture path. Answer a deeper question from the mechanism and its failure route.', '* Keep the resident choice and independent safety service explicit; dress for the executive setting without distracting from the product.', '', '## Embedded demo runbook', '')
                 $Lines += @($Runbook.TrimEnd(), '', '## Slide evidence and appendix access', '', 'Use the [question bank](./questions-and-answers.md) for deeper answers and the [27 November review](../source/review-2026-11-27.md) for the claim register and assessment gaps. Original notes remain in the PowerPoint and source manifest.')
+                if ($Definition.appendix_route) {
+                    $Extra = $Definition.appendix_route
+                    $Lines += @('', '## Optional secondary story', '',
+                        "Use the separate PowerPoint custom show `"$($Extra.name)`" only when the panel confirms six additional minutes. It is not part of the 15-minute pitch or its two-minute question reserve. For one question, use only the relevant chapter and return deliberately to the interrupted page.", '')
+                    $Elapsed = 0
+                    foreach ($Step in $Extra.steps) {
+                        $Spec = @($Definition.slides | Where-Object code -CEQ $Step.code)[0]
+                        $End = $Elapsed + $Step.seconds
+                        $Window = '{0:00}:{1:00}-{2:00}:{3:00}' -f [Math]::Floor($Elapsed / 60), ($Elapsed % 60), [Math]::Floor($End / 60), ($End % 60)
+                        $Lines += @("### Optional $Window | page $($Spec.number) / $($Spec.code)", '',
+                            $Spec.title.Trim(), '', "SAY: $($Step.say)", '')
+                        $Elapsed = $End
+                    }
+                }
             }
             $Content = ($Lines -join "`n").Replace("`r", '')
             $Content = [regex]::Replace($Content, '(?m)[ \t]+$', '')
-            [IO.File]::WriteAllText((Join-Path $Pitch $Name), $Content + "`n", [Text.UTF8Encoding]::new($false))
+            [IO.File]::WriteAllText((Join-Path $Pitch $Name), $Content.TrimEnd() + "`n", [Text.UTF8Encoding]::new($false))
         }
     } finally { $Archive.Dispose() }
 }

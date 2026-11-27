@@ -54,8 +54,21 @@ authoring inventory does not recreate the current deck.
 The custom show has seventeen slides. B28 covers the full illustrative Azure
 envelope, including model use; B27 follows with a separate proposed budget
 policy before the preserved S18 inference scenario. Neither alters the six
-protected financial records. The cost-model hash is recorded in the delivery
+protected financial calculations. The cost-model hash is recorded in the delivery
 receipt and its arithmetic/pool allocation is checked against the slide source.
+
+The owner-requested `azure_cost_summary` marker on S05 permits only two fixed,
+source-derived text additions and an appended planning note on physical page 6.
+The original financial shapes, arithmetic and notes stay intact. The builder
+rejects arbitrary elements, replacements, images or revised financial notes on
+that page; the receipt reports the approved additive page separately rather
+than claiming all six financial pages are byte-identical.
+
+`appendix_route` owns the separate six-minute "Discovery and UK sovereignty"
+custom show and its timed SAY text. The default remains "Demo-first pitch".
+The secondary route never extends the primary 15-minute allocation or consumes
+its question reserve. It reuses existing appendix pages without moving physical
+pages or original action destinations.
 
 ### Retained deployment insertion and reference route
 
@@ -76,7 +89,8 @@ Financial graphics/arithmetic are untouched. Explicit index/topic/answer labels
 are incremented without changing fonts, geometry or targets, including cost-page
 footer numbers. Cost notes permit only the existing fixed status/navigation
 corrections plus deterministic page-reference and current-route metadata;
-no general cost-note edit permission is added.
+no general cost-note edit permission is added. The fixed additive Azure summary
+and appended planning note on page 6 are the explicit 27 November exception.
 
 ## Earlier autonomy and product-story reviews
 

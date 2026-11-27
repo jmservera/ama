@@ -404,7 +404,8 @@
       "code": "S05",
       "title": "Forecast: every Zava home at EPC C by April 2030.",
       "layout": "baseline",
-      "notes": "S05 | Forecast: every Zava home at EPC C by April 2030.\nThe 15,600-home cohort is modelled as 60,000 x 26%, not a measured stock survey. GBP 6,082/home x 15,600 = GBP 94,879,200 works (about GBP 95m). Conditional grant: min(50% x GBP 6,082, GBP 7,500) = GBP 3,041/home; x 15,600 = GBP 47,439,600. This assumes all homes and benchmark costs qualify, sufficient allocation, award and successful claims; none is established.\nE21 inference planning scenario: 6,884 tokens / five historical runs = 1,376.8/run; assumed x10 = 13,768/task; x20 tasks/home = 275,360 tokens/home. At the historical secondary-source USD 1.60/million assumption dated 2026-10-23, inference = USD 0.440576/home x 15,600 = USD 6,872.9856, rounded USD 6,873. Not verified current deployment pricing or measured accepted work. Full project TCO is unpriced. Keep USD and GBP separate; no percentage without Finance-approved dated FX.\nSource: evidence/ai-cost-evidence.md, Recovered Council Comparison (2026-10-24), E21. The planning scenario does not satisfy issue #435 acceptance, grant approval or spending authority. RELATED ANSWER: B08; question index slide 27.\nTIMING: 90 s for this slide (all builds together) · 03:50-05:20 on the 23:45 narration clock.\r\n"
+      "notes": "S05 | Forecast: every Zava home at EPC C by April 2030.\nThe 15,600-home cohort is modelled as 60,000 x 26%, not a measured stock survey. GBP 6,082/home x 15,600 = GBP 94,879,200 works (about GBP 95m). Conditional grant: min(50% x GBP 6,082, GBP 7,500) = GBP 3,041/home; x 15,600 = GBP 47,439,600. This assumes all homes and benchmark costs qualify, sufficient allocation, award and successful claims; none is established.\nE21 inference planning scenario: 6,884 tokens / five historical runs = 1,376.8/run; assumed x10 = 13,768/task; x20 tasks/home = 275,360 tokens/home. At the historical secondary-source USD 1.60/million assumption dated 2026-10-23, inference = USD 0.440576/home x 15,600 = USD 6,872.9856, rounded USD 6,873. Not verified current deployment pricing or measured accepted work. Full project TCO is unpriced. Keep USD and GBP separate; no percentage without Finance-approved dated FX.\nSource: evidence/ai-cost-evidence.md, Recovered Council Comparison (2026-10-24), E21. The planning scenario does not satisfy issue #435 acceptance, grant approval or spending authority. RELATED ANSWER: B08; question index slide 27.\nTIMING: 90 s for this slide (all builds together) · 03:50-05:20 on the 23:45 narration clock.\r\n",
+      "azure_cost_summary": "owner-requested-2026-11-27"
     },
     {
       "number": 7,
@@ -412,29 +413,7 @@
       "baseline_number": 7,
       "code": "S06",
       "title": "Discovery grew scope. Delivery keeps learning.",
-      "layout": "text",
-      "replacements": [
-        {"id": 33476, "from": "Six weeks of product work", "to": "Discovery grew scope."},
-        {"id": 33476, "from": "sit under these slides.", "to": "Delivery keeps learning."},
-        {"id": 33487, "from": "What you see: this deck", "to": "Activity and scope, not outcomes"},
-        {"id": 33494, "from": "480", "to": "2023", "box": [6.5, 2.457, 1.75, 1.0859]},
-        {"id": 33502, "from": "commits", "to": "non-merge commits"},
-        {"id": 33511, "from": "233", "to": "2038"},
-        {"id": 33532, "from": "6", "to": "358"},
-        {"id": 33544, "from": "architecture decisions", "to": "tracked project items"},
-        {"id": 33557, "from": "142", "to": "264"},
-        {"id": 33571, "from": "requirements", "to": "completed issues"},
-        {"id": 33586, "from": "196", "to": "85"},
-        {"id": 33602, "from": "acceptance criteria", "to": "open issues"},
-        {"id": 33619, "from": "34", "to": "9"},
-        {"id": 33637, "from": "research documents", "to": "not planned"},
-        {"id": 33676, "from": "journey maps", "to": "journey hypotheses"},
-        {"id": 33697, "from": "189", "to": "5"},
-        {"id": 33719, "from": "backlog items", "to": "proposal capabilities"},
-        {"id": 33742, "from": "Since 11 Sep 2026", "to": "Snapshot: 27 Nov 2026"},
-        {"id": 33742, "from": "one architect, GitHub Copilot and automation", "to": "Ongoing build; activity is not customer benefit"},
-        {"id": 33766, "from": "Sources: public repository jmservera/ama at 140d8f4 (23 Oct 2026) · BRD v0.19.0 · PRD v0.18.0 · AMA Plan board", "to": "Sources: git a9667a8f5d; GitHub merged PRs; AMA Plan 7, 27 Nov 2026, 09:21 UTC. 66 of the 85 open are deferred for production."}
-      ],
+      "layout": "native",
       "notes": "S06 | Six weeks of product work sit under these slides.\n\r\nTIMING: 60 s for this slide (all builds together) · 05:20-06:20 on the 23:45 narration clock.\n\r\n\n\r\nSAY\n\r\nThese counts show activity, not accepted value; the lesson is to preserve short, usable feedback loops.\n\r\n\n\r\nThese slides sit on six weeks of product work: 480 commits, 233 merged pull requests and six architecture decision records. A business requirements document and a product requirements document with 142 requirements and 196 acceptance criteria. 34 research documents, 28 journey maps, a what-if study with 20 scenarios and a backlog of 189 items generated from all of it.\n\r\n\n\r\nThe recorded contributors are one architect, GitHub Copilot and automation. These activity counts do not validate a long coordinator loop or establish accepted delivery for Zava.\n\r\n\n\r\nThis is a product-management story first: understand the problem, test the assumptions, then build.\n\r\n\n\r\nSOURCES AND CALCULATIONS\n\r\nRepository home page and pull request search, 23 Oct 2026: 480 commits on main, 233 merged pull requests, 3 contributors; docs/adrs (6 ADRs); BRD v0.19.0 (52 FR, 12 NFR, 103 AC) and PRD v0.18.0 (61 FR, 17 NFR, 93 AC); docs/reference/research (34 documents); journey atlas (28 maps); agent what-if study (20 scenarios); AMA Plan board (189 items). BRD created 11 Sep 2026; first pull request 20 Sep 2026.\n\r\n",
       "revised_notes": [
         "S06 | Discovery grew scope. Delivery keeps learning.",
@@ -442,6 +421,264 @@
         "SNAPSHOT: Project 7 REST read at 2026-11-27T09:21Z retrieved all 358 non-archived issue members (rows equal totalCount): OPEN 85 (83 open, 2 reopened), CLOSED/COMPLETED 264, CLOSED/NOT_PLANNED 9; Status Todo 2, In Progress 17, Deferred 66, Done 273. These are overlapping views of the same denominator, not extra items. The supplied Insights chart is stacked: its upper boundary is not 358 open issues. We verified endpoint counts, not every historical chart transition.",
         "HISTORY: 131 currently tracked issues were created on 14 October; 172 current members existed by 15 October. This is current-membership issue history, not a complete historical membership or status-transition export. Scope expansion is not a measured failure rate or causal productivity finding. Epics, features, stories and assurance items are not interchangeable units.",
         "SOURCES: docs/capstone/source/review-2026-11-08.md, Progress snapshot and refresh; git rev-list --count --no-merges origin/main at a9667a8f5d; GitHub search is:pr is:merged total_count 2038 at this snapshot (the 8 November figure of 982 used gh pr list); AMA Plan project 7. Commits include automation. Twenty-seven companion maps plus one atlas map remain 28 hypotheses, not interviews. Refresh all changing counts and evidence before final presentation."
+      ],
+      "keep_ids": [
+        33466,
+        33467,
+        33469,
+        33472,
+        33476,
+        33481,
+        33487,
+        33766,
+        33791
+      ],
+      "headers": [
+        {
+          "id": 33476,
+          "text": "Discovery grew scope. Delivery keeps learning.",
+          "size": 30,
+          "box": [
+            6.56,
+            0.8,
+            6.173,
+            1.18
+          ]
+        },
+        {
+          "id": 33766,
+          "text": "Source: main git/API snapshot; exact denominators in notes.",
+          "size": 12,
+          "box": [
+            6.56,
+            6.39,
+            5.38,
+            0.48
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "key": "count-0",
+          "box": [
+            6.56,
+            2.68,
+            1.48,
+            0.72
+          ],
+          "text": "2023",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-0",
+          "box": [
+            6.56,
+            3.46,
+            1.48,
+            0.57
+          ],
+          "text": "non-merge commits",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "count-1",
+          "box": [
+            8.12,
+            2.68,
+            1.48,
+            0.72
+          ],
+          "text": "2038",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-1",
+          "box": [
+            8.12,
+            3.46,
+            1.48,
+            0.57
+          ],
+          "text": "merged PRs",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "count-2",
+          "box": [
+            9.68,
+            2.68,
+            1.48,
+            0.72
+          ],
+          "text": "358",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-2",
+          "box": [
+            9.68,
+            3.46,
+            1.48,
+            0.57
+          ],
+          "text": "tracked items",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "count-3",
+          "box": [
+            11.239999999999998,
+            2.68,
+            1.48,
+            0.72
+          ],
+          "text": "264",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-3",
+          "box": [
+            11.239999999999998,
+            3.46,
+            1.48,
+            0.57
+          ],
+          "text": "completed",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "count-4",
+          "box": [
+            6.56,
+            4.12,
+            1.48,
+            0.72
+          ],
+          "text": "85",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-4",
+          "box": [
+            6.56,
+            4.9,
+            1.48,
+            0.57
+          ],
+          "text": "open",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "count-5",
+          "box": [
+            8.12,
+            4.12,
+            1.48,
+            0.72
+          ],
+          "text": "9",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-5",
+          "box": [
+            8.12,
+            4.9,
+            1.48,
+            0.57
+          ],
+          "text": "not planned",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "count-6",
+          "box": [
+            9.68,
+            4.12,
+            1.48,
+            0.72
+          ],
+          "text": "28",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-6",
+          "box": [
+            9.68,
+            4.9,
+            1.48,
+            0.57
+          ],
+          "text": "journey hypotheses",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "count-7",
+          "box": [
+            11.239999999999998,
+            4.12,
+            1.48,
+            0.72
+          ],
+          "text": "5",
+          "size": 40,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "label-7",
+          "box": [
+            11.239999999999998,
+            4.9,
+            1.48,
+            0.57
+          ],
+          "text": "proposal capabilities",
+          "size": 15,
+          "color": "50655E",
+          "bold": false
+        },
+        {
+          "key": "activity-snapshot",
+          "box": [
+            6.56,
+            5.79,
+            6.1,
+            0.43
+          ],
+          "text": "27 Nov 09:21 UTC; main a9667a8f5d. Activity is not measured benefit.",
+          "size": 12,
+          "color": "50655E",
+          "bold": false
+        }
       ]
     },
     {
@@ -977,38 +1214,68 @@
       "code": "S11A",
       "title": "Azure connects home evidence to owned action.",
       "layout": "native",
-      "keep_ids": [37905, 37907, 37910, 37914],
+      "keep_ids": [
+        37905,
+        37907,
+        37910,
+        37914
+      ],
       "headers": [
         {
           "id": 37907,
           "text": "Azure connects home evidence to owned action.",
           "size": 30,
-          "box": [0.6, 0.55, 12.1333, 0.6]
+          "box": [
+            0.6,
+            0.55,
+            12.1333,
+            0.6
+          ]
         },
         {
           "id": 37905,
           "text": "",
           "size": 12,
-          "box": [0.6, 0.5, 0.1, 0.1]
+          "box": [
+            0.6,
+            0.5,
+            0.1,
+            0.1
+          ]
         },
         {
           "id": 37910,
           "text": "",
           "size": 12,
-          "box": [0.6, 6.9, 0.1, 0.1]
+          "box": [
+            0.6,
+            6.9,
+            0.1,
+            0.1
+          ]
         },
         {
           "id": 37914,
           "text": "",
           "size": 12,
-          "box": [12.15, 6.85, 0.58, 0.15]
+          "box": [
+            12.15,
+            6.85,
+            0.58,
+            0.15
+          ]
         }
       ],
       "elements": [],
       "images": [
         {
           "asset": "architecture-azure-deployment",
-          "box": [0.5, 1.2, 12.334, 5.8],
+          "box": [
+            0.5,
+            1.2,
+            12.334,
+            5.8
+          ],
           "alt": "Full source-grounded Azure deployment projection: home sensors to Azure IoT Hub and Event Hubs, validated idempotent intake, SQL retained telemetry/history and on-read averages/analysis; employee Workbench and shared API, five-helper quality-evidence preparation, separate resident site identity with own-case grants and assisted service; SQL, Blob and conditional Foundry; VNet/private endpoints/private DNS, registry, Key Vault and Monitor. Edge, token validation, background intake, queues, model, simulator and live sensor-to-Quality integration remain gated. Operational logs are not the household telemetry store. Resident consent and professional, safety and Finance decisions remain independent."
         }
       ],
@@ -1020,7 +1287,8 @@
         "SOURCES: infra/modules/iothub.bicep; src/api/src/zava_forward/api/iot_stream.py; src/api/src/zava_forward/api/sensor_ingestion.py; src/core/src/zava_forward/core/store.py; src/core/src/zava_forward/core/sensor_analysis_store.py; src/core/src/zava_forward/core/assistants.py; docs/capstone/source/diagrams/architecture/text-equivalent.md; docs/capstone/source/review-2026-11-27.md",
         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
         "TIMING: 45 s for this added main-route slide · 11:40-12:25 on the 24:30 narration clock.",
-        "DRAWING TEXT EQUIVALENT / DATED DESIGN: home sensors -> IoT Hub -> Event Hubs -> validated, idempotent intake -> SQL accepted observations and retained history. Aggregates are derived on read. Workbench consumes the case API; five current helpers include Quality Verification evidence. The separate resident site needs identity and explicit own-case scope; assisted service remains. SQL/Blob, Foundry, private endpoints, DNS, registry, Vault and Monitor support the design. Optional edge, token, background queue, model and simulator paths are separately gated. This retained 8 November drawing is not a fresh deployed inventory or proof that every depicted service link is released. See the 27 November review for current source versus dated execution evidence."
+        "DRAWING TEXT EQUIVALENT / DATED DESIGN: home sensors -> IoT Hub -> Event Hubs -> validated, idempotent intake -> SQL accepted observations and retained history. Aggregates are derived on read. Workbench consumes the case API; five current helpers include Quality Verification evidence. The separate resident site needs identity and explicit own-case scope; assisted service remains. SQL/Blob, Foundry, private endpoints, DNS, registry, Vault and Monitor support the design. Optional edge, token, background queue, model and simulator paths are separately gated. This retained 8 November drawing is not a fresh deployed inventory or proof that every depicted service link is released. See the 27 November review for current source versus dated execution evidence.",
+        "UK BOUNDARY UPDATE, 27 NOVEMBER: UK South is the primary application/data target, not proof that all data stays in the UK. SQL and AI locations are independently selectable. The retained resident-model option is Sweden Central and GlobalStandard can process outside the UK. The picture's outer application box is not a country or provider boundary. Entra identity, abuse monitoring, support, telemetry and control-plane access require separate approved data maps. Synthetic demo permission does not approve real resident data. The dated sovereign service matrix is in docs/architecture/environment-region-quota-strategy.md."
       ],
       "sources": [
         "infra/modules/iothub.bicep",
@@ -3614,14 +3882,24 @@
           "id": 3833,
           "text": "Sources: Bicep + current source contracts, 8 Nov 2026. Gated paths are not live acceptance.",
           "size": 12,
-          "box": [0.6, 6.7, 8.0, 0.3]
+          "box": [
+            0.6,
+            6.7,
+            8.0,
+            0.3
+          ]
         }
       ],
       "elements": [
         {
           "key": "full-view-caption",
-          "box": [0.6, 6.12, 12.13, 0.35],
-          "text": "Core view here. Full editable reference: device flow, operations, production/worker options and separate resident boundary.",
+          "box": [
+            0.6,
+            6.12,
+            12.13,
+            0.35
+          ],
+          "text": "UK target: verify model processing, identity and provider access separately. Private Link is a network control.",
           "size": 15,
           "color": "50655E"
         }
@@ -3629,7 +3907,12 @@
       "images": [
         {
           "asset": "azure-architecture",
-          "box": [0.6, 1.83, 12.13, 4.18],
+          "box": [
+            0.6,
+            1.83,
+            12.13,
+            4.18
+          ],
           "alt": "Selected core projection of the source-grounded Azure reference architecture. Staff sign-in reaches one Container Apps Workbench/API with coded gates and five proposal helpers. Private endpoints sit within the VNet; SQL, Blob and conditional Foundry/OpenAI sit outside it. The visible direction points to new main S11A/page 13 for the full home-sensor receiving chain, SQL telemetry/history/on-read averages, separate resident site, supporting services and gated options; the editable full map retains technical detail. This is not a live deployment, accepted sensor-to-Quality integration or UK-inference attestation."
         }
       ],
@@ -3652,7 +3935,9 @@
         "NETWORK AND PROCESSING: PaaS services are outside the VNet, accessed through declared private endpoints. Direct demo and private production ingress are different profiles. Main defaults and independent flags do not prove a working worker or an enabled API consumer. GlobalStandard is not UK-only processing; the separate optional resident model is public Sweden Central. Legal/privacy/retention and current runtime acceptance remain separate.",
         "VALUE HYPOTHESIS: fewer conflicting updates and fewer operating boundaries. Verify human effort, recovery and load before treating architectural simplicity as a measured benefit.",
         "SOURCES: bounded System Architecture Reviewer analysis of main/modules and resident/simulator entrypoints at c50e9f0b, 8 Nov 2026; exact locators and limits in docs/capstone/source/diagrams/architecture/text-equivalent.md. Existing ADR/runtime alternatives are retained. No fresh cloud inventory, deployment, credential read or operational adoption occurred.",
-        "NAVIGATION: B10, page 37; question index page 27; fixed topic S16/page 19. Existing native slide-jump links remain unchanged."
+        "NAVIGATION: B10, page 37; question index page 27; fixed topic S16/page 19. Existing native slide-jump links remain unchanged.",
+        "UK BOUNDARY UPDATE, 27 NOVEMBER: the outer CxO box is logical application scope, not a VNet, country or provider-access boundary. Private endpoints protect a network path; the managed SQL, Blob, Foundry and other services sit outside that VNet. Primary Bicep location is UK South, but SQL and AI locations are independently selectable and the retained resident-model option is Sweden Central. GlobalStandard may process outside the UK. Entra, support, abuse monitoring, telemetry, backups and control-plane access need their own data map and contract review.",
+        "SOVEREIGN PATH: UK public Azure with applicable sovereign controls preserves public managed services; UK-operated Azure Local changes the runtime and operating model. Containers are portable, but SQL Database, model serving, identity, sensing and monitoring need replacements or revalidation. See B22/page 49 and docs/architecture/environment-region-quota-strategy.md#uk-data-boundary-and-sovereign-migration-options-2026-11-27. No sovereign deployment or real-data approval is claimed."
       ]
     },
     {
@@ -3673,27 +3958,11 @@
       "layout": "native",
       "notes": "B12 | Research validation and representative maps\nSPEAKER SCRIPT\nThe plain answer is no: this design has not been validated through direct resident or staff research. Owner feedback, prototype review and nine role instruments informed it, but none is customer endorsement.\nThese three representative maps expose testable hypotheses: the resident needs meaningful choice without repeating the story; the assessor needs traceable preparation and observations; the Finance preparer needs version-correct evidence and separate cash reconciliation.\nThe next empirical work is direct, privacy-governed task and comprehension testing with relevant residents and staff, including assisted routes, access needs, handoff failures and net effort. Desired gains stay hypotheses until that evidence exists.\nDIAGRAM TEXT EQUIVALENT\nThree horizontal maps, each made of five connected, numbered native chevrons. Resident: 1 hear/report -> 2 survey -> 3 choose works -> 4 appointment -> 5 live with measures. Pain hypothesis: repeated story or pressure; desired gain: meaningful choice and owned aftercare. Assessor: 1 prepare -> 2 arrange access -> 3 observe -> 4 write up -> 5 clarify/revisit. Pain hypothesis: missing records or re-keying; desired gain: sourced, traceable assessment. Finance preparer: 1 establish need -> 2 check route -> 3 assemble case -> 4 maintain award/claim evidence -> 5 reconcile. Pain hypothesis: conflicting versions or unsupported scope; desired gain: a defensible pack. Stage labels, numbers and hypothesis/gain text preserve meaning without colour. No user validation or emotion score is asserted.\nEVIDENCE AND LIMITS\nNo direct resident/staff interviews, observation, task validation, acceptance or endorsement is supplied by owner feedback or role-agent instruments.\nThese are three representative maps from the 28-map research coverage, not exhaustive validated user coverage. Pain hypotheses and desired gains are not measurements.\nThe next empirical validation needs appropriate privacy/research controls and relevant people; no participant recruitment, completion date or result is invented.\nSOURCES\ndocs/reference/research/ux/customer-journeys/customer-journey-atlas.md\ndocs/reference/research/ux/customer-journeys/residents.md\ndocs/reference/research/ux/customer-journeys/programme.md\ndocs/reference/research/ux/customer-journeys/finance.md\nNAVIGATION\nB12 appendix answer. Preserve Last Slide Viewed caller, fixed Topic: S07 / slide 8, and Index: slide 27 controls.\nExisting source footers are retained verbatim; the paths above identify the sources for this revision.",
       "revised_notes": [
-        "B12 | Did you validate this with real residents and staff?",
-        "SPEAKER SCRIPT",
-        "The plain answer is no: this design has not been validated through direct resident or staff research. Owner feedback, prototype review and nine role instruments informed it, but none is customer endorsement.",
-        "These three representative maps expose testable hypotheses: the resident needs meaningful choice without repeating the story; the assessor needs traceable preparation and observations; the Finance preparer needs version-correct evidence and separate cash reconciliation.",
-        "The next empirical work is direct, privacy-governed task and comprehension testing with relevant residents and staff, including assisted routes, access needs, handoff failures and net effort. Desired gains stay hypotheses until that evidence exists.",
-        "DIAGRAM TEXT EQUIVALENT",
-        "Three horizontal maps, each made of five connected, numbered native chevrons. Resident: 1 hear/report -> 2 survey -> 3 choose works -> 4 appointment -> 5 live with measures. Pain hypothesis: repeated story or pressure; desired gain: meaningful choice and owned aftercare. Assessor: 1 prepare -> 2 arrange access -> 3 observe -> 4 write up -> 5 clarify/revisit. Pain hypothesis: missing records or re-keying; desired gain: sourced, traceable assessment. Finance preparer: 1 establish need -> 2 check route -> 3 assemble case -> 4 maintain award/claim evidence -> 5 reconcile. Pain hypothesis: conflicting versions or unsupported scope; desired gain: a defensible pack. Stage labels, numbers and hypothesis/gain text preserve meaning without colour. No user validation or emotion score is asserted.",
-        "EVIDENCE AND LIMITS",
-        "No direct resident/staff interviews, observation, task validation, acceptance or endorsement is supplied by owner feedback or role-agent instruments.",
-        "These are three representative maps from the 28-map research coverage, not exhaustive validated user coverage. Pain hypotheses and desired gains are not measurements.",
-        "The next empirical validation needs appropriate privacy/research controls and relevant people; no participant recruitment, completion date or result is invented.",
-        "SOURCES",
-        "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
-        "docs/reference/research/ux/customer-journeys/residents.md",
-        "docs/reference/research/ux/customer-journeys/programme.md",
-        "docs/reference/research/ux/customer-journeys/finance.md",
-        "NAVIGATION",
-        "NAVIGATION: Native controls retain their fixed Topic and Index destinations. Return deliberately to the actual interrupted page; no dynamic Last Slide Viewed behaviour is claimed. Other content and action targets remain unchanged.",
-        "Existing source footers are retained verbatim; the paths above identify the sources for this revision.",
-        "VISUAL UPDATE, 30 OCT: The value-proposition canvas links proposed products/services, gain creators and pain relievers to hypothesised resident jobs, gains and pains. Fit is a testable design proposition, not a delivered result. No quantified or observed sentiment curve is invented. The retained representative assessor and Finance maps remain research depth in the source and notes, not new interview evidence.",
-        "Resident jobs: choose specific works, keep ordinary routines and use or query the measures. Pains to test: repeated stories and pressure. Gains sought: meaningful choice and owned aftercare. Proposed response: scoped case, supported visit, aftercare, named contact and visible remedies; direct resident/staff testing remains next."
+        "B12 | Which resident jobs, pains and gains shaped the product?",
+        "DIAGRAM TEXT EQUIVALENT: this is the resident value-proposition canvas, not three horizontal journey maps. The customer side names choosing works, keeping everyday routines, using the home and querying outcomes. Pains include repeated explanations and pressure to accept; gains include meaningful choice and owned aftercare. The product side proposes a named contact, visible open remedies and help preparing the next action.",
+        "DISCOVERY TRACE: role-agent perspectives, pains/gains mapping, the journey atlas and what-if alternatives led to representative-authority records, separate offers and commitments, and handover that does not hide open remedies. These are desk-research hypotheses from research instruments, not employee testimony, resident interviews or proof that every formal DT workshop ran.",
+        "PRODUCT TEST: compare the bounded assistant with the same workflow without AI. Count preparation, checking, corrections, coordination and resident effort. Stop when advice loses consent, safety, source trace or an accountable receiving owner. The five learning bundles are a protocol; no resident-benefit result is reported.",
+        "SOURCE: docs/reference/research/ux/customer-journeys/customer-journey-atlas.md; docs/reference/research/ux/journey-learning-test-bundles.md; docs/adrs/0003-journey-derived-capabilities-runtime-fit.md. Retained historical touchpoint maps remain separately available."
       ],
       "keep_ids": [
         4253,
@@ -4851,9 +5120,336 @@
       "code": "B22",
       "part_number": 49,
       "baseline_number": 49,
-      "title": "Can customer data leave the UK or train a provider's model?\r",
-      "layout": "baseline",
-      "notes": "B22 | Can customer data leave the UK or train a provider's model?\r\nQuestion-led appendix answer | Audience: DPO / CISO / CIO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThis package cannot make that contractual or legal assurance. Verify the exact provider, model/version, deployment SKU, routing/geography, retention, abuse monitoring, subprocessors and applicable agreement before real data is processed. A UK resource name or region does not alone prove UK-only inference, especially for a GlobalStandard model deployment. Local snapshots and research are evidence to review, not current legal sign-off. The handoff contains only public synthetic illustrations and repository-authored summaries, not private datasets or credentials.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Processing geography is set by the deployment type\r\n- Verify exact model, deployment type and contract\r\n- No real resident data or private dataset in this handoff\r\n\r\nVISUAL\r\nProcessing decision checklist, no unverified UK-only green badge.\r\n\r\nRETURN\r\nReturn to S16 (slide 19), architecture and security boundaries. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE04 | docs/ideas/typesafe-system-one-agent-fit.md | Observed Feasibility and Parallel Value Experiment, 2026-10-11; task suitability and serving limitations\r\n   Classification: Dated research, feasibility observations and experiment proposals\r\n   Supports: Decision 1 candidate scoring and screening distinct from rules and generation\r\n   Limit: No general cheaper/faster, calibrated quality, Foundry tier availability or accepted-outcome saving claim.\r\nE06 | docs/architecture/README.md; docs/architecture/assets/README.md; infra/main.bicep | Executive and Technical Architecture; interaction contracts; Icon Source and Terms; modelDeployments and profile parameters\r\n   Classification: Source-based architecture and dated historical handover\r\n   Supports: Single-API assistants, SQL/Blob, Entra, managed identities, model contracts, configured operations and official icons\r\n   Limit: Historical source/deployment evidence, not fresh Azure inventory. GlobalStandard does not establish UK-only processing.\r\nE12 | docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/case_study_48_addendum.md; docs/reference/regulatory/README.md | ADR Decision 6 and Implementation Status; Responsible AI release boundary; source authority and human acceptance\r\n   Classification: Accepted Basic IoT Hub exercise direction; partial engineering; separate human/legal gates\r\n   Supports: Offline consumer is not live Hub integration; no diagnosis or suppressed hazard route; human/legal/privacy acceptance remains distinct\r\n   Limit: No current legal determination, live telemetry, qualified assessment, fairness or WCAG-conformance claim.\r\nE13 | docs/architecture/cutover-evidence-pack.md; infra/README.md | Bounded RG Publication Continuation, 2026-10-19; Current Exercise Handover; Direct Entra Setup and Acceptance\r\n   Classification: Dated actual cloud observations, failed attempts and source runbook\r\n   Supports: Current cutover blockers; exact live versus local evidence; preflight, rollback, private backing and owner sign-off requirements\r\n   Limit: No fresh deployment, paid call or genuine staff session performed for this presentation package.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- No legal-currentness, WCAG-conformance, production-readiness or completed human-validation claim follows from this package.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
+      "title": "UK data boundary: controls first, migration second.",
+      "layout": "native",
+      "notes": "B22 | Can customer data leave the UK or train a provider's model?\r\nQuestion-led appendix answer | Audience: DPO / CISO / CIO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThis package cannot make that contractual or legal assurance. Verify the exact provider, model/version, deployment SKU, routing/geography, retention, abuse monitoring, subprocessors and applicable agreement before real data is processed. A UK resource name or region does not alone prove UK-only inference, especially for a GlobalStandard model deployment. Local snapshots and research are evidence to review, not current legal sign-off. The handoff contains only public synthetic illustrations and repository-authored summaries, not private datasets or credentials.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Processing geography is set by the deployment type\r\n- Verify exact model, deployment type and contract\r\n- No real resident data or private dataset in this handoff\r\n\r\nVISUAL\r\nProcessing decision checklist, no unverified UK-only green badge.\r\n\r\nRETURN\r\nReturn to S16 (slide 19), architecture and security boundaries. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE04 | docs/ideas/typesafe-system-one-agent-fit.md | Observed Feasibility and Parallel Value Experiment, 2026-10-11; task suitability and serving limitations\r\n   Classification: Dated research, feasibility observations and experiment proposals\r\n   Supports: Decision 1 candidate scoring and screening distinct from rules and generation\r\n   Limit: No general cheaper/faster, calibrated quality, Foundry tier availability or accepted-outcome saving claim.\r\nE06 | docs/architecture/README.md; docs/architecture/assets/README.md; infra/main.bicep | Executive and Technical Architecture; interaction contracts; Icon Source and Terms; modelDeployments and profile parameters\r\n   Classification: Source-based architecture and dated historical handover\r\n   Supports: Single-API assistants, SQL/Blob, Entra, managed identities, model contracts, configured operations and official icons\r\n   Limit: Historical source/deployment evidence, not fresh Azure inventory. GlobalStandard does not establish UK-only processing.\r\nE12 | docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/case_study_48_addendum.md; docs/reference/regulatory/README.md | ADR Decision 6 and Implementation Status; Responsible AI release boundary; source authority and human acceptance\r\n   Classification: Accepted Basic IoT Hub exercise direction; partial engineering; separate human/legal gates\r\n   Supports: Offline consumer is not live Hub integration; no diagnosis or suppressed hazard route; human/legal/privacy acceptance remains distinct\r\n   Limit: No current legal determination, live telemetry, qualified assessment, fairness or WCAG-conformance claim.\r\nE13 | docs/architecture/cutover-evidence-pack.md; infra/README.md | Bounded RG Publication Continuation, 2026-10-19; Current Exercise Handover; Direct Entra Setup and Acceptance\r\n   Classification: Dated actual cloud observations, failed attempts and source runbook\r\n   Supports: Current cutover blockers; exact live versus local evidence; preflight, rollback, private backing and owner sign-off requirements\r\n   Limit: No fresh deployment, paid call or genuine staff session performed for this presentation package.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- No legal-currentness, WCAG-conformance, production-readiness or completed human-validation claim follows from this package.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history.",
+      "keep_ids": [
+        8328,
+        8435,
+        8543,
+        8652
+      ],
+      "headers": [
+        {
+          "id": 8435,
+          "text": "UK data boundary: controls first, migration second.",
+          "size": 29,
+          "box": [
+            0.6,
+            0.75,
+            12.13,
+            0.72
+          ]
+        },
+        {
+          "id": 8543,
+          "text": "Sources: Microsoft Learn / Ignite, checked 27 Nov. Full service matrix and limits in notes.",
+          "size": 12,
+          "box": [
+            0.6,
+            6.65,
+            9.7,
+            0.34
+          ]
+        }
+      ],
+      "elements": [
+        {
+          "key": "country-limit",
+          "box": [
+            0.6,
+            1.78,
+            12.13,
+            0.42
+          ],
+          "text": "UK app/data target. GlobalStandard can leave the UK. Identity and operator access are separate.",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-heading-0",
+          "box": [
+            0.6,
+            2.35,
+            3.85,
+            0.42
+          ],
+          "text": "UK public Azure",
+          "size": 19,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "sovereign-heading-1",
+          "box": [
+            4.63,
+            2.35,
+            3.85,
+            0.42
+          ],
+          "text": "UK-operated Azure Local",
+          "size": 19,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "sovereign-heading-2",
+          "box": [
+            8.66,
+            2.35,
+            4.07,
+            0.42
+          ],
+          "text": "Revalidation needed",
+          "size": 19,
+          "color": "173F35",
+          "bold": true
+        },
+        {
+          "key": "sovereign-0-0",
+          "box": [
+            0.6,
+            2.9,
+            3.85,
+            0.6
+          ],
+          "text": "Consumption apps and jobs",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-0-1",
+          "box": [
+            4.63,
+            2.9,
+            3.85,
+            0.6
+          ],
+          "text": "AKS / scheduled containers",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-0-2",
+          "box": [
+            8.66,
+            2.9,
+            4.07,
+            0.6
+          ],
+          "text": "You operate ingress, scaling and clusters.",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-1-0",
+          "box": [
+            0.6,
+            3.51,
+            3.85,
+            0.6
+          ],
+          "text": "SQL Database; Blob / Queue",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-1-1",
+          "box": [
+            4.63,
+            3.51,
+            3.85,
+            0.6
+          ],
+          "text": "SQL Server GA; Blob preview",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-1-2",
+          "box": [
+            8.66,
+            3.51,
+            4.07,
+            0.6
+          ],
+          "text": "Queue parity unverified; test data and recovery.",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-2-0",
+          "box": [
+            0.6,
+            4.12,
+            3.85,
+            0.6
+          ],
+          "text": "Entra; Monitor / Defender",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-2-1",
+          "box": [
+            4.63,
+            4.12,
+            3.85,
+            0.6
+          ],
+          "text": "AD / AD FS when disconnected",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-2-2",
+          "box": [
+            8.66,
+            4.12,
+            4.07,
+            0.6
+          ],
+          "text": "Rebuild resident identity, monitoring and security.",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-3-0",
+          "box": [
+            0.6,
+            4.73,
+            3.85,
+            0.6
+          ],
+          "text": "Approved geography model SKU",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-3-1",
+          "box": [
+            4.63,
+            4.73,
+            3.85,
+            0.6
+          ],
+          "text": "Foundry Local GA; new models",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-3-2",
+          "box": [
+            8.66,
+            4.73,
+            4.07,
+            0.6
+          ],
+          "text": "Re-test quality; price hardware and operations.",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-4-0",
+          "box": [
+            0.6,
+            5.34,
+            3.85,
+            0.6
+          ],
+          "text": "Registry / Key Vault",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-4-1",
+          "box": [
+            4.63,
+            5.34,
+            3.85,
+            0.6
+          ],
+          "text": "Local Registry / Key Vault documented",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-4-2",
+          "box": [
+            8.66,
+            5.34,
+            4.07,
+            0.6
+          ],
+          "text": "Premium / HSM feature parity needs review.",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-5-0",
+          "box": [
+            0.6,
+            5.949999999999999,
+            3.85,
+            0.6
+          ],
+          "text": "IoT Hub / Event Hubs",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-5-1",
+          "box": [
+            4.63,
+            5.949999999999999,
+            3.85,
+            0.6
+          ],
+          "text": "Same managed hubs not documented",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        },
+        {
+          "key": "sovereign-5-2",
+          "box": [
+            8.66,
+            5.949999999999999,
+            4.07,
+            0.6
+          ],
+          "text": "Replace sensing intake and prove the full flow.",
+          "size": 17,
+          "color": "173F35",
+          "bold": false
+        }
+      ],
+      "revised_notes": [
+        "B22 | UK data boundary and sovereign migration options, evidence checked 27 November 2026.",
+        "UK TARGET AND EXCEPTIONS: the application and primary data target is UK South. Independent SQL/AI locations and the retained Sweden Central resident-model option need explicit approved data maps. GlobalStandard can process prompts/responses in any Azure geography; Standard and regional provisioned processing stay within the customer-specified geography, where the model/SKU is supported. EU DataZone follows the EU/EFTA boundary and is not a UK zone. Private Link is a network control, not country attestation. Entra's published core-store geographies and External ID options do not establish UK-only identity storage. Support, abuse monitoring, telemetry, backups and control-plane access require separate contract/control review.",
+        "PUBLIC SOVEREIGN CONTROLS: Sovereign Public Cloud adds supported controls to existing public Azure, not a new UK service catalog. Review regional policy, keys, qualifying Lockbox access, logs and recovery against the customer's requirement. Data Guardian and Production Touch Ledger are documented for EU/EFTA regions, not UK coverage. Customer data is not used to train foundation models without permission/instruction under the cited Foundry terms; that is distinct from processing location and abuse monitoring.",
+        "PRIVATE/CONNECTED: UK-operated Azure Local means customer/partner-operated infrastructure with Azure connectivity for connected control-plane services. Containers can move to AKS; Container Apps on Arc is not the same hosted Consumption service. SQL Database needs SQL Server compatibility/recovery tests. Foundry Local serves a different model/catalog and operating model; current GPT-4.1 prices and quality cannot transfer unchanged. Regional service, SKU, feature, quota and contract admission remain prerequisites.",
+        "PRIVATE/DISCONNECTED: official supported services include AKS/VMs, local Container Registry, Key Vault, Policy and system-assigned managed identity for supported types. Registry Premium and HSM feature parity is not proven. AD/AD FS replaces the public Entra operator identity path; resident identity needs a separate design. Microsoft announced SQL Server and Foundry Local GA on 17 November, but Blob and connected-to-disconnected management transition are preview. Queue, IoT Hub, Event Hubs, Fabric/Power BI and Agent 365 are not established as identical disconnected services. Replace or revalidate messaging, alerts, monitoring and security. Azure Government is US-only and is not a UK destination.",
+        "MIGRATION AND COST: first approve the requirement and data map; harden/revalidate the UK public target; isolate portable containers and deterministic contracts; run a separate local-platform proof of concept with chosen models and services; prove identity/consent, audit, recovery, safety and observability before any approved cut-over. Hardware, power, licensing, support and operational staff remain payable when workloads idle. This is a possible path, not a selected platform, deployment plan, contract promise or approval. The current GPT-4.1 family has a published 14 April 2027 retirement schedule; already retired regional offers stay retired and no successor is assumed.",
+        "FULL MATRIX AND DATED SOURCES: docs/architecture/environment-region-quota-strategy.md#uk-data-boundary-and-sovereign-migration-options-2026-11-27. Microsoft Learn: azure-sovereign-clouds/public/overview-sovereign-public-cloud (9 Nov 2026); foundry/foundry-models/concepts/deployment-types (6 Aug 2026); azure-local/manage/disconnected-operations-overview and disconnected-operations-identity (23 Feb 2026); entra/fundamentals/data-residency (6 Nov 2025); foundry/openai/concepts/model-retirement-schedule (18 Nov 2026); foundry/responsible-ai/openai/data-privacy (18 May 2026); Azure Arc Blog Ignite update (17 Nov 2026). All retrieved 27 Nov 2026. Availability is not quota, contractual UK assurance or accepted live behaviour."
+      ]
     },
     {
       "number": 51,
@@ -5196,7 +5792,7 @@
       {
         "code": "S11A",
         "seconds": 45,
-        "say": "Home sensors feed IoT Hub, Event Hubs, validated intake and SQL history. Read-only derivation doesn't certify damp or retrofit success. The synthetic simulator is separate from the resident's monitoring choice. Registry, identity, Vault, private endpoints and monitoring support the application. This is the retained eight-November drawing, not today's cloud inventory. Later audits observed the simulator, transport, SQL and UI; the twenty-six-November Quality model leg was blocked. Check the selected revision rather than assuming the whole chain works."
+        "say": "Here is the receiving chain: home evidence enters through IoT, is validated, and becomes retained SQL history before a colleague reviews it. The employee workbench and optional resident site have separate access rights. UK South is the application and data target, but GlobalStandard inference can leave the UK; the retained resident model option is Sweden Central. Identity and provider operations need separate checks too. Private endpoints do not prove UK-only processing. The appendix explains the sovereign options and which services would have to change."
       },
       {
         "code": "S15",
@@ -5247,6 +5843,47 @@
         "code": "S23",
         "seconds": 30,
         "say": "Zava Forward makes the home, its evidence and its next accountable action visible. The demo shows the product's mechanism; it doesn't prove faster retrofit or lower bills. My recommendation is to validate that mechanism with the people doing the work, finish the remaining task contracts and expand only when quality and net value support it."
+      }
+    ]
+  },
+  "appendix_route": {
+    "name": "Discovery and UK sovereignty",
+    "slot_seconds": 360,
+    "steps": [
+      {
+        "code": "B12",
+        "seconds": 60,
+        "say": "The discovery started with what residents need to do: choose works, keep everyday routines and get an answer when something goes wrong. The canvas records repeated explanations and pressure to accept as pain hypotheses. Meaningful choice and owned aftercare are the proposed gains. Role perspectives, pains and gains, journey mapping and what-if alternatives led to concrete product choices: representative authority, a named receiving owner, separate offers and commitments, and open remedies that survive handover. These are research hypotheses, not resident interviews. The next step is to test those choices with people and a workflow-only comparator."
+      },
+      {
+        "code": "B06",
+        "seconds": 45,
+        "say": "The resident site adds a channel; it does not make digital access compulsory. Phone, letters, visits and assisted service remain. Signing in, allowing a record to be used, agreeing to monitoring and consenting to particular works are different permissions. The assistant can explain retained evidence or prepare a question. It cannot give consent, diagnose the home or accept work. A useful product test is whether someone can keep that choice while a colleague knows who owns the next action. That takes us to the alternatives."
+      },
+      {
+        "code": "B01",
+        "seconds": 45,
+        "say": "Process improvement without AI is the baseline. Clear ownership, shared records and better scheduling may already remove much of the avoidable delay. Staffing, contractor capacity and physical work remain constraints. AI earns its place only if it improves a bounded task after checking and correction are counted. The chosen direction combines deterministic workflow with optional preparation and recommendations. We did not choose a chatbot to run the entire retrofit. That choice also determines which kind of model belongs in each task."
+      },
+      {
+        "code": "B04",
+        "seconds": 45,
+        "say": "Use rules when the answer is known arithmetic or an exact labelled check. A constrained decision model can select among supplied candidates or abstain; generation is for permitted explanation and drafting. The historical Decision 1 feasibility work is not the engine deployed across the current five helpers. Richer documents, photos or sensors may improve preparation, but they do not grant safety or approval authority. Recommendations and evidence judging are the priority AI workloads; deterministic checks consume no tokens. The workflow keeps the final decision with its accountable owner."
+      },
+      {
+        "code": "B10",
+        "seconds": 45,
+        "say": "Those product choices explain the architecture. One shared API and retained records keep ownership, evidence and approvals consistent; bounded helpers prepare work around them. Sensors add evidence through a validated receiving chain, not an automatic acceptance decision. The diagram separates private network endpoints from managed services outside the VNet. Its outer box is application scope, not a UK data guarantee. The UK application target, model processing and provider operations need separate evidence. A future sovereign requirement therefore starts with the data map, not with copying this picture."
+      },
+      {
+        "code": "B22",
+        "seconds": 75,
+        "say": "First define what must stay in the UK: application records, model processing, identity, support and operational access are different requirements. GlobalStandard inference can leave the UK, and an EU data zone is not a UK zone. Applicable sovereign controls on UK public Azure preserve the public services. A UK-operated Azure Local platform is a bigger change. Containers can move to AKS; SQL Server and Foundry Local are available, but Blob is preview. Local Registry and Key Vault are documented, yet SKU features still need checking. Disconnected operation changes identity, monitoring and sensing services; it is not a like-for-like copy. Azure Government is US-only. A local proof of concept must re-test model quality, recovery, consent and safety, and price hardware and operations. Today's public-cloud estimate does not price that migration. The current GPT-4.1 retirement schedule also means a successor must be evaluated."
+      },
+      {
+        "code": "B15",
+        "seconds": 45,
+        "say": "The next decision is a bounded validation exercise, not production approval. Test story-once and owned promises, visit readiness, evidence reuse after changes, aftercare, and funding preparation against non-AI comparators. Count the effort for employees and residents, including corrections and coordination. Stop when consent, safety, source trace or responsibility is lost. A technical deployment test cannot prove those user outcomes. Named owners still need to approve the service, legal and privacy position, accessibility and operating model before a pilot or a sovereign migration."
       }
     ]
   }

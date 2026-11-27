@@ -2,7 +2,7 @@
 title: Environment Strategy, Region and Quota Parameterization, and Recorded Checks
 description: Canonical specification of Zava Forward dev, test, and pilot Bicep parameter sets, bounded region and service quota parameters, mechanical fail-closed check-reference guards, and dated capability/quota evidence
 author: GitHub Copilot
-ms.date: 2026-11-15
+ms.date: 2026-11-27
 ms.topic: reference
 ---
 
@@ -131,3 +131,127 @@ Operational rules for `regionCheckReference` and `quotaCheckReference`:
 * Evaluates compiled `parameter-guard` ARM expressions against blank, whitespace, placeholder, assumption-word, bare UUID, and malformed-region inputs, plus positive repository anchors containing substrings such as `spending` and `jtbd`, and runs negative ARM template mutations to verify tamper detection.
 * Exercises `infra/scripts/pipeline.py` and `infra/scripts/deploy.py` parameter validation against placeholder, assumption, bare/embedded UUID, duplicate `--parameter`, and invalid-region overrides while verifying that raw rejected values are never echoed in errors.
 * Verifies parity across compiled Bicep defaults, this architecture document, `docs/architecture/README.md`, and `infra/README.md` (`## Environments` and `R1` through `R17`).
+
+## UK Data Boundary and Sovereign Migration Options (2026-11-27)
+
+This is a presentation and future-options analysis, not an approved platform
+selection or a change to the deployment contract above. The dated parameter
+matrix and October quota ledger remain historical evidence. The [27 November
+Azure cost model](../capstone/source/azure-cost-model-2026-11-27.json) describes
+the observed public-cloud configuration, including provisioned SQL S3; it
+does not price a private-cloud migration or supersede those older parameter sets.
+
+### Separate the requirements
+
+UK application records, inference, identity and operational control are
+different requirements. `primaryLocationMustBeUKSouth` constrains the primary
+stack location; SQL and AI locations are independently selectable. The
+[retained architecture](../capstone/source/diagrams/architecture/text-equivalent.md)
+also includes a Sweden Central resident-model option. Neither the diagram's
+outer application box nor Private Link establishes UK-only processing.
+
+Foundry's documented processing rules distinguish Global types, which may
+process in any Azure region, from Standard and regional provisioned types,
+which process within the customer-specified geography. Data at rest remains
+in the designated geography under the applicable service contract. EU DataZone
+follows the EU/EFTA boundary, not a UK zone [M2, M8].
+
+Entra's published core-store geographies and External ID choices do not
+establish UK-only identity storage. Support access, abuse monitoring,
+telemetry, backups and the management control plane need their own data map,
+retention and contract review. The statement that prompts do not train
+foundation models without permission or instruction is a separate assurance
+from where inference occurs [M4, M8].
+
+### Public and private options
+
+Sovereign Public Cloud applies supported controls to the existing public
+cloud. It does not require moving to a separate UK cloud or supply a different
+service catalog. Controls vary by workload, service, region and configuration.
+Data Guardian and Production Touch Ledger are documented for EU/EFTA regions;
+their availability must not be extended to UK regions by implication [M1].
+
+UK-operated Sovereign Private Cloud on Azure Local changes who operates
+infrastructure and which services can run locally. Connected operation still
+uses Azure connectivity for applicable management services. Disconnected
+operation provides a local control plane and a documented subset of services,
+with eligible agreement, support, trained operators and dedicated management
+hardware prerequisites [M3, M9]. Azure Government is US-only and is not a UK
+destination [M7].
+
+### Service-by-service migration matrix
+
+Public entries describe the existing service families, not a fresh guarantee
+of every UK SKU, feature, quota or customer contract. "Not established" means
+the cited local catalog does not prove an identical service; it does not mean
+that no alternative or future service can supply the function.
+
+| Current dependency | UK public Azure with applicable controls | Azure Local connected | UK-operated disconnected Azure Local | Product consequence |
+| --- | --- | --- | --- | --- |
+| Container Apps Consumption and jobs | Retain the public app/job service; recheck regional profile and quota | Container Apps on Arc/AKS changes hosting; app/job managed identity is unavailable [M10] | AKS/VMs documented; identical Consumption/job service not established [M3] | Port images; revalidate ingress, scaling, credential rotation and scheduled work |
+| Azure SQL Database | Retain managed database; target SKU/admission check required | SQL Server on Azure Local, not identical SQL Database [M5] | SQL Server GA announced for connected/disconnected operation [M5] | Test T-SQL, audit, backup, recovery, availability and patch ownership |
+| Blob and Queue | Retain public storage services | Local Blob preview; Queue parity not established [M5] | Blob preview; identical Queue service not established [M3, M5] | Preview is not a production dependency approval; select and test storage/messaging |
+| Premium Container Registry | Retain public registry; validate Premium features | Local/Arc registry feature checks required | Local Registry documented; Premium feature parity not established [M3] | Revalidate image trust, retention, network and distribution controls |
+| Key Vault | Retain applicable public vault/key controls | Select supported local/connected key management | Local Key Vault documented for secrets; HSM/Premium-equivalent features not established [M3] | Confirm key custody, rotation, availability and operator rights |
+| Private endpoints and DNS | Retain applicable Private Link/private DNS network controls | Local network integration needs design | Customer-operated networking/DNS; identical public Private Link service not established | Network isolation does not establish geographic or legal sovereignty |
+| IoT Hub B1 and Event Hubs | Retain public sensing services; check target SKU/quota | Local IoT/messaging product choice required | Identical managed hubs not established in the supported list [M3] | Replace brokers/receivers and prove idempotent intake and review-only signals |
+| Log Analytics, alerts and Defender | Retain applicable public monitoring/security services | Connected telemetry and operator-access requirements need review | Identical public services not established; local monitoring/security required [M3] | Price and prove logs, alerts, response, audit and security operations |
+| Azure OpenAI GPT-4.1 family | Select supported geography/SKU; GlobalStandard is not UK-only [M2] | Foundry Local is a different serving/model option [M5] | Foundry Local GA; identical hosted GPT-4.1 service not established [M5] | Re-evaluate models, guardrails, quality, latency and hardware cost |
+| Workforce Entra identity | Published tenant geography is not a UK-only guarantee [M4] | Connected identity/access requirements need review | Operator identity uses AD and AD FS; only supported system-assigned managed identities [M3, M6] | Rebuild authentication, role revocation and audit tests |
+| Resident External ID | Independent tenant/data-residency decision [M4] | Public dependency would retain external connectivity | Identical External ID service not established; AD/AD FS operator support is not a resident identity design [M6] | Preserve own-case grants, representative authority, consent and assisted access |
+| Fabric / Power BI; Agent 365 | Future options, not current dependencies | Separate availability, license and residency review | Identical disconnected services not established [M3] | Do not turn roadmap products into migration prerequisites |
+
+Microsoft's 17 November announcement states that Foundry Local and SQL Server
+are generally available on Azure Local. Blob and the connected-to-disconnected
+management transition are preview [M5]. Portable application containers do not
+make those previews, service replacements or identity changes production-ready.
+
+The current GPT-4.1 family has a published 14 April 2027 retirement schedule.
+Already retired Regional Standard offers remain retired. Catalog presence is
+not active-offer admission or quota, and no UK-regional successor is assumed
+[M11, M12]. Recheck both the lifecycle and exact region/SKU before choosing
+a replacement; rerun the bounded quality and price comparison.
+
+### Possible migration path and decision gates
+
+* Agree the requirement with the data owner, DPO, Legal and operations:
+  storage country, processing country, operator access and disconnected
+  operation must be explicit. Record permitted exceptions.
+* Establish the UK public baseline through fresh resource/configuration,
+  model/SKU, data-flow, backup, identity and contract checks. Applicable
+  regional policy, key custody and qualifying access controls are options
+  for approval, not controls activated by this document.
+* Keep portable containers and deterministic API/data contracts separate
+  from provider identity, storage, sensing, model and monitoring adapters.
+  Do not assume the current Bicep can deploy unchanged to Azure Local.
+* Run a separate local-platform proof of concept with selected substitutes.
+  Demonstrate consent and own-case isolation, audit, safe abstention, sensor
+  intake, recovery, accessibility and operational response. Compare it with
+  the same workflow without AI.
+* Price hardware, GPUs where required, power, licensing, support, operators
+  and replacement-service maintenance. Workload scale-to-zero does not
+  remove those costs; the public Azure estimate does not transfer unchanged.
+* Obtain named technical, data, legal, resident-service and financial
+  approval before any cut-over. Preserve a tested recovery path. No platform,
+  customer contract, real-data use or migration is approved here.
+
+### Official evidence checked on 2026-11-27
+
+These are product/service documentation and release announcements, not legal
+interpretation or UK-government accreditation. Recheck them before consequential
+selection or release.
+
+| ID | Official source and relevant section | Source date / last update |
+| --- | --- | --- |
+| M1 | [Sovereign Public Cloud](https://learn.microsoft.com/en-us/azure/azure-sovereign-clouds/public/overview-sovereign-public-cloud), overview and operator access | 2026-11-09 / 2026-11-17 |
+| M2 | [Foundry deployment types](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/deployment-types), Important and Data Zone deployments | 2026-08-06 / 2026-08-12 |
+| M3 | [Azure Local disconnected overview](https://learn.microsoft.com/en-us/azure/azure-local/manage/disconnected-operations-overview), supported services and eligibility | 2026-02-23 / 2026-10-28 |
+| M4 | [Entra data residency](https://learn.microsoft.com/en-us/entra/fundamentals/data-residency), Core Store and cloud models | 2025-11-06 / 2026-06-15 |
+| M5 | [Microsoft Ignite private-cloud update](https://techcommunity.microsoft.com/blog/azurearcblog/whats-new-with-sovereign-private-cloud-at-microsoft-ignite-2026/4573886), AI, data services and operational independence | 2026-11-17 |
+| M6 | [Disconnected identity](https://learn.microsoft.com/en-us/azure/azure-local/manage/disconnected-operations-identity), supported identity and synchronization | 2026-02-23 / 2026-06-16 |
+| M7 | [Azure Government overview](https://learn.microsoft.com/en-us/azure/azure-government/documentation-government-welcome), US-only and eligibility | 2022-03-07 / 2026-11-26 |
+| M8 | [Foundry privacy](https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy), inferencing, Global/DataZone and abuse monitoring | 2026-05-18 / 2026-06-05 |
+| M9 | [Connected Azure Local](https://learn.microsoft.com/en-us/azure/azure-sovereign-clouds/private/azure-local/connected-operations-overview), connectivity | 2026-05-14 |
+| M10 | [Container Apps on Arc](https://learn.microsoft.com/en-us/azure/container-apps/azure-arc-overview), hosting and limitations | 2026-09-15 |
+| M11 | [Model retirement schedule](https://learn.microsoft.com/en-us/azure/foundry/openai/concepts/model-retirement-schedule), Azure OpenAI and footnote 3 | 2026-11-18 / 2026-11-24 |
+| M12 | [Model region availability](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/models-sold-directly-by-azure-region-availability), exact deployment-type tables | Updated 2026-11-24 |

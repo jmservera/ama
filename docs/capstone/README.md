@@ -8,12 +8,18 @@ ms.topic: how-to
 ## Start Here
 
 Use the current Cowork v2 presentation and select its "Demo-first pitch"
-custom show. It contains 16 selected slides, begins the employee-site demo
+custom show. It contains 17 selected slides, begins the employee-site demo
 at 00:30 and returns to the business argument at 02:20. Prepared narration
 and demo finish at 13:00; questions and recovery have 2:00 within 15 minutes.
 The full 56-page deck and PDF remain the source-backed reference package.
 B28 is now part of the [manifest](./source/slides.json) and builder, so a
 clean rebuild preserves the measured Tokenomics evidence.
+
+Physical slide 6 also shows the full Azure planning range, including AI;
+slide 7 retains its dated counters in a readable grid. The separate
+"Discovery and UK sovereignty" custom show takes six additional confirmed
+minutes. Its timed chapters are in the integrated script; do not spend the
+two-minute question reserve on the full secondary show.
 
 | Work | Current material |
 | --- | --- |
@@ -28,6 +34,7 @@ clean rebuild preserves the measured Tokenomics evidence.
 | Understand the application and full Azure topology | [CxO concept](./source/diagrams/architecture/cxo-architecture.svg), [new main-route deployment projection](./source/diagrams/architecture/azure-deployment.svg), [full reference](./source/diagrams/architecture/azure-architecture.svg) and [editable sources/text equivalent](./source/diagrams/architecture/text-equivalent.md); main 12/13 and B10/core frame 38 |
 | Improve the story and challenged criteria | [CxO/story review](./source/review-2026-11-08-cxo.md); main-route recommendation/state-flow/autonomy, appendix alignment and real rehearsal evidence still needed |
 | Review the demo-first refresh | [27 November evidence, narrative and full assessment review](./source/review-2026-11-27.md); retained history, current-source/detailed-live distinctions, costs, study findings and validation gaps |
+| Explain UK boundaries and sovereign options | [Dated service matrix and possible migration path](../architecture/environment-region-quota-strategy.md#uk-data-boundary-and-sovereign-migration-options-2026-11-27); public controls, local replacements, preview limits and separate identity/model/provider checks |
 | Explain brief fidelity and the evolving product | [8 November autonomy/story review](./source/review-2026-11-08.md): exact requested/current levels, three help modes, historical Decision 1, optional resident access, design-thinking decisions and refreshable progress snapshot |
 | Inspect findings and checks | [30 October illustrated visual refresh](./source/review-2026-10-30.md#illustrated-visual-refresh-on-linux), earlier roadmap findings on the same page and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |

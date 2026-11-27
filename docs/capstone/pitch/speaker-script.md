@@ -12,7 +12,7 @@ The 15-minute slot includes 13:00 of planned narration/demo and 2:00 for questio
 Only the SAY paragraphs are spoken. Actions, source notes and the embedded operational runbook are presenter aids.
 Physical page numbers stay stable; the PDF contains the full deck, not the custom-show sequence.
 The shorter route replaces the former 24:30 narration plan. Original slide TIMING lines are historical reference only.
-Candidate SHA-256: `45e5fd9a5e704355cb3e8ce576dfe213e26fc0486b438ffd8bafb2093c32cf15`. No performed rehearsal or current live acceptance is claimed.
+Candidate SHA-256: `36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40`. No performed rehearsal or current live acceptance is claimed.
 
 ## Audience and decision
 
@@ -84,7 +84,7 @@ SAY: The employee and resident surfaces have separate identity and scope. The ca
 
 Azure connects home evidence to owned action.
 
-SAY: Home sensors feed IoT Hub, Event Hubs, validated intake and SQL history. Read-only derivation doesn't certify damp or retrofit success. The synthetic simulator is separate from the resident's monitoring choice. Registry, identity, Vault, private endpoints and monitoring support the application. This is the retained eight-November drawing, not today's cloud inventory. Later audits observed the simulator, transport, SQL and UI; the twenty-six-November Quality model leg was blocked. Check the selected revision rather than assuming the whole chain works.
+SAY: Here is the receiving chain: home evidence enters through IoT, is validated, and becomes retained SQL history before a colleague reviews it. The employee workbench and optional resident site have separate access rights. UK South is the application and data target, but GlobalStandard inference can leave the UK; the retained resident model option is Sweden Central. Identity and provider operations need separate checks too. Private endpoints do not prove UK-only processing. The appendix explains the sovereign options and which services would have to change.
 
 ### 05:55-06:45 | page 17 / S15
 
@@ -734,3 +734,49 @@ package. See the [current pitch notes](speaker-script.md) and
 ## Slide evidence and appendix access
 
 Use the [question bank](./questions-and-answers.md) for deeper answers and the [27 November review](../source/review-2026-11-27.md) for the claim register and assessment gaps. Original notes remain in the PowerPoint and source manifest.
+
+## Optional secondary story
+
+Use the separate PowerPoint custom show "Discovery and UK sovereignty" only when the panel confirms six additional minutes. It is not part of the 15-minute pitch or its two-minute question reserve. For one question, use only the relevant chapter and return deliberately to the interrupted page.
+
+### Optional 00:00-01:00 | page 40 / B12
+
+Did you validate this with real residents and staff?
+
+SAY: The discovery started with what residents need to do: choose works, keep everyday routines and get an answer when something goes wrong. The canvas records repeated explanations and pressure to accept as pain hypotheses. Meaningful choice and owned aftercare are the proposed gains. Role perspectives, pains and gains, journey mapping and what-if alternatives led to concrete product choices: representative authority, a named receiving owner, separate offers and commitments, and open remedies that survive handover. These are research hypotheses, not resident interviews. The next step is to test those choices with people and a workflow-only comparator.
+
+### Optional 01:00-01:45 | page 34 / B06
+
+How do residents retain choice, especially without digital access?
+
+SAY: The resident site adds a channel; it does not make digital access compulsory. Phone, letters, visits and assisted service remain. Signing in, allowing a record to be used, agreeing to monitoring and consenting to particular works are different permissions. The assistant can explain retained evidence or prepare a question. It cannot give consent, diagnose the home or accept work. A useful product test is whether someone can keep that choice while a colleague knows who owns the next action. That takes us to the alternatives.
+
+### Optional 01:45-02:30 | page 29 / B01
+
+Why not fix the process and hire more people instead?
+
+SAY: Process improvement without AI is the baseline. Clear ownership, shared records and better scheduling may already remove much of the avoidable delay. Staffing, contractor capacity and physical work remain constraints. AI earns its place only if it improves a bounded task after checking and correction are counted. The chosen direction combines deterministic workflow with optional preparation and recommendations. We did not choose a chatbot to run the entire retrofit. That choice also determines which kind of model belongs in each task.
+
+### Optional 02:30-03:15 | page 32 / B04
+
+Where do rules, decision models and generation fit?
+
+SAY: Use rules when the answer is known arithmetic or an exact labelled check. A constrained decision model can select among supplied candidates or abstain; generation is for permitted explanation and drafting. The historical Decision 1 feasibility work is not the engine deployed across the current five helpers. Richer documents, photos or sensors may improve preparation, but they do not grant safety or approval authority. Recommendations and evidence judging are the priority AI workloads; deterministic checks consume no tokens. The workflow keeps the final decision with its accountable owner.
+
+### Optional 03:15-04:00 | page 38 / B10
+
+How is the full application architecture organised?
+
+SAY: Those product choices explain the architecture. One shared API and retained records keep ownership, evidence and approvals consistent; bounded helpers prepare work around them. Sensors add evidence through a validated receiving chain, not an automatic acceptance decision. The diagram separates private network endpoints from managed services outside the VNet. Its outer box is application scope, not a UK data guarantee. The UK application target, model processing and provider operations need separate evidence. A future sovereign requirement therefore starts with the data map, not with copying this picture.
+
+### Optional 04:00-05:15 | page 50 / B22
+
+UK data boundary: controls first, migration second.
+
+SAY: First define what must stay in the UK: application records, model processing, identity, support and operational access are different requirements. GlobalStandard inference can leave the UK, and an EU data zone is not a UK zone. Applicable sovereign controls on UK public Azure preserve the public services. A UK-operated Azure Local platform is a bigger change. Containers can move to AKS; SQL Server and Foundry Local are available, but Blob is preview. Local Registry and Key Vault are documented, yet SKU features still need checking. Disconnected operation changes identity, monitoring and sensing services; it is not a like-for-like copy. Azure Government is US-only. A local proof of concept must re-test model quality, recovery, consent and safety, and price hardware and operations. Today's public-cloud estimate does not price that migration. The current GPT-4.1 retirement schedule also means a successor must be evaluated.
+
+### Optional 05:15-06:00 | page 43 / B15
+
+What exactly must happen before a pilot or production decision?
+
+SAY: The next decision is a bounded validation exercise, not production approval. Test story-once and owned promises, visit readiness, evidence reuse after changes, aftercare, and funding preparation against non-AI comparators. Count the effort for employees and residents, including corrections and coordination. Stop when consent, safety, source trace or responsibility is lost. A technical deployment test cannot prove those user outcomes. Named owners still need to approve the service, legal and privacy position, accessibility and operating model before a pilot or a sovereign migration.

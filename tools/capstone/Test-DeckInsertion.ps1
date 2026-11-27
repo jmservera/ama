@@ -20,6 +20,23 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $RepoRoot 'tools/capstone/Invoke-Capstone.ps1') -Action Verify -RepoRoot $RepoRoot -OutputDir ([IO.Path]::GetTempPath())
 $Definition = Get-Content (Join-Path $RepoRoot 'docs/capstone/source/slides.json') -Raw | ConvertFrom-Json
 Assert-DeckDefinition $Definition
+if ($Definition.appendix_route) {
+    foreach ($Mutation in @('name', 'duration', 'duplicate', 'code', 'missing-say', 'negative-seconds')) {
+        $Mutant = $Definition | ConvertTo-Json -Depth 60 | ConvertFrom-Json
+        switch ($Mutation) {
+            'name' { $Mutant.appendix_route.name = 'arbitrary' }
+            'duration' { $Mutant.appendix_route.slot_seconds++ }
+            'duplicate' { $Mutant.appendix_route.steps[1].code = $Mutant.appendix_route.steps[0].code }
+            'code' { $Mutant.appendix_route.steps[0].code = 'S01' }
+            'missing-say' { $Mutant.appendix_route.steps[0].say = '' }
+            'negative-seconds' { $Mutant.appendix_route.steps[0].seconds = -1 }
+        }
+        $Refused = $false
+        try { Assert-DeckDefinition $Mutant } catch { $Refused = $true }
+        if (-not $Refused) { throw "Optional appendix mutation was not refused: $Mutation" }
+    }
+    Write-Output 'Optional appendix route passed with six malformed-route refusals.'
+}
 $Original = [IO.Compression.ZipFile]::OpenRead((Join-Path $RepoRoot 'docs/capstone/source/baseline.pptx'))
 try {
     foreach ($Slide in $Definition.slides | Where-Object part_number -ne 55) {

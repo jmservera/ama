@@ -255,6 +255,99 @@ class CapstonePitchDocsTest(unittest.TestCase):
                     broken.append(f"{doc.relative_to(ROOT)} -> {target}")
         self.assertEqual([], broken)
 
+    def test_optional_story_is_separate_and_matches_both_native_shows(self) -> None:
+        import zipfile
+        from xml.etree import ElementTree as ET
+
+        manifest = json.loads((CAPSTONE / "source/slides.json").read_text())
+        extra = manifest["appendix_route"]
+        self.assertEqual(360, sum(step["seconds"] for step in extra["steps"]))
+        script = (CAPSTONE / "pitch/speaker-script.md").read_text()
+        self.assertIn("six additional minutes", script)
+        self.assertIn("two-minute question reserve", script)
+        for step in extra["steps"]:
+            self.assertIn("SAY: " + step["say"], script)
+        questions = (CAPSTONE / "pitch/questions-and-answers.md").read_text()
+        self.assertEqual(
+            "See B22/page 50", re.search(r"See B22/page \d+", questions).group()
+        )
+        ns = {
+            "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+            "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+        }
+        with zipfile.ZipFile(CAPSTONE / "deck/zava-forward-cowork-v2-draft.pptx") as z:
+            presentation = ET.fromstring(z.read("ppt/presentation.xml"))
+            targets = {
+                node.attrib["Id"]: node.attrib["Target"]
+                for node in ET.fromstring(z.read("ppt/_rels/presentation.xml.rels"))
+            }
+            shows = presentation.findall("p:custShowLst/p:custShow", ns)
+            self.assertEqual(2, len(shows))
+            parts = {s["code"]: s["part_number"] for s in manifest["slides"]}
+            for show, route in zip(
+                shows, (manifest["presentation_route"], extra), strict=True
+            ):
+                self.assertEqual(route["name"], show.attrib["name"])
+                self.assertEqual(
+                    [f"slides/slide{parts[s['code']]}.xml" for s in route["steps"]],
+                    [
+                        targets[node.attrib[f"{{{ns['r']}}}id"]]
+                        for node in show.findall("p:sldLst/p:sld", ns)
+                    ],
+                )
+            props = ET.fromstring(z.read("ppt/presProps.xml"))
+            self.assertEqual("0", props.find("p:showPr/p:custShow", ns).attrib["id"])
+
+    def test_page_six_only_adds_azure_summary_to_existing_financial_shapes(
+        self,
+    ) -> None:
+        import zipfile
+        from xml.etree import ElementTree as ET
+
+        ns = {
+            "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+            "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+        }
+        with (
+            zipfile.ZipFile(CAPSTONE / "source/baseline.pptx") as before,
+            zipfile.ZipFile(
+                CAPSTONE / "deck/zava-forward-cowork-v2-draft.pptx"
+            ) as after,
+        ):
+            old = ET.fromstring(before.read("ppt/slides/slide6.xml"))
+            new = ET.fromstring(after.read("ppt/slides/slide6.xml"))
+            old_shapes = list(old.find("p:cSld/p:spTree", ns))
+            new_shapes = list(new.find("p:cSld/p:spTree", ns))
+            self.assertEqual(len(old_shapes) + 2, len(new_shapes))
+            for original, delivered in zip(old_shapes, new_shapes):
+                self.assertEqual(ET.tostring(original), ET.tostring(delivered))
+            visible = " ".join(t.text or "" for t in new.findall(".//a:t", ns))
+            model = json.loads(
+                (CAPSTONE / "source/azure-cost-model-2026-11-27.json").read_text()
+            )
+            self.assertIn(model["display"]["monthly"] + "/month, AI included", visible)
+            self.assertIn(model["display"]["persistent"] + "/month", visible)
+            notes = ET.fromstring(after.read("ppt/notesSlides/notesSlide6.xml"))
+            self.assertIn(
+                "AZURE PLANNING UPDATE",
+                " ".join(t.text or "" for t in notes.findall(".//a:t", ns)),
+            )
+
+    def test_progress_counts_use_a_single_line_native_grid(self) -> None:
+        from pptx import Presentation
+
+        page = Presentation(CAPSTONE / "deck/zava-forward-cowork-v2-draft.pptx").slides[
+            6
+        ]
+        expected = {"2023", "2038", "358", "264", "85", "9", "28", "5"}
+        counts = [s for s in page.shapes if getattr(s, "text", "") in expected]
+        self.assertEqual(expected, {s.text for s in counts})
+        self.assertEqual(8, len(counts))
+        self.assertEqual(1, len({s.width for s in counts}))
+        self.assertEqual(2, len({s.top for s in counts}))
+        for shape in counts:
+            self.assertEqual(40, shape.text_frame.paragraphs[0].runs[0].font.size.pt)
+
     def test_revised_appendix_navigation_matches_physical_pages(self) -> None:
         import zipfile
         from xml.etree import ElementTree as ET
