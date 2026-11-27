@@ -3706,6 +3706,27 @@ def main() -> int:
         if args.preflight is None and not args.base:
             raise GateError("--base is required")
         if args.preflight is not None:
+            ignored = [
+                "--" + name.replace("_", "-")
+                for name in (
+                    "base",
+                    "out",
+                    "extra_test",
+                    "lock_timeout",
+                    "heavy_lock_fd",
+                    "jobs",
+                    "fresh_images",
+                    "stack",
+                    "stack_member",
+                    "exact_base",
+                    "required_scope",
+                )
+                if getattr(args, name) != parser.get_default(name)
+            ]
+            if ignored:
+                raise GateError(
+                    f"--preflight takes only selectors; {', '.join(ignored)} would be ignored"
+                )
             preflight(root, args.preflight)
         elif args.verify_receipt:
             verify(

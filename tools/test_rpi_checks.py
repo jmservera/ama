@@ -4470,6 +4470,24 @@ class PreflightTests(unittest.TestCase):
             self.assertEqual(gate.main(), 0)
         run.assert_called_once()
 
+    def test_preflight_rejects_gate_only_options_instead_of_ignoring_them(self) -> None:
+        for extra in (
+            ["--extra-test", "core:test_b"],
+            ["--base", "abc"],
+            ["--out", "/tmp/x"],
+            ["--jobs", "2"],
+            ["--fresh-images"],
+        ):
+            argv = ["rpi-checks.py", "--preflight", "core:test_a", *extra]
+            with (
+                self.subTest(extra=extra),
+                patch.object(sys, "argv", argv),
+                patch.object(gate, "preflight") as run,
+                redirect_stdout(io.StringIO()),
+            ):
+                self.assertEqual(gate.main(), 1)
+            run.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()
