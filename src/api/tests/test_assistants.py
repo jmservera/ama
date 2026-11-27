@@ -489,6 +489,31 @@ class ContractTests(Base):
         self.assertTrue(all(a["version"] == VERSION for a in r["assistants"]))
         self.assertEqual(r["principal"], PURPOSE)
 
+    def test_registry_readiness_report_runs_without_the_write_lock(self):
+        """The report takes the store lock, so it must not run while the assistant transaction holds the SQLite write lock (issue #1837)."""
+        from zava_forward.core import rai_control_plane
+
+        real = rai_control_plane.exercise_acceptance_report
+        probes = []
+
+        def probe(*args, **kwargs):
+            other = sqlite3.connect(self.dbpath, isolation_level=None)
+            other.execute("PRAGMA busy_timeout=0")
+            try:
+                other.execute("BEGIN IMMEDIATE")
+                other.execute("ROLLBACK")
+                probes.append("free")
+            except sqlite3.OperationalError:
+                probes.append("locked")
+            finally:
+                other.close()
+            return real(*args, **kwargs)
+
+        with patch.object(rai_control_plane, "exercise_acceptance_report", probe):
+            payload = self.service.registry(self.pm)
+        self.assertEqual(probes, ["free"])
+        self.assertIn("registered_tasks", payload)
+
     def test_each_assistant_states_model_call_and_depth_bounds(self):
         for user_cfg in (None, dict(attempts=3)):
             service = self.service if user_cfg is None else self.other(**user_cfg)
