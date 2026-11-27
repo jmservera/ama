@@ -123,7 +123,13 @@ def critical_chain(
     steps = []
     while True:
         steps.append(current)
-        earlier = [c for c in commands if c["end"] <= current["start"] and c is not current]
+        # Strict (end, start) ordering guarantees the walk ends on coincident zero-length commands.
+        earlier = [
+            c
+            for c in commands
+            if c["end"] <= current["start"]
+            and (c["end"], c["start"]) < (current["end"], current["start"])
+        ]
         if not earlier:
             break
         current = max(earlier, key=lambda c: c["end"])
