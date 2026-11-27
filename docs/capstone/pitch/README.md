@@ -51,7 +51,7 @@ describe the conditional future. Keep one factual core across those registers.
 The current route is the native "Demo-first pitch" custom show, not physical
 pages 1-27 in sequence. The [speaker script](./speaker-script.md) gives the
 spoken text, deliberate jumps and complete embedded runbook. Demo at 00:30,
-slides again at 02:20, prepared close at 12:10, questions through 15:00.
+slides again at 02:20, prepared close at 13:00, questions through 15:00.
 B28/page 56 presents measured synthetic usage before S18/page 22's older
 planning scenario. All non-inference and acceptance-denominator gaps stay
 explicit. See the [27 November review](../source/review-2026-11-27.md) for the

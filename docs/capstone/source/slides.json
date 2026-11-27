@@ -3166,14 +3166,16 @@
         {"id": 21196, "from": "Why not exactly the five agents requested?", "to": "Which autonomy levels did we meet or change?"},
         {"id": 21031, "from": "How did requirements become the backlog?", "to": "Who runs the study, under which protocol?"},
         {"id": 21218, "from": "Why not deploy each agent independently?", "to": "How is the application architecture organised?"},
-        {"id": 26092, "from": "Sensors: can AI diagnose damp or mould?", "to": "How do device readings support safe decisions?"}
+        {"id": 26092, "from": "Sensors: can AI diagnose damp or mould?", "to": "How do device readings support safe decisions?"},
+        {"id": 25885, "from": "What stops chat and agent sprawl?", "to": "How do we protect business AI from chat?", "box": [0.6, 6.02, 5.8667, 0.33]}
       ],
       "revised_notes": [
         "QX | Question index: optional depth after the current-product story and future proposal.",
         "Pages 1-22 establish the built product and design reasoning; pages 23-24 propose the separate future portfolio/history/context opportunity. Pages 25-26 demonstrate/debrief the current product and close. Fabric and Power BI are not current components. All 54 page numbers and fixed native action targets are preserved.",
         "Main pages 9/16 explain the chosen automation and exact levels; page 12 is the CxO application/trust map; page 14 shows the coded state-flow and optional AI branch. B03/page 30 retains the full autonomy matrix, B10/page 37 the Azure reference view, B14/page 41 the workflow/AI distinction and B27/page 54 the single-call and financial-limit explanation. These are depth answers, not first disclosure of the design.",
         "The question, answer headline and index entries for B04, B10, B19 and B20 are reconciled. B06/page 33 explains resident choice; B13/page 40 the study and implementation epochs; B20/page 47 conditional Fabric value beyond SQL. Its fixed Topic button still goes to page 15, the adoption boundary. B04 is task-fit reasoning, not measured savings. All native destinations remain unchanged.",
-        "Restate the question, answer it directly, then add evidence and its limit. Return to the actual interrupted page deliberately. Optional depth consumes the discussion reserve; silence is not consent or approval. Native/keyboard and human acceptance are separate checks."
+        "Restate the question, answer it directly, then add evidence and its limit. Return to the actual interrupted page deliberately. Optional depth consumes the discussion reserve; silence is not consent or approval. Native/keyboard and human acceptance are separate checks.",
+        "27 NOVEMBER COST FOLLOW-UP: B27 explains proposed protected priority budgets; appended B28 explains the full Azure planning envelope. Both are in the custom show. Planning allowances are not actual bills or spending authority."
       ]
     },
     {
@@ -4902,42 +4904,47 @@
       "code": "B27",
       "part_number": 54,
       "baseline_number": 54,
-      "title": "What stops chat and agent sprawl multiplying hidden calls?",
+      "title": "Protect business AI when chat reaches its limit",
       "layout": "native",
       "keep_ids": [11303, 11435, 11568, 11702],
       "headers": [
-        {"id": 11435, "text": "What stops chat and agent sprawl multiplying hidden calls?", "size": 30, "box": [0.6, 0.92, 12.13, 0.72]},
-        {"id": 11568,         "text": "Sources: core/API guides; Agent 365 research, 16 Nov. No live integration or acceptance.", "size": 12, "box": [0.6, 6.7, 8.0, 0.3]}
+        {"id": 11435, "text": "Protect business AI when chat reaches its limit", "size": 30, "box": [0.6, 0.92, 12.13, 0.72]},
+        {"id": 11568,         "text": "Sources: cost model and core admission, 27 Nov. Illustrative; not activated.", "size": 12, "box": [0.6, 6.7, 8.0, 0.3]}
       ],
       "elements": [
         {"key": "question-frame", "geometry": "rect", "box": [0.6, 1.94, 3.78, 2.44], "fill": "FAF9F6", "stroke": "C7D8CF", "stroke_width": 1},
-        {"key": "question-cap", "box": [0.82, 2.14, 3.34, 0.28], "text": "USER QUESTION", "size": 14, "bold": true, "color": "50655E"},
-        {"key": "question-title", "box": [0.82, 2.69, 3.34, 0.78], "text": "One selected skill.\nOne bounded call.", "size": 24, "bold": true},
-        {"key": "question-body", "box": [0.82, 3.65, 3.34, 0.53], "text": "No routing-model hop,\ntool loop or write tool.", "size": 17},
+        {"key": "question-cap", "box": [0.82, 2.14, 3.34, 0.28], "text": "RECOMMENDATIONS", "size": 14, "bold": true, "color": "50655E"},
+        {"key": "question-title", "box": [0.82, 2.69, 3.34, 0.9], "text": "USD 20/month\nUSD 1/day", "size": 24, "bold": true},
+        {"key": "question-body", "box": [0.82, 3.65, 3.34, 0.64], "text": "Protected allocation.\nA person accepts proposals.", "size": 17},
         {"key": "admission-frame", "geometry": "rect", "box": [4.78, 1.94, 3.78, 2.44], "fill": "E8F1ED"},
-        {"key": "admission-cap", "box": [5, 2.14, 3.34, 0.28], "text": "BEFORE DISPATCH", "size": 14, "bold": true, "color": "50655E"},
-        {"key": "admission-title", "box": [5, 2.69, 3.34, 0.78], "text": "Scope and release\nFinancial admission", "size": 23, "bold": true},
-        {"key": "admission-body", "box": [5, 3.65, 3.34, 0.53], "text": "Unknown authority or liability:\nstop; keep manual work.", "size": 17},
+        {"key": "admission-cap", "box": [5, 2.14, 3.34, 0.28], "text": "DOCUMENT JUDGING", "size": 14, "bold": true, "color": "50655E"},
+        {"key": "admission-title", "box": [5, 2.69, 3.34, 0.9], "text": "USD 10/month\nUSD 0.50/day", "size": 23, "bold": true},
+        {"key": "admission-body", "box": [5, 3.65, 3.34, 0.64], "text": "Rules first; bounded model\nwhen interpretation is needed.", "size": 17},
         {"key": "output-frame", "geometry": "rect", "box": [8.96, 1.94, 3.78, 2.44], "fill": "EEE8F4"},
-        {"key": "output-cap", "box": [9.18, 2.14, 3.34, 0.28], "text": "ADVISORY OUTPUT", "size": 14, "bold": true, "color": "61437C"},
-        {"key": "output-title", "box": [9.18, 2.69, 3.34, 0.78], "text": "Advice, not a\ncase decision.", "size": 23, "bold": true},
-        {"key": "output-body", "box": [9.18, 3.65, 3.34, 0.66], "text": "Sources and permissions\nchecked again.", "size": 17},
+        {"key": "output-cap", "box": [9.18, 2.14, 3.34, 0.28], "text": "CHAT", "size": 14, "bold": true, "color": "61437C"},
+        {"key": "output-title", "box": [9.18, 2.69, 3.34, 0.9], "text": "USD 20/month\nUSD 1/day", "size": 23, "bold": true},
+        {"key": "output-body", "box": [9.18, 3.65, 3.34, 0.66], "text": "Stops at its own limit.\nCannot borrow priority funds.", "size": 17},
         {"key": "coded-title", "box": [0.6, 4.82, 5.87, 0.31], "text": "SOURCE-CODED BOUNDS", "size": 15, "bold": true},
-        {"key": "coded-body", "box": [0.6, 5.3, 5.87, 1.0], "text": "Calls/tokens/expiry + task/period money limits.\nDurable request call/depth ceilings.\nApproved evidence required before dispatch.", "size": 18},
-        {"key": "unproved-title", "box": [6.87, 4.82, 5.87, 0.31], "text": "LIVE ACCEPTANCE STILL SEPARATE", "size": 15, "bold": true, "color": "885500"},
-        {"key": "unproved-body", "box": [6.87, 5.3, 5.87, 1.0],         "text": "Billing and whole-journey coverage unproved.\nResident metering joins are optional,\nnot universal or reconciled.", "size": 18}
+        {"key": "coded-body", "box": [0.6, 5.3, 5.87, 1.0], "text": "Call/token/money limits; reserve worst-case cost.\nGlobal safety and liability holds still apply.\nManual and hazard paths remain available.", "size": 18},
+        {"key": "unproved-title", "box": [6.87, 4.82, 5.87, 0.31], "text": "ILLUSTRATIVE ALLOCATION, NOT LIVE-PROVED", "size": 15, "bold": true, "color": "885500"},
+        {"key": "unproved-body", "box": [6.87, 5.3, 5.87, 1.0],         "text": "Aggregate: USD 50/month, USD 2.50/day.\nStable period IDs; no chat borrowing.\nConfigure and test before activation.", "size": 18}
       ],
-      "sources": ["src/api/README.md", "src/core/README.md", "src/core/src/zava_forward/core/ai_consumption.py", ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md"],
+      "sources": ["src/api/README.md", "src/core/README.md", "src/core/src/zava_forward/core/ai_consumption.py", "docs/capstone/source/azure-cost-model-2026-11-27.json", ".copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md"],
       "revised_notes": [
-        "B27 | What stops chat and agent sprawl multiplying hidden calls?",
-        "SHORT ANSWER: the employee chooses one advisory skill and gets one bounded ChatModel call, not a router followed by a model swarm. The case workflow is coded separately. Financial admission also binds durable task/period and request call/depth ceilings; missing approval, price or unresolved liability keeps dispatch off.",
+        "B27 | Protect business AI when chat reaches its limit",
+        "SHORT ANSWER: allocate separate recommendation, document-judging and chat budgets, with no borrowing. The illustrated monthly allowances are USD 20/10/20 and daily allowances USD 1/0.50/1, inside absolute USD 50/month and USD 2.50/day ceilings. Known chat exhaustion cannot consume the USD 30/month and USD 1.50/day priority allocations. This is a proposed allocation, not spending authority or a live configuration.",
+        "MINIMUM / MAXIMUM: zero model calls means USD 0 model charge, though hosting remains. With the proposed policy enforced, each class uses the lower of its daily remaining and monthly remaining allowance, and the shared aggregate remains an absolute ceiling. For a 30-day month the lane maxima sum to min(30*1,20)+min(30*0.50,10)+min(30*1,20)=USD 50. No request can reserve more than its class and aggregate remaining budgets. Outside/bypassing model traffic is not capped by this policy.",
+        "BOUND EACH ATTEMPT: at most 4,000 total provider-input and 1,000 output tokens in this example, with one attempt and no assumed cache discount. At 27 November public rates, nano GlobalStandard is at most USD 0.0008; mini regional Standard is at most USD 0.003872. Retries, multi-document passes and other model legs require separately reserved liability or a hold. A larger context or new SKU needs a new priced envelope; never hide extra calls.",
+        "DOCUMENT CHECKS: deterministic missing-field, state and evidence predicates consume no model tokens. They still use the hosted application. Semantic interpretation can require a bounded model judge; neither a rule result nor a model finding accepts funding or quality evidence. Professional and human approval remain separate. No measured saving or universal Decision Model runtime is claimed.",
+        "CONFIGURE BEFORE ACTIVATION: each capability uses stable class day/month budget IDs and shared aggregate day/month IDs (four identities, within the source limit of eight). Use UTC calendar periods in this illustration; renewal cannot reset spent history or unresolved liability. Atomically reserve worst-case priced liability before dispatch, settle valid provider usage and reconcile billing. Test concurrent exhaustion, expiry, cross-period outstanding reservations and global holds with named authority. Azure Cost Management budget alerts are delayed notifications, not this enforcing mechanism.",
+        "EXHAUSTION / FAILURE: known exhausted chat stops chat only; its allowance cannot borrow the priority pools. Unknown price, authority, unresolved liability, safety or absolute aggregate holds can stop all model dispatch. Manual workflow and independent hazard routes remain. The allocation must never override those controls.",
         "CORRECTION TO THE HISTORICAL ANSWER: the current core consumption ledger has source-coded currency, task/period and root call/depth bounds. Those are no longer merely a proposed hard-stop design. This does not prove live activation, complete billing reconciliation or a complete cost-per-resident/employee journey. The older captured notes remain historical.",
         "SCOPE: explicit skill selection is not an assistant proposal invocation. Employee chat has no tool, booking, consent, approval or domain-write operation. Other retained inference paths and retries still require attribution/admission; no gateway, semantic cache or open-ended graph runtime is introduced by this diagram. Optional resident metering joins are path/configuration-specific, not universal attribution or reconciliation.",
         "Q: WOULD AGENT 365 SOLVE AGENT SPRAWL? It could add enterprise inventory, agent identity/lifecycle and Defender/Purview oversight as a future conditional service. It is not integrated or adopted here and cannot replace protected SQL audit, admission/release controls, human review, resident consent or safety authority. OTel traces explain run order, latency and failure; they do not prove answer truth, meaningful review or complete billing.",
         "Q: WHY NOT CONNECT IT NOW? The 16 November canonical schema requires messages/tool payloads and relevant caller object ID/IP fields, conflicting with content-free diagnostics. Supported redacted-payload or omission behavior, identity minimization, ingestion and downstream feature parity remain unresolved. Obtain vendor confirmation plus an approved synthetic test; assume neither raw export nor feature-complete metadata-only adoption. Do not invent a human caller or capture chain of thought. Tenant identity/admin consent, licensing, privacy/retention/location, network/egress and full cost are separate gates; HTTP 200 alone does not prove accepted, landed and correctly grouped records.",
         "Q: WHAT IS THE OBSERVABILITY STEP NOW? The opt-in content-free OpenTelemetry path is implemented with offline real-SDK correlation checks; export is off by default. The parent reports 20 core, 77 worker and 9 HTTP/core-composition tests passing, plus strict types, on 16 November. These are offline checks, not a live collector/model receipt or universal coverage. Validate the OTLP destination next. Direct Azure Monitor export is deferred after installed exporter 1.0.0b59 revealed implicit hostname/locale metadata and secondary SDK/control-plane traffic. An Azure/AppInsights collector/backend integration needs separate acceptance; neither it nor Agent 365 is integrated. The newer Microsoft OpenTelemetry Distro, Agent 365 SDK and Agent 365 service are distinct; the former Agent 365 Observability SDK is deprecated. The current PRD remains unsigned; full gate and independent review are separate.",
         "OBSERVABILITY SOURCES: .copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md F1, F4-F6, W2-W10 (official documentation retrieved 16 November); owner OTLP-first/exporter-deferral decision. Research reuse is not tenant inspection, operational acceptance or authority to adopt.",
-        "KNOWN / ASSUMED / NEXT: known source contracts are one selected-skill call and serialized admission limits. Applicable live prices, owners, approval and reconciled accepted-value costs are still required. Test missing/overrun/failure cases and the workflow-only stop on an authorised exact source; do not infer savings or permission from a bounded test.",
+        "KNOWN / ASSUMED / NEXT: known source contracts are one selected-skill call and serialized monetary admission. Public prices and illustrative allocations are in docs/capstone/source/azure-cost-model-2026-11-27.json. Live budget isolation, named owners/approval, complete path attribution and billing/accepted-value reconciliation are still required; do not infer saving or permission from bounded arithmetic.",
         "SOURCES: src/api/README.md:707-734, Employee chat with bounded skills; src/core/README.md:94-144, AI consumption ledger; src/core/src/zava_forward/core/ai_consumption.py. All are source evidence, not a current production control attestation.",
         "NAVIGATION: B27/page 54; index 27; fixed Topic S18/page 21. Native destinations remain unchanged. Return to the actual interrupted page deliberately."
       ],
@@ -4948,7 +4955,7 @@
       "code": "B28",
       "part_number": 56,
       "baseline_number": 54,
-      "title": "What does an accepted proposal cost?",
+      "title": "The Azure bill continues when the apps sleep",
       "layout": "native",
       "keep_ids": [
         11303,
@@ -4960,7 +4967,7 @@
       "headers": [
         {
           "id": 11435,
-          "text": "What does an accepted proposal cost?",
+          "text": "The Azure bill continues when the apps sleep",
           "size": 30,
           "box": [
             0.6,
@@ -4982,7 +4989,7 @@
         },
         {
           "id": 11303,
-          "text": "TOKENOMICS / THE CFO QUESTION",
+          "text": "FULL AZURE COST / THE CFO QUESTION",
           "size": 12,
           "box": [
             0.6,
@@ -5034,7 +5041,7 @@
             11.69,
             0.3
           ],
-          "text": "MEASURED HELD-OUT BATCH / SYNTHETIC / USAGE ONLY / 18 NOVEMBER",
+          "text": "UK SOUTH / 30-DAY PLANNING / PUBLIC RATES / NOT A BILL",
           "size": 17,
           "color": "FFFFFF",
           "bold": true
@@ -5047,7 +5054,7 @@
             5.65,
             0.7
           ],
-          "text": "12 proposals",
+          "text": "USD 335",
           "size": 36,
           "color": "173F35",
           "bold": true
@@ -5060,7 +5067,7 @@
             5.65,
             0.7
           ],
-          "text": "2,522 tokens",
+          "text": "USD 435-1,260",
           "size": 36,
           "color": "173F35",
           "bold": true
@@ -5069,14 +5076,21 @@
           "key": "batch-list-price",
           "box": [
             0.75,
-            3.75,
-            11.83,
-            0.8
+            3.64,
+            5.65,
+            0.66
           ],
-          "text": "USD 0.000744 at dated list rates.\nAn estimate for this batch, not a bill or a per-home cost.",
-          "size": 21,
+          "text": "Persistent-service subtotal\nbefore usage and allowances",
+          "size": 18,
           "color": "173F35",
           "bold": false
+        },
+        {
+          "key": "monthly-envelope-label",
+          "box": [6.92, 3.64, 5.65, 0.66],
+          "text": "Full illustrative Azure envelope / month\nAI included: USD 0-50",
+          "size": 18,
+          "color": "173F35"
         },
         {
           "key": "unit-frame",
@@ -5097,7 +5111,7 @@
             11.69,
             0.78
           ],
-          "text": "Total attributable cost / human-accepted proposals above the quality floor\nHosting + implementation + review + correction + support. Denominator unknown.",
+          "text": "Zero replicas remove app compute charges; persistent services remain.\nScheduled jobs continue overnight. Storage, logs and security included.",
           "size": 20,
           "color": "173F35",
           "bold": false
@@ -5110,7 +5124,7 @@
             12.13,
             0.38
           ],
-          "text": "No accepted-outcome cost, saving or payback measured. Finite tokens are not money caps.",
+          "text": "Illustrative, not a maximum bill. Temporary QA, future services and human work extra.",
           "size": 17,
           "color": "885500",
           "bold": true
@@ -5118,25 +5132,33 @@
       ],
       "sources": [
         "docs/reference/research/ai-heldout-batch-432-live-2026-11-18.md",
-        "docs/capstone/pitch/tokenomics-cost-per-home-vs-value.md"
+        "docs/capstone/pitch/tokenomics-cost-per-home-vs-value.md",
+        "docs/capstone/source/azure-cost-model-2026-11-27.json",
+        "docs/reference/resources/ai-tokenomics.md"
       ],
       "revised_notes": [
-        "B28 | What does an accepted proposal cost?",
+        "B28 | The Azure bill continues when the apps sleep",
+        "FULL AZURE PLANNING: about USD 435-1,260/month, including model usage, for the conditional UK South demo envelope. Exact low/high totals are USD 434.348/1,257.862. Public retail rates retrieved 27 November 2026; 30 days/720 hours, USD, no negotiated/tax/FX assumption or shared subscription free allowances deducted. This is not an invoice, an approved budget, a production forecast or a maximum Azure bill.",
+        "PERSISTENT SUBTOTAL: SQL S3 30*6.048=181.44; Premium registry 30*1.6666=49.998; IoT B1=10; Event Hubs 720*0.03=21.60; nine private endpoints 9*720*0.01=64.80; fourteen private DNS zones 14*0.50=7. Total USD 334.838 before app/job compute, storage, logs, security, monitoring, operations and AI. The currently observed SQL is S3/100 DTU, not the source parameter example's serverless database; it does not auto-pause.",
+        "FULL ENVELOPE WORKINGS (low/high USD): persistent 334.838/334.838; apps 37.422/517.104; jobs 0.756/151.20; Blob capacity 0.192/1.92; log ingestion 2.88/57.60; billable retention 0.26/5.20; alert provision 6/20; security provision 50/100; other operations/transfer provision 2/20; AI 0/50. The source-owned JSON records exact units, quantities, meter IDs and assumptions. Security, alert and operations provisions are illustrative allowances; protected counts, the applicable legacy/preview DWU billing and actual volumes need reconciliation.",
+        "SCALE-TO-ZERO: all three apps are Consumption with min 0, but the observed cooldown is 3,600 seconds. Low assumes one of each replica, 1.25 vCPU/2.5 GiB for 198 hours (176 working hours plus 22 cooldowns); high assumes all configured maximum replicas, 4.75 vCPU/9.5 GiB for 720 hours. Active rates are USD 0.000034/vCPU-second and 0.000004/GiB-second. Zero replicas means no app replica resource charges; it does not make SQL, registry, storage, private networking, monitoring or jobs free. No observed replica-time saving is claimed.",
+        "JOBS / RETENTION: the audit, orchestration, simulator and receiver have separate schedules, including overnight and weekends. Jobs are active-billed while running. The scenario provisions 20/4,000 equivalent quarter-vCPU/half-GiB job replica-hours, not a guaranteed execution cap. Logs have 90-day retention and no daily ingestion quota; the model uses 1/20 GB ingestion and 2/40 billable GB-month retention, not a second charge for all retained days. Do not disable safety, audit or required retention to fit an illustration.",
+        "EXTRAS / BOUNDARY: five temporary S0 QA databases would add USD 90.75 if retained for all 30 days, before other charges; outside the core scenario. Future Fabric, production redundancy, larger capacity, exceptional transfer and other resources need another estimate. Human implementation, integration, review, correction and support belong in total accepted-outcome cost, not the Azure-only subtotal. Actual billing and the accepted-outcome denominator are still unknown.",
         "MEASURED: 12 synthetic proposals, 882 input and 1,640 output tokens, total 2,522; mean 210.17, minimum 180 and maximum 225, 18 November 2026. gpt-4.1-nano, dated list rates USD 0.10 input and USD 0.40 output per million. Estimate: 882/1000000*0.10 + 1640/1000000*0.40 = USD 0.000744. This is not a billing record, a measured per-home cost or an accepted-outcome count.",
         "METHOD: total attributable cost divided by human-accepted proposals above an agreed quality floor. Unknown or zero denominator means not measurable. Include non-inference and human handling costs; time released is capacity until Finance confirms where value falls.",
         "COMPARISON LIMIT: the batch uses short synthetic prompts on a different model from the older S18 scenario. Do not infer a saving from their difference. Earlier failed/unmeasured attempt remains in the batch evidence.",
-        "SOURCES: docs/reference/research/ai-heldout-batch-432-live-2026-11-18.md; docs/capstone/pitch/tokenomics-cost-per-home-vs-value.md. No new spending authority or paid call.",
-        "NAVIGATION: physical page 56; included in Demo-first pitch before S18. The fixed Topic button goes to page 22 and Index to page 28; return deliberately after an appendix answer."
+        "SOURCES: docs/capstone/source/azure-cost-model-2026-11-27.json; docs/reference/resources/ai-tokenomics.md; https://prices.azure.com/api/retail/prices; https://learn.microsoft.com/en-us/azure/container-apps/billing; docs/reference/research/ai-heldout-batch-432-live-2026-11-18.md; docs/capstone/pitch/tokenomics-cost-per-home-vs-value.md. No deployment, billing export, new spending authority or paid call.",
+        "NAVIGATION: physical page 56; included in Demo-first pitch before B27 and S18. The fixed Topic button goes to page 22 and Index to page 28; return deliberately after an appendix answer."
       ],
       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     }
   ],
   "content_date": "2026-11-27",
-  "visual_revision": "2026-11-27 / demo-first custom show, current product evidence, measured Tokenomics and completed study; stable physical pages and protected cost arithmetic",
+  "visual_revision": "2026-11-27 / demo-first custom show with full Azure planning and protected priority-budget proposal; stable physical pages, measured batch and protected historical cost arithmetic",
   "presentation_route": {
     "name": "Demo-first pitch",
     "slot_seconds": 900,
-    "reserve_seconds": 170,
+    "reserve_seconds": 120,
     "demo_after": "S22",
     "demo_seconds": 110,
     "demo_source": "docs/capstone/demo/runbook.md",
@@ -5188,13 +5210,18 @@
       },
       {
         "code": "B28",
-        "seconds": 55,
-        "say": "I can show measured usage, but not a verified cost per accepted outcome. The held-out demo batch produced twelve synthetic proposals and used 2,522 tokens. At its dated input and output list rates, that is a USD 0.000744 estimate for the batch, not an invoice. Those short prompts on a different model don't price a home's lifetime workload. The denominator we need is human-accepted proposals above a quality floor. The numerator includes hosting, implementation, integration, review, correction and support. Neither is complete. Source-coded call and money admission bounds contain dispatch; billing and whole-journey coverage still need proof."
+        "seconds": 60,
+        "say": "Tokens are only one line in the Azure bill. The identified persistent services are about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. Add app and job compute, storage, logs, security, operations and AI, and this illustrative demo envelope is about USD 435-1,260 a month. The assumptions are in the notes; this isn't an invoice or a maximum bill. The apps can scale to zero, but SQL is currently provisioned S3 and scheduled jobs continue overnight. Five temporary QA databases are extra. For AI, the measured synthetic batch used 2,522 tokens; that still doesn't give a cost per accepted outcome. Human implementation, review and support belong in that wider denominator-based comparison."
+      },
+      {
+        "code": "B27",
+        "seconds": 45,
+        "say": "Model usage can cost zero. This illustrative USD 50 monthly ceiling gives recommendations twenty, document judging ten and chat twenty, with daily limits too. Chat cannot borrow the protected business allocations. Known gap checks use no model tokens; interpretation may need a bounded judge and professional acceptance. Source-coded admission reserves worst-case cost before dispatch. These allocations need configuration and testing; they aren't live spending authority. Known chat exhaustion leaves priority funds, but unknown liability, safety or aggregate holds can stop all model work. Azure budget alerts only notify."
       },
       {
         "code": "S18",
         "seconds": 35,
-        "say": "Forty-four US cents per home is the older inference-only scenario: twenty tasks, ten times the historical mean tokens, and a dated secondary-source rate. Double the workload and the figure doubles. That doesn't price this project. Works and conditional grants are in pounds; technology is in dollars. We have no approved exchange rate or secured award for a return-on-investment ratio."
+        "say": "Forty-four US cents per home is the older inference-only scenario: twenty tasks, ten times the historical mean tokens, and a dated secondary-source rate. The preceding slides now cover the wider Azure envelope and a separate AI budget policy. Neither establishes cost per accepted outcome. Works and conditional grants are in pounds; technology is in dollars. We have no approved exchange rate or secured award for a return-on-investment ratio."
       },
       {
         "code": "S14",

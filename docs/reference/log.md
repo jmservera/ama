@@ -15672,3 +15672,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Retained the [original independent review](../../.copilot-tracking/reviews/code-reviews/docs-demo-first-capstone/review.md), including its Medium double-mapping finding and `approve_with_comments` outcome.
 * Corrected baseline navigation numbers for B03, B06 and B13, then regenerated the native deck, PDF and question bank. A new regression failed for all three original instructions and passed after correction. All 56 native images and bounds remained identical; nine pitch tests, all 111 PDF destinations and the existing insertion, cost and hash guards passed.
 * Updated the [dated presentation review](../capstone/source/review-2026-11-27.md) and local receipt. Corrected exact-head independent assessment, hosted observations and human acceptance remain separate.
+
+## [2026-11-27] update | Full Azure costs and protected AI budget proposal
+
+* Extended [AI Tokenomics](./resources/ai-tokenomics.md#full-azure-planning-and-protected-ai-pools-2026-11-27) with a dated public-rate platform scenario and [source-owned cost model](../capstone/source/azure-cost-model-2026-11-27.json). Distinguished the USD 334.838 persistent-service subtotal from compute, jobs, storage, logging, security, monitoring, operations and model charges; allowances and temporary QA costs are explicit, not invoices.
+* Updated B28/B27 and the generated presentation aids to explain scale-to-zero limits and proposed disjoint recommendation/document/chat budgets. The 15-minute route retains the 00:30-02:20 demo and reserves 2:00 after a 13:00 prepared story.
+* Kept the original protected financial scenarios and measured synthetic batch separate. This update grants no deployment, spend, security/retention change or live-policy acceptance; local generation and exact-head review are recorded separately.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import os
@@ -27,7 +28,9 @@ def pitch_documents() -> list[Path]:
 
 class CapstonePitchDocsTest(unittest.TestCase):
     def test_demo_first_script_embeds_runbook_and_uses_manifest_route(self) -> None:
-        manifest = json.loads((CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8"))
+        manifest = json.loads(
+            (CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8")
+        )
         route = manifest["presentation_route"]
         script = (CAPSTONE / "pitch" / "speaker-script.md").read_text(encoding="utf-8")
         runbook = (CAPSTONE / "demo" / "runbook.md").read_text(encoding="utf-8")
@@ -61,30 +64,160 @@ class CapstonePitchDocsTest(unittest.TestCase):
         demo = script.split("### 00:30-02:20", 1)[1].split("### 02:20-", 1)[0]
         self.assertIn(hook.group(1).strip(), demo)
         self.assertIn("00:30-02:20", script)
-        self.assertIn("12:10-15:00", script)
+        prepared = route["slot_seconds"] - route["reserve_seconds"]
+        self.assertIn(f"{prepared // 60:02}:{prepared % 60:02}-15:00", script)
+
+    def test_full_azure_cost_arithmetic_and_delivery_binding(self) -> None:
+        model_path = CAPSTONE / "source" / "azure-cost-model-2026-11-27.json"
+        model = json.loads(model_path.read_text(encoding="utf-8"))
+        manifest = json.loads(
+            (CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8")
+        )
+        cost_slide = next(
+            slide for slide in manifest["slides"] if slide["code"] == "B28"
+        )
+        copy = "\n".join(item.get("text", "") for item in cost_slide["elements"])
+        for column in ("low", "high"):
+            total = sum(
+                Decimal(row["rate_usd"]) * Decimal(row[f"{column}_quantity"])
+                for row in model["components"]
+            )
+            self.assertEqual(total, Decimal(model["totals_usd"][column]))
+            displayed = model["display"]["monthly"].removeprefix("USD ").split("-")
+            self.assertLess(
+                abs(total - Decimal(displayed[column == "high"].replace(",", ""))), 5
+            )
+        persistent = sum(
+            Decimal(row["rate_usd"]) * Decimal(row["low_quantity"])
+            for row in model["components"]
+            if row["category"] == "persistent"
+        )
+        self.assertEqual(persistent, Decimal(model["totals_usd"]["persistent"]))
+        self.assertIn(model["display"]["persistent"], copy)
+        self.assertIn(model["display"]["monthly"], copy)
+        self.assertEqual(
+            Decimal(model["ai_policy"]["aggregate_monthly_usd"]),
+            Decimal(
+                next(row for row in model["components"] if row["id"] == "model-usage")[
+                    "high_quantity"
+                ]
+            ),
+        )
+        for attempt in model["ai_request"]["models"]:
+            maximum = (
+                (
+                    Decimal(attempt["input_usd_per_1000"])
+                    * model["ai_request"]["max_provider_input_tokens"]
+                    + Decimal(attempt["output_usd_per_1000"])
+                    * model["ai_request"]["max_output_tokens"]
+                )
+                / 1000
+                * model["ai_request"]["max_attempts"]
+            )
+            self.assertEqual(maximum, Decimal(attempt["attempt_ceiling_usd"]))
+            self.assertIn(
+                attempt["attempt_ceiling_usd"],
+                "\n".join(
+                    next(
+                        slide for slide in manifest["slides"] if slide["code"] == "B27"
+                    )["revised_notes"]
+                ),
+            )
+        receipt = json.loads(
+            (CAPSTONE / "source" / "validation.json").read_text(encoding="utf-8")
+        )
+        canonical = (
+            model_path.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+        )
+        self.assertEqual(
+            hashlib.sha256(canonical).hexdigest(),
+            receipt["source_verification"]["azure_cost_model_sha256"],
+        )
+
+    def test_priority_budget_arithmetic_and_spoken_route(self) -> None:
+        model = json.loads(
+            (CAPSTONE / "source" / "azure-cost-model-2026-11-27.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        policy = model["ai_policy"]
+        pools = {pool["id"]: pool for pool in policy["pools"]}
+        self.assertEqual(len(pools), len(policy["pools"]))
+        for period in ("daily", "monthly"):
+            ceiling = Decimal(policy[f"aggregate_{period}_usd"])
+            allocations = [Decimal(pool[f"{period}_usd"]) for pool in pools.values()]
+            self.assertLessEqual(sum(allocations), ceiling)
+            priority = sum(
+                Decimal(pools[name][f"{period}_usd"])
+                for name in ("recommendations", "document-judging")
+            )
+            after_chat = ceiling - Decimal(pools["chat"][f"{period}_usd"])
+            self.assertGreaterEqual(after_chat, priority)
+        period_maximum = sum(
+            min(
+                Decimal(pool["daily_usd"]) * model["month_days"],
+                Decimal(pool["monthly_usd"]),
+            )
+            for pool in pools.values()
+        )
+        self.assertLessEqual(period_maximum, Decimal(policy["aggregate_monthly_usd"]))
+        manifest = json.loads(
+            (CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8")
+        )
+        codes = [step["code"] for step in manifest["presentation_route"]["steps"]]
+        self.assertEqual(
+            ["B28", "B27", "S18"], codes[codes.index("B28") : codes.index("B28") + 3]
+        )
+        script = (CAPSTONE / "pitch" / "speaker-script.md").read_text(encoding="utf-8")
+        self.assertIn("Chat cannot borrow the protected business allocations.", script)
+        self.assertIn("unknown liability, safety or aggregate holds", script)
+        questions = (CAPSTONE / "pitch" / "questions-and-answers.md").read_text(
+            encoding="utf-8"
+        )
+        for text in (
+            model["display"]["monthly"],
+            "maximum Azure bill",
+            "not spending authority",
+            "cannot consume",
+            "scheduled jobs",
+            "S3",
+        ):
+            self.assertIn(text.casefold(), questions.casefold())
 
     def test_pitch_custom_show_matches_delivered_slide_order(self) -> None:
         import zipfile
         from xml.etree import ElementTree as ET
 
-        manifest = json.loads((CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8"))
+        manifest = json.loads(
+            (CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8")
+        )
         namespace = {
             "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
             "r": "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
         }
-        with zipfile.ZipFile(CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx") as archive:
+        with zipfile.ZipFile(
+            CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx"
+        ) as archive:
             presentation = ET.fromstring(archive.read("ppt/presentation.xml"))
             children = [node.tag for node in presentation]
             self.assertLess(
                 children.index(f"{{{namespace['p']}}}custShowLst"),
                 children.index(f"{{{namespace['p']}}}defaultTextStyle"),
             )
-            relationships = ET.fromstring(archive.read("ppt/_rels/presentation.xml.rels"))
-            targets = {node.attrib["Id"]: node.attrib["Target"] for node in relationships}
-            slides = {slide["code"]: slide["part_number"] for slide in manifest["slides"]}
+            relationships = ET.fromstring(
+                archive.read("ppt/_rels/presentation.xml.rels")
+            )
+            targets = {
+                node.attrib["Id"]: node.attrib["Target"] for node in relationships
+            }
+            slides = {
+                slide["code"]: slide["part_number"] for slide in manifest["slides"]
+            }
             show = presentation.find("p:custShowLst/p:custShow", namespace)
             self.assertIsNotNone(show)
-            self.assertEqual(manifest["presentation_route"]["name"], show.attrib["name"])
+            self.assertEqual(
+                manifest["presentation_route"]["name"], show.attrib["name"]
+            )
             actual = [
                 targets[node.attrib[f"{{{namespace['r']}}}id"]]
                 for node in show.findall("p:sldLst/p:sld", namespace)
@@ -96,9 +229,12 @@ class CapstonePitchDocsTest(unittest.TestCase):
             self.assertEqual(expected, actual)
             properties = ET.fromstring(archive.read("ppt/presProps.xml"))
             self.assertEqual(
-                show.attrib["id"], properties.find("p:showPr/p:custShow", namespace).attrib["id"]
+                show.attrib["id"],
+                properties.find("p:showPr/p:custShow", namespace).attrib["id"],
             )
-            self.assertEqual(56, len(presentation.findall("p:sldIdLst/p:sldId", namespace)))
+            self.assertEqual(
+                56, len(presentation.findall("p:sldIdLst/p:sldId", namespace))
+            )
             notes = archive.read("ppt/notesSlides/notesSlide56.xml").decode()
             self.assertIn("2,522", notes)
             self.assertIn("not a billing record", notes)
@@ -117,15 +253,23 @@ class CapstonePitchDocsTest(unittest.TestCase):
         import zipfile
         from xml.etree import ElementTree as ET
 
-        manifest = json.loads((CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8"))
+        manifest = json.loads(
+            (CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8")
+        )
         slides = {slide["code"]: slide for slide in manifest["slides"]}
-        questions = (CAPSTONE / "pitch" / "questions-and-answers.md").read_text(encoding="utf-8")
-        with zipfile.ZipFile(CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx") as archive:
+        questions = (CAPSTONE / "pitch" / "questions-and-answers.md").read_text(
+            encoding="utf-8"
+        )
+        with zipfile.ZipFile(
+            CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx"
+        ) as archive:
             for code, topic in (("B03", "S08"), ("B06", "S12"), ("B13", "S19")):
                 with self.subTest(code=code):
                     slide = slides[code]
                     notes = ET.fromstring(
-                        archive.read(f"ppt/notesSlides/notesSlide{slide['part_number']}.xml")
+                        archive.read(
+                            f"ppt/notesSlides/notesSlide{slide['part_number']}.xml"
+                        )
                     )
                     navigation = next(
                         node.text
@@ -154,7 +298,9 @@ class CapstonePitchDocsTest(unittest.TestCase):
         self.assertIn("current-deck-assessment-2026-11-12.md", rows["6"])
         self.assertNotIn("No revised deck exists", rows["5"])
         # Criterion 3 stays open while the rehearsal record is blank.
-        notes = (CAPSTONE / "pitch" / "tokenomics-rehearsal-notes.md").read_text(encoding="utf-8")
+        notes = (CAPSTONE / "pitch" / "tokenomics-rehearsal-notes.md").read_text(
+            encoding="utf-8"
+        )
         record = notes.split("## Rehearsal Record", 1)[1]
         if re.search(r"\| Date and presenter \| *\|", record):
             self.assertIn("rehearsal-notes.md", rows["3"])
@@ -166,7 +312,9 @@ class CapstonePitchDocsTest(unittest.TestCase):
             self.skipTest("python-pptx is not installed")
         from pptx import Presentation
 
-        deck = Presentation(str(CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx"))
+        deck = Presentation(
+            str(CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx")
+        )
 
         def text(number: int) -> str:
             shapes = deck.slides[number - 1].shapes
@@ -186,7 +334,10 @@ class CapstonePitchDocsTest(unittest.TestCase):
         self.assertIn("accepted-outcome TCA unknown", cfo)
 
     def test_measured_batch_stays_within_recorded_authority(self) -> None:
-        folder = ROOT / "docs/reference/research/evaluation/heldout-batch-432-live-2026-11-18"
+        folder = (
+            ROOT
+            / "docs/reference/research/evaluation/heldout-batch-432-live-2026-11-18"
+        )
         auth = json.loads((folder / "authorization.json").read_text(encoding="utf-8"))
         report = json.loads((folder / "report-live.json").read_text(encoding="utf-8"))
         self.assertTrue(auth["approved_by"] and auth["authority_ref"])
@@ -195,7 +346,9 @@ class CapstonePitchDocsTest(unittest.TestCase):
         self.assertEqual(auth["authority_ref"], report["spend_authority_ref"])
         self.assertLessEqual(report["calls"], auth["max_calls"])
         self.assertLessEqual(report["tokens"]["total"], auth["max_total_tokens"])
-        self.assertLessEqual(Decimal(report["accrued_usd"]), Decimal(auth["max_budget_usd"]))
+        self.assertLessEqual(
+            Decimal(report["accrued_usd"]), Decimal(auth["max_budget_usd"])
+        )
         self.assertEqual(report["calls"], len(report["rows"]))
 
     def test_spoken_scripts_do_not_say_the_batch_has_not_run(self) -> None:
@@ -204,10 +357,16 @@ class CapstonePitchDocsTest(unittest.TestCase):
             CAPSTONE / "pitch" / "tokenomics-rehearsal-notes.md",
         ):
             text = " ".join(doc.read_text(encoding="utf-8").split())
-            for stale in ("authorised but not run", "not yet run live", "That batch has not run"):
+            for stale in (
+                "authorised but not run",
+                "not yet run live",
+                "That batch has not run",
+            ):
                 self.assertNotIn(stale, text, f"{doc.name}: {stale}")
 
-    def test_model_tier_comparison_is_dated_sourced_and_makes_no_saving_claim(self) -> None:
+    def test_model_tier_comparison_is_dated_sourced_and_makes_no_saving_claim(
+        self,
+    ) -> None:
         text = " ".join(
             (CAPSTONE / "pitch" / "tokenomics-model-tier-comparison.md")
             .read_text(encoding="utf-8")

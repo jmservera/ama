@@ -864,13 +864,16 @@ function Export-PitchMaterials {
             }
             if ($Kind -eq 'main' -and $Definition.presentation_route) {
                 $Route = $Definition.presentation_route
+                $Prepared = [int]$Route.slot_seconds - [int]$Route.reserve_seconds
+                $PreparedClock = '{0:00}:{1:00}' -f [Math]::Floor($Prepared / 60), ($Prepared % 60)
+                $ReserveClock = '{0}:{1:00}' -f [Math]::Floor($Route.reserve_seconds / 60), ($Route.reserve_seconds % 60)
                 $Lines = @(
                     '---', 'title: Demo-first capstone speaker script'
                     'description: Timed pitch with the complete demo runbook embedded; prepared, not rehearsed'
                     "ms.date: $ContentDate", 'ms.topic: how-to', '---', ''
                     '## Present this route', ''
                     'Use the PowerPoint custom show "Demo-first pitch". Start the demo at 00:30; the complete demo lasts 1:50.'
-                    'The 15-minute slot includes 12:10 of planned narration/demo and 2:50 for questions or recovery.'
+                    "The 15-minute slot includes $PreparedClock of planned narration/demo and $ReserveClock for questions or recovery."
                     'Only the SAY paragraphs are spoken. Actions, source notes and the embedded operational runbook are presenter aids.'
                     'Physical page numbers stay stable; the PDF contains the full deck, not the custom-show sequence.'
                     'The shorter route replaces the former 24:30 narration plan. Original slide TIMING lines are historical reference only.'
@@ -905,7 +908,7 @@ function Export-PitchMaterials {
                         $Lines += @('### 00:30-02:20 | embedded 1:50 demo', '', 'The clock below starts at demo 00:00 (pitch 00:30). Speak the quotations; the screen/action column is an operator aid.', '', $Hook.Groups[1].Value.Trim(), '', 'After the demo, return to page 4 / S04. Use one recovery within the existing window; never enlarge a model allowance.', '')
                     }
                 }
-                $Lines += @('### 12:10-15:00 | questions and recovery', '', 'Let the question finish. Restate the concern, answer directly, then open one appendix or identify the missing evidence and its owner. Do not repeat the pitch.', '', '## Delivery cues', '', '* Stand still for the opening and final decision; look at the room rather than the screen.', '* In the demo, point to the evidence and next owner. Stop moving the cursor while speaking.', '* Slow down for costs and denominators. An unknown accepted-outcome count is a result to disclose, not a number to fill in.', '* Use one gesture along the architecture path. Answer a deeper question from the mechanism and its failure route.', '* Keep the resident choice and independent safety service explicit; dress for the executive setting without distracting from the product.', '', '## Embedded demo runbook', '')
+                $Lines += @("### $PreparedClock-15:00 | questions and recovery", '', 'Let the question finish. Restate the concern, answer directly, then open one appendix or identify the missing evidence and its owner. Do not repeat the pitch.', '', '## Delivery cues', '', '* Stand still for the opening and final decision; look at the room rather than the screen.', '* In the demo, point to the evidence and next owner. Stop moving the cursor while speaking.', '* Slow down for costs and denominators. An unknown accepted-outcome count is a result to disclose, not a number to fill in.', '* Use one gesture along the architecture path. Answer a deeper question from the mechanism and its failure route.', '* Keep the resident choice and independent safety service explicit; dress for the executive setting without distracting from the product.', '', '## Embedded demo runbook', '')
                 $Lines += @($Runbook.TrimEnd(), '', '## Slide evidence and appendix access', '', 'Use the [question bank](./questions-and-answers.md) for deeper answers and the [27 November review](../source/review-2026-11-27.md) for the claim register and assessment gaps. Original notes remain in the PowerPoint and source manifest.')
             }
             $Content = ($Lines -join "`n").Replace("`r", '')

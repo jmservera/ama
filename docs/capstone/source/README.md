@@ -10,7 +10,7 @@ ms.topic: how-to
 The current source is schema 3 with 56 slide records. It restores B28 to the
 reproducible builder and defines the native "Demo-first pitch" custom show.
 The delivered pitch starts the employee-site demo at 00:30, returns to slides
-at 02:20 and finishes the prepared story at 12:10, leaving 2:50 inside a
+at 02:20 and finishes the prepared story at 13:00, leaving 2:00 inside a
 15-minute slot. The demo is included, not a separate allowance.
 
 The [speaker script](../pitch/speaker-script.md) is generated from
@@ -36,6 +36,7 @@ changes through this authoring update.
 | --- | --- |
 | [baseline.pptx](./baseline.pptx) | Immutable snapshot of the actual owner-supplied 54-slide deck at this reorganization; native layouts, sections, media, relationships and untouched content |
 | [slides.json](./slides.json) | All 56 records/notes, immutable baseline mapping, deployment insertion, appended B28, demo-first custom show, exact text/bounds and spoken narration |
+| [Dated Azure cost model](./azure-cost-model-2026-11-27.json) | Public-rate meters, full low/high platform assumptions, visible allowances and proposed protected AI pools; not an invoice, spending authority or live control |
 | [assets/catalog.json](./assets/catalog.json) | Captured media in `media`; future-logo, journey and architecture projections in `additional_media`, with exact usage and SVG/native/PNG hashes |
 | [assets/media](./assets/media/) | All 36 original embedded media files, not flattened pictures of whole slides |
 | [Official product icons](./assets/official/README.md) | Fabric and Power BI source SVGs, native PNG derivatives, permitted-use guidance and archive provenance |
@@ -49,6 +50,12 @@ The baseline hash is pinned in the manifest. The delivered PPTX is an output,
 never an implicit fallback input. A complete rebuild needs the native baseline,
 JSON, catalog, all referenced media and both scripts above. The old 18-slide
 authoring inventory does not recreate the current deck.
+
+The custom show has seventeen slides. B28 covers the full illustrative Azure
+envelope, including model use; B27 follows with a separate proposed budget
+policy before the preserved S18 inference scenario. Neither alters the six
+protected financial records. The cost-model hash is recorded in the delivery
+receipt and its arithmetic/pool allocation is checked against the slide source.
 
 ### Retained deployment insertion and reference route
 

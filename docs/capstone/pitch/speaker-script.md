@@ -8,11 +8,11 @@ ms.topic: how-to
 ## Present this route
 
 Use the PowerPoint custom show "Demo-first pitch". Start the demo at 00:30; the complete demo lasts 1:50.
-The 15-minute slot includes 12:10 of planned narration/demo and 2:50 for questions or recovery.
+The 15-minute slot includes 13:00 of planned narration/demo and 2:00 for questions or recovery.
 Only the SAY paragraphs are spoken. Actions, source notes and the embedded operational runbook are presenter aids.
 Physical page numbers stay stable; the PDF contains the full deck, not the custom-show sequence.
 The shorter route replaces the former 24:30 narration plan. Original slide TIMING lines are historical reference only.
-Candidate SHA-256: `0c1d29fc1d80c3477f2b8f85f0ef05c01701a1b81e270ee045cf9154ad4c4939`. No performed rehearsal or current live acceptance is claimed.
+Candidate SHA-256: `45e5fd9a5e704355cb3e8ce576dfe213e26fc0486b438ffd8bafb2093c32cf15`. No performed rehearsal or current live acceptance is claimed.
 
 ## Audience and decision
 
@@ -98,49 +98,55 @@ Seven checkpoints between an AI draft and a real-world decision.
 
 SAY: The model receives a permitted, versioned evidence projection. Dispatch has a finite allowance; output checks reject broken structure or stale sources. A person checks meaning and current permissions. Accepting a proposal is separate from consenting to works, submitting funding or accepting quality. A valid citation can still support a wrong claim, so meaningful review is an evaluation question. Failures leave an owned manual route; safety reports bypass AI.
 
-### 07:20-08:15 | page 56 / B28
+### 07:20-08:20 | page 56 / B28
 
-What does an accepted proposal cost?
+The Azure bill continues when the apps sleep
 
-SAY: I can show measured usage, but not a verified cost per accepted outcome. The held-out demo batch produced twelve synthetic proposals and used 2,522 tokens. At its dated input and output list rates, that is a USD 0.000744 estimate for the batch, not an invoice. Those short prompts on a different model don't price a home's lifetime workload. The denominator we need is human-accepted proposals above a quality floor. The numerator includes hosting, implementation, integration, review, correction and support. Neither is complete. Source-coded call and money admission bounds contain dispatch; billing and whole-journey coverage still need proof.
+SAY: Tokens are only one line in the Azure bill. The identified persistent services are about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. Add app and job compute, storage, logs, security, operations and AI, and this illustrative demo envelope is about USD 435-1,260 a month. The assumptions are in the notes; this isn't an invoice or a maximum bill. The apps can scale to zero, but SQL is currently provisioned S3 and scheduled jobs continue overnight. Five temporary QA databases are extra. For AI, the measured synthetic batch used 2,522 tokens; that still doesn't give a cost per accepted outcome. Human implementation, review and support belong in that wider denominator-based comparison.
 
-### 08:15-08:50 | page 22 / S18
+### 08:20-09:05 | page 55 / B27
+
+Protect business AI when chat reaches its limit
+
+SAY: Model usage can cost zero. This illustrative USD 50 monthly ceiling gives recommendations twenty, document judging ten and chat twenty, with daily limits too. Chat cannot borrow the protected business allocations. Known gap checks use no model tokens; interpretation may need a bounded judge and professional acceptance. Source-coded admission reserves worst-case cost before dispatch. These allocations need configuration and testing; they aren't live spending authority. Known chat exhaustion leaves priority funds, but unknown liability, safety or aggregate holds can stop all model work. Azure budget alerts only notify.
+
+### 09:05-09:40 | page 22 / S18
 
 Model inference. Measure accepted value.
 
-SAY: Forty-four US cents per home is the older inference-only scenario: twenty tasks, ten times the historical mean tokens, and a dated secondary-source rate. Double the workload and the figure doubles. That doesn't price this project. Works and conditional grants are in pounds; technology is in dollars. We have no approved exchange rate or secured award for a return-on-investment ratio.
+SAY: Forty-four US cents per home is the older inference-only scenario: twenty tasks, ten times the historical mean tokens, and a dated secondary-source rate. The preceding slides now cover the wider Azure envelope and a separate AI budget policy. Neither establishes cost per accepted outcome. Works and conditional grants are in pounds; technology is in dollars. We have no approved exchange rate or secured award for a return-on-investment ratio.
 
-### 08:50-09:25 | page 16 / S14
+### 09:40-10:15 | page 16 / S14
 
 Adopt without a big-bang replacement.
 
 SAY: Adoption is another cost. The existing file tooling previews declared spreadsheets, keeps row lineage, quarantines conflicts and leaves the original unchanged. Review and familiar exports help compare the new process with the old one. That library isn't a completed web import journey or live housing-system integration. I would start with an agreed mapping and reconciliation, retain assisted service, and measure displaced work as well as time released.
 
-### 09:25-10:10 | page 10 / S09
+### 10:15-11:00 | page 10 / S09
 
 Every prototype taught us something we kept.
 
 SAY: The delivery history changed how I manage the product. Requirements and journey work exposed missing ownership. A rewrite could pass tests while losing a usable path, including sign-in or the trusted staff binding. Later corrections restored those mechanisms and retained the original failures. Research, Plan and Implement records, independent review and exact-version checks now matter more than a count of closed issues. The same discipline applies to this demo: a dated success is evidence to recheck, never a permanent green badge.
 
-### 10:10-10:50 | page 23 / S19
+### 11:00-11:40 | page 23 / S19
 
 Limited coding gains, at added resource cost.
 
 SAY: Our exploratory coding study reports 315 completed trajectories; judging uses a 313-trajectory snapshot. Longer delivery already retained most features. Consolidation's primary gain was 1.19 percentage points, conditional on owner-attested coverage and below the ten-point practical benchmark, with added resource cost. One Gemini change-request comparison favoured read-only review. These aren't universal productivity results. Isabel Cabezas Martin collected data separately; both authors work at Microsoft. For this product, test usable journeys and retain contrary results.
 
-### 10:50-11:40 | page 25 / S21
+### 11:40-12:30 | page 25 / S21
 
 Prove the need. Choose the smallest next step.
 
 SAY: The next decision is one bounded same-home validation, with Programme owning scope and Finance, Quality, Engagement and Digital supplying their review evidence. Compare the workflow with and without AI on accepted outcomes, total handling effort, critical misses, recovery and full cost. Finish the requested task breadth before expanding authority. Keep SQL as operational control. Fabric, richer context and Agent 365 are conditional options for a demonstrated need, not today's dependencies. Set the review point after scope and prerequisites are agreed; cost and authorise execution separately.
 
-### 11:40-12:10 | page 27 / S23
+### 12:30-13:00 | page 27 / S23
 
 More homes ready, with control intact.
 
 SAY: Zava Forward makes the home, its evidence and its next accountable action visible. The demo shows the product's mechanism; it doesn't prove faster retrofit or lower bills. My recommendation is to validate that mechanism with the people doing the work, finish the remaining task contracts and expand only when quality and net value support it.
 
-### 12:10-15:00 | questions and recovery
+### 13:00-15:00 | questions and recovery
 
 Let the question finish. Restate the concern, answer directly, then open one appendix or identify the missing evidence and its owner. Do not repeat the pitch.
 

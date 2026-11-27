@@ -10,7 +10,7 @@ ms.topic: how-to
 Use the current Cowork v2 presentation and select its "Demo-first pitch"
 custom show. It contains 16 selected slides, begins the employee-site demo
 at 00:30 and returns to the business argument at 02:20. Prepared narration
-and demo finish at 12:10; questions and recovery have 2:50 within 15 minutes.
+and demo finish at 13:00; questions and recovery have 2:00 within 15 minutes.
 The full 56-page deck and PDF remain the source-backed reference package.
 B28 is now part of the [manifest](./source/slides.json) and builder, so a
 clean rebuild preserves the measured Tokenomics evidence.
