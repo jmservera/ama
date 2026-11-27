@@ -1,0 +1,11 @@
+dense 0 95 [['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored']]
+dense 1 95 [['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored']]
+short 0 95 [['sensor-forecast-point', 'Latest stored']]
+short 1 95 [['sensor-forecast-point', 'Latest stored']]
+one 0 95 [['sensor-forecast-point', 'Latest stored']]
+one 1 95 [['sensor-forecast-point', 'Latest stored']]
+two 0 95 [['sensor-forecast-point', 'Latest stored']]
+two 1 95 [['sensor-forecast-point', 'Latest stored']]
+day 0 95 [['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored']]
+day 1 95 [['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored'], ['sensor-point', 'Latest stored']]
+done
