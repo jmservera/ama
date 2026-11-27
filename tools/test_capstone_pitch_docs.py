@@ -34,6 +34,16 @@ class CapstonePitchDocsTest(unittest.TestCase):
         route = manifest["presentation_route"]
         script = (CAPSTONE / "pitch" / "speaker-script.md").read_text(encoding="utf-8")
         runbook = (CAPSTONE / "demo" / "runbook.md").read_text(encoding="utf-8")
+        receipt = json.loads((CAPSTONE / "source/validation.json").read_text())
+        canonical = (
+            (CAPSTONE / "demo/runbook.md")
+            .read_bytes()
+            .replace(b"\r\n", b"\n")
+            .replace(b"\r", b"\n")
+        )
+        self.assertEqual(
+            hashlib.sha256(canonical).hexdigest(), receipt["pitch"]["runbook_sha256"]
+        )
         self.assertEqual(
             900,
             sum(step["seconds"] for step in route["steps"])

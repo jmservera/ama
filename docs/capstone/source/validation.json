@@ -291,7 +291,7 @@
     "question_reserve": "13:00-15:00",
     "speaker_script_sha256": "1be6fcf0334510fc78cbe973c1ec97b890c791af7b6d4a4daf6b4248fe22b34a",
     "questions_and_answers_sha256": "6b0a48888ef56814effec29ff49bbfe56797121936168eb905cdd19f21a1e5b9",
-    "runbook_sha256": "0adeb77b8533df19f3fc4c90a79d1f4998a4ceb96df0b69c8bee74d7599f6f12",
+    "runbook_sha256": "31deb5a6f423460280b480aef7993ab87b4c0a163bbefbf58c4e3f02bd12500f",
     "rehearsal_performed": false,
     "optional_story": {
       "name": "Discovery and UK sovereignty",

@@ -1,0 +1,126 @@
+{
+  "schema_version": "1",
+  "branch": "docs/demo-first-capstone",
+  "head_commit": "01ad9aeb8eae5ad72b33f20882fab3997384b979",
+  "base_commit": "3da0011a89281482aeb6500e6524c9fe05c56d42",
+  "reviewed_at": "2026-11-27T23:37:55Z",
+  "verdict": "approve_with_comments",
+  "reviewer": "ama-presentation-communications-strategist",
+  "review_profile": "independent-main-story-privacy-rai-uk-price",
+  "depth_tier": "standard",
+  "scope": {
+    "pages": [
+      {"code": "S01", "page": 1},
+      {"code": "S11A", "page": 13},
+      {"code": "S15", "page": 17},
+      {"code": "S17", "page": 21},
+      {"code": "B28", "page": 56}
+    ],
+    "includes": [
+      "Not-for-profit mission/accountability and privacy claim limits",
+      "UK Standard-model target versus current Global/Sweden exceptions",
+      "Meaningful human decisions and pending operational RAI acceptance",
+      "Global nano versus regional UK model price scope",
+      "Primary narration, Executive Hook, native notes and five native PNGs",
+      "Exact delivery bindings and route timing",
+      "Cited reviewed regulatory update, original research, draft DPIA and RAI/company evidence"
+    ],
+    "excludes": [
+      "Full 17-file PR/code readiness objective",
+      "Application architecture or whole-application source review",
+      "Private datasets and settings",
+      "Deployment, paid inference and operational verification",
+      "Legal, privacy, RAI or accessibility certification",
+      "Human acceptance, merge authorization and external posting"
+    ]
+  },
+  "files_changed": [
+    "docs/capstone/source/slides.json",
+    "docs/capstone/demo/runbook.md",
+    "docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md"
+  ],
+  "findings_count": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 1
+  },
+  "findings": [
+    {
+      "id": "R1",
+      "severity": "low",
+      "file": "docs/capstone/source/validation.json",
+      "line": 294,
+      "title": "Validation record retains previous-published runbook digest",
+      "recorded_sha256": "0adeb77b8533df19f3fc4c90a79d1f4998a4ceb96df0b69c8bee74d7599f6f12",
+      "actual_head_sha256": "31deb5a6f423460280b480aef7993ab87b4c0a163bbefbf58c4e3f02bd12500f",
+      "impact": "The runbook hash field binds the previous base, although actual generated runbook and Hook content parity passes.",
+      "suggested_remediation": "Refresh the runbook digest from the final file after verification; do not alter approval gates.",
+      "resolved": false
+    }
+  ],
+  "verification": {
+    "head_confirmed_before_review_and_before_writing": true,
+    "serialized_diff_matches_exact_base_head_diff": true,
+    "inspected_sources_and_deliveries_match_head_blobs": true,
+    "five_native_pngs_visually_inspected": true,
+    "native_build_pptx_and_verified_pdf_match_delivery": true,
+    "five_native_note_primary_say_parity": true,
+    "canonical_source_bindings_passed": 4,
+    "pptx_pdf_script_question_bank_bindings": "pass",
+    "runbook_digest_record": "stale_previous_base",
+    "complete_embedded_runbook_parity": "pass",
+    "inline_executive_hook_parity": "pass",
+    "primary_manifest_script_parity": "pass",
+    "primary_custom_show_pages": 17,
+    "prepared_seconds": 780,
+    "demo_start_seconds": 30,
+    "demo_seconds": 110,
+    "reserve_seconds": 120,
+    "optional_story_seconds": 360,
+    "optional_story_requires_separate_confirmed_slot": true,
+    "focused_frames": 42,
+    "focused_overflow_flags": 0,
+    "pdf_pages": 56,
+    "pdf_internal_links_with_valid_destinations": 111,
+    "tests_rerun": false,
+    "prior_tests": "Attributed prior record: 26 selected tests and three subtests passed.",
+    "native_render_rerun": false,
+    "public_source_spot_checks": [
+      "UK GDPR Articles 22A and 22C",
+      "ICO restricted-transfer compliance chapter",
+      "ICO ADM draft status",
+      "RSH Transparency, Influence and Accountability Standard",
+      "Microsoft deployment types",
+      "Microsoft Standard/Regional Europe catalog: gpt-4.1-mini 2025-04-14, UK South",
+      "Microsoft provider privacy, EEA reviewer location and Modified Abuse Monitoring change"
+    ]
+  },
+  "remaining_limits": {
+    "other_revised_bounds_warnings_unaccepted": 28,
+    "inherited_bounds_warnings_unaccepted": 179,
+    "performed_rehearsal": "not_established",
+    "projector_keyboard_real_at_acceptance": "not_established",
+    "live_uk_residency": "not_established",
+    "legal_dpo_real_data_approval": "not_established",
+    "operational_rai_and_fairness_acceptance": "not_established",
+    "whole_pr_readiness": "not_reviewed",
+    "human_review": "not_granted",
+    "merge_authorization": "not_granted",
+    "posting_authorization": "not_granted"
+  },
+  "artifacts": {
+    "review": "review.md",
+    "diff_state": "diff-state.json",
+    "dispatch_manifest": "dispatch-manifest.json"
+  },
+  "preserved_input_sha256": {
+    "diff_state": "a5ff8861782b77801e65d9f149cdbbea6b664e8893ca6c2344e9323ab2c5bbad",
+    "increment_diff": "87f33f535a7ff22aabc8eeccc56d2e4306e6f83689ffc4b5cca28e229672c55f"
+  },
+  "nested_agents_used": false,
+  "source_edited": false,
+  "git_mutated": false,
+  "external_posting_performed": false,
+  "general_pr_comment_draft_authored": false
+}

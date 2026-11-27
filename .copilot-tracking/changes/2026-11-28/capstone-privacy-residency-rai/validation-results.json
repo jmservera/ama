@@ -54,6 +54,14 @@
     "optional_seconds": 360,
     "optional_slot_requires_confirmation": true
   },
+  "independent_review_correction": {
+    "finding": "R1: stale runbook SHA-256 in the compact receipt",
+    "original_verdict": "approve_with_comments at 01ad9aeb8eae5ad72b33f20882fab3997384b979",
+    "new_binding_assertion_before_correction": "expected_fail",
+    "correction": "Refreshed canonical runbook digest; retained original review; extended existing parity regression",
+    "delivery_and_spoken_content_changed": false,
+    "followup_validation": "26 tests and 3 subtests passed; canonical source/delivery bindings, Ruff and whitespace passed"
+  },
   "not_established": [
     "Performed rehearsal, projector or keyboard/assistive-technology acceptance",
     "Live UK residency or whole-project privacy/RAI acceptance",

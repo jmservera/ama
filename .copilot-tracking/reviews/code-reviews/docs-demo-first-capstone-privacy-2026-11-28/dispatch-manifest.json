@@ -1,0 +1,37 @@
+{
+  "mode": "workflow",
+  "currentPhase": "independent-main-story-review-complete",
+  "originalReadinessAttempt": {
+    "status": "blocked_missing_serialized_diff",
+    "verdictEmitted": false,
+    "correction": "Exact diff generated and diffPatchPath serialized",
+    "sameAgentFollowup": "Unavailable because synchronous workers do not accept follow-up messages"
+  },
+  "targetHead": "01ad9aeb8eae5ad72b33f20882fab3997384b979",
+  "independentMainStoryReview": {
+    "status": "completed",
+    "verdict": "approve_with_comments",
+    "reviewedAt": "2026-11-27T23:37:55Z",
+    "scope": "Five main-route pages, primary narration/Executive Hook, cited privacy/residency/RAI and UK-model-price claims; not full 17-file readiness",
+    "reviewPath": "review.md",
+    "metadataPath": "metadata.json",
+    "findings": ["R1"],
+    "broaderReadinessRetried": false
+  },
+  "phaseGates": {
+    "implementationAndLocalValidation": "passed",
+    "independentExactHeadReadiness": "pending",
+    "independentMainStoryExactHeadReview": "passed_with_comments",
+    "humanReview": "not_granted",
+    "mergeAuthorization": "not_granted",
+    "generalPrCommentPosting": "not_granted"
+  },
+  "nextActions": [
+    "Qualified human to review the bounded findings; no human/merge/posting approval is granted",
+    "Owner to refresh the stale runbook digest in docs/capstone/source/validation.json:294",
+    "Broader exact-head readiness remains pending; do not infer it from this narrower verdict"
+  ],
+  "boardItems": [
+    {"id": "privacy-pitch", "area": "presentation evidence and claim boundaries", "status": "completed_with_comments", "register": 2, "verdict": "approve_with_comments", "findings": ["R1"]}
+  ]
+}

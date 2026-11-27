@@ -1,0 +1,81 @@
+{
+  "mode": "workflow",
+  "repositoryRoot": "/home/jmservera/source/ama",
+  "diffPatchPath": "/home/jmservera/source/ama/.copilot-tracking/reviews/code-reviews/docs-demo-first-capstone-privacy-2026-11-28/increment.diff",
+  "branch": "docs/demo-first-capstone",
+  "reviewTarget": {
+    "kind": "branch_diff",
+    "baseRef": "3da0011a89281482aeb6500e6524c9fe05c56d42",
+    "headRef": "docs/demo-first-capstone",
+    "headSha": "01ad9aeb8eae5ad72b33f20882fab3997384b979"
+  },
+  "reviewProfile": "custom",
+  "perspectives": ["readiness"],
+  "depthTier": "standard",
+  "recommendedDepth": "standard",
+  "depthRationale": "Bounded presentation/readiness review of the full 17-file increment, generated native/PDF/script and legal/privacy/RAI claim limits; no deployed control changes",
+  "reviewStateProvenance": {
+    "scope": "automation-derived",
+    "changeRiskEvidence": "automation-derived",
+    "recommendedDepth": "automation-derived",
+    "depthTier": "automation-derived",
+    "depthRationale": "automation-derived"
+  },
+  "changeBrief": {
+    "intent": "Bring not-for-profit stewardship, UK GDPR/privacy, qualified UK regional processing and accountable human decisions into the main demo-first pitch",
+    "orientation": "The main route retains 17 pages, 780 prepared seconds, a demo starting at 00:30 for 110 seconds and 120 seconds reserve. The optional sovereignty story stays six minutes. Five pages change pixels: 1, 13, 17, 21, 56. The diagram remains unshrunk, financial pairs unchanged and PDF navigation has 111 verified actions. Claims distinguish owner-confirmed non-profit status, proposed UK Standard processing, current Global/Sweden exceptions, pending real-data approval, meaningful human review and unapproved AI-budget allocations.",
+    "generatedDeliverables": [
+      "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx",
+      "docs/capstone/deck/zava-forward-cowork-v2-draft.pdf",
+      "docs/capstone/pitch/speaker-script.md",
+      "docs/capstone/pitch/questions-and-answers.md"
+    ]
+  },
+  "files": [
+    ".copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/native-fit-iterations.json",
+    ".copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/validation-results.json",
+    ".copilot-tracking/research/2026-11-28/capstone-privacy-residency-rai-research.md",
+    "docs/architecture/environment-region-quota-strategy.md",
+    "docs/capstone/deck/zava-forward-cowork-v2-draft.pdf",
+    "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx",
+    "docs/capstone/demo/runbook.md",
+    "docs/capstone/pitch/questions-and-answers.md",
+    "docs/capstone/pitch/speaker-script.md",
+    "docs/capstone/source/review-2026-11-27.md",
+    "docs/capstone/source/slides.json",
+    "docs/capstone/source/validation.json",
+    "docs/reference/README.md",
+    "docs/reference/log.md",
+    "docs/reference/regulatory/README.md",
+    "docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md",
+    "tools/test_capstone_pitch_docs.py"
+  ],
+  "changeRiskEvidence": {
+    "change-scope": {"signal": "Presentation and documentation only", "availability": "observed", "evidence": "17 changed files; no runtime, infra, dependency, workflow or gate-tool changes"},
+    "path-criticality": {"signal": "Consequential explanation, not live rule activation", "availability": "qualitative", "evidence": "Privacy/RAI/residency wording must not imply legal or deployed acceptance"},
+    "history": {"signal": "Earlier findings preserved", "availability": "observed", "evidence": "Original missing-content regressions and opening-fit failure retained; previous sovereign review is not reused"},
+    "test-presence": {"signal": "Existing and two new focused tests", "availability": "observed", "evidence": "26 tests and 3 subtests, native guards and source/hash bindings passed"},
+    "coverage": {"signal": "Local delivery evidence, not operational acceptance", "availability": "observed", "evidence": "56 rendered pages, 111 PDF links, 42 changed frames with zero warnings; rehearsal, AT, Legal/DPO and hosted evidence separate"},
+    "rollback": {"signal": "Versioned static delivery", "availability": "observed", "evidence": "Previous delivery remains in base commit; no deployment or live-control activation"}
+  },
+  "hotspots": [
+    "Not-for-profit does not automatically create UK-only or unrestricted-disclosure duties",
+    "Standard-model target is distinct from current Global/Sweden and identity/provider exceptions",
+    "Global nano rate is not a UK-resident quotation",
+    "Meaningful human review and pending real-data/RAI approval remain explicit",
+    "Visible copy, generated script/runbook, timing, native fit and financial/link/source bindings agree"
+  ],
+  "specialistSignals": ["privacy/PII and RAI explanatory claims; no live processing change"],
+  "outOfScope": [
+    "Inherited manuscript/provenance commits before the exact base",
+    "Actual UK migration, deployment, paid inference or private datasets",
+    "Legal, operational RAI, accessibility certification or human acceptance",
+    "Merge, rebase, push, external review/comment emission"
+  ],
+  "task": {
+    "kind": "perspective_batch",
+    "outputs": {
+      "readiness": ".copilot-tracking/reviews/code-reviews/docs-demo-first-capstone-privacy-2026-11-28/readiness-findings.json"
+    }
+  }
+}
