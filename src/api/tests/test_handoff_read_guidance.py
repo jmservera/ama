@@ -325,8 +325,8 @@ class HandoffReadGuidanceBrowser(unittest.TestCase):
         self.assertNotIn("CANARY", page.locator("main").inner_text())
         self.assertNotIn("Failed to fetch", page.locator("main").inner_text())
         self.assertNotIn("Pat Test", card.inner_text())
-        # One rejected attempt, no retry; the wrapper rejects before the network.
-        self.assertEqual(page.evaluate("window.__attempts"), 1)
+        # First read plus two bounded dropped-connection retries (#2261).
+        self.assertEqual(page.evaluate("window.__attempts"), 3)
         self.assertEqual([r for r in requests if r.url.endswith("/api/handoffs")], [])
         self.assertEqual([r for r in requests if r.method == "POST" and "login" not in r.url], [])
 

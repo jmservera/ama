@@ -20,6 +20,12 @@ backup appointees, acknowledgement/escalation limits and coverage, approved
 thresholds/windows/recipients and dated signal verification. Missing appointments
 or approvals mean Blocked. Do not send resident/case data in alerts or Teams.
 
+Live note (2026-11-26): a read-only inventory of resource group `ama` found the
+job, IoT, poison-queue and AI-limit rules installed and enabled in the demo
+estate, so the "disabled candidate" wording below describes the source default,
+not that estate. Installed and enabled is not fired or delivered. See
+[the 2026-11-26 note](../docs/reference/research/issue-146-live10-monitoring-2026-11-26.md).
+
 New rules in [operationalMonitoring.bicep](./modules/operationalMonitoring.bicep)
 are disabled by default. `enableCandidateMonitoringAlerts=true` only enables
 them when `monitoringApprovalReference` is nonempty after trimming; this is a
@@ -553,6 +559,18 @@ this rule. Triage: `az containerapp job execution list` status and start time, t
 platform events; no console-content dumps. Response: the receiver is a telemetry
 reader, so keep manual routes and do not replay without audit. Recovery: next
 scheduled execution Succeeded.
+
+### Job live simulator
+
+Anchor: `job-live-simulator`. `alert-job-live-simulator-failed`, created by
+`infra/live-simulator-job.bicep` only when `failureAlertActionGroupId` is set:
+`Microsoft.App/jobs` `Executions` Total >0 with `state=Failed` over 15 minutes,
+every five minutes, severity 2. Proposed owner: Digital service owner (actual
+appointment pending). Triage: `az containerapp job execution list` status and
+start time, then platform events; no console-content dumps. Response: the
+simulator only publishes synthetic device messages, so pause the schedule and keep
+manual routes; do not replay without audit. Recovery: next scheduled execution
+Succeeded.
 
 ### API 5xx query
 

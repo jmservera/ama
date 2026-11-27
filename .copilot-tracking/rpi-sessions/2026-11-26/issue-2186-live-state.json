@@ -1,0 +1,53 @@
+{
+ "task_id": "issue-2186-live-20261126T224620Z",
+ "task_slug": "issue-2186-live-20261126t224620z",
+ "parent_task": null,
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-26-issue-2186-live-20261126T224620Z-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-26/issue-2186-live-20261126T224620Z-plan.md",
+  "details": ".copilot-tracking/details/2026-11-26/issue-2186-live-20261126T224620Z-details.md",
+  "critique": ".copilot-tracking/critique/2026-11-26/issue-2186-live-20261126T224620Z-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-26/issue-2186-live-20261126T224620Z-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-26-issue-2186-live-20261126T224620Z-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "Goal overrides generic brief rule: run rpi-checks.py --all once at the integration tip (owner approval 2026-11-26)",
+   "status": "confirmed",
+   "evidence": "task goal"
+  },
+  {
+   "decision": "Critique executed once, proceed",
+   "status": "done",
+   "evidence": ".copilot-tracking/critique/2026-11-26/issue-2186-live-20261126T224620Z-critique.md"
+  },
+  {
+   "decision": "Review executed once, gate blocked",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-26-issue-2186-live-20261126T224620Z-review.md"
+  }
+ ],
+ "blockers": [
+  {
+   "id": "main-e501",
+   "summary": "ruff E501 at src/api/checks/employee_chat_browser_check.py:36 on origin/main (ecaaeff89d) blocks the browser group",
+   "resolution": "fix on main with manifest SHA, rerun full gate"
+  }
+ ],
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Coordinator fixes E501 on main and reruns the full gate"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Fix E501 in employee_chat_browser_check.py and rerun full gate",
+   "rationale": "only remaining blocker",
+   "evidence": ".copilot-tracking/changes/2026-11-26/issue-2186-live-20261126T224620Z-changes.md"
+  }
+ ]
+}

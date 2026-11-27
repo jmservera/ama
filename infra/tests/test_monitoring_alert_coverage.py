@@ -8,6 +8,7 @@ INFRA = Path(__file__).resolve().parents[1]
 MAIN = (INFRA / "main.bicep").read_text(encoding="utf-8")
 MODULE = (INFRA / "modules" / "operationalMonitoring.bicep").read_text(encoding="utf-8")
 RECEIVER = (INFRA / "live-receiver-job.bicep").read_text(encoding="utf-8")
+SIMULATOR = (INFRA / "live-simulator-job.bicep").read_text(encoding="utf-8")
 RUNBOOK = (INFRA / "monitoring-runbooks.md").read_text(encoding="utf-8")
 LINK = re.compile(r"monitoring-runbooks\.md#|\$\{runbookBase\}#")
 
@@ -55,6 +56,7 @@ class AlertCoverageTests(unittest.TestCase):
             (MAIN, "ledgerVerifyMissing", "ledger-verify-missing"),
             (MAIN, "sqlDtu", "sql-dtu"),
             (RECEIVER, "failureAlert", "job-live-receiver"),
+            (SIMULATOR, "failureAlert", "job-live-simulator"),
             (MODULE, "agentTasksPoison", "agent-tasks-poison"),
             (MODULE, "aiLimitBreach", "ai-limits"),
         ]
@@ -97,6 +99,13 @@ class AlertCoverageTests(unittest.TestCase):
         self.assertIn("timeAggregation: 'Total'", block)
         self.assertNotIn("timeAggregation: 'Maximum'", block)
 
+    def test_live_job_failure_rules_are_opt_in_and_use_total(self) -> None:
+        for source in (RECEIVER, SIMULATOR):
+            block = _resource(source, "failureAlert")
+            self.assertIn("if (!empty(failureAlertActionGroupId))", block)
+            self.assertIn("timeAggregation: 'Total'", block)
+            self.assertIn("values: ['Failed']", block)
+
     def test_ai_limit_classes_link_owned_anchors(self) -> None:
         anchors = _anchors()
         text = _description(_resource(MODULE, "aiLimitBreach"))
@@ -122,6 +131,22 @@ class AlertCoverageTests(unittest.TestCase):
             "enableAiLimitAlerts",
         ):
             self.assertRegex(MODULE, rf"param {gate} bool = false")
+
+
+class DemoParameterActivationTests(unittest.TestCase):
+    def test_test_parameters_enable_candidates_with_dated_reference(self) -> None:
+        params = (INFRA / "main.test.bicepparam").read_text(encoding="utf-8")
+        for gate in (
+            "enableCandidateMonitoringAlerts",
+            "enablePoisonQueueAlertCandidate",
+            "enableAiLimitAlertCandidate",
+        ):
+            self.assertRegex(params, rf"(?m)^param {gate} = true$")
+        match = re.search(r"(?m)^param monitoringApprovalReference = '([^']+)'$", params)
+        self.assertIsNotNone(match)
+        assert match is not None
+        self.assertTrue((INFRA.parent / match.group(1)).is_file())
+        self.assertIn("owner decision 2026-11-18", params)
 
 
 if __name__ == "__main__":

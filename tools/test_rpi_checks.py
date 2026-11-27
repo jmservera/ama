@@ -4147,6 +4147,11 @@ os.fstat(3)
         full = self.relaxed_receipt("full")
         cases = {
             "unread paths": (("support/x.md", ".copilot-tracking/x.json"), True),
+            "rubric score files": (
+                (".github/rubric/scores/latest.json", ".github/rubric/scores/badge.svg"),
+                True,
+            ),
+            "rubric scripts": ((".github/rubric/scripts/prepare.py",), False),
             "docs markdown read by link test": (("docs/other.md",), False),
             "root README read by tests": (("README.md",), False),
             "infra README read by tests": (("infra/README.md",), False),

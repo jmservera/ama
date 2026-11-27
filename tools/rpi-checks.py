@@ -31,7 +31,7 @@ IMAGE_CONCURRENCY = 4
 IMAGES = ("api", "agents", "orchestrator", "importer")
 INERT_PREFIXES = ("docs/", ".copilot-tracking/", "support/")
 # Paths no test reads (the link test skips both); markdown elsewhere, docs/ included, is test input.
-RECEIPT_INERT_PREFIXES = (".copilot-tracking/", "support/")
+RECEIPT_INERT_PREFIXES = (".copilot-tracking/", "support/", ".github/rubric/scores/")
 # Projects whose unit suite may be split across worker processes, with the maximum shard count.
 SHARDED_PROJECTS = {"api": 3}
 # Unit suite ceiling in seconds; core ran 1535 s on a loaded host (issue #470), so it gets double.
@@ -453,6 +453,8 @@ def moved_path_blocker(
     """Reason a main-side path invalidates a partial receipt, or an empty string."""
     if path in pr_paths:
         return "also changed by the candidate"
+    if receipt_inert_path(path):
+        return ""
     if inert_path(path):
         # Tests read markdown under src/, so only other inert paths are provably irrelevant.
         return "markdown under src/ may be read by tests" if path.startswith("src/") else ""

@@ -15606,3 +15606,15 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 2302 AI economics proof (Refs #2302)
 
 * Added [issue-2302-live-20261126T232328Z.md](research/issue-2302-live-20261126T232328Z.md): where the Overview renders AI consumption economics with denominators, live screenshots showing Unknown not zero, the existing tests that prove it, and a per-criterion table.
+## [2026-11-26] update | Issue 2186 rubric score files receipt-inert (Refs #2186)
+
+* Updated [issue-2186-live-full-receipt-docs-move-2026-11-21.md](research/issue-2186-live-full-receipt-docs-move-2026-11-21.md): `chore(rubric)` score commits (29 recent) no longer invalidate a full gate receipt; per-criterion table unchanged, real full-receipt verify still unproven.
+## [2026-11-26] add | Issue 146 live monitoring activation (Refs #146)
+
+* Added [issue-146-live9-monitoring-2026-11-26.md](research/issue-146-live9-monitoring-2026-11-26.md): demo candidate alerts enabled live, receiver failure alert created, workbook redeployed with 14 items, candidate gates set in `infra/main.test.bicepparam`. Firing of poison and IoT rules, named owners and Portal render remain unproven.
+## [2026-11-26] add | Issue 146 simulator failure rule (Refs #146)
+
+* Added [issue-146-live10-monitoring-2026-11-26.md](research/issue-146-live10-monitoring-2026-11-26.md): fresh read-only inventory, an opt-in failure alert for `job-live-simulator` with a runbook entry and owner role, and a per-criterion table.
+## [2026-11-26] add | Issue 146 live monitoring pass (Refs #146)
+
+* Added [issue-146-live10-monitoring-2026-11-26.md](research/issue-146-live10-monitoring-2026-11-26.md): live inventory shows alerts enabled for ledger, poison, IoT and four of six jobs, all eight workbook queries execute, four legacy rules lack owner and runbook; per-criterion table. Runbook status text corrected.
