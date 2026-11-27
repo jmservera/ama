@@ -18,6 +18,26 @@ ran all five arms at medium effort, with 21 trajectories per model and arm:
 $3\times5\times21=315$. The scheduler used seed 2027; we divided execution and collection from design and analysis as stated in Author contributions. Section~\ref{sec:threats} explains the resulting
 limits on inference.
 
+\paragraph{Deviations from the registration.}
+The OSF update dated 6 November 2026 and the registered base of
+7 November 2026 specified before collection five arms; allocation options
+of 12, 21 or 33 trajectories per model and arm; primary outcome final
+$P_{10}$ coverage; whole-run bootstrap intervals with 10,000 draws and
+seed 2027; and, for CR1, 97.5\% Clopper--Pearson component intervals
+with opposite-endpoint bounds. No significance testing or $p$-value
+thresholds were registered.
+Some registration fields, including sample size, inference and inclusion,
+retain the earlier eighteen-trajectory, three-arm wording; the update's
+stated reason and sampling section describe the executed design.
+B--D is explicitly registered as the primary coverage contrast.
+
+Disclosed in Git, not registered, were the selection of $n=21$ before
+collection, model-stratified scheduling, parallel execution, short calibration
+and recovery handling.
+Newcombe intervals, Fisher $p$ values in
+Supplement Table~\ref{tab:resultscrintervals} and the verdicts in
+Table~\ref{tab:predictionverdicts} are post hoc.
+
 \subsection{Task and comparison groups}\label{sec:protocolsummary}
 
 Each agent starts with a fresh repository, develops it through ten ordered features and then receives the withheld change request, CR1;
@@ -281,6 +301,9 @@ Immutable accepted tests and rollback are part of every tested policy.
 
 All 315 allocated trajectories completed, including the audited recovery;
 the Supplement preserves the step, attempt and liability counts.
+The study recorded 62,299.76 settled AI credits (US\$623.00), about
+197.8 credits per run (about US\$1.98), and 19,200 reserved credits on
+55 holds (US\$192.00).
 Coverage and regression counts are complete, whereas CR1 sampling
 intervals and unknown-outcome bounds answer different questions
 (Supplement Section~\ref{app:resultsdetail}).
@@ -401,10 +424,13 @@ Gemini, read-only review achieved 16/21 successes (76.2\%) versus 8/21
 repair. Exploratory inspection in the source report attributed the recurring failure
 to views that blocked known write methods but forwarded new CR1 methods.
 The structural improvement therefore coexisted with a permission-boundary
-failure. The Gemini B--C difference is $-38.10$ percentage points, with an
-unadjusted Newcombe hybrid-score 95\% interval of $[-59.88,-8.18]$ and
-two-sided Fisher exact $p=0.02778$
-(Supplement Table~\ref{tab:resultscrintervals}). This is an exploratory
+failure. The Gemini B--C difference is $-38.10$ percentage points, with
+registered bounds of $[-77.05,+14.69]$, which span zero, followed by the
+post hoc unadjusted Newcombe hybrid-score 95\% interval of $[-59.88,-8.18]$
+and two-sided Fisher exact $p=0.02778$
+(Supplement Table~\ref{tab:resultscrintervals}).
+Holm-adjusted across the eight Sonnet and Gemini CR1 contrasts, $p=0.22$.
+This is an exploratory
 comparison among many, conditional on independent binomial outcomes;
 we did not trace which review actions produced the difference.
 
@@ -585,7 +611,7 @@ but did not exercise \texttt{view.define\_region} or
 poor hidden-suite CR1 success.
 
 The \texttt{gpt-6-luna} judge completed two fresh ratings per
-evaluable packet: 1,252 calls costing 418.64 settled AI credits in
+evaluable packet: 1,252 calls costing 418.64 settled AI credits (US\$4.19) in
 the completed assessment. Its complete-frame differences in functional completeness
 and API usability favoured B by about 0.06 on the 0--4 scale at $P_{10}$
 (Supplement Table~\ref{tab:resultsjudgecontrasts}), largely reflecting GPT's greater
