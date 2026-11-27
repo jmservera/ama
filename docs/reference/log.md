@@ -15626,3 +15626,10 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 1830 filter-tile focus fit stability (Refs #1830)
 
 * Added [issue-1830-live-r15-2026-11-27.md](research/issue-1830-live-r15-2026-11-27.md): preflight re-proved at head, the map check's intermittent filter-tile geometry failure fixed by waiting for a stable layout (2 of 14 before, 0 of 12 after), and a per-criterion table.
+## [2026-11-27] add | Issue 2164 bound Entra scope re-verification (Refs #2164)
+
+* Added [issue-2164-bound-entra-scope-2026-11-27.md](research/issue-2164-bound-entra-scope-2026-11-27.md): roster-bound Entra staff inherit roster scope in `assistants.authorize` (already delivered by #2274); one added view_only test with a mutation check; per-criterion table.
+
+## [2026-11-27] add | Issue 2245 live recheck on revision 0000130 (Refs #2245)
+
+* Added [issue-2245-live-20261127T024556Z.md](research/issue-2245-live-20261127T024556Z.md): an ask returned 500 after a paid model call because the answer save timed out on the SQL write lock; `chat_panel` now retries that save twice. Includes live probes, a widget "Model calls: 1" screenshot and a per-criterion table with the unproven items.

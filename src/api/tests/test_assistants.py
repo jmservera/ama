@@ -1157,6 +1157,14 @@ class ReviewTests(Base):
             with self.assertRaises(PermissionError):
                 self.service.authorize(db, dict(user, view_only=True), "stock-prioritisation", "ZF-1")
 
+    def test_bound_view_only_entra_principal_is_denied(self):
+        user = self.bound_entra(case_ids=["ZF-1"])
+        with self.service.transaction() as db:
+            self.assertEqual(self.service.authorize(db, user, "stock-prioritisation", "ZF-1")["id"], "ZF-1")
+            for case_id in ("ZF-1", None):
+                with self.assertRaises(PermissionError):
+                    self.service.authorize(db, dict(user, view_only=True), "stock-prioritisation", case_id)
+
     def test_independent_qa_reviewer_and_separate_human_verification(self):
         self.case(lambda c: c.update(quality=[dict(measure="Loft insulation", state="Submitted",
                                                  recorded_by=self.pm["name"], recorded_by_code=self.pm["code"], items=[])]))

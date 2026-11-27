@@ -1076,6 +1076,37 @@ class HybridAttributionTests(unittest.TestCase):
         self.assertIn("not generative AI", reply["answer_source_label"])
         self.assertEqual(reply["answer_origin"], "decision_rule")
 
+    def lock_busy_saves(self, failures: int) -> tuple[Any, list[int]]:
+        class ProgrammingError(Exception):
+            __module__ = "pyodbc"
+
+        real, calls = self.store.chat_add_message, [0]
+
+        def flaky(user: Any, tid: str, role: str, *args: Any, **kwargs: Any) -> Any:
+            if role == "assistant":
+                calls[0] += 1
+                if calls[0] <= failures:
+                    raise ProgrammingError("could not take the write lock")
+            return real(user, tid, role, *args, **kwargs)
+
+        return patch.object(self.store, "chat_add_message", side_effect=flaky), calls
+
+    def test_answer_save_retries_a_write_lock_timeout_after_the_model_answered(self) -> None:
+        ctx = ChatIsolation(self.store, env=self.ENV).case_context(self.user, "ZF-4")
+        assert ctx is not None
+        draft = json.dumps(dict(answer=f"Stage: {ctx['stage']}", citations=["ZF-4/stage"]))
+        patched, calls = self.lock_busy_saves(2)
+        with patched:
+            reply = self.ask(lambda s, p: draft)
+        self.assertEqual(calls[0], 3)
+        self.assertEqual(reply["answer_origin"], "generative_model")
+        self.assertEqual(reply["consumption"]["model_calls"], 1)
+        patched, calls = self.lock_busy_saves(99)
+        with patched, self.assertRaises(Exception) as ctx_err:
+            self.ask(lambda s, p: draft)
+        self.assertEqual(calls[0], 3)
+        self.assertEqual(type(ctx_err.exception).__name__, "ProgrammingError")
+
     def test_failed_dispatch_settles_meter_as_ineligible(self) -> None:
         def failing(system: str, prompt: str) -> str:
             raise ModelUnavailable("provider-error", calls=1, meter_id="m1", meter_root="root1")
