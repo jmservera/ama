@@ -440,7 +440,20 @@ def check_expanded_filters(
             check(
                 f"filter label and focus fit at {width}x{height}",
                 button.evaluate(
-                    """el => {
+                    """async el => {
+                  const box = () => {
+                    const r = el.getBoundingClientRect();
+                    const q = el.closest('.overview-map-filters').getBoundingClientRect();
+                    return [r.top, r.bottom, q.top, q.bottom].join();
+                  };
+                  const frame = () => new Promise(done => requestAnimationFrame(done));
+                  // Focus can scroll the panel and re-renders can shift it; measure once stable.
+                  for (let last = '', stable = 0, n = 0; stable < 5 && n < 120; n++) {
+                    await frame();
+                    const now = box();
+                    stable = now === last ? stable + 1 : 0;
+                    last = now;
+                  }
                   const r = el.getBoundingClientRect();
                   const p = el.closest('.overview-map-filters').getBoundingClientRect();
                   return r.height >= 40 && el.scrollWidth <= el.clientWidth

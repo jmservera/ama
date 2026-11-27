@@ -15618,3 +15618,11 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-26] add | Issue 146 live monitoring pass (Refs #146)
 
 * Added [issue-146-live10-monitoring-2026-11-26.md](research/issue-146-live10-monitoring-2026-11-26.md): live inventory shows alerts enabled for ledger, poison, IoT and four of six jobs, all eight workbook queries execute, four legacy rules lack owner and runbook; per-criterion table. Runbook status text corrected.
+
+## [2026-11-27] add | Issue 1204 extended-window re-check (Refs #1204)
+
+* Added [issue-1204-extended-window-recheck-2026-11-27.md](research/issue-1204-extended-window-recheck-2026-11-27.md): no local tick_log window carries the extended columns, handoff guard tests made load-independent, criterion 2 stays unproven.
+
+## [2026-11-27] add | Issue 1830 filter-tile focus fit stability (Refs #1830)
+
+* Added [issue-1830-live-r15-2026-11-27.md](research/issue-1830-live-r15-2026-11-27.md): preflight re-proved at head, the map check's intermittent filter-tile geometry failure fixed by waiting for a stable layout (2 of 14 before, 0 of 12 after), and a per-criterion table.
