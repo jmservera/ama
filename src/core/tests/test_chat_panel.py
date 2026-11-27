@@ -1122,6 +1122,37 @@ class HybridAttributionTests(unittest.TestCase):
         self.assertEqual(calls[0], 3)
         self.assertEqual(type(ctx_err.exception).__name__, "ProgrammingError")
 
+    def test_audit_writes_retry_a_write_lock_timeout_after_the_answer_saved(self) -> None:
+        class ProgrammingError(Exception):
+            __module__ = "pyodbc"
+
+        draft = json.dumps(dict(answer="Stage: x", citations=["ZF-4/stage"]))
+        real = self.store.audit
+
+        def run(failures: int, action: str) -> tuple[Any, list[int]]:
+            calls = [0]
+
+            def flaky(who: str, act: str, *args: Any) -> Any:
+                if act == action:
+                    calls[0] += 1
+                    if calls[0] <= failures:
+                        raise ProgrammingError("could not take the write lock")
+                return real(who, act, *args)
+
+            return patch.object(self.store, "audit", side_effect=flaky), calls
+
+        for action in ("chat.answer", "chat.turn"):
+            patched, calls = run(2, action)
+            with patched:
+                reply = self.ask(lambda s, p: draft)
+            self.assertEqual(calls[0], 3, action)
+            self.assertEqual(reply["consumption"]["outcome"], reply["kind"])
+            patched, calls = run(99, action)
+            with patched, self.assertRaises(Exception) as err:
+                self.ask(lambda s, p: draft)
+            self.assertEqual(calls[0], 3, action)
+            self.assertEqual(type(err.exception).__name__, "ProgrammingError")
+
     def test_failed_dispatch_settles_meter_as_ineligible(self) -> None:
         def failing(system: str, prompt: str) -> str:
             raise ModelUnavailable("provider-error", calls=1, meter_id="m1", meter_root="root1")
