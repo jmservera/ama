@@ -326,6 +326,9 @@ case "$1 $2" in
     case "$2" in
       */compare/*)
         if [ -n "${GH_COMPARE_FAIL:-}" ]; then exit 1; fi
+        if [ -n "${GH_COMPARE_FAIL_ONCE:-}" ] && [ ! -f "$GH_STATE/compare_failed" ]; then
+          touch "$GH_STATE/compare_failed"; echo "gh: Server Error (HTTP 500)" >&2; exit 1
+        fi
         range="${2##*/compare/}"; from="${range%%...*}"; to="${range##*...}"
         if [ "$from" = "$to" ]; then echo identical
         elif git --git-dir "$GH_REMOTE" merge-base --is-ancestor "$from" "$to"; then echo ahead
@@ -541,6 +544,14 @@ def test_failed_freshness_comparison_aborts_before_publication(steps, tmp_path):
     assert result.returncode != 0
     assert remote_ref(remote, f"refs/heads/{BRANCH}") is None
     assert not any(call.startswith(("pr create ", "pr edit ", "pr merge ")) for call in calls)
+
+
+def test_transient_comparison_failure_is_retried_and_the_refresh_completes(steps, tmp_path):
+    root, remote, out, base, scored = recording_repo(tmp_path)
+    result, calls = run_refresh(steps, tmp_path, root, remote, out, scored, GH_MAIN_COMMIT=base, GH_COMPARE_FAIL_ONCE="1")
+    assert result.returncode == 0, result.stderr
+    assert sum("/compare/" in call for call in calls) >= 2
+    assert any(call.startswith("pr merge ") for call in calls)
 
 
 def test_older_dispatch_cannot_replace_a_newer_pending_refresh(steps, tmp_path):
