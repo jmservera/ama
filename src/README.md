@@ -569,7 +569,8 @@ Before committing and starting a full gate, run exact unit selectors with
 (repeatable). It reuses the reviewed selector grammar, requires a tracked test
 module, and fails closed on a failing run, zero tests or skipped tests. It
 needs no `--base` or `--out`, takes no lock, writes no receipt and mutates no
-source. Its output is development feedback only and never satisfies a full-tier
+source. It rejects gate-only options (`--base`, `--out`, `--extra-test`, `--jobs` and
+the like) rather than ignoring them. Its output is development feedback only and never satisfies a full-tier
 receipt or a hosted check.
 
 ```bash

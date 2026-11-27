@@ -809,6 +809,8 @@ def validate_retries(receipt: dict[str, Any]) -> None:
             or not isinstance(row["log"], str)
             or row["log"] in seen
             or not re.fullmatch(r"[0-9]{4}-[a-zA-Z0-9_.:-]+\.log", row["log"])
+            or not isinstance(row["sha256"], str)
+            or not re.fullmatch(r"[0-9a-f]{64}", row["sha256"])
             or files.get(row["log"]) != row["sha256"]
             or not isinstance(row["exit_code"], int)
             or row["exit_code"] <= 0
@@ -3706,6 +3708,27 @@ def main() -> int:
         if args.preflight is None and not args.base:
             raise GateError("--base is required")
         if args.preflight is not None:
+            ignored = [
+                "--" + name.replace("_", "-")
+                for name in (
+                    "base",
+                    "out",
+                    "extra_test",
+                    "lock_timeout",
+                    "heavy_lock_fd",
+                    "jobs",
+                    "fresh_images",
+                    "stack",
+                    "stack_member",
+                    "exact_base",
+                    "required_scope",
+                )
+                if getattr(args, name) != parser.get_default(name)
+            ]
+            if ignored:
+                raise GateError(
+                    f"--preflight takes only selectors; {', '.join(ignored)} would be ignored"
+                )
             preflight(root, args.preflight)
         elif args.verify_receipt:
             verify(
