@@ -55,6 +55,12 @@ def load_receipt(path: Path) -> dict[str, Any]:
         raise TimingError(
             EXIT_INPUT, f"Only passed schema 4 full-scope receipts are analysed: {path}"
         )
+    jobs = receipt.get("jobs")
+    if not isinstance(jobs, int) or isinstance(jobs, bool) or jobs < 1:
+        raise TimingError(EXIT_INPUT, f"Receipt jobs is missing or invalid: {path}")
+    if not isinstance(receipt.get("image_cache"), str):
+        raise TimingError(EXIT_INPUT, f"Receipt image_cache is missing or invalid: {path}")
+    aware_timestamp(receipt.get("sealed"), "sealed")
     return receipt  # type: ignore[no-any-return]
 
 
