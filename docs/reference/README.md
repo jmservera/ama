@@ -869,6 +869,8 @@ The [2026-11-25 live proof](./research/issue-2202-live-r72-2026-11-25.md) re-pro
 
 The [second 2026-11-27 live proof](./research/issue-2202-live-2026-11-27-r2.md) repeats the #2202 criteria under a running receiver with a corrected chat routing probe; provenance and a rollback drill remain unproven.
 
+The [third 2026-11-27 live proof](./research/issue-2202-live-2026-11-27-r3.md) re-proves the criteria, records one chat 500 under SQL write-lock contention on the undeployed-fix image, and adds a question-save retry in source; provenance and a rollback drill remain unproven.
+
 The [second 2026-11-24 live re-proof](./research/issue-2202-live-r2-2026-11-24.md) repeats the revision, hardening, chart, gauge, consent, chat routing and coverage proofs (58.9% of homes with readings), diagnoses one Failed receiver execution at its window edge, records the fix, and corrects the job image digest statement, with a per-criterion table.
 
 The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads API revision 0000054 and resident revision 0000026 and records the two owner gates for generative AI answers: the open suspension (scope all, 2026-11-18) and the resident ledger budget expiry.

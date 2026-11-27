@@ -1,0 +1,182 @@
+[
+ {
+  "round": 0,
+  "case": "ZF-2025-0331",
+  "status": 200,
+  "seconds": 0.76
+ },
+ {
+  "round": 0,
+  "case": "ZF-2025-0150",
+  "status": 200,
+  "seconds": 0.14
+ },
+ {
+  "round": 0,
+  "case": "ZF-2025-0032",
+  "status": 200,
+  "seconds": 0.19
+ },
+ {
+  "round": 0,
+  "case": "ZF-2025-0389",
+  "status": 200,
+  "seconds": 0.13
+ },
+ {
+  "round": 0,
+  "case": "ZF-2025-0340",
+  "status": 200,
+  "seconds": 0.31
+ },
+ {
+  "round": 1,
+  "case": "ZF-2025-0331",
+  "status": 200,
+  "seconds": 0.19
+ },
+ {
+  "round": 1,
+  "case": "ZF-2025-0150",
+  "status": 200,
+  "seconds": 0.18
+ },
+ {
+  "round": 1,
+  "case": "ZF-2025-0032",
+  "status": 200,
+  "seconds": 0.18
+ },
+ {
+  "round": 1,
+  "case": "ZF-2025-0389",
+  "status": 200,
+  "seconds": 0.17
+ },
+ {
+  "round": 1,
+  "case": "ZF-2025-0340",
+  "status": 200,
+  "seconds": 0.2
+ },
+ {
+  "round": 2,
+  "case": "ZF-2025-0331",
+  "status": 200,
+  "seconds": 0.17
+ },
+ {
+  "round": 2,
+  "case": "ZF-2025-0150",
+  "status": 200,
+  "seconds": 0.17
+ },
+ {
+  "round": 2,
+  "case": "ZF-2025-0032",
+  "status": 200,
+  "seconds": 0.19
+ },
+ {
+  "round": 2,
+  "case": "ZF-2025-0389",
+  "status": 200,
+  "seconds": 0.16
+ },
+ {
+  "round": 2,
+  "case": "ZF-2025-0340",
+  "status": 200,
+  "seconds": 0.2
+ },
+ {
+  "round": 3,
+  "case": "ZF-2025-0331",
+  "status": 200,
+  "seconds": 0.14
+ },
+ {
+  "round": 3,
+  "case": "ZF-2025-0150",
+  "status": 200,
+  "seconds": 0.15
+ },
+ {
+  "round": 3,
+  "case": "ZF-2025-0032",
+  "status": 200,
+  "seconds": 0.2
+ },
+ {
+  "round": 3,
+  "case": "ZF-2025-0389",
+  "status": 200,
+  "seconds": 0.2
+ },
+ {
+  "round": 3,
+  "case": "ZF-2025-0340",
+  "status": 200,
+  "seconds": 0.26
+ },
+ {
+  "round": 4,
+  "case": "ZF-2025-0331",
+  "status": 200,
+  "seconds": 0.55
+ },
+ {
+  "round": 4,
+  "case": "ZF-2025-0150",
+  "status": 200,
+  "seconds": 0.57
+ },
+ {
+  "round": 4,
+  "case": "ZF-2025-0032",
+  "status": 200,
+  "seconds": 0.57
+ },
+ {
+  "round": 4,
+  "case": "ZF-2025-0389",
+  "status": 200,
+  "seconds": 0.27
+ },
+ {
+  "round": 4,
+  "case": "ZF-2025-0340",
+  "status": 200,
+  "seconds": 0.66
+ },
+ {
+  "round": 5,
+  "case": "ZF-2025-0331",
+  "status": 200,
+  "seconds": 0.18
+ },
+ {
+  "round": 5,
+  "case": "ZF-2025-0150",
+  "status": 200,
+  "seconds": 0.31
+ },
+ {
+  "round": 5,
+  "case": "ZF-2025-0032",
+  "status": 200,
+  "seconds": 0.2
+ },
+ {
+  "round": 5,
+  "case": "ZF-2025-0389",
+  "status": 200,
+  "seconds": 0.19
+ },
+ {
+  "round": 5,
+  "case": "ZF-2025-0340",
+  "status": 200,
+  "seconds": 0.15
+ }
+]

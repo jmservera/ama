@@ -1076,14 +1076,16 @@ class HybridAttributionTests(unittest.TestCase):
         self.assertIn("not generative AI", reply["answer_source_label"])
         self.assertEqual(reply["answer_origin"], "decision_rule")
 
-    def lock_busy_saves(self, failures: int) -> tuple[Any, list[int]]:
+    def lock_busy_saves(
+        self, failures: int, saved_role: str = "assistant"
+    ) -> tuple[Any, list[int]]:
         class ProgrammingError(Exception):
             __module__ = "pyodbc"
 
         real, calls = self.store.chat_add_message, [0]
 
         def flaky(user: Any, tid: str, role: str, *args: Any, **kwargs: Any) -> Any:
-            if role == "assistant":
+            if role == saved_role:
                 calls[0] += 1
                 if calls[0] <= failures:
                     raise ProgrammingError("could not take the write lock")
@@ -1102,6 +1104,19 @@ class HybridAttributionTests(unittest.TestCase):
         self.assertEqual(reply["answer_origin"], "generative_model")
         self.assertEqual(reply["consumption"]["model_calls"], 1)
         patched, calls = self.lock_busy_saves(99)
+        with patched, self.assertRaises(Exception) as ctx_err:
+            self.ask(lambda s, p: draft)
+        self.assertEqual(calls[0], 3)
+        self.assertEqual(type(ctx_err.exception).__name__, "ProgrammingError")
+
+    def test_question_save_retries_a_write_lock_timeout(self) -> None:
+        draft = json.dumps(dict(answer="Stage: x", citations=["ZF-4/stage"]))
+        patched, calls = self.lock_busy_saves(2, "user")
+        with patched:
+            reply = self.ask(lambda s, p: draft)
+        self.assertEqual(calls[0], 3)
+        self.assertEqual(reply["consumption"]["outcome"], reply["kind"])
+        patched, calls = self.lock_busy_saves(99, "user")
         with patched, self.assertRaises(Exception) as ctx_err:
             self.ask(lambda s, p: draft)
         self.assertEqual(calls[0], 3)

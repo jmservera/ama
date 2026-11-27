@@ -1,0 +1,77 @@
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "fqdn": "ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "hard": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:46d18ed8264b26dc31504999c9276c6d0def46c7aec1e1f3b6a278480c16a4af",
+  "mode": "Single",
+  "name": "ca-cutover-test-demo-api",
+  "ready": "ca-cutover-test-demo-api--0000131",
+  "rev": "ca-cutover-test-demo-api--0000131",
+  "run": "Running"
+}
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+{
+  "fqdn": "ca-resident-demo.happyriver-ace49996.uksouth.azurecontainerapps.io",
+  "hard": "enforced",
+  "img": "crcutovertestrzsrg.azurecr.io/zava-resident-demo@sha256:3e10d2dd1b49b10271afff9c27e02fdde9d56f51b99aedc67dcfd31df7177b9e",
+  "mode": "Single",
+  "name": "ca-resident-demo",
+  "ready": "ca-resident-demo--0000030",
+  "rev": "ca-resident-demo--0000030",
+  "run": "Running"
+}
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+N                            Rev                                   Run      Min    Hard
+---------------------------  ------------------------------------  -------  -----  --------
+ca-cutover-test-demo-api     ca-cutover-test-demo-api--0000131     Running  1      enforced
+ca-resident-demo             ca-resident-demo--0000030             Running  1      enforced
+ca-cutover-test-demo-agents  ca-cutover-test-demo-agents--0000004  Running  0      enforced
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+N                            Hard      Img
+---------------------------  --------  -------------------------------------------------------------------------------------------------------------------------------
+job-cutover-test-demo-load   enforced  crcutovertestrzsrg.azurecr.io/zava-forward-importer@sha256:51b6a480bd7e89506341cb8d2fa667c0c24d86a4793f22358fa930a86f093f6f
+job-cutover-test-demo-audit  enforced  crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7
+job-cutover-test-demo-orch   enforced  crcutovertestrzsrg.azurecr.io/zava-forward-orchestrator@sha256:e3b290bfa2af70918ae667feab4212f2d4d4ff8c6f4bd4b01fc629ced4a099d7
+job-live-simulator           enforced  crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:9c5b424a7751e435683c541480de2650071b664c68344412fa10401cd0b6f947
+job-live-receiver            enforced  crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:9c5b424a7751e435683c541480de2650071b664c68344412fa10401cd0b6f947
+job-184-bodyscan                       crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:463d096c02ada946d222b0037daf2a1743a7aa63ed7290ea5fe083cf8b21e96b
+job-tmp-2244r26-long                   crcutovertestrzsrg.azurecr.io/zava-forward-api@sha256:9c5b424a7751e435683c541480de2650071b664c68344412fa10401cd0b6f947
+WARNING: The behavior of this command has been altered by the following extension: containerapp
+job-cutover-test-demo-load
+job-cutover-test-demo-audit
+{
+  "end": "2026-11-27T02:00:46+00:00",
+  "s": "Succeeded",
+  "start": "2026-11-27T02:00:00+00:00"
+}
+job-cutover-test-demo-orch
+{
+  "end": "2026-11-27T09:00:41+00:00",
+  "s": "Succeeded",
+  "start": "2026-11-27T09:00:00+00:00"
+}
+job-live-simulator
+{
+  "end": "2026-11-27T09:02:13+00:00",
+  "s": "Succeeded",
+  "start": "2026-11-27T09:00:00+00:00"
+}
+job-live-receiver
+{
+  "end": null,
+  "s": "Running",
+  "start": "2026-11-27T09:00:00+00:00"
+}
+job-184-bodyscan
+{
+  "end": "2026-11-24T07:54:46+00:00",
+  "s": "Succeeded",
+  "start": "2026-11-24T07:52:35+00:00"
+}
+job-tmp-2244r26-long
+{
+  "end": "2026-11-26T12:53:51+00:00",
+  "s": "Succeeded",
+  "start": "2026-11-26T12:48:00+00:00"
+}
+Fri Nov 27 09:03:41 UTC 2026
