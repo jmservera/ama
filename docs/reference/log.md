@@ -15652,3 +15652,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 2202 third live proof and question-save retry (Refs #2202)
 
 * Added [issue-2202-live-2026-11-27-r3.md](research/issue-2202-live-2026-11-27-r3.md): re-proof on API 0000131 (58.9% of homes with readings, gauges, consent, six routed questions); one chat ask 500 under write-lock contention; `chat_panel` now retries the question save as well as the answer save. Not deployed; provenance and rollback drill stay unproven.
+
+## [2026-11-27] add | Issue 1837 re-run evidence, run b (Refs #1837)
+
+* Added [issue-1837-live-demo-evidence-2026-11-27-b.md](research/issue-1837-live-demo-evidence-2026-11-27-b.md): fresh unit and axe evidence for the standalone nomination forms, a test race fix, and an open timeout observation in the read-only nomination check.

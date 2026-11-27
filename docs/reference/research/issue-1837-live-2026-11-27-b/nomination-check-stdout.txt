@@ -1,0 +1,516 @@
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/src/zava_forward/api/server.py", line 189, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/src/zava_forward/api/server.py", line 180, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/src/zava_forward/api/server.py", line 189, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/src/zava_forward/api/server.py", line 180, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/src/zava_forward/api/server.py", line 189, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/src/zava_forward/api/server.py", line 180, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-error GET /api/assistants/proposals status=503 exc=OperationalError
+http-response GET /api/assistants/proposals status=503
+http-error GET /api/assistants status=503 exc=OperationalError
+http-response GET /api/assistants status=503
+http-error POST /api/cases/ZF-1/resident status=500 exc=OperationalError at=sqlstore.py:1223:save response_started=False cause=other
+http-response POST /api/cases/ZF-1/resident status=500
+http-error POST /api/cases/ZF-1/resident 500 response not delivered
+http-error GET /api/assistants status=503 exc=BrokenPipeError
+http-response GET /api/assistants status=503
+http-error GET /api/assistants client-disconnect exc=BrokenPipeError phase=response-write
+Exception in callback Connection.dispatch.<locals>._done_callback(<Task cancell...ntext.py:252>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:546
+handle: <Handle Connection.dispatch.<locals>._done_callback(<Task cancell...ntext.py:252>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:546>
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 143, in run
+    code, detail = fixture.action(
+                   ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 98, in action
+    return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 87, in call
+    with urlopen(req, timeout=5) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 547, in _done_callback
+    exc = future.exception()
+          ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_browser_context.py", line 267, in _on_route
+    handled = await route_handler.handle(route)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 443, in handle
+    return await self._handle_internal(route)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 479, in _handle_internal
+    await handler_finished_future
+asyncio.exceptions.CancelledError
+Exception in callback Connection.dispatch.<locals>._done_callback(<Task cancell...ntext.py:252>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:546
+handle: <Handle Connection.dispatch.<locals>._done_callback(<Task cancell...ntext.py:252>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:546>
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 143, in run
+    code, detail = fixture.action(
+                   ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 98, in action
+    return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 87, in call
+    with urlopen(req, timeout=5) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 547, in _done_callback
+    exc = future.exception()
+          ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_browser_context.py", line 267, in _on_route
+    handled = await route_handler.handle(route)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 443, in handle
+    return await self._handle_internal(route)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 479, in _handle_internal
+    await handler_finished_future
+asyncio.exceptions.CancelledError
+Exception in callback Connection.dispatch.<locals>._done_callback(<Task cancell...ntext.py:252>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:546
+handle: <Handle Connection.dispatch.<locals>._done_callback(<Task cancell...ntext.py:252>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:546>
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 143, in run
+    code, detail = fixture.action(
+                   ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 98, in action
+    return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 87, in call
+    with urlopen(req, timeout=5) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 547, in _done_callback
+    exc = future.exception()
+          ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_browser_context.py", line 267, in _on_route
+    handled = await route_handler.handle(route)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 443, in handle
+    return await self._handle_internal(route)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 479, in _handle_internal
+    await handler_finished_future
+asyncio.exceptions.CancelledError
+Exception in callback wait_for_future.<locals>.resume(<Task cancell...twork.py:545>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py:67
+handle: <Handle wait_for_future.<locals>.resume(<Task cancell...twork.py:545>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py:67>
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 143, in run
+    code, detail = fixture.action(
+                   ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 98, in action
+    return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 87, in call
+    with urlopen(req, timeout=5) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py", line 68, in resume
+    g_self.switch()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 470, in _handler
+    self.handler(route, route.request)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_impl_to_api_mapping.py", line 140, in wrapper_func
+    return handler(
+           ^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 66, in <lambda>
+    route.continue_()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 22486, in continue_
+    self._sync(
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 111, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 558, in continue_
+    return await self._handle_route(_inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 504, in _handle_route
+    await callback()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 556, in _inner
+    await self._inner_continue(False)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 562, in _inner_continue
+    await self._race_with_page_close(
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 599, in _race_with_page_close
+    await asyncio.wait(
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 464, in wait
+    return await _wait(fs, timeout, return_when, loop)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 550, in _wait
+    await waiter
+asyncio.exceptions.CancelledError
+Exception in callback wait_for_future.<locals>.resume(<Task cancell...twork.py:545>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py:67
+handle: <Handle wait_for_future.<locals>.resume(<Task cancell...twork.py:545>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py:67>
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 143, in run
+    code, detail = fixture.action(
+                   ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 98, in action
+    return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 87, in call
+    with urlopen(req, timeout=5) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py", line 68, in resume
+    g_self.switch()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 470, in _handler
+    self.handler(route, route.request)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_impl_to_api_mapping.py", line 140, in wrapper_func
+    return handler(
+           ^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 66, in <lambda>
+    route.continue_()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 22486, in continue_
+    self._sync(
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 111, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 558, in continue_
+    return await self._handle_route(_inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 504, in _handle_route
+    await callback()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 556, in _inner
+    await self._inner_continue(False)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 562, in _inner_continue
+    await self._race_with_page_close(
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 599, in _race_with_page_close
+    await asyncio.wait(
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 464, in wait
+    return await _wait(fs, timeout, return_when, loop)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 550, in _wait
+    await waiter
+asyncio.exceptions.CancelledError
+Exception in callback wait_for_future.<locals>.resume(<Task cancell...twork.py:545>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py:67
+handle: <Handle wait_for_future.<locals>.resume(<Task cancell...twork.py:545>>) at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py:67>
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 143, in run
+    code, detail = fixture.action(
+                   ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 98, in action
+    return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 87, in call
+    with urlopen(req, timeout=5) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/asyncio/events.py", line 88, in _run
+    self._context.run(self._callback, *self._args)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_greenlets.py", line 68, in resume
+    g_self.switch()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_helper.py", line 470, in _handler
+    self.handler(route, route.request)  # type: ignore
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_impl_to_api_mapping.py", line 140, in wrapper_func
+    return handler(
+           ^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 66, in <lambda>
+    route.continue_()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 22486, in continue_
+    self._sync(
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 111, in _sync
+    return task.result()
+           ^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 558, in continue_
+    return await self._handle_route(_inner)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 504, in _handle_route
+    await callback()
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 556, in _inner
+    await self._inner_continue(False)
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 562, in _inner_continue
+    await self._race_with_page_close(
+  File "/home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_network.py", line 599, in _race_with_page_close
+    await asyncio.wait(
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 464, in wait
+    return await _wait(fs, timeout, return_when, loop)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/tasks.py", line 550, in _wait
+    await waiter
+asyncio.exceptions.CancelledError
+Task was destroyed but it is pending!
+task: <Task cancelling name='Task-191' coro=<Channel.send() running at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:78> wait_for=<Future finished result=None>>
+Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+Task was destroyed but it is pending!
+task: <Task cancelling name='Task-194' coro=<Channel.send() running at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:78> wait_for=<Future finished result=None>>
+Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+Task was destroyed but it is pending!
+task: <Task cancelling name='Task-197' coro=<Channel.send() running at /home/azureuser/.local/lib/python3.12/site-packages/playwright/_impl/_connection.py:78> wait_for=<Future finished result=None>>
+Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 194, in <module>
+    main()
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 188, in main
+    result = run(args.axe)
+             ^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/checks/nomination_browser_check.py", line 143, in run
+    code, detail = fixture.action(
+                   ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 98, in action
+    return self.call("/api/cases/ZF-1/resident", actor, dict(action=action, **kw))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1837-live-20261127T095820Z/src/api/tests/test_resident_api.py", line 87, in call
+    with urlopen(req, timeout=5) as response:
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 215, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 515, in open
+    response = self._open(req, data)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 532, in _open
+    result = self._call_chain(self.handle_open, protocol, protocol +
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 492, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1373, in http_open
+    return self.do_open(http.client.HTTPConnection, req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/urllib/request.py", line 1348, in do_open
+    r = h.getresponse()
+        ^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 1457, in getresponse
+    response.begin()
+  File "/usr/lib/python3.12/http/client.py", line 336, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/http/client.py", line 297, in _read_status
+    line = str(self.fp.readline(_MAXLINE + 1), "iso-8859-1")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socket.py", line 707, in readinto
+    return self._sock.recv_into(b)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: timed out
