@@ -771,6 +771,35 @@ class UnusableArchivePathTests(RunnerBase):
                 self.setUp()
                 self.check_unknown(make)
 
+    def verify_with_race(self, replace: Any) -> dict[str, Any]:
+        real = os.stat
+        archive = os.fspath(self.archive)
+        fired: list[bool] = []
+
+        def racing(path: Any, *a: Any, **kw: Any) -> Any:
+            if os.fspath(path) == archive and not fired:
+                fired.append(True)
+                replace()
+                raise FileNotFoundError(2, "No such file or directory")
+            return real(path, *a, **kw)
+
+        with patch("os.stat", racing):
+            return self.go("verify")
+
+    def test_path_replaced_after_the_first_stat_is_unknown_not_empty(self) -> None:
+        for name, replace in (
+            ("regular_file", lambda: self.archive.write_text("not a folder")),
+            ("dangling_link", lambda: os.symlink(self.root / "missing", self.archive)),
+        ):
+            with self.subTest(name):
+                self.setUp()
+                ver = self.verify_with_race(replace)
+                self.assertEqual(
+                    (ver["status"], ver["latest"], ver["overdue"], len(ver["problems"])),
+                    ("problem", None, None, 1),
+                )
+                self.assertNotIn(str(self.root), json.dumps(ver))
+
     def test_regular_file_archive_exits_nonzero_through_main(self) -> None:
         self.regular_file()
         cases = self.cases_file()
