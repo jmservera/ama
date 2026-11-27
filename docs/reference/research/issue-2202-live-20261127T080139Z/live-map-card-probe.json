@@ -1,0 +1,26 @@
+{
+ "title": "Angela Dixon",
+ "latest": "Sensor status\n\u2713\nSensor recent\n. Recent reading (within 15 minutes)\nLatest reading\n7.7 \u00b0C, 91.9% relative humidity",
+ "meters": [
+  {
+   "label": "Temperature 7.7 degC, scale 0 to 40",
+   "value": 7.7,
+   "min": 0,
+   "max": 40,
+   "text": "7.7 degC"
+  },
+  {
+   "label": "Relative humidity 91.9 %RH, scale 0 to 100",
+   "value": 91.9,
+   "min": 0,
+   "max": 100,
+   "text": "91.9 %RH"
+  }
+ ],
+ "labels": [
+  "Temperature: 7.7 degC",
+  "Relative humidity: 91.9 %RH"
+ ],
+ "old": false,
+ "animations": 0
+}

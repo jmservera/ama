@@ -867,6 +867,8 @@ The [2026-11-24 live re-proof](./research/issue-2202-live-r68-2026-11-24.md) re-
 
 The [2026-11-25 live proof](./research/issue-2202-live-r72-2026-11-25.md) re-proves the #2202 criteria on API 0000072, records a 503 on the Home sensors tab under SQL write-lock contention, fixes it in source (sensor reads use the lock-free read connection) and lists what stays unproven.
 
+The [second 2026-11-27 live proof](./research/issue-2202-live-2026-11-27-r2.md) repeats the #2202 criteria under a running receiver with a corrected chat routing probe; provenance and a rollback drill remain unproven.
+
 The [second 2026-11-24 live re-proof](./research/issue-2202-live-r2-2026-11-24.md) repeats the revision, hardening, chart, gauge, consent, chat routing and coverage proofs (58.9% of homes with readings), diagnoses one Failed receiver execution at its window edge, records the fix, and corrects the job image digest statement, with a per-criterion table.
 
 The [gates recheck](./research/issue-2202-gates-recheck-2026-11-22.md) re-reads API revision 0000054 and resident revision 0000026 and records the two owner gates for generative AI answers: the open suspension (scope all, 2026-11-18) and the resident ledger budget expiry.
@@ -2012,6 +2014,7 @@ or infra acceptance claimed.
 | [Issue 470 Live Re-check r3, Faster Local Gate (2026-11-23)](./research/issue-470-live-r3-2026-11-23.md) | 129 gate tests pass proving criteria 1, 2, 3 and 5; criterion 4 (measured full-run before/after in a PR) unproven and owner-gated; no source change |
 | [Issue 470 Live Re-check r4, Faster Local Gate (2026-11-23)](./research/issue-470-live-r4-2026-11-23.md) | 129 gate tests pass proving criteria 1, 2, 3 and 5; `rpi-gate-timing.py compare --markdown` added for PR-ready tables; criterion 4 (measured full-run before/after) unproven, full gate not run |
 | [Issue 470 Live r9, Before and After Full-Gate Timings (2026-11-24)](./research/issue-470-live-r9-2026-11-24.md) | Records serial 23 to 26 min (2026-10-27) versus retained receipts 2926.9 s (jobs 1), 2788 to 5297 s (jobs 2) and 2402.3 s (jobs 4); not like for like, controlled pair and PR entry unproven |
+| [Issue 470 Live r10, Per-Group Wall Times From Two Retained Receipts (2026-11-27)](./research/issue-470-live-r10-2026-11-27.md) | Per-group wall times and critical chain of a failed (timeout, 4333.5 s) and a passed (jobs 2, 3114.1 s) full-gate receipt; pair not like for like, criterion 4 stays unticked |
 | [Issue 1830 Live Audit, Gate Preflight and Timing](./research/issue-1830-live-20261118T1648Z-2026-11-18.md) | Per-criterion audit of issue 1830 with timing reports from seven retained full receipts; criteria 1 and 3 partly evidenced, 2 and 4 unproven (the preflight candidate refuses all selected execution); no source change |
 | [Issue 1830 Live r3, No Buildable Criterion](./research/issue-1830-live-r3-2026-11-19.md) | Re-verification of the gate preflight and timing tools; every remaining criterion needs an owner decision, a pull request or lost data; no source change |
 | [Issue 1830 Live r4, No Buildable Criterion](./research/issue-1830-live-r4-2026-11-19.md) | Re-verified 2026-11-19: preflight still refuses execution by design, no retained receipts; per-criterion table, no source change |

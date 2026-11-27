@@ -15641,3 +15641,10 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 2188 forged retry records (Refs #2188)
 
 * Added [issue-2188-live-retry-verify-2026-11-27.md](research/issue-2188-live-retry-verify-2026-11-27.md): receipt verify accepted a retry row with a null hash and no log; it now requires a 64-hex hash matching a hashed log, with a regression test. Wall-time pair still unproven.
+
+## [2026-11-27] add | Issue 470 per-group wall times from two receipts (Refs #470)
+
+* Added [issue-470-live-r10-2026-11-27.md](research/issue-470-live-r10-2026-11-27.md): per-group wall times and critical chain from a failed (timeout) and a passed full-gate receipt; the pair is not like for like and the before and after criterion stays unticked.
+## [2026-11-27] add | Issue 2202 second live proof on API 0000131 (Refs #2202)
+
+* Added [issue-2202-live-2026-11-27-r2.md](research/issue-2202-live-2026-11-27-r2.md): read-only re-proof under a running receiver (30 of 30 sensor GETs 200, 58.9% of homes with readings, gauges, consent, six routed questions); fixes a probe race that shifted routing lines; provenance and rollback drill stay unproven.
