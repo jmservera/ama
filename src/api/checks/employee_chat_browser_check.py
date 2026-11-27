@@ -33,7 +33,8 @@ def settle_route(page: Page, destination: str | None) -> None:
     """
     if destination == "#/":
         page.wait_for_function(
-            "() => document.getElementById('workspace-status').textContent.startsWith('Perspective:')"
+            "() => document.getElementById('workspace-status')"
+            ".textContent.startsWith('Perspective:')"
         )
     page.wait_for_load_state("networkidle")
 
