@@ -41,18 +41,25 @@ review; D\@: longer feature-only sessions; E\@: visible-specification repair.}
 \large Stable Retention, Missing Features and the Cost of Consolidation.\\
 An Exploratory Case Study and Experiment}
 
-\author{Juan Manuel Servera Bondroit\thanks{The views expressed are the
-authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
-\small Senior Partner Solution Architect, Microsoft EMEA, Zurich\\[9pt]
-\large Isabel Cabezas Martin\\[4pt]
-\small Software Engineer, Frontier Company at Microsoft, Zurich}
+\author{%
+Juan Manuel Servera Bondroit%
+\thanks{The views expressed are the authors' own and do not
+necessarily reflect those of Microsoft.}\\[4pt]
+\small Senior Partner Solution Architect\\
+\small Microsoft EMEA, Zurich
+\and
+Isabel Cabezas Martin\\[4pt]
+\small Software Engineer\\
+\small Frontier Company at Microsoft, Zurich
+}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
 I spent weeks refining requirements with agents before asking a coordinator
-to develop the product. After 47 completed issues in five days, checks
+agent I had created to manage a ``herd'' of agents researching, building and
+verifying the product's code. After 47 completed issues in five days, checks
 were passing, but I could not sign in.
 What does each feature leave for the next one?
 We tested three models across five arms with 21 runs per cell, each building
@@ -83,18 +90,24 @@ feedback loops; human-AI interaction; exploratory case study; experiment protoco
 
 \section{Introduction}\label{sec:intro}
 
-I was developing a product from a supplied housing-retrofit use case:
-helping staff coordinate energy-efficiency work on residents' homes.
+For my capstone in Microsoft's internal Azure Master Architect (AMA)
+programme, I was developing a product from an assigned synthetic
+housing-retrofit use case: helping staff coordinate energy-efficiency
+work on residents' homes.
 \footnote{``I'' identifies Servera Bondroit's participant account; ``we''
 identifies the authors' experiment, analysis and paper.}
-I used the HyperVelocity methodology to move an early prototype towards
+I used the HyperVelocity methodology~\cite{hvecore} to move an early
+prototype towards
 production readiness while leaving out some non-essential production
 requirements, expecting to keep the behaviour that already worked.
 Short exchanges with agents had produced a prototype and a Minimum Viable
 Experiment (MVE) in a few hours, including working sign-in. I used those
 results to refine the business and product requirements documents (BRD and
-PRD), then gave a coordinator and parallel workers a formal backlog to
-implement autonomously. My account records 47 completed issues out of more
+PRD), then gave this coordinator agent and its parallel workers a formal backlog to
+implement autonomously. I call these managed worker agents a ``herd'', using
+the metaphor developed in my practitioner article
+\emph{The Agent Shepherd}~\cite{servera2026shepherd}.
+My account records 47 completed issues out of more
 than 180 in the first 5 days. I could inspect completed issues and passing
 checks, but when I opened the replacement to provide feedback, I could not
 sign in to the new application.
@@ -1338,6 +1351,12 @@ J.~M. Servera~Bondroit.
 Forward retrofit programme.
 \newblock GitHub repository, 24 October 2026.
 \newblock \url{https://github.com/jmservera/ama}.
+
+\bibitem{servera2026shepherd}
+J.~M. Servera~Bondroit.
+\newblock The Agent Shepherd.
+\newblock Practitioner article, LinkedIn, 15 November 2026.
+\newblock \url{https://www.linkedin.com/pulse/agent-shepherd-juan-manuel-servera-bondroit-5e7fe/}.
 
 \bibitem{shinn2023reflexion}
 N.~Shinn, F.~Cassano, E.~Berman, A.~Gopinath, K.~Narasimhan, and S.~Yao.

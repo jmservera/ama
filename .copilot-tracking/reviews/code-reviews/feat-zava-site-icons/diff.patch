@@ -1,0 +1,290 @@
+diff --git a/src/api/README.md b/src/api/README.md
+index 23f12dd01..7c47bc3a0 100644
+--- a/src/api/README.md
++++ b/src/api/README.md
+@@ -2,10 +2,24 @@
+ title: Zava Forward API and web workbench
+ description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
+ author: AMA programme
+-ms.date: 2026-11-21
++ms.date: 2026-11-27
+ ms.topic: reference
+ ---
+ 
++## Browser tab icons
++
++The resident showcase and preview use a black circled Z on white. Employee
++pages use a larger white circled Z on black. Both PNG favicons are derived
++from the Z in [the existing logo](./src/zava_forward/api/web/zava-logo.png);
++the circle becomes an outline so the letter and ring share the foreground
++colour. The 64-pixel icons use a 52-pixel resident mark and a 60-pixel employee
++mark.
++
++The welcome page embeds its favicon using the existing inline-media path,
++so anonymous visitors need no additional public asset permissions. Other
++pages use the existing release-versioned static assets. Authentication and
++resident host checks are unchanged.
++
+ ## Map sensor loading
+ 
+ Ordinary map loads and viewport changes do not read sensor values. Selecting
+diff --git a/src/api/src/zava_forward/api/resident_demo/app.py b/src/api/src/zava_forward/api/resident_demo/app.py
+index 96d3a2027..2786ce006 100644
+--- a/src/api/src/zava_forward/api/resident_demo/app.py
++++ b/src/api/src/zava_forward/api/resident_demo/app.py
+@@ -54,6 +54,7 @@ ASSETS = {
+     "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
+ }
+ SHARED_ASSETS = {
++    "/favicon-resident.png": ("favicon-resident.png", "image/png"),
+     "/chat-widget.js": ("chat-widget.js", "text/javascript; charset=utf-8"),
+     "/chat-widget.css": ("chat-widget.css", "text/css; charset=utf-8"),
+ }
+diff --git a/src/api/src/zava_forward/api/resident_demo/web/index.html b/src/api/src/zava_forward/api/resident_demo/web/index.html
+index 824679443..0e9ed24ef 100644
+--- a/src/api/src/zava_forward/api/resident_demo/web/index.html
++++ b/src/api/src/zava_forward/api/resident_demo/web/index.html
+@@ -5,6 +5,7 @@
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="color-scheme" content="light">
+ <title>Your home improvement progress - synthetic showcase, not live</title>
++<link rel="icon" type="image/png" sizes="64x64" href="/favicon-resident.png">
+ <link rel="stylesheet" href="/demo.css">
+ <link rel="stylesheet" href="/chat-widget.css">
+ </head>
+diff --git a/src/api/src/zava_forward/api/resident_preview/app.py b/src/api/src/zava_forward/api/resident_preview/app.py
+index fc18dab2c..74655ea36 100644
+--- a/src/api/src/zava_forward/api/resident_preview/app.py
++++ b/src/api/src/zava_forward/api/resident_preview/app.py
+@@ -24,6 +24,7 @@ ASSETS = {
+     "/index.html": ("index.html", "text/html; charset=utf-8"),
+     "/resident.css": ("resident.css", "text/css; charset=utf-8"),
+     "/resident.js": ("resident.js", "text/javascript; charset=utf-8"),
++    "/favicon-resident.png": ("../../web/favicon-resident.png", "image/png"),
+ }
+ UNAVAILABLE_PATHS = (
+     "/resident/messages",
+diff --git a/src/api/src/zava_forward/api/resident_preview/web/index.html b/src/api/src/zava_forward/api/resident_preview/web/index.html
+index bc4fbae83..bc3bda9c4 100644
+--- a/src/api/src/zava_forward/api/resident_preview/web/index.html
++++ b/src/api/src/zava_forward/api/resident_preview/web/index.html
+@@ -4,6 +4,7 @@
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Your home improvement progress - synthetic preview, not live</title>
++<link rel="icon" type="image/png" sizes="64x64" href="/favicon-resident.png">
+ <link rel="stylesheet" href="/resident.css">
+ </head>
+ <body>
+diff --git a/src/api/src/zava_forward/api/web/favicon-employee.png b/src/api/src/zava_forward/api/web/favicon-employee.png
+new file mode 100644
+index 000000000..51b8f36a5
+Binary files /dev/null and b/src/api/src/zava_forward/api/web/favicon-employee.png differ
+diff --git a/src/api/src/zava_forward/api/web/favicon-resident.png b/src/api/src/zava_forward/api/web/favicon-resident.png
+new file mode 100644
+index 000000000..d9f1066a3
+Binary files /dev/null and b/src/api/src/zava_forward/api/web/favicon-resident.png differ
+diff --git a/src/api/src/zava_forward/api/web/index.html b/src/api/src/zava_forward/api/web/index.html
+index 4a920d91d..a77b656b6 100644
+--- a/src/api/src/zava_forward/api/web/index.html
++++ b/src/api/src/zava_forward/api/web/index.html
+@@ -5,6 +5,7 @@
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <meta name="theme-color" content="#0b5d6b">
+ <title>Zava Forward | Zava North Homes</title>
++<link rel="icon" type="image/png" sizes="64x64" href="/favicon-employee.png">
+ <link rel="stylesheet" href="/vendor/leaflet.css">
+ <link rel="stylesheet" href="/style.css">
+ <link rel="stylesheet" href="/progress.css">
+diff --git a/src/api/src/zava_forward/api/web/law.html b/src/api/src/zava_forward/api/web/law.html
+index 74921b652..03e972bc9 100644
+--- a/src/api/src/zava_forward/api/web/law.html
++++ b/src/api/src/zava_forward/api/web/law.html
+@@ -4,6 +4,7 @@
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <title>Law store viewer - Zava Forward</title>
++<link rel="icon" type="image/png" sizes="64x64" href="/favicon-employee.png">
+ <link rel="stylesheet" href="/style.css">
+ </head>
+ <body>
+diff --git a/src/api/src/zava_forward/api/web/welcome.html b/src/api/src/zava_forward/api/web/welcome.html
+index 7dc2d7445..46a1d36c8 100644
+--- a/src/api/src/zava_forward/api/web/welcome.html
++++ b/src/api/src/zava_forward/api/web/welcome.html
+@@ -7,6 +7,7 @@
+ <meta name="theme-color" content="#faf9f6">
+ <meta name="description" content="Zava Forward is a research demonstrator for retrofit programme delivery. Every home has an owner and a next step, AI prepares evidence and people decide.">
+ <title>Welcome to Zava Forward | Zava North Homes</title>
++<link rel="icon" type="image/png" sizes="64x64" href="__WELCOME_FAVICON__">
+ <link rel="stylesheet" href="/style.css">
+ </head>
+ <body class="welcome-page">
+diff --git a/src/api/src/zava_forward/api/welcome.py b/src/api/src/zava_forward/api/welcome.py
+index 351a80024..c6d612f80 100644
+--- a/src/api/src/zava_forward/api/welcome.py
++++ b/src/api/src/zava_forward/api/welcome.py
+@@ -1,7 +1,7 @@
+-"""Public welcome page: the link to the separate resident site and the page's pictures.
++"""Public welcome page: the resident site link, pictures and favicon.
+ 
+ The platform sign-in bypass serves only a short list of paths, so the page cannot
+-link to extra image files. Its pictures are packaged beside it and inlined as data
++link to extra image files. Its pictures and favicon are packaged beside it and inlined as data
+ URIs when the page is served instead.
+ 
+ The resident site is a different host, so its address is configuration, never
+@@ -32,6 +32,8 @@ PHOTOS = {
+ }
+ ICONS_MARKER = b"__WELCOME_ICONS__"
+ ICONS_FILE = "welcome-icons.svg"
++FAVICON_MARKER = b"__WELCOME_FAVICON__"
++FAVICON_FILE = "favicon-employee.png"
+ SPRITE = re.compile(rb"<svg[^>]*>(.*)</svg>", re.S)
+ 
+ 
+@@ -74,7 +76,7 @@ def _block(name: bytes) -> re.Pattern[bytes]:
+ 
+ @functools.cache
+ def media() -> tuple[tuple[bytes, bytes], ...]:
+-    """Marker and replacement pairs for the page's pictures, read once per process."""
++    """Marker and replacement pairs for the page's media, read once per process."""
+     pairs = [
+         (marker, b"data:image/webp;base64," + base64.b64encode((WEB / name).read_bytes()))
+         for marker, name in PHOTOS.items()
+@@ -82,7 +84,8 @@ def media() -> tuple[tuple[bytes, bytes], ...]:
+     sprite = SPRITE.search((WEB / ICONS_FILE).read_bytes())
+     if sprite is None:
+         raise ValueError(f"{ICONS_FILE} is not an SVG file")
+-    return (*pairs, (ICONS_MARKER, sprite.group(1)))
++    favicon = b"data:image/png;base64," + base64.b64encode((WEB / FAVICON_FILE).read_bytes())
++    return (*pairs, (ICONS_MARKER, sprite.group(1)), (FAVICON_MARKER, favicon))
+ 
+ 
+ def render(body: bytes, resident_url: str) -> bytes:
+diff --git a/src/api/tests/test_auth.py b/src/api/tests/test_auth.py
+index fc903ef28..5b95586aa 100644
+--- a/src/api/tests/test_auth.py
++++ b/src/api/tests/test_auth.py
+@@ -595,11 +595,12 @@ class ProxyHttpTests(Base):
+             text = response.read().decode()
+             self.assertIn("Sign in to the workbench", text)
+             self.assertNotIn("app.js", text)
++            self.assertIn('href="data:image/png;base64,', text)
+         class NoRedirect(urllib.request.HTTPRedirectHandler):
+             def redirect_request(self, *args, **kwargs):
+                 return None
+         opener = urllib.request.build_opener(NoRedirect())
+-        for path, target in (("/app", "/sign-in"), ("/sign-in", "/.auth/login/aad?post_login_redirect_uri=%2Fapp")):
++        for path, target in (("/app", "/sign-in"), ("/favicon-employee.png", "/sign-in"), ("/sign-in", "/.auth/login/aad?post_login_redirect_uri=%2Fapp")):
+             with self.assertRaises(urllib.error.HTTPError) as error:
+                 opener.open(self.base + path)
+             self.assertEqual(error.exception.code, 302)
+@@ -607,6 +608,10 @@ class ProxyHttpTests(Base):
+         req = urllib.request.Request(self.base + "/app", headers={"X-MS-CLIENT-PRINCIPAL": principal()})
+         with urllib.request.urlopen(req) as response:
+             self.assertIn('data-auth-provider="trusted-proxy"', response.read().decode())
++        req = urllib.request.Request(self.base + "/favicon-employee.png", headers={"X-MS-CLIENT-PRINCIPAL": principal()})
++        with urllib.request.urlopen(req) as response:
++            self.assertEqual(response.headers["Content-Type"], "image/png")
++            self.assertTrue(response.read().startswith(b"\x89PNG\r\n\x1a\n"))
+ 
+     def test_current_account_claims_do_not_change_staff_records(self):
+         p = json.loads(base64.b64decode(principal(email="signed-in@example.test")))
+diff --git a/src/api/tests/test_static_assets.py b/src/api/tests/test_static_assets.py
+index 3d4062071..97ac4526c 100644
+--- a/src/api/tests/test_static_assets.py
++++ b/src/api/tests/test_static_assets.py
+@@ -1,5 +1,6 @@
+ """Release identity and conditional HTTP on the actual employee/resident handlers."""
+ 
++import base64
+ import hashlib
+ import http.client
+ import tempfile
+@@ -23,11 +24,14 @@ class AssetLinks(HTMLParser):
+     def __init__(self) -> None:
+         super().__init__()
+         self.urls: list[str] = []
++        self.icons: list[dict[str, str | None]] = []
+ 
+     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+         values = dict(attrs)
+         url = values.get("src" if tag == "script" else "href")
+-        if tag in ("script", "link") and url:
++        if tag == "link" and values.get("rel") == "icon":
++            self.icons.append(values)
++        if tag in ("script", "link") and url and not url.startswith("data:"):
+             self.urls.append(url)
+ 
+ 
+@@ -44,6 +48,41 @@ def request(
+ 
+ 
+ class CacheContract(unittest.TestCase):
++    def check_favicon(
++        self,
++        port: int,
++        entry: str,
++        filename: str,
++        headers: dict[str, str] | None = None,
++        *,
++        inline: bool = False,
++    ) -> None:
++        status, _, page = request(port, entry, headers=headers)
++        self.assertEqual(status, 200)
++        links = AssetLinks()
++        links.feed(page.decode())
++        self.assertEqual(len(links.icons), 1)
++        icon = links.icons[0]
++        self.assertEqual(icon.get("type"), "image/png")
++        self.assertEqual(icon.get("sizes"), "64x64")
++        url = icon.get("href")
++        assert url is not None
++        expected = (SHARED_WEB / filename).read_bytes()
++        if inline:
++            prefix = "data:image/png;base64,"
++            self.assertTrue(url.startswith(prefix))
++            self.assertEqual(base64.b64decode(url.removeprefix(prefix), validate=True), expected)
++        else:
++            self.assertEqual(urlsplit(url).path, "/" + filename)
++            self.assertRegex(urlsplit(url).query, r"^v=[0-9a-f]{64}$")
++            status, response, body = request(port, url, headers=headers)
++            self.assertEqual((status, body), (200, expected))
++            self.assertEqual(response["Content-Type"], "image/png")
++        with (SHARED_WEB.parents[3] / "pyproject.toml").open("rb") as stream:
++            config = tomllib.load(stream)
++        patterns = config["tool"]["setuptools"]["package-data"]["zava_forward.api"]
++        self.assertTrue(any(Path("web", filename).match(pattern) for pattern in patterns))
++
+     def check_cache(self, port: int, entry: str, headers: dict[str, str] | None = None) -> None:
+         status, response, body = request(port, entry, headers=headers)
+         self.assertEqual(status, 200)
+@@ -116,6 +155,9 @@ class EmployeeAssets(Base, CacheContract):
+         port = self.httpd.server_port
+         for entry in ("/", "/welcome.html", "/app", "/index.html", "/law.html"):
+             self.check_cache(port, entry)
++            self.check_favicon(
++                port, entry, "favicon-employee.png", inline=entry in ("/", "/welcome.html")
++            )
+         for path in ("/api/me", "/missing.js"):
+             status, headers, _ = request(port, path, headers={"If-None-Match": "*"})
+             self.assertIn(status, (401, 404))
+@@ -144,6 +186,9 @@ class ResidentAssets(DemoTestCase, CacheContract):
+     def test_static_contract_and_no_store_denials(self) -> None:
+         for entry in ("/", "/index.html"):
+             self.check_cache(self.app.port, entry, {"Host": "demo.test.invalid"})
++            self.check_favicon(
++                self.app.port, entry, "favicon-resident.png", {"Host": "demo.test.invalid"}
++            )
+         for path, headers in (
+             ("/demo/view", {"Host": "demo.test.invalid"}),
+             ("/chat-widget.js?v=old", {"Host": "wrong.invalid", "If-None-Match": "*"}),
+@@ -165,6 +210,7 @@ class PreviewAssets(CacheContract):
+         try:
+             for entry in ("/", "/index.html"):
+                 self.check_cache(app.port, entry)
++                self.check_favicon(app.port, entry, "favicon-resident.png")
+         finally:
+             server.shutdown()
+             server.server_close()

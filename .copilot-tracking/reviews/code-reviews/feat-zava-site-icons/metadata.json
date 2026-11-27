@@ -1,0 +1,28 @@
+{
+  "schema_version": "1",
+  "branch": "feat/zava-site-icons",
+  "head_commit": "f037bd977817c78940457146b6836330e6f1b746",
+  "reviewed_at": "2026-11-27T15:03:25Z",
+  "verdict": "approve",
+  "files_changed": [
+    "src/api/README.md",
+    "src/api/src/zava_forward/api/resident_demo/app.py",
+    "src/api/src/zava_forward/api/resident_demo/web/index.html",
+    "src/api/src/zava_forward/api/resident_preview/app.py",
+    "src/api/src/zava_forward/api/resident_preview/web/index.html",
+    "src/api/src/zava_forward/api/web/index.html",
+    "src/api/src/zava_forward/api/web/law.html",
+    "src/api/src/zava_forward/api/web/welcome.html",
+    "src/api/src/zava_forward/api/welcome.py",
+    "src/api/tests/test_auth.py",
+    "src/api/tests/test_static_assets.py"
+  ],
+  "findings_count": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "reviewer": "code-review",
+  "independent_reviewer": "hve-core:code-review-functional"
+}
