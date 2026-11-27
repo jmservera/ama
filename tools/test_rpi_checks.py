@@ -352,7 +352,7 @@ class GateTests(unittest.TestCase):
             and c.func.attr in {"to_be_enabled", "to_have_count"}
         ]
         self.assertEqual(
-            [c.func.attr for c in sorted(calls, key=lambda c: c.lineno)],
+            [getattr(c.func, "attr") for c in sorted(calls, key=lambda c: c.lineno)],
             [
                 "to_be_enabled",
                 "to_have_count",
