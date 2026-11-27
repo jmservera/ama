@@ -595,11 +595,12 @@ class ProxyHttpTests(Base):
             text = response.read().decode()
             self.assertIn("Sign in to the workbench", text)
             self.assertNotIn("app.js", text)
+            self.assertIn('href="data:image/png;base64,', text)
         class NoRedirect(urllib.request.HTTPRedirectHandler):
             def redirect_request(self, *args, **kwargs):
                 return None
         opener = urllib.request.build_opener(NoRedirect())
-        for path, target in (("/app", "/sign-in"), ("/sign-in", "/.auth/login/aad?post_login_redirect_uri=%2Fapp")):
+        for path, target in (("/app", "/sign-in"), ("/favicon-employee.png", "/sign-in"), ("/sign-in", "/.auth/login/aad?post_login_redirect_uri=%2Fapp")):
             with self.assertRaises(urllib.error.HTTPError) as error:
                 opener.open(self.base + path)
             self.assertEqual(error.exception.code, 302)
@@ -607,6 +608,10 @@ class ProxyHttpTests(Base):
         req = urllib.request.Request(self.base + "/app", headers={"X-MS-CLIENT-PRINCIPAL": principal()})
         with urllib.request.urlopen(req) as response:
             self.assertIn('data-auth-provider="trusted-proxy"', response.read().decode())
+        req = urllib.request.Request(self.base + "/favicon-employee.png", headers={"X-MS-CLIENT-PRINCIPAL": principal()})
+        with urllib.request.urlopen(req) as response:
+            self.assertEqual(response.headers["Content-Type"], "image/png")
+            self.assertTrue(response.read().startswith(b"\x89PNG\r\n\x1a\n"))
 
     def test_current_account_claims_do_not_change_staff_records(self):
         p = json.loads(base64.b64decode(principal(email="signed-in@example.test")))

@@ -24,6 +24,7 @@ ASSETS = {
     "/index.html": ("index.html", "text/html; charset=utf-8"),
     "/resident.css": ("resident.css", "text/css; charset=utf-8"),
     "/resident.js": ("resident.js", "text/javascript; charset=utf-8"),
+    "/favicon-resident.png": ("../../web/favicon-resident.png", "image/png"),
 }
 UNAVAILABLE_PATHS = (
     "/resident/messages",

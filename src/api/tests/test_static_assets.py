@@ -1,5 +1,6 @@
 """Release identity and conditional HTTP on the actual employee/resident handlers."""
 
+import base64
 import hashlib
 import http.client
 import tempfile
@@ -23,11 +24,14 @@ class AssetLinks(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
         self.urls: list[str] = []
+        self.icons: list[dict[str, str | None]] = []
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
         url = values.get("src" if tag == "script" else "href")
-        if tag in ("script", "link") and url:
+        if tag == "link" and values.get("rel") == "icon":
+            self.icons.append(values)
+        if tag in ("script", "link") and url and not url.startswith("data:"):
             self.urls.append(url)
 
 
@@ -44,6 +48,41 @@ def request(
 
 
 class CacheContract(unittest.TestCase):
+    def check_favicon(
+        self,
+        port: int,
+        entry: str,
+        filename: str,
+        headers: dict[str, str] | None = None,
+        *,
+        inline: bool = False,
+    ) -> None:
+        status, _, page = request(port, entry, headers=headers)
+        self.assertEqual(status, 200)
+        links = AssetLinks()
+        links.feed(page.decode())
+        self.assertEqual(len(links.icons), 1)
+        icon = links.icons[0]
+        self.assertEqual(icon.get("type"), "image/png")
+        self.assertEqual(icon.get("sizes"), "64x64")
+        url = icon.get("href")
+        assert url is not None
+        expected = (SHARED_WEB / filename).read_bytes()
+        if inline:
+            prefix = "data:image/png;base64,"
+            self.assertTrue(url.startswith(prefix))
+            self.assertEqual(base64.b64decode(url.removeprefix(prefix), validate=True), expected)
+        else:
+            self.assertEqual(urlsplit(url).path, "/" + filename)
+            self.assertRegex(urlsplit(url).query, r"^v=[0-9a-f]{64}$")
+            status, response, body = request(port, url, headers=headers)
+            self.assertEqual((status, body), (200, expected))
+            self.assertEqual(response["Content-Type"], "image/png")
+        with (SHARED_WEB.parents[3] / "pyproject.toml").open("rb") as stream:
+            config = tomllib.load(stream)
+        patterns = config["tool"]["setuptools"]["package-data"]["zava_forward.api"]
+        self.assertTrue(any(Path("web", filename).match(pattern) for pattern in patterns))
+
     def check_cache(self, port: int, entry: str, headers: dict[str, str] | None = None) -> None:
         status, response, body = request(port, entry, headers=headers)
         self.assertEqual(status, 200)
@@ -116,6 +155,9 @@ class EmployeeAssets(Base, CacheContract):
         port = self.httpd.server_port
         for entry in ("/", "/welcome.html", "/app", "/index.html", "/law.html"):
             self.check_cache(port, entry)
+            self.check_favicon(
+                port, entry, "favicon-employee.png", inline=entry in ("/", "/welcome.html")
+            )
         for path in ("/api/me", "/missing.js"):
             status, headers, _ = request(port, path, headers={"If-None-Match": "*"})
             self.assertIn(status, (401, 404))
@@ -144,6 +186,9 @@ class ResidentAssets(DemoTestCase, CacheContract):
     def test_static_contract_and_no_store_denials(self) -> None:
         for entry in ("/", "/index.html"):
             self.check_cache(self.app.port, entry, {"Host": "demo.test.invalid"})
+            self.check_favicon(
+                self.app.port, entry, "favicon-resident.png", {"Host": "demo.test.invalid"}
+            )
         for path, headers in (
             ("/demo/view", {"Host": "demo.test.invalid"}),
             ("/chat-widget.js?v=old", {"Host": "wrong.invalid", "If-None-Match": "*"}),
@@ -165,6 +210,7 @@ class PreviewAssets(CacheContract):
         try:
             for entry in ("/", "/index.html"):
                 self.check_cache(app.port, entry)
+                self.check_favicon(app.port, entry, "favicon-resident.png")
         finally:
             server.shutdown()
             server.server_close()

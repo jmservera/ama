@@ -2,9 +2,23 @@
 title: Zava Forward API and web workbench
 description: Staff features, configuration, local run, honest limits and container checks for the api project, split from the former mvp README in M6 of #199
 author: AMA programme
-ms.date: 2026-11-21
+ms.date: 2026-11-27
 ms.topic: reference
 ---
+
+## Browser tab icons
+
+The resident showcase and preview use a black circled Z on white. Employee
+pages use a larger white circled Z on black. Both PNG favicons are derived
+from the Z in [the existing logo](./src/zava_forward/api/web/zava-logo.png);
+the circle becomes an outline so the letter and ring share the foreground
+colour. The 64-pixel icons use a 52-pixel resident mark and a 60-pixel employee
+mark.
+
+The welcome page embeds its favicon using the existing inline-media path,
+so anonymous visitors need no additional public asset permissions. Other
+pages use the existing release-versioned static assets. Authentication and
+resident host checks are unchanged.
 
 ## Map sensor loading
 

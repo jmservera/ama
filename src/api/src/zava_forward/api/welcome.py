@@ -1,7 +1,7 @@
-"""Public welcome page: the link to the separate resident site and the page's pictures.
+"""Public welcome page: the resident site link, pictures and favicon.
 
 The platform sign-in bypass serves only a short list of paths, so the page cannot
-link to extra image files. Its pictures are packaged beside it and inlined as data
+link to extra image files. Its pictures and favicon are packaged beside it and inlined as data
 URIs when the page is served instead.
 
 The resident site is a different host, so its address is configuration, never
@@ -32,6 +32,8 @@ PHOTOS = {
 }
 ICONS_MARKER = b"__WELCOME_ICONS__"
 ICONS_FILE = "welcome-icons.svg"
+FAVICON_MARKER = b"__WELCOME_FAVICON__"
+FAVICON_FILE = "favicon-employee.png"
 SPRITE = re.compile(rb"<svg[^>]*>(.*)</svg>", re.S)
 
 
@@ -74,7 +76,7 @@ def _block(name: bytes) -> re.Pattern[bytes]:
 
 @functools.cache
 def media() -> tuple[tuple[bytes, bytes], ...]:
-    """Marker and replacement pairs for the page's pictures, read once per process."""
+    """Marker and replacement pairs for the page's media, read once per process."""
     pairs = [
         (marker, b"data:image/webp;base64," + base64.b64encode((WEB / name).read_bytes()))
         for marker, name in PHOTOS.items()
@@ -82,7 +84,8 @@ def media() -> tuple[tuple[bytes, bytes], ...]:
     sprite = SPRITE.search((WEB / ICONS_FILE).read_bytes())
     if sprite is None:
         raise ValueError(f"{ICONS_FILE} is not an SVG file")
-    return (*pairs, (ICONS_MARKER, sprite.group(1)))
+    favicon = b"data:image/png;base64," + base64.b64encode((WEB / FAVICON_FILE).read_bytes())
+    return (*pairs, (ICONS_MARKER, sprite.group(1)), (FAVICON_MARKER, favicon))
 
 
 def render(body: bytes, resident_url: str) -> bytes:

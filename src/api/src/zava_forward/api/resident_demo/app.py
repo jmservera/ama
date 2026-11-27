@@ -54,6 +54,7 @@ ASSETS = {
     "/assistant.js": ("assistant.js", "text/javascript; charset=utf-8"),
 }
 SHARED_ASSETS = {
+    "/favicon-resident.png": ("favicon-resident.png", "image/png"),
     "/chat-widget.js": ("chat-widget.js", "text/javascript; charset=utf-8"),
     "/chat-widget.css": ("chat-widget.css", "text/css; charset=utf-8"),
 }
