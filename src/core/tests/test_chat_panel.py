@@ -1153,6 +1153,45 @@ class HybridAttributionTests(unittest.TestCase):
             self.assertEqual(calls[0], 3, action)
             self.assertEqual(type(err.exception).__name__, "ProgrammingError")
 
+    def test_thread_create_audit_retries_a_write_lock_timeout_after_the_insert(self) -> None:
+        class ProgrammingError(Exception):
+            __module__ = "pyodbc"
+
+        real = self.store.audit
+
+        def run(failures: int, error: Exception) -> tuple[Any, list[int]]:
+            calls = [0]
+
+            def flaky(who: str, act: str, *args: Any) -> Any:
+                if act == "chat.thread.created":
+                    calls[0] += 1
+                    if calls[0] <= failures:
+                        raise error
+                return real(who, act, *args)
+
+            return patch.object(self.store, "audit", side_effect=flaky), calls
+
+        def created() -> int:
+            return sum(
+                1 for e in self.store.audit_entries() if e["action"] == "chat.thread.created"
+            )
+
+        before = created()
+        patched, calls = run(2, ProgrammingError("could not take the write lock"))
+        with patched:
+            thread = self.store.chat_create_thread(self.user)
+        self.assertEqual(calls[0], 3)
+        self.assertEqual(created(), before + 1)
+        self.assertEqual(self.store.chat_resume(self.user, thread["id"])["id"], thread["id"])
+        patched, calls = run(99, ProgrammingError("could not take the write lock"))
+        with patched, self.assertRaises(ProgrammingError):
+            self.store.chat_create_thread(self.user)
+        self.assertEqual(calls[0], 3)
+        patched, calls = run(99, RuntimeError("disk full"))
+        with patched, self.assertRaises(RuntimeError):
+            self.store.chat_create_thread(self.user)
+        self.assertEqual(calls[0], 1)
+
     def test_failed_dispatch_settles_meter_as_ineligible(self) -> None:
         def failing(system: str, prompt: str) -> str:
             raise ModelUnavailable("provider-error", calls=1, meter_id="m1", meter_root="root1")

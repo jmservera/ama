@@ -237,6 +237,35 @@ class ErrorLoggingTests(Base):
         self.assertIn("http-error POST /api/chat/threads status=500", line)
         self.assertNotIn(SECRET, line)
 
+    def test_busy_audit_after_chat_thread_insert_is_absorbed_without_an_orphan(self) -> None:
+        busy, real = self.busy_error(), self.store.audit
+        calls: list[str] = []
+
+        def audit_busy_once(who: str, action: str, *args: Any) -> Any:
+            if action == "chat.thread.created":
+                calls.append(action)
+                if len(calls) == 1:
+                    raise busy
+            return real(who, action, *args)
+
+        def listing() -> list[Any]:
+            req = urllib.request.Request(
+                self.base + "/api/chat/threads",
+                headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=OID_SAM)},  # type: ignore[no-untyped-call]
+            )
+            with urllib.request.urlopen(req, timeout=20) as r:
+                found: list[Any] = json.loads(r.read())
+                return found
+
+        with patch.dict(os.environ, CHAT_APPROVED):
+            before = len(listing())
+            with patch.object(self.store, "audit", audit_busy_once):
+                code, body, retry = self.post("/api/chat/threads", {})
+            self.assertEqual((code, retry), (200, None))
+            self.assertNotIn(SECRET, body.decode())
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(len(listing()), before + 1)
+
     def test_busy_sql_write_lock_on_other_post_still_answers_500(self) -> None:
         # The container installs the process-wide log redaction at start; install it here so the
         # result does not depend on which earlier test module did.
