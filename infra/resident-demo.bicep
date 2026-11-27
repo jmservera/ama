@@ -28,6 +28,10 @@ param chatNoticeRef string = 'docs/reference/research/chat-demo-storage-approval
 param chatRetentionRef string = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention'
 @minValue(1)
 param chatRetentionDays int = 30
+@description('Opt-in demo exception: resource id of a separate sensor-writing user-assigned identity for the resident sensor-consent card. Empty keeps the single least-privilege identity and no consent wiring.')
+param sensorConsentIdentityId string = ''
+@description('Client id of the sensor-consent identity; required when sensorConsentIdentityId is set.')
+param sensorConsentSqlClientId string = ''
 
 var appName = 'ca-resident-demo'
 var identityName = 'id-resident-demo'
@@ -107,7 +111,7 @@ resource app 'Microsoft.App/containerApps@2025-07-01' = {
   tags: { workload: 'resident-demo', 'zava-forward-synthetic': 'true' }
   identity: {
     type: 'UserAssigned'
-    userAssignedIdentities: { '${identity.id}': {} }
+    userAssignedIdentities: empty(sensorConsentIdentityId) ? { '${identity.id}': {} } : { '${identity.id}': {}, '${sensorConsentIdentityId}': {} }
   }
   properties: {
     managedEnvironmentId: environment.id
@@ -132,6 +136,11 @@ resource app 'Microsoft.App/containerApps@2025-07-01' = {
         image: image
         resources: { cpu: json('0.25'), memory: '0.5Gi' }
         env: [
+          { name: 'ZF_DEMO_SENSOR_CONSENT', value: empty(sensorConsentIdentityId) ? '0' : '1' }
+          { name: 'ZF_DEMO_SENSOR_CONSENT_SQL_AUTH', value: 'msi' }
+          { name: 'ZF_DEMO_SENSOR_CONSENT_SQL_CLIENT_ID', value: sensorConsentSqlClientId }
+          { name: 'ZF_DEMO_SENSOR_CONSENT_SQL_SERVER', value: sqlServerFqdn }
+          { name: 'ZF_DEMO_SENSOR_CONSENT_SQL_DATABASE', value: sqlDatabaseName }
           { name: 'ZF_CONTAINER_HARDENING', value: 'enforced' }
           { name: 'PYTHONDONTWRITEBYTECODE', value: '1' }
           { name: 'TMPDIR', value: '/tmp' }
