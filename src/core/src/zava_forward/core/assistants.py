@@ -1991,13 +1991,7 @@ class Assistants:
                         ),
                     )
                 )
-            readiness = rai_control_plane.exercise_acceptance_report(
-                self.store,
-                user=user,
-                assistants_service=self,
-                db=db,
-            )
-            return dict(
+            payload = dict(
                 assistants=result,
                 registered_tasks=registered,
                 disabled=self.disabled(db),
@@ -2009,8 +2003,17 @@ class Assistants:
                 if not self.limits.valid
                 else {k: getattr(self.limits, k) for k in Limits.DEFAULTS},
                 manual="Use the ordinary case controls; proposals never approve or change the case.",
-                **readiness,
             )
+        # The report verifies the audit ledger under the store lock, which a writer holds while it waits for the
+        # SQLite write lock this transaction held; reading on its own connection after commit avoids that deadlock.
+        payload.update(
+            rai_control_plane.exercise_acceptance_report(
+                self.store,
+                user=user,
+                assistants_service=self,
+            )
+        )
+        return payload
 
     def _task_id(self, db, capability, c, signature):
         return digest(
