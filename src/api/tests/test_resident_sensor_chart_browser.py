@@ -16,8 +16,8 @@ except ImportError:  # pragma: no cover
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/resident_demo/web"
 
-MEASURE = """({history, points}) => {
-  const metric = sensorMetrics[0];
+MEASURE = """({history, points, metricIndex = 0}) => {
+  const metric = sensorMetrics[metricIndex];
   const figure = sensorChart(history, metric, {points});
   document.body.appendChild(figure);
   const svg = figure.querySelector('svg');
@@ -37,11 +37,13 @@ MEASURE = """({history, points}) => {
   let circleTouches = 0;
   for (let i = 1; i < circles.length; i++) if (hit(circles[i - 1], circles[i])) circleTouches++;
   const circleOnText = circles.some(c => boxes.some(b => hit(c, b)));
+  const squareOnText = [...svg.querySelectorAll('rect.sensor-forecast-point')]
+    .some(r => boxes.some(b => hit(r.getBoundingClientRect(), b)));
   return {
     labels: texts.map(t => t.textContent),
     maxLabelRatio: Math.max(
       ...texts.map(t => parseFloat(getComputedStyle(t).fontSize) * scale)) / bodyPx,
-    textOverlaps, circleCount: circles.length, circleTouches, circleOnText,
+    textOverlaps, circleCount: circles.length, circleTouches, circleOnText, squareOnText,
     squares: svg.querySelectorAll('rect.sensor-forecast-point').length,
     circleRadiusPx: circles[0].width / 2,
   };
@@ -96,6 +98,66 @@ def harness() -> str:
 
 @unittest.skipIf(sync_playwright is None, "playwright is not installed")
 class ResidentSensorChartBrowserTests(unittest.TestCase):
+    def test_latest_stored_label_clears_markers_near_top_of_scale(self) -> None:
+        page_html = harness()
+
+        class Serving(Handler):
+            def do_GET(self) -> None:
+                if self.path == "/harness.html":
+                    body = page_html.encode()
+                    self.send_response(200)
+                    self.send_header("Content-Type", "text/html")
+                    self.send_header("Content-Length", str(len(body)))
+                    self.end_headers()
+                    self.wfile.write(body)
+                    return
+                super().do_GET()
+
+        handler = functools.partial(Serving, directory=str(WEB))
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), handler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            with sync_playwright() as p:
+                try:
+                    browser = p.chromium.launch()
+                except Exception as exc:  # pragma: no cover
+                    self.skipTest(f"chromium is not available: {exc}")
+                try:
+                    # Humidity near 95 percent and temperature near 37 C plot close to the top edge.
+                    for count, step in ((288, 5), (6, 30), (1, 30)):
+                        for metric_index in (1, 0):
+                            with self.subTest(count=count, metric=metric_index):
+                                hist = history(count, step)
+                                for row in hist:
+                                    row["humidity_pct"] = 95
+                                    row["temperature_c"] = 37
+                                points = forecast_points(hist)
+                                for point in points:
+                                    point["humidity_pct"] = 95
+                                    point["temperature_c"] = 37
+                                page = browser.new_page(viewport={"width": 1440, "height": 900})
+                                page.goto(f"http://127.0.0.1:{server.server_port}/harness.html")
+                                result = page.evaluate(
+                                    MEASURE,
+                                    {
+                                        "history": hist,
+                                        "points": points,
+                                        "metricIndex": metric_index,
+                                    },
+                                )
+                                page.close()
+                                self.assertIn("Latest stored", result["labels"])
+                                self.assertEqual(result["textOverlaps"], [], result)
+                                self.assertFalse(result["circleOnText"], result)
+                                self.assertFalse(result["squareOnText"], result)
+                finally:
+                    browser.close()
+        finally:
+            server.shutdown()
+            server.server_close()
+            thread.join()
+
     def test_chart_labels_body_sized_not_overlapping_with_circle_markers(self) -> None:
         page_html = harness()
 

@@ -245,6 +245,7 @@
     var latestIndex = history.length - 1;
     while (latestIndex > 0 && history[latestIndex][metric.key] === null) latestIndex--;
     var thinned = false;
+    var plotted = [];
     function segment() {
       if (points.length > 1) svg.appendChild(svgEl("polyline", { points: points.join(" "), class: "sensor-line" }));
       points = [];
@@ -256,6 +257,7 @@
       var x = end === start ? 263 : 56 + (stamp - start) / (end - start) * 414;
       var y = yFor(reading[metric.key]);
       points.push(x + "," + y);
+      plotted.push([x, y]);
       if (x - lastMarkerX >= markerGap || reading === history[latestIndex]) {
         if (lastMarker && x - lastMarkerX < markerGap) {
           svg.removeChild(lastMarker);
@@ -276,7 +278,16 @@
       var anchorX = 56 + (latestAt - start) / (end - start) * 414;
       svg.appendChild(svgEl("line", { x1: anchorX, y1: 10, x2: anchorX, y2: 150, class: "sensor-divider" }));
       var roomLeft = anchorX - 4 - 56 >= 90;
-      svg.appendChild(svgEl("text", { x: roomLeft ? anchorX - 4 : anchorX + 4, y: 26, "text-anchor": roomLeft ? "end" : "start" }, "Latest stored"));
+      var labelFrom = roomLeft ? anchorX - 84 : anchorX + 4;
+      var forecastXY = future.map(function (point) {
+        return [56 + (Date.parse(point.forecast_at) - start) / (end - start) * 414, yFor(point[metric.key])];
+      });
+      // Keep the label clear of markers: use the top of the plot, or the bottom when readings sit near the top.
+      var crowded = function (from, to) {
+        return plotted.concat(forecastXY).filter(function (p) { return p[0] >= labelFrom - 4 && p[0] <= labelFrom + 88 && p[1] >= from && p[1] <= to; }).length;
+      };
+      var labelY = crowded(8, 34) > 0 && crowded(128, 154) < crowded(8, 34) ? 144 : 26;
+      svg.appendChild(svgEl("text", { x: roomLeft ? anchorX - 4 : anchorX + 4, y: labelY, "text-anchor": roomLeft ? "end" : "start" }, "Latest stored"));
       var line = [];
       if (lastValue && history[history.length - 1][metric.key] !== null) {
         line.push(anchorX + "," + yFor(lastValue[metric.key]));
