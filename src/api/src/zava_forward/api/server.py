@@ -28,6 +28,7 @@ from zava_forward.core import identity, list_export, projection, quality, rankin
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
 from zava_forward.api import auth, build_info, eval_report_cache, plain_language, sensor_badges, simulator_admin, welcome
 from zava_forward.api.workbench import navigation
+from zava_forward.api.listener import NonBlockingAcceptMixin
 from zava_forward.agents.chat import AI_SUSPENDED, CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core import sensor_map, sensor_review_draft, simulation_lane, telemetry
@@ -2406,7 +2407,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
     return H
 
 
-class _Server(ThreadingHTTPServer):
+class _Server(NonBlockingAcceptMixin, ThreadingHTTPServer):
     # The stdlib backlog of 5 drops bursts of parallel proxy connections.
     request_queue_size = 128
 

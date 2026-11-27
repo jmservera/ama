@@ -184,6 +184,35 @@ class DemoTestCase(unittest.TestCase):
         return Client(self.app.port)
 
 
+class ShutdownDoesNotHangTests(DemoTestCase):
+    def test_stale_readiness_cannot_block_the_serving_thread_in_accept(self) -> None:
+        # A readiness event can outlive its connection; a blocking accept would then
+        # sleep until the next client and `shutdown()` would wait forever (issue 2190).
+        self.server.shutdown()
+        done = threading.Event()
+
+        def accept_without_client() -> None:
+            self.server._handle_request_noblock()  # type: ignore[attr-defined]
+            done.set()
+
+        threading.Thread(target=accept_without_client, daemon=True).start()
+        self.assertTrue(done.wait(5), "accept blocked with no pending connection")
+
+    def test_accepted_connections_stay_blocking_and_shutdown_returns(self) -> None:
+        seen: list[float | None] = []
+        original = self.server.get_request
+
+        def spy() -> Any:
+            request, address = original()
+            seen.append(request.gettimeout())
+            return request, address
+
+        self.server.get_request = spy  # type: ignore[method-assign]
+        self.assertEqual(Client(self.app.port).call("GET", "/demo/session")[0], 200)
+        self.assertEqual(seen, [None])
+        self.assertEqual(self.server.socket.gettimeout(), 0.0)
+
+
 class SignInTests(DemoTestCase):
     def test_login_shows_only_own_allowlisted_view(self) -> None:
         c = self.client()

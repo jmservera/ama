@@ -34,6 +34,7 @@ from zava_forward.core.resident_assistant import (
     advise,
 )
 
+from zava_forward.api.listener import NonBlockingAcceptMixin
 from zava_forward.api.static_assets import StaticAssets
 
 from . import chat
@@ -103,7 +104,7 @@ class Reader(Protocol):
     def fetch_case(self, case_id: str) -> rs.ShowcaseRow | None: ...
 
 
-class _Server(ThreadingHTTPServer):
+class _Server(NonBlockingAcceptMixin, ThreadingHTTPServer):
     daemon_threads = True
     request_queue_size = 128
 

@@ -15,6 +15,7 @@ from urllib.parse import urlsplit
 
 from zava_forward.core import resident_preview as rp
 
+from zava_forward.api.listener import NonBlockingAcceptMixin
 from zava_forward.api.static_assets import StaticAssets
 
 WEB = Path(__file__).parent / "web"
@@ -45,7 +46,7 @@ HEADERS = {
 }
 
 
-class _Server(ThreadingHTTPServer):
+class _Server(NonBlockingAcceptMixin, ThreadingHTTPServer):
     daemon_threads = True
     request_queue_size = 128
 
