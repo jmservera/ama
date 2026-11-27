@@ -913,6 +913,65 @@ class NominationApiRoutesTests(unittest.TestCase):
             self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
             self.assertEqual(post({"X-ZF-CSRF": "1"})[0], 200)
 
+    def test_route_form_failures_show_feedback_keep_form_usable_and_write_nothing(self) -> None:
+        from playwright.sync_api import sync_playwright
+
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        nom_id = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]["id"]
+        key = f"#nomination-ack-{nom_id}"
+
+        with sync_playwright() as pw:
+            browser = self._launch_headless_chromium(pw)
+            try:
+                context = browser.new_context()
+                context.add_cookies(
+                    [
+                        {
+                            "name": "zf_session",
+                            "value": self._login_cookie("sam").split("=", 1)[1],
+                            "url": self.base,
+                        }
+                    ]
+                )
+                page = context.new_page()
+                page.goto(self.base + "/api/cases/ZF-1?view=nomination-routes-html")
+                page.locator("summary", has_text=f"Record acknowledgement for {nom_id}").click()
+                page.select_option(f"{key}-channel", "digital")
+                page.fill(f"{key}-acknowledgement_ref", "SYN-FAIL-ACK")
+                page.fill(f"{key}-non_digital_route", "Phone Sam or visit housing hub")
+                page.fill(f"{key}-next_update", "2099-03-01")
+                button = page.locator(f"{key} button[type='submit']")
+
+                # Another session moves the record on, so the form's expected_version is stale.
+                code, _ = self.call_json(
+                    "/api/cases/ZF-1/resident",
+                    "sam",
+                    self._ack_payload(nom_id, acknowledgement_ref="SYN-OTHER-SESSION"),
+                )
+                self.assertEqual(code, 200)
+                with page.expect_response("**/resident") as stale:
+                    button.click()
+                self.assertGreaterEqual(stale.value.status, 400)
+                feedback = page.locator(f"{key}-feedback")
+                self.assertEqual(feedback.inner_text().strip(), stale.value.json()["error"])
+                self.assertTrue(feedback.evaluate("el => el === document.activeElement"))
+                self.assertTrue(button.is_enabled())
+
+                page.route("**/resident", lambda route: route.abort())
+                button.click()
+                page.wait_for_function(
+                    "id => document.getElementById(id).textContent.includes('Nothing was')",
+                    arg=f"nomination-ack-{nom_id}-feedback",
+                )
+                self.assertTrue(button.is_enabled())
+            finally:
+                browser.close()
+
+        record = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]
+        self.assertEqual(record["acknowledgement"]["reference"], "SYN-OTHER-SESSION")
+
     def test_route_form_script_posts_json_with_csrf_header_and_page_loads_it(self) -> None:
         self.assertEqual(
             self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
