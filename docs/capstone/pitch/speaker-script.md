@@ -1,7 +1,7 @@
 ---
 title: Demo-first capstone speaker script
 description: Timed pitch with the complete demo runbook embedded; prepared, not rehearsed
-ms.date: 2026-11-27
+ms.date: 2026-11-28
 ms.topic: how-to
 ---
 
@@ -12,7 +12,7 @@ The 15-minute slot includes 13:00 of planned narration/demo and 2:00 for questio
 Only the SAY paragraphs are spoken. Actions, source notes and the embedded operational runbook are presenter aids.
 Physical page numbers stay stable; the PDF contains the full deck, not the custom-show sequence.
 The shorter route replaces the former 24:30 narration plan. Original slide TIMING lines are historical reference only.
-Candidate SHA-256: `36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40`. No performed rehearsal or current live acceptance is claimed.
+Candidate SHA-256: `3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687`. No performed rehearsal or current live acceptance is claimed.
 
 ## Audience and decision
 
@@ -25,13 +25,13 @@ Ask for one bounded same-home validation, named Programme/Finance/Quality/Engage
 
 More homes ready. Faster. With control intact.
 
-SAY: Our fictional housing association has 60,000 homes and a retrofit programme behind plan. I recommend an owned case workflow, with AI preparing evidence. I'll show one next action first, then explain the design and cost.
+SAY: Our fictional, not-for-profit housing association has 60,000 homes and a retrofit programme behind plan. The aim is resident benefit and accountable spending. I recommend an owned workflow with AI preparing evidence; let's start with one next action.
 
 ### 00:20-00:30 | page 26 / S22
 
 One home. The next action has an owner.
 
-SAY: This is constructed data. Watch the unresolved check, its owner and the decisions people retain.
+SAY: This is constructed data, not residents' personal information. Watch the missing check and its owner: AI suggests; people decide.
 
 ### 00:30-02:20 | embedded 1:50 demo
 
@@ -43,10 +43,10 @@ are presenter notes. State route E or L before starting the clock.
 
 | Clock | Show | Say |
 | --- | --- | --- |
-| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This homepage illustrates the product. The manager owns the programme; an independent inspector accepts finished work. The next action has an owner. AI prepares evidence; people keep their decisions." |
+| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This is a not-for-profit's workflow, illustrated with constructed data. The programme manager owns delivery; an independent inspector accepts work. AI prepares evidence. People retain the decisions." |
 | 00:20-00:50 | Open the preflight-selected actual case; show its own reference, unresolved check and next responsible role | "Now this is the actual synthetic case. Here is the check that cannot pass and the next responsible person. Other useful work can continue. Progress means resolving an owned handoff, not hiding the missing evidence." |
 | 00:50-01:20 | Same-case prepared model answer or proposal beside its source, only if one exists. Otherwise show the actual rules/held state and ordinary next action | "I check the answer's origin, source and what it cannot verify. Accepting a draft doesn't accept the works. A held or unavailable model doesn't clear the check or stop the person following the ordinary action." |
-| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident can ask for help without giving up their choice. Record permission, monitoring permission and works consent are separate. Assisted service stays. The business test is less handling effort and fewer lost handoffs; this demo hasn't measured that." |
+| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident controls works consent and monitoring choice, with assisted help available. Own-case access protects other households. Data use still needs a lawful basis. We are testing less handling effort and fewer lost handoffs, not claiming it." |
 
 For route L, show only equivalent pre-arranged, authorized behaviour. Identify
 a prepared model output as recorded evidence, with its actual date and source.
@@ -60,7 +60,7 @@ After the demo, return to page 4 / S04. Use one recovery within the existing win
 
 Homes don't stall on ambition. They stall between teams.
 
-SAY: That next action is the product's unit of progress. The brief asks for faster retrofit delivery and safer homes, but a start isn't an accepted handover. Survey evidence, funding, capacity and the resident's choice must agree. Our design makes the blocker and owner visible. The proposed business test is fewer unresolved handoffs and less total preparation and review effort; we haven't measured that benefit yet.
+SAY: That next action is the unit of progress. As a not-for-profit provider, Zava's value test is safer homes and resident benefit with accountable spending. Residents should understand the service, the next step and how to challenge a decision; transparency never means exposing another household's records. Survey evidence, funding, capacity and the resident's choice must agree before handover. Reduced handoffs and review effort are proposed benefits, not measured results.
 
 ### 02:55-03:30 | page 14 / S12
 
@@ -82,27 +82,27 @@ SAY: The employee and resident surfaces have separate identity and scope. The ca
 
 ### 05:10-05:55 | page 13 / S11A
 
-Azure connects home evidence to owned action.
+UK processing is the target. Proof comes before release.
 
-SAY: Here is the receiving chain: home evidence enters through IoT, is validated, and becomes retained SQL history before a colleague reviews it. The employee workbench and optional resident site have separate access rights. UK South is the application and data target, but GlobalStandard inference can leave the UK; the retained resident model option is Sweden Central. Identity and provider operations need separate checks too. Private endpoints do not prove UK-only processing. The appendix explains the sovereign options and which services would have to change.
+SAY: Home evidence reaches validated SQL history through the IoT receiving chain. For real resident data, our proposed boundary is UK application, storage and Standard-model inference. A UK South mini model is catalogued; quota, quality and lifecycle still need checks. This retained drawing includes Global and Sweden Central options, so it doesn't prove a UK-only deployment. Identity, provider access and backups need separate review. Legal and the Data Protection Officer must approve the data map and processing before real data enters. Full local sovereignty is an appendix option.
 
 ### 05:55-06:45 | page 17 / S15
 
-Five responsibilities. Autonomy is not one switch.
+Responsible AI: models suggest. People decide.
 
-SAY: Stock, Assessment, Funding, Coordination and Quality have different responsibilities. Trigger, output and authority are separate questions. Quality now has a source-coded proactive L4 review flag when a current model finding cites captured readings. It cannot accept work; the latest twenty-six-November model leg was blocked. Decision 1 was historical supplied-candidate scoring, not this helper engine. Known checks stay in rules. Choose a generative model by comparing the same cases, quality floor, latency and complete review cost with the simpler route. A successful call alone settles none of that.
+SAY: Responsible AI means that a named, authorised person keeps the decision. Models prepare recommendations, drafts or review flags; they cannot consent, diagnose hazards, commit funding or accept completed works. The reviewer needs evidence, competence, time and authority to correct or reject before anything affects a resident. We keep the reason and a way to challenge the decision, with assisted service when AI is unavailable. We also need fairness and error testing, including households with missing data. These are release criteria; today's synthetic demo does not establish operational RAI acceptance.
 
 ### 06:45-07:20 | page 21 / S17
 
-Seven checkpoints between an AI draft and a real-world decision.
+UK GDPR and Responsible AI: people remain accountable.
 
-SAY: The model receives a permitted, versioned evidence projection. Dispatch has a finite allowance; output checks reject broken structure or stale sources. A person checks meaning and current permissions. Accepting a proposal is separate from consenting to works, submitting funding or accepting quality. A valid citation can still support a wrong claim, so meaningful review is an evaluation question. Failures leave an owned manual route; safety reports bypass AI.
+SAY: UK GDPR, the UK's General Data Protection Regulation, needs more than UK hosting: lawful purpose, minimal case-scoped data, approved retention and rights handling. A data-protection impact assessment addresses likely high-risk processing; health data needs an additional legal condition. Works consent is separate. A named person checks the model's evidence and owns the consequential decision. Legal and the DPO must approve real-data processing. Missing authority or evidence leaves an owned manual route.
 
 ### 07:20-08:20 | page 56 / B28
 
 The Azure bill continues when the apps sleep
 
-SAY: Tokens are only one line in the Azure bill. The identified persistent services are about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. Add app and job compute, storage, logs, security, operations and AI, and this illustrative demo envelope is about USD 435-1,260 a month. The assumptions are in the notes; this isn't an invoice or a maximum bill. The apps can scale to zero, but SQL is currently provisioned S3 and scheduled jobs continue overnight. Five temporary QA databases are extra. For AI, the measured synthetic batch used 2,522 tokens; that still doesn't give a cost per accepted outcome. Human implementation, review and support belong in that wider denominator-based comparison.
+SAY: Tokens are one line in the Azure bill. Identified persistent services cost about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. With compute, storage, logs, security and AI, this illustrative envelope is USD 435-1,260 a month. It prices the observed public-cloud configuration; a UK-only model choice needs repricing. Apps can scale to zero, but provisioned SQL and scheduled jobs remain. Five temporary QA databases are extra. The notes hold assumptions; this isn't a maximum bill. The measured synthetic AI batch used 2,522 tokens, without an accepted-outcome denominator. Human implementation, review and support belong in that wider comparison.
 
 ### 08:20-09:05 | page 55 / B27
 
@@ -216,6 +216,21 @@ sections to orient the room. In the short hook show only the Programme Manager
 and Quality Inspector responsibilities; the other employee, contractor and
 resident roles are available for questions. The source is
 [welcome.html](../../../src/api/src/zava_forward/api/web/welcome.html).
+
+The main pitch now connects the not-for-profit mission to accountable spending
+and resident privacy. Use constructed data only. AI prepares recommendations,
+drafts or review flags; a named, authorised person checks the evidence and can
+correct or reject before a decision affects a resident. The homepage's example
+buttons do not demonstrate meaningful human oversight by themselves.
+
+The proposed real-data design uses UK application/storage and UK Standard-model
+inference. UK GDPR permits safeguarded international transfers; UK residency is
+the proposed customer policy, not a blanket consequence of not-for-profit
+status or proof of compliance. The retained drawing includes Global and Sweden
+Central options, so do not describe the demo as wholly UK-resident. Explain
+lawful purpose, case-scoped access, retention and rights on S17/page 21; S11A/page
+13 covers the UK target and S15/page 17 covers Responsible AI. Fully local
+sovereignty stays in the optional appendix.
 
 * Choose one synthetic case with an inspectable missing check and next role.
   A Quality-stage case fits the installer/inspection example only if its
@@ -432,10 +447,10 @@ are presenter notes. State route E or L before starting the clock.
 
 | Clock | Show | Say |
 | --- | --- | --- |
-| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This homepage illustrates the product. The manager owns the programme; an independent inspector accepts finished work. The next action has an owner. AI prepares evidence; people keep their decisions." |
+| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This is a not-for-profit's workflow, illustrated with constructed data. The programme manager owns delivery; an independent inspector accepts work. AI prepares evidence. People retain the decisions." |
 | 00:20-00:50 | Open the preflight-selected actual case; show its own reference, unresolved check and next responsible role | "Now this is the actual synthetic case. Here is the check that cannot pass and the next responsible person. Other useful work can continue. Progress means resolving an owned handoff, not hiding the missing evidence." |
 | 00:50-01:20 | Same-case prepared model answer or proposal beside its source, only if one exists. Otherwise show the actual rules/held state and ordinary next action | "I check the answer's origin, source and what it cannot verify. Accepting a draft doesn't accept the works. A held or unavailable model doesn't clear the check or stop the person following the ordinary action." |
-| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident can ask for help without giving up their choice. Record permission, monitoring permission and works consent are separate. Assisted service stays. The business test is less handling effort and fewer lost handoffs; this demo hasn't measured that." |
+| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident controls works consent and monitoring choice, with assisted help available. Own-case access protects other households. Data use still needs a lawful basis. We are testing less handling effort and fewer lost handoffs, not claiming it." |
 
 For route L, show only equivalent pre-arranged, authorized behaviour. Identify
 a prepared model output as recorded evidence, with its actual date and source.
@@ -678,6 +693,14 @@ operator, route and safe evidence reference. A written checklist is not a pass.
 * Intended SQL state and permitted persistence/restart evidence, without reseeding
 * Exact allowed AI task, sources, model/version, finite calls/tokens, expiry,
   processing terms, price/cost scope and current owner authorization
+* For any UK-residency claim, verify the actual application, SQL, Blob, log and
+  backup locations and UK Standard-model inference deployment type; a UK
+  endpoint, GlobalStandard or EU DataZone does not establish UK-only inference.
+  Record model/version, subscription quota and processing terms. Map identity,
+  provider access and abuse monitoring separately; do not expose private settings.
+* For real personal data, require Legal/DPO-approved purpose, lawful basis,
+  special-category condition where applicable, retention, rights/transfer
+  handling and DPIA where required. Synthetic-demo authorization is not approval.
 * Independent manual work and human safety routes; no actual emergency test
 * Reversible prepared action, disposable fixture where necessary and recovery owner
 * Clean sharing profile, no notifications, private identities, endpoints,

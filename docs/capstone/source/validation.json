@@ -1,7 +1,7 @@
 {
-  "source_as_of": "2026-11-27",
+  "source_as_of": "2026-11-28",
   "status": "partial",
-  "revision": "Additive Azure costs on physical page 6; single-line native activity counters on page 7; optional six-minute discovery/UK-sovereignty show; unchanged primary 13:00 demo-first route and 2:00 reserve.",
+  "revision": "Not-for-profit stewardship, UK privacy target and Responsible AI on the main route; constructed-data demo; qualified regional-model and public-cloud cost scope. Stable 56 pages, 13:00 preparation, early 1:50 demo and 2:00 reserve.",
   "status_limit": "Local source/package/rendering checks passed. Prepared, not rehearsed or human-accepted. Retained diagrams have dated provenance failures; exact-head independent and hosted review are separate PR evidence.",
   "package": {
     "status": "pass",
@@ -56,13 +56,13 @@
       37
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40",
+    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "d2887e40b6df2e42f78767937739fe9133c05ceb726d7cd100e1117783a1171b",
+    "manifest_sha256": "57a12b2f7702320bfb5b72ac8cf575581fbcb658baaeb5c595a7711cd10621c3",
     "asset_catalog_sha256": "c9743882738e54f90e3332036ff26bfe0898a88091cbe68323bb5b16ce02693c",
     "builder_sha256": "bae8eb2ec82ccb6edd526732dff53cfc18c17da579c416729e65d4fe187f6313",
     "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068",
-    "unchanged_baseline_members": 184
+    "unchanged_baseline_members": 183
   },
   "source_verification": {
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
@@ -91,13 +91,15 @@
     },
     "revised_appendix_navigation_physical_pages": "pass",
     "pitch_document_tests_status": "pass",
-    "pitch_document_tests_passed": 14,
+    "pitch_document_tests_passed": 16,
     "optional_appendix_refusal_mutations": 6,
     "both_native_custom_shows_and_default_verified": true,
     "five_other_protected_slide_and_note_pairs_byte_identical_to_previous_delivery": true,
     "original_page_six_financial_shape_subtrees_preserved": true,
     "approved_summary_and_original_financial_mutations_refused": true,
-    "native_progress_counts_single_line_and_in_bounds": true
+    "native_progress_counts_single_line_and_in_bounds": true,
+    "privacy_increment_all_six_protected_pairs_unchanged_from_published_head": true,
+    "privacy_rai_main_route_and_uk_price_scope": "pass"
   },
   "pdf_navigation": {
     "slides": 56,
@@ -105,34 +107,34 @@
     "all_destinations_and_hit_regions_verified": true,
     "unambiguous_hit_regions": true,
     "text_extraction_checked_pages": [
-      6,
-      7,
-      38,
-      50,
-      55,
+      1,
+      13,
+      17,
+      21,
       56
     ],
     "all_checked_text_present": true,
     "renderer": "Microsoft PowerPoint 16.0 COM; existing PyMuPDF link reconstruction/readback",
-    "raw_native_pdf_sha256": "f765c7b3cf2ca3c14e6a70a8d5def8e54fc5de91a990d9f9e9c968a0e73a9e7b",
-    "delivered_pdf_sha256": "227c72896404f6702a59a4411a5790aa28a857bf8284e08f347f7f56a0bf5cb7"
+    "raw_native_pdf_sha256": "ef8e4647f7d46b6d7bf048d6e0f09a14b2152ba2e266f7ed79f6135464752fd8",
+    "delivered_pdf_sha256": "a48be8ca10007be21e94c2455cc59b4dad7626f0b4476e14bddd6810dbff7805"
   },
   "native": {
     "status": "render_pass",
     "renderer": "Microsoft PowerPoint 16.0 COM",
     "slides": 56,
-    "candidate_sha256": "36d28f7edb029c587e36310d9aa50808bacb48d3a4e545b27105ba8f9ecb3f40",
+    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
     "render_size": [
       1600,
       900
     ],
     "focused_pages": [
-      6,
-      7,
-      38,
-      50
+      1,
+      13,
+      17,
+      21,
+      56
     ],
-    "focused_revised_frames": 46,
+    "focused_revised_frames": 42,
     "focused_revised_bound_warnings": 0,
     "other_source_revised_bound_warnings": 28,
     "inherited_bound_warnings": 179,
@@ -142,10 +144,11 @@
     "historical_note_only_correction_pixels_identical": true,
     "historical_note_only_correction_bounds_identical": true,
     "followup_pixel_changes_vs_previous_delivery": [
-      6,
-      7,
-      38,
-      50
+      1,
+      13,
+      17,
+      21,
+      56
     ],
     "historical_full_cost_pixel_changes_vs_previous_delivery": [
       28,
@@ -241,7 +244,23 @@
         "overflow": false,
         "revised": true
       }
-    ]
+    ],
+    "historical_sovereignty_followup": {
+      "focused_pages": [
+        6,
+        7,
+        38,
+        50
+      ],
+      "focused_revised_frames": 46,
+      "focused_revised_bound_warnings": 0,
+      "followup_pixel_changes_vs_previous_delivery": [
+        6,
+        7,
+        38,
+        50
+      ]
+    }
   },
   "pitch": {
     "custom_show": "Demo-first pitch",
@@ -270,8 +289,8 @@
     "reserve_seconds": 120,
     "demo_window": "00:30-02:20",
     "question_reserve": "13:00-15:00",
-    "speaker_script_sha256": "33be8d91159b9918fa55e3227788f2eda94764aee893b69ac1b06b9caaa37da4",
-    "questions_and_answers_sha256": "7798e33c0f304f6f2fdbe7cb7d1e10ded870a27321248d0df66dfd1924a15f26",
+    "speaker_script_sha256": "1be6fcf0334510fc78cbe973c1ec97b890c791af7b6d4a4daf6b4248fe22b34a",
+    "questions_and_answers_sha256": "6b0a48888ef56814effec29ff49bbfe56797121936168eb905cdd19f21a1e5b9",
     "runbook_sha256": "0adeb77b8533df19f3fc4c90a79d1f4998a4ceb96df0b69c8bee74d7599f6f12",
     "rehearsal_performed": false,
     "optional_story": {

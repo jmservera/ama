@@ -1,7 +1,7 @@
 ---
 title: Capstone Demo and Recovery Runbook
 description: Demo-first panel route, preflight and recovery with dated live evidence and a complete optional deeper walkthrough
-ms.date: 2026-11-27
+ms.date: 2026-11-28
 ms.topic: how-to
 ---
 
@@ -60,6 +60,21 @@ sections to orient the room. In the short hook show only the Programme Manager
 and Quality Inspector responsibilities; the other employee, contractor and
 resident roles are available for questions. The source is
 [welcome.html](../../../src/api/src/zava_forward/api/web/welcome.html).
+
+The main pitch now connects the not-for-profit mission to accountable spending
+and resident privacy. Use constructed data only. AI prepares recommendations,
+drafts or review flags; a named, authorised person checks the evidence and can
+correct or reject before a decision affects a resident. The homepage's example
+buttons do not demonstrate meaningful human oversight by themselves.
+
+The proposed real-data design uses UK application/storage and UK Standard-model
+inference. UK GDPR permits safeguarded international transfers; UK residency is
+the proposed customer policy, not a blanket consequence of not-for-profit
+status or proof of compliance. The retained drawing includes Global and Sweden
+Central options, so do not describe the demo as wholly UK-resident. Explain
+lawful purpose, case-scoped access, retention and rights on S17/page 21; S11A/page
+13 covers the UK target and S15/page 17 covers Responsible AI. Fully local
+sovereignty stays in the optional appendix.
 
 * Choose one synthetic case with an inspectable missing check and next role.
   A Quality-stage case fits the installer/inspection example only if its
@@ -276,10 +291,10 @@ are presenter notes. State route E or L before starting the clock.
 
 | Clock | Show | Say |
 | --- | --- | --- |
-| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This homepage illustrates the product. The manager owns the programme; an independent inspector accepts finished work. The next action has an owner. AI prepares evidence; people keep their decisions." |
+| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This is a not-for-profit's workflow, illustrated with constructed data. The programme manager owns delivery; an independent inspector accepts work. AI prepares evidence. People retain the decisions." |
 | 00:20-00:50 | Open the preflight-selected actual case; show its own reference, unresolved check and next responsible role | "Now this is the actual synthetic case. Here is the check that cannot pass and the next responsible person. Other useful work can continue. Progress means resolving an owned handoff, not hiding the missing evidence." |
 | 00:50-01:20 | Same-case prepared model answer or proposal beside its source, only if one exists. Otherwise show the actual rules/held state and ordinary next action | "I check the answer's origin, source and what it cannot verify. Accepting a draft doesn't accept the works. A held or unavailable model doesn't clear the check or stop the person following the ordinary action." |
-| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident can ask for help without giving up their choice. Record permission, monitoring permission and works consent are separate. Assisted service stays. The business test is less handling effort and fewer lost handoffs; this demo hasn't measured that." |
+| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident controls works consent and monitoring choice, with assisted help available. Own-case access protects other households. Data use still needs a lawful basis. We are testing less handling effort and fewer lost handoffs, not claiming it." |
 
 For route L, show only equivalent pre-arranged, authorized behaviour. Identify
 a prepared model output as recorded evidence, with its actual date and source.
@@ -522,6 +537,14 @@ operator, route and safe evidence reference. A written checklist is not a pass.
 * Intended SQL state and permitted persistence/restart evidence, without reseeding
 * Exact allowed AI task, sources, model/version, finite calls/tokens, expiry,
   processing terms, price/cost scope and current owner authorization
+* For any UK-residency claim, verify the actual application, SQL, Blob, log and
+  backup locations and UK Standard-model inference deployment type; a UK
+  endpoint, GlobalStandard or EU DataZone does not establish UK-only inference.
+  Record model/version, subscription quota and processing terms. Map identity,
+  provider access and abuse monitoring separately; do not expose private settings.
+* For real personal data, require Legal/DPO-approved purpose, lawful basis,
+  special-category condition where applicable, retention, rights/transfer
+  handling and DPIA where required. Synthetic-demo authorization is not approval.
 * Independent manual work and human safety routes; no actual emergency test
 * Reversible prepared action, disposable fixture where necessary and recovery owner
 * Clean sharing profile, no notifications, private identities, endpoints,

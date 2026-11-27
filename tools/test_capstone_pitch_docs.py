@@ -73,6 +73,75 @@ class CapstonePitchDocsTest(unittest.TestCase):
         self.assertIn("00:30-02:20", script)
         self.assertIn(f"{prepared // 60:02}:{prepared % 60:02}-15:00", script)
 
+    def test_privacy_and_responsible_ai_are_visible_on_the_main_route(self) -> None:
+        import zipfile
+        from xml.etree import ElementTree as ET
+
+        manifest = json.loads((CAPSTONE / "source/slides.json").read_text())
+        slides = {slide["code"]: slide for slide in manifest["slides"]}
+        spoken = {
+            step["code"]: step["say"]
+            for step in manifest["presentation_route"]["steps"]
+        }
+        expected = {
+            "S01": ("Not-for-profit", "resident benefit"),
+            "S11A": ("UK processing is the target", "Proof comes before release"),
+            "S15": ("Responsible AI", "NAMED HUMAN REVIEW"),
+            "S17": ("UK GDPR", "retention", "rights", "Legal/DPO approval"),
+        }
+        with zipfile.ZipFile(
+            CAPSTONE / "deck/zava-forward-cowork-v2-draft.pptx"
+        ) as deck:
+            for code, phrases in expected.items():
+                self.assertIn(code, spoken)
+                page = ET.fromstring(
+                    deck.read(f"ppt/slides/slide{slides[code]['part_number']}.xml")
+                )
+                visible = " ".join(
+                    node.text or ""
+                    for node in page.iter(
+                        "{http://schemas.openxmlformats.org/drawingml/2006/main}t"
+                    )
+                )
+                for phrase in phrases:
+                    self.assertIn(phrase, visible)
+        self.assertIn("before anything affects a resident", spoken["S15"])
+        self.assertIn("Works consent is separate", spoken["S17"])
+        self.assertIn("release criteria", spoken["S15"])
+        self.assertIn("synthetic demo", spoken["S15"])
+
+    def test_uk_target_and_model_price_scope_do_not_claim_live_residency(self) -> None:
+        from pptx import Presentation
+
+        manifest = json.loads((CAPSTONE / "source/slides.json").read_text())
+        spoken = {
+            step["code"]: step["say"]
+            for step in manifest["presentation_route"]["steps"]
+        }
+        self.assertIn("proposed boundary", spoken["S11A"])
+        self.assertIn("Standard-model inference", spoken["S11A"])
+        self.assertIn("doesn't prove a UK-only deployment", spoken["S11A"])
+        self.assertIn("Identity, provider access and backups", spoken["S11A"])
+        self.assertIn("UK-only model choice needs repricing", spoken["B28"])
+        cost_page = next(
+            slide["number"] - 1
+            for slide in manifest["slides"]
+            if slide["code"] == "B28"
+        )
+        copy = "\n".join(
+            shape.text
+            for shape in Presentation(
+                CAPSTONE / "deck/zava-forward-cowork-v2-draft.pptx"
+            )
+            .slides[cost_page]
+            .shapes
+            if shape.has_text_frame
+        )
+        self.assertIn("Global nano is not a UK-resident rate", copy)
+        runbook = (CAPSTONE / "demo/runbook.md").read_text()
+        self.assertIn("UK Standard-model inference", runbook)
+        self.assertIn("UK GDPR permits safeguarded international transfers", runbook)
+
     def test_full_azure_cost_arithmetic_and_delivery_binding(self) -> None:
         model_path = CAPSTONE / "source" / "azure-cost-model-2026-11-27.json"
         model = json.loads(model_path.read_text(encoding="utf-8"))

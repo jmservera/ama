@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-27
+ms.date: 2026-11-28
 ms.topic: overview
 ---
 
@@ -20,6 +20,14 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+The [28 November privacy/residency/Responsible AI review](./regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
+supports the main capstone story: not-for-profit stewardship, resident privacy,
+a proposed UK Standard-model processing target and accountable human decisions.
+The [architecture analysis](../architecture/environment-region-quota-strategy.md#privacy-and-accountable-human-review-2026-11-28)
+keeps current Global/Sweden options, provider-location exceptions and optional
+local sovereignty distinct. Real-data, legal and operational RAI acceptance
+remain pending; the low Global nano rate is not a UK-resident quotation.
 
 The [27 November demo-first presentation review](../capstone/source/review-2026-11-27.md)
 indexes the retained RPI/GitHub history and investigates eight delivery

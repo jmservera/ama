@@ -163,6 +163,43 @@ retention and contract review. The statement that prompts do not train
 foundation models without permission or instruction is a separate assurance
 from where inference occurs [M4, M8].
 
+### Privacy and accountable human review (2026-11-28)
+
+The proposed real-data design combines UK application/storage with UK
+Standard-model inference. The [dated official-source review](../reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
+confirms a UK South gpt-4.1-mini listing in Microsoft's Standard/Regional
+Europe table. It does not establish subscription quota, model quality,
+lifecycle suitability or active deployment. Standard processes within the
+selected geography; "Local Deployment" must not imply on-premises execution.
+The [current source](../../infra/main.bicep) still defaults to GlobalStandard,
+and the retained resident option is Sweden Central. A UK-only model choice
+requires repricing: Global nano's low rate is not a UK-resident quotation.
+
+Not-for-profit stewardship supports useful resident-facing accountability,
+while own-case access protects other households. UK GDPR permits appropriately
+safeguarded international transfers; a UK residency policy is a customer/design
+choice, not a blanket consequence of non-profit status. RSH obligations depend
+on relevant registered-provider status and jurisdiction, which remain unknown.
+
+UK location does not replace lawful purpose/basis, minimisation, retention,
+rights handling or a required DPIA. Health information can need an additional
+special-category condition. Works consent and optional monitoring choice are
+separate from the lawful basis for processing. Legal and DPO approval of the
+data map and real-data processing remains pending. Identity, remote access,
+support, provider monitoring, logs/backups and control-plane terms require
+their own location and contract checks. Microsoft's checked reviewer-location
+assurance covers EEA resources, not UK resources; Modified Abuse Monitoring
+must not be promised as universal or permanent.
+
+Responsible AI preserves meaningful human authority before a consequential
+decision is applied. A competent, authorised reviewer needs evidence, time
+and discretion to correct or reject, with reasons and challenge routes.
+AI prepares proposals or flags; it cannot supply consent, professional/safety
+judgement, funding approval or independent quality acceptance. Current UK GDPR
+Articles 22A-22D do not prohibit all automation. The product's suggestion-only
+policy and [partial RAI evidence](../reference/research/rai/project-rai-review.md)
+are distinct from operational acceptance.
+
 ### Public and private options
 
 Sovereign Public Cloud applies supported controls to the existing public

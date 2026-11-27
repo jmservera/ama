@@ -25,19 +25,22 @@
         {
           "id": 59781,
           "from": "Decision today: fund the validation gate, then scale",
-          "to": "Decision today: scope, owners, then a costed plan"
+          "to": "Not-for-profit: resident benefit, accountable spend"
         }
       ],
       "revised_notes": [
         "S01 | More homes ready. Faster. With control intact.",
-        "SAY: Our fictional housing association has 60,000 homes and a retrofit programme behind plan. I recommend an owned case workflow, with AI preparing evidence. I'll show one next action first, then explain the design and cost.",
+        "SAY: Our fictional, not-for-profit housing association has 60,000 homes and a retrofit programme behind plan. The aim is resident benefit and accountable spending. I recommend an owned workflow with AI preparing evidence; let's start with one next action.",
         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
         "SOURCES: docs/capstone/source/review-2026-11-27.md",
         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
-        "TIMING: 40 s for this slide (all builds together) · 00:00-00:40 on the 23:45 narration clock.\r"
+        "TIMING: 40 s for this slide (all builds together) · 00:00-00:40 on the 23:45 narration clock.\r",
+        "STEWARDSHIP UPDATE, 28 NOVEMBER: not-for-profit status is owner-confirmed in docs/reference/research/company/company-profile-research.md; exact legal form, charitable status and registration remain unknown. Resident-facing accountability is not unrestricted disclosure of personal records. Not-for-profit status alone creates neither a blanket UK-only residency duty nor a special-category processing condition."
       ],
       "sources": [
-        "docs/capstone/source/review-2026-11-27.md"
+        "docs/capstone/source/review-2026-11-27.md",
+        "docs/reference/research/company/company-profile-research.md",
+        "docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md"
       ]
     },
     {
@@ -1212,7 +1215,7 @@
       "part_number": 55,
       "baseline_number": 12,
       "code": "S11A",
-      "title": "Azure connects home evidence to owned action.",
+      "title": "UK processing is the target. Proof comes before release.",
       "layout": "native",
       "keep_ids": [
         37905,
@@ -1223,7 +1226,7 @@
       "headers": [
         {
           "id": 37907,
-          "text": "Azure connects home evidence to owned action.",
+          "text": "UK processing is the target. Proof comes before release.",
           "size": 30,
           "box": [
             0.6,
@@ -1281,14 +1284,16 @@
       ],
       "notes": "S11A | Azure connects home evidence to owned action.\nTIMING: 45 s for this added main-route slide · 11:40-12:25 on the 24:30 narration clock.",
       "revised_notes": [
-        "S11A | Azure connects home evidence to owned action.",
-        "SAY: Home sensors feed IoT Hub, Event Hubs, validated intake and SQL history. Read-only derivation doesn't certify damp or retrofit success. The synthetic simulator is separate from the resident's monitoring choice. Registry, identity, Vault, private endpoints and monitoring support the application. This is the retained eight-November drawing, not today's cloud inventory. Later audits observed the simulator, transport, SQL and UI; the twenty-six-November Quality model leg was blocked. Check the selected revision rather than assuming the whole chain works.",
+        "S11A | UK processing is the target. Proof comes before release.",
+        "SAY: Home evidence reaches validated SQL history through the IoT receiving chain. For real resident data, our proposed boundary is UK application, storage and Standard-model inference. A UK South mini model is catalogued; quota, quality and lifecycle still need checks. This retained drawing includes Global and Sweden Central options, so it doesn't prove a UK-only deployment. Identity, provider access and backups need separate review. Legal and the Data Protection Officer must approve the data map and processing before real data enters. Full local sovereignty is an appendix option.",
         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
         "SOURCES: infra/modules/iothub.bicep; src/api/src/zava_forward/api/iot_stream.py; src/api/src/zava_forward/api/sensor_ingestion.py; src/core/src/zava_forward/core/store.py; src/core/src/zava_forward/core/sensor_analysis_store.py; src/core/src/zava_forward/core/assistants.py; docs/capstone/source/diagrams/architecture/text-equivalent.md; docs/capstone/source/review-2026-11-27.md",
         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
         "TIMING: 45 s for this added main-route slide · 11:40-12:25 on the 24:30 narration clock.",
         "DRAWING TEXT EQUIVALENT / DATED DESIGN: home sensors -> IoT Hub -> Event Hubs -> validated, idempotent intake -> SQL accepted observations and retained history. Aggregates are derived on read. Workbench consumes the case API; five current helpers include Quality Verification evidence. The separate resident site needs identity and explicit own-case scope; assisted service remains. SQL/Blob, Foundry, private endpoints, DNS, registry, Vault and Monitor support the design. Optional edge, token, background queue, model and simulator paths are separately gated. This retained 8 November drawing is not a fresh deployed inventory or proof that every depicted service link is released. See the 27 November review for current source versus dated execution evidence.",
-        "UK BOUNDARY UPDATE, 27 NOVEMBER: UK South is the primary application/data target, not proof that all data stays in the UK. SQL and AI locations are independently selectable. The retained resident-model option is Sweden Central and GlobalStandard can process outside the UK. The picture's outer application box is not a country or provider boundary. Entra identity, abuse monitoring, support, telemetry and control-plane access require separate approved data maps. Synthetic demo permission does not approve real resident data. The dated sovereign service matrix is in docs/architecture/environment-region-quota-strategy.md."
+        "UK BOUNDARY UPDATE, 27 NOVEMBER: UK South is the primary application/data target, not proof that all data stays in the UK. SQL and AI locations are independently selectable. The retained resident-model option is Sweden Central and GlobalStandard can process outside the UK. The picture's outer application box is not a country or provider boundary. Entra identity, abuse monitoring, support, telemetry and control-plane access require separate approved data maps. Synthetic demo permission does not approve real resident data. The dated sovereign service matrix is in docs/architecture/environment-region-quota-strategy.md.",
+        "PRIVACY UPDATE, 28 NOVEMBER: the proposed real-data design uses UK application/storage and UK Standard-model inference, subject to service-specific data maps and Legal/DPO approval. Microsoft's official Standard/Regional Europe table lists gpt-4.1-mini in UK South; catalog availability is not subscription quota, quality acceptance or deployment attestation. Standard processes within the selected Azure geography, potentially across its regions. GlobalStandard is not UK-only and EU DataZone is not UK. Use Standard/regional terminology; Foundry Local/private infrastructure is a different appendix option. The retained drawing still records Global and Sweden Central options and is deliberately not rewritten as a deployed UK guarantee.",
+        "PROVIDER LIMITS: identity, support/remote access, abuse monitoring, logs, backups and the control plane need separate contract/location checks. The checked provider privacy page's reviewer-location guarantee covers EEA resources, not UK resources. Modified Abuse Monitoring is not a universal or permanent UK-processing guarantee. The dated GPT-4.1 lifecycle requires successor quality, price, location, quota and terms evaluation. See docs/architecture/environment-region-quota-strategy.md and docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md."
       ],
       "sources": [
         "infra/modules/iothub.bicep",
@@ -2028,7 +2033,7 @@
       "part_number": 16,
       "baseline_number": 16,
       "notes": "S15 | AI where it earns its place: five assistants, one workbench, people decide.\r\nTIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r\n\r\nSAY\r\nWe put AI exactly where it earns its keep, and nowhere else.\r\n\r\nKnown policy and arithmetic stay in rules: eligibility, freshness, consent and release gates are deterministic, fast and repeatable. Where the task is choosing between supplied candidates, a learned decision model scores them and can abstain. Where the job is explaining evidence or drafting a letter, generative AI writes a cited draft.\r\n\r\nThe original brief asked for five agents. We kept all five responsibilities as five assistants on one proposal service: prioritisation, assessment, funding evidence, coordination and quality evidence. The task registry and the accept-or-reject flow are delivered; the five assistants are being built on top.\r\n\r\nEvery suggestion is accepted or rejected with a reason, which means we learn from every decision, and if the AI is switched off the workflow keeps running.\r\n\r\nSOURCES AND CALCULATIONS\r\nAI placement diagram and Decision 1 research (E04); five-assistant runtime and proposal lifecycle (E09); AMA Plan #105 AI task registry and proposal envelope (Done), #106 suggestions, accept or reject with reason, workflow-only fallback (Done), #107 five reactive and proactive assistants on one proposal service (In Progress), #214 home-specific cited chat (In Progress).\r\n\r\nRELATED ANSWERS: B04 = slide 31; B11 = slide 38. Question index = slide 27.\r\n",
-      "title": "Five responsibilities. Autonomy is not one switch.",
+      "title": "Responsible AI: models suggest. People decide.",
       "layout": "native",
       "keep_ids": [
         52590,
@@ -2038,7 +2043,7 @@
       "headers": [
         {
           "id": 52592,
-          "text": "Five responsibilities. Autonomy is not one switch.",
+          "text": "Responsible AI: models suggest. People decide.",
           "size": 30,
           "box": [
             0.6,
@@ -2329,7 +2334,7 @@
             3.51,
             0.26
           ],
-          "text": "DECISION 1 / HISTORICAL",
+          "text": "NAMED HUMAN REVIEW",
           "size": 14,
           "bold": true,
           "color": "173F35"
@@ -2342,7 +2347,7 @@
             3.51,
             0.58
           ],
-          "text": "Candidate / support scoring\nNot today's helper engine",
+          "text": "Evidence review + correction\nDecision owner + reason",
           "size": 16
         },
         {
@@ -2413,12 +2418,14 @@
         "docs/capstone/source/review-2026-11-27.md"
       ],
       "revised_notes": [
-        "S15 | Five responsibilities. Autonomy is not one switch.",
-        "SAY: Stock, Assessment, Funding, Coordination and Quality have different responsibilities. Trigger, output and authority are separate questions. Quality now has a source-coded proactive L4 review flag when a current model finding cites captured readings. It cannot accept work; the latest twenty-six-November model leg was blocked. Decision 1 was historical supplied-candidate scoring, not this helper engine. Known checks stay in rules. Choose a generative model by comparing the same cases, quality floor, latency and complete review cost with the simpler route. A successful call alone settles none of that.",
+        "S15 | Responsible AI: models suggest. People decide.",
+        "SAY: Responsible AI means that a named, authorised person keeps the decision. Models prepare recommendations, drafts or review flags; they cannot consent, diagnose hazards, commit funding or accept completed works. The reviewer needs evidence, competence, time and authority to correct or reject before anything affects a resident. We keep the reason and a way to challenge the decision, with assisted service when AI is unavailable. We also need fairness and error testing, including households with missing data. These are release criteria; today's synthetic demo does not establish operational RAI acceptance.",
         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
         "SOURCES: docs/adrs/0002-pilot-readiness-architecture.md; docs/ideas/typesafe-system-one-agent-fit.md; src/agents/README.md; src/api/README.md; docs/capstone/source/review-2026-11-27.md",
         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
-        "TIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r"
+        "TIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r",
+        "RAI UPDATE, 28 NOVEMBER: the visible authority card now names human evidence review, correction and accountable decisions. Meaningful review requires competence, time, relevant evidence and discretion before applying a consequential decision. The five responsibility levels and independent consent, technical sign-off, Finance and quality acceptance remain unchanged. Fairness/error testing, resident challenge and assisted-service acceptance are release criteria, not observed outcomes.",
+        "MODEL AND EXECUTION CONTEXT: Decision 1 remains historical supplied-candidate/support scoring, not today's helper engine. Quality's source-coded L4 review flag is a recommendation to a person, never independent acceptance; the latest 26 November live model leg was blocked. Model selection still needs same-case quality, latency, complete review-cost and simpler-route comparison. See docs/reference/research/rai/project-rai-review.md and docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md."
       ]
     },
     {
@@ -2477,19 +2484,33 @@
       "code": "S17",
       "part_number": 20,
       "baseline_number": 20,
-      "title": "Seven checkpoints between an AI draft and a real-world decision.\r",
-      "layout": "baseline",
+      "title": "UK GDPR and Responsible AI: people remain accountable.",
+      "layout": "text",
+      "replacements": [
+        {"id": 63201, "from": "Seven checkpoints between an AI", "to": "UK GDPR and Responsible AI:"},
+        {"id": 63201, "from": "draft and a real-world decision.", "to": "People remain accountable."},
+        {"id": 63213, "from": "The model prepares. The system checks. A person decides.", "to": "Protect residents' data; a named person decides."},
+        {"id": 63726, "from": "Human review with current permissions: accept or reject with a reason", "to": "Named human checks evidence; corrects or rejects with a reason"},
+        {"id": 63864, "from": "Failure never becomes approval: the work falls back to its owner", "to": "UK GDPR: lawful purpose, minimal data, retention and rights"},
+        {"id": 63864, "from": "Hazards bypass the AI path entirely", "to": "Real personal data needs Legal/DPO approval"}
+      ],
       "notes": "S17 | Seven checkpoints between an AI draft and a real-world decision.\r\nTIMING: 60 s for this slide (all builds together) · 17:40-18:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nHere is how we keep AI useful and safe at the same time. Seven checkpoints sit between an AI draft and anything that happens in the real world.\r\n\r\nThe user is signed in. Their role and case scope are checked. The model only sees permitted evidence, with source and version IDs. The call is bounded, with a finite allowance and an expiry. The output is checked for schema, citations and freshness, and anything stale or broken stops. A person with current permissions accepts it or rejects it with a reason. And the real decision, consent, quality acceptance or a Finance approval, is a separate step with its own audit trail.\r\n\r\nIf anything fails, the work falls back to its owner, never to an approval. And safety hazards bypass the AI path entirely: they go straight to the people who own them.\r\n\r\nSOURCES AND CALCULATIONS\r\nControlled AI flow text alternative (diagram 04); five-assistant runtime, scoped evidence, finite allowances, unreviewed output (E09); AMA Plan #105 task registry and proposal envelope, #106 accept or reject with reason and workflow-only fallback (Done).\r\n\r\nRELATED ANSWERS: B07 = slide 34; B16 = slide 43; B21 = slide 48. Question index = slide 27.",
       "revised_notes": [
-        "S17 | Seven checkpoints between an AI draft and a real-world decision.",
-        "SAY: The model receives a permitted, versioned evidence projection. Dispatch has a finite allowance; output checks reject broken structure or stale sources. A person checks meaning and current permissions. Accepting a proposal is separate from consenting to works, submitting funding or accepting quality. A valid citation can still support a wrong claim, so meaningful review is an evaluation question. Failures leave an owned manual route; safety reports bypass AI.",
+        "S17 | UK GDPR and Responsible AI: people remain accountable.",
+        "SAY: UK GDPR, the UK's General Data Protection Regulation, needs more than UK hosting: lawful purpose, minimal case-scoped data, approved retention and rights handling. A data-protection impact assessment addresses likely high-risk processing; health data needs an additional legal condition. Works consent is separate. A named person checks the model's evidence and owns the consequential decision. Legal and the DPO must approve real-data processing. Missing authority or evidence leaves an owned manual route.",
         "SOURCE DATE: 27 November 2026. Current source, dated execution receipts, hypotheses and operational acceptance are distinct. See docs/capstone/source/review-2026-11-27.md for exact evidence and known gaps.",
         "SOURCES: docs/capstone/source/review-2026-11-27.md",
         "BOUNDARY: no new deployment, paid inference, real resident-data use, legal-currentness finding, professional approval or measured customer benefit. Original TIMING is preserved reference-route provenance; Demo-first pitch is operative.",
-        "TIMING: 60 s for this slide (all builds together) · 17:40-18:40 on the 23:45 narration clock.\r"
+        "TIMING: 60 s for this slide (all builds together) · 17:40-18:40 on the 23:45 narration clock.\r",
+        "PRIVACY AND RAI UPDATE, 28 NOVEMBER: UK GDPR Articles 5, 6, 9, 25 and 35 concern principles, lawful basis, special-category conditions, protection by design and likely-high-risk DPIAs. Works consent, monitoring choice and a lawful basis for data use are distinct. Health data can be special category; not every vulnerability datum is. Article 9(2)(d) does not automatically cover a not-for-profit housing association. No real-data lawful-basis, DPIA or operational privacy acceptance is recorded.",
+        "MEANINGFUL OVERSIGHT: current Articles 22A-22D distinguish solely automated significant decisions from meaningful human involvement; Article 22C provides safeguards for covered decisions. The product's suggestion-only policy is a stronger design choice, not a claim that UK GDPR prohibits all automation. A competent, authorised reviewer needs evidence and time to influence the decision before it is applied, with discretion to change it. An accept button or later spot check is insufficient. Preserve information, representations, intervention and challenge routes where applicable. The current ICO ADM guidance is draft consultation, not final law.",
+        "EVIDENCE: docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md; docs/reference/research/chat-memory-dpia.md; docs/reference/research/rai/project-rai-review.md. Current whole-project RAI review is partial engineering evidence, not fairness, safety or privacy acceptance."
       ],
       "sources": [
-        "docs/capstone/source/review-2026-11-27.md"
+        "docs/capstone/source/review-2026-11-27.md",
+        "docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md",
+        "docs/reference/research/chat-memory-dpia.md",
+        "docs/reference/research/rai/project-rai-review.md"
       ]
     },
     {
@@ -5542,7 +5563,8 @@
         "OBSERVABILITY SOURCES: .copilot-tracking/research/2026-11-16/agent-observability-agent365-research.md F1, F4-F6, W2-W10 (official documentation retrieved 16 November); owner OTLP-first/exporter-deferral decision. Research reuse is not tenant inspection, operational acceptance or authority to adopt.",
         "KNOWN / ASSUMED / NEXT: known source contracts are one selected-skill call and serialized monetary admission. Public prices and illustrative allocations are in docs/capstone/source/azure-cost-model-2026-11-27.json. Live budget isolation, named owners/approval, complete path attribution and billing/accepted-value reconciliation are still required; do not infer saving or permission from bounded arithmetic.",
         "SOURCES: src/api/README.md:707-734, Employee chat with bounded skills; src/core/README.md:94-144, AI consumption ledger; src/core/src/zava_forward/core/ai_consumption.py. All are source evidence, not a current production control attestation.",
-        "NAVIGATION: B27/page 54; index 27; fixed Topic S18/page 21. Native destinations remain unchanged. Return to the actual interrupted page deliberately."
+        "NAVIGATION: B27/page 54; index 27; fixed Topic S18/page 21. Native destinations remain unchanged. Return to the actual interrupted page deliberately.",
+        "UK PRICE SCOPE, 28 NOVEMBER: the retained USD 0.0008 Global nano attempt is not a UK-resident rate. Regional mini is the separately priced example; actual UK eligibility, quota and lifecycle need checks. Allocation isolation never overrides privacy, safety, authority or aggregate liability holds. Known documentary gap rules use no model tokens; interpretive judging still needs an eligible bounded model and professional review."
       ],
       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     },
@@ -5637,7 +5659,7 @@
             11.69,
             0.3
           ],
-          "text": "UK SOUTH / 30-DAY PLANNING / PUBLIC RATES / NOT A BILL",
+          "text": "PUBLIC AZURE / 30-DAY PLANNING / NOT A BILL",
           "size": 17,
           "color": "FFFFFF",
           "bold": true
@@ -5718,9 +5740,9 @@
             0.6,
             6.12,
             12.13,
-            0.38
+            0.72
           ],
-          "text": "Illustrative, not a maximum bill. Temporary QA, future services and human work extra.",
+          "text": "Illustrative, not a bill cap. QA, future services and human work extra.\nGlobal nano is not a UK-resident rate; UK-only inference needs repricing.",
           "size": 17,
           "color": "885500",
           "bold": true
@@ -5744,13 +5766,14 @@
         "METHOD: total attributable cost divided by human-accepted proposals above an agreed quality floor. Unknown or zero denominator means not measurable. Include non-inference and human handling costs; time released is capacity until Finance confirms where value falls.",
         "COMPARISON LIMIT: the batch uses short synthetic prompts on a different model from the older S18 scenario. Do not infer a saving from their difference. Earlier failed/unmeasured attempt remains in the batch evidence.",
         "SOURCES: docs/capstone/source/azure-cost-model-2026-11-27.json; docs/reference/resources/ai-tokenomics.md; https://prices.azure.com/api/retail/prices; https://learn.microsoft.com/en-us/azure/container-apps/billing; docs/reference/research/ai-heldout-batch-432-live-2026-11-18.md; docs/capstone/pitch/tokenomics-cost-per-home-vs-value.md. No deployment, billing export, new spending authority or paid call.",
-        "NAVIGATION: physical page 56; included in Demo-first pitch before B27 and S18. The fixed Topic button goes to page 22 and Index to page 28; return deliberately after an appendix answer."
+        "NAVIGATION: physical page 56; included in Demo-first pitch before B27 and S18. The fixed Topic button goes to page 22 and Index to page 28; return deliberately after an appendix answer.",
+        "UK PRICE SCOPE, 28 NOVEMBER: the dated model prices the observed public-cloud configuration. Global nano's low rate is not a UK-resident-inference quotation; Standard nano availability was not established. A UK-only target requires an eligible regional model, quota, quality/lifecycle checks and repricing. The existing USD 0-50 AI allowance is a proposed budget allocation, not permission for a non-UK call or a maximum bill."
       ],
       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     }
   ],
-  "content_date": "2026-11-27",
-  "visual_revision": "2026-11-27 / demo-first custom show with full Azure planning and protected priority-budget proposal; stable physical pages, measured batch and protected historical cost arithmetic",
+  "content_date": "2026-11-28",
+  "visual_revision": "2026-11-28 / not-for-profit stewardship, UK privacy target and Responsible AI on the demo-first main route; stable pages, timing and protected financial evidence",
   "presentation_route": {
     "name": "Demo-first pitch",
     "slot_seconds": 900,
@@ -5762,17 +5785,17 @@
       {
         "code": "S01",
         "seconds": 20,
-        "say": "Our fictional housing association has 60,000 homes and a retrofit programme behind plan. I recommend an owned case workflow, with AI preparing evidence. I'll show one next action first, then explain the design and cost."
+        "say": "Our fictional, not-for-profit housing association has 60,000 homes and a retrofit programme behind plan. The aim is resident benefit and accountable spending. I recommend an owned workflow with AI preparing evidence; let's start with one next action."
       },
       {
         "code": "S22",
         "seconds": 10,
-        "say": "This is constructed data. Watch the unresolved check, its owner and the decisions people retain."
+        "say": "This is constructed data, not residents' personal information. Watch the missing check and its owner: AI suggests; people decide."
       },
       {
         "code": "S04",
         "seconds": 35,
-        "say": "That next action is the product's unit of progress. The brief asks for faster retrofit delivery and safer homes, but a start isn't an accepted handover. Survey evidence, funding, capacity and the resident's choice must agree. Our design makes the blocker and owner visible. The proposed business test is fewer unresolved handoffs and less total preparation and review effort; we haven't measured that benefit yet."
+        "say": "That next action is the unit of progress. As a not-for-profit provider, Zava's value test is safer homes and resident benefit with accountable spending. Residents should understand the service, the next step and how to challenge a decision; transparency never means exposing another household's records. Survey evidence, funding, capacity and the resident's choice must agree before handover. Reduced handoffs and review effort are proposed benefits, not measured results."
       },
       {
         "code": "S12",
@@ -5792,22 +5815,22 @@
       {
         "code": "S11A",
         "seconds": 45,
-        "say": "Here is the receiving chain: home evidence enters through IoT, is validated, and becomes retained SQL history before a colleague reviews it. The employee workbench and optional resident site have separate access rights. UK South is the application and data target, but GlobalStandard inference can leave the UK; the retained resident model option is Sweden Central. Identity and provider operations need separate checks too. Private endpoints do not prove UK-only processing. The appendix explains the sovereign options and which services would have to change."
+        "say": "Home evidence reaches validated SQL history through the IoT receiving chain. For real resident data, our proposed boundary is UK application, storage and Standard-model inference. A UK South mini model is catalogued; quota, quality and lifecycle still need checks. This retained drawing includes Global and Sweden Central options, so it doesn't prove a UK-only deployment. Identity, provider access and backups need separate review. Legal and the Data Protection Officer must approve the data map and processing before real data enters. Full local sovereignty is an appendix option."
       },
       {
         "code": "S15",
         "seconds": 50,
-        "say": "Stock, Assessment, Funding, Coordination and Quality have different responsibilities. Trigger, output and authority are separate questions. Quality now has a source-coded proactive L4 review flag when a current model finding cites captured readings. It cannot accept work; the latest twenty-six-November model leg was blocked. Decision 1 was historical supplied-candidate scoring, not this helper engine. Known checks stay in rules. Choose a generative model by comparing the same cases, quality floor, latency and complete review cost with the simpler route. A successful call alone settles none of that."
+        "say": "Responsible AI means that a named, authorised person keeps the decision. Models prepare recommendations, drafts or review flags; they cannot consent, diagnose hazards, commit funding or accept completed works. The reviewer needs evidence, competence, time and authority to correct or reject before anything affects a resident. We keep the reason and a way to challenge the decision, with assisted service when AI is unavailable. We also need fairness and error testing, including households with missing data. These are release criteria; today's synthetic demo does not establish operational RAI acceptance."
       },
       {
         "code": "S17",
         "seconds": 35,
-        "say": "The model receives a permitted, versioned evidence projection. Dispatch has a finite allowance; output checks reject broken structure or stale sources. A person checks meaning and current permissions. Accepting a proposal is separate from consenting to works, submitting funding or accepting quality. A valid citation can still support a wrong claim, so meaningful review is an evaluation question. Failures leave an owned manual route; safety reports bypass AI."
+        "say": "UK GDPR, the UK's General Data Protection Regulation, needs more than UK hosting: lawful purpose, minimal case-scoped data, approved retention and rights handling. A data-protection impact assessment addresses likely high-risk processing; health data needs an additional legal condition. Works consent is separate. A named person checks the model's evidence and owns the consequential decision. Legal and the DPO must approve real-data processing. Missing authority or evidence leaves an owned manual route."
       },
       {
         "code": "B28",
         "seconds": 60,
-        "say": "Tokens are only one line in the Azure bill. The identified persistent services are about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. Add app and job compute, storage, logs, security, operations and AI, and this illustrative demo envelope is about USD 435-1,260 a month. The assumptions are in the notes; this isn't an invoice or a maximum bill. The apps can scale to zero, but SQL is currently provisioned S3 and scheduled jobs continue overnight. Five temporary QA databases are extra. For AI, the measured synthetic batch used 2,522 tokens; that still doesn't give a cost per accepted outcome. Human implementation, review and support belong in that wider denominator-based comparison."
+        "say": "Tokens are one line in the Azure bill. Identified persistent services cost about USD 335 a month: SQL, registry, IoT, Event Hubs and private networking. With compute, storage, logs, security and AI, this illustrative envelope is USD 435-1,260 a month. It prices the observed public-cloud configuration; a UK-only model choice needs repricing. Apps can scale to zero, but provisioned SQL and scheduled jobs remain. Five temporary QA databases are extra. The notes hold assumptions; this isn't a maximum bill. The measured synthetic AI batch used 2,522 tokens, without an accepted-outcome denominator. Human implementation, review and support belong in that wider comparison."
       },
       {
         "code": "B27",
