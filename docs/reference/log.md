@@ -15660,3 +15660,6 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 2245 live recheck on revision 0000136 (Refs #2245)
 
 * Added [issue-2245-live-20261127T125527Z.md](research/issue-2245-live-20261127T125527Z.md): no 500 on 13 thread creates, rules-only replies state the spending hold, and chat_panel now retries the chat.answer and chat.turn audit writes on a SQL write-lock timeout. Live effect of the fix and the lock holder stay unproven.
+## [2026-11-27] add | Issue 1830 timing analyzer header validation (Refs #1830)
+
+* Added [issue-1830-live-r17-2026-11-27.md](research/issue-1830-live-r17-2026-11-27.md): `rpi-gate-timing.py` now refuses hash-valid receipts lacking `jobs`, `image_cache` or an aware `sealed` instead of raising KeyError. Criteria 1, 3 and 4 stay partly proven or owner-gated.

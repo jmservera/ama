@@ -177,6 +177,30 @@ class ReportTests(unittest.TestCase):
                 self.assertEqual(code, 2)
                 self.assertIn("REFUSED", err)
 
+    def test_hash_valid_receipt_missing_header_fields_is_refused(self) -> None:
+        fields = {
+            "jobs": None,
+            "image_cache": None,
+            "sealed": None,
+            "naive sealed": "2026-11-16T10:00:00",
+            "zero jobs": 0,
+        }
+        for name, value in fields.items():
+            with self.subTest(name):
+                path = write_receipt(self.root / name.replace(" ", "-"), [("g", 0, 5)])
+                receipt = json.loads(path.read_text())
+                key = {"naive sealed": "sealed", "zero jobs": "jobs"}.get(name, name)
+                if value is None:
+                    del receipt[key]
+                else:
+                    receipt[key] = value
+                path.write_text(json.dumps(receipt))
+                digest = hashlib.sha256(path.read_bytes()).hexdigest()
+                (path.parent / "receipt.sha256").write_text(digest + "\n")
+                code, _out, err = run("report", str(path))
+                self.assertEqual(code, 2)
+                self.assertIn("REFUSED", err)
+
     def test_receipt_that_is_not_json_is_refused(self) -> None:
         path = write_receipt(self.root / "a", [("g", 0, 5)])
         path.write_text("{bad")
