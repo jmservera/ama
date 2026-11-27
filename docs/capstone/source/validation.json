@@ -53,9 +53,9 @@
       37
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "f1e5ce0a4e58fe73f1e3605da69acf4bee698524d6bf24c0b5492d72cd9b6240",
+    "candidate_sha256": "0c1d29fc1d80c3477f2b8f85f0ef05c01701a1b81e270ee045cf9154ad4c4939",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "2e911ca03015bc54b006cc707eff23d9960d4e92641d07d5865f673a93986bed",
+    "manifest_sha256": "9dd6ad010f3d20283fb8d72659e86ae78c8e423935b5929a2a60b9845c7a116a",
     "asset_catalog_sha256": "c9743882738e54f90e3332036ff26bfe0898a88091cbe68323bb5b16ce02693c",
     "builder_sha256": "46b429123e3fea2d8287e6e2fa4526b29b1763932f634da9a3ad061d1559c448",
     "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068",
@@ -88,7 +88,7 @@
     "all_existing_slide_ids_sections_and_fixed_targets_preserved": true,
     "protected_cost_number_geometry_note_and_unapproved_status_mutations_refused": true,
     "preview_regressions_passed": 10,
-    "pitch_document_tests_passed": 8,
+    "pitch_document_tests_passed": 9,
     "ruff_check": "pass",
     "complete_embedded_runbook_parity": "pass",
     "hook_inline_before_S04": "pass",
@@ -98,7 +98,8 @@
       "historical_status": "fail",
       "reference": "docs/capstone/source/README.md, 16 November exact-HEAD controls",
       "limit": "Retained drawing metadata/generator failures are not repaired or promoted to fresh passing evidence."
-    }
+    },
+    "revised_appendix_navigation_physical_pages": "pass"
   },
   "pdf_navigation": {
     "slides": 56,
@@ -115,14 +116,14 @@
     ],
     "all_checked_text_present": true,
     "renderer": "Microsoft PowerPoint 16.0 COM; existing PyMuPDF link reconstruction/readback",
-    "raw_native_pdf_sha256": "6760ec72c85a370f2f2adddf0ee4f392babcf0f7133f247eb10789a9e99aa19b",
-    "delivered_pdf_sha256": "5b6d8857bbf32a5242cb2efc58fde03a7569b9a29c6790c86680a0a3c777913d"
+    "raw_native_pdf_sha256": "27390a319f4ad93aa351cf0ab1ab769cb2f49639a8a566149a479e052bd02eaf",
+    "delivered_pdf_sha256": "f802e2b328459ddf359928c84bb1b8a2f66932938b3f264e26c99e867c9d6b58"
   },
   "native": {
     "status": "render_pass",
     "renderer": "Microsoft PowerPoint 16.0 COM",
     "slides": 56,
-    "candidate_sha256": "f1e5ce0a4e58fe73f1e3605da69acf4bee698524d6bf24c0b5492d72cd9b6240",
+    "candidate_sha256": "0c1d29fc1d80c3477f2b8f85f0ef05c01701a1b81e270ee045cf9154ad4c4939",
     "render_size": [
       1600,
       900
@@ -146,7 +147,9 @@
       31
     ],
     "human_acceptance": false,
-    "keyboard_projector_and_real_AT": "not_run"
+    "keyboard_projector_and_real_AT": "not_run",
+    "note_only_correction_pixels_identical": true,
+    "note_only_correction_bounds_identical": true
   },
   "pitch": {
     "custom_show": "Demo-first pitch",
@@ -174,8 +177,8 @@
     "reserve_seconds": 170,
     "demo_window": "00:30-02:20",
     "question_reserve": "12:10-15:00",
-    "speaker_script_sha256": "d7cd16e1646fee813ac354debdc853d3786423fefe0d8a009f1696497571816e",
-    "questions_and_answers_sha256": "e9534de3f676337d4019a5a2b6c5a6716caaa29ad0fc05faf6a25b8c998eaf27",
+    "speaker_script_sha256": "8c8b8a23f9e4b6a1bb46e2a0a626dd9d144109116e4cd123a47141714d36ebc8",
+    "questions_and_answers_sha256": "8a94a65e190a6c0c67edf5b3618a4685c7607065b40a35249ba60567b6d1587f",
     "runbook_sha256": "e747a1fe01ab421be92d5e70770611cdb9913653f2c49e351d8a2f61fa996a86",
     "rehearsal_performed": false
   },

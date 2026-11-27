@@ -113,6 +113,35 @@ class CapstonePitchDocsTest(unittest.TestCase):
                     broken.append(f"{doc.relative_to(ROOT)} -> {target}")
         self.assertEqual([], broken)
 
+    def test_revised_appendix_navigation_matches_physical_pages(self) -> None:
+        import zipfile
+        from xml.etree import ElementTree as ET
+
+        manifest = json.loads((CAPSTONE / "source" / "slides.json").read_text(encoding="utf-8"))
+        slides = {slide["code"]: slide for slide in manifest["slides"]}
+        questions = (CAPSTONE / "pitch" / "questions-and-answers.md").read_text(encoding="utf-8")
+        with zipfile.ZipFile(CAPSTONE / "deck" / "zava-forward-cowork-v2-draft.pptx") as archive:
+            for code, topic in (("B03", "S08"), ("B06", "S12"), ("B13", "S19")):
+                with self.subTest(code=code):
+                    slide = slides[code]
+                    notes = ET.fromstring(
+                        archive.read(f"ppt/notesSlides/notesSlide{slide['part_number']}.xml")
+                    )
+                    navigation = next(
+                        node.text
+                        for node in notes.iter(
+                            "{http://schemas.openxmlformats.org/drawingml/2006/main}t"
+                        )
+                        if node.text and node.text.startswith("NAVIGATION:")
+                    )
+                    for target in (
+                        f"{code}/page {slide['number']}",
+                        f"index {slides['QX']['number']}",
+                        f"fixed Topic {topic}/page {slides[topic]['number']}",
+                    ):
+                        self.assertIn(target, navigation)
+                        self.assertIn(target, questions)
+
     def test_placement_draft_status_matches_delivered_artifacts(self) -> None:
         rows = {}
         draft = CAPSTONE / "pitch" / "tokenomics-placement-draft.md"

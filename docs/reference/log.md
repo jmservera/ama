@@ -15666,3 +15666,9 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Added the [presentation evidence review](../capstone/source/review-2026-11-27.md): retained-history coverage, eight delivery decisions/adverse outcomes, current source versus dated live evidence, completed-study denominator limits and all twenty assessment criteria.
 * Updated the source-owned native custom show to start the complete 1:50 demo at 00:30, then return to architecture, costs and a bounded validation decision. Restored B28 to the builder, retained the original destinations and protected financial evidence, and embedded the complete operational runbook in the generated speaker script.
 * Distinguished homepage illustrations from actual cases, Quality's source-coded L4 review flag from its unproved live model leg, and measured token usage from full accepted-outcome cost. Prepared timing and local rendering are not rehearsal, human acceptance, deployment or a new spending authority.
+
+## [2026-11-27] update | Capstone independent-review navigation correction
+
+* Retained the [original independent review](../../.copilot-tracking/reviews/code-reviews/docs-demo-first-capstone/review.md), including its Medium double-mapping finding and `approve_with_comments` outcome.
+* Corrected baseline navigation numbers for B03, B06 and B13, then regenerated the native deck, PDF and question bank. A new regression failed for all three original instructions and passed after correction. All 56 native images and bounds remained identical; nine pitch tests, all 111 PDF destinations and the existing insertion, cost and hash guards passed.
+* Updated the [dated presentation review](../capstone/source/review-2026-11-27.md) and local receipt. Corrected exact-head independent assessment, hosted observations and human acceptance remain separate.
