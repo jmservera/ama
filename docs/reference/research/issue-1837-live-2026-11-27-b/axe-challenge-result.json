@@ -1,0 +1,557 @@
+{
+  "outcome": "passed",
+  "browser": "156.0.8078.4",
+  "channels": [
+    "Digital",
+    "Phone"
+  ],
+  "axe_version": "4.10.3",
+  "axe_sha256": "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb",
+  "scans": [
+    {
+      "state": "challenge-validation",
+      "target_sizes": [
+        {
+          "control": "<summary>Suggestion 3768d87ea852: No recorded correction</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Suggestion a77a2d667dcf: No recorded correction</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record supplied challenge</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-proposal_id",
+          "width": 238,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-target_kind",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-channel",
+          "width": 354,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-raised_by",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-source",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-request",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-explanation",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-owner",
+          "width": 200,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-non_digital_route",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-hazard_concern",
+          "width": 488,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-next_update",
+          "width": 168,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Record supplied challenge</button>",
+          "width": 274.046875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"reset\" class=\"alt\">Discard challenge draft</button>",
+          "width": 254.84375,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 20
+    },
+    {
+      "state": "challenge-resolved-320",
+      "target_sizes": [
+        {
+          "control": "<summary>Suggestion 3768d87ea852: Needs a fresh review</summary>",
+          "width": 236,
+          "height": 80,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Suggestion a77a2d667dcf: Needs a fresh review</summary>",
+          "width": 236,
+          "height": 80,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record supplied challenge</summary>",
+          "width": 236,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-proposal_id",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-target_kind",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-channel",
+          "width": 236,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-raised_by",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-source",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-request",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-explanation",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-owner",
+          "width": 200,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-non_digital_route",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-hazard_concern",
+          "width": 236,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-next_update",
+          "width": 168,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Record supplied challenge</button>",
+          "width": 236,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"reset\" class=\"alt\">Discard challenge draft</button>",
+          "width": 236,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record supplied resolution for CH-2</summary>",
+          "width": 236,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-resolution",
+          "width": 236,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-resolution_ref",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-explanation",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-next_update",
+          "width": 168,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Record supplied resolution for CH-2</button>",
+          "width": 236,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"reset\" class=\"alt\">Discard challenge draft</button>",
+          "width": 236,
+          "height": 66,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    },
+    {
+      "state": "challenge-resolved-390",
+      "target_sizes": [
+        {
+          "control": "<summary>Suggestion 3768d87ea852: Needs a fresh review</summary>",
+          "width": 306,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Suggestion a77a2d667dcf: Needs a fresh review</summary>",
+          "width": 306,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record supplied challenge</summary>",
+          "width": 306,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-proposal_id",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-target_kind",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-channel",
+          "width": 306,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-raised_by",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-source",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-request",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-explanation",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-owner",
+          "width": 200,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-non_digital_route",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-hazard_concern",
+          "width": 306,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-next_update",
+          "width": 168,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Record supplied challenge</button>",
+          "width": 274.046875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"reset\" class=\"alt\">Discard challenge draft</button>",
+          "width": 254.84375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record supplied resolution for CH-2</summary>",
+          "width": 306,
+          "height": 56,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-resolution",
+          "width": 239,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-resolution_ref",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-explanation",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-next_update",
+          "width": 168,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Record supplied resolution for CH-2</button>",
+          "width": 306,
+          "height": 66,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"reset\" class=\"alt\">Discard challenge draft</button>",
+          "width": 254.84375,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    },
+    {
+      "state": "challenge-resolved-1280",
+      "target_sizes": [
+        {
+          "control": "<summary>Suggestion 3768d87ea852: Needs a fresh review</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Suggestion a77a2d667dcf: Needs a fresh review</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record supplied challenge</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-proposal_id",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-target_kind",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-channel",
+          "width": 354,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-raised_by",
+          "width": 123,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-source",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-request",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-explanation",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-owner",
+          "width": 200,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-non_digital_route",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-hazard_concern",
+          "width": 488,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-open-next_update",
+          "width": 168,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Record supplied challenge</button>",
+          "width": 274.046875,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"reset\" class=\"alt\">Discard challenge draft</button>",
+          "width": 254.84375,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<summary>Record supplied resolution for CH-2</summary>",
+          "width": 1172,
+          "height": 32,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-resolution",
+          "width": 239,
+          "height": 38,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-resolution_ref",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-explanation",
+          "width": 236,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "challenge-resolve-CH-2-next_update",
+          "width": 168,
+          "height": 44,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"submit\">Record supplied resolution for CH-2</button>",
+          "width": 370.0625,
+          "height": 42,
+          "min_height": 24
+        },
+        {
+          "control": "<button type=\"reset\" class=\"alt\">Discard challenge draft</button>",
+          "width": 254.84375,
+          "height": 42,
+          "min_height": 24
+        }
+      ],
+      "violations": [],
+      "incomplete": [],
+      "passes": 22
+    }
+  ],
+  "screen_reader": "Not run",
+  "human_acceptance": "Not run",
+  "scope": "Constructed retained priority challenge only; no whole-system conformance"
+}

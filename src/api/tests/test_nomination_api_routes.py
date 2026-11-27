@@ -955,6 +955,10 @@ class NominationApiRoutesTests(unittest.TestCase):
                     button.click()
                 self.assertGreaterEqual(stale.value.status, 400)
                 feedback = page.locator(f"{key}-feedback")
+                page.wait_for_function(
+                    "id => document.getElementById(id).textContent.trim() !== ''",
+                    arg=f"nomination-ack-{nom_id}-feedback",
+                )
                 self.assertEqual(feedback.inner_text().strip(), stale.value.json()["error"])
                 self.assertTrue(feedback.evaluate("el => el === document.activeElement"))
                 self.assertTrue(button.is_enabled())
