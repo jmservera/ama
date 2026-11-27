@@ -334,6 +334,46 @@ class GateTests(unittest.TestCase):
         self.assertEqual(len(baseline), 1)
         self.assertLess(settle[0], baseline[0])
 
+    def test_skills_wait_precedes_option_count_with_loaded_host_timeout(self) -> None:
+        source = (
+            Path(__file__).resolve().parents[1] / "src/api/checks/employee_chat_browser_check.py"
+        ).read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        func = next(
+            n
+            for n in ast.walk(tree)
+            if isinstance(n, ast.FunctionDef) and n.name == "wait_for_skills"
+        )
+        calls = [
+            c
+            for c in ast.walk(func)
+            if isinstance(c, ast.Call)
+            and isinstance(c.func, ast.Attribute)
+            and c.func.attr in {"to_be_enabled", "to_have_count"}
+        ]
+        self.assertEqual(
+            [
+                c.func.attr
+                for c in sorted(calls, key=lambda c: c.lineno)
+                if isinstance(c.func, ast.Attribute)
+            ],
+            [
+                "to_be_enabled",
+                "to_have_count",
+            ],
+        )
+        timeout = next(k.value for k in calls[0].keywords if k.arg == "timeout")
+        self.assertGreaterEqual(ast.literal_eval(timeout), 20_000)
+        counts = [
+            c
+            for c in ast.walk(tree)
+            if isinstance(c, ast.Call)
+            and isinstance(c.func, ast.Attribute)
+            and c.func.attr == "to_have_count"
+            and "select option" in ast.unparse(c)
+        ]
+        self.assertEqual(len(counts), 1)
+
     def test_first_chat_reply_wait_is_bounded_for_loaded_hosts(self) -> None:
         source = (
             Path(__file__).resolve().parents[1] / "src/api/checks/employee_chat_browser_check.py"
