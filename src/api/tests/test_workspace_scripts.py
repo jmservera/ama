@@ -218,6 +218,8 @@ async function run(responses, signal) {
 
   out = await run([reply(503, null, "text/plain"), reply(200)]);
   assert.equal(out.calls, 1, "a gateway 503 is not retried");
+  out = await run([reply(503), reply(200)]);
+  assert.equal(out.calls, 1, "a 503 without Retry-After is not the busy answer");
   out = await run([reply(500), reply(200)]);
   assert.equal(out.calls, 1, "an application 500 is not retried");
   out = await run([reply(200)]);

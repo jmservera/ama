@@ -326,12 +326,13 @@ function startupFailure(res) {
 const BUSY_RETRY_MESSAGE = "The service is busy saving other work. Trying again, this can take a few seconds.";
 const BUSY_RETRY_MAX_MS = 5000;
 
-// Chat thread creation is one insert and commit, so the server answers a write-lock timeout with a handled 503 that leaves nothing saved. Repeating the POST once is safe for that path only.
+// Chat thread creation is one insert and commit, so the server answers a write-lock timeout with a handled 503 that leaves nothing saved. Only a 503 carrying Retry-After is the handled busy answer; repeating the POST once is safe for that path only.
 async function postThreadRetryingBusy(path, options) {
   const res = await fetch(path, options);
   if (res.status !== 503 || !(res.headers?.get("content-type") || "").includes("json")) return res;
   const seconds = Number(res.headers.get("retry-after"));
-  const delay = Number.isFinite(seconds) && seconds > 0 ? Math.min(seconds * 1000, BUSY_RETRY_MAX_MS) : BUSY_RETRY_MAX_MS;
+  if (!Number.isFinite(seconds) || seconds <= 0) return res;
+  const delay = Math.min(seconds * 1000, BUSY_RETRY_MAX_MS);
   const previous = workspaceStatus.textContent;
   workspaceStatus.textContent = BUSY_RETRY_MESSAGE;
   try {
