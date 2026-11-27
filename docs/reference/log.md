@@ -15656,3 +15656,7 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 1837 re-run evidence, run b (Refs #1837)
 
 * Added [issue-1837-live-demo-evidence-2026-11-27-b.md](research/issue-1837-live-demo-evidence-2026-11-27-b.md): fresh unit and axe evidence for the standalone nomination forms, a test race fix, and an open timeout observation in the read-only nomination check.
+
+## [2026-11-27] add | Issue 2245 live recheck on revision 0000136 (Refs #2245)
+
+* Added [issue-2245-live-20261127T125527Z.md](research/issue-2245-live-20261127T125527Z.md): no 500 on 13 thread creates, rules-only replies state the spending hold, and chat_panel now retries the chat.answer and chat.turn audit writes on a SQL write-lock timeout. Live effect of the fix and the lock holder stay unproven.

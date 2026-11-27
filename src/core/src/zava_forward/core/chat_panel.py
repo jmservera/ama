@@ -766,10 +766,14 @@ class ChatPanel:
             receipt["outcome"] = "access-rejected"
             raise
         finally:
-            with self.iso.store.lock:
-                self.iso.store.audit(
-                    user_key(user), "chat.turn", "", json.dumps(receipt, sort_keys=True)
-                )
+
+            def audit_turn() -> None:
+                with self.iso.store.lock:
+                    self.iso.store.audit(
+                        user_key(user), "chat.turn", "", json.dumps(receipt, sort_keys=True)
+                    )
+
+            _retry_lock_busy("turn audit", audit_turn)
 
     def ask_unstored(
         self, user: dict[str, Any], case_id: str, question: object, *, skill: object = None
@@ -922,26 +926,32 @@ class ChatPanel:
                 return saved
 
             message = _retry_lock_busy("answer", save_answer)
-            with store.lock:
-                if not sql:
-                    finalize(message)
-                    if receipt.get("financial_attribution"):
-                        saved = next(
-                            m
-                            for m in store.chat_repo.doc[tid]["messages"]
-                            if m["seq"] == message["seq"]
-                        )
-                        saved.update(content=text, evidence=[], model=model_name)
-                        store.save()
-                store.audit(
-                    user_key(user),
-                    "chat.answer",
-                    case_id,
-                    json.dumps(
-                        dict(thread_id=tid, question_seq=question_seq, skill=skill, outcome=kind),
-                        sort_keys=True,
-                    ),
-                )
+
+            def audit_answer() -> None:
+                with store.lock:
+                    if not sql:
+                        finalize(message)
+                        if receipt.get("financial_attribution"):
+                            saved = next(
+                                m
+                                for m in store.chat_repo.doc[tid]["messages"]
+                                if m["seq"] == message["seq"]
+                            )
+                            saved.update(content=text, evidence=[], model=model_name)
+                            store.save()
+                    store.audit(
+                        user_key(user),
+                        "chat.answer",
+                        case_id,
+                        json.dumps(
+                            dict(
+                                thread_id=tid, question_seq=question_seq, skill=skill, outcome=kind
+                            ),
+                            sort_keys=True,
+                        ),
+                    )
+
+            _retry_lock_busy("answer audit", audit_answer)
             reply = dict(
                 self._reply(kind, text, cites, model_name, sources, source),
                 skill=skill,
