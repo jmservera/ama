@@ -1,0 +1,16 @@
+{
+ "total": 443,
+ "states": {
+  "consent-withheld": 94,
+  "fresh": 108,
+  "no-readings": 88,
+  "stale": 153
+ },
+ "with_readings": 261,
+ "recent": 108,
+ "unmeasured": 0,
+ "with_readings_share": 0.5891647855530474,
+ "recent_share": 0.24379232505643342,
+ "complete": true,
+ "meets_half": true
+}

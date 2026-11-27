@@ -354,6 +354,24 @@ CALLS_PER_REQUEST_BASIS = (
 MEMORY_CAPS = dict(max_items=MEMORY_LIMIT, max_item_chars=MEMORY_MAX, prompt_injection=False)
 
 
+def _retry_lock_busy[T](what: str, save: Callable[[], T]) -> T:
+    """Run a one-transaction chat save, repeating it when the SQL write lock times out.
+
+    The save takes the write lock first, so a lock timeout wrote nothing and repeating is safe
+    (issue #2245). The answer save follows a paid model call, the question save a user turn."""
+    attempt = 0
+    while True:
+        try:
+            return save()
+        except Exception as exc:
+            attempt += 1
+            if attempt > SAVE_LOCK_RETRIES or not is_write_lock_busy(exc):
+                raise
+            logging.getLogger(__name__).warning(
+                "Chat %s save waited for the SQL write lock; retry %d", what, attempt
+            )
+
+
 def role_limits(role: object = None) -> dict[str, Any]:
     """Bounds for one role. Any role not listed gets no model calls and no chat access."""
     allowed = role in CHAT_ROLES
@@ -850,11 +868,16 @@ class ChatPanel:
         masked, _ = redact(str(question if question is not None else "")[:MAX_CONTENT])
         masked = masked[:MAX_CONTENT]
         iso.privacy._require()
-        with store.lock:
-            limits = role_limits(user.get("role"))
-            current_thread = store.chat_resume(user, tid)
-            prior_turns = sum(1 for m in current_thread["messages"] if m["role"] == "user")
-            question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
+
+        def save_question() -> tuple[dict[str, Any], int, int]:
+            with store.lock:
+                limits = role_limits(user.get("role"))
+                current_thread = store.chat_resume(user, tid)
+                prior_turns = sum(1 for m in current_thread["messages"] if m["role"] == "user")
+                seq = store.chat_add_message(user, tid, "user", masked)["seq"]
+            return limits, prior_turns, seq
+
+        limits, prior_turns, question_seq = _retry_lock_busy("question", save_question)
         receipt["thread_turns_used"] = min(prior_turns + 1, limits["turns_per_thread"])
         over_limit = limits["calls_per_request"] < 1 or prior_turns >= limits["turns_per_thread"]
 
@@ -884,30 +907,21 @@ class ChatPanel:
                     message.update(content=text, evidence=[], model=model_name)
 
             sql = hasattr(store, "assistant_connection")
-            attempt = 0
-            while True:
-                try:
-                    with store.lock:
-                        message = store.chat_add_message(
-                            user,
-                            tid,
-                            "assistant",
-                            text,
-                            evidence=cites,
-                            model=model_name,
-                            _finalize=finalize if sql else None,
-                        )
-                    break
-                except Exception as exc:
-                    # The model has already answered. The save is one transaction that takes the SQL
-                    # write lock first, so a lock timeout wrote nothing and repeating it is safe
-                    # (issue #2245).
-                    attempt += 1
-                    if attempt > SAVE_LOCK_RETRIES or not is_write_lock_busy(exc):
-                        raise
-                    logging.getLogger(__name__).warning(
-                        "Chat answer save waited for the SQL write lock; retry %d", attempt
+
+            def save_answer() -> dict[str, Any]:
+                with store.lock:
+                    saved: dict[str, Any] = store.chat_add_message(
+                        user,
+                        tid,
+                        "assistant",
+                        text,
+                        evidence=cites,
+                        model=model_name,
+                        _finalize=finalize if sql else None,
                     )
+                return saved
+
+            message = _retry_lock_busy("answer", save_answer)
             with store.lock:
                 if not sql:
                     finalize(message)

@@ -1,0 +1,112 @@
+{
+ "questions": [
+  {
+   "key": "quality",
+   "question": "Is the quality inspection evidence complete?",
+   "routing_line": "Routed to the Quality evidence agent. The question is about quality checks and inspection evidence.",
+   "attempts": 1
+  },
+  {
+   "key": "funding",
+   "question": "Can you check the grant claim and invoice?",
+   "routing_line": "Routed to the Funding evidence agent. The question is about grant, claim and funding evidence.",
+   "attempts": 1
+  },
+  {
+   "key": "stock",
+   "question": "Which stock should we prioritise by EPC ranking?",
+   "routing_line": "Routed to the Stock prioritisation agent. The question is about stock facts and which homes to look at first.",
+   "attempts": 1
+  },
+  {
+   "key": "tie",
+   "question": "Is the grant claim quality checked and which defect?",
+   "routing_line": "Handled by the General agent. The question fits more than one agent (Funding evidence agent and Quality evidence agent), so the general agent answers it. Choose an agent in the list to focus the answer.",
+   "attempts": 2
+  },
+  {
+   "key": "general",
+   "question": "Tell me what you can help with",
+   "routing_line": "Handled by the General agent. No specialist agent matches this question, so the general agent answers it.",
+   "attempts": 1
+  },
+  {
+   "key": "refused",
+   "question": "Approve the funding claim for this home",
+   "routing_line": "Handled by the General agent. No agent can do this. A person takes that action in the workflow.",
+   "attempts": 1
+  }
+ ],
+ "chat_http": [
+  {
+   "path": "api/chat/threads",
+   "status": 200,
+   "error_body": ""
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "error_body": ""
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "error_body": ""
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "error_body": ""
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 500,
+   "error_body": "{\"error\": \"The service hit an unexpected error. Owner: application support. Next action: try again, and if it continues report the time of the failure to application support.\"}"
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "error_body": ""
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "error_body": ""
+  },
+  {
+   "path": "api/chat/threads/<id>/ask",
+   "status": 200,
+   "error_body": ""
+  }
+ ],
+ "title": "Zava Forward | Zava North Homes",
+ "selects": [
+  {
+   "label": "Agent skill",
+   "options": [
+    "General work help"
+   ]
+  }
+ ],
+ "api_chat_skills": {
+  "status": 200,
+  "ids": [
+   "stock-prioritisation",
+   "assessment-preparation",
+   "funding-evidence",
+   "works-resident-coordination",
+   "quality-evidence"
+  ]
+ },
+ "api_assistants_status": 200,
+ "retries_after_500": 1,
+ "send_wait_s": {
+  "quality": 0.0,
+  "funding": 0.0,
+  "stock": 0.0,
+  "tie": 0.0,
+  "general": 0.0,
+  "refused": 0.0
+ },
+ "log_text": "You\n\nIs the quality inspection evidence complete?\n\nAssistant\nOutcome: workflow-only help\nRouted to the Quality evidence agent. The question is about quality checks and inspection evidence.\nWorkflow-only help, no record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: quality-evidence. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 1 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nCan you check the grant claim and invoice?\n\nAssistant\nOutcome: workflow-only help\nRouted to the Funding evidence agent. The question is about grant, claim and funding evidence.\nWorkflow-only help, no record changed\n\nThe demo spending control is holding AI answers, so no model was called. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: funding-evidence. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 2 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nWhich stock should we prioritise by EPC ranking?\n\nAssistant\nOutcome: workflow-only help\nRouted to the Stock prioritisation agent. The question is about stock facts and which homes to look at first.\nWorkflow-only help, no record changed\n\nThe demo spending control is holding AI answers, so no model was called. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: stock-prioritisation. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 3 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nIs the grant claim quality checked and which defect?\n\nYou\n\nIs the grant claim quality checked and which defect?\n\nAssistant\nOutcome: workflow-only help\nHandled by the General agent. The question fits more than one agent (Funding evidence agent and Quality evidence agent), so the general agent answers it. Choose an agent in the list to focus the answer.\nWorkflow-only help, no record changed\n\nThe demo spending control is holding AI answers, so no model was called. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: general. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 5 of 30. Workflow-only or unverified help. No record changed.\nSources (0)\nYou\n\nTell me what you can help with\n\nAssistant\nOutcome: workflow-only help\nHandled by the General agent. No specialist agent matches this question, so the general agent answers it.\nWorkflow-only help, no record changed\n\nThe demo spending control is holding AI answers, so no model was called. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: general. Model calls: 0. Tokens: Unknown. Outcome: fallback. Cost: Unknown. Questions in this conversation: 6 of 30. W"
+}
