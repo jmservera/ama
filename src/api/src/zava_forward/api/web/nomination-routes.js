@@ -3,6 +3,18 @@
 (() => {
   const form_ids = /^(nomination-ack-|nomination-correct-|challenge-open-route)/;
 
+  // One write at a time per page; a recorded or uncertain write locks every form until reload.
+  let busy = false;
+  let locked = false;
+
+  function setButtons(disabled) {
+    for (const form of document.querySelectorAll("form")) {
+      if (!form_ids.test(form.getAttribute("id") || "")) continue;
+      const button = form.querySelector("button[type='submit']");
+      if (button) button.disabled = disabled;
+    }
+  }
+
   function payload(form) {
     const body = {};
     for (const [name, value] of new FormData(form).entries()) {
@@ -28,14 +40,15 @@
     const formId = form.getAttribute("id") || "";
     if (!form_ids.test(formId)) return;
     event.preventDefault();
+    if (busy || locked) return;
     const feedback = document.getElementById(`${formId}-feedback`);
     const say = (text) => {
       if (!feedback) return;
       feedback.textContent = text;
       feedback.focus();
     };
-    const button = form.querySelector("button[type='submit']");
-    if (button) button.disabled = true;
+    busy = true;
+    setButtons(true);
     try {
       const res = await fetch(form.getAttribute("action"), {
         method: "POST",
@@ -44,15 +57,24 @@
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
+        locked = true;
         say("Recorded. Reloading the updated routes.");
         window.location.reload();
         return;
       }
+      // A server error may have committed the write, so only a client refusal unlocks the forms.
+      if (res.status >= 500) {
+        locked = true;
+        say("The service reported a fault, so the result is unknown. Reload this page to check before trying again.");
+        return;
+      }
       say(data.error || "Could not record that. Check the fields and try again.");
     } catch {
-      say("Could not reach the service. Nothing was recorded; try again.");
+      locked = true;
+      say("The service did not answer, so the result is unknown. Reload this page to check before trying again.");
     }
-    if (button) button.disabled = false;
+    busy = false;
+    if (!locked) setButtons(false);
   }
 
   document.addEventListener("submit", submit);
