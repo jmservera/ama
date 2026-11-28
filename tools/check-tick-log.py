@@ -6,6 +6,8 @@ coordinator session SQL). Row fields:
 * `tick`: integer sequence number (rows are checked in this order)
 * `counts`: object with `ready`, `running`, `unassessed`, `human_blocked`,
   `dependency_blocked`
+  (each present count must be a non-negative integer; anything else is a
+  `count-value` violation because it would hide ready work)
 * `action`, `evidence`: strings; a tick missing either is no-progress
 * `recovery`: true when the tick executed the bounded recovery action (needs
   `action` and `evidence`)
@@ -30,6 +32,7 @@ from typing import Any
 
 SESSION_CAP = 8
 CLOSURE_BATCH_MAX = 5
+COUNT_KEYS = ("ready", "running", "unassessed", "human_blocked", "dependency_blocked")
 OPTIONAL_COLUMNS = (
     "closure_batch",
     "approvals_granted",
@@ -96,6 +99,13 @@ def check_ticks(rows: list[dict[str, Any]], require_extended: bool = False) -> l
             seen_ticks.add(tick)
         if not isinstance(row.get("counts"), dict):
             violations.append(Violation(tick, "schema", "counts object is required"))
+        else:
+            for key in COUNT_KEYS:
+                value = row["counts"].get(key, 0)
+                if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                    violations.append(
+                        Violation(tick, "count-value", f"{key} must be a non-negative integer")
+                    )
         if require_extended:
             missing = [c for c in OPTIONAL_COLUMNS if c not in row]
             if missing:

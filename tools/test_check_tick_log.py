@@ -52,6 +52,15 @@ class TickLogTests(unittest.TestCase):
     def test_clean_log_passes(self) -> None:
         self.assertEqual(rules([tick(1), tick(2)]), [])
 
+    def test_malformed_counts_are_flagged_not_coerced_to_zero(self) -> None:
+        for bad in (-1, True, "2", 1.5, None):
+            counts = {"ready": bad, "running": 1, "unassessed": 0}
+            self.assertEqual(rules([tick(1, counts=counts)]), ["count-value"], bad)
+        counts = {"ready": -1, "running": 1.0, "unassessed": 0}
+        self.assertEqual(rules([tick(1, counts=counts)]), ["count-value", "count-value"])
+        self.assertEqual(rules([tick(1, counts={"ready": 0})]), [])
+        self.assertEqual(rules([tick(1, counts="x")]), ["schema"])
+
     def test_missing_action_with_ready_work_is_flagged(self) -> None:
         self.assertEqual(rules([tick(1, action="", evidence="")]), ["no-progress"])
 
