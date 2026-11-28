@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-28T16:04:06+00:00",
-  "commit": "103fb9428be79466e32a7d58043b70eae02d96e1",
+  "scored_at": "2026-11-28T16:16:23+00:00",
+  "commit": "950679fc5d4cbf306a7bde58a9edc3bdc6e1ad5f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/46162622819",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/46163627245",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
     "adr": "b57f49945945ec4ca2cbe1be00a5aa090b0d70bdfe09dfa1c601f27da28e3f48",
-    "solution-code": "641e67e63c8af438eb9e19bef6f28ee234fa8d802a7ecc018a2764cf3e181035",
+    "solution-code": "99850a020b2649cb8bae953a80117258542d6054303eec6ed2eec5a507f1ed2d",
     "infrastructure": "71a028040119015d7af269c20e82dcef7a31e4826060d090cfa314ba21cd7c03",
     "capstone-deck": "10f3a507178a791c9fc10575a51231629e3485c627bff76a0101a46ce8973f67",
     "pitch": "7273ddb60a51a1635c943c6a4e3007246dc48009df4eef7eccc0608c6755a275",
@@ -55,7 +55,7 @@
         "src/core/tests/test_demo_handoff_due_seed.py:115-168",
         "src/core/tests/test_tokenomics_helpers.py:1-132"
       ],
-      "rationale": "Tests cover already-implemented seed/revert and tokenomics fail-closed helpers; no new production capability completed. Ceiling (5) unchanged."
+      "rationale": "Tests cover already-implemented seed/revert and tokenomics fail-closed helpers; new effort_delta_seconds is a reporting field addition, not new production capability. Ceiling (5) unchanged."
     },
     "A5": {
       "score": 5,
@@ -114,7 +114,7 @@
         "src/agents/tests/test_region_confirmation_branches.py",
         "src/core/tests/test_review_flag_status_1288.py"
       ],
-      "rationale": "This diff touches test files only, not documentation; baseline documentation gap (undocumented nomination routes) unchanged. Retained at Good (4)."
+      "rationale": "This diff touches test/source files only, not documentation; baseline documentation gap (undocumented nomination routes) unchanged. Retained at Good (4)."
     },
     "B7": {
       "score": 5,
