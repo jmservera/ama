@@ -7,6 +7,7 @@ import hashlib
 import http.client
 import importlib.util
 import io
+import os
 import tarfile
 import tempfile
 import unittest
@@ -240,6 +241,25 @@ class WorkflowWiringTests(unittest.TestCase):
             if "releases/download" in line and ("curl" in line or "wget" in line)
         ]
         self.assertEqual(offenders, [])
+
+
+@unittest.skipUnless(
+    os.environ.get("ZF_LIVE_RELEASE") == "1", "set ZF_LIVE_RELEASE=1 to reach the official release"
+)
+class LiveReleaseTests(unittest.TestCase):
+    def test_official_assets_match_the_pinned_identity_and_checksums(self) -> None:
+        with mock.patch.object(mod.time, "sleep"):
+            checksums = mod.fetch(mod.CHECKSUMS)
+            archive = mod.fetch(mod.ARCHIVE)
+        mod.check_checksums(checksums)
+        self.assertEqual(len(archive), mod.ARCHIVE.size)
+        self.assertEqual(hashlib.sha256(archive).hexdigest(), mod.ARCHIVE.sha256)
+
+    def test_install_writes_an_unexecuted_binary(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            target = mod.install(Path(directory) / "bin")
+            self.assertTrue(target.is_file())
+            self.assertEqual(target.stat().st_mode & 0o777, 0o755)
 
 
 if __name__ == "__main__":
