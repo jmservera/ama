@@ -325,6 +325,15 @@ class AncestorDurabilityTests(unittest.TestCase):
         known = [e for e in events if e != "other"]
         self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
 
+    def test_regular_file_in_the_ancestor_chain_refuses_before_any_sync_or_write(self):
+        self.root.joinpath("a").write_bytes(b"not a folder")
+        events, sync, link = self.labelled()
+        with sync, link, self.assertRaises(OSError):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(events, [])
+        self.assertEqual([p.name for p in self.root.iterdir()], ["a"])
+        self.assertEqual(self.root.joinpath("a").read_bytes(), b"not a folder")
+
     def test_existing_archive_keeps_its_parent_sync_after_the_archive_sync(self):
         self.dir.mkdir(parents=True)
         events, sync, link = self.labelled()

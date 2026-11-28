@@ -7,7 +7,8 @@ coordinator session SQL). Row fields:
 * `counts`: object with `ready`, `running`, `unassessed`, `human_blocked`,
   `dependency_blocked`
 * `action`, `evidence`: strings; a tick missing either is no-progress
-* `recovery`: true when the tick executed the bounded recovery action
+* `recovery`: true when the tick executed the bounded recovery action (needs
+  `action` and `evidence`)
 * `closure_batch`: list of closure-review item ids assessed in the tick
 * `approvals_granted`, `approvals_expired`: lists of `{"scope", "tasks"}` objects
 * `reclassified`: list of `{"task", "to", "scope"}` objects
@@ -115,6 +116,10 @@ def check_ticks(rows: list[dict[str, Any]], require_extended: bool = False) -> l
                 Violation(
                     tick, "recovery", "two no-progress ticks need a recovery action this tick"
                 )
+            )
+        if row.get("recovery") is True and not acted:
+            violations.append(
+                Violation(tick, "recovery-claim", "recovery claimed without action and evidence")
             )
         streak = 0 if acted else streak + 1
 

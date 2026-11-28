@@ -69,6 +69,12 @@ class TickLogTests(unittest.TestCase):
         rows[2]["recovery"] = True
         self.assertEqual(rules(rows), [])
 
+    def test_recovery_claim_needs_action_and_evidence(self) -> None:
+        full = {"ready": 1, "running": 8, "unassessed": 0}
+        claimed = tick(1, counts=full, action="", evidence="", recovery=True)
+        self.assertEqual(rules([claimed]), ["recovery-claim"])
+        self.assertEqual(rules([tick(1, counts=full, recovery=True)]), [])
+
     def test_closure_batch_bound_and_repeat(self) -> None:
         big = tick(1, closure_batch=list("abcdef"))
         again = tick(2, closure_batch=["a"])
