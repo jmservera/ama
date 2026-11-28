@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-28T03:59:35+00:00",
-  "commit": "9178b97aecda9922745dca9375b02c7b87028497",
+  "scored_at": "2026-11-28T04:24:12+00:00",
+  "commit": "009748a975ac385ad5920e032ea8823d2081cade",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/46104919970",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/46106892691",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
     "adr": "b57f49945945ec4ca2cbe1be00a5aa090b0d70bdfe09dfa1c601f27da28e3f48",
-    "solution-code": "82dcd49a8e6cc2bb2e2e62c0cea5c413a81a271742a28c2e491140c9130b76b1",
+    "solution-code": "45c96c6133c2186e74a51ec2eeb020984b36dfdfc8ea759b145b9f84bff6f7c5",
     "infrastructure": "71a028040119015d7af269c20e82dcef7a31e4826060d090cfa314ba21cd7c03",
     "capstone-deck": "3fcb0be04913519de21b81e379c71336ada2af2efb24af7be5be2eaccc92095d",
     "pitch": "9b4fdfbe17acc6561fc2b364f8249ed8f6b4e384d6056f77dcc3b54a5a9cf8b5",
@@ -32,7 +32,7 @@
         "src/api/checks/connected_home_browser_check.py:1-50",
         "infra/resident-demo.bicep:29-34"
       ],
-      "rationale": "Opt-in second identity for sensor-consent demo reuses existing conditional-identity pattern; no new architecture. Ceiling 5 unchanged."
+      "rationale": "Diff adds identity-bind/scoping and chat-privacy tests only; no architecture change. Ceiling 5 unchanged."
     },
     "A2": {
       "score": 5,
@@ -44,19 +44,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_assistants.py:1108-1125",
-        "infra/resident-demo.bicep:139-143",
-        "infra/tests/test_resident_demo_deploy.py:126-139"
+        "src/api/tests/test_assistants.py:1193-1206",
+        "src/core/tests/test_chat_privacy.py:179-200"
       ],
-      "rationale": "New sensor-consent env/identity wiring is fail-closed and off by default (empty() checks), with a dedicated opt-in test. Reinforces existing control at ceiling (5), unchanged."
+      "rationale": "New tests reinforce existing scoped-authorization and PII-redaction/erase controls (view-only denial, redaction coverage, idempotent erase) without adding new production control surface. Ceiling (5) unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:456-480",
-        "src/core/src/zava_forward/core/grants.py:77-191"
+        "src/api/tests/test_assistants.py:1193-1206",
+        "src/core/tests/test_chat_privacy.py:179-200"
       ],
-      "rationale": "Adds explicit criterion-3 memory-poisoning/prompt-injection flags with fail-closed enablement check, and a new grant eligibility separation-of-duties gate; both complete previously partial capability with tests. Completeness reinforced at ceiling (5)."
+      "rationale": "Tests cover already-implemented authorize/redact/diagnostic_safe/erase behavior; no new production capability completed. Ceiling (5) unchanged."
     },
     "A5": {
       "score": 5,
@@ -64,7 +63,7 @@
         "infra/scripts/monitoring_live_inventory.py:26-57",
         "infra/tests/test_monitoring_live_inventory.py:99-109"
       ],
-      "rationale": "Ceiling (5) unchanged; new monitoring-inventory job-coverage check adds granularity but does not raise an already-maxed observability score."
+      "rationale": "Not touched by this diff. Ceiling (5) unchanged."
     },
     "A6": {
       "score": 5,
@@ -72,7 +71,7 @@
         "src/agents/src/zava_forward/agents/regulatory_gates.py:262-330",
         "src/agents/src/zava_forward/agents/paired_trial.py:215-280"
       ],
-      "rationale": "New beside_cost reporting ties AI cost per accepted check to citation-validity, refusal-accuracy and hazard-miss gates in both arms, with cards-alone-unless-all-gates-pass logic and tests; strengthens evaluation rigor at ceiling (5), unchanged."
+      "rationale": "Not touched by this diff. Ceiling (5) unchanged."
     },
     "A7": {
       "score": 5,
@@ -80,7 +79,7 @@
         "src/core/src/zava_forward/core/assistants.py:1474-1494",
         "src/api/tests/test_assistant_restart_non_replenishment.py:228-258"
       ],
-      "rationale": "New _pool() inherits the most constrained persisted ledger across a rotated authority token, closing a replenishment-via-rotation gap with tests. Reinforces existing reliability guarantee at ceiling (5), unchanged."
+      "rationale": "Not touched by this diff. Ceiling (5) unchanged."
     },
     "B1": {
       "score": 3,
@@ -112,7 +111,7 @@
     "B6": {
       "score": 4,
       "evidence": [],
-      "rationale": "This diff touches test files and a core module, not documentation; baseline documentation gap (undocumented nomination routes) is unchanged. Retained at Good (4)."
+      "rationale": "This diff touches test files only, not documentation; baseline documentation gap (undocumented nomination routes) unchanged. Retained at Good (4)."
     },
     "B7": {
       "score": 5,
