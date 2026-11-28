@@ -67,6 +67,12 @@ class Epic73RequirementTrace(unittest.TestCase):
                 self.assertTrue(argv[-1].endswith(f".{name}"), req)
                 self.assertIn("../core/src", pythonpath)
 
+    def test_runner_never_counts_a_skipped_or_empty_run_as_a_passing_check(self):
+        self.assertEqual(runner.classify(0, "Ran 1 test in 0.1s\n\nOK"), "PASS")
+        self.assertEqual(runner.classify(0, "Ran 1 test in 0.0s\n\nOK (skipped=1)"), "SKIP")
+        self.assertEqual(runner.classify(0, "Ran 0 tests in 0.0s\n\nOK"), "SKIP")
+        self.assertEqual(runner.classify(1, "Ran 1 test in 0.1s\n\nFAILED (failures=1)"), "FAIL")
+
     def test_runner_refuses_a_cited_test_outside_src_projects(self):
         with self.assertRaises(ValueError):
             runner.command("tools/test_x.py", "test_y")

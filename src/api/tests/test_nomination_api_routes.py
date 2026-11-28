@@ -996,6 +996,39 @@ class NominationApiRoutesTests(unittest.TestCase):
         record = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]
         self.assertEqual(record["acknowledgement"]["reference"], "SYN-OTHER-SESSION")
 
+    def test_challenge_open_refuses_every_adverse_field_and_writes_nothing(self) -> None:
+        from zava_forward.core.challenges import FORBIDDEN_ADVERSE_FIELDS
+
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        proposal = self.seed_priority_proposal()
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        target = next(t for t in before["challenge_targets"] if t["proposal_id"] == proposal["id"])
+        challenge: dict[str, Any] = {
+            "action": "challenge_open",
+            "proposal_id": proposal["id"],
+            "proposal_version": target["proposal_version"],
+            "decision_version": target["decision_version"],
+            "target_kind": "proposal",
+            "channel": "digital",
+            "source": "SYN-NEG-ADVERSE",
+            "request": "SYN challenge request",
+            "explanation": "SYN challenge explanation",
+            "owner": "sam@example.test",
+            "non_digital_route": "Phone Sam or visit the local housing office",
+            "next_update": "2099-03-03",
+            "hazard_concern": False,
+        }
+        for key in sorted(FORBIDDEN_ADVERSE_FIELDS):
+            with self.subTest(key=key):
+                status, body = self.call_json(
+                    "/api/cases/ZF-1/resident", "sam", dict(challenge, **{key: True})
+                )
+                self.assertEqual(status, 400, body)
+                self.assertIn(key, json.dumps(body))
+                self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+
     def test_route_form_script_posts_json_with_csrf_header_and_page_loads_it(self) -> None:
         self.assertEqual(
             self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200

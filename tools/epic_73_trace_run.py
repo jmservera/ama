@@ -54,6 +54,15 @@ def _class_dotted(path: str, name: str) -> str:
     raise ValueError(f"{name} not found in {path}")
 
 
+def classify(returncode: int, output: str) -> str:
+    """Return PASS, SKIP or FAIL; unittest exits 0 for a skipped or empty run, which is no check."""
+    if returncode != 0:
+        return "FAIL"
+    if re.search(r"skipped=\d+", output) or re.search(r"^Ran 0 tests", output, re.MULTILINE):
+        return "SKIP"
+    return "PASS"
+
+
 def run() -> int:
     failures = 0
     for req, checks in cited_tests().items():
@@ -63,8 +72,8 @@ def run() -> int:
             result = subprocess.run(
                 argv, check=False, cwd=cwd, env=env, capture_output=True, text=True
             )
-            status = "PASS" if result.returncode == 0 else "FAIL"
-            failures += result.returncode != 0
+            status = classify(result.returncode, result.stderr + result.stdout)
+            failures += status != "PASS"
             print(f"{req}\t{status}\t{path}::{name}")
     return 1 if failures else 0
 
