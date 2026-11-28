@@ -322,10 +322,17 @@ class ChatMixin:
                  title=str(title or "New chat")[:200], task=task or "", task_version=task_version or (VERSION if task else ""),
                  model=str(model or "")[:100], status=ACTIVE, rowversion=1, message_count=0, created_at=now, updated_at=now)
         repo = self.chat_repo
-        with repo.txn():
-            repo.insert_thread(t)
-            repo.commit()
         from .mssqlstore import is_write_lock_busy
+        for insert_attempt in (1, 2):
+            try:
+                with repo.txn():
+                    repo.insert_thread(t)
+                    repo.commit()
+                break
+            except Exception as exc:
+                # The write lock is taken first and the transaction rolls back, so a lock timeout stored nothing and one repeat is safe; a first POST after the API recovers then answers 200 (issue #2245).
+                if insert_attempt == 2 or not is_write_lock_busy(exc):
+                    raise
         attempt = 0
         while True:
             try:

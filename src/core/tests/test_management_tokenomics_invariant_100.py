@@ -437,6 +437,12 @@ class ManagementTokenomicsInvariantTests(unittest.TestCase):
             self.assertNotEqual(econ["total_cost_of_ai"], "Unknown")
             self.assertEqual(econ["cost_per_accepted_outcome"], econ["total_cost_of_ai"])
             self.assertEqual(econ["metered_usage"]["total_tokens"], 120)
+            self.assertNotIn("tokens_per_home", econ)
+            per_home = tokenomics.store_ai_consumption_economics(
+                store, start=START, as_of=AS_OF, home_count=4
+            )
+            self.assertEqual(per_home["tokens_per_home"], "30")
+            self.assertEqual(per_home["token_cost_per_home"], "0.00003375")
 
     def test_mixed_metered_and_unmetered_ai_calls_fail_closed_to_unknown_unit_cost(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
