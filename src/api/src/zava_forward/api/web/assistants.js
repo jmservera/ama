@@ -328,3 +328,49 @@ async function assistantQueueView(after = "", append = false) {
     }
   }
 }
+
+const AI_OBSERVABILITY_ROWS = [
+  ["invocation", "AI requests made"],
+  ["refusal", "Requests stopped by the safety checks"],
+  ["withheld", "Answers held back"],
+  ["validation_failure", "Answers that did not pass checking"],
+  ["fallback", "Times the AI was paused or its allowance ran out"],
+  ["human_review", "Answers sent to a person to review"],
+  ["override", "Answers a person rejected or changed"],
+  ["tokens", "Text units used (tokens)"],
+  ["latency_samples", "Requests with a recorded time"],
+];
+
+async function aiObservabilityView() {
+  const owner = me;
+  const signal = routeController.signal;
+  const heading = h("h1", {}, "AI observability");
+  if (owner.services?.assistants !== true) {
+    show(heading, h("p", { role: "status" }, "AI observability is for staff roles. Nothing is waiting on you here. Ask your team manager if you need access."));
+    return;
+  }
+  const portal = owner.services.ai_observability_url;
+  const portalLink = typeof portal === "string" && portal.startsWith("https://")
+    && h("p", {}, h("a", { href: portal, target: "_blank", rel: "noopener noreferrer" }, "Open Azure Application Insights (opens in a new tab)"));
+  try {
+    const data = await api("/api/assistants/rai-metrics");
+    if (signal.aborted || me !== owner) return;
+    const m = data.metrics;
+    const summary = m
+      ? "Totals for the last 24 hours. They show no details about any resident or case."
+      : "No counts are available for this period. Nothing was changed; carry on with ordinary case work.";
+    const seconds = typeof data.latency_seconds_total === "number" ? `${data.latency_seconds_total} seconds in total across the timed requests.` : "";
+    show(h("div", { "data-ai-observability": "" }, heading,
+      h("p", { role: "status" }, summary),
+      m && h("table", {}, h("caption", {}, "AI activity, last 24 hours"),
+        h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Measure"), h("th", { scope: "col" }, "Count"))),
+        h("tbody", {}, ...AI_OBSERVABILITY_ROWS.map(([key, label]) => h("tr", {}, h("th", { scope: "row" }, label), h("td", {}, String(m[key] ?? 0)))))),
+      seconds && h("p", {}, seconds),
+      portalLink,
+      h("p", {}, h("a", { href: "#/" }, "Back to case work"))));
+  } catch (e) {
+    if (e.name === "AbortError" || signal.aborted || me !== owner) return;
+    show(heading, h("p", { role: "alert" }, e.status === 403 ? "AI observability is for staff roles. Nothing is waiting on you here." : assistantOwned(e.message, ASSISTANT_SUPPORT, "try again shortly, or continue ordinary case work and tell application support if it continues", e.status)),
+      portalLink, h("p", {}, h("a", { href: "#/" }, "Continue case work")));
+  }
+}
