@@ -3864,6 +3864,36 @@ os.fstat(3)
         self.assertEqual([row["exit_code"] for row in runner.retries], [1])
         self.assertNotEqual(runner.retries[0]["log"], runner.rows[0]["log"])
 
+    def test_flaky_test_class_passes_on_one_real_retry_and_record_validates(self) -> None:
+        tests = self.root / "src/api/tests"
+        tests.mkdir(parents=True)
+        marker = self.root / "seen"
+        (tests / "test_flaky.py").write_text(
+            "import pathlib, unittest\n"
+            f"M = pathlib.Path({str(marker)!r})\n"
+            "class FlakyOnce(unittest.TestCase):\n"
+            "    def test_first_run_fails(self):\n"
+            "        first = not M.exists()\n"
+            "        M.touch()\n"
+            "        self.assertFalse(first)\n"
+        )
+        runner = self.runner(self.out / "real-retry")
+        runner.snapshot = self.root
+        runner.group = "project-api"
+        with patch.object(runner, "discover_test_ids", return_value=["test_flaky.FlakyOnce.t"]):
+            runner.sharded_tests("api", sys.executable, "src/api", [["test_flaky"]])
+        self.assertEqual([row["exit_code"] for row in runner.rows], [0])
+        self.assertEqual([row["exit_code"] for row in runner.retries], [1])
+        retry = runner.retries[0]
+        log = runner.out / retry["log"]
+        self.assertIn("FlakyOnce", log.read_text())
+        receipt = {
+            "retries": runner.retries,
+            "files": {retry["log"]: retry["sha256"]},
+            "commands": runner.rows,
+        }
+        gate.validate_retries(receipt)
+
     def test_wall_seconds_spans_earliest_start_to_latest_finish_with_retries(self) -> None:
         rows = [
             {"started": "2026-11-23T10:00:00+00:00", "finished": "2026-11-23T10:00:30+00:00"},
