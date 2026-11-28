@@ -182,6 +182,43 @@ class TickLogTests(unittest.TestCase):
             self.assertIs(rows[0]["global_stop"], True)
             self.assertEqual(sorted(rules(rows)), ["closure-progress", "global-stop"])
 
+    def test_load_rows_rejects_non_object_rows_and_accepts_empty(self) -> None:
+        self.assertEqual(checker.load_rows("  \n"), [])
+        with self.assertRaises(ValueError):
+            checker.load_rows("[1, 2]")
+        with self.assertRaises(ValueError):
+            checker.load_rows('"text"')
+
+    def test_non_integer_tick_is_a_schema_violation(self) -> None:
+        self.assertIn("schema", rules([tick("1")]))
+        self.assertIn("schema", rules([tick(True)]))
+
+    def test_session_sqlite_unreadable_inputs_raise_value_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            empty = Path(tmp) / "empty.db"
+            with closing(sqlite3.connect(empty)) as db:
+                db.execute("CREATE TABLE other (id INTEGER)")
+                db.commit()
+            with self.assertRaises(ValueError):
+                checker.load_sqlite(empty)
+            with self.assertRaises(ValueError):
+                checker.load_sqlite(Path(tmp) / "absent.db")
+            self.assertEqual(checker.main([str(empty)]), 2)
+
+    def test_sqlite_extended_columns_decode_plain_text_and_null(self) -> None:
+        self.assertEqual(checker._decode_column("closure_batch", "188"), ["188"])
+        self.assertEqual(checker._decode_column("closure_batch", "  "), [])
+        self.assertEqual(checker._decode_column("closure_batch", None), [])
+        self.assertEqual(checker._decode_column("closure_batch", '["1"]'), ["1"])
+        self.assertIs(checker._decode_column("global_stop", 0), False)
+
+    def test_malformed_approval_entries_are_ignored(self) -> None:
+        self.assertEqual(rules([tick(1, approvals_granted=["x", 3], reclassified=["y"])]), [])
+
+    def test_ready_move_without_scope_or_grant_is_flagged(self) -> None:
+        row = tick(1, reclassified=[{"task": "9", "to": "ready"}])
+        self.assertEqual(rules([row]), ["approval"])
+
     def test_cli_exit_codes_and_json_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             good = Path(tmp) / "good.jsonl"
