@@ -112,6 +112,12 @@ CHALLENGE_SUBMITTERS = ("The resident", "Their representative", "Nominee")
 NON_RETALIATION_ACTIONS = frozenset({
     "challenge_open", "challenge_resolve", "nomination_record", "nomination_correct", "nomination_review",
     "service_open", "service_reopen",
+    "service_update", "service_close", "service_reassign", "service_supersede_authorize",
+    "remedy_confirm", "remedy_update",
+})
+SERVICE_ROUTE_GUARDED_ACTIONS = frozenset({
+    "service_update", "service_close", "service_reassign", "service_supersede_authorize",
+    "remedy_confirm", "remedy_update",
 })
 
 
@@ -1130,6 +1136,8 @@ def _operation(store, user, case_id, body):
             if sql:
                 context["rowversion"] = store._rv[case_id]
             detail = getattr(store, "_res_" + body["action"])(actor, c, context["body"])
+            if body["action"] in SERVICE_ROUTE_GUARDED_ACTIONS:
+                challenges.assert_no_retaliation(before, c)
             if before_ranking is not None:
                 store._ranks = None
                 after_ranking = store._ranking()
