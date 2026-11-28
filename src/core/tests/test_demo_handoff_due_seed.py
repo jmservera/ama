@@ -1,11 +1,15 @@
+import contextlib
 import copy
+import io
 import json
+import os
 import tempfile
 import threading
 import unittest
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 import dataset as _dataset
 from zava_forward.core import change_provenance
@@ -108,41 +112,119 @@ class DemoHandoffDueSeed(unittest.TestCase):
         self.assertEqual(shown["elapsed_hours"], 25.0)
 
 
+class SeedEdges(unittest.TestCase):
+    def test_every_pending_state_is_seeded_and_junk_times_are_skipped(self) -> None:
+        store = FakeStore(
+            {
+                "R": case("R", state="Received"),
+                "E": case("E", state="Escalated"),
+                "B": case("B", offered_at="not a time"),
+                "N": case("N", offered_at=None),
+                "D": case("D", state="Declined"),
+            }
+        )
+        report = seed.run(store, apply=True)
+        self.assertEqual(report["handoffs_to_write"], 2)
+        self.assertEqual(
+            report["skipped"],
+            {"offer_time_missing_or_already_aware": 2, "no_pending_handoff": 1},
+        )
+        self.assertEqual(store.cases["B"]["handoff"]["offered_at"], "not a time")
+        self.assertIsNone(store.cases["N"]["handoff"]["offered_at"])
+
+    def test_winter_wall_time_uses_greenwich_offset_and_summer_uses_bst(self) -> None:
+        store = FakeStore({"W": case("W", offered_at="2026-12-01T09:00")})
+        seed.run(store, apply=True)
+        handoff = store.cases["W"]["handoff"]
+        self.assertEqual(handoff["offered_at"], "2026-12-01T09:00+00:00")
+        self.assertEqual(handoff["due_at"], "2026-12-04T09:00+00:00")
+
+    def test_revert_keeps_a_due_time_it_did_not_seed(self) -> None:
+        store = FakeStore({"K": case("K", due_at="2026-10-20T10:00+00:00")})
+        seed.run(store, apply=True)
+        seed.revert(store)
+        self.assertEqual(store.cases["K"]["handoff"]["due_at"], "2026-10-20T10:00+00:00")
+        self.assertNotIn(seed.MARK, store.cases["K"]["handoff"])
+        self.assertEqual(seed.revert(store), {"handoffs_reverted": 0, "applied": False})
+
+    def test_cli_rejects_bad_arguments_and_missing_store_without_opening_one(self) -> None:
+        with mock.patch.dict(os.environ, {"ZF_STORE": "memory"}):
+            self.assertEqual(seed.main(["apply", "extra"]), 2)
+            self.assertEqual(seed.main(["wipe"]), 2)
+            self.assertEqual(seed.main(["inspect"]), 2)
+
+    def test_cli_inspect_prints_counts_only(self) -> None:
+        store = FakeStore({"C1": case("C1")})
+        out = io.StringIO()
+        with (
+            mock.patch.dict(os.environ, {"ZF_STORE": "sqlite"}),
+            mock.patch("zava_forward.core.factory.open_store", return_value=store),
+            contextlib.redirect_stdout(out),
+        ):
+            self.assertEqual(seed.main(["inspect"]), 0)
+        printed = json.loads(out.getvalue())
+        self.assertEqual((printed["handoffs_to_write"], printed["applied"]), (1, False))
+        self.assertNotIn("Miguel", out.getvalue())
+        self.assertEqual(store.saves, 0)
+
+
 class RealStoreSeed(unittest.TestCase):
+    AS_OF = "2026-10-14T09:00+00:00"
+
+    def aged_store(self, tmp: str) -> tuple[Any, Path, str, dict[str, Any]]:
+        path = Path(tmp) / "seed.json"
+        data: dict[str, Any] = copy.deepcopy(_dataset.DATA)
+        data["staff"].append(
+            dict(
+                code="RC-01",
+                name="Rex Coordinator",
+                email="rex@example.test",
+                role="Retrofit Coordinator",
+            )
+        )
+        path.write_text(json.dumps(data), encoding="utf-8")
+        store: Any = Store(str(path))
+        sam = next(r for r in data["staff"] if r["email"].startswith("sam@"))
+        rex = next(r for r in data["staff"] if r["email"].startswith("rex@"))
+        cid = data["cases"][0]["id"]
+        store.offer_handoff(
+            sam, cid, rex["email"], "note", metadata=_dataset.change_metadata(store, cid)
+        )
+        with change_provenance.controlled(store, sam, cid) as (c, actor):
+            c["handoff"]["offered_at"] = "2026-10-13T09:00"
+            c["handoff"]["due_at"] = None
+            store._save_workflow(actor, "test_age_handoff", cid, "x")
+        return store, path, cid, rex
+
     def test_waiting_list_shows_seeded_due_time_through_the_store(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "seed.json"
-            data: dict[str, Any] = copy.deepcopy(_dataset.DATA)
-            data["staff"].append(
-                dict(
-                    code="RC-01",
-                    name="Rex Coordinator",
-                    email="rex@example.test",
-                    role="Retrofit Coordinator",
-                )
-            )
-            path.write_text(json.dumps(data), encoding="utf-8")
-            store: Any = Store(str(path))
-            sam = next(r for r in data["staff"] if r["email"].startswith("sam@"))
-            rex = next(r for r in data["staff"] if r["email"].startswith("rex@"))
-            cid = data["cases"][0]["id"]
-            store.offer_handoff(
-                sam, cid, rex["email"], "note", metadata=_dataset.change_metadata(store, cid)
-            )
-            with change_provenance.controlled(store, sam, cid) as (c, actor):
-                c["handoff"]["offered_at"] = "2026-10-13T09:00"
-                c["handoff"]["due_at"] = None
-                store._save_workflow(actor, "test_age_handoff", cid, "x")
-            as_of = "2026-10-14T09:00+00:00"
-            before = store.unaccepted_handoffs(rex, as_of=as_of)
+            store, path, cid, rex = self.aged_store(tmp)
+            before = store.unaccepted_handoffs(rex, as_of=self.AS_OF)
             self.assertEqual([r["due_at"] for r in before], [None])
             self.assertIsNone(before[0]["age_hours"])
             seed.run(store, apply=True)
-            after = store.unaccepted_handoffs(rex, as_of=as_of)
+            after = store.unaccepted_handoffs(rex, as_of=self.AS_OF)
             self.assertEqual([r["due_at"] for r in after], ["2026-10-16T08:00+00:00"])
             self.assertEqual(after[0]["age_hours"], 25.0)
             self.assertEqual(
                 Store(str(path)).cases[cid]["handoff"]["due_at"], "2026-10-16T08:00+00:00"
+            )
+
+    def test_apply_keeps_handoff_history_and_revert_restores_persisted_offer(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            store, path, cid, rex = self.aged_store(tmp)
+            history = copy.deepcopy(store.cases[cid]["handoff_history"])
+            self.assertTrue(history)
+            seed.run(store, apply=True)
+            self.assertEqual(Store(str(path)).cases[cid]["handoff_history"], history)
+            self.assertEqual(seed.revert(store)["handoffs_reverted"], 1)
+            restored = Store(str(path)).cases[cid]["handoff"]
+            self.assertEqual(restored["offered_at"], "2026-10-13T09:00")
+            self.assertIsNone(restored["due_at"])
+            self.assertNotIn(seed.MARK, restored)
+            self.assertEqual(Store(str(path)).cases[cid]["handoff_history"], history)
+            self.assertEqual(
+                [r["due_at"] for r in store.unaccepted_handoffs(rex, as_of=self.AS_OF)], [None]
             )
 
 

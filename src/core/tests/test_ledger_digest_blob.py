@@ -759,6 +759,32 @@ class LedgerDigestBlobTests(unittest.TestCase):
         self.assertNotIn("SUPERSECRET", fault_lines[0])
         self.assertNotIn("stzavasecretacct", fault_lines[0])
 
+    def test_scheduled_verification_alerts_sanitized_on_unexpected_exception(self) -> None:
+        class _ExplodingStore(BlobLedgerDigestStore):
+            def list_names(self) -> list[str]:
+                raise ValueError(f"unexpected failure for {ACCOUNT_URL}?{SECRET_SAS}")
+
+        blob = _ExplodingStore(
+            ACCOUNT_URL,
+            DEFAULT_CONTAINER,
+            sas=SECRET_SAS,
+            transport=_FakeImmutableBlobTransport(),
+        )
+        lines: list[str] = []
+        outcome = run_scheduled_verification(_sample_chain(), blob, out=lines.append)
+
+        self.assertEqual(outcome["exit_code"], 1)
+        self.assertIs(outcome["intact"], False)
+        self.assertEqual(outcome["marker"], ALERT_MARKER)
+        self.assertEqual(outcome["diagnostic"]["status"], "blocked")
+        self.assertIsNone(outcome["report"])
+        self.assertEqual(len(lines), 1)
+        self.assertIn(ALERT_MARKER, lines[0])
+        self.assertIn("unexpected_verification_error", lines[0])
+        self.assertNotIn(OK_MARKER, lines[0])
+        self.assertNotIn("SUPERSECRET", lines[0])
+        self.assertNotIn("stzavasecretacct", lines[0])
+
     def test_cli_main_alerts_on_missing_or_invalid_env_and_supports_publish_and_reconcile(
         self,
     ) -> None:

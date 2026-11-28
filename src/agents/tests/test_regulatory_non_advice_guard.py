@@ -116,6 +116,25 @@ class RegulatoryChatNonAdviceGuardTests(unittest.TestCase):
                 )
                 self.assertIn("Advisory review item only", result["reply"])
 
+    def test_cards_without_a_named_approver_or_active_status_are_refused(self) -> None:
+        mutations: list[tuple[str, str, Any]] = [
+            ("blank_approver", "approved_by", ""),
+            ("whitespace_approver", "approved_by", "   "),
+            ("null_approver", "approved_by", None),
+            ("retired_card", "status", "retired"),
+            ("rejected_card", "status", "rejected"),
+            ("superseded_card", "status", "superseded"),
+        ]
+        for label, key, value in mutations:
+            with self.subTest(case=label):
+                case_bundle = copy.deepcopy(self.bundle)
+                case_bundle["cards"][0][key] = value
+                result = regulatory_chat.answer(case_bundle)
+                self.assertEqual(result["kind"], "refused")
+                self.assertTrue(result["requires_human"])
+                self.assertEqual(result["citations"], [])
+                self.assertEqual(result["sections"]["what_sources_say"], [])
+
     def test_duty_satisfied_and_legal_advice_claims_in_generated_sections(self) -> None:
         duty_bundle = copy.deepcopy(self.bundle)
         duty_bundle["unknown"] = (

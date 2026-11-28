@@ -19,7 +19,10 @@ from urllib.request import Request, urlopen
 from tests.test_mvp import DATA
 from zava_forward.core.sqlstore import SqlStore
 
+from source_isolation import assert_source_isolated
 from zava_forward.api.server import App, make_handler
+
+assert_source_isolated("test_nomination_api_routes")
 
 
 class _AccessibleFormInspector(HTMLParser):
@@ -777,6 +780,23 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertGreaterEqual(status, 400)
         self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
+    def test_acknowledgement_replay_is_refused_and_preserves_original_record(self) -> None:
+        path = "/api/cases/ZF-1/resident"
+        self.assertEqual(self.call_json(path, "sam", self.nomination_payload())[0], 200)
+        nom_id = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]["id"]
+        payload = self._ack_payload(nom_id)
+        code, acked = self.call_json(path, "sam", payload)
+        self.assertEqual(code, 200, acked)
+        record = acked["nomination_records"][0]
+        self.assertEqual(record["acknowledgement"]["route_mode"], "digital")
+        after_first = self.call_json("/api/cases/ZF-1", "sam")[1]
+
+        code, _ = self.call_json(path, "sam", dict(payload, acknowledgement_ref="SYN-REPLAY"))
+        self.assertGreaterEqual(code, 400)
+        after_replay = self.call_json("/api/cases/ZF-1", "sam")[1]
+        self.assertEqual(after_replay, after_first)
+        self.assertNotIn("SYN-REPLAY", json.dumps(after_replay))
+
     def test_native_form_encoding_is_refused_and_writes_nothing(self) -> None:
         self.assertEqual(
             self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
@@ -881,6 +901,42 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertEqual(self.call_json("/api/cases/ZF-NOPE/resident", "sam", challenge)[0], 404)
         self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
+    def test_json_charset_callers_work_and_text_plain_write_needs_csrf_header(self) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        nom_id = before["nomination_records"][0]["id"]
+
+        def post(content_type: str, payload: dict[str, Any], extra: dict[str, str]) -> int:
+            req = Request(
+                self.base + "/api/cases/ZF-1/resident",
+                json.dumps(payload).encode(),
+                headers={
+                    "Cookie": self._login_cookie("sam"),
+                    "Content-Type": content_type,
+                    **extra,
+                },
+            )
+            try:
+                with urlopen(req, timeout=10) as response:
+                    return int(response.status)
+            except HTTPError as err:
+                return err.code
+
+        ack = self._ack_payload(nom_id, acknowledgement_ref="SYN-TEXTPLAIN")
+        with patch.object(self.app.provider, "name", "trusted-proxy"):
+            self.assertEqual(post("text/plain", ack, {}), 403)
+            self.assertEqual(post("text/plain;charset=UTF-8", ack, {}), 403)
+        self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+        self.assertEqual(
+            post("application/json; charset=utf-8", ack, {"X-ZF-CSRF": "1"}),
+            200,
+        )
+        after = self.call_json("/api/cases/ZF-1", "sam")[1]
+        self.assertIn("SYN-TEXTPLAIN", json.dumps(after))
+        self.assertNotIn("SYN-TEXTPLAIN", json.dumps(before))
+
     def test_trusted_proxy_route_write_requires_csrf_header_and_writes_nothing_without_it(
         self,
     ) -> None:
@@ -975,6 +1031,39 @@ class NominationApiRoutesTests(unittest.TestCase):
 
         record = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]
         self.assertEqual(record["acknowledgement"]["reference"], "SYN-OTHER-SESSION")
+
+    def test_challenge_open_refuses_every_adverse_field_and_writes_nothing(self) -> None:
+        from zava_forward.core.challenges import FORBIDDEN_ADVERSE_FIELDS
+
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        proposal = self.seed_priority_proposal()
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        target = next(t for t in before["challenge_targets"] if t["proposal_id"] == proposal["id"])
+        challenge: dict[str, Any] = {
+            "action": "challenge_open",
+            "proposal_id": proposal["id"],
+            "proposal_version": target["proposal_version"],
+            "decision_version": target["decision_version"],
+            "target_kind": "proposal",
+            "channel": "digital",
+            "source": "SYN-NEG-ADVERSE",
+            "request": "SYN challenge request",
+            "explanation": "SYN challenge explanation",
+            "owner": "sam@example.test",
+            "non_digital_route": "Phone Sam or visit the local housing office",
+            "next_update": "2099-03-03",
+            "hazard_concern": False,
+        }
+        for key in sorted(FORBIDDEN_ADVERSE_FIELDS):
+            with self.subTest(key=key):
+                status, body = self.call_json(
+                    "/api/cases/ZF-1/resident", "sam", dict(challenge, **{key: True})
+                )
+                self.assertEqual(status, 400, body)
+                self.assertIn(key, json.dumps(body))
+                self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
     def test_route_form_script_posts_json_with_csrf_header_and_page_loads_it(self) -> None:
         self.assertEqual(

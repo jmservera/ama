@@ -17,6 +17,7 @@ from zava_forward.core.data_protection import (
     CONSTRUCTED_DERIVATIVE,
     DATA_CLASSES,
     HOSTING_REGION_VS_INFERENCE_RESIDENCY,
+    MANUAL_PATH,
     MODE_ENV,
     SUBJECT_POPULATIONS,
     TASKS,
@@ -32,7 +33,14 @@ from zava_forward.core.data_protection import (
     register_report,
     required_gates,
     rights_status,
+    validate_necessity_exception,
     validate_task_payload,
+)
+from zava_forward.core.data_protection import (
+    _valid_redaction_review as valid_redaction_review,
+)
+from zava_forward.core.data_protection import (
+    _valid_scoped_necessity_ref as valid_scoped_necessity_ref,
 )
 
 # Legacy modules exempt from strict typing are reached dynamically.
@@ -76,6 +84,61 @@ class Register(unittest.TestCase):
         self.assertFalse(row["references_recorded"])
         self.assertTrue(row["synthetic"])
         self.assertNotIn("SYNTH-1", str(rep))
+
+
+class RetentionUnknownWithoutApproval(unittest.TestCase):
+    def actual_classes(self) -> list[str]:
+        return [c.id for c in DATA_CLASSES if c.kind == "actual"]
+
+    def test_retention_stays_unknown_until_its_own_reference_is_real(self) -> None:
+        for cid in self.actual_classes():
+            for bad in ("", "   ", "SYNTH-1", "placeholder"):
+                env = refs(cid)
+                env[f"DP_{cid.upper()}_RETENTION_REF"] = bad
+                report = register_report(env)
+                row = next(c for c in report["classes"] if c["id"] == cid)
+                with self.subTest(cls=cid, ref=bad):
+                    self.assertTrue(row["retention"].startswith("Unknown"))
+                    self.assertFalse(any(ch.isdigit() for ch in row["retention"]))
+                    self.assertFalse(row["references_recorded"])
+                    self.assertFalse(report["dpo_reviewed"])
+            with self.subTest(cls=cid, ref="real"):
+                row = next(c for c in register_report(refs(cid))["classes"] if c["id"] == cid)
+                self.assertEqual(row["retention"], "Reference recorded; period held by owner")
+                self.assertTrue(row["references_recorded"])
+
+
+class ProductionApprovalGate(unittest.TestCase):
+    """Production use of an actual class stays blocked until every gate has a recorded reference."""
+
+    def actual_model_bound(self) -> list[str]:
+        return [c.id for c in DATA_CLASSES if c.kind == "actual" and c.model_bound]
+
+    def derivative(self, class_id: str) -> str | None:
+        return "reviewed_redacted" if BY_ID[class_id].needs_derivative else None
+
+    def test_each_gate_blocks_on_blank_whitespace_and_placeholder_refs(self) -> None:
+        class_ids = self.actual_model_bound()
+        self.assertTrue(class_ids)
+        for cid in class_ids:
+            for gate in required_gates(BY_ID[cid]):
+                for bad in ("", "   ", "SYNTH-1", "placeholder"):
+                    env = refs(cid)
+                    env[f"DP_{cid.upper()}_{gate}_REF"] = bad
+                    decision = model_dispatch(cid, env, self.derivative(cid))
+                    with self.subTest(cls=cid, gate=gate, ref=bad):
+                        self.assertFalse(decision["permitted"])
+                        self.assertIn(gate, decision["reason"])
+
+    def test_full_reference_set_is_the_only_way_through_and_is_not_approval(self) -> None:
+        for cid in self.actual_model_bound():
+            with self.subTest(cls=cid):
+                self.assertFalse(model_dispatch(cid, {}, self.derivative(cid))["permitted"])
+                env = refs(cid)
+                self.assertTrue(model_dispatch(cid, env, self.derivative(cid))["permitted"])
+                report = register_report(env)
+                self.assertFalse(report["dpo_reviewed"])
+                self.assertIn("not verified DPO or Legal approval", report["statement"])
 
 
 class Dispatch(unittest.TestCase):
@@ -1072,6 +1135,343 @@ class RightsRequestLedgerPersistenceTests(unittest.TestCase):
                 received_at=received,
                 actor="dpo@zava.example",
             )
+
+
+class RejectionBoundaries(unittest.TestCase):
+    """Failure paths that keep intact or unreviewed material away from a model (#121)."""
+
+    def test_redaction_review_needs_named_human_and_recorded_review(self) -> None:
+        bad: list[tuple[Any, Any]] = [
+            (None, "REV-1"),
+            ("  ", "REV-1"),
+            ("x" * 121, "REV-1"),
+            ("SYNTH-reviewer", "REV-1"),
+            ("ai", "REV-1"),
+            ("review-bot", "REV-1"),
+            ("jo.reviewer", None),
+            ("jo.reviewer", " "),
+            ("jo.reviewer", "x" * 121),
+            ("jo.reviewer", "SYNTH-1"),
+        ]
+        for reviewer, review_id in bad:
+            with self.subTest(reviewer=reviewer, review_id=review_id):
+                ok, _reason = valid_redaction_review(reviewer, review_id)
+                self.assertFalse(ok)
+        ok, reason = valid_redaction_review(" jo.reviewer ", " REV-1 ")
+        self.assertTrue(ok)
+        self.assertIn("not verified", reason)
+
+    def test_scoped_necessity_ref_rejects_wildcards_long_and_other_tasks(self) -> None:
+        for ref in (None, "", "   ", "x" * 121, "*", "ALL", "any", "SYNTH-1", "demo"):
+            with self.subTest(ref=ref):
+                self.assertFalse(valid_scoped_necessity_ref(ref, "read_document")[0])
+        self.assertFalse(valid_scoped_necessity_ref("NEC-1", "case_brief")[0])
+        self.assertTrue(valid_scoped_necessity_ref("NEC-1", "look_at_attachment")[0])
+        self.assertTrue(valid_scoped_necessity_ref("NEC-1", "read_document")[0])
+
+    def test_necessity_exception_rejects_each_malformed_shape(self) -> None:
+        good: dict[str, Any] = {
+            "reference": "NEC-1",
+            "approved_by": "jo.dpo",
+            "reason": "Reviewer needs the redacted excerpt",
+            "task": "read_document",
+        }
+
+        def check(**changes: Any) -> dict[str, Any]:
+            doc = {**good, **changes}
+            doc = {k: v for k, v in doc.items() if v is not None}
+            return validate_necessity_exception(doc, task="read_document", as_of="2026-11-28")
+
+        self.assertTrue(check()["permitted"])
+        self.assertFalse(validate_necessity_exception("NEC-1")["permitted"])
+        self.assertFalse(validate_necessity_exception(None)["permitted"])
+        for changes in (
+            {"reference": None},
+            {"reference": "x" * 121},
+            {"approved_by": None},
+            {"approved_by": "model"},
+            {"reason": None},
+            {"reason": "r" * 301},
+            {"task": None},
+            {"task": "*"},
+            {"task": "case_brief"},
+            {"case_id": 5},
+            {"doc_id": ""},
+            {"expires_at": "tomorrow"},
+            {"expires_at": "2026-13-45"},
+            {"expires_at": "2026-11-27"},
+        ):
+            with self.subTest(changes=changes):
+                result = check(**changes)
+                self.assertFalse(result["permitted"])
+                self.assertIsNone(result["exception"])
+
+    def test_necessity_exception_binds_case_document_and_actual_references(self) -> None:
+        doc = {
+            "id": "NEC-2",
+            "approved_by": "jo.dpo",
+            "reason": "Needed",
+            "scope": "look_at_attachment",
+            "case_id": "C-1",
+            "doc_id": "D-1",
+        }
+        kwargs: dict[str, Any] = {"task": "look_at_attachment", "case_id": "C-1", "doc_id": "D-1"}
+        self.assertTrue(validate_necessity_exception(doc, **kwargs)["permitted"])
+        self.assertFalse(
+            validate_necessity_exception(doc, **{**kwargs, "case_id": "C-2"})["permitted"]
+        )
+        self.assertFalse(
+            validate_necessity_exception(doc, **{**kwargs, "doc_id": "D-2"})["permitted"]
+        )
+        self.assertFalse(
+            validate_necessity_exception({**doc, "id": "SYNTH-9"}, actual=True, **kwargs)[
+                "permitted"
+            ]
+        )
+        self.assertTrue(
+            validate_necessity_exception(
+                {**doc, "expires_at": "2026-11-28T00:00:00"}, as_of=datetime(2026, 11, 28), **kwargs
+            )["permitted"]
+        )
+
+    def test_task_payload_rejects_wrong_types_oversize_and_special_fields(self) -> None:
+        result = validate_task_payload(
+            "case_brief",
+            {"case_id": "C-1", "waiting_days": True, "open_actions": 501, "stage": "x" * 81},
+        )
+        self.assertEqual(result["fields"], {"case_id": "C-1"})
+        self.assertEqual(result["rejected"], ["open_actions", "stage", "waiting_days"])
+        empty = validate_task_payload(
+            "case_brief", {"waiting_days": -1}, user_permission_granted=True
+        )
+        self.assertFalse(empty["permitted"])
+        self.assertTrue(empty["user_permission_granted"])
+        self.assertFalse(empty["user_permission_establishes_necessity"])
+        self.assertEqual(empty["manual_path"], MANUAL_PATH)
+
+    def test_due_date_needs_timezone_and_rolls_over_december(self) -> None:
+        with self.assertRaises(ValueError):
+            due_date(datetime(2026, 11, 1))
+        self.assertEqual(
+            due_date(datetime(2026, 12, 31, tzinfo=UTC)), datetime(2027, 1, 31, tzinfo=UTC)
+        )
+
+    def test_rights_ledger_rejects_malformed_rows_on_load(self) -> None:
+        base: dict[str, Any] = {
+            "request_id": "R-1",
+            "kind": "access",
+            "received_at": "2026-11-01T00:00:00+00:00",
+        }
+
+        def load(**changes: Any) -> None:
+            row = {**base, **changes}
+            RightsRequestLedger.from_json(json.dumps({"requests": [row]}))
+
+        load()
+        for changes in (
+            {"request_id": " "},
+            {"kind": "sell"},
+            {"received_at": "2026-11-01T00:00:00"},
+            {"answered_at": "2026-10-01T00:00:00+00:00"},
+            {"actions": [["erase"]]},
+            {"actions": [{"action": "shred", "at": "2026-11-02T00:00:00+00:00"}]},
+            {
+                "actions": [
+                    {
+                        "action": "erase",
+                        "at": "2026-11-02T00:00:00+00:00",
+                        "provider_erasure_confirmed": True,
+                    }
+                ]
+            },
+            {"actions": [{"action": "erase", "at": "2026-11-02T00:00:00"}]},
+        ):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                load(**changes)
+
+    def test_rights_status_accepts_raw_rows_and_rejects_bad_mapping(self) -> None:
+        now = datetime(2026, 11, 28, tzinfo=UTC)
+        row = {
+            "request_id": "R-1",
+            "kind": "access",
+            "received_at": "2026-10-01T00:00:00+00:00",
+        }
+        for source in ([row], {"requests": [row]}, {"rights_requests": [row]}):
+            with self.subTest(source=type(source).__name__):
+                report = rights_status(source, now)
+                self.assertEqual(report["overdue"], ["R-1"])
+                self.assertFalse(report["provider_erasure_confirmed"])
+        with self.assertRaises(ValueError):
+            rights_status({"requests": "R-1"}, now)
+        with self.assertRaises(ValueError):
+            rights_status([row], datetime(2026, 11, 28))
+
+
+class RightsLedgerBoundaries(unittest.TestCase):
+    """In-memory ledger refusals: rights requests stay logged, bounded and human-owned (#121)."""
+
+    RECEIVED = "2026-10-01T09:00:00+00:00"
+
+    def _ledger(self) -> RightsRequestLedger:
+        ledger = RightsRequestLedger()
+        ledger.record_request(
+            request_id="R-1",
+            kind="erasure",
+            subject_key="staff-42",
+            received_at=self.RECEIVED,
+            actor="jo.officer",
+        )
+        return ledger
+
+    def test_record_request_rejects_each_malformed_shape(self) -> None:
+        base: dict[str, Any] = {
+            "request_id": "R-2",
+            "kind": "access",
+            "subject_key": "staff-42",
+            "received_at": self.RECEIVED,
+            "actor": "jo.officer",
+        }
+        bad: list[dict[str, Any]] = [
+            {"request_id": "R-1"},
+            {"request_id": "SYNTH-9"},
+            {"kind": "sell"},
+            {"subject_population": "everyone"},
+            {"actor": "SYNTH-bot"},
+            {"actor": "ai"},
+            {"notes_ref": "n" * 201},
+            {"received_at": "2026-10-01T09:00:00"},
+            {"request_id": " "},
+        ]
+        ledger = self._ledger()
+        for override in bad:
+            with self.subTest(override=override):
+                with self.assertRaises(ValueError):
+                    ledger.record_request(**{**base, **override})
+        self.assertEqual(len(ledger.requests()), 1)
+
+    def test_unknown_request_raises_key_error(self) -> None:
+        ledger = self._ledger()
+        with self.assertRaises(KeyError):
+            ledger.get("R-404")
+        with self.assertRaises(KeyError):
+            ledger.log_action(
+                "R-404", action="locate", actor="jo.officer", at="2026-10-02T09:00:00+00:00"
+            )
+        with self.assertRaises(KeyError):
+            ledger.answer_request(
+                "R-404", answered_at="2026-10-02T09:00:00+00:00", actor="jo.officer"
+            )
+
+    def test_log_action_rejects_bad_inputs_and_provider_erasure_claims(self) -> None:
+        ledger = self._ledger()
+        good: dict[str, Any] = {
+            "action": "erase",
+            "actor": "jo.officer",
+            "at": "2026-10-02T09:00:00+00:00",
+        }
+        bad: list[dict[str, Any]] = [
+            {"action": "shred"},
+            {"actor": "ai"},
+            {"record_count": -1},
+            {"record_count": True},
+            {"action": "locate", "local_deleted": True},
+            {"at": "2026-09-30T09:00:00+00:00"},
+            {"at": "2026-10-02T09:00:00"},
+            {"provider_erasure_confirmed": True},
+        ]
+        for override in bad:
+            with self.subTest(override=override):
+                with self.assertRaises(ValueError):
+                    ledger.log_action("R-1", **{**good, **override})
+        self.assertEqual(ledger.get("R-1")["actions"], [])
+        entry = ledger.log_action("R-1", **good, local_deleted=True, record_count=3)
+        self.assertFalse(entry["provider_erasure_confirmed"])
+        self.assertTrue(entry["local_deleted"])
+
+    def test_answer_request_rejects_bad_inputs_and_keeps_provider_flag_false(self) -> None:
+        ledger = self._ledger()
+        answered = "2026-10-05T09:00:00+00:00"
+        with self.assertRaises(ValueError):
+            ledger.answer_request(
+                "R-1", answered_at=answered, actor="jo.officer", provider_erasure_confirmed=True
+            )
+        with self.assertRaises(ValueError):
+            ledger.answer_request(
+                "R-1", answered_at="2026-09-01T00:00:00+00:00", actor="jo.officer"
+            )
+        with self.assertRaises(ValueError):
+            ledger.answer_request(
+                "R-1", answered_at=answered, actor="jo.officer", summary_ref="s" * 201
+            )
+        with self.assertRaises(ValueError):
+            ledger.answer_request("R-1", answered_at=answered, actor="review-bot")
+        row = ledger.answer_request(
+            "R-1",
+            answered_at=answered,
+            actor="jo.officer",
+            local_deleted=True,
+            audit_retention_refusal="Article 17(3) audit retention",
+        )
+        self.assertTrue(row["within_one_month"])
+        self.assertFalse(row["provider_erasure_confirmed"])
+        self.assertEqual(row["audit_retention_refusal"], "Article 17(3) audit retention")
+
+    def test_serialised_ledger_rejects_provider_erasure_and_non_objects(self) -> None:
+        with self.assertRaises(ValueError):
+            RightsRequestLedger.from_dict({"provider_erasure_confirmed": True})
+        with self.assertRaises(ValueError):
+            RightsRequestLedger.from_dict({"requests": "R-1"})
+        with self.assertRaises(ValueError):
+            RightsRequestLedger.from_json("[]")
+        restored = RightsRequestLedger.from_json(self._ledger().to_json())
+        self.assertEqual([r["request_id"] for r in restored.requests()], ["R-1"])
+
+    def test_module_helpers_refuse_unsupported_targets(self) -> None:
+        with self.assertRaises(TypeError):
+            record_rights_request(
+                object(),
+                request_id="R-9",
+                kind="access",
+                subject_key="staff-42",
+                received_at=self.RECEIVED,
+            )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.json"
+            record_rights_request(
+                path,
+                request_id="R-9",
+                kind="access",
+                subject_key="staff-42",
+                received_at=self.RECEIVED,
+                actor="jo.officer",
+            )
+            report = rights_status(path, datetime(2026, 10, 2, tzinfo=UTC))
+            self.assertTrue(report["persisted"])
+            self.assertEqual(report["requests"][0]["state"], "open")
+
+    def test_status_separates_late_answers_and_refuses_confirmed_provider_erasure(self) -> None:
+        now = datetime(2026, 12, 15, tzinfo=UTC)
+        rows: list[dict[str, Any]] = [
+            {
+                "request_id": "A",
+                "kind": "access",
+                "received_at": "2026-10-01T00:00:00+00:00",
+                "answered_at": "2026-12-01T00:00:00+00:00",
+            },
+            {
+                "request_id": "B",
+                "kind": "access",
+                "received_at": "2026-10-01T00:00:00+00:00",
+                "answered_at": "2026-10-20T00:00:00+00:00",
+            },
+            {"request_id": "C", "kind": "erasure", "received_at": "2026-12-10T00:00:00+00:00"},
+        ]
+        report = rights_status(rows, now)
+        states = {r["id"]: r["state"] for r in report["requests"]}
+        self.assertEqual(states, {"A": "answered_late", "B": "answered", "C": "open"})
+        self.assertFalse(report["note"].startswith("Persisted"))
+        with self.assertRaises(ValueError):
+            rights_status([{**rows[0], "provider_erasure_confirmed": True}], now)
 
 
 if __name__ == "__main__":

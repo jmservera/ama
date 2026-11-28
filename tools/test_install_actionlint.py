@@ -7,6 +7,7 @@ import hashlib
 import http.client
 import importlib.util
 import io
+import os
 import tarfile
 import tempfile
 import unittest
@@ -88,6 +89,11 @@ class FetchTests(unittest.TestCase):
         self.assertEqual(len(network.requests), 3)
         self.assertEqual(self.sleeps, [2.0, 5.0])
 
+    def test_429_is_retried_on_the_same_source(self) -> None:
+        result, network = self.run_fetch({"github.com": [http_error(429), self.body]})
+        self.assertEqual(result, self.body)
+        self.assertEqual(len(network.requests), 2)
+
     def test_browser_exhaustion_falls_back_to_official_api(self) -> None:
         result, network = self.run_fetch(
             {"github.com": [http_error(504)] * 3, "api.github.com": [self.body]}
@@ -105,6 +111,26 @@ class FetchTests(unittest.TestCase):
         self.assertEqual(result, self.body)
         with self.assertRaisesRegex(mod.InstallError, "IncompleteRead"):
             self.run_fetch({"github.com": [cut] * 3, "api.github.com": [cut] * 3})
+
+    def test_connection_errors_and_timeouts_are_retried_then_recover(self) -> None:
+        result, network = self.run_fetch(
+            {"github.com": [urllib.error.URLError("reset"), TimeoutError("slow"), self.body]}
+        )
+        self.assertEqual(result, self.body)
+        self.assertEqual(len(network.requests), 3)
+
+    def test_requests_are_pinned_to_official_hosts_and_the_exact_version(self) -> None:
+        for asset in (mod.ARCHIVE, mod.CHECKSUMS):
+            urls = [url for url, _ in mod.sources(asset, None)]
+            self.assertEqual(
+                urls[0],
+                f"https://github.com/rhysd/actionlint/releases/download/v{mod.VERSION}/{asset.name}",
+            )
+            self.assertEqual(
+                urls[1],
+                f"https://api.github.com/repos/rhysd/actionlint/releases/assets/{asset.asset_id}",
+            )
+            self.assertEqual(len(urls), 2)
 
     def test_wrong_checksum_on_every_source_exhausts(self) -> None:
         wrong = b"x" * len(self.body)
@@ -181,6 +207,22 @@ class InstallTests(unittest.TestCase):
                 mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
             self.assertEqual(list(Path(tmp).iterdir()), [])
 
+    def test_exhausted_checksums_never_request_the_archive(self) -> None:
+        network = Network(
+            {"github.com": [http_error(504)] * 3, "api.github.com": [http_error(504)] * 3}
+        )
+        with self.patched(), tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(mod.InstallError, "exhausted"):
+                mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
+            self.assertEqual(list(Path(tmp).iterdir()), [])
+        self.assertEqual(len(network.requests), 6)
+        self.assertTrue(
+            all(
+                self.sums_asset.name in r.full_url or "/assets/2" in r.full_url
+                for r in network.requests
+            )
+        )
+
     def test_archive_without_binary_or_invalid_archive_installs_nothing(self) -> None:
         for body in (make_archive({"README.md": b"x"}), b"not a tarball at all"):
             archive_asset = asset_for(self.archive_asset.name, 1, body)
@@ -194,6 +236,17 @@ class InstallTests(unittest.TestCase):
                 with self.assertRaises((mod.InstallError, tarfile.TarError)):
                     mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
                 self.assertEqual(list(Path(tmp).iterdir()), [])
+
+    def test_failed_replace_leaves_no_temporary_file(self) -> None:
+        network = Network({"github.com": [self.sums, self.archive]})
+        with (
+            self.patched(),
+            tempfile.TemporaryDirectory() as tmp,
+            mock.patch.object(mod.os, "replace", side_effect=OSError("disk full")),
+        ):
+            with self.assertRaises(OSError):
+                mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
+            self.assertEqual(list(Path(tmp).iterdir()), [])
 
     def test_main_exit_codes(self) -> None:
         with contextlib.redirect_stderr(io.StringIO()):
@@ -219,6 +272,25 @@ class WorkflowWiringTests(unittest.TestCase):
             if "releases/download" in line and ("curl" in line or "wget" in line)
         ]
         self.assertEqual(offenders, [])
+
+
+@unittest.skipUnless(
+    os.environ.get("ZF_LIVE_RELEASE") == "1", "set ZF_LIVE_RELEASE=1 to reach the official release"
+)
+class LiveReleaseTests(unittest.TestCase):
+    def test_official_assets_match_the_pinned_identity_and_checksums(self) -> None:
+        with mock.patch.object(mod.time, "sleep"):
+            checksums = mod.fetch(mod.CHECKSUMS)
+            archive = mod.fetch(mod.ARCHIVE)
+        mod.check_checksums(checksums)
+        self.assertEqual(len(archive), mod.ARCHIVE.size)
+        self.assertEqual(hashlib.sha256(archive).hexdigest(), mod.ARCHIVE.sha256)
+
+    def test_install_writes_an_unexecuted_binary(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            target = mod.install(Path(directory) / "bin")
+            self.assertTrue(target.is_file())
+            self.assertEqual(target.stat().st_mode & 0o777, 0o755)
 
 
 if __name__ == "__main__":

@@ -2644,6 +2644,41 @@ os.fstat(3)
                     with self.assertRaises(gate.GateError):
                         gate.verify(self.root, path, self.base)
             target.write_text(json.dumps(CHAT_SCANS))
+            retry_log = self.out / "0900-project-api.log"
+            retry_log.write_text("FAIL: FlakyOnce.test_first_run_fails\n")
+            retry = {
+                "group": "project-api",
+                "log": retry_log.name,
+                "sha256": real_digest(retry_log),
+                "exit_code": 1,
+                "argv": ["py", "-m", "unittest"],
+            }
+            with_retry = copy.deepcopy(original_receipt)
+            with_retry["retries"] = [retry]
+            with_retry["files"][retry_log.name] = retry["sha256"]
+            gate.atomic_json(path, with_retry)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
+            gate.verify(self.root, path, self.base)
+            retry_log.write_text("edited after the gate ran\n")
+            with (
+                self.subTest(retry_evidence="log edited on disk"),
+                self.assertRaisesRegex(gate.GateError, "evidence file hash mismatch"),
+            ):
+                gate.verify(self.root, path, self.base)
+            retry_log.write_text("FAIL: FlakyOnce.test_first_run_fails\n")
+            reused = copy.deepcopy(with_retry)
+            reused["commands"][0]["log"] = retry_log.name
+            forged = copy.deepcopy(with_retry)
+            forged["retries"][0]["exit_code"] = 124
+            unhashed = copy.deepcopy(with_retry)
+            unhashed["files"].pop(retry_log.name)
+            for label, changed in (("reused", reused), ("timeout", forged), ("unhashed", unhashed)):
+                with self.subTest(retry_evidence=label):
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+            retry_log.unlink()
             gate.atomic_json(path, original_receipt)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             environment = self.out / "venvs/core"
@@ -3863,6 +3898,36 @@ os.fstat(3)
         self.assertEqual([row["exit_code"] for row in runner.rows], [0])
         self.assertEqual([row["exit_code"] for row in runner.retries], [1])
         self.assertNotEqual(runner.retries[0]["log"], runner.rows[0]["log"])
+
+    def test_flaky_test_class_passes_on_one_real_retry_and_record_validates(self) -> None:
+        tests = self.root / "src/api/tests"
+        tests.mkdir(parents=True)
+        marker = self.root / "seen"
+        (tests / "test_flaky.py").write_text(
+            "import pathlib, unittest\n"
+            f"M = pathlib.Path({str(marker)!r})\n"
+            "class FlakyOnce(unittest.TestCase):\n"
+            "    def test_first_run_fails(self):\n"
+            "        first = not M.exists()\n"
+            "        M.touch()\n"
+            "        self.assertFalse(first)\n"
+        )
+        runner = self.runner(self.out / "real-retry")
+        runner.snapshot = self.root
+        runner.group = "project-api"
+        with patch.object(runner, "discover_test_ids", return_value=["test_flaky.FlakyOnce.t"]):
+            runner.sharded_tests("api", sys.executable, "src/api", [["test_flaky"]])
+        self.assertEqual([row["exit_code"] for row in runner.rows], [0])
+        self.assertEqual([row["exit_code"] for row in runner.retries], [1])
+        retry = runner.retries[0]
+        log = runner.out / retry["log"]
+        self.assertIn("FlakyOnce", log.read_text())
+        receipt = {
+            "retries": runner.retries,
+            "files": {retry["log"]: retry["sha256"]},
+            "commands": runner.rows,
+        }
+        gate.validate_retries(receipt)
 
     def test_wall_seconds_spans_earliest_start_to_latest_finish_with_retries(self) -> None:
         rows = [

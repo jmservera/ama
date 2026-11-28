@@ -91,6 +91,39 @@ print(json.dumps({
 """
 
 
+_ORIGINAL_PURGE = """
+import json, sys
+from pathlib import Path
+import test_bulk_edits as b
+src_root = Path({src!r})
+old_store = sys.modules["zava_forward.core.store"]
+
+def outside(mod):
+    f = getattr(mod, "__file__", None)
+    return isinstance(f, str) and not Path(f).resolve().is_relative_to(src_root)
+
+for target in ({agents!r}, {tests!r}, {core!r}):
+    if target in sys.path:
+        sys.path.remove(target)
+    sys.path.insert(0, target)
+if any((n == "zava_forward" or n.startswith("zava_forward.")) and outside(m)
+       for n, m in list(sys.modules.items())):
+    for n in [k for k in list(sys.modules) if k == "zava_forward" or k.startswith("zava_forward.")]:
+        sys.modules.pop(n, None)
+from zava_forward.core import bulk_edits as fresh_bulk
+from zava_forward.core.store import ConflictError, GateError, Store
+print(json.dumps({{
+    "conflict_same": ConflictError is b.ConflictError,
+    "store_same": Store is b.Store,
+    "patch_target_same": fresh_bulk is b.bulk_edits,
+    "old_conflict_file": old_store.__file__,
+    "new_conflict_file": sys.modules[ConflictError.__module__].__file__,
+    "old_conflict_module_is_new": old_store is sys.modules[ConflictError.__module__],
+    "gate_file": sys.modules[GateError.__module__].__file__,
+}}))
+"""
+
+
 class NominationBootstrapIdentityTests(unittest.TestCase):
     def _run(self, code: str, *roots: Path, isolated: bool = False) -> dict[str, object]:
         env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
@@ -170,6 +203,44 @@ class NominationBootstrapIdentityTests(unittest.TestCase):
                 code = f"import site; site.addsitedir({tmp!r})\n" + code
                 self._assert_source_identity(self._run(code, _TESTS, isolated=True))
 
+    def test_editable_dist_info_layout_reports_metadata_and_source_origins(self) -> None:
+        probe = (
+            "import importlib.metadata as md, json, sys\n"
+            "for name in {order}:\n"
+            "    __import__(name)\n"
+            "n = sys.modules['test_nomination_route']\n"
+            "b = sys.modules['test_bulk_edits']\n"
+            "print(json.dumps({{\n"
+            "    'conflict': n.ConflictError is b.ConflictError,\n"
+            "    'gate': n.GateError is sys.modules[n.GateError.__module__].GateError,\n"
+            "    'store': n.Store is b.Store,\n"
+            "    'patch_target': b.bulk_edits is sys.modules['zava_forward.core.bulk_edits'],\n"
+            "    'store_file': sys.modules['zava_forward.core.store'].__file__,\n"
+            "    'gate_file': sys.modules[n.GateError.__module__].__file__,\n"
+            "    'meta_version': md.version('zava-forward-core'),\n"
+            "}}))\n"
+        )
+        orders = (
+            ["test_bulk_edits", "test_nomination_route"],
+            ["test_nomination_route", "test_bulk_edits"],
+        )
+        for order in orders:
+            with self.subTest(order=order), tempfile.TemporaryDirectory() as tmp:
+                info = Path(tmp) / "zava_forward_core-0.1.0.dist-info"
+                info.mkdir()
+                (info / "METADATA").write_text(
+                    "Metadata-Version: 2.1\nName: zava-forward-core\nVersion: 0.1.0\n",
+                    encoding="utf-8",
+                )
+                (Path(tmp) / "zava-editable.pth").write_text(
+                    f"{_CORE_SRC}\n{_AGENTS_SRC}\n", encoding="utf-8"
+                )
+                code = f"import site; site.addsitedir({tmp!r})\n" + probe.format(order=order)
+                result = self._run(code, _TESTS, isolated=True)
+                self._assert_source_identity(result)
+                self.assertEqual(result["meta_version"], "0.1.0")
+                self.assertTrue(Path(str(result["gate_file"])).is_relative_to(_TESTS.parents[1]))
+
     def _noneditable_copy(self, tmp: str) -> Path:
         shutil.copytree(
             _CORE_SRC / "zava_forward",
@@ -196,6 +267,26 @@ class NominationBootstrapIdentityTests(unittest.TestCase):
             self.assertTrue(result["family_unchanged"])
             self.assertTrue(result["path_unchanged"])
             self.assertFalse(result["nomination_loaded"])
+
+    def test_original_purge_bootstrap_splits_identity_measured(self) -> None:
+        # Measures the pre-fix bootstrap (whole-family sys.modules purge) so the identity split
+        # behind the second-apply ConflictError failure is an observation, not a hypothesis.
+        code = _ORIGINAL_PURGE.format(
+            src=str(_TESTS.parents[1]),
+            agents=str(_AGENTS_SRC),
+            tests=str(_TESTS),
+            core=str(_CORE_SRC),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            site = self._noneditable_copy(tmp)
+            result = self._run(code, site, _AGENTS_SRC, _TESTS)
+        self.assertIs(result["conflict_same"], False)
+        self.assertIs(result["store_same"], False)
+        self.assertIs(result["patch_target_same"], False)
+        self.assertIs(result["old_conflict_module_is_new"], False)
+        self.assertTrue(Path(str(result["old_conflict_file"])).is_relative_to(site))
+        self.assertTrue(Path(str(result["new_conflict_file"])).is_relative_to(_TESTS.parents[1]))
+        self.assertTrue(Path(str(result["gate_file"])).is_relative_to(_TESTS.parents[1]))
 
 
 if __name__ == "__main__":

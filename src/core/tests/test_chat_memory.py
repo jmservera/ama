@@ -174,6 +174,30 @@ class MemoryLifecycle:
         self.assertIn("chat.memory.opt_out", log)
         self.assertNotIn("secret-ish", log)
 
+    def test_another_opted_in_user_never_sees_or_removes_memory(self):
+        self.c.opt_in(U1, True)
+        self.c.add_memory(U1, "private style note", task=TASK)
+        self.c.opt_in(OTHER, True)
+        self.assertEqual(self.c.list_memory(OTHER), [])
+        self.assertEqual(self.c.prompt_memory(OTHER, TASK), [])
+        self.assertEqual(self.c.locate(OTHER)["memory"], [])
+        self.assertEqual(self.c.clear_memory(OTHER), 0)
+        self.assertEqual(self.c.opt_out(OTHER), 0)
+        self.assertEqual(self.c.erase(OTHER)["memory"], 0)
+        self.assertEqual([m["content"] for m in self.c.list_memory(U1)], ["private style note"])
+        self.assertEqual(len(self.c.prompt_memory(U1, TASK)), 1)
+
+    def test_memory_ledger_records_metadata_for_every_mutation_without_content(self):
+        self.c.opt_in(U1, True)
+        mid = self.c.add_memory(U1, "marker-add-text", task=TASK)
+        self.c.edit_memory(U1, mid, "marker-edit-text")
+        self.c.delete_memory(U1, mid)
+        log = json.dumps(list(self.store.audit_entries()))
+        for event in ("chat.memory.added", "chat.memory.deleted"):
+            self.assertIn(event, log)
+        self.assertNotIn("marker-add-text", log)
+        self.assertNotIn("marker-edit-text", log)
+
     def test_erase_and_purge_cover_memory(self):
         self.c.opt_in(U1, True)
         self.c.add_memory(U1, "tables", task=TASK)

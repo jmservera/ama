@@ -176,6 +176,74 @@ class ChatPrivacyBehaviour(_TestCase):
             c.add_memory(U1, "tenant has asthma", task=TASK)
         self.assertIn("special-category", cp.WARNING)
 
+    def test_redaction_leaves_benign_text_and_masks_every_occurrence(self) -> None:
+        self.assertEqual(cp.redact("Order 12 radiators for the Maple block"), ("Order 12 radiators for the Maple block", []))
+        text, kinds = cp.redact("a@example.test and b@example.test, +44 7700 900123, ab 12 34 56 c")
+        for leak in ("a@example.test", "b@example.test", "7700", "ab 12"):
+            self.assertNotIn(leak, text)
+        self.assertEqual(text.count("[email removed]"), 2)
+        self.assertEqual(kinds, ["email", "ni_number", "phone"])
+        self.assertEqual(cp.redact(text), (text, []))
+
+    def test_diagnostic_allowlist_names_no_content_field(self) -> None:
+        for name in ("content", "prompt", "memory", "message", "text", "reply"):
+            self.assertNotIn(name, cp.DIAGNOSTIC_FIELDS)
+        noisy = dict(thread_id="t", status="ok", message="m", text="x", reply="r", email="a@example.test")
+        self.assertEqual(cp.diagnostic_safe(noisy), dict(thread_id="t", status="ok"))
+
+    def test_erase_is_idempotent_and_leaves_other_users_export_untouched(self) -> None:
+        c = self.cp(**APPROVED)
+        self.assertEqual(c.erase(U1), dict(threads=0, messages=0, memory=0))
+        for u in (U1, U2):
+            c.add_message(u, c.start_thread(u, "ZF-1", TASK), "user", f"from {u['name']}")
+        self.assertEqual(c.erase(U1)["messages"], 1)
+        self.assertEqual(c.erase(U1), dict(threads=0, messages=0, memory=0))
+        self.assertEqual([m["content"] for m in c.export(U2)["messages"]], [f"from {U2['name']}"])
+        self.assertEqual(c.export(U1), dict(messages=[], memory=[]))
+
+    def test_memory_is_stored_masked_and_edit_applies_the_same_checks(self) -> None:
+        c = self.cp(**APPROVED)
+        c.opt_in(U1, True)
+        mid = c.add_memory(U1, "reach me on a@example.test", task=TASK)
+        self.assertNotIn("a@example.test", c.list_memory(U1)[0]["content"])
+        c.edit_memory(U1, mid, "call 07700 900123")
+        stored = c.list_memory(U1)[0]["content"]
+        self.assertNotIn("07700", stored)
+        self.assertIn("[phone removed]", stored)
+        with self.assertRaises(ValueError):
+            c.edit_memory(U1, mid, "tenant has asthma")
+        self.assertEqual(c.list_memory(U1)[0]["content"], stored)
+
+    def test_other_user_cannot_edit_or_delete_memory_item(self) -> None:
+        c = self.cp(**APPROVED)
+        for u in (U1, U2):
+            c.opt_in(u, True)
+        mid = c.add_memory(U1, "table layout", task=TASK)
+        with self.assertRaises(LookupError):
+            c.edit_memory(U2, mid, "overwritten")
+        with self.assertRaises(LookupError):
+            c.delete_memory(U2, mid)
+        self.assertEqual([m["content"] for m in c.list_memory(U1)], ["table layout"])
+
+    def test_edit_does_not_extend_expiry(self) -> None:
+        c = self.cp(**APPROVED, CHAT_RETENTION_DAYS="30", CHAT_RETENTION_REF="SYNTH-RET-1")
+        c.opt_in(U1, True)
+        mid = c.add_memory(U1, "first", task=TASK)
+        before = c.list_memory(U1)[0]["expires_at"]
+        self.assertIsNotNone(before)
+        c.edit_memory(U1, mid, "second")
+        item = c.list_memory(U1)[0]
+        self.assertEqual((item["content"], item["expires_at"]), ("second", before))
+
+    def test_locate_returns_ids_and_counts_not_content(self) -> None:
+        c = self.cp(**APPROVED)
+        c.opt_in(U1, True)
+        c.add_message(U1, c.start_thread(U1, "ZF-1", TASK), "user", "distinctive-marker-text")
+        c.add_memory(U1, "distinctive-memory-text", task=TASK)
+        found = c.locate(U1)
+        self.assertEqual(set(found), {"threads", "messages", "memory"})
+        self.assertNotIn("distinctive", json.dumps(found))
+
     def test_diagnostics_exclude_content(self) -> None:
         out = cp.diagnostic_safe(dict(thread_id="t", content="secret", prompt="p", memory="m", count=2))
         self.assertEqual(out, dict(thread_id="t", count=2))

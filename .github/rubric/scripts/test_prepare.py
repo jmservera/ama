@@ -493,6 +493,37 @@ def test_given_pr_deleting_scored_file_when_gated_then_drop_counts(tmp_path):
     assert (state["removed_files"], result["passed"], result["total"]) == ([REMOVED], False, expected_total)
 
 
+def test_given_pr_deleting_files_and_dropping_their_glob_when_computed_then_old_registry_counts_deletion(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    registry_path = root / ".github" / "rubric" / "artifacts.json"
+    legacy_glob = "legacy/**/*"
+    legacy_file = "legacy/old.py"
+    registry = json.loads(registry_path.read_text(encoding="utf-8"))
+    solution = next(a for a in registry["artifacts"] if a["id"] == "solution-code")
+    solution["include"].append(legacy_glob)
+    registry_path.write_text(json.dumps(registry), encoding="utf-8")
+    (root / "legacy").mkdir()
+    (root / legacy_file).write_text("old evidence\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "registry covers legacy")
+    git(root, "checkout", "-b", "feature")
+    solution["include"].remove(legacy_glob)
+    registry_path.write_text(json.dumps(registry), encoding="utf-8")
+    git(root, "rm", legacy_file)
+    git(root, "commit", "-am", "delete legacy and drop its glob")
+
+    # Act
+    state = prepare.compute_state(root, "main", "pull_request")
+
+    # Assert
+    assert state["instrument_changed"] is True
+    assert state["should_score"] is True
+    assert len(state["open_criteria"]) == 20
+    assert legacy_file not in state["artifacts"]["solution-code"]["files"]
+    assert not (root / legacy_file).exists()
+
+
 def test_given_direct_push_deleting_scored_file_when_computed_then_removed_detected(tmp_path):
     # Arrange
     root = make_repo(tmp_path)

@@ -1190,6 +1190,58 @@ class ReviewTests(Base):
                 with self.assertRaises(PermissionError):
                     self.service.authorize(db, dict(user, view_only=True), "stock-prioritisation", case_id)
 
+    def test_bound_view_only_entra_denied_on_every_assistant_route(self):
+        user = self.bound_entra(case_ids=["ZF-1"])
+        p = self.run_ready("stock-prioritisation")
+        self.assertEqual(self.service.detail(user, p["id"])["id"], p["id"])
+        self.assertTrue(self.service.listing(user)["proposals"])
+        view_only = dict(user, view_only=True)
+        for op in (
+            lambda: self.service.invoke(view_only, "stock-prioritisation", "ZF-1"),
+            lambda: self.service.listing(view_only),
+            lambda: self.service.detail(view_only, p["id"]),
+            lambda: self.verify(p, view_only),
+        ):
+            with self.assertRaises(PermissionError):
+                op()
+
+    def test_bound_entra_area_scope_applies_to_invoke_and_detail(self):
+        user = self.bound_entra()
+        p = self.run_ready("stock-prioritisation")
+        with self.service.transaction() as db:
+            area = json.loads(db.execute("SELECT body FROM cases WHERE id='ZF-1'").fetchone()[0])["home"]["area"]
+
+        def set_areas(areas):
+            with self.service.transaction() as db:
+                row = json.loads(db.execute("SELECT body FROM staff WHERE email=?", (user["email"],)).fetchone()[0])
+                db.execute("UPDATE staff SET body=? WHERE email=?",
+                           (canonical(dict(row, areas=areas)), user["email"]))
+
+        set_areas([area + "-other"])
+        for op in (lambda: self.service.invoke(user, "stock-prioritisation", "ZF-1"),
+                   lambda: self.service.detail(user, p["id"])):
+            with self.assertRaises(PermissionError):
+                op()
+        self.assertEqual(self.service.listing(user)["proposals"], [])
+        set_areas([area])
+        self.assertEqual(self.service.detail(user, p["id"])["id"], p["id"])
+        self.assertTrue(self.service.invoke(user, "stock-prioritisation", "ZF-1"))
+
+    def test_principal_bound_by_identity_bind_is_scoped_and_view_only_denied(self):
+        seed = self.bound_entra(case_ids=["ZF-2"])
+        raw = identity.principal(seed["tid"], seed["oid"], "Retrofit Programme Manager")
+        user = identity.bind(self.store, raw)
+        self.assertEqual(user["bound"], seed["bound"])
+        with self.service.transaction() as db:
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, user, "stock-prioritisation", "ZF-1")
+            self.assertEqual(self.service.authorize(db, user, "stock-prioritisation", "ZF-2")["id"], "ZF-2")
+        view_only = identity.bind(self.store, dict(raw, view_only=True))
+        self.assertTrue(view_only["view_only"])
+        with self.service.transaction() as db:
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, view_only, "stock-prioritisation", "ZF-2")
+
     def test_independent_qa_reviewer_and_separate_human_verification(self):
         self.case(lambda c: c.update(quality=[dict(measure="Loft insulation", state="Submitted",
                                                  recorded_by=self.pm["name"], recorded_by_code=self.pm["code"], items=[])]))

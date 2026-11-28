@@ -14,7 +14,7 @@ import tempfile
 import unittest
 from collections.abc import Iterator
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from unittest.mock import patch
 
 from dataset import case
@@ -724,6 +724,18 @@ class UnusableArchivePathTests(RunnerBase):
         self.archive = locked / "archive"
         return locked
 
+    def empty_path(self) -> Path:
+        # A str: Path("") would normalise to the current folder, which is a valid archive.
+        self.archive = cast(Path, "")
+        previous = os.getcwd()
+        self.addCleanup(os.chdir, previous)
+        os.chdir(self.root)
+        return self.root
+
+    def nul_path(self) -> Path:
+        self.archive = cast(Path, "archive\0folder")
+        return self.root
+
     def scenarios(self) -> list[Any]:
         return [
             self.regular_file,
@@ -734,6 +746,8 @@ class UnusableArchivePathTests(RunnerBase):
             self.symlink_loop,
             self.symlink_loop_ancestor,
             self.unsearchable_parent,
+            self.empty_path,
+            self.nul_path,
         ]
 
     def check_unknown(self, make: Any) -> None:
@@ -810,6 +824,42 @@ class UnusableArchivePathTests(RunnerBase):
             code, res = self.cli("publish", *base, "--cases", str(cases))
         self.assertEqual((code, self.codes(res)), (2, ["archive_unreadable"]))
         self.assertEqual(self.archive.read_text(), "not a folder")
+
+    def test_empty_archive_argument_exits_nonzero_and_writes_nothing(self) -> None:
+        self.empty_path()
+        cases = self.cases_file()
+        before = sorted(os.listdir(self.root))
+        base = ("--archive", "", "--today", TODAY)
+        with self.registry_patched():
+            self.assertEqual(self.cli("verify", *base)[0], 1)
+            self.assertEqual(self.cli("schedule", *base)[0], 1)
+            code, res = self.cli("publish", *base, "--cases", str(cases))
+        self.assertEqual((code, self.codes(res)), (2, ["archive_unreadable"]))
+        self.assertEqual(sorted(os.listdir(self.root)), before)
+
+    def test_unusable_shapes_exit_nonzero_through_main(self) -> None:
+        shapes = (
+            self.dangling_link,
+            self.dangling_ancestor,
+            self.symlink_loop,
+            self.ancestor_regular_file,
+        )
+        for make in shapes:
+            with self.subTest(make.__name__):
+                self.setUp()
+                sentinel = make()
+                before = os.path.lexists(sentinel), os.path.islink(sentinel)
+                cases = self.cases_file()
+                base = ("--archive", str(self.archive), "--today", TODAY)
+                with self.registry_patched():
+                    code_v, res_v = self.cli("verify", *base)
+                    code_s, res_s = self.cli("schedule", *base)
+                    code_p, res_p = self.cli("publish", *base, "--cases", str(cases))
+                self.assertEqual((code_v, code_s, code_p), (1, 1, 2))
+                self.assertEqual(self.codes(res_p), ["archive_unreadable"])
+                for res in (res_v, res_s, res_p):
+                    self.assertNotIn(str(self.root), json.dumps(res))
+                self.assertEqual((os.path.lexists(sentinel), os.path.islink(sentinel)), before)
 
     @unittest.skipIf(os.geteuid() == 0, "root bypasses directory permissions")
     def test_real_permission_denied_parent_is_unknown_not_creatable(self) -> None:

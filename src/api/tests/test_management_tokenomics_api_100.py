@@ -238,6 +238,40 @@ class ManagementTokenomicsApiTests(unittest.TestCase):
             for forbidden in ("PRIVATE-DRAFT-BODY", "PRIVATE-REVIEW-NOTE", "SECRET-REAL-RECORD"):
                 self.assertNotIn(forbidden, progress_blob)
 
+    def test_progress_window_bounds_ai_economics_denominators_and_keeps_costs_unknown(
+        self,
+    ) -> None:
+        # The one synthetic accepted proposal is resolved on 2026-03-03; the end date is inclusive.
+        windows = (
+            ("2026-03-02", "2026-03-05", 1),
+            ("2026-03-03", "2026-03-03", 1),
+            ("2026-03-04", "2026-03-05", 0),
+            ("2026-03-01", "2026-03-02", 0),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "store.json"
+            path.write_text(json.dumps(_api_fixture()), encoding="utf-8")
+            store_cls: Any = Store
+            srv = _ServerHarness(store_cls(path))
+            try:
+                results = {
+                    (start, end): srv.get_json(
+                        "/api/progress?" + urlencode({"start": start, "end": end}),
+                        "pam@example.test",
+                    )["ai_consumption_economics"]
+                    for start, end, _ in windows
+                }
+            finally:
+                srv.close()
+        for start, end, expected in windows:
+            with self.subTest(start=start, end=end):
+                econ = results[(start, end)]
+                tokenomics.assert_tokenomics_invariants(econ)
+                self.assertEqual(econ["proposal_count"], expected)
+                self.assertEqual(econ["accepted_outcome_count"], expected)
+                for cost_key in COST_KEYS:
+                    self.assertEqual(econ[cost_key], "Unknown")
+
     def test_priced_sql_http_endpoints_distinguish_zero_outcomes_from_accepted_outcomes(
         self,
     ) -> None:

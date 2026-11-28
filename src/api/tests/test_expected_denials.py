@@ -48,7 +48,13 @@ class ExpectedDenialTests(Base):
         self.assertEqual(code, 200)
         self.assertEqual(
             me["services"],
-            {"photo": False, "law_alerts": False, "assistants": True, "cases": True},
+            {
+                "photo": False,
+                "law_alerts": False,
+                "assistants": True,
+                "cases": True,
+                "ai_observability_url": None,
+            },
         )
         self.assertEqual(self.get("/api/account/photo")[0], 503)
         self.assertEqual(self.get("/api/law/alerts")[0], 503)

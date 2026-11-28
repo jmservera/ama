@@ -6,8 +6,11 @@ coordinator session SQL). Row fields:
 * `tick`: integer sequence number (rows are checked in this order)
 * `counts`: object with `ready`, `running`, `unassessed`, `human_blocked`,
   `dependency_blocked`
+  (each present count must be a non-negative integer; anything else is a
+  `count-value` violation because it would hide ready work)
 * `action`, `evidence`: strings; a tick missing either is no-progress
-* `recovery`: true when the tick executed the bounded recovery action
+* `recovery`: true when the tick executed the bounded recovery action (needs
+  `action` and `evidence`)
 * `closure_batch`: list of closure-review item ids assessed in the tick
 * `approvals_granted`, `approvals_expired`: lists of `{"scope", "tasks"}` objects
 * `reclassified`: list of `{"task", "to", "scope"}` objects
@@ -29,6 +32,7 @@ from typing import Any
 
 SESSION_CAP = 8
 CLOSURE_BATCH_MAX = 5
+COUNT_KEYS = ("ready", "running", "unassessed", "human_blocked", "dependency_blocked")
 OPTIONAL_COLUMNS = (
     "closure_batch",
     "approvals_granted",
@@ -84,12 +88,24 @@ def check_ticks(rows: list[dict[str, Any]], require_extended: bool = False) -> l
     ordered = sorted(rows, key=lambda r: r.get("tick") if isinstance(r.get("tick"), int) else -1)
     seen_items: set[str] = set()
     streak = 0
+    seen_ticks: set[int] = set()
     for row in ordered:
         tick = row.get("tick")
         if not isinstance(tick, int) or isinstance(tick, bool):
             violations.append(Violation(tick, "schema", "tick must be an integer"))
+        elif tick in seen_ticks:
+            violations.append(Violation(tick, "duplicate-tick", "tick number appears twice"))
+        else:
+            seen_ticks.add(tick)
         if not isinstance(row.get("counts"), dict):
             violations.append(Violation(tick, "schema", "counts object is required"))
+        else:
+            for key in COUNT_KEYS:
+                value = row["counts"].get(key, 0)
+                if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                    violations.append(
+                        Violation(tick, "count-value", f"{key} must be a non-negative integer")
+                    )
         if require_extended:
             missing = [c for c in OPTIONAL_COLUMNS if c not in row]
             if missing:
@@ -110,6 +126,10 @@ def check_ticks(rows: list[dict[str, Any]], require_extended: bool = False) -> l
                 Violation(
                     tick, "recovery", "two no-progress ticks need a recovery action this tick"
                 )
+            )
+        if row.get("recovery") is True and not acted:
+            violations.append(
+                Violation(tick, "recovery-claim", "recovery claimed without action and evidence")
             )
         streak = 0 if acted else streak + 1
 
@@ -175,6 +195,17 @@ def _check_approvals(row: dict[str, Any], tick: object) -> list[Violation]:
             expired_allowed = allowed
         else:
             granted_allowed = allowed
+    for task in sorted(expired_allowed & granted_allowed):
+        found.append(
+            Violation(tick, "approval-conflict", f"task {task} both expired and granted this tick")
+        )
+    for move in moves:
+        if move.get("to") == "ready" and str(move.get("task")) in expired_allowed:
+            found.append(
+                Violation(
+                    tick, "approval-conflict", f"task {move.get('task')} made ready after expiry"
+                )
+            )
     for move in moves:
         task = str(move.get("task"))
         if move.get("to") == "human-blocked" and task not in expired_allowed:
@@ -226,9 +257,12 @@ def _decode_column(column: str, value: object) -> object:
         return bool(value)
     if isinstance(value, str):
         try:
-            return json.loads(value)
+            decoded = json.loads(value)
         except json.JSONDecodeError:
-            return [value] if value.strip() else []
+            decoded = None
+        if isinstance(decoded, list):
+            return decoded
+        return [value.strip()] if value.strip() else []
     return [] if value is None else value
 
 

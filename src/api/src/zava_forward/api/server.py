@@ -9,6 +9,7 @@ import secrets
 import sys
 import threading
 import traceback
+from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -92,6 +93,14 @@ def chat_admission(store):
         chat_demo_meter.ensure(store, CHAT_MAX_TOKENS)
         return AI_SUSPENDED if store.continuity_block(CHAT_TASK) else None
     return store.release_block(CHAT_TASK, store.ai.fast) or (AI_SUSPENDED if store.continuity_block(CHAT_TASK) else None)
+
+
+def ai_observability_url(env: Mapping[str, str] | None = None) -> str | None:
+    """Optional Azure Application Insights portal link for staff; only a plain https URL is ever shown."""
+    env = os.environ if env is None else env
+    url = (env.get("ZF_AI_OBSERVABILITY_URL") or "").strip()
+    parts = urlparse(url)
+    return url if parts.scheme == "https" and parts.netloc and not parts.username and not parts.password else None
 
 
 def tile_config(env=None):
@@ -1164,6 +1173,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     law_alerts=app.law is not None,
                     assistants=u.get("role") in projection.STAFF_ROLES,
                     cases=projection.allowed(u, "cases"),
+                    ai_observability_url=ai_observability_url() if u.get("role") in projection.STAFF_ROLES else None,
                 )
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["navigation"] = navigation(u)

@@ -52,6 +52,15 @@ class TickLogTests(unittest.TestCase):
     def test_clean_log_passes(self) -> None:
         self.assertEqual(rules([tick(1), tick(2)]), [])
 
+    def test_malformed_counts_are_flagged_not_coerced_to_zero(self) -> None:
+        for bad in (-1, True, "2", 1.5, None):
+            counts = {"ready": bad, "running": 1, "unassessed": 0}
+            self.assertEqual(rules([tick(1, counts=counts)]), ["count-value"], bad)
+        counts = {"ready": -1, "running": 1.0, "unassessed": 0}
+        self.assertEqual(rules([tick(1, counts=counts)]), ["count-value", "count-value"])
+        self.assertEqual(rules([tick(1, counts={"ready": 0})]), [])
+        self.assertEqual(rules([tick(1, counts="x")]), ["schema"])
+
     def test_missing_action_with_ready_work_is_flagged(self) -> None:
         self.assertEqual(rules([tick(1, action="", evidence="")]), ["no-progress"])
 
@@ -68,6 +77,12 @@ class TickLogTests(unittest.TestCase):
         self.assertEqual(rules(rows), ["recovery"])
         rows[2]["recovery"] = True
         self.assertEqual(rules(rows), [])
+
+    def test_recovery_claim_needs_action_and_evidence(self) -> None:
+        full = {"ready": 1, "running": 8, "unassessed": 0}
+        claimed = tick(1, counts=full, action="", evidence="", recovery=True)
+        self.assertEqual(rules([claimed]), ["recovery-claim"])
+        self.assertEqual(rules([tick(1, counts=full, recovery=True)]), [])
 
     def test_closure_batch_bound_and_repeat(self) -> None:
         big = tick(1, closure_batch=list("abcdef"))
@@ -99,6 +114,59 @@ class TickLogTests(unittest.TestCase):
         moves = [{"task": 7, "to": "ready", "scope": "send"}]
         self.assertEqual(rules([tick(1, approvals_granted=granted, reclassified=moves)]), [])
 
+    def test_duplicate_tick_number_is_flagged_once(self) -> None:
+        self.assertEqual(rules([tick(1), tick(1), tick(2)]), ["duplicate-tick"])
+
+    def test_same_tick_expiry_and_grant_conflict(self) -> None:
+        both = [{"scope": "a", "tasks": [5]}]
+        moves = [
+            {"task": 5, "to": "human-blocked", "scope": "a"},
+            {"task": 5, "to": "ready", "scope": "a"},
+        ]
+        found = rules([tick(1, approvals_expired=both, approvals_granted=both, reclassified=moves)])
+        self.assertEqual(sorted(set(found)), ["approval-conflict"])
+
+    def test_ready_after_expiry_without_grant_conflicts(self) -> None:
+        expired = [{"scope": "a", "tasks": [5]}]
+        moves = [
+            {"task": 5, "to": "human-blocked", "scope": "a"},
+            {"task": 5, "to": "ready", "scope": "a"},
+        ]
+        self.assertEqual(
+            rules([tick(1, approvals_expired=expired, reclassified=moves)]), ["approval-conflict"]
+        )
+
+    def test_expiry_then_later_grant_across_ticks_is_clean(self) -> None:
+        expired = [{"scope": "a", "tasks": [5]}]
+        granted = [{"scope": "b", "tasks": [5]}]
+        rows = [
+            tick(
+                1,
+                approvals_expired=expired,
+                reclassified=[{"task": 5, "to": "human-blocked", "scope": "a"}],
+            ),
+            tick(
+                2,
+                approvals_granted=granted,
+                reclassified=[{"task": 5, "to": "ready", "scope": "b"}],
+            ),
+        ]
+        self.assertEqual(rules(rows), [])
+
+    def test_block_without_expiry_is_flagged_but_expiry_block_is_clean(self) -> None:
+        move = {"task": "7", "to": "human-blocked", "scope": "s"}
+        self.assertEqual(rules([tick(1, reclassified=[move])]), ["approval"])
+        expired = {"scope": "s", "tasks": ["7"]}
+        self.assertEqual(rules([tick(1, reclassified=[move], approvals_expired=[expired])]), [])
+
+    def test_duplicate_id_inside_one_closure_batch_is_a_repeat(self) -> None:
+        self.assertEqual(rules([tick(1, closure_batch=["a", "a"])]), ["closure-repeat"])
+
+    def test_whitespace_action_is_no_progress_and_idle_stop_is_allowed(self) -> None:
+        self.assertEqual(rules([tick(1, action="   ")]), ["no-progress"])
+        drained = {"ready": 0, "running": 0, "unassessed": 0, "human_blocked": 4}
+        self.assertEqual(rules([tick(1, counts=drained, global_stop=True)]), [])
+
     def test_global_stop_with_remaining_work_is_flagged(self) -> None:
         self.assertEqual(rules([tick(1, global_stop=True)]), ["global-stop"])
 
@@ -127,6 +195,43 @@ class TickLogTests(unittest.TestCase):
             self.assertEqual(rows[0]["closure_batch"], [])
             self.assertIs(rows[0]["global_stop"], True)
             self.assertEqual(sorted(rules(rows)), ["closure-progress", "global-stop"])
+
+    def test_load_rows_rejects_non_object_rows_and_accepts_empty(self) -> None:
+        self.assertEqual(checker.load_rows("  \n"), [])
+        with self.assertRaises(ValueError):
+            checker.load_rows("[1, 2]")
+        with self.assertRaises(ValueError):
+            checker.load_rows('"text"')
+
+    def test_non_integer_tick_is_a_schema_violation(self) -> None:
+        self.assertIn("schema", rules([tick("1")]))
+        self.assertIn("schema", rules([tick(True)]))
+
+    def test_session_sqlite_unreadable_inputs_raise_value_error(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            empty = Path(tmp) / "empty.db"
+            with closing(sqlite3.connect(empty)) as db:
+                db.execute("CREATE TABLE other (id INTEGER)")
+                db.commit()
+            with self.assertRaises(ValueError):
+                checker.load_sqlite(empty)
+            with self.assertRaises(ValueError):
+                checker.load_sqlite(Path(tmp) / "absent.db")
+            self.assertEqual(checker.main([str(empty)]), 2)
+
+    def test_sqlite_extended_columns_decode_plain_text_and_null(self) -> None:
+        self.assertEqual(checker._decode_column("closure_batch", "188"), ["188"])
+        self.assertEqual(checker._decode_column("closure_batch", "  "), [])
+        self.assertEqual(checker._decode_column("closure_batch", None), [])
+        self.assertEqual(checker._decode_column("closure_batch", '["1"]'), ["1"])
+        self.assertIs(checker._decode_column("global_stop", 0), False)
+
+    def test_malformed_approval_entries_are_ignored(self) -> None:
+        self.assertEqual(rules([tick(1, approvals_granted=["x", 3], reclassified=["y"])]), [])
+
+    def test_ready_move_without_scope_or_grant_is_flagged(self) -> None:
+        row = tick(1, reclassified=[{"task": "9", "to": "ready"}])
+        self.assertEqual(rules([row]), ["approval"])
 
     def test_cli_exit_codes_and_json_lines(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

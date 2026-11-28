@@ -4,6 +4,7 @@ import copy
 import json
 import tempfile
 import unittest
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -848,3 +849,89 @@ class SafeguardingClockInputs(unittest.TestCase):
         self.assertEqual(first["response_due_at"], "Unknown")
         self.assertFalse(second["owner_named"])
         self.assertEqual(second["response_state"], "Unknown")
+
+
+class QueueHelperBoundaries(unittest.TestCase):
+    NOW = datetime(2026, 10, 16, 12, tzinfo=UTC)
+
+    def test_queue_filter_accepts_blank_and_published_keys_only(self) -> None:
+        taskqueues.validate_queue("")
+        for key, _, _ in taskqueues.DEFINITIONS:
+            taskqueues.validate_queue(key)
+        with self.assertRaises(ValueError):
+            taskqueues.validate_queue("everything")
+
+    def test_instant_parses_only_recorded_instants(self) -> None:
+        for bad in (None, 5, "", "not a date", "2026-10-16T12:00:00"):
+            self.assertIsNone(taskqueues.instant(bad))
+        self.assertEqual(taskqueues.instant("2026-10-16"), datetime(2026, 10, 16, tzinfo=UTC))
+        self.assertEqual(
+            taskqueues.instant("2026-10-16T13:00:00+01:00"), datetime(2026, 10, 16, 12, tzinfo=UTC)
+        )
+
+    def test_timing_needs_a_completion_not_after_the_snapshot(self) -> None:
+        now = self.NOW
+        self.assertEqual(taskqueues.timing("2026-10-16", "2026-10-16T12:00:00Z", now), "Completed")
+        self.assertEqual(taskqueues.timing("2026-10-15", None, now), "Overdue")
+        self.assertEqual(taskqueues.timing("2026-10-17", None, now), "Open")
+        self.assertEqual(taskqueues.timing(None, None, now), "Unknown")
+        self.assertEqual(taskqueues.timing("2026-10-15", "2026-10-17T00:00:00Z", now), "Overdue")
+
+    def test_safeguarding_label_needs_reason_visibility(self) -> None:
+        self.assertEqual(taskqueues.safe_category("Safeguarding concern", False), "Safety review")
+        self.assertEqual(
+            taskqueues.safe_category("Safeguarding concern", True), "Safeguarding concern"
+        )
+        self.assertEqual(taskqueues.safe_category("Damp", False), "Damp")
+        self.assertEqual(taskqueues.safe_category(None, False), "Unknown")
+
+    def test_priority_queue_needs_approved_policy_with_a_named_owner(self) -> None:
+        self.assertTrue(taskqueues.approved_priority({"status": "Approved", "owner": "Ops"}))
+        for owner in (None, "", "Unknown", "to be named"):
+            self.assertFalse(taskqueues.approved_priority({"status": "Approved", "owner": owner}))
+        self.assertFalse(taskqueues.approved_priority({"status": "Draft", "owner": "Ops"}))
+
+    def test_open_safety_item_fails_closed_on_unclear_state(self) -> None:
+        self.assertFalse(taskqueues.is_open_safety_item({"released": True}))
+        self.assertTrue(taskqueues.is_open_safety_item({"released": "yes"}))
+        self.assertTrue(taskqueues.is_open_safety_item({"released": False, "status": "Open"}))
+        self.assertTrue(taskqueues.is_open_safety_item({}))
+        for status in (" Closed ", "RESOLVED", "released"):
+            self.assertFalse(taskqueues.is_open_safety_item({"status": status}))
+
+    def test_malformed_safety_containers_count_as_open_safety(self) -> None:
+        self.assertFalse(taskqueues.has_open_safety({}))
+        self.assertFalse(taskqueues.has_open_safety({"hazards": [{"status": "Closed"}]}))
+        for case in (
+            {"hazards": "none"},
+            {"hazards": [{"status": "Closed"}, "note"]},
+            {"safeguarding_items": {"status": "Closed"}},
+            {"safeguarding": "see notes"},
+            {"safeguarding": [{"status": "Closed"}, 3]},
+        ):
+            with self.subTest(case=case):
+                self.assertTrue(taskqueues.has_open_safety(case))
+
+    def test_open_safeguarding_ignores_note_only_containers_and_closed_items(self) -> None:
+        self.assertFalse(taskqueues.has_open_safeguarding({"safeguarding": {"note": "text"}}))
+        self.assertFalse(
+            taskqueues.has_open_safeguarding({"safeguarding_items": [{"status": "closed"}]})
+        )
+        self.assertTrue(
+            taskqueues.has_open_safeguarding({"safeguarding": {"status": "Open", "id": "S1"}})
+        )
+        self.assertTrue(taskqueues.has_open_safeguarding({"safeguarding_items": [{"id": "S2"}]}))
+        self.assertTrue(
+            taskqueues.has_open_safeguarding({"hazards": [{"category": "Safeguarding concern"}]})
+        )
+        self.assertFalse(taskqueues.has_open_safeguarding({"hazards": [{"category": "Damp"}]}))
+
+    def test_safeguarding_item_kind_and_unrecorded_owner_tokens(self) -> None:
+        self.assertTrue(taskqueues.is_safeguarding_item({}, default_kind="safeguarding"))
+        self.assertTrue(taskqueues.is_safeguarding_item({"kind": " Safeguarding "}))
+        self.assertTrue(taskqueues.is_safeguarding_item({"category": "Safeguarding concern"}))
+        self.assertFalse(taskqueues.is_safeguarding_item({"category": "Damp"}))
+        for value in ("", "  TBD ", "Unassigned", "To be named", 7, None):
+            self.assertIsNone(taskqueues._clean_name(value))
+        self.assertEqual(taskqueues._clean_name("  A. Khan "), "A. Khan")
+        self.assertEqual(taskqueues.accountable_owner("  "), taskqueues.ESCALATION_OWNER)

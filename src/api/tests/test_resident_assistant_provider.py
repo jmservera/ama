@@ -19,6 +19,8 @@ from zava_forward.api.resident_demo.assistant import (
     RequestEnvelope,
     _NoRedirect,
     _post,
+    expires_at,
+    expiry_configured,
 )
 
 ENDPOINT = "https://synthetic-test.openai.azure.com"
@@ -73,6 +75,27 @@ class AzureTopicProviderTests(unittest.TestCase):
         with self.assertRaises(AssistantUnavailable):
             AzureTopicProvider(ENDPOINT, "test", enabled=True).select(Topic.STATUS)
         self.assertEqual(self.events, [])
+
+    def test_expiry_follows_zf_demo_expires_at_on_the_topic_provider(self) -> None:
+        later = "2028-01-01T00:00:00Z"
+        stamp = expires_at({"ZF_DEMO_EXPIRES_AT": later})
+        with patch.dict("os.environ", {"ZF_DEMO_EXPIRES_AT": later}):
+            self.assertEqual(
+                self.provider(True, EXPIRES + 86400).select(Topic.STATUS), Topic.STATUS
+            )
+            self.events.clear()
+            with self.assertRaises(AssistantUnavailable):
+                self.provider(True, stamp).select(Topic.STATUS)
+        self.assertEqual(self.events, [])
+        with self.assertRaises(AssistantUnavailable):
+            self.provider(True, EXPIRES + 86400).select(Topic.STATUS)
+
+    def test_expiry_configured_accepts_only_explicit_utc(self) -> None:
+        for good in ("2028-01-01T00:00:00Z", " 2028-01-01T00:00:00+00:00 "):
+            self.assertTrue(expiry_configured({"ZF_DEMO_EXPIRES_AT": good}), good)
+        for bad in ("", "tomorrow", "2028-01-01T00:00:00", "2028-01-01T00:00:00+01:00"):
+            self.assertFalse(expiry_configured({"ZF_DEMO_EXPIRES_AT": bad}), bad)
+        self.assertFalse(expiry_configured({}))
 
     def test_budget_reservation_precedes_credentials_and_fixed_bounded_prompt(self) -> None:
         self.assertEqual(self.provider(True).select(Topic.STATUS), Topic.STATUS)

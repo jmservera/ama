@@ -118,6 +118,16 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(report["chain_seconds"], report["span_seconds"])
         self.assertIn("c", [s["group"] for s in report["critical_chain"]])
 
+    def test_zero_length_command_inside_a_chain_keeps_wall_accounting(self) -> None:
+        path = write_receipt(self.root / "m", [("a", 0, 10), ("z", 10, 10), ("b", 10, 20)])
+        code, out, _ = run("report", str(path))
+        report = json.loads(out)
+        self.assertEqual(code, 0)
+        self.assertEqual(report["span_seconds"], 20.0)
+        self.assertEqual(report["chain_seconds"], 20.0)
+        groups = {step["group"] for step in report["critical_chain"]}
+        self.assertTrue({"a", "b"} <= groups)
+
     def test_idle_gap_inside_a_group_and_queue_wait_from_the_log(self) -> None:
         commands = [("g", 0, 10), ("g", 30, 40)]
         path = write_receipt(self.root / "a", commands)
@@ -227,6 +237,45 @@ class ReportTests(unittest.TestCase):
         self.assertTrue(timing.is_setup(["python", "-m", "pip", "install"]))
         self.assertTrue(timing.is_setup(["docker", "build", "x"]))
         self.assertFalse(timing.is_setup(["python", "-m", "unittest", "pipeline"]))
+
+    def test_symlinked_receipt_and_invalid_header_values_are_refused(self) -> None:
+        real = write_receipt(self.root / "real", CHAIN)
+        link = self.root / "link"
+        link.mkdir()
+        (link / "receipt.json").symlink_to(real)
+        (link / "receipt.sha256").write_text((real.parent / "receipt.sha256").read_text())
+        code, _out, err = run("report", str(link / "receipt.json"))
+        self.assertEqual(code, 2)
+        self.assertIn("Not a regular receipt file", err)
+        for name, override in {
+            "zero jobs": {"jobs": 0},
+            "bool jobs": {"jobs": True},
+            "numeric image cache": {"image_cache": 1},
+        }.items():
+            with self.subTest(name):
+                path = write_receipt(self.root / name.replace(" ", "-"), CHAIN, **override)
+                code, _out, err = run("report", str(path))
+                self.assertEqual(code, 2)
+                self.assertIn("REFUSED", err)
+
+    def test_same_group_steps_on_the_chain_merge_into_one_run_segment(self) -> None:
+        path = write_receipt(self.root / "a", [("g", 0, 10), ("g", 10, 25), ("h", 25, 30)])
+        report = json.loads(run("report", str(path))[1])
+        self.assertEqual(
+            [(s["kind"], s["group"], s["seconds"]) for s in report["critical_chain"]],
+            [("run", "g", 25.0), ("run", "h", 5.0)],
+        )
+        self.assertEqual(report["chain_seconds"], report["span_seconds"])
+
+    def test_host_manifest_prints_the_documented_keys(self) -> None:
+        code, out, _err = run("host-manifest")
+        manifest = json.loads(out)
+        self.assertEqual(code, 0)
+        self.assertEqual(
+            set(manifest),
+            {"cpu_model", "vcpus", "memory_kib", "docker_server", "load_average"},
+        )
+        self.assertEqual(len(manifest["load_average"]), 3)
 
 
 class CompareTests(unittest.TestCase):
@@ -537,6 +586,52 @@ class CompareTests(unittest.TestCase):
         code, report = self.compare(before, self.arm("d", [90, 80], head=wider), *flags)
         self.assertEqual(code, 3)
         self.assertIn("other.txt", report["reasons"][0])
+
+    def test_missing_inputs_and_mixed_heads_make_an_arm_noncomparable(self) -> None:
+        before, after = self.arm("b", [100, 120]), self.arm("a", [80, 90])
+        code, out, _ = run("compare", "--before", *before[0], "--after", *after[0])
+        report = json.loads(out)
+        self.assertEqual(code, 3)
+        for arm in ("before", "after"):
+            self.assertIn(f"{arm}: host manifest missing", report["reasons"])
+            self.assertIn(f"{arm}: verification record missing", report["reasons"])
+        mixed = [
+            write_receipt(self.root / "m0", [("g", 0, 80)], head="a" * 40),
+            write_receipt(self.root / "m1", [("g", 0, 90)], head="b" * 40),
+        ]
+        records = self.root / "mixed-verify.json"
+        records.write_text(
+            json.dumps(
+                [{"receipt": str(p), "command": "v", "exit": 0, "checkout": "/x"} for p in mixed]
+            )
+        )
+        code, out, _ = run(
+            "compare",
+            "--before", *before[0],
+            "--after", *(str(p) for p in mixed),
+            "--host-manifest-before", str(before[1]),
+            "--host-manifest-after", str(after[1]),
+            "--verification-before", str(before[2]),
+            "--verification-after", str(records),
+        )  # fmt: skip
+        self.assertEqual(code, 3)
+        self.assertIn("after: receipts are from different heads", json.loads(out)["reasons"])
+
+    def test_unreadable_manifest_and_unknown_revision_are_refused(self) -> None:
+        before, after = self.arm("b", [100, 120]), self.arm("a", [80, 90])
+        broken = self.root / "broken.json"
+        broken.write_text("{not json")
+        code, _out, err = run(
+            "compare",
+            "--before", *before[0],
+            "--after", *after[0],
+            "--host-manifest-before", str(broken),
+        )  # fmt: skip
+        self.assertEqual(code, 2)
+        self.assertIn("Cannot read JSON", err)
+        with self.assertRaises(timing.TimingError) as caught:
+            timing.tree_delta(self.root, "0" * 40, "1" * 40)
+        self.assertEqual(caught.exception.code, 2)
 
 
 if __name__ == "__main__":

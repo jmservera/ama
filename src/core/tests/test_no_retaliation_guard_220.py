@@ -97,6 +97,56 @@ class NoRetaliationGuardFacadeTests(unittest.TestCase):
         with self.assertRaises(no_retaliation_guard.ChallengeSafeguardError):
             no_retaliation_guard.assert_no_adverse_challenge_effects(baseline, lowered)
 
+    def test_independent_hazard_routing_keeps_existing_hazard_clocks(self) -> None:
+        active = {
+            "id": "HZ-1",
+            "released": False,
+            "aware_at": "2026-11-15T08:00:00Z",
+            "hold": {"status": "Active"},
+        }
+        new_ok = {
+            "id": "HZ-2",
+            "released": False,
+            "aware_at": "2026-11-16T09:00:00Z",
+            "hold": {"status": "Active"},
+        }
+        before: dict[str, Any] = {"id": "CASE-220-HZ", "hazards": [active]}
+        guard = no_retaliation_guard.assert_no_adverse_challenge_effects
+
+        after = copy.deepcopy(before)
+        after["hazards"].append(new_ok)
+        guard(before, after, allow_new_independent_hazard=True)
+        with self.assertRaises(no_retaliation_guard.ChallengeSafeguardError):
+            guard(before, after)
+
+        def delayed(case: dict[str, Any]) -> None:
+            case["hazards"][0]["aware_at"] = "2026-11-20T08:00:00Z"
+
+        def removed(case: dict[str, Any]) -> None:
+            case["hazards"] = []
+
+        def released_new(case: dict[str, Any]) -> None:
+            case["hazards"][1]["released"] = True
+
+        def held_new(case: dict[str, Any]) -> None:
+            case["hazards"][1]["hold"] = {"status": "Released"}
+
+        def unstamped_new(case: dict[str, Any]) -> None:
+            case["hazards"][1]["aware_at"] = " "
+
+        for name, mutate in (
+            ("delayed_clock", delayed),
+            ("removed_hazard", removed),
+            ("released_new", released_new),
+            ("inactive_hold_new", held_new),
+            ("unstamped_new", unstamped_new),
+        ):
+            with self.subTest(name):
+                bad = copy.deepcopy(after)
+                mutate(bad)
+                with self.assertRaises(no_retaliation_guard.ChallengeSafeguardError):
+                    guard(before, bad, allow_new_independent_hazard=True)
+
     def test_held_form_review_drafts_remain_isolated_from_challenge_catalog(self) -> None:
         rd: Any = resident_decisions
         case: dict[str, Any] = {

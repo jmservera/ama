@@ -568,6 +568,29 @@ class RaiControlPlane218Tests(unittest.TestCase):
                 finally:
                     rai_control_plane._cached_default_traceability_targets.cache_clear()
 
+    def test_rai_failure_does_not_change_real_ai_delivery_gate(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            store = _make_json_store(tmp, "json-converse")
+            actor = _pm_actor(store)
+            baseline = store.rai_readiness_report(actor)
+            self.assertEqual(baseline["rai_exercise_acceptance"]["status"], "passed")
+
+            broken = copy.deepcopy(rai_control_plane.traceability_summary())
+            broken["untraced_ids"] = ["FR-051"]
+            broken["complete"] = False
+            with patch.object(rai_control_plane, "traceability_summary", return_value=broken):
+                degraded = store.rai_readiness_report(actor)
+
+            self.assertEqual(degraded["rai_exercise_acceptance"]["status"], "failed")
+            self.assertEqual(
+                degraded["real_ai_delivery_gate"]["status"],
+                baseline["real_ai_delivery_gate"]["status"],
+            )
+            self.assertEqual(
+                {k: v["passed"] for k, v in degraded["real_ai_delivery_gate"]["checks"].items()},
+                {k: v["passed"] for k, v in baseline["real_ai_delivery_gate"]["checks"].items()},
+            )
+
     def test_exercise_acceptance_separates_rai_checks_from_real_ai_delivery_gate(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             json_store = _make_json_store(tmp, "json-readiness")

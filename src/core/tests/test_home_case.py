@@ -152,6 +152,68 @@ class HomeCaseTests(unittest.TestCase):
                     shown = store.home_case_view(sam, "ZF-2")["home"]["funding_confirmed"]
                     self.assertIs(shown, expected)
 
+    def test_version_gate_refuses_negative_bool_and_non_dict_input(self) -> None:
+        for store in self.each_store():
+            pam = store.data["staff"][1]
+            for bad in (-1, True, 1.0, None):
+                with self.subTest(expected=bad):
+                    with self.assertRaises(ValueError):
+                        store.home_case_record_version(pam, "ZF-2", meta(bad))  # type: ignore[arg-type]
+            with self.assertRaises(ValueError):
+                store.home_case_record_version(pam, "ZF-2", "not a mapping")
+            self.assertEqual(store.home_case_view(pam, "ZF-2")["version"], 0)
+
+    def test_recording_without_scheme_keeps_scheme_and_closed_case_keeps_history(self) -> None:
+        for store in self.each_store():
+            pam = store.data["staff"][1]
+            store.home_case_record_version(pam, "ZF-2", meta(0, scheme_id="SCH-1"))
+            second = store.home_case_record_version(pam, "ZF-2", meta(1))
+            self.assertEqual(second["links"]["scheme_id"], "SCH-1")
+            self.assertEqual(second["changes"]["scheme_id"], {"old": "SCH-1", "new": "SCH-1"})
+            store.cases["ZF-2"]["closed"] = True
+            with self.assertRaises(ValueError):
+                store.home_case_record_version(pam, "ZF-2", meta(2))
+            view = store.home_case_view(pam, "ZF-2")
+            self.assertEqual([v["version"] for v in view["versions"]], [2, 1])
+            self.assertEqual(view["scheme"]["id"], "SCH-1")
+
+    def test_unknown_building_is_unknown_and_unclean_documents_are_not_linked(self) -> None:
+        for store in self.each_store():
+            pam = store.data["staff"][1]
+            store.cases["ZF-2"]["documents"].append(
+                {
+                    "id": "HELD-DOC",
+                    "name": "Held",
+                    "kind": "Survey",
+                    "generated": False,
+                    "scan_status": "pending",
+                }
+            )
+            view = store.home_case_view(pam, "ZF-2")
+            self.assertNotIn("HELD-DOC", view["links"]["document_ids"])
+            self.assertNotIn("HELD-DOC", [d["id"] for d in view["home"]["documents"]])
+            store.cases["ZF-2"]["building_id"] = "SYN-MISSING"
+            view = store.home_case_view(pam, "ZF-2")
+            self.assertEqual(view["building"], {"id": "SYN-MISSING", "status": "Unknown"})
+            store.cases["ZF-2"]["building_id"] = None
+            self.assertIsNone(store.home_case_view(pam, "ZF-2")["building"])
+
+    def test_scheme_registry_rejects_malformed_rows(self) -> None:
+        good = {"id": "S", "name": "n", "source": "SYN"}
+        bad_registries: list[Any] = [
+            "SCH-1",
+            [dict(good, extra="x")],
+            [dict(good, name="  ")],
+            [dict(good, source=1)],
+            [good, dict(good)],
+            ["not a row"],
+        ]
+        for registry in bad_registries:
+            with self.subTest(registry=registry):
+                with self.assertRaises(ValueError):
+                    home_case.schemes({"schemes": registry})
+        self.assertEqual(home_case.schemes({"schemes": [good]}), {"S": good})
+
     def test_scheme_registry_validation(self) -> None:
         self.assertEqual(home_case.schemes({}), {})
         with self.assertRaises(ValueError):

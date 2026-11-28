@@ -6,8 +6,12 @@ It does not run the cited tests and never records the epic or a requirement as a
 """
 
 import re
+import sys
 import unittest
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import epic_73_trace_run as runner
 
 ROOT = Path(__file__).resolve().parents[1]
 NOTE = ROOT / "docs/reference/research/issue-73-requirement-trace-2026-11-20.md"
@@ -52,6 +56,26 @@ class Epic73RequirementTrace(unittest.TestCase):
         text = NOTE.read_text(encoding="utf-8")
         self.assertIn("ticks nothing", text)
         self.assertNotRegex(text, r"(?i)#73\b[^.\n]{0,40}\b(?:is|was) (?:accepted|closed)\b")
+
+    def test_runner_builds_an_exact_unittest_id_for_every_cited_test(self):
+        cited = runner.cited_tests()
+        self.assertEqual(set(cited), set(REQUIREMENTS) - {"BG-011"})
+        for req, checks in cited.items():
+            for path, name in checks:
+                argv, cwd, pythonpath = runner.command(path, name)
+                self.assertTrue(cwd.is_dir(), req)
+                self.assertTrue(argv[-1].endswith(f".{name}"), req)
+                self.assertIn("../core/src", pythonpath)
+
+    def test_runner_never_counts_a_skipped_or_empty_run_as_a_passing_check(self):
+        self.assertEqual(runner.classify(0, "Ran 1 test in 0.1s\n\nOK"), "PASS")
+        self.assertEqual(runner.classify(0, "Ran 1 test in 0.0s\n\nOK (skipped=1)"), "SKIP")
+        self.assertEqual(runner.classify(0, "Ran 0 tests in 0.0s\n\nOK"), "SKIP")
+        self.assertEqual(runner.classify(1, "Ran 1 test in 0.1s\n\nFAILED (failures=1)"), "FAIL")
+
+    def test_runner_refuses_a_cited_test_outside_src_projects(self):
+        with self.assertRaises(ValueError):
+            runner.command("tools/test_x.py", "test_y")
 
 
 if __name__ == "__main__":

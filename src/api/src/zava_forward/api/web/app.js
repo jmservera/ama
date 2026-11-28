@@ -231,6 +231,7 @@ function showAccount() {
   document.getElementById("account-initials").textContent = account.name.trim().split(/\s+/).slice(0, 2).map((n) => n[0]).join("").toUpperCase();
   document.getElementById("switch-account").hidden = !microsoftSignIn;
   document.getElementById("account-error").textContent = "";
+  document.getElementById("ai-observability-entry").hidden = me.services?.assistants !== true;
   document.getElementById("account").hidden = false;
   const status = document.getElementById("photo-status");
   status.textContent = microsoftSignIn ? "Loading Microsoft profile photo..." : "Local development account";
@@ -414,7 +415,7 @@ function missingWorkspaceScripts(hash, caseRoute) {
       && ["handler", "run", "feedback"].every(method => typeof AsyncAction[method] === "function")],
     ["/ops.js", staffCase || (staffDestination && hash === "#/capacity") || (contractor && !caseRoute && !screensRoute), typeof qualityPanel === "function"],
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
-    ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
+    ["/assistants.js", staffCase || (staffDestination && (hash === "#/assistants" || hash === "#/ai-observability")), typeof assistantCasePanel === "function"],
     ["/chat.js", Boolean(me) && !contractor, typeof chatCasePanel === "function" && typeof employeeChat !== "undefined"],
     ["/aftercare.js", staffDestination && destination === "#/aftercare", typeof aftercareWorkspaceView === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
@@ -523,7 +524,7 @@ async function route() {
   if (isRoleScreensDestination(baseHash)) return await roleScreensView();
   if (baseHash === "#/simulator") return await simulatorControlView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
-  if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/import") {
+  if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/ai-observability" && hash !== "#/import") {
     return show(h("h1", {}, "No case work for this account"),
       h("p", { role: "status" }, "This account manages the application and has no case access. Case lists are not shown and nothing is waiting on you here. Ask a programme owner if you need case access."));
   }
@@ -534,6 +535,7 @@ async function route() {
   if (building) return await buildingView(decodeURIComponent(building[1]));
   if (hash === "#/handoff-waiting") return await handoffWaitingView();
   if (hash === "#/assistants") return await assistantQueueView();
+  if (hash === "#/ai-observability") return await aiObservabilityView();
   if (hash === "#/time") return await timeView();
   if (hash === "#/aftercare") return await aftercareWorkspaceView();
   if (hash.split("?")[0] === "#/closed") return await ProgressViews.closed();

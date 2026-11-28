@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-27T23:34:26+00:00",
-  "commit": "ded47f1ae5b0a976ad170e73e58ffa4687b0e655",
+  "scored_at": "2026-11-28T10:04:34+00:00",
+  "commit": "367ce9ecdf7a839758ea023f3ddd6f17c03eb5ae",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/46082635318",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/46132930061",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
     "adr": "b57f49945945ec4ca2cbe1be00a5aa090b0d70bdfe09dfa1c601f27da28e3f48",
-    "solution-code": "785fbc264ae087b2d0cc2fcd4016db03e0c394d0e63658f49c9a03b56906e73a",
+    "solution-code": "808714da4e9e18662113c7eaf18b8a681b74dc5f2ab414c785cf84cbd105359d",
     "infrastructure": "71a028040119015d7af269c20e82dcef7a31e4826060d090cfa314ba21cd7c03",
     "capstone-deck": "3fcb0be04913519de21b81e379c71336ada2af2efb24af7be5be2eaccc92095d",
-    "pitch": "cb8f61f79b3ac65c673b563b927f4a6d3e5e3b69d3cc9221dd89a86b73ffd5ec",
+    "pitch": "9b4fdfbe17acc6561fc2b364f8249ed8f6b4e384d6056f77dcc3b54a5a9cf8b5",
     "thought-leadership": "9e90dc63d4a46213b1e9c3b9399036f7f3fa7e70bb23da72a4409ee97e49288d"
   },
   "total": 81,
@@ -32,7 +32,7 @@
         "src/api/checks/connected_home_browser_check.py:1-50",
         "infra/resident-demo.bicep:29-34"
       ],
-      "rationale": "Opt-in second identity for sensor-consent demo reuses existing conditional-identity pattern; no new architecture. Ceiling 5 unchanged."
+      "rationale": "Diff adds identity-bind/scoping and chat-privacy tests only; no architecture change. Ceiling 5 unchanged."
     },
     "A2": {
       "score": 5,
@@ -44,19 +44,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_assistants.py:1108-1125",
-        "infra/resident-demo.bicep:139-143",
-        "infra/tests/test_resident_demo_deploy.py:126-139"
+        "src/api/tests/test_quality_sensors_correlation.py:89-136",
+        "src/core/tests/test_ai_input_bounds.py:146-209"
       ],
-      "rationale": "New sensor-consent env/identity wiring is fail-closed and off by default (empty() checks), with a dedicated opt-in test. Reinforces existing control at ceiling (5), unchanged."
+      "rationale": "New tests reinforce existing minimized-snapshot/consent-withdrawal and input-size-refusal controls; no new production control surface added. Ceiling (5) unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:456-480",
-        "src/core/src/zava_forward/core/grants.py:77-191"
+        "src/core/tests/test_demo_handoff_due_seed.py:115-168",
+        "src/core/tests/test_tokenomics_helpers.py:1-132"
       ],
-      "rationale": "Adds explicit criterion-3 memory-poisoning/prompt-injection flags with fail-closed enablement check, and a new grant eligibility separation-of-duties gate; both complete previously partial capability with tests. Completeness reinforced at ceiling (5)."
+      "rationale": "Tests cover already-implemented seed/revert and tokenomics fail-closed helpers; no new production capability completed. Ceiling (5) unchanged."
     },
     "A5": {
       "score": 5,
@@ -64,7 +63,7 @@
         "infra/scripts/monitoring_live_inventory.py:26-57",
         "infra/tests/test_monitoring_live_inventory.py:99-109"
       ],
-      "rationale": "Ceiling (5) unchanged; new monitoring-inventory job-coverage check adds granularity but does not raise an already-maxed observability score."
+      "rationale": "Not touched by this diff. Ceiling (5) unchanged."
     },
     "A6": {
       "score": 5,
@@ -72,7 +71,7 @@
         "src/agents/src/zava_forward/agents/regulatory_gates.py:262-330",
         "src/agents/src/zava_forward/agents/paired_trial.py:215-280"
       ],
-      "rationale": "New beside_cost reporting ties AI cost per accepted check to citation-validity, refusal-accuracy and hazard-miss gates in both arms, with cards-alone-unless-all-gates-pass logic and tests; strengthens evaluation rigor at ceiling (5), unchanged."
+      "rationale": "Not touched by this diff. Ceiling (5) unchanged."
     },
     "A7": {
       "score": 5,
@@ -80,7 +79,7 @@
         "src/core/src/zava_forward/core/assistants.py:1474-1494",
         "src/api/tests/test_assistant_restart_non_replenishment.py:228-258"
       ],
-      "rationale": "New _pool() inherits the most constrained persisted ledger across a rotated authority token, closing a replenishment-via-rotation gap with tests. Reinforces existing reliability guarantee at ceiling (5), unchanged."
+      "rationale": "Not touched by this diff. Ceiling (5) unchanged."
     },
     "B1": {
       "score": 3,
@@ -111,8 +110,11 @@
     },
     "B6": {
       "score": 4,
-      "evidence": [],
-      "rationale": "This diff touches test files and a core module, not documentation; baseline documentation gap (undocumented nomination routes) is unchanged. Retained at Good (4)."
+      "evidence": [
+        "src/agents/tests/test_region_confirmation_branches.py",
+        "src/core/tests/test_review_flag_status_1288.py"
+      ],
+      "rationale": "This diff touches test files only, not documentation; baseline documentation gap (undocumented nomination routes) unchanged. Retained at Good (4)."
     },
     "B7": {
       "score": 5,
