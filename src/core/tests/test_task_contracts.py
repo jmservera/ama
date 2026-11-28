@@ -103,6 +103,26 @@ class TaskContractTests(unittest.TestCase):
         ai.consumption.reserve.assert_not_called()
         urlopen.assert_not_called()
 
+    def test_document_text_is_scanned_before_it_reaches_the_model(self) -> None:
+        from unittest import mock
+
+        from zava_forward.core.ai import Ai
+
+        ai: Any = Ai()  # type: ignore[no-untyped-call]
+        ai.endpoint = "https://provider.invalid"
+        hold = mock.patch(
+            "zava_forward.core.data_protection.document_model_hold", return_value=None
+        )
+        with hold, mock.patch.object(Ai, "_chat", return_value="A survey note.") as chat:
+            refused = ai.look_at("n.txt", b"Ring jo@example.org on 07700 900123", "text/plain")
+            self.assertEqual(refused["source"], "template")
+            self.assertIn("email address", refused["reason"])
+            self.assertNotIn("example.org", refused["reason"])
+            chat.assert_not_called()
+            clean = ai.look_at("n.txt", b"Loft survey booked for Tuesday", "text/plain")
+        self.assertEqual(clean["source"], "ai")
+        chat.assert_called_once()
+
     def test_contract_does_not_claim_approval(self) -> None:
         for contract in task_contracts.CONTRACTS.values():
             self.assertIn("not claimed", contract["approval_claim"])

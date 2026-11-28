@@ -415,7 +415,13 @@ class Ai:
             content = [{"type": "text", "text": instruction},
                        {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{base64.b64encode(data).decode()}"}}]
         elif mime.startswith("text/") or mime in ("application/json", "text/csv"):
-            content = instruction + "\n\n" + data.decode("utf-8", "replace")[:6000]
+            body = data.decode("utf-8", "replace")[:6000]
+            label = task_contracts.prohibited_in("read_document", body)
+            if label:
+                return dict(text="The file is stored. It is not sent to AI; add a short note about what it is.",
+                            source="template", model=None, validated=True, task="read_document",
+                            reason=f"Document text holds prohibited content ({label}); it is not sent to AI. Use the manual route.")
+            content = instruction + "\n\n" + body
         else:
             return dict(text="This file type is stored but not read. Add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document")
