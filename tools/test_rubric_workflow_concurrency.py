@@ -54,5 +54,24 @@ class RubricConcurrencyTests(unittest.TestCase):
         self.assertIn("github.run_id", self.source["group"])
 
 
+DETECTION_FLAG = re.compile(
+    r'^\s+GH_AW_DETECTION_CONTINUE_ON_ERROR:\s*"?([^"\s]+)"?\s*$', re.MULTILINE
+)
+
+
+class DetectionContinueOnErrorTests(unittest.TestCase):
+    """Detection problems must stay warnings, as the tracker issue documents."""
+
+    def test_lock_detection_steps_never_block_safe_outputs(self) -> None:
+        values = DETECTION_FLAG.findall(LOCK.read_text(encoding="utf-8"))
+        self.assertGreaterEqual(len(values), 1)
+        self.assertEqual(set(values), {"true"})
+
+    def test_source_does_not_enable_strict_threat_detection(self) -> None:
+        source = SOURCE.read_text(encoding="utf-8")
+        frontmatter = source.split("---", 2)[1]
+        self.assertNotRegex(frontmatter, r"continue-on-error:\s*false")
+
+
 if __name__ == "__main__":
     unittest.main()

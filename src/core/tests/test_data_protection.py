@@ -86,6 +86,28 @@ class Register(unittest.TestCase):
         self.assertNotIn("SYNTH-1", str(rep))
 
 
+class RetentionUnknownWithoutApproval(unittest.TestCase):
+    def actual_classes(self) -> list[str]:
+        return [c.id for c in DATA_CLASSES if c.kind == "actual"]
+
+    def test_retention_stays_unknown_until_its_own_reference_is_real(self) -> None:
+        for cid in self.actual_classes():
+            for bad in ("", "   ", "SYNTH-1", "placeholder"):
+                env = refs(cid)
+                env[f"DP_{cid.upper()}_RETENTION_REF"] = bad
+                report = register_report(env)
+                row = next(c for c in report["classes"] if c["id"] == cid)
+                with self.subTest(cls=cid, ref=bad):
+                    self.assertTrue(row["retention"].startswith("Unknown"))
+                    self.assertFalse(any(ch.isdigit() for ch in row["retention"]))
+                    self.assertFalse(row["references_recorded"])
+                    self.assertFalse(report["dpo_reviewed"])
+            with self.subTest(cls=cid, ref="real"):
+                row = next(c for c in register_report(refs(cid))["classes"] if c["id"] == cid)
+                self.assertEqual(row["retention"], "Reference recorded; period held by owner")
+                self.assertTrue(row["references_recorded"])
+
+
 class ProductionApprovalGate(unittest.TestCase):
     """Production use of an actual class stays blocked until every gate has a recorded reference."""
 
