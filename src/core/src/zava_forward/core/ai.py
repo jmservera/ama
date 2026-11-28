@@ -17,8 +17,9 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
+from collections.abc import Mapping
 from dataclasses import replace
-from . import ai_consumption, ai_prompts, ai_transport, data_protection, export_fields, telemetry
+from . import ai_consumption, ai_prompts, ai_transport, data_protection, export_fields, task_contracts, telemetry
 
 SCOPE = "https://cognitiveservices.azure.com"
 _ACTIONS = (r"sent|approved|authori[sz]ed|signed off|rejected|declined|updated|changed|amended|edited|"
@@ -38,10 +39,30 @@ class DispatchDenied(RuntimeError):
     pass
 
 
-def may_carry_captured_readings(carrier):
+DEMO_SENSOR_DISPATCH_ENV = "ZF_DEMO_SENSOR_MODEL_DISPATCH"
+DEMO_SENSOR_DISPATCH_VALUE = "synthetic-demo-only"
+
+
+def demo_sensor_dispatch(env: "Mapping[str, str] | None" = None) -> bool:
+    """Demo-only opt-in: a real Ai client may carry captured retained readings.
+
+    Retained readings are synthetic by construction. The deployment must run the demo profile and set
+    the exact value; every other deployment keeps the fail-closed ban. Per-attempt consent, release and
+    epoch checks still run before dispatch."""
+    env = os.environ if env is None else env
+    return (
+        env.get(DEMO_SENSOR_DISPATCH_ENV) == DEMO_SENSOR_DISPATCH_VALUE
+        and env.get("ZF_DEPLOYMENT_PROFILE") == "demo"
+    )
+
+
+def may_carry_captured_readings(carrier: object, env: "Mapping[str, str] | None" = None) -> bool:
     """Captured IoT readings may only reach a carrier that is not a real Ai client and declares that it
-    sends no bytes. This is a composition declaration about the sink, not data provenance."""
-    return not isinstance(carrier, Ai) and getattr(carrier, "sends_no_bytes", False) is True
+    sends no bytes, or a real Ai client in the explicitly opted-in synthetic demo deployment. This is a
+    composition declaration about the sink, not data provenance."""
+    if isinstance(carrier, Ai):
+        return demo_sensor_dispatch(env)
+    return getattr(carrier, "sends_no_bytes", False) is True
 
 
 MAX_TEXT_BYTES = 128 * 1024
@@ -330,6 +351,10 @@ class Ai:
                        reason="AI feature is disabled; use the manual route")
         if off:
             return out(text=template, source="template", model=None, validated=True, reason="workflow-only mode selected")
+        label = task_contracts.prohibited_in(task, system, user)
+        if label:
+            return out(text=template, source="template", model=None, validated=True,
+                       reason=f"Prompt holds prohibited content ({label}); it is not sent to AI. Use the manual route.")
         dep = self.strong if strong else self.fast
         held = self.gate(task, dep) if self.gate else None
         if held:

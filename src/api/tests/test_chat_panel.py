@@ -788,6 +788,7 @@ class PanelTests(roles.Matrix):
                 (code, status["activation"], status["demo_activation"]), (200, "demo-only", True)
             )
             self.assertIn("No DPO, Legal or RAI approval", status["demo_disclaimer"])
+            self.assertIn("deterministic rules", status["demo_disclaimer"])
             d = self.ask(self.thread())[1]
             self.assertEqual((d["kind"], d["model"]), ("answer", "azure-openai"))
             self.assertEqual(d["consumption"]["model_calls"], 1)
