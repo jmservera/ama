@@ -43,10 +43,12 @@ DELAYED_ROUTE = """
 <p id="workspace-status"></p>
 <script>
   window.addEventListener('hashchange', () => {
-    // Longer than the 500 ms networkidle window, with no request in flight.
-    setTimeout(() => {
+    const publish = () => {
       document.getElementById('workspace-status').textContent = 'Perspective: tester.';
-    }, 1200);
+    };
+    // Longer than the 500 ms networkidle window, with no request in flight. Without the
+    // timer the status is held back until the test releases it, so no clock decides the outcome.
+    if (window.autoPublish) setTimeout(publish, 1200); else window.publish = publish;
   });
 </script>
 """
@@ -55,7 +57,7 @@ DELAYED_ROUTE = """
 class SettleRouteBrowserTests(unittest.TestCase):
     """Reproduce the gap between the facets read and the cases read with a real browser."""
 
-    def run_route(self, wait: Callable[[Page], None]) -> str:
+    def run_route(self, wait: Callable[[Page], None], auto_publish: bool) -> str:
         with sync_playwright() as playwright:
             try:
                 browser = playwright.chromium.launch()
@@ -64,6 +66,7 @@ class SettleRouteBrowserTests(unittest.TestCase):
             try:
                 page = browser.new_page()
                 page.set_content(DELAYED_ROUTE)
+                page.evaluate("auto => { window.autoPublish = auto; }", auto_publish)
                 page.evaluate("() => { location.hash = '#/'; }")
                 wait(page)
                 return str(page.locator("#workspace-status").text_content())
@@ -71,11 +74,13 @@ class SettleRouteBrowserTests(unittest.TestCase):
                 browser.close()
 
     def test_network_idle_alone_returns_before_the_list_status(self) -> None:
-        status = self.run_route(lambda page: page.wait_for_load_state("networkidle"))
+        status = self.run_route(
+            lambda page: page.wait_for_load_state("networkidle"), auto_publish=False
+        )
         self.assertEqual(status, "")
 
     def test_settle_route_returns_after_the_list_status(self) -> None:
-        status = self.run_route(lambda page: settle_route(page, "#/"))
+        status = self.run_route(lambda page: settle_route(page, "#/"), auto_publish=True)
         self.assertTrue(status.startswith("Perspective:"), status)
 
 

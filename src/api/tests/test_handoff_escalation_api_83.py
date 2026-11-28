@@ -280,6 +280,28 @@ class HandoffEscalationApi83Tests(unittest.TestCase):
         self.assertEqual(len(json_rows[0]), 13)
         self.assertTrue(all(r["escalated"] is True for r in json_rows))
 
+    def test_manager_card_and_waiting_queues_agree_for_third_party_offer(self) -> None:
+        self._offer_aged("sam", "ZF-1", "rex@example.test", "2026-10-15T08:00:00+00:00")
+        code, card = self.call("pam", "/api/cases/ZF-1")
+        self.assertEqual(code, 200)
+        self.assertEqual(card["handoff"]["state"], "Offered")
+        for route in ("/api/handoffs", "/api/handoffs/unaccepted", "/api/handoffs/unowned"):
+            code, rows = self.call("pam", route)
+            with self.subTest(route=route):
+                self.assertEqual(code, 200)
+                (row,) = [r for r in rows if r["case_id"] == "ZF-1"]
+                self.assertEqual(row["proposed_receiver"], "Rex Coordinator")
+                self.assertEqual(row["chase_owner"], card["handoff"]["from_name"])
+        code, rows = self.call("quinn", "/api/handoffs/unaccepted")
+        self.assertEqual((code, rows), (200, []))
+
+    def test_offer_without_timezone_stays_listed_with_unknown_age(self) -> None:
+        self._offer_aged("sam", "ZF-1", "rex@example.test", "2026-10-15T08:00")
+        code, rows = self.call("pam", "/api/handoffs/unaccepted")
+        self.assertEqual(code, 200)
+        (row,) = [r for r in rows if r["case_id"] == "ZF-1"]
+        self.assertIsNone(row["age_hours"])
+
 
 if __name__ == "__main__":
     unittest.main()
