@@ -2,19 +2,19 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-28T10:55:57+00:00",
-  "commit": "6dc105d946b4b6cb70ea3b493f0f147fc2f87df2",
+  "scored_at": "2026-11-28T15:23:35+00:00",
+  "commit": "5eadc45fea41c2852198ef102a2c34ec46344b42",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/46136921066",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/46158704432",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
     "adr": "b57f49945945ec4ca2cbe1be00a5aa090b0d70bdfe09dfa1c601f27da28e3f48",
-    "solution-code": "9d4f29a66991e21f129173acc549b4dce02eace887e1612e177e49534496fa0d",
+    "solution-code": "595547081711eaa592c78a8d06ad08a8f916fa8332a22a74b5eaec6fd7686937",
     "infrastructure": "71a028040119015d7af269c20e82dcef7a31e4826060d090cfa314ba21cd7c03",
-    "capstone-deck": "3fcb0be04913519de21b81e379c71336ada2af2efb24af7be5be2eaccc92095d",
-    "pitch": "9b4fdfbe17acc6561fc2b364f8249ed8f6b4e384d6056f77dcc3b54a5a9cf8b5",
-    "thought-leadership": "9e90dc63d4a46213b1e9c3b9399036f7f3fa7e70bb23da72a4409ee97e49288d"
+    "capstone-deck": "10f3a507178a791c9fc10575a51231629e3485c627bff76a0101a46ce8973f67",
+    "pitch": "7273ddb60a51a1635c943c6a4e3007246dc48009df4eef7eccc0608c6755a275",
+    "thought-leadership": "19f93b8a96b7b99b5ebb5da3e2ce974c2e2751bc1bd54d4781813f13b417a08b"
   },
   "total": 81,
   "sections": {
