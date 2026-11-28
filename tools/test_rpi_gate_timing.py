@@ -118,6 +118,16 @@ class ReportTests(unittest.TestCase):
         self.assertEqual(report["chain_seconds"], report["span_seconds"])
         self.assertIn("c", [s["group"] for s in report["critical_chain"]])
 
+    def test_zero_length_command_inside_a_chain_keeps_wall_accounting(self) -> None:
+        path = write_receipt(self.root / "m", [("a", 0, 10), ("z", 10, 10), ("b", 10, 20)])
+        code, out, _ = run("report", str(path))
+        report = json.loads(out)
+        self.assertEqual(code, 0)
+        self.assertEqual(report["span_seconds"], 20.0)
+        self.assertEqual(report["chain_seconds"], 20.0)
+        groups = {step["group"] for step in report["critical_chain"]}
+        self.assertTrue({"a", "b"} <= groups)
+
     def test_idle_gap_inside_a_group_and_queue_wait_from_the_log(self) -> None:
         commands = [("g", 0, 10), ("g", 30, 40)]
         path = write_receipt(self.root / "a", commands)
