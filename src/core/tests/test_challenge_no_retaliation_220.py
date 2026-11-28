@@ -316,6 +316,29 @@ class ChallengeRegisterNoRetaliationTests(unittest.TestCase):
             assert_no_adverse_challenge_effects(base, after)
         reject_adverse_mapping({"summary": "ok", "route": "phone"})
 
+    def test_every_forbidden_adverse_key_is_refused_at_every_depth(self) -> None:
+        src = _node("source", "SRC-220", "v1")
+        prop = _node("proposal", "PROP-220", "v1")
+        dec = _node("human_decision", "DEC-220", "d1")
+        for key in sorted(FORBIDDEN_ADVERSE_FIELDS):
+            with self.subTest(key=key):
+                with self.assertRaisesRegex(ChallengeSafeguardError, key):
+                    reject_adverse_mapping({key: True})
+                reg = ChallengeRegister({prop: [src], dec: [prop]})
+                with self.assertRaisesRegex(ChallengeSafeguardError, key):
+                    reg.record_digital(
+                        {"kind": "source", "id": "SRC-220", "version": "v1"},
+                        "DEC-220#d1",
+                        "SYN challenge statement.",
+                        "Sam Officer",
+                        "2026-11-20",
+                        explanations=[{"kind": "policy", "text": "SYN policy reason.", key: True}],
+                    )
+                self.assertEqual(reg.challenges, {})
+                base: dict[str, Any] = {"id": "ZF-220-KEY", "score": 50}
+                with self.assertRaises(ChallengeSafeguardError):
+                    assert_no_adverse_challenge_effects(base, {**base, key: True})
+
     def test_register_reopen_representative_channels_and_assurance_contract(self) -> None:
         self.assertIn("trusted_intermediary", NON_DIGITAL_CHANNELS)
         self.assertEqual(SUBMITTER_KINDS, ("resident", "representative", "nominee", "third_party"))

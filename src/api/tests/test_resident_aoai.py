@@ -206,6 +206,24 @@ class AzureAdvisorTests(unittest.TestCase):
             "Summary by rules", self.advisor.answer(Topic.STATUS, CASE, resident_key("C-1")).label
         )
 
+    def test_question_path_follows_zf_demo_expires_at_past_the_old_default(self) -> None:
+        later = "2028-01-01T00:00:00Z"
+        stamp = expires_at({"ZF_DEMO_EXPIRES_AT": later})
+        base = chat.answer("repair", {})
+        self.transport.side_effect = None
+        self.transport.return_value = question_reply()
+        with patch.dict("os.environ", {"ZF_DEMO_EXPIRES_AT": later}):
+            self.advisor.clock = lambda: EXPIRES + 86400
+            result = self.advisor.answer_question("A smell", CASE, resident_key("C-1"), base)
+            self.assertEqual(result.label, "AI-generated")
+            self.transport.assert_called_once()
+            self.transport.reset_mock()
+            self.advisor.clock = lambda: stamp
+            result = self.advisor.answer_question("A smell", CASE, resident_key("C-1"), base)
+            self.assertIn("Summary by rules", result.label)
+            self.assertIn("ended", result.label)
+            self.transport.assert_not_called()
+
     def test_missing_expiry_setting_is_named_not_reported_as_ended(self) -> None:
         self.advisor.clock = lambda: EXPIRES + 86400
         self.transport.return_value = reply()
