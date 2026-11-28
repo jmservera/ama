@@ -104,6 +104,24 @@ class EvalHarnessTests(unittest.TestCase):
         verdict = verify_recorded(reapproved(self.manifest), recorded)
         self.assertEqual(verdict["reasons"], ["manifest digest changed"])
 
+    def test_changing_a_threshold_or_expected_outcome_invalidates_the_recorded_result(self) -> None:
+        recorded = run_eval(self.manifest, self.predictions)
+        edits: dict[str, Any] = dict(
+            threshold=lambda m: m["thresholds"].update(min_accuracy=0.5),
+            expected=lambda m: m["held_out"]["expected"].update(h1="changed"),
+        )
+        for name, edit in edits.items():
+            changed = copy.deepcopy(self.manifest)
+            edit(changed)
+            verdict = verify_recorded(reapproved(changed), recorded)
+            self.assertEqual(verdict["reasons"], ["manifest digest changed"], name)
+
+    def test_recorded_result_without_versions_or_digest_is_invalidated(self) -> None:
+        for recorded in ({}, {"versions": "x", "manifest_digest": 1}):
+            verdict = verify_recorded(self.manifest, recorded)
+            self.assertEqual(verdict["outcome"], "invalidated")
+            self.assertEqual(len(verdict["reasons"]), len(VERSION_KEYS) + 1)
+
     def test_missing_and_malformed_predictions_are_input_errors(self) -> None:
         del self.predictions["h1"]
         self.predictions["h2"]["critical_errors"] = "unsafe advice"

@@ -463,7 +463,7 @@ def register_report(env: Any) -> dict[str, Any]:
                 synthetic=synthetic,
                 references_recorded=c.kind == "actual" and not missing and not synthetic,
                 retention="Unknown until Legal sets a period"
-                if "RETENTION" in missing
+                if "RETENTION" in missing or "RETENTION" in synthetic
                 else "Reference recorded; period held by owner",
             )
         )

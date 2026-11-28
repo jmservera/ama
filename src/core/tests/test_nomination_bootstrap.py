@@ -91,6 +91,39 @@ print(json.dumps({
 """
 
 
+_ORIGINAL_PURGE = """
+import json, sys
+from pathlib import Path
+import test_bulk_edits as b
+src_root = Path({src!r})
+old_store = sys.modules["zava_forward.core.store"]
+
+def outside(mod):
+    f = getattr(mod, "__file__", None)
+    return isinstance(f, str) and not Path(f).resolve().is_relative_to(src_root)
+
+for target in ({agents!r}, {tests!r}, {core!r}):
+    if target in sys.path:
+        sys.path.remove(target)
+    sys.path.insert(0, target)
+if any((n == "zava_forward" or n.startswith("zava_forward.")) and outside(m)
+       for n, m in list(sys.modules.items())):
+    for n in [k for k in list(sys.modules) if k == "zava_forward" or k.startswith("zava_forward.")]:
+        sys.modules.pop(n, None)
+from zava_forward.core import bulk_edits as fresh_bulk
+from zava_forward.core.store import ConflictError, GateError, Store
+print(json.dumps({{
+    "conflict_same": ConflictError is b.ConflictError,
+    "store_same": Store is b.Store,
+    "patch_target_same": fresh_bulk is b.bulk_edits,
+    "old_conflict_file": old_store.__file__,
+    "new_conflict_file": sys.modules[ConflictError.__module__].__file__,
+    "old_conflict_module_is_new": old_store is sys.modules[ConflictError.__module__],
+    "gate_file": sys.modules[GateError.__module__].__file__,
+}}))
+"""
+
+
 class NominationBootstrapIdentityTests(unittest.TestCase):
     def _run(self, code: str, *roots: Path, isolated: bool = False) -> dict[str, object]:
         env = {k: v for k, v in os.environ.items() if k != "PYTHONPATH"}
@@ -234,6 +267,26 @@ class NominationBootstrapIdentityTests(unittest.TestCase):
             self.assertTrue(result["family_unchanged"])
             self.assertTrue(result["path_unchanged"])
             self.assertFalse(result["nomination_loaded"])
+
+    def test_original_purge_bootstrap_splits_identity_measured(self) -> None:
+        # Measures the pre-fix bootstrap (whole-family sys.modules purge) so the identity split
+        # behind the second-apply ConflictError failure is an observation, not a hypothesis.
+        code = _ORIGINAL_PURGE.format(
+            src=str(_TESTS.parents[1]),
+            agents=str(_AGENTS_SRC),
+            tests=str(_TESTS),
+            core=str(_CORE_SRC),
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            site = self._noneditable_copy(tmp)
+            result = self._run(code, site, _AGENTS_SRC, _TESTS)
+        self.assertIs(result["conflict_same"], False)
+        self.assertIs(result["store_same"], False)
+        self.assertIs(result["patch_target_same"], False)
+        self.assertIs(result["old_conflict_module_is_new"], False)
+        self.assertTrue(Path(str(result["old_conflict_file"])).is_relative_to(site))
+        self.assertTrue(Path(str(result["new_conflict_file"])).is_relative_to(_TESTS.parents[1]))
+        self.assertTrue(Path(str(result["gate_file"])).is_relative_to(_TESTS.parents[1]))
 
 
 if __name__ == "__main__":

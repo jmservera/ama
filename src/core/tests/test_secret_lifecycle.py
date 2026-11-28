@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import copy
 import datetime as dt
+import json
 import unittest
+from pathlib import Path
 from typing import Any
 
 from zava_forward.core.secret_lifecycle import (
@@ -14,6 +16,7 @@ from zava_forward.core.secret_lifecycle import (
     access_review,
     assert_no_secret_material,
     audit_keyvault_data_plane_access,
+    check_secrets,
     create_signed_access_review_record,
     default_expected_caller_policy,
     merge_vault_role_assignments,
@@ -22,6 +25,7 @@ from zava_forward.core.secret_lifecycle import (
     rotation_plan,
     unwrap_arm_list_envelope,
     validate_human_reviewer,
+    validate_inventory,
     verify_access_review_ledger,
     verify_staged_entra_rotation,
 )
@@ -1641,6 +1645,82 @@ class AccessAuditAndLedgerTests(unittest.TestCase):
         )
         self.assertFalse(led_res["intact"])
         self.assertNotIn(canary, " | ".join(led_res["problems"]))
+
+
+INVENTORY_PATH = Path(__file__).resolve().parents[3] / "infra" / "secret-inventory.json"
+CHECK_NOW = parse_time("2026-11-15T12:00:00Z")
+
+
+def _inventory(interval: int = 30, alert: int = 7) -> dict[str, Any]:
+    return {
+        "secrets": [
+            {
+                "name": "s1",
+                "owner": "owner",
+                "rotationIntervalDays": interval,
+                "expiryAlertDays": alert,
+            }
+        ]
+    }
+
+
+def _listed(
+    expires: str | None, updated: str = "2026-11-10T12:00:00Z", enabled: bool = True
+) -> list[dict[str, Any]]:
+    attrs: dict[str, Any] = {"enabled": enabled, "updated": updated}
+    if expires is not None:
+        attrs["expires"] = expires
+    return [{"name": "s1", "attributes": attrs}]
+
+
+def _kinds(findings: list[tuple[str, str, str]]) -> list[str]:
+    return [kind for _, kind, _ in findings]
+
+
+class CheckSecretsTests(unittest.TestCase):
+    def test_repository_inventory_names_owner_interval_and_alert(self) -> None:
+        inventory: dict[str, Any] = json.loads(INVENTORY_PATH.read_text(encoding="utf-8"))
+        self.assertEqual(validate_inventory(inventory), [])
+        self.assertGreaterEqual(len(inventory["secrets"]), 1)
+        for entry in inventory["secrets"]:
+            self.assertTrue(entry["owner"])
+            self.assertGreater(entry["rotationIntervalDays"], 0)
+            self.assertGreater(entry["expiryAlertDays"], 0)
+
+    def test_expiry_alert_window_boundary(self) -> None:
+        inv = _inventory(alert=7)
+        inside = check_secrets(inv, _listed("2026-11-22T12:00:00Z"), CHECK_NOW)
+        self.assertEqual(_kinds(inside), ["expiring"])
+        outside = check_secrets(inv, _listed("2026-11-23T12:00:00Z"), CHECK_NOW)
+        self.assertEqual(outside, [])
+
+    def test_expired_and_missing_expiry_are_findings(self) -> None:
+        inv = _inventory()
+        self.assertEqual(
+            _kinds(check_secrets(inv, _listed("2026-11-01T12:00:00Z"), CHECK_NOW)), ["expired"]
+        )
+        self.assertEqual(_kinds(check_secrets(inv, _listed(None), CHECK_NOW)), ["no-expiry"])
+
+    def test_rotation_interval_boundary(self) -> None:
+        inv = _inventory(interval=30)
+        due = check_secrets(inv, _listed("2027-06-01T00:00:00Z", "2026-10-16T12:00:00Z"), CHECK_NOW)
+        self.assertEqual(due, [])
+        overdue = check_secrets(
+            inv, _listed("2027-06-01T00:00:00Z", "2026-10-15T11:00:00Z"), CHECK_NOW
+        )
+        self.assertEqual(_kinds(overdue), ["rotation-overdue"])
+
+    def test_disabled_missing_and_uninventoried_secrets(self) -> None:
+        inv = _inventory()
+        disabled = check_secrets(inv, _listed("2027-06-01T00:00:00Z", enabled=False), CHECK_NOW)
+        self.assertEqual(_kinds(disabled), ["disabled"])
+        extra = [*_listed("2027-06-01T00:00:00Z"), {"name": "stray", "attributes": {}}]
+        self.assertEqual(_kinds(check_secrets(inv, extra, CHECK_NOW)), ["uninventoried"])
+        self.assertEqual(_kinds(check_secrets(inv, [], CHECK_NOW)), ["missing"])
+
+    def test_inventory_without_owner_is_reported(self) -> None:
+        bad = {"secrets": [{"name": "x", "rotationIntervalDays": 1, "expiryAlertDays": 1}]}
+        self.assertEqual(validate_inventory(bad), ["x: missing owner"])
 
 
 if __name__ == "__main__":
