@@ -1122,6 +1122,30 @@ class HybridAttributionTests(unittest.TestCase):
         self.assertEqual(calls[0], 3)
         self.assertEqual(type(ctx_err.exception).__name__, "ProgrammingError")
 
+    def test_thread_insert_retries_a_write_lock_timeout_once(self) -> None:
+        class ProgrammingError(Exception):
+            __module__ = "pyodbc"
+
+        repo, real, calls = self.store.chat_repo, self.store.chat_repo.insert_thread, [0]
+
+        def flaky(thread: Any) -> None:
+            calls[0] += 1
+            if calls[0] == 1:
+                raise ProgrammingError("could not take the write lock")
+            real(thread)
+
+        with patch.object(repo, "insert_thread", side_effect=flaky):
+            thread = self.store.chat_create_thread(self.user)
+        self.assertEqual(calls[0], 2)
+        stored = [t["id"] for t in self.store.chat_list_threads(self.user)]
+        self.assertEqual(stored.count(thread["id"]), 1)
+        calls[0] = 0
+        always = MagicMock(side_effect=ProgrammingError("could not take the write lock"))
+        with patch.object(repo, "insert_thread", always), self.assertRaises(Exception) as err:
+            self.store.chat_create_thread(self.user)
+        self.assertEqual(always.call_count, 2)
+        self.assertEqual(type(err.exception).__name__, "ProgrammingError")
+
     def test_audit_writes_retry_a_write_lock_timeout_after_the_answer_saved(self) -> None:
         class ProgrammingError(Exception):
             __module__ = "pyodbc"

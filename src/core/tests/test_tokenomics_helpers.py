@@ -179,3 +179,25 @@ class InvariantNegativeTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class HomeCountTest(unittest.TestCase):
+    def test_home_unit_is_omitted_without_a_home_count(self) -> None:
+        summary = tokenomics.summarize_ai_consumption_economics()
+        self.assertNotIn("tokens_per_home", summary)
+
+    def test_home_unit_is_unknown_when_tokens_or_price_are_missing(self) -> None:
+        summary = tokenomics.summarize_ai_consumption_economics(home_count=3)
+        self.assertEqual(summary["home_count"], 3)
+        self.assertEqual(summary["tokens_per_home"], UNKNOWN)
+        self.assertEqual(summary["token_cost_per_home"], UNKNOWN)
+
+    def test_invalid_or_non_positive_home_count(self) -> None:
+        for bad in (True, "3", 1.5):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                tokenomics.summarize_ai_consumption_economics(home_count=bad)  # type: ignore[arg-type]
+        summary = tokenomics.summarize_ai_consumption_economics(home_count=0)
+        self.assertEqual(summary["tokens_per_home"], UNKNOWN)
+        summary["token_cost_per_home"] = "1"
+        with self.assertRaises(AssertionError):
+            tokenomics.assert_tokenomics_invariants(summary)

@@ -493,10 +493,13 @@ def summarize_ai_consumption_economics(
     booked_value: object = None,
     limit_configured: bool = False,
     ledger_coverage: str | None = None,
+    home_count: int | None = None,
 ) -> dict[str, Any]:
     """Synthesize BRD Required Management Views `ai_consumption_economics` deterministically."""
     if od_51_status not in ("open", "approved"):
         raise ValueError("od_51_status must be 'open' or 'approved'.")
+    if home_count is not None and (not isinstance(home_count, int) or isinstance(home_count, bool)):
+        raise ValueError("home_count must be an int or None.")
 
     begin = _bound_timestamp(start, "start")
     finish = _bound_timestamp(end, "end")
@@ -988,6 +991,19 @@ def summarize_ai_consumption_economics(
         by_capability=by_capability,
         non_benefit_notice=NON_BENEFIT_NOTICE,
     )
+    if home_count is not None:
+        homes_ok = home_count > 0
+        summary["home_count"] = home_count
+        summary["tokens_per_home"] = (
+            _ratio_str(Decimal(total_tokens), home_count)
+            if homes_ok and isinstance(total_tokens, int)
+            else UNKNOWN
+        )
+        summary["token_cost_per_home"] = (
+            _ratio_str(ai_consumption.amount(token_cost), home_count)
+            if homes_ok and token_cost != UNKNOWN
+            else UNKNOWN
+        )
     assert_tokenomics_invariants(summary)
     return summary
 
@@ -1006,6 +1022,7 @@ def store_ai_consumption_economics(
     quality_floor_status: str | None = None,
     booked_value: object = None,
     limit_configured: bool | None = None,
+    home_count: int | None = None,
 ) -> dict[str, Any]:
     """Build deterministic, read-only `ai_consumption_economics` from a Store or SqlStore."""
     with store.lock:
@@ -1070,6 +1087,7 @@ def store_ai_consumption_economics(
         booked_value=resolved_booked,
         limit_configured=resolved_limits,
         ledger_coverage=ledger_coverage,
+        home_count=home_count,
     )
 
 
@@ -1147,6 +1165,17 @@ def assert_tokenomics_invariants(summary: Mapping[str, Any]) -> None:
                     f"{unit_field} must be {UNKNOWN!r} when accepted_outcome_count == 0, "
                     f"got {summary.get(unit_field)!r}"
                 )
+
+    if "home_count" in summary:
+        homes = summary["home_count"]
+        if not isinstance(homes, int) or isinstance(homes, bool):
+            raise AssertionError("home_count must be an int.")
+        for field in ("tokens_per_home", "token_cost_per_home"):
+            _assert_not_zero_or_none_cost(field, summary.get(field))
+            if homes <= 0 and summary.get(field) != UNKNOWN:
+                raise AssertionError(f"{field} must be {UNKNOWN!r} when home_count <= 0.")
+        if not price_ok and summary.get("token_cost_per_home") != UNKNOWN:
+            raise AssertionError("token_cost_per_home must be Unknown when unpriced.")
 
     by_cap = summary.get("by_capability")
     if not isinstance(by_cap, Mapping):
