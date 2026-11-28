@@ -17,6 +17,7 @@ from zava_forward.core.data_protection import (
     CONSTRUCTED_DERIVATIVE,
     DATA_CLASSES,
     HOSTING_REGION_VS_INFERENCE_RESIDENCY,
+    MANUAL_PATH,
     MODE_ENV,
     SUBJECT_POPULATIONS,
     TASKS,
@@ -32,7 +33,14 @@ from zava_forward.core.data_protection import (
     register_report,
     required_gates,
     rights_status,
+    validate_necessity_exception,
     validate_task_payload,
+)
+from zava_forward.core.data_protection import (
+    _valid_redaction_review as valid_redaction_review,
+)
+from zava_forward.core.data_protection import (
+    _valid_scoped_necessity_ref as valid_scoped_necessity_ref,
 )
 
 # Legacy modules exempt from strict typing are reached dynamically.
@@ -1072,6 +1080,176 @@ class RightsRequestLedgerPersistenceTests(unittest.TestCase):
                 received_at=received,
                 actor="dpo@zava.example",
             )
+
+
+class RejectionBoundaries(unittest.TestCase):
+    """Failure paths that keep intact or unreviewed material away from a model (#121)."""
+
+    def test_redaction_review_needs_named_human_and_recorded_review(self) -> None:
+        bad: list[tuple[Any, Any]] = [
+            (None, "REV-1"),
+            ("  ", "REV-1"),
+            ("x" * 121, "REV-1"),
+            ("SYNTH-reviewer", "REV-1"),
+            ("ai", "REV-1"),
+            ("review-bot", "REV-1"),
+            ("jo.reviewer", None),
+            ("jo.reviewer", " "),
+            ("jo.reviewer", "x" * 121),
+            ("jo.reviewer", "SYNTH-1"),
+        ]
+        for reviewer, review_id in bad:
+            with self.subTest(reviewer=reviewer, review_id=review_id):
+                ok, _reason = valid_redaction_review(reviewer, review_id)
+                self.assertFalse(ok)
+        ok, reason = valid_redaction_review(" jo.reviewer ", " REV-1 ")
+        self.assertTrue(ok)
+        self.assertIn("not verified", reason)
+
+    def test_scoped_necessity_ref_rejects_wildcards_long_and_other_tasks(self) -> None:
+        for ref in (None, "", "   ", "x" * 121, "*", "ALL", "any", "SYNTH-1", "demo"):
+            with self.subTest(ref=ref):
+                self.assertFalse(valid_scoped_necessity_ref(ref, "read_document")[0])
+        self.assertFalse(valid_scoped_necessity_ref("NEC-1", "case_brief")[0])
+        self.assertTrue(valid_scoped_necessity_ref("NEC-1", "look_at_attachment")[0])
+        self.assertTrue(valid_scoped_necessity_ref("NEC-1", "read_document")[0])
+
+    def test_necessity_exception_rejects_each_malformed_shape(self) -> None:
+        good: dict[str, Any] = {
+            "reference": "NEC-1",
+            "approved_by": "jo.dpo",
+            "reason": "Reviewer needs the redacted excerpt",
+            "task": "read_document",
+        }
+
+        def check(**changes: Any) -> dict[str, Any]:
+            doc = {**good, **changes}
+            doc = {k: v for k, v in doc.items() if v is not None}
+            return validate_necessity_exception(doc, task="read_document", as_of="2026-11-28")
+
+        self.assertTrue(check()["permitted"])
+        self.assertFalse(validate_necessity_exception("NEC-1")["permitted"])
+        self.assertFalse(validate_necessity_exception(None)["permitted"])
+        for changes in (
+            {"reference": None},
+            {"reference": "x" * 121},
+            {"approved_by": None},
+            {"approved_by": "model"},
+            {"reason": None},
+            {"reason": "r" * 301},
+            {"task": None},
+            {"task": "*"},
+            {"task": "case_brief"},
+            {"case_id": 5},
+            {"doc_id": ""},
+            {"expires_at": "tomorrow"},
+            {"expires_at": "2026-13-45"},
+            {"expires_at": "2026-11-27"},
+        ):
+            with self.subTest(changes=changes):
+                result = check(**changes)
+                self.assertFalse(result["permitted"])
+                self.assertIsNone(result["exception"])
+
+    def test_necessity_exception_binds_case_document_and_actual_references(self) -> None:
+        doc = {
+            "id": "NEC-2",
+            "approved_by": "jo.dpo",
+            "reason": "Needed",
+            "scope": "look_at_attachment",
+            "case_id": "C-1",
+            "doc_id": "D-1",
+        }
+        kwargs: dict[str, Any] = {"task": "look_at_attachment", "case_id": "C-1", "doc_id": "D-1"}
+        self.assertTrue(validate_necessity_exception(doc, **kwargs)["permitted"])
+        self.assertFalse(
+            validate_necessity_exception(doc, **{**kwargs, "case_id": "C-2"})["permitted"]
+        )
+        self.assertFalse(
+            validate_necessity_exception(doc, **{**kwargs, "doc_id": "D-2"})["permitted"]
+        )
+        self.assertFalse(
+            validate_necessity_exception({**doc, "id": "SYNTH-9"}, actual=True, **kwargs)[
+                "permitted"
+            ]
+        )
+        self.assertTrue(
+            validate_necessity_exception(
+                {**doc, "expires_at": "2026-11-28T00:00:00"}, as_of=datetime(2026, 11, 28), **kwargs
+            )["permitted"]
+        )
+
+    def test_task_payload_rejects_wrong_types_oversize_and_special_fields(self) -> None:
+        result = validate_task_payload(
+            "case_brief",
+            {"case_id": "C-1", "waiting_days": True, "open_actions": 501, "stage": "x" * 81},
+        )
+        self.assertEqual(result["fields"], {"case_id": "C-1"})
+        self.assertEqual(result["rejected"], ["open_actions", "stage", "waiting_days"])
+        empty = validate_task_payload(
+            "case_brief", {"waiting_days": -1}, user_permission_granted=True
+        )
+        self.assertFalse(empty["permitted"])
+        self.assertTrue(empty["user_permission_granted"])
+        self.assertFalse(empty["user_permission_establishes_necessity"])
+        self.assertEqual(empty["manual_path"], MANUAL_PATH)
+
+    def test_due_date_needs_timezone_and_rolls_over_december(self) -> None:
+        with self.assertRaises(ValueError):
+            due_date(datetime(2026, 11, 1))
+        self.assertEqual(
+            due_date(datetime(2026, 12, 31, tzinfo=UTC)), datetime(2027, 1, 31, tzinfo=UTC)
+        )
+
+    def test_rights_ledger_rejects_malformed_rows_on_load(self) -> None:
+        base: dict[str, Any] = {
+            "request_id": "R-1",
+            "kind": "access",
+            "received_at": "2026-11-01T00:00:00+00:00",
+        }
+
+        def load(**changes: Any) -> None:
+            row = {**base, **changes}
+            RightsRequestLedger.from_json(json.dumps({"requests": [row]}))
+
+        load()
+        for changes in (
+            {"request_id": " "},
+            {"kind": "sell"},
+            {"received_at": "2026-11-01T00:00:00"},
+            {"answered_at": "2026-10-01T00:00:00+00:00"},
+            {"actions": [["erase"]]},
+            {"actions": [{"action": "shred", "at": "2026-11-02T00:00:00+00:00"}]},
+            {
+                "actions": [
+                    {
+                        "action": "erase",
+                        "at": "2026-11-02T00:00:00+00:00",
+                        "provider_erasure_confirmed": True,
+                    }
+                ]
+            },
+            {"actions": [{"action": "erase", "at": "2026-11-02T00:00:00"}]},
+        ):
+            with self.subTest(changes=changes), self.assertRaises(ValueError):
+                load(**changes)
+
+    def test_rights_status_accepts_raw_rows_and_rejects_bad_mapping(self) -> None:
+        now = datetime(2026, 11, 28, tzinfo=UTC)
+        row = {
+            "request_id": "R-1",
+            "kind": "access",
+            "received_at": "2026-10-01T00:00:00+00:00",
+        }
+        for source in ([row], {"requests": [row]}, {"rights_requests": [row]}):
+            with self.subTest(source=type(source).__name__):
+                report = rights_status(source, now)
+                self.assertEqual(report["overdue"], ["R-1"])
+                self.assertFalse(report["provider_erasure_confirmed"])
+        with self.assertRaises(ValueError):
+            rights_status({"requests": "R-1"}, now)
+        with self.assertRaises(ValueError):
+            rights_status([row], datetime(2026, 11, 28))
 
 
 if __name__ == "__main__":
