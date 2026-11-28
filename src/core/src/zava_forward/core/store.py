@@ -13,7 +13,7 @@ import threading
 import time
 import uuid
 from copy import deepcopy
-from datetime import datetime
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING, Any
 
 from . import (
@@ -67,6 +67,11 @@ if TYPE_CHECKING:
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
 READY_STAGE = "Final checks before ordering"
 BOOKED_STAGE = "Install booked"
+
+
+def _handoff_clock():
+    """Wall clock shared with the handoff queues, so a card and the waiting list judge one wait alike."""
+    return datetime.now(UTC).isoformat(timespec="minutes")
 
 
 class GateError(Exception):
@@ -1097,7 +1102,7 @@ class Store(
             resident_reasons=resident_gate(c),
             technical_missing=missing_items(c),
             handoff=handoff_view(
-                c, as_of=self.as_of, policy=data.get("handoff_policy"), staff=data.get("staff")
+                c, as_of=_handoff_clock(), policy=data.get("handoff_policy"), staff=data.get("staff")
             ),
             staff=staff_list,
         )
@@ -1257,7 +1262,7 @@ class Store(
             if c.get("handoff"):
                 d["handoff"] = handoff_view(
                     c,
-                    as_of=self.as_of,
+                    as_of=_handoff_clock(),
                     policy=self.data.get("handoff_policy"),
                     staff=self.data.get("staff"),
                 )
