@@ -780,6 +780,23 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertGreaterEqual(status, 400)
         self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
+    def test_acknowledgement_replay_is_refused_and_preserves_original_record(self) -> None:
+        path = "/api/cases/ZF-1/resident"
+        self.assertEqual(self.call_json(path, "sam", self.nomination_payload())[0], 200)
+        nom_id = self.call_json("/api/cases/ZF-1", "sam")[1]["nomination_records"][0]["id"]
+        payload = self._ack_payload(nom_id)
+        code, acked = self.call_json(path, "sam", payload)
+        self.assertEqual(code, 200, acked)
+        record = acked["nomination_records"][0]
+        self.assertEqual(record["acknowledgement"]["route_mode"], "digital")
+        after_first = self.call_json("/api/cases/ZF-1", "sam")[1]
+
+        code, _ = self.call_json(path, "sam", dict(payload, acknowledgement_ref="SYN-REPLAY"))
+        self.assertGreaterEqual(code, 400)
+        after_replay = self.call_json("/api/cases/ZF-1", "sam")[1]
+        self.assertEqual(after_replay, after_first)
+        self.assertNotIn("SYN-REPLAY", json.dumps(after_replay))
+
     def test_native_form_encoding_is_refused_and_writes_nothing(self) -> None:
         self.assertEqual(
             self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
