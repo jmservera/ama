@@ -202,6 +202,33 @@ class HomeCaseApiTests(unittest.TestCase):
             for amount in ("6000.00", "12000.00", "SYN-ALLOCATION", "SYN-ESTIMATE"):
                 self.assertNotIn(amount, body)
 
+    def test_non_finance_writer_version_response_and_history_carry_no_cost_amounts(self) -> None:
+        sam = self.login("sam@example.test")
+        meta = {
+            "expected_version": 0,
+            "source": "SYN-CASE-REVIEW",
+            "source_version": "1",
+            "reason": "Check links before ordering",
+            "scheme_id": "SCH-1",
+        }
+        code, written, _ = self.call("/api/cases/ZF-2/home-case-version", sam, meta)
+        pam = self.login("pam@example.test")
+        _, finance_view, _ = self.call("/api/cases/ZF-2/home-case", pam)
+        if code == 200:
+            self.assertEqual(finance_view["version"], 1)
+            _, later, _ = self.call("/api/cases/ZF-2/home-case", sam)
+            for view in (written, later):
+                self.assertIs(view["home"]["cost_allocation_restricted"], True)
+                self.assertIs(view["building"]["costs_restricted"], True)
+                body = json.dumps(view)
+                for amount in ("6000.00", "12000.00", "SYN-ALLOCATION", "SYN-ESTIMATE"):
+                    self.assertNotIn(amount, body)
+        else:
+            self.assertEqual(code, 403)
+            self.assertEqual(finance_view["version"], 0)
+            for amount in ("6000.00", "12000.00", "SYN-ALLOCATION", "SYN-ESTIMATE"):
+                self.assertNotIn(amount, json.dumps(written))
+
     def test_finance_staff_get_building_cost_and_own_home_allocation_over_http(self) -> None:
         pam = self.login("pam@example.test")
         for case_id in ("ZF-2", "ZF-3"):
