@@ -194,6 +194,7 @@ class Wcag22Baseline(unittest.TestCase):
         # 14 on 2026-11-15: the exception queue competing-values table (#135) was audited and added.
         # 15 on 2026-11-15: sensorTable in ops.js (#151) gained a caption and scroll region.
         # 17 on 2026-11-22: the spreadsheet column-mapping and row-preview tables (#2008) were audited and added.
+        # 18 on 2026-11-28: the AI observability counts table (#2486) has a caption and row and column headers.
         tables = 0
         for path in sorted(WEB.glob("*.js")):
             text = path.read_text()
@@ -201,7 +202,7 @@ class Wcag22Baseline(unittest.TestCase):
             for match in re.finditer(r'h\("table", \{\},\s*(.{0,60})', text):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), f"{path.name}: {match.group(1)}")
-        self.assertEqual(tables, 17, "new table: audit it and update this check and the record")
+        self.assertEqual(tables, 18, "new table: audit it and update this check and the record")
 
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)
