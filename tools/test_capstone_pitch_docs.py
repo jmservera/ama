@@ -97,6 +97,28 @@ class CapstonePitchDocsTest(unittest.TestCase):
             for stale in ("authorised but not run", "not yet run live", "That batch has not run"):
                 self.assertNotIn(stale, text, f"{doc.name}: {stale}")
 
+    def test_rehearsal_route_arithmetic_matches_the_stated_totals(self) -> None:
+        notes = (CAPSTONE / "pitch" / "tokenomics-rehearsal-notes.md").read_text(encoding="utf-8")
+        row = re.compile(
+            r"^\| [\d, to]+ \| ([^|]+)\| (\d+|n/a) \| (\d+) \| (\d\d):(\d\d)-(\d\d):(\d\d) \|",
+            re.MULTILINE,
+        )
+        rows = row.findall(notes)
+        self.assertEqual(25, len(rows))
+        previous_end = 0
+        for name, _, slot, start_m, start_s, end_m, end_s in rows:
+            start = int(start_m) * 60 + int(start_s)
+            end = int(end_m) * 60 + int(end_s)
+            self.assertEqual(previous_end, start, name)
+            self.assertEqual(int(slot), end - start, name)
+            previous_end = end
+        self.assertEqual(900, previous_end)
+        self.assertEqual(1470, sum(int(r[1]) for r in rows if r[1] != "n/a"))
+        self.assertEqual(840, sum(int(r[2]) for r in rows[:-1]))
+        self.assertEqual(60, int(rows[-1][2]))
+        slide22 = next(r for r in rows if r[0].startswith("S18 Tokenomics"))
+        self.assertEqual("20", slide22[2])
+
     def test_model_tier_comparison_is_dated_sourced_and_makes_no_saving_claim(self) -> None:
         text = " ".join(
             (CAPSTONE / "pitch" / "tokenomics-model-tier-comparison.md")
