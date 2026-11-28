@@ -1,17 +1,15 @@
 {
-  "source_as_of": "2026-11-16",
+  "source_as_of": "2026-11-28",
   "status": "partial",
-  "revision": "S20/S21 and B27: conditional Agent 365 enterprise oversight, content-free OTLP first, direct Azure exporter deferred, parent-reported offline P02 evidence and explicit privacy/ingestion gates; no live integration, deployment or authority change",
-  "status_limit": "Native package and Linux preview passed; synchronized draft only. Existing diagram-source generators and four architecture evidence tests fail on stale evidence metadata. Full gate, independent review and native/human acceptance are not established.",
+  "revision": "Not-for-profit stewardship, UK privacy target and Responsible AI on the main route; constructed-data demo; qualified regional-model and public-cloud cost scope. Stable 56 pages, 13:00 preparation, early 1:50 demo and 2:00 reserve.",
+  "status_limit": "Local source/package/rendering checks passed. Prepared, not rehearsed or human-accepted. Retained diagrams have dated provenance failures; exact-head independent and hosted review are separate PR evidence.",
   "package": {
     "status": "pass",
-    "slides": 55,
-    "nonempty_notes": 55,
-    "navigation_actions": 108,
-    "package_members": 303,
+    "slides": 56,
+    "nonempty_notes": 56,
+    "navigation_actions": 111,
+    "package_members": 307,
     "baseline_members": 293,
-    "unchanged_baseline_members": 186,
-    "changed_baseline_members": 107,
     "added_media_parts": [
       "ppt/media/journey-resident.png",
       "ppt/media/roadmap-azure-architecture.png",
@@ -22,131 +20,299 @@
     ],
     "added_slide_parts": [
       "ppt/notesSlides/_rels/notesSlide55.xml.rels",
+      "ppt/notesSlides/_rels/notesSlide56.xml.rels",
       "ppt/notesSlides/notesSlide55.xml",
+      "ppt/notesSlides/notesSlide56.xml",
       "ppt/slides/_rels/slide55.xml.rels",
-      "ppt/slides/slide55.xml"
+      "ppt/slides/_rels/slide56.xml.rels",
+      "ppt/slides/slide55.xml",
+      "ppt/slides/slide56.xml"
     ],
+    "timing_preserved": true,
     "baseline_mapping_preserved": true,
     "physical_slide_order_verified": true,
     "inserted_main_slide": 13,
-    "narration_seconds": 1470,
-    "original_timing_lines_and_duration_slots_preserved": true,
+    "narration_seconds": 780,
     "native_navigation_preserved": true,
     "six_cost_slide_bytes_preserved": false,
+    "approved_additive_azure_summary_pages": [
+      6
+    ],
     "cost_financial_evidence_preserved": true,
-    "approved_cost_status_updates": [22, 53],
-    "cost_navigation_label_updates": [33, 37, 53],
-    "cost_note_navigation_and_route_updates": [6, 11, 33, 37],
+    "approved_cost_status_updates": [
+      22,
+      53
+    ],
+    "cost_navigation_label_updates": [
+      33,
+      37,
+      53
+    ],
     "cost_note_calculations_preserved": true,
+    "cost_note_navigation_and_route_updates": [
+      6,
+      11,
+      33,
+      37
+    ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "75b4c16e8dd0adb8dd845abb21ad3520bd1aceb9f3e22da4b477238af71b2224",
+    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "2cb59d75adaa096b55bdfb8d87feae38b3a692f8586d685e5807abe0a10c45e6",
+    "manifest_sha256": "57a12b2f7702320bfb5b72ac8cf575581fbcb658baaeb5c595a7711cd10621c3",
     "asset_catalog_sha256": "c9743882738e54f90e3332036ff26bfe0898a88091cbe68323bb5b16ce02693c",
-    "builder_sha256": "99ac3da7385b4a05e5f12bbe246e7d923e19eedebec34b987a1df493b4b04cd4",
-    "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068"
+    "builder_sha256": "bae8eb2ec82ccb6edd526732dff53cfc18c17da579c416729e65d4fe187f6313",
+    "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068",
+    "unchanged_baseline_members": 183
   },
   "source_verification": {
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
     "native_shape_checks": 32,
     "insertion_refusal_mutations": 6,
+    "pitch_refusal_mutations": 8,
+    "legacy_schema_2_insertion_compatibility": "pass",
     "original_notes_preserved": true,
     "all_existing_slide_ids_sections_and_fixed_targets_preserved": true,
-    "visible_index_answer_and_topic_numbers_verified": true,
     "protected_cost_number_geometry_note_and_unapproved_status_mutations_refused": true,
-    "pdf_navigation_regressions": 10,
-    "all_financial_slide_and_note_parts_identical_to_incumbent_delivery": true,
-    "all_media_parts_identical_to_incumbent_delivery": true,
-    "only_changed_package_parts_vs_incumbent": [
-      "ppt/slides/slide23.xml",
-      "ppt/slides/slide24.xml",
-      "ppt/slides/slide54.xml",
-      "ppt/notesSlides/notesSlide23.xml",
-      "ppt/notesSlides/notesSlide24.xml",
-      "ppt/notesSlides/notesSlide54.xml"
-    ],
-    "geometry_styles_original_notes_timing_order_and_identities_unchanged": true,
-    "architecture_catalog_pin_repair": "Six SVG/native hashes now bind existing committed files from metadata refresh 1ccfae43. Visual models equal formerly pinned ad679b96 after excluding evidence metadata/links; all PNG and package media bytes unchanged.",
+    "preview_regressions_passed": 10,
+    "azure_cost_model_sha256": "8b3388dddff50f359dd979e8fcf3d486427977155873a40d028be2c029dba6bb",
+    "public_rate_readback": "15 exact meter IDs and their scenario catalog regions matched current official API rows, including model 1K token units; DNS zone-month semantics confirmed by official pricing page.",
+    "full_cost_arithmetic_and_priority_allocation": "pass",
+    "six_protected_slide_and_note_parts_byte_identical_to_previous_delivery": false,
+    "ruff_check": "pass",
+    "complete_embedded_runbook_parity": "pass",
+    "runbook_timing_matches_manifest_allocation": "pass",
+    "hook_inline_before_S04": "pass",
+    "native_schema_custom_show_order": "pass",
     "diagram_source_checks": {
-      "status": "fail",
-      "resident_journey_generator_check": "fail: stale resident-journey.excalidraw evidence locators",
-      "architecture_generator_check": "fail: stale cxo-architecture.excalidraw evidence locators",
-      "architecture_tests_passed": 7,
-      "architecture_tests_failed": 4,
-      "failed_tests": [
-        "native sources have unique editable elements and source-backed evidence",
-        "all four editable views include the complete sensor chain and honest resident/averages targets",
-        "vector previews retain accessible text and tagged native-source provenance",
-        "the SVG and native derivatives match the explicit generator"
-      ],
-      "baseline_control": {
-        "revision": "723d502687ee148c7cbd869cad2ec3036e71a8a2",
-        "method": "git archive HEAD into an isolated external directory; run the unchanged Node commands with the real repository GIT_DIR and snapshot GIT_WORK_TREE so historical git-show inputs resolve.",
-        "resident_journey_generator_check": "same failure on exact HEAD",
-        "architecture_generator_check": "same failure on exact HEAD",
-        "architecture_tests_passed": 7,
-        "architecture_tests_failed": 4,
-        "first_test_4_stale_input": "src/importer/README.md: actual d7e0df275ebbdb7c355702179e5d2516a1445b7174b057a69eecfe308fface26; pinned 45a6c58cde567214c0a2faf98a713e83a49210a05d8bb567ff46794f4049386c",
-        "first_test_7_stale_input": "src/core/src/zava_forward/core/sensor_consumer.py: actual ecaa228c431d308d079c0a679308baa32aeae8ff3157ac84f872cee8800baf7c; pinned b8f3ac1a8550423af3252a6262e631ab5772f49938f07e7eaaf1a8f84d49048b",
-        "test_10": "Executive and technical SVG data-native-sha256 do not bind their current native files, unchanged between HEAD and worktree.",
-        "test_11": "The first nested capstone generator --check fails on both HEAD and worktree; the later root generator is not reached. A separate root-generator diagnostic also fails on both."
-      },
-      "patch_additional_provenance_inputs": [
-        "src/agents/README.md",
-        "src/api/README.md",
-        "src/core/src/zava_forward/core/assistants.py",
-        "src/api/src/zava_forward/api/server.py (root architecture only)",
-        "src/core/src/zava_forward/core/ai.py (root architecture only)"
-      ],
-      "limit": "All six reported failure statuses are pre-existing, not introduced by observability. The patch adds full-file hash/line drift to directly referenced inputs, but whole-generator regeneration would also repair unrelated baseline provenance. No diagram, generator or test was changed; no baseline failure was suppressed."
+      "status": "not_rerun",
+      "historical_status": "fail",
+      "reference": "docs/capstone/source/README.md, 16 November exact-HEAD controls",
+      "limit": "Retained drawing metadata/generator failures are not repaired or promoted to fresh passing evidence."
     },
-    "actual_deployment_notes_and_alt_required_service_terms": 30,
-    "actual_deployment_notes_and_alt_extraction": "pass"
+    "revised_appendix_navigation_physical_pages": "pass",
+    "pitch_document_tests_status": "pass",
+    "pitch_document_tests_passed": 16,
+    "optional_appendix_refusal_mutations": 6,
+    "both_native_custom_shows_and_default_verified": true,
+    "five_other_protected_slide_and_note_pairs_byte_identical_to_previous_delivery": true,
+    "original_page_six_financial_shape_subtrees_preserved": true,
+    "approved_summary_and_original_financial_mutations_refused": true,
+    "native_progress_counts_single_line_and_in_bounds": true,
+    "privacy_increment_all_six_protected_pairs_unchanged_from_published_head": true,
+    "privacy_rai_main_route_and_uk_price_scope": "pass"
   },
-  "linux_preview": {
-    "renderer": "LibreOffice 7.4.7.2 40(Build:2)",
-    "source_sha256": "75b4c16e8dd0adb8dd845abb21ad3520bd1aceb9f3e22da4b477238af71b2224",
-    "pdf_sha256": "ccbb38de6af741bd6e65f6a2b5c6352709b9a7419fa70e964266411051cbf159",
-    "rendered_images": 55,
-    "fixed_slide_jumps": 108,
+  "pdf_navigation": {
+    "slides": 56,
+    "fixed_slide_jumps": 111,
     "all_destinations_and_hit_regions_verified": true,
     "unambiguous_hit_regions": true,
-    "revised_native_text_frames_checked": 50,
-    "text_extraction_checked_pages": [24, 25, 55],
-    "all_native_words_present": true,
-    "text_check_limit": "Whitespace-normalized PDF extraction contains every header/element string on pages 24, 25 and 55. Not glyph-ink, full-deck overflow or native PowerPoint text-bound metrics.",
-    "visually_inspected_pages": [23, 24, 25, 26, 54, 55],
-    "metrics_scope_note": "Pages 23-26 and 54 were inspected in the preceding candidate and are byte-identical PNGs in this final preview. Final page 55 was inspected separately after correcting the optional resident-metering wording and shortening the source footer. No new layout, overlap or clipping defect observed on these pages; no full-deck visual/accessibility acceptance claimed.",
-    "isolated_tooling": "Task-owned PowerShell 7.7.0; pip-only preview venv; rootless Docker LibreOffice 7.4.7.2 with Liberation Sans, no network/capabilities or repository mount during conversion.",
-    "tool_retry": "First preview refused profile access because host UID mapped to a rootless subordinate UID. Task-local launcher now requires rootless Docker and uses container UID 0 mapped to owning host user; final fresh preview passed. javaldx emitted a non-fatal Java warning.",
-    "human_acceptance": false,
-    "native_powerpoint_validation": false
-  },
-  "pitch": {
-    "main_pages": "1-27",
-    "question_index": 28,
-    "answer_pages": "29-55",
-    "answers": 27,
-    "narration": "24:30",
-    "question_contingency_reserve": "5:30 inside the planned 30-minute presentation",
-    "separate_demo": "10 minutes; existing outcome hook under two minutes remains a plan",
-    "speaker_script_sha256": "2c144e037d66eded1427e00ccc7c469b356226d91fca6c78ab9604aa72698be0",
-    "questions_and_answers_sha256": "7b70ca5dd2eda72f3bc48628b3fdb30f76220a76668c83c41c1c8d0b1d7b387f",
-    "rehearsal_performed": false
+    "text_extraction_checked_pages": [
+      1,
+      13,
+      17,
+      21,
+      56
+    ],
+    "all_checked_text_present": true,
+    "renderer": "Microsoft PowerPoint 16.0 COM; existing PyMuPDF link reconstruction/readback",
+    "raw_native_pdf_sha256": "ef8e4647f7d46b6d7bf048d6e0f09a14b2152ba2e266f7ed79f6135464752fd8",
+    "delivered_pdf_sha256": "a48be8ca10007be21e94c2455cc59b4dad7626f0b4476e14bddd6810dbff7805"
   },
   "native": {
-    "status": "not_run",
-    "reason": "Native Windows PowerPoint, projector, keyboard, assistive-technology and resident/staff acceptance remain separate."
-  },
-  "historical_native": {
+    "status": "render_pass",
     "renderer": "Microsoft PowerPoint 16.0 COM",
-    "slides": 54,
-    "candidate_sha256": "f8fc59568ff6d8221e55dd77bf87734144732fae851d6e46eec92b6443a519fd",
-    "pdf_sha256": "11926cc3b0936d8905979295414bf9e7841af78676cfc276046d6ec671b84f50",
-    "revised_text_overflow": 0,
-    "inherited_bound_warnings": 231,
-    "independently_inspected_pages": [8, 9, 13, 14, 15, 23, 24],
+    "slides": 56,
+    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
+    "render_size": [
+      1600,
+      900
+    ],
+    "focused_pages": [
+      1,
+      13,
+      17,
+      21,
+      56
+    ],
+    "focused_revised_frames": 42,
+    "focused_revised_bound_warnings": 0,
+    "other_source_revised_bound_warnings": 28,
+    "inherited_bound_warnings": 179,
+    "previous_refresh_contact_sheet_pages": 56,
     "human_acceptance": false,
-    "current_candidate_validated": false
+    "keyboard_projector_and_real_AT": "not_run",
+    "historical_note_only_correction_pixels_identical": true,
+    "historical_note_only_correction_bounds_identical": true,
+    "followup_pixel_changes_vs_previous_delivery": [
+      1,
+      13,
+      17,
+      21,
+      56
+    ],
+    "historical_full_cost_pixel_changes_vs_previous_delivery": [
+      28,
+      55,
+      56
+    ],
+    "progress_counter_bounds": [
+      {
+        "slide": 7,
+        "name": "Story-7-count-0",
+        "text": "2023",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 100.12504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      },
+      {
+        "slide": 7,
+        "name": "Story-7-count-1",
+        "text": "2038",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 100.12504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      },
+      {
+        "slide": 7,
+        "name": "Story-7-count-2",
+        "text": "358",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 77.87504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      },
+      {
+        "slide": 7,
+        "name": "Story-7-count-3",
+        "text": "264",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 77.87504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      },
+      {
+        "slide": 7,
+        "name": "Story-7-count-4",
+        "text": "85",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 55.62504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      },
+      {
+        "slide": 7,
+        "name": "Story-7-count-5",
+        "text": "9",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 33.37504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      },
+      {
+        "slide": 7,
+        "name": "Story-7-count-6",
+        "text": "28",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 55.62504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      },
+      {
+        "slide": 7,
+        "name": "Story-7-count-7",
+        "text": "5",
+        "bound_height": 46.90504,
+        "available_height": 50.40000009536743,
+        "bound_width": 33.37504,
+        "available_width": 103.67999744415283,
+        "overflow": false,
+        "revised": true
+      }
+    ],
+    "historical_sovereignty_followup": {
+      "focused_pages": [
+        6,
+        7,
+        38,
+        50
+      ],
+      "focused_revised_frames": 46,
+      "focused_revised_bound_warnings": 0,
+      "followup_pixel_changes_vs_previous_delivery": [
+        6,
+        7,
+        38,
+        50
+      ]
+    }
+  },
+  "pitch": {
+    "custom_show": "Demo-first pitch",
+    "codes": [
+      "S01",
+      "S22",
+      "S04",
+      "S12",
+      "S08",
+      "S11",
+      "S11A",
+      "S15",
+      "S17",
+      "B28",
+      "B27",
+      "S18",
+      "S14",
+      "S09",
+      "S19",
+      "S21",
+      "S23"
+    ],
+    "slot_seconds": 900,
+    "prepared_seconds": 780,
+    "demo_seconds": 110,
+    "reserve_seconds": 120,
+    "demo_window": "00:30-02:20",
+    "question_reserve": "13:00-15:00",
+    "speaker_script_sha256": "1be6fcf0334510fc78cbe973c1ec97b890c791af7b6d4a4daf6b4248fe22b34a",
+    "questions_and_answers_sha256": "6b0a48888ef56814effec29ff49bbfe56797121936168eb905cdd19f21a1e5b9",
+    "runbook_sha256": "31deb5a6f423460280b480aef7993ab87b4c0a163bbefbf58c4e3f02bd12500f",
+    "rehearsal_performed": false,
+    "optional_story": {
+      "name": "Discovery and UK sovereignty",
+      "codes": [
+        "B12",
+        "B06",
+        "B01",
+        "B04",
+        "B10",
+        "B22",
+        "B15"
+      ],
+      "seconds": 360,
+      "requires_additional_confirmed_slot": true,
+      "consumes_primary_reserve": false
+    }
+  },
+  "publication": {
+    "classification": "focused: presentation content and native authoring support only; no application, deployment, dependency, security control or RPI gate semantics changed",
+    "parent_pr": 2467,
+    "base": "feat/zava-site-icons",
+    "independent_and_hosted_checks": "Recorded separately against the exact published head; not established by this local receipt."
   }
 }

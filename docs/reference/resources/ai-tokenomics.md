@@ -1,7 +1,7 @@
 ---
 title: AI Tokenomics (Total Cost of AI and Value Realised)
 description: What the mentor clue on Tokenomics points to, the public Tokenomics Foundation framing, how it maps to the capstone rubric and the Zava Forward evidence, and what remains unmeasured
-ms.date: 2026-11-10
+ms.date: 2026-11-27
 ms.topic: reference
 ---
 
@@ -434,13 +434,99 @@ resource scope is passed to `Consumption.billing`. Until then the pitch states
 cost as Unknown and quotes only the QA observation of 6,884 tokens over five
 runs, which is a token count and not a cost.
 
+## Full Azure Planning and Protected AI Pools (2026-11-27)
+
+The [dated Azure cost model](../../capstone/source/azure-cost-model-2026-11-27.json)
+records public meters, assumptions and allocations. A read-only configuration
+check on 27 November found Consumption apps with minimum zero, provisioned
+SQL S3, Premium registry, IoT B1, Event Hubs Standard, nine private endpoints
+and fourteen private DNS zones. The source's serverless SQL example is not
+the observed database. No subscription identifiers, secrets or invoices are
+included.
+
+Those persistent services have a USD 334.838 list-price subtotal for 30 days.
+The full illustrative scenario adds app/job compute, Blob storage, log
+ingestion/retention, security, alerts, operations/transfer and model usage:
+USD 434.348-1,257.862, presented as about USD 435-1,260 per month. Security,
+monitoring and operations figures are explicit planning allowances; actual
+protection counts and consumption require reconciliation. No shared free
+allowance, negotiated rate, tax or FX conversion is deducted.
+
+Low-demand app compute uses one replica of each service for 176 working hours
+plus 22 one-hour cooldowns. High load uses the configured maximum replicas
+for 720 hours. These are scenarios, not observed runtime. Zero app replicas
+remove replica resource charges, while SQL, storage, networking and scheduled
+audit/orchestration/simulator/intake jobs remain. Logs have 90-day retention
+and no daily ingestion quota. There is no proven maximum Azure bill.
+
+Five temporary S0 QA databases would add USD 90.75 for 30 days, before their
+other charges; outside the core scenario. Production redundancy, future
+Fabric, exceptional traffic and new resources need another estimate. Human
+implementation, integration, review, correction and support belong in
+accepted-outcome Total Cost of AI, not the Azure-only subtotal.
+
+### AI model bounds and protected allocations
+
+The same configuration read observed nano GlobalStandard and mini regional
+Standard deployments. Public Retail Prices API rows retrieved 27 November
+give these bounded-attempt estimates, with 4,000 total provider-input and
+1,000 output tokens and no cache discount:
+
+| Model/SKU | Input/output USD per million | Attempt upper estimate USD |
+| --- | --- | ---: |
+| GPT-4.1-nano GlobalStandard | 0.10 / 0.40 | 0.0008 |
+| GPT-4.1-mini regional Standard | 0.484 / 1.936 | 0.003872 |
+
+No model call means zero model charge; deterministic evidence predicates
+still use hosted compute. Interpretation may need a paid bounded judge.
+Neither rules nor a model finding supply professional acceptance, and these
+rates do not establish comparative quality or savings.
+
+The proposed policy allocates USD 20/month and USD 1/day to recommendations,
+USD 10/month and USD 0.50/day to document judging, and USD 20/month and USD
+1/day to chat. Absolute aggregate ceilings are USD 50/month and USD 2.50/day.
+Chat cannot borrow the USD 30/month or USD 1.50/day priority allocations.
+The maximum is conditional on enforcement through these metered paths; it
+does not cap external provider traffic or the full Azure bill.
+
+The source consumption ledger already supports monetary, call, token and
+expiry admission. Each attempt must reserve worst-case priced liability
+against stable class and aggregate day/month budget IDs before dispatch,
+account for in-flight liability, settle valid provider usage and reconcile
+billing. UTC calendar periods are illustrative; renewal cannot clear spent
+history or unresolved liability. Retries and additional model passes require
+separate reservation or a hold.
+
+Known exhausted chat leaves the priority allocations available. Unknown
+price, authority, liability, safety or aggregate holds can still stop all
+model dispatch; manual and independent hazard routes remain. The allocation
+is not spending authority or proven live configuration. Named approval and
+concurrency, expiry, period-boundary and global-hold tests precede activation.
+Azure Cost Management budgets notify after delayed evaluation; they do not
+stop resources or implement this admission policy.
+
+### Evidence status and sources
+
+The 18 November authorised synthetic batch supersedes the 17 November
+inventory's "not run" status: twelve proposals used 2,522 tokens, estimated
+USD 0.000744 at its dated nano rates. That remains usage, not an invoice,
+accepted-outcome denominator or price for an entire home.
+The [batch evidence](../research/ai-heldout-batch-432-live-2026-11-18.md)
+retains its failed first attempt and comparison limits.
+
+* [Azure Retail Prices API](https://prices.azure.com/api/retail/prices), retrieved 2026-11-27. The model records exact meter IDs/units; the OpenAI service is listed as Foundry Models.
+* [Container Apps billing](https://learn.microsoft.com/en-us/azure/container-apps/billing), retrieved 2026-11-27: zero replicas have no resource charge; running jobs and other services still incur costs. Free allowances are subscription-wide.
+* [Azure budgets](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets), retrieved 2026-11-27: notifications, not consumption stops; delayed cost data.
+* [Defender billing-model guidance](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-portal/estimate-track-costs), retrieved 2026-11-27: DWU model is preview and requires subscription movement. A public DWU meter does not establish this subscription's migration, protected quantity or actual charge.
+* [Core admission source](../../../src/core/src/zava_forward/core/ai_consumption.py), authority and atomic reservation; [assistant source](../../../src/core/src/zava_forward/core/assistants.py), deterministic evidence predicates and generated findings. Source mechanisms are not operational acceptance.
+
 ## Gaps
 
 | Gap | Why it matters | Where it is tracked |
 | --- | --- | --- |
-| No price table, so no money figure per token | A cost per accepted proposal needs the regional price for the deployed model on a recorded date. None is stored, and none is invented here | BRD OD-51; NFR-012 |
+| Actual attributable billing remains unverified | Dated public rates and platform scenarios are now stored, but an accepted-outcome cost still needs scoped billing reconciliation and Finance validation | BRD OD-51; NFR-012 |
 | No denominator defined | Cost per token, per assistant run, per accepted proposal and per accepted handover answer different questions | BRD OD-51; FR-052 |
-| TCA components not enumerated for Zava Forward | The investment case lists technology cost lines but not as a Total Cost of AI with a token share | BRD FR-025, RULE-016, NFR-012 |
+| TCA amounts and accepted-outcome denominator remain incomplete | Azure drivers are enumerated with explicit scenarios/allowances; human integration, review, correction, assurance and support costs are still unmeasured | BRD FR-025, RULE-016, NFR-012 |
 | No quality floor in cost reporting | A cheaper model that raises critical misses is not cheaper | BRD NFR-012; backlog #108 |
 | Review effort is the largest hidden cost | Human review, correction and re-review are likely larger than tokens, which the existing comparative-effort design already measures | BRD RULE-019; PRD effort comparison |
 | Chat is a consumption driver | Per-user threads and memory multiply calls per request | Backlog #157 and #159 |

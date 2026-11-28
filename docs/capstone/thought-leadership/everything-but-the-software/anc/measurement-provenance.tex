@@ -602,26 +602,28 @@ Equal-model & E -- B & [+6.35, +7.94] \\
 \begin{table}[!htbp]
 \centering\small
 \caption{CR1 success differences (\texttt{H6}) for cells with 21 observed
-Boolean outcomes in both arms, in percentage points. Every row reports a
-Newcombe hybrid-score 95\% interval and a two-sided Fisher exact $p$ value,
+Boolean outcomes in both arms, in percentage points. Every row reports
+registered bounds using 97.5\% Clopper--Pearson component intervals and
+opposite endpoints, a post hoc Newcombe hybrid-score 95\% interval and
+a post hoc two-sided Fisher exact $p$ value,
 conditional on independent binomial outcomes. All comparisons are exploratory
 and unadjusted for multiplicity.}\label{tab:resultscrintervals}
 
-\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}llrrl@{}}
+\begin{tabularx}{\textwidth}{@{}L{1.8cm}L{1.4cm}rYrl@{}}
 \toprule
-Model & Contrast & Gain & Fisher $p$ & 95\% interval \\
+Model & Contrast & Gain & Registered bounds (CP 97.5\%, opposite-endpoint) & Fisher $p$ & 95\% interval \\
 \midrule
-Sonnet 5.5 & B -- D & +4.7619 & 1.00000 & [-11.1902, +22.6694] \\
-Sonnet 5.5 & B -- A & 0.0000 & 1.00000 & [-15.4639, +15.4639] \\
-Sonnet 5.5 & B -- C & 0.0000 & 1.00000 & [-15.4639, +15.4639] \\
-Sonnet 5.5 & E -- B & -4.7619 & 1.00000 & [-22.6694, +11.1902] \\
+Sonnet 5.5 & B -- D & +4.7619 & [-18.77, +26.77] & 1.00000 & [-11.1902, +22.6694] \\
+Sonnet 5.5 & B -- A & 0.0000 & [-18.83, +18.83] & 1.00000 & [-15.4639, +15.4639] \\
+Sonnet 5.5 & B -- C & 0.0000 & [-18.83, +18.83] & 1.00000 & [-15.4639, +15.4639] \\
+Sonnet 5.5 & E -- B & -4.7619 & [-26.77, +18.77] & 1.00000 & [-22.6694, +11.1902] \\
 \midrule
-Gemini 4 Argon & B -- D & +4.7619 & 1.00000 & [-22.7012, +31.2676] \\
-Gemini 4 Argon & B -- A & +9.5238 & 0.74421 & [-18.0105, +35.2120] \\
-Gemini 4 Argon & B -- C & -38.0952 & 0.02778 & [-59.8800, -8.1786] \\
-Gemini 4 Argon & E -- B & +14.2857 & 0.53590 & [-14.7411, +40.2154] \\
+Gemini 4 Argon & B -- D & +4.7619 & [-43.88, +51.67] & 1.00000 & [-22.7012, +31.2676] \\
+Gemini 4 Argon & B -- A & +9.5238 & [-39.16, +54.73] & 0.74421 & [-18.0105, +35.2120] \\
+Gemini 4 Argon & B -- C & -38.0952 & [-77.05, +14.69] & 0.02778 & [-59.8800, -8.1786] \\
+Gemini 4 Argon & E -- B & +14.2857 & [-37.24, +60.67] & 0.53590 & [-14.7411, +40.2154] \\
 \bottomrule
-\end{tabular*}
+\end{tabularx}
 \end{table}
 
 The two unadjudicated GPT~6.1 Sol CR1 test errors (\texttt{B-08} and
@@ -1176,7 +1178,7 @@ Combined nominal session credits & 1,107,000 & 1,876,500 & 2,902,500 \\
 Combined nominal allowances are $85500n+81000$ credits and maximum
 agent-hours are $116.25n+105$. At default $n=12$, 1,107,000 nominal credits
 and 3,300 sessions including calibration do not authorize spending beyond
-the unchanged 300,000-credit envelope or 270,000-credit admission ceiling.
+the unchanged 300,000-credit envelope (US\$3,000) or 270,000-credit admission ceiling.
 Excluded calibration informs cost and time feasibility only, not outcome-
 or variance-driven sample resizing. Its cost forecast must show that the
 entire selected allocation, including CR1 and all-attempt liabilities, fits
@@ -1257,9 +1259,9 @@ Both authors are Microsoft employees; execution was separate from design
 and analysis, but not institutionally independent.
 
 An earlier three-arm protocol was registered at \url{https://osf.io/ywsrv/overview},
-and I, the repository maintainer, confirm a 7 November 2026 OSF-registered base at
-\url{https://osf.io/xcpt4}. Because the OSF registration could not be amended in
-place, the executed five-arm model-stratified design and mid-study resilience
+and a 7 November 2026 OSF-registered base at
+\url{https://osf.io/xcpt4}. The five-arm design and allocation options were
+registered before collection; later model-stratified scheduling and mid-study resilience
 recoveries (short calibration, parallel execution, WebSocket/HTTP retry
 handling, VM restarts and quarantine-completion transitions) were publicly
 disclosed in version control, culminating in initial handoff commit
@@ -1269,7 +1271,7 @@ The completed study estimates exploratory differences under an evolving
 protocol. The registered base covers only part of that execution history.
 The public protocol leaves its formal hypothesis list empty and marks the
 current amendment's registration fields false or null. Those fields concern
-the amendment; the registered base remains based on my confirmation.
+the amendment.
 
 The active profile is \nolinkurl{pilot-estimation.json},
 \texttt{model-stratified-v2-five-arm}, suite \texttt{s1-retrofit}.
@@ -1527,7 +1529,10 @@ admission; unknown usage is never zero or free headroom.
 Original 300-credit sessions use a 270-credit soft limit; D's
 600-credit feature uses 540. A retry shares the original allowance.
 In-flight responses can overshoot; these are not provider billing caps.
-No verified dollar conversion is available.
+At GitHub's published rate, 1 GitHub AI credit = US\$0.01~\cite{githubcopilotpricing}.
+AI credits remain the primary measured unit. USD figures are list-price
+equivalents at the published overage rate; actual out-of-pocket cost depends
+on plan allowances.
 
 The historical plan required the selected allocation, calibration and
 all-attempt liabilities to fit the remaining envelope and deadline before

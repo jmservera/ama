@@ -1,0 +1,32 @@
+{
+  "schema_version": "1",
+  "branch": "docs/demo-first-capstone",
+  "head_commit": "bd3dee187fb019a782a4f5d9fa3188812797e17c",
+  "base_commit": "e85aff7ef7c4e8076092550de903a9010d12b105",
+  "reviewed_at": "2026-11-27T18:27:29Z",
+  "verdict": "approve_with_comments",
+  "files_changed": [
+    ".copilot-tracking/research/2026-11-27/azure-total-cost-pitch-research.md",
+    "docs/capstone/README.md",
+    "docs/capstone/pitch/README.md",
+    "docs/capstone/source/README.md",
+    "docs/capstone/source/azure-cost-model-2026-11-27.json",
+    "docs/capstone/source/review-2026-11-27.md",
+    "docs/capstone/source/slides.json",
+    "docs/capstone/tokenomics-qa-brief.md",
+    "docs/reference/README.md",
+    "docs/reference/log.md",
+    "docs/reference/resources/ai-tokenomics.md",
+    "tools/capstone/Invoke-Capstone.ps1",
+    "tools/test_capstone_pitch_docs.py"
+  ],
+  "findings_count": {
+    "critical": 0,
+    "high": 0,
+    "medium": 1,
+    "low": 0
+  },
+  "reviewer": "presentation-review",
+  "agent_id": "1c7c17e1-1d40-4927-9942-3d493a946fb0",
+  "retention_note": "Parent-retained read-only reviewer response; original outcome before correction. Inherited manuscript changes and absent workflow-state artifacts are outside this record."
+}

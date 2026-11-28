@@ -1,47 +1,110 @@
 ---
 title: Capstone Demo and Recovery Runbook
-description: Timed panel demo and optional ten-minute walkthrough covering AI evidence, observability, sensors, staff work and resident self-service, with the 2026-11-21 live demo status and explicit readiness limits
-ms.date: 2026-11-21
+description: Demo-first panel route, preflight and recovery with dated live evidence and a complete optional deeper walkthrough
+ms.date: 2026-11-28
 ms.topic: how-to
 ---
 
 ## Outcome And Timing
 
-Show one fictional home, one evidence conflict, one accountable next action
-and the boundary between an AI draft and a human decision. Land that outcome
-inside two minutes; do not begin with a screen tour or platform inventory.
+Begin the demo at pitch 00:30, immediately after the recommendation and a
+ten-second handoff on S22/page 26. Show one fictional home's unresolved check,
+the next responsible role and the difference between a draft and a decision.
+The complete demo lasts 1:50. Its first minute must land the business point.
 
 The [assessment guide](../../reference/method/ama-capstone-assessment-guide.md)
 does not allocate a ten-minute demo slot. B3 requires the outcome to land in
 under two minutes; its preparation advice also says to rehearse the demo to
 under two minutes. B5 requires finishing inside the slot with room for questions.
-The [current capstone plan](../README.md#next-work) separately reserves ten
-minutes for the demo alongside a 30-minute presentation, whose narration is
-24:30 with 5:30 reserve. That is the repository plan, not a confirmed panel allocation.
+The [current capstone plan](../README.md) includes the demo inside the
+15-minute pitch: 13:00 prepared narration/demo and 2:00 questions/recovery.
+The native custom show "Demo-first pitch" starts on page 1, moves to page 26,
+then returns to page 4 after the demo. The physical deck remains a reference
+package; do not present all 56 pages in sequence.
 
-Use 00:00-01:50 below as the complete panel demo. Continue only if the panel
-has confirmed the separate ten-minute slot: prepared navigation ends at 08:00,
-leaving 02:00 for questions or one recovery. The extended route includes the
-short demo; it is not another ten minutes. Confirm whether any demo must instead
-fit inside the presentation slot before the final rehearsal.
+Use the four rows in [Executive Hook](#executive-hook) as the complete default
+demo. Continue into the deeper route only when a longer slot is confirmed.
+That route finishes navigation at 08:00, reserving 02:00 for questions or one
+recovery. It includes the short demo and replaces it; it is never added silently
+to the 15-minute pitch.
 
-Use S22/page 25 to introduce it and S23/page 26 to close. Do not double-count
-the presentation's closing 30 seconds. This runbook is the authored demo script;
-it does not change the generated deck speaker notes or their source manifest.
+The [speaker script](../pitch/speaker-script.md) embeds this entire runbook,
+with relative links rebased by the builder. Edit this source, not its embedded
+copy. S23/page 27 closes the pitch after costs, design and the validation ask.
 
-This is preparation, not an executed demo or rehearsal. No cloud, identity,
-model, resident-data or workflow mutation is authorized by this runbook.
+This is preparation, not a performed rehearsal. The owner has approved AI use
+on synthetic demo data; that does not authorise deployment, new spending limits,
+real resident data or consequential case actions. Record the effective task
+release, finite admission and model origin in preflight, rather than describing
+all AI as awaiting a new generic owner approval.
 The [live demo status](#live-demo-status-2026-11-21) below records what was
 observed on the synthetic demo on 2026-11-21 and what was not verified. It
-replaces the five-home target as the description of the live cohort.
+records a historical cohort, not today's guaranteed simulator or sensor state.
+
+## Presenter setup
+
+Pre-open the employee home page, Workbench case and, if available, an actual
+source-linked prepared answer for that case. The employee home explains the product, role
+responsibilities and limits; use it as the pitch surface, not a page-by-page
+feature tour. Complete staff sign-in before sharing. Login is a prerequisite,
+not the opening demonstration.
+
+The homepage is an authored product explanation. Its
+`EXAMPLE-HOME-0412` card and "Workflow only" checkbox are an interactive
+illustration, not live case data or an operational AI switch. Label that before
+opening the actual case. Do not present its fake Accept/Edit/Reject labels as
+working controls or claim that two different case references are one home.
+
+Use the homepage's "How it works", "AI and people" and "Who does what"
+sections to orient the room. In the short hook show only the Programme Manager
+and Quality Inspector responsibilities; the other employee, contractor and
+resident roles are available for questions. The source is
+[welcome.html](../../../src/api/src/zava_forward/api/web/welcome.html).
+
+The main pitch now connects the not-for-profit mission to accountable spending
+and resident privacy. Use constructed data only. AI prepares recommendations,
+drafts or review flags; a named, authorised person checks the evidence and can
+correct or reject before a decision affects a resident. The homepage's example
+buttons do not demonstrate meaningful human oversight by themselves.
+
+The proposed real-data design uses UK application/storage and UK Standard-model
+inference. UK GDPR permits safeguarded international transfers; UK residency is
+the proposed customer policy, not a blanket consequence of not-for-profit
+status or proof of compliance. The retained drawing includes Global and Sweden
+Central options, so do not describe the demo as wholly UK-resident. Explain
+lawful purpose, case-scoped access, retention and rights on S17/page 21; S11A/page
+13 covers the UK target and S15/page 17 covers Responsible AI. Fully local
+sovereignty stays in the optional appendix.
+
+* Choose one synthetic case with an inspectable missing check and next role.
+  A Quality-stage case fits the installer/inspection example only if its
+  actual records show that gap. Otherwise use the real blocker in the chosen
+  case; do not narrate a fictional defect over a different record.
+* Pre-open the same-case resident fixture only after verifying its linkage.
+  If it is a separate showcase, label that before switching. Status lookup,
+  permission to use records, sensor-monitoring choice and works consent are
+  distinct.
+* Keep the original source and a dated prepared AI output side by side. A
+  recorded answer must carry its date and model/source origin. The short route
+  does not wait for uploading, scanning, model generation or a new sensor event.
+* Keep the accessible list/table and a source-evidence fallback ready. Exclude
+  notifications, tenant/account details, credentials and raw payloads from
+  sharing. A current trace is optional depth, never a dependency of the hook.
+* Put a timer beside the speaker notes. At demo 01:50 return to S04/page 4,
+  even if a question or failed step has consumed part of the window.
 
 ## Explain the Requested and Built Autonomy
 
-Use [page 30's matrix and review](../source/review-2026-11-08.md#requested-versus-built-autonomy)
-to describe exact brief fidelity. The case already specified L2-L4 and
-professional/resident decisions. The current five helpers are evidence
+Use [B03/page 31 and the current review](../source/review-2026-11-27.md)
+to describe exact brief fidelity. The
+[8 November review](../source/review-2026-11-08.md#requested-versus-built-autonomy)
+is historical, not the current Quality finding.
+The case already specified L2-L4 and
+professional/resident decisions. The first four current helpers are evidence
 proposals; a request or approved scan can prepare one without advancing the
-case. Do not call that a delivered L3 booking or L4 autonomous quality flag.
+case. Do not call that a delivered L3 booking. Quality now has a source contract
+for proactive source-cited L4 review flags when released; it never accepts work.
+Its current live activation needs separate preflight.
 
 For the prepared walkthrough, show the three existing help modes:
 
@@ -70,7 +133,18 @@ observed readings for two homes but blocked the Quality model at release admissi
 Source capability, dated observations and live-ready authority remain distinct.
 Refresh the progress and activation snapshot before the final demo.
 
+The later [26 November audit](../../reference/research/issue-1288-live-r15-quality-sensor-evidence-2026-11-26.md)
+found releases in force, but the assistants suspension path still blocked the
+model leg: zero tokens during the finite walkthrough. Its override correction
+was source-only in that record. Do not say the release is still missing, or
+claim a live Quality model flag because the release is present.
+
 ## Live Demo Status (2026-11-21)
+
+Historical observation, retained for comparison. The rows below are not the
+27 November preflight and must not be read as current blockers or successes.
+Use the [27 November evidence review](../source/review-2026-11-27.md) for later
+source and dated execution changes; recheck the selected build before presenting.
 
 Refs #2203. This section describes the synthetic desktop demo in the Azure
 resource group `ama`, under the owner decisions of 2026-11-18 (synthetic data,
@@ -217,10 +291,10 @@ are presenter notes. State route E or L before starting the clock.
 
 | Clock | Show | Say |
 | --- | --- | --- |
-| 00:00-00:25 | Today's briefing, then the selected case and its next owner | "This fictional home needs attention, but priority is not permission to start work. The employee can see the blocker and who owns the next action. The queue is rules-based; AI suggestions are labelled separately." |
-| 00:25-00:55 | A prepared document reading beside its synthetic source, or its source contract | "The document says the installer has finished, but independent inspection is not recorded. AI can help surface that gap. The employee checks the source and prepares the next action; the model cannot accept the work." |
-| 00:55-01:20 | Same-home journey strip and Home sensors, or their labelled evidence | "The case connects assessment, funding, resident choice, coordination and quality. Sensor readings add evidence and alerts identify something to check. These readings are synthetic, not a diagnosis. Human safety response never waits for AI." |
-| 01:20-01:50 | Separately signed-in synthetic resident view, or its source contract; return to the case | "The resident can look up their own information without first contacting an employee. That is a proposed benefit, not measured savings. Here the blocker and next owner are visible. Test whether this reduces total staff effort." |
+| 00:00-00:20 | Employee homepage: "Every home has an owner"; "Who does what", Programme Manager and Quality Inspector. Workbench already signed in | "This is a not-for-profit's workflow, illustrated with constructed data. The programme manager owns delivery; an independent inspector accepts work. AI prepares evidence. People retain the decisions." |
+| 00:20-00:50 | Open the preflight-selected actual case; show its own reference, unresolved check and next responsible role | "Now this is the actual synthetic case. Here is the check that cannot pass and the next responsible person. Other useful work can continue. Progress means resolving an owned handoff, not hiding the missing evidence." |
+| 00:50-01:20 | Same-case prepared model answer or proposal beside its source, only if one exists. Otherwise show the actual rules/held state and ordinary next action | "I check the answer's origin, source and what it cannot verify. Accepting a draft doesn't accept the works. A held or unavailable model doesn't clear the check or stop the person following the ordinary action." |
+| 01:20-01:50 | Verified same-case resident view, or stay on the case's recorded resident-answer field if the resident showcase is a different home. Return to the owned action | "The resident controls works consent and monitoring choice, with assisted help available. Own-case access protects other households. Data use still needs a lawful basis. We are testing less handling effort and fewer lost handoffs, not claiming it." |
 
 For route L, show only equivalent pre-arranged, authorized behaviour. Identify
 a prepared model output as recorded evidence, with its actual date and source.
@@ -463,6 +537,14 @@ operator, route and safe evidence reference. A written checklist is not a pass.
 * Intended SQL state and permitted persistence/restart evidence, without reseeding
 * Exact allowed AI task, sources, model/version, finite calls/tokens, expiry,
   processing terms, price/cost scope and current owner authorization
+* For any UK-residency claim, verify the actual application, SQL, Blob, log and
+  backup locations and UK Standard-model inference deployment type; a UK
+  endpoint, GlobalStandard or EU DataZone does not establish UK-only inference.
+  Record model/version, subscription quota and processing terms. Map identity,
+  provider access and abuse monitoring separately; do not expose private settings.
+* For real personal data, require Legal/DPO-approved purpose, lawful basis,
+  special-category condition where applicable, retention, rights/transfer
+  handling and DPIA where required. Synthetic-demo authorization is not approval.
 * Independent manual work and human safety routes; no actual emergency test
 * Reversible prepared action, disposable fixture where necessary and recovery owner
 * Clean sharing profile, no notifications, private identities, endpoints,
@@ -477,13 +559,13 @@ officer routes stay available; login is not works consent.
 ## Technology Questions
 
 Keep the demo on one home and an accountable next action, not a platform tour.
-Main pages 14-15 explain the built Workbench and existing file/CLI adoption.
-The demo is that current-product story, not the future platform. Page 13's
+Main pages 15-16 explain the built Workbench and existing file/CLI adoption.
+The demo is that current-product story, not the future platform. Page 14's
 resident map explains the pains and design responses, labelled as hypotheses.
-Only closing pages 23-24 propose optional Fabric/Power BI history and richer
+Only reference pages 24-25 propose optional Fabric/Power BI history and richer
 semantic/preview ontology context; analytics and context tests are separate.
-Use page 31 for rules versus Decision 1 versus generation, page 37 for the
-shared API/SQL/Blob decision, page 46 for the source-only IoT route and page 47
+Use page 32 for rules versus Decision 1 versus generation, page 38 for the
+shared API/SQL/Blob decision, page 47 for the source-grounded IoT route and page 48
 for conditional Fabric analytics. The updated sensor route includes the
 custom private Event Hub. Synthetic intake is not calibrated diagnosis;
 resident hazard reports go directly to the independent human safety service.

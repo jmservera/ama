@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "review_type": "independent_correction_and_presentation_increment_readiness",
+  "verdict": "approve",
+  "reviewed_at": "2026-11-27T23:45:59Z",
+  "repository": "jmservera/ama",
+  "branch": "docs/demo-first-capstone",
+  "head_commit": "39021437a4464caf355891129e00e1ac59691ff5",
+  "base_commit": "3da0011a89281482aeb6500e6524c9fe05c56d42",
+  "previous_reviewed_head": "01ad9aeb8eae5ad72b33f20882fab3997384b979",
+  "review_path": "correction-review.md",
+  "scope": "Complete seventeen-path presentation increment and full correction delta; not inherited manuscript content, whole application, operational certification or an unseen future head.",
+  "coverage_completed": true,
+  "corrected_source_diff": {
+    "path": "corrected-source.diff",
+    "sha256": "c6a4520f5a331714db6e4f5cfb024bea193803c8cda1c6e47947617d5568533e",
+    "lines": 1930,
+    "paths": 17,
+    "exact_git_diff_match": true,
+    "all_worktree_source_files_match_target_head": true,
+    "excludes_review_artifact_recursion": true,
+    "covered_paths": [
+      ".copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/native-fit-iterations.json",
+      ".copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/validation-results.json",
+      ".copilot-tracking/research/2026-11-28/capstone-privacy-residency-rai-research.md",
+      "docs/architecture/environment-region-quota-strategy.md",
+      "docs/capstone/deck/zava-forward-cowork-v2-draft.pdf",
+      "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx",
+      "docs/capstone/demo/runbook.md",
+      "docs/capstone/pitch/questions-and-answers.md",
+      "docs/capstone/pitch/speaker-script.md",
+      "docs/capstone/source/review-2026-11-27.md",
+      "docs/capstone/source/slides.json",
+      "docs/capstone/source/validation.json",
+      "docs/reference/README.md",
+      "docs/reference/log.md",
+      "docs/reference/regulatory/README.md",
+      "docs/reference/regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md",
+      "tools/test_capstone_pitch_docs.py"
+    ]
+  },
+  "correction_delta": {
+    "complete_delta_reviewed": true,
+    "source_and_evidence_paths": 4,
+    "newly_committed_original_review_paths": 5,
+    "source_and_evidence_changes": [
+      ".copilot-tracking/changes/2026-11-28/capstone-privacy-residency-rai/validation-results.json",
+      "docs/capstone/source/review-2026-11-27.md",
+      "docs/capstone/source/validation.json",
+      "tools/test_capstone_pitch_docs.py"
+    ],
+    "slides_narration_runbook_diagrams_model_prices_and_delivered_binaries_unchanged": true
+  },
+  "findings_count": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "findings": [],
+  "historical_finding_resolution": {
+    "id": "R1",
+    "severity": "low",
+    "original_verdict": "approve_with_comments",
+    "original_head": "01ad9aeb8eae5ad72b33f20882fab3997384b979",
+    "original_location": "docs/capstone/source/validation.json:294",
+    "original_metadata_resolved_value": false,
+    "technical_status": "corrected_independently_verified",
+    "qualified_human_validation": "pending",
+    "old_runbook_sha256": "0adeb77b8533df19f3fc4c90a79d1f4998a4ceb96df0b69c8bee74d7599f6f12",
+    "correct_runbook_sha256": "31deb5a6f423460280b480aef7993ab87b4c0a163bbefbf58c4e3f02bd12500f",
+    "existing_regression_location": "tools/test_capstone_pitch_docs.py:37-46",
+    "independent_in_memory_stale_value_rejected": true,
+    "current_receipt_regression_passed": true,
+    "source_files_modified_by_negative_probe": false
+  },
+  "independent_checks": {
+    "targeted_pytest": {
+      "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=tools/capstone TMPDIR=/home/jmservera/source/ama/.copilot-tracking/reviews/code-reviews/docs-demo-first-capstone-privacy-2026-11-28 /home/jmservera/.copilot/session-state/e8515bdf-8697-4e5e-817f-f1620e418f1d/files/deck-venv/bin/python -m pytest -p no:cacheprovider -q tools/test_capstone_pitch_docs.py tools/capstone/test_render_preview.py --basetemp=/home/jmservera/source/ama/.copilot-tracking/reviews/code-reviews/docs-demo-first-capstone-privacy-2026-11-28/correction-pytest-tmp",
+      "status": "passed",
+      "tests": 26,
+      "subtests": 3,
+      "elapsed_seconds": 1.2,
+      "bytecode_and_pytest_cache_disabled": true,
+      "fixtures_confined_to_review_folder": true
+    },
+    "canonical_source_bindings": {
+      "count": 4,
+      "status": "passed",
+      "manifest_sha256": "57a12b2f7702320bfb5b72ac8cf575581fbcb658baaeb5c595a7711cd10621c3",
+      "asset_catalog_sha256": "c9743882738e54f90e3332036ff26bfe0898a88091cbe68323bb5b16ce02693c",
+      "builder_sha256": "bae8eb2ec82ccb6edd526732dff53cfc18c17da579c416729e65d4fe187f6313",
+      "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068",
+      "convention": "Normalize CRLF and CR to LF; preserve BOM and all other bytes."
+    },
+    "other_receipt_bindings": {
+      "status": "passed",
+      "baseline_pptx_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
+      "dated_cost_model_sha256": "8b3388dddff50f359dd979e8fcf3d486427977155873a40d028be2c029dba6bb",
+      "delivered_pptx_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
+      "raw_native_pdf_sha256": "ef8e4647f7d46b6d7bf048d6e0f09a14b2152ba2e266f7ed79f6135464752fd8",
+      "delivered_pdf_sha256": "a48be8ca10007be21e94c2455cc59b4dad7626f0b4476e14bddd6810dbff7805",
+      "speaker_script_sha256": "1be6fcf0334510fc78cbe973c1ec97b890c791af7b6d4a4daf6b4248fe22b34a",
+      "questions_and_answers_sha256": "6b0a48888ef56814effec29ff49bbfe56797121936168eb905cdd19f21a1e5b9",
+      "canonical_runbook_sha256": "31deb5a6f423460280b480aef7993ab87b4c0a163bbefbf58c4e3f02bd12500f",
+      "native_pptx_equals_delivery": true,
+      "verified_navigation_pdf_equals_delivery": true
+    },
+    "package": {
+      "candidate_members": 307,
+      "baseline_members": 293,
+      "unchanged_baseline_members": 183,
+      "media_bytes_preserved_against_published_base": true,
+      "presentation_order_bytes_preserved_against_published_base": true
+    },
+    "native_and_generated_delivery": {
+      "focused_frame_records_equal_actual_native_measurements": 42,
+      "focused_overflow_flags": 0,
+      "original_native_image_evidence_reused": true,
+      "scoped_physical_pages": [1, 13, 17, 21, 56],
+      "appendix_sections_matching_native_notes": 28,
+      "pdf_pages": 56,
+      "valid_pdf_internal_links": 111,
+      "native_destination_and_hit_region_matches": 111
+    },
+    "timing": {
+      "primary_pages": 17,
+      "prepared_seconds": 780,
+      "demo_start_seconds": 30,
+      "demo_end_seconds": 140,
+      "reserve_seconds": 120,
+      "separately_confirmed_optional_seconds": 360,
+      "rehearsal_not_established": true
+    },
+    "added_markdown_local_references": {
+      "checked": 18,
+      "broken": 0,
+      "new_architecture_fragments_checked": 2,
+      "new_architecture_fragments_valid": 2
+    },
+    "lint_and_whitespace": {
+      "changed_python_source_ruff_check": "passed",
+      "changed_python_source_ruff_format": "passed",
+      "both_tested_python_files_format_check": "passed",
+      "source_only_whitespace_both_ranges": "passed",
+      "broader_unchanged_preview_test_ruff_probe": "inherited I001 at tools/capstone/test_render_preview.py:5; not repaired or counted as an increment finding",
+      "unfiltered_correction_literal_diff_context_whitespace_reports": 51,
+      "literal_context_reports_only_in_preserved_increment_diff": true
+    },
+    "public_evidence": {
+      "prior_independent_official_source_checks_reused_for_unchanged_claims": true,
+      "new_public_fetches_in_followup": false,
+      "draft_dpia_and_rai_are_not_operational_approval": true
+    }
+  },
+  "preserved_original_artifacts_sha256": {
+    "review.md": "b997312f97068e7ba0dbf3db71c6fff121a627202c47d50eccf6569786d4dce5",
+    "metadata.json": "a7938f871cd816f0ae39c490a8722a86dc40970ff1f1a726ff0afd4c19d34573",
+    "diff-state.json": "a5ff8861782b77801e65d9f149cdbbea6b664e8893ca6c2344e9323ab2c5bbad",
+    "increment.diff": "87f33f535a7ff22aabc8eeccc56d2e4306e6f83689ffc4b5cca28e229672c55f",
+    "dispatch-manifest.json": "b15fbf32576055a9cd7134fc9bf6c591858015f5098f67c7e5a4aee095f11a70"
+  },
+  "original_artifact_retention": {
+    "all_five_match_committed_target_blobs": true,
+    "original_input_hash_bindings_match": true,
+    "original_verdict_approve_with_comments_preserved": true,
+    "original_low_r1_and_unresolved_historical_state_preserved": true,
+    "original_blocked_readiness_attempt_preserved": true,
+    "original_blocked_attempt_verdict_emitted": false,
+    "historical_dispatch_target_and_gates_not_rewritten": true
+  },
+  "phase_gates": {
+    "independent_exact_head_presentation_increment_review": "passed",
+    "qualified_human_review": "not_granted",
+    "merge_authorization": "not_granted",
+    "general_pr_comment_posting": "not_granted",
+    "deployment_authorization": "not_granted",
+    "future_artifact_commit_head_confirmation": "not_performed"
+  },
+  "limitations": [
+    "28 other revised bounds warnings and 179 inherited warnings remain explicitly unaccepted.",
+    "No whole-deck accessibility, assistive-technology, projector, rehearsal or resident acceptance.",
+    "Inherited manuscript, whole-application architecture and security certification are outside this increment review.",
+    "Historical diagram-source failures remain not rerun, not repaired and not promoted to pass.",
+    "No privacy, legal, Responsible AI or operational certification; real-data and professional approvals remain separate.",
+    "Proposed UK Standard-model policy is not an attested wholly-UK deployment or a UK-price quotation.",
+    "Original native visual and official-source checks reused only for unchanged claims and delivery.",
+    "Inherited preview-test import ordering remains outside the changed-source lint result.",
+    "No approval of an unseen later commit containing the new review artifacts."
+  ],
+  "actions_not_taken": [
+    "nested agents",
+    "private-data access",
+    "paid inference",
+    "source edits",
+    "Git mutation",
+    "deployment",
+    "publication",
+    "PR comment posting"
+  ],
+  "qualified_human_checkbox_checked": false,
+  "code_review_disclaimer_included_verbatim": true
+}

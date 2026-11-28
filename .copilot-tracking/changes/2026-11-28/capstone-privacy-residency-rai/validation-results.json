@@ -1,0 +1,72 @@
+{
+  "date": "2026-11-28",
+  "scope": "Presentation-only privacy/UK target/RAI increment; no operational control activation",
+  "tier": "focused",
+  "tier_basis": "Presentation data and generated delivery, prose-only architecture/regulatory findings and targeted document regressions; no infrastructure/security/permission/dependency/deployment/CI semantics change",
+  "original_new_regression_result": {
+    "status": "expected_fail",
+    "count": 2,
+    "failures": [
+      "Previously delivered opening lacked visible not-for-profit stewardship",
+      "Previously delivered main narration lacked the qualified UK Standard target"
+    ]
+  },
+  "native": {
+    "build_verify_render": "pass",
+    "physical_pages": 56,
+    "final_candidate": "privacy-build-2",
+    "first_candidate": "privacy-build-1",
+    "original_fit_failure": "Opening stewardship line wrapped beyond its measured frame",
+    "correction": "Shortened opening copy, preserving frame and font",
+    "focused_revised_frames": 42,
+    "focused_revised_warnings": 0,
+    "other_source_revised_warnings": 28,
+    "inherited_warnings": 179,
+    "visual_and_text_checked_pages": [1, 13, 17, 21, 56],
+    "pixel_changed_pages_vs_prior_published_delivery": [1, 13, 17, 21, 56],
+    "six_protected_slide_note_pairs_unchanged_for_this_increment": true,
+    "pdf_jumps_and_hit_regions_read_back": 111
+  },
+  "targeted_tests": {
+    "command": "PYTHONPATH=tools/capstone /home/jmservera/.copilot/session-state/e8515bdf-8697-4e5e-817f-f1620e418f1d/files/deck-venv/bin/python -m pytest -q tools/test_capstone_pitch_docs.py tools/capstone/test_render_preview.py",
+    "status": "pass",
+    "pitch_tests": 16,
+    "preview_tests": 10,
+    "subtests": 3,
+    "native_shape_checks": 32,
+    "insertion_refusal_mutations": 6,
+    "primary_route_refusal_mutations": 8,
+    "optional_route_refusal_mutations": 6,
+    "financial_refusal_checks": "pass",
+    "canonical_source_bindings": 4,
+    "delivery_hash_binding": "pass",
+    "ruff_and_format": "pass",
+    "whitespace": "pass",
+    "local_links_source_documents": 7,
+    "initial_preview_import_failure": "unittest import required existing tools/capstone module path; final pytest run collected all function-based preview tests"
+  },
+  "preserved_routes": {
+    "main_slides": 17,
+    "prepared_seconds": 780,
+    "demo_start_seconds": 30,
+    "demo_seconds": 110,
+    "reserve_seconds": 120,
+    "optional_seconds": 360,
+    "optional_slot_requires_confirmation": true
+  },
+  "independent_review_correction": {
+    "finding": "R1: stale runbook SHA-256 in the compact receipt",
+    "original_verdict": "approve_with_comments at 01ad9aeb8eae5ad72b33f20882fab3997384b979",
+    "new_binding_assertion_before_correction": "expected_fail",
+    "correction": "Refreshed canonical runbook digest; retained original review; extended existing parity regression",
+    "delivery_and_spoken_content_changed": false,
+    "followup_validation": "26 tests and 3 subtests passed; canonical source/delivery bindings, Ruff and whitespace passed"
+  },
+  "not_established": [
+    "Performed rehearsal, projector or keyboard/assistive-technology acceptance",
+    "Live UK residency or whole-project privacy/RAI acceptance",
+    "Legal/DPO real-data approval, deployment or paid inference",
+    "A UK-resident Global nano quotation or actual maximum Azure bill",
+    "Independent exact-head, hosted CI or human approval from these local checks"
+  ]
+}

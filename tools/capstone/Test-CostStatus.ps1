@@ -36,7 +36,7 @@ function Assert-CostRefusal {
 }
 
 function New-CostMutant {
-    param([int]$Number, [ValidateSet('number', 'geometry', 'notes')][string]$Kind)
+    param([int]$Number, [ValidateSet('number', 'geometry', 'notes', 'summary')][string]$Kind)
     $Path = Join-Path ([IO.Path]::GetTempPath()) ("capstone-cost-" + [Guid]::NewGuid() + '.pptx')
     [IO.File]::Copy($CandidatePath, $Path)
     $script:Owned.Add($Path)
@@ -45,8 +45,11 @@ function New-CostMutant {
         $Part = if ($Kind -eq 'notes') { "ppt/notesSlides/notesSlide$Number.xml" } else { "ppt/slides/slide$Number.xml" }
         $Document = Get-PartDocument $Archive $Part
         $Namespaces = Get-Namespaces $Document
-        if ($Kind -eq 'number') {
-            $Node = @($Document.SelectNodes('//a:t', $Namespaces) | Where-Object { $_.InnerText -match '\d+' })[0]
+        if ($Kind -in @('number', 'summary')) {
+            $Node = @($Document.SelectNodes('//a:t', $Namespaces) | Where-Object {
+                if ($Kind -eq 'summary') { $_.InnerText.StartsWith('Azure:') }
+                else { $_.InnerText -match '\d+' }
+            })[0]
             if (-not $Node) { throw 'Financial-number mutation fixture has no numeric text' }
             $Value = [regex]::Match($Node.InnerText, '\d+').Value
             $Node.InnerText = $Node.InnerText.Replace($Value, $Value + '0')
@@ -84,14 +87,27 @@ try {
     foreach ($Number in @(21, 52)) {
         Assert-CostRefusal { Assert-CostSlide $Baseline $Candidate $Number $false $Definition } 'fixed approved status words'
     }
-    foreach ($Kind in @('number', 'geometry', 'notes')) {
-        $MutantPath = New-CostMutant 21 $Kind
-        $Mutant = [IO.Compression.ZipFile]::OpenRead($MutantPath)
-        try {
-            Assert-CostRefusal { Assert-CostSlide $Baseline $Mutant 21 $true $Definition } 'Protected cost'
-        } finally { $Mutant.Dispose() }
+    $Unapproved = $Definition | ConvertTo-Json -Depth 60 | ConvertFrom-Json
+    $Unapproved.slides[5].PSObject.Properties.Remove('azure_cost_summary')
+    Assert-CostRefusal { Assert-CostSlide $Baseline $Candidate 6 $true $Unapproved } 'Protected cost'
+    foreach ($Property in @('azure_cost_summary', 'layout', 'replacements', 'revised_notes')) {
+        $MutantDefinition = $Definition | ConvertTo-Json -Depth 60 | ConvertFrom-Json
+        $Value = if ($Property -eq 'layout') { 'native' } else { 'arbitrary' }
+        $MutantDefinition.slides[5] | Add-Member -NotePropertyName $Property -NotePropertyValue $Value -Force
+        Assert-CostRefusal { Get-AzureCostSummaryElements $MutantDefinition } 'Only the fixed additive'
     }
-    Write-Output 'Protected-cost tests passed: explicit fixed approval, all six pages, denied unapproved status, number, geometry and note mutations.'
+    foreach ($Number in @(6, 21)) {
+        $Kinds = @('number', 'geometry', 'notes')
+        if ($Number -eq 6) { $Kinds += 'summary' }
+        foreach ($Kind in $Kinds) {
+            $MutantPath = New-CostMutant $Number $Kind
+            $Mutant = [IO.Compression.ZipFile]::OpenRead($MutantPath)
+            try {
+                Assert-CostRefusal { Assert-CostSlide $Baseline $Mutant $Number $true $Definition } 'Protected cost'
+            } finally { $Mutant.Dispose() }
+        }
+    }
+    Write-Output 'Protected-cost tests passed: six pages, fixed status and additive-summary approvals; refused marker/layout/replacement/note authoring and original-number/geometry/note/summary mutations.'
 } finally {
     $Candidate.Dispose()
     $Baseline.Dispose()

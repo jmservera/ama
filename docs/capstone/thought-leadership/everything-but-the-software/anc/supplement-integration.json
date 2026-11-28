@@ -21,7 +21,7 @@
       "content_sha256": "95826e6632b5889c7838b612daa57b13528ed658549c7013ebb5892208a6162b"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "069872bcb4843035a4bfb742c8d678c77a94f212f7b51ded0207bd994af45acd"
+      "content_sha256": "6435e8449ed3af1e8cb0894ae99b45a119faeab0aa778235b74e103cd8ae51db"
     }
   },
   "author_review_revision": {
@@ -1153,7 +1153,23 @@
   "current_supplement_start_page": 37,
   "current_pdf_sha256": "33f89fa43397e3954d95dace508313ff07ee2a0c22e36f52b0b7d50dbd1c017f",
   "literal_renderer": "Wrapped listings; original ASCII bytes, input path and SHA256 retained; no lineno dependency.",
-  "current_editorial_revision": "final_arxiv_release_pass_2026_11_26",
+  "current_editorial_revision": "registration_fidelity_correction_2026_11_27",
+  "registration_fidelity_correction_2026_11_27": {
+    "date": "2026-11-27",
+    "scope": "Owner-requested registration-fidelity and published USD list-price corrections only; directly coupled interval regression and source hashes refreshed. Delivered PDF unchanged; prior bindings preserved.",
+    "prior_delivery_revision": "final_arxiv_release_pass_2026_11_26",
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "069872bcb4843035a4bfb742c8d678c77a94f212f7b51ded0207bd994af45acd"
+    },
+    "source_sha256": {
+      "main.tex": "e44a12dd95686684171541aeb57a442a21771784a80c08db1d85d50fdb63cb42",
+      "anc/experiment-protocol.tex": "01411988fbd8024f782d152e41ec2de2baeb4f5fa83eab8d18011834446991ed",
+      "anc/measurement-provenance.tex": "c020b8df6e987866d973725a50997e3180504ed1eab967d41ac140451eec429a",
+      "references.bib": "425ceebbdf805876e7938b87f81e5a7bd7da4eff22cc192cedcbd463ffaf0d97",
+      "anc/test_measurement_provenance.py": "bcba4991e8c8e7630c6697811acf0f15b9ed379c74e586657dbaf2b6feae4365"
+    },
+    "retained_pdf_sha256": "5d76f7c16f228b7ff875825bd691fd5a21a89e56eac414bafcd880fc5a61ef50"
+  },
   "final_editorial_revision_2026_11_26": {
     "date": "2026-11-26",
     "scope": "Owner-requested final editorial revision; moved audit history, corrected only the authorised Gemini B–C interval, preserved all other numerical table data and displayed equations. No experiment or publication.",

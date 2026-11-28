@@ -1,0 +1,26 @@
+{
+  "schema_version": "1",
+  "branch": "docs/demo-first-capstone",
+  "head_commit": "90672b574dadd26e10107179cc88f77affa60964",
+  "base_commit": "92c61f991a7701b1c6fc6a207aa400c639415499",
+  "reviewed_at": "2026-11-27T20:47:58Z",
+  "verdict": "approve",
+  "files_changed": [
+    ".copilot-tracking/research/2026-11-27/capstone-cost-discovery-sovereignty-research.md",
+    "docs/architecture/environment-region-quota-strategy.md",
+    "docs/capstone/README.md",
+    "docs/capstone/source/README.md",
+    "docs/capstone/source/review-2026-11-27.md",
+    "docs/capstone/source/slides.json",
+    "docs/reference/README.md",
+    "docs/reference/log.md",
+    "tools/capstone/Invoke-Capstone.ps1",
+    "tools/capstone/Test-CostStatus.ps1",
+    "tools/capstone/Test-DeckInsertion.ps1",
+    "tools/test_capstone_pitch_docs.py"
+  ],
+  "findings_count": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+  "reviewer": "capstone-sovereignty-review",
+  "agent_id": "421b802e-8c17-43c2-a7da-9c3fb1b087cb",
+  "retention_note": "Original read-only response retained by the parent. Generated deliveries and receipt were reviewed as evidence, not listed as source files. Human and publication acceptance remain separate."
+}

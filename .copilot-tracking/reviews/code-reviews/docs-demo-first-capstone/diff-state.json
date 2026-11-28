@@ -1,0 +1,25 @@
+{
+  "target": "commit",
+  "branch": "docs/demo-first-capstone",
+  "head": "30ea47662a9642fbe9ef566c682c75b1900625d6",
+  "base": "20701b2f41ed799f2f356d758a17b30a4174cb54",
+  "scope": "Complete 18-file presentation increment; functional and delivery-contract review, excluding concurrent changes.",
+  "reviewStateProvenance": {
+    "scope": "automation-derived",
+    "changeRiskEvidence": "automation-derived",
+    "recommendedDepth": "automation-derived",
+    "depthTier": "automation-derived",
+    "depthRationale": "automation-derived"
+  },
+  "recommendedDepth": "standard",
+  "depthTier": "standard",
+  "depthRationale": "Native package structure, navigation and generated/source parity need artifact inspection; no application or deployment change.",
+  "changeRiskEvidence": [
+    {"category": "change-scope", "signal": "18-file increment", "availability": "observed", "evidence": "Pinned commit diff."},
+    {"category": "path-criticality", "signal": "Native authoring and navigation", "availability": "observed", "evidence": "Builder, manifest, tests and delivered XML."},
+    {"category": "history", "signal": "Source-owned B28 and earlier schema-order correction", "availability": "observed", "evidence": "Dated author review and parent diff."},
+    {"category": "test-presence", "signal": "Focused author tests reported", "availability": "observed", "evidence": "Committed validation.json; reviewer did not execute tests."},
+    {"category": "coverage", "signal": "Package inspection only; no human/AT acceptance", "availability": "qualitative", "evidence": "Independent review coverage and limits in review.md."},
+    {"category": "rollback", "signal": "Topic increment above retained parent", "availability": "observed", "evidence": "Pinned parent ancestry; no rollback was performed."}
+  ]
+}
