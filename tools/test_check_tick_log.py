@@ -153,6 +153,20 @@ class TickLogTests(unittest.TestCase):
         ]
         self.assertEqual(rules(rows), [])
 
+    def test_block_without_expiry_is_flagged_but_expiry_block_is_clean(self) -> None:
+        move = {"task": "7", "to": "human-blocked", "scope": "s"}
+        self.assertEqual(rules([tick(1, reclassified=[move])]), ["approval"])
+        expired = {"scope": "s", "tasks": ["7"]}
+        self.assertEqual(rules([tick(1, reclassified=[move], approvals_expired=[expired])]), [])
+
+    def test_duplicate_id_inside_one_closure_batch_is_a_repeat(self) -> None:
+        self.assertEqual(rules([tick(1, closure_batch=["a", "a"])]), ["closure-repeat"])
+
+    def test_whitespace_action_is_no_progress_and_idle_stop_is_allowed(self) -> None:
+        self.assertEqual(rules([tick(1, action="   ")]), ["no-progress"])
+        drained = {"ready": 0, "running": 0, "unassessed": 0, "human_blocked": 4}
+        self.assertEqual(rules([tick(1, counts=drained, global_stop=True)]), [])
+
     def test_global_stop_with_remaining_work_is_flagged(self) -> None:
         self.assertEqual(rules([tick(1, global_stop=True)]), ["global-stop"])
 

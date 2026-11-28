@@ -547,7 +547,9 @@ class Release(Base):
         held = dict(outcome="financial-held", source="unverified", usage=None, model=None)
         self.assertTrue(self.service.complete(task, held, None))
         with self.service.transaction() as db:
-            row = db.execute("SELECT used_calls,reserved_tokens FROM assistant_allowance").fetchone()
+            row = db.execute(
+                "SELECT used_calls,reserved_tokens FROM assistant_allowance"
+            ).fetchone()
         self.assertEqual((row[0], row[1]), (0, 0))
         self.assertEqual(self.service.detail(self.pm, p["id"])["state"], "failed")
 
@@ -1372,7 +1374,6 @@ class TaskReleaseRecord(Base):
         self.assertIs(self.store.briefing(user), out)
         self.assertEqual(calls, [1])
 
-
     def test_briefing_answers_without_503_when_recording_hits_a_busy_write_lock(self):
         from zava_forward.core.mssqlstore import LOCK_FAILED
 
@@ -1429,7 +1430,6 @@ class TaskReleaseRecord(Base):
         self.store._briefing_busy.clear()
         self.assertNotIn("recorded", self.store.briefing(user))
         self.assertEqual(self.store._briefing_busy, {})
-
 
     def test_briefing_caps_its_write_lock_wait_and_a_cached_read_takes_no_lock(self):
         ai = self.legacy()
@@ -1813,6 +1813,46 @@ class ProcessRaces(UnleasedRevocation):
 
     def test_changed_data_process_revokes_and_fresh_process_stays_denied(self):
         self.check_changed_binding_process("data", "data", "data_version")
+
+    def test_old_image_with_other_mismatches_after_revocation_cannot_restore_or_replenish(self):
+        """Processes carrying different, older bindings stay denied and leave the revocation untouched."""
+        p, held1, held2 = (
+            self.service.invoke(self.pm, CAP, case)["id"] for case in ("ZF-1", "ZF-2", "ZF-3")
+        )
+        control = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")["id"]
+
+        wave = self.work / "control"
+        self.spawn("control", [control], wave)
+        self.release(wave, [])
+        self.assertEqual(self.finish(["control"])[0]["results"], [True])
+
+        wave = self.work / "changed"
+        self.spawn("changed", [p], wave, variation=["rule", CAP])
+        self.release(wave, [])
+        self.assertEqual(self.finish(["changed"])[0]["results"], [False])
+        revoked = self.stored_release(CAP)
+        self.assertEqual(revoked["status"], "revoked")
+        self.assertIn("policy", revoked["invalidated"]["triggers"])
+        stored = self.pool(self.service)
+        self.assertEqual(len(self.provider_calls()), 1)
+
+        larger = dict(call_allowance=1000, token_allowance=9000000, expires="2100-01-01T00:00:00Z")
+        for label, kind, task in (("old1", "model", held1), ("old2", "purpose", held2)):
+            wave = self.work / label
+            self.spawn(label, [task], wave, variation=[kind, CAP], **larger)
+            self.release(wave, [])
+            self.assertEqual(self.finish([label])[0]["results"], [False], label)
+            denied, _, disabled, _ = self.snapshot(self.service, task)
+            self.assertEqual(
+                (denied["state"], denied["owner"], denied["attempts"]), ("disabled", "", 0)
+            )
+            self.assertTrue(
+                denied["reason"].startswith("Release admission denied"), denied["reason"]
+            )
+            self.assertEqual(len(disabled), 1)
+            self.assertEqual(self.stored_release(CAP), revoked, label)
+            self.assertEqual(self.pool(self.service), stored, label)
+            self.assertEqual(len(self.provider_calls()), 1, label)
 
     def check_process_wide_binding(self, kind, trigger, field):
         """A process whose whole runtime binding moved denies the task; a fresh original process stays denied."""
