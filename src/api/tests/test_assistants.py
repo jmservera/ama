@@ -178,6 +178,28 @@ class QualityDemoScope(Base):
         self.assertTrue(capabilities & (set(REGISTRY) - {QUALITY}))
         self.assertEqual(self.provider.calls, 0)
 
+    def test_demo_schedule_opt_in_lets_the_scan_start_quality_for_the_five_homes_only(self):
+        self.case(lambda c: c["home"].update(epc=None))
+        opt = dict(ZF_ASSIST_QUALITY_DEMO_SCHEDULE="synthetic-demo-only", ZF_DEPLOYMENT_PROFILE="demo")
+
+        def build(extra):
+            store = self.open_store()
+            store.ai = self.provider
+            service = Assistants(store, {**config(quality_demo_homes=",".join(DEMO)), **extra})
+            self.addCleanup(store.db.close)
+            self.addCleanup(service.stop)
+            return service
+
+        self.assertFalse(build({"ZF_ASSIST_QUALITY_DEMO_SCHEDULE": "synthetic-demo-only"}).limits.quality_scheduled)
+        service = build(opt)
+        self.assertTrue(service.limits.quality_scheduled)
+        service.scan()
+        quality = [case for cap, case in self.tasks(service) if cap == QUALITY]
+        self.assertIn("ZF-1", quality)
+        self.assertTrue(set(quality) <= set(DEMO))
+        self.assertEqual(service.registry(self.pm)["quality_scope"]["background_scan"], "demo-homes-only")
+        self.assertEqual(self.provider.calls, 0)
+
     def test_manual_request_is_admitted_for_the_five_and_refused_outside_them(self):
         service = self.scoped()
         task = service.invoke(self.pm, QUALITY, "ZF-1")

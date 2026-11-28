@@ -966,6 +966,13 @@ class Limits:
             self.quality_homes = demo_homes(env.get("ZF_ASSIST_QUALITY_DEMO_HOMES"))
         except ValueError:
             self.quality_scope_error = True
+        # Separate demo-profile opt-in: the scan may also schedule Quality, still only for the five homes.
+        self.quality_scheduled = (
+            self.quality_homes is not None
+            and not self.quality_scope_error
+            and env.get("ZF_ASSIST_QUALITY_DEMO_SCHEDULE") == "synthetic-demo-only"
+            and env.get("ZF_DEPLOYMENT_PROFILE") == "demo"
+        )
 
     @property
     def reservation(self):
@@ -2031,12 +2038,14 @@ class Assistants:
     def quality_scope_denial(self, capability, case_id, requested=True):
         """The reason Quality may not work on this case under the demo scope, or None.
 
-        Unset scope allows everything; a configured scope allows only the five homes and only on a person's request."""
+        Unset scope allows everything; a configured scope allows only the five homes and only on a person's
+        request, unless the demo schedule opt-in also lets the background scan work those five homes."""
         l = self.limits
         if capability != "quality-evidence":
             return None
         if l.quality_scope_error or (
-            l.quality_homes is not None and (case_id not in l.quality_homes or not requested)
+            l.quality_homes is not None
+            and (case_id not in l.quality_homes or not (requested or l.quality_scheduled))
         ):
             return "Quality analysis is limited to the configured five-home demo set and a person's request; use the manual route."
         return None
@@ -2054,8 +2063,16 @@ class Assistants:
         return dict(
             mode=mode,
             homes=homes,
-            trigger="operator-requested-only" if scoped else "any",
-            background_scan="skips-quality" if scoped else "includes-quality",
+            trigger=(
+                "operator-requested-or-scheduled-demo-homes"
+                if l.quality_scheduled
+                else "operator-requested-only" if scoped else "any"
+            ),
+            background_scan=(
+                "demo-homes-only"
+                if l.quality_scheduled
+                else "skips-quality" if scoped else "includes-quality"
+            ),
             per_reading_calls="none",
             model_call_authority_present=bool(l.authority) and l.valid,
         )
@@ -2925,11 +2942,13 @@ class Assistants:
                     for cap in REGISTRY:
                         if self.suspended(db, cap):
                             continue
-                        # Demo scope: Quality runs only when a person requests it, never from the background scan.
+                        # Demo scope: Quality runs only when a person requests it, never from the background
+                        # scan, unless the demo schedule opt-in lets the scan work the five configured homes.
                         if cap == "quality-evidence" and (
                             self.limits.quality_homes is not None or self.limits.quality_scope_error
                         ):
-                            continue
+                            if self.quality_scope_denial(cap, cid, False):
+                                continue
                         s = self.snapshot(db, cap, c)
                         if self._due(db, cap, c, s, today):
                             result.append(self._enqueue(db, cap, c, "proactive", PURPOSE))
