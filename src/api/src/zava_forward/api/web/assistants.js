@@ -362,9 +362,10 @@ async function aiObservabilityView() {
     const seconds = typeof data.latency_seconds_total === "number" ? `${data.latency_seconds_total} seconds in total across the timed requests.` : "";
     show(h("div", { "data-ai-observability": "" }, heading,
       h("p", { role: "status" }, summary),
-      m && h("table", {}, h("caption", {}, "AI activity, last 24 hours"),
-        h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Measure"), h("th", { scope: "col" }, "Count"))),
-        h("tbody", {}, ...AI_OBSERVABILITY_ROWS.map(([key, label]) => h("tr", {}, h("th", { scope: "row" }, label), h("td", {}, String(m[key] ?? 0)))))),
+      m && h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "AI activity table" },
+        h("table", {}, h("caption", {}, "AI activity, last 24 hours"),
+          h("thead", {}, h("tr", {}, h("th", { scope: "col" }, "Measure"), h("th", { scope: "col" }, "Count"))),
+          h("tbody", {}, ...AI_OBSERVABILITY_ROWS.map(([key, label]) => h("tr", {}, h("th", { scope: "row" }, label), h("td", {}, String(m[key] ?? 0))))))),
       seconds && h("p", {}, seconds),
       portalLink,
       h("p", {}, h("a", { href: "#/" }, "Back to case work"))));

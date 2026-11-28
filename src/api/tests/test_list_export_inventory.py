@@ -86,6 +86,7 @@ EXEMPT = {
     "/api/packages/": "One package action; the packages list exports.",
     "/api/workorders/": "One work order action; the work orders list exports.",
     "/api/me": "The signed-in person.",
+    "/api/assistants/rai-metrics": "Totals of AI activity for staff; these are counts, not a list.",
     "/api/login": "Sign in.",
     "/api/logout": "Sign out.",
     "/api/import-check": "Preview of a file the person chose; it changes nothing.",

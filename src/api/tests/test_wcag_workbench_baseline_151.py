@@ -505,7 +505,7 @@ vm.runInContext(progressSrc, ctx);
                 table_sites.append(site)
             if 'h("table", {},' in text:
                 self.assertIn('scope: "row"', text, path.name)
-        self.assertEqual(len(table_sites), 17, table_sites)
+        self.assertEqual(len(table_sites), 18, table_sites)
 
         ops_js = (WEB / "ops.js").read_text()
         sensor_fn = extract_function(

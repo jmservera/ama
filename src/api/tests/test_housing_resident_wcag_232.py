@@ -902,7 +902,7 @@ class HousingResidentWcag232Tests(unittest.TestCase):
             for match in re.finditer(r'h\("table", \{\},\s*(.{0,60})', source):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), path.name)
-        self.assertEqual(tables, 17)
+        self.assertEqual(tables, 18)
         self.assertEqual(aria_invalid, 9)
 
     def test_contact_centre_housing_and_resident_routes_and_script_isolation(self) -> None:
