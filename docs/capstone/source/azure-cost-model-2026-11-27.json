@@ -1,0 +1,83 @@
+{
+  "retrieved_on": "2026-11-27",
+  "currency": "USD",
+  "region": "uksouth",
+  "status": "illustrative planning model; not billing, spending authority or a maximum Azure invoice",
+  "price_source": "https://prices.azure.com/api/retail/prices",
+  "month_days": 30,
+  "month_hours": 720,
+  "free_allowances_deducted": false,
+  "components": [
+    {"id": "sql-s3", "category": "persistent", "unit": "day", "rate_usd": "6.048", "low_quantity": "30", "high_quantity": "30", "meter_id": "23581df3-94d7-4621-8507-b1c7cb4b6d27"},
+    {"id": "premium-registry", "category": "persistent", "unit": "day", "rate_usd": "1.6666", "low_quantity": "30", "high_quantity": "30", "meter_id": "2f8e1105-47d0-4105-a934-b2175c766a71"},
+    {"id": "iot-b1", "category": "persistent", "unit": "month", "rate_usd": "10", "low_quantity": "1", "high_quantity": "1", "meter_id": "b639605e-822b-4c37-aced-7505f2272819"},
+    {"id": "event-hubs", "category": "persistent", "unit": "throughput-unit-hour", "rate_usd": "0.03", "low_quantity": "720", "high_quantity": "720", "meter_id": "62d94a65-9300-48a6-8c15-0e70fc41eb44"},
+    {"id": "private-endpoints", "category": "persistent", "region": "Global", "unit": "endpoint-hour", "rate_usd": "0.01", "low_quantity": "6480", "high_quantity": "6480", "meter_id": "e6ab7238-e433-4fe0-a2b2-2b2564df2cdb"},
+    {"id": "private-dns", "category": "persistent", "region": "Zone 1", "unit": "zone-month", "rate_usd": "0.50", "low_quantity": "14", "high_quantity": "14", "meter_id": "0b608a26-f611-4232-8192-ce81b6b57194"},
+    {"id": "app-cpu", "category": "compute", "unit": "vCPU-second", "rate_usd": "0.000034", "low_quantity": "891000", "high_quantity": "12312000", "meter_id": "2c27faec-4865-58a4-9bca-4c64327315d3"},
+    {"id": "app-memory", "category": "compute", "unit": "GiB-second", "rate_usd": "0.000004", "low_quantity": "1782000", "high_quantity": "24624000", "meter_id": "edbe3fc7-4303-5495-a104-88c166efe547"},
+    {"id": "job-cpu", "category": "compute", "unit": "vCPU-second", "rate_usd": "0.000034", "low_quantity": "18000", "high_quantity": "3600000", "meter_id": "2c27faec-4865-58a4-9bca-4c64327315d3"},
+    {"id": "job-memory", "category": "compute", "unit": "GiB-second", "rate_usd": "0.000004", "low_quantity": "36000", "high_quantity": "7200000", "meter_id": "edbe3fc7-4303-5495-a104-88c166efe547"},
+    {"id": "blob-storage", "category": "storage", "unit": "GB-month", "rate_usd": "0.0192", "low_quantity": "10", "high_quantity": "100", "meter_id": "758b46f1-1579-4490-a54a-9829ff267c51"},
+    {"id": "log-ingestion", "category": "monitoring", "unit": "GB", "rate_usd": "2.88", "low_quantity": "1", "high_quantity": "20", "meter_id": "d664ef7a-c553-4b1c-a2ae-1a44ea5ed8ce"},
+    {"id": "billable-retention", "category": "monitoring", "unit": "GB-month", "rate_usd": "0.13", "low_quantity": "2", "high_quantity": "40", "meter_id": "b1ea455c-26fc-40a1-b16b-86ad898f4fc5"},
+    {"id": "monitoring-allowance", "category": "allowance", "unit": "USD provision", "rate_usd": "1", "low_quantity": "6", "high_quantity": "20", "basis": "Alert/resource/series provision, not an observed charge or enforced limit"},
+    {"id": "security-allowance", "category": "allowance", "unit": "USD provision", "rate_usd": "1", "low_quantity": "50", "high_quantity": "100", "basis": "Defender/security provision; reconcile protected count, trial and legacy versus preview DWU billing"},
+    {"id": "operations-transfer-allowance", "category": "allowance", "unit": "USD provision", "rate_usd": "1", "low_quantity": "2", "high_quantity": "20", "basis": "Blob/Queue/Key Vault operations, DNS/network, Event Hubs ingress and registry tasks; no supplied actual volumes"},
+    {"id": "model-usage", "category": "ai", "unit": "USD", "rate_usd": "1", "low_quantity": "0", "high_quantity": "50", "basis": "Illustrative policy below; not currently activated"}
+  ],
+  "totals_usd": {"persistent": "334.838", "low": "434.348", "high": "1257.862"},
+  "display": {"persistent": "USD 335", "monthly": "USD 435-1,260", "label": "Full illustrative Azure envelope / month; AI included"},
+  "workload_assumptions": [
+    "Low: one replica of each app, 1.25 vCPU/2.5 GiB aggregate, 198 hours (176 working hours plus 22 one-hour cooldowns).",
+    "High: configured maximum app replicas, 4.75 vCPU/9.5 GiB aggregate, 720 hours; not observed replica history.",
+    "Jobs: 20/4,000 equivalent 0.25-vCPU/0.5-GiB replica-hours, covering audit, orchestration, simulator and intake with an illustrative retry/execution provision; not a concurrency or expenditure cap.",
+    "Storage/log quantities and allowances are scenario inputs, not measured consumption.",
+    "Zero app replicas remove app resource charges, not persistent services or scheduled job charges."
+  ],
+  "ai_request": {
+    "max_provider_input_tokens": 4000,
+    "max_output_tokens": 1000,
+    "max_attempts": 1,
+    "cache_discount_assumed": false,
+    "scope": "One bounded attempt including system/context tokens; retries and other model legs need separate reservation or a hold",
+    "models": [
+      {"model": "gpt-4.1-nano", "deployment": "GlobalStandard", "input_usd_per_1000": "0.0001", "output_usd_per_1000": "0.0004", "input_meter_id": "5a96380c-2dbe-5b68-b0da-e71db0e00147", "output_meter_id": "0af08775-3bab-5db5-ac98-5ddb9fbd3c30", "effective_start": "2025-04-01", "attempt_ceiling_usd": "0.0008"},
+      {"model": "gpt-4.1-mini", "deployment": "Standard regional", "input_usd_per_1000": "0.000484", "output_usd_per_1000": "0.001936", "input_meter_id": "a9c78fe9-7568-5bbc-b7bc-51f8977c79d7", "output_meter_id": "84d4645a-720e-5eb0-a3e9-e4e811a2a45b", "effective_start": "2025-11-01", "attempt_ceiling_usd": "0.003872"}
+    ]
+  },
+  "ai_policy": {
+    "status": "proposed illustrative allocation; no spending authority or live configuration",
+    "minimum_monthly_usd": "0",
+    "aggregate_daily_usd": "2.50",
+    "aggregate_monthly_usd": "50",
+    "periods": "UTC calendar day/month; stable budget IDs within each period; renewal never clears unresolved liability",
+    "pools": [
+      {"id": "recommendations", "daily_usd": "1", "monthly_usd": "20"},
+      {"id": "document-judging", "daily_usd": "0.50", "monthly_usd": "10"},
+      {"id": "chat", "daily_usd": "1", "monthly_usd": "20"}
+    ],
+    "rules": [
+      "No borrowing between pools; known chat exhaustion cannot consume recommendation or document-judging allocations.",
+      "Each attempt needs its class day/month and shared aggregate day/month budgets, price and authority checks before dispatch.",
+      "Reserve worst-case priced liability atomically, including outstanding attempts; settle against valid provider usage and reconcile billing.",
+      "Unknown liability, price, authority, safety or absolute aggregate holds may stop every model pool; owned manual and hazard paths remain.",
+      "Deterministic evidence predicates consume no model tokens; interpretation may need a model and professional acceptance remains separate.",
+      "Azure budget alerts notify after delayed cost evaluation and do not enforce this policy.",
+      "Configure, test boundary/cross-period/concurrent cases and obtain named authority before live activation; external bypass traffic is outside these caps."
+    ]
+  },
+  "exclusions": [
+    "Actual negotiated/tax/FX billing and finance reconciliation are unavailable.",
+    "Five temporary S0 QA databases: another USD 90.75 for 30 days, before their other charges; outside core-service totals.",
+    "Optional future Fabric, production redundancy, larger capacity, exceptional transfer and other resources are outside this envelope.",
+    "Implementation, integration, human review, correction and support are not Azure charges; include them in accepted-outcome TCA.",
+    "No actual accepted-outcome denominator, production workload, active budget isolation or maximum Azure invoice is established."
+  ],
+  "billing_sources": [
+    "https://learn.microsoft.com/en-us/azure/container-apps/billing",
+    "https://azure.microsoft.com/en-us/pricing/details/dns/",
+    "https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-acm-create-budgets",
+    "https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-portal/estimate-track-costs"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "mode": ["improve", "refactor"],
+  "target": ".github/agents/ama-scientific-paper-writer-reviewer.agent.md",
+  "supersedes_for_current_source": "review.json",
+  "candidate_sha256": "646c73a052d2524dc6636040756bc40ecb39b962e88e0e5cb628d7e10fe7d31a",
+  "owner_direction": "Keep only generic citation practice among the new learnings and require the intended venue's scientific standards, including arXiv where applicable.",
+  "changes": [
+    "Removed the newly added case-specific coordinator/SDLC guidance and source-only PDF rule.",
+    "Removed the badge-specific citation example and generalized self-citation guidance.",
+    "Added current reporting, citation and submission requirements for the intended journal, conference or repository, with an official arXiv guidance link.",
+    "Preserved every instruction and frontmatter field from the agent's original baseline."
+  ],
+  "validation": {
+    "result": "Pass",
+    "checks": [
+      "git diff --check passed.",
+      "Removing the new Citation Practice section reproduces the original agent exactly.",
+      "New guidance contains no badge, coordinator, SDLC, delivered-PDF or metaphor-specific examples.",
+      "Headings are unique and all existing local links resolve.",
+      "The official arXiv guidance URL resolves."
+    ],
+    "source_retrieval_limit": "Inspected the first 4,000 characters of the official arXiv submission guidelines on 27 November 2026, including its scholarly-communication requirement. This was not a complete venue-policy assessment.",
+    "hosted_ci": "Not run or observed; no push authorized."
+  },
+  "review": {
+    "reviewer": "Parent assistant, direct instruction-quality review",
+    "verdict": "Pass",
+    "findings": [],
+    "basis": "The new guidance is generic and citation-focused, follows supplied venue rules or the existing manuscript style, requires current official guidance before claiming compliance, and preserves the original agent's authority and evidence boundaries.",
+    "limitations": "Source-level review only; no independent human review or native runtime evaluation."
+  },
+  "outcome": "Pass",
+  "source_correction_batches": 1,
+  "stop_reason": "Owner-requested generic citation-only scope is validated; prior review remains historical."
+}

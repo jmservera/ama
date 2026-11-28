@@ -55,7 +55,7 @@ function Resolve-LocalInput {
 function Get-MediaUsage {
     param($Archive, [string]$Part, $Definition = $null)
     $Used = @()
-    foreach ($Number in 1..55) {
+    foreach ($Number in 1..56) {
         $Entry = $Archive.GetEntry("ppt/slides/_rels/slide$Number.xml.rels")
         if (-not $Entry) { continue }
         $Relationships = Get-PartDocument $Archive $Entry.FullName
@@ -96,8 +96,10 @@ function Assert-DeckDefinition {
         return
     }
     $Insertion = $Definition.insertion
-    if ($Definition.schema_version -ne 2 -or $Definition.slide_count -ne 55 -or
-        $Definition.slides.Count -ne 55 -or (@($Definition.slides.number) -join ',') -cne ((1..55) -join ',') -or
+    $Count = 55
+    if ($Definition.schema_version -eq 3) { $Count = 56 }
+    if ($Definition.schema_version -notin @(2, 3) -or $Definition.slide_count -ne $Count -or
+        $Definition.slides.Count -ne $Count -or (@($Definition.slides.number) -join ',') -cne ((1..$Count) -join ',') -or
         $Insertion.after_baseline_slide -ne 12 -or $Insertion.template_slide -ne 12 -or
         $Insertion.new_part_number -ne 55 -or $Insertion.code -cne 'S11A' -or $Insertion.narration_seconds -ne 45) {
         throw 'Only the declared single deployment-slide insertion is supported'
@@ -105,9 +107,11 @@ function Assert-DeckDefinition {
     foreach ($Slide in $Definition.slides) {
         $Part = $Slide.number
         if ($Slide.number -eq 13) { $Part = 55 }
+        elseif ($Slide.number -eq 56) { $Part = 56 }
         elseif ($Slide.number -gt 13) { $Part-- }
         $Template = $Part
         if ($Part -eq 55) { $Template = 12 }
+        if ($Part -eq 56) { $Template = 54 }
         if ($Slide.part_number -ne $Part -or $Slide.baseline_number -ne $Template) { throw 'Baseline slide mapping changed' }
         if ($Part -eq 55 -and ($Slide.code -cne 'S11A' -or $Slide.layout -cne 'native' -or
             $Slide.images.Count -ne 1 -or $Slide.images[0].asset -cne 'architecture-azure-deployment' -or
@@ -118,6 +122,61 @@ function Assert-DeckDefinition {
             $RevisedTiming = @($Slide.revised_notes | Where-Object { $_ -like 'TIMING:*' }) -join "`n"
             if ($NoteTiming -cne $ExpectedTiming -or $RevisedTiming -cne $ExpectedTiming) { throw 'Inserted deployment timing changed' }
         }
+        if ($Part -eq 56 -and ($Slide.code -cne 'B28' -or $Slide.layout -cne 'native' -or $Slide.images)) {
+            throw 'Only the declared native Tokenomics appendix is supported'
+        }
+    }
+    if ($Definition.schema_version -eq 3) {
+        Assert-PresentationRoute $Definition
+        if ($Definition.appendix_route) { Assert-AppendixRoute $Definition }
+    }
+}
+
+function Assert-AppendixRoute {
+    param($Definition)
+    $Route = $Definition.appendix_route
+    $Codes = @($Route.steps.code)
+    if ($Route.name -cne 'Discovery and UK sovereignty' -or $Route.slot_seconds -ne 360 -or
+        @($Codes | Select-Object -Unique).Count -ne $Codes.Count -or
+        'B12' -notin $Codes -or 'B22' -notin $Codes) {
+        throw 'Invalid optional appendix route'
+    }
+    $Seconds = 0
+    foreach ($Step in $Route.steps) {
+        if ($Step.code -notmatch '^B\d+$' -or
+            @($Definition.slides | Where-Object code -CEQ $Step.code).Count -ne 1 -or
+            ($Step.seconds -isnot [long] -and $Step.seconds -isnot [int]) -or
+            $Step.seconds -le 0 -or -not $Step.say.Trim()) {
+            throw 'Invalid optional appendix step'
+        }
+        $Seconds += $Step.seconds
+    }
+    if ($Seconds -ne $Route.slot_seconds) { throw 'Optional appendix timing differs from its separate slot' }
+}
+
+function Assert-PresentationRoute {
+    param($Definition)
+    $Route = $Definition.presentation_route
+    if ($Route.name -cne 'Demo-first pitch' -or $Route.slot_seconds -ne 900 -or
+        $Route.demo_after -cne 'S22' -or $Route.demo_seconds -ne 110 -or
+        $Route.demo_source -cne 'docs/capstone/demo/runbook.md' -or
+        $Route.steps.Count -lt 2 -or $Route.steps[0].code -cne 'S01' -or
+        $Route.steps[1].code -cne 'S22' -or $Route.steps[-1].code -cne 'S23') {
+        throw 'Invalid demo-first presentation route'
+    }
+    $Codes = @($Route.steps.code)
+    if (@($Codes | Select-Object -Unique).Count -ne $Codes.Count -or 'B28' -notin $Codes -or 'S18' -notin $Codes) {
+        throw 'Pitch needs unique slides and both Tokenomics evidence and scenario'
+    }
+    $Seconds = [int]$Route.demo_seconds
+    foreach ($Step in $Route.steps) {
+        if (@($Definition.slides | Where-Object code -CEQ $Step.code).Count -ne 1 -or
+            ($Step.seconds -isnot [long] -and $Step.seconds -isnot [int]) -or
+            $Step.seconds -le 0 -or -not $Step.say.Trim()) { throw 'Invalid pitch step or missing spoken text' }
+        $Seconds += $Step.seconds
+    }
+    if ($Route.reserve_seconds -lt 120 -or $Seconds + $Route.reserve_seconds -ne $Route.slot_seconds) {
+        throw 'Pitch timing must include the demo and a question reserve inside 15 minutes'
     }
 }
 
@@ -189,6 +248,82 @@ function Get-InsertionParts {
     [void]$Titles.InsertAfter($Title, $Titles.ChildNodes[14])
     $Titles.SetAttribute('size', '58')
     $Parts['docProps/app.xml'] = Get-XmlBytes $App
+    if ($Definition.schema_version -eq 3) {
+        $NewId = $Presentation.CreateElement('p', 'sldId', $Namespaces.LookupNamespace('p'))
+        $NewId.SetAttribute('id', [string]($Id + 1))
+        [void]$NewId.SetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'rIdTokenomics56')
+        [void]$List.AppendChild($NewId)
+        $Section = $Presentation.SelectSingleNode('//p14:section[last()]/p14:sldIdLst', $Namespaces)
+        if (-not $Section) { throw 'Tokenomics appendix section missing' }
+        $SectionId = $Presentation.CreateElement('p14', 'sldId', $Namespaces.LookupNamespace('p14'))
+        $SectionId.SetAttribute('id', [string]($Id + 1))
+        [void]$Section.AppendChild($SectionId)
+        $Relationship = $Relationships.CreateElement('Relationship', $RelationshipNamespace)
+        $Relationship.SetAttribute('Id', 'rIdTokenomics56')
+        $Relationship.SetAttribute('Type', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide')
+        $Relationship.SetAttribute('Target', 'slides/slide56.xml')
+        [void]$Relationships.DocumentElement.AppendChild($Relationship)
+        foreach ($Pair in @(
+            @('ppt/slides/_rels/slide54.xml.rels', 'ppt/slides/_rels/slide56.xml.rels', '/notesSlide', '../notesSlides/notesSlide56.xml'),
+            @('ppt/notesSlides/_rels/notesSlide54.xml.rels', 'ppt/notesSlides/_rels/notesSlide56.xml.rels', '/slide', '../slides/slide56.xml')
+        )) {
+            $Document = Get-PartDocument $Archive $Pair[0]
+            $Matches = @($Document.DocumentElement.ChildNodes | Where-Object { $_.Type.EndsWith($Pair[2]) })
+            if ($Matches.Count -ne 1) { throw 'Tokenomics template relationship ambiguous' }
+            $Matches[0].SetAttribute('Target', $Pair[3])
+            $Parts[$Pair[1]] = Get-XmlBytes $Document
+        }
+        foreach ($Pair in @(
+            @('/ppt/slides/slide56.xml', 'application/vnd.openxmlformats-officedocument.presentationml.slide+xml'),
+            @('/ppt/notesSlides/notesSlide56.xml', 'application/vnd.openxmlformats-officedocument.presentationml.notesSlide+xml')
+        )) {
+            $Override = $Types.CreateElement('Override', $Types.DocumentElement.NamespaceURI)
+            $Override.SetAttribute('PartName', $Pair[0])
+            $Override.SetAttribute('ContentType', $Pair[1])
+            [void]$Types.DocumentElement.AppendChild($Override)
+        }
+        foreach ($Name in @('Slides', 'Notes')) { $App.SelectSingleNode("/ep:Properties/ep:$Name", $AppNamespaces).InnerText = '56' }
+        $Count.InnerText = '56'
+        $Title = $App.CreateElement('vt', 'lpstr', $AppNamespaces.LookupNamespace('vt'))
+        $Title.InnerText = $Definition.slides[55].title
+        [void]$Titles.AppendChild($Title)
+        $Titles.SetAttribute('size', '59')
+        $Shows = $Presentation.CreateElement('p', 'custShowLst', $Namespaces.LookupNamespace('p'))
+        $Routes = @($Definition.presentation_route)
+        if ($Definition.appendix_route) { $Routes += $Definition.appendix_route }
+        for ($Index = 0; $Index -lt $Routes.Count; $Index++) {
+            $Show = $Presentation.CreateElement('p', 'custShow', $Namespaces.LookupNamespace('p'))
+            $Show.SetAttribute('name', $Routes[$Index].name)
+            $Show.SetAttribute('id', [string]$Index)
+            $ShowSlides = $Presentation.CreateElement('p', 'sldLst', $Namespaces.LookupNamespace('p'))
+            foreach ($Step in $Routes[$Index].steps) {
+                $Spec = @($Definition.slides | Where-Object code -CEQ $Step.code)[0]
+                $Target = "slides/slide$(Get-DeckPartNumber $Spec).xml"
+                $Ref = @($Relationships.DocumentElement.ChildNodes | Where-Object Target -CEQ $Target)
+                if ($Ref.Count -ne 1) { throw 'Custom show target ambiguous' }
+                $Node = $Presentation.CreateElement('p', 'sld', $Namespaces.LookupNamespace('p'))
+                [void]$Node.SetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', $Ref[0].Id)
+                [void]$ShowSlides.AppendChild($Node)
+            }
+            [void]$Show.AppendChild($ShowSlides)
+            [void]$Shows.AppendChild($Show)
+        }
+        $ShowAnchor = $Presentation.SelectSingleNode('/p:presentation/p:defaultTextStyle', $Namespaces)
+        if (-not $ShowAnchor) { throw 'Pinned baseline default text style is missing' }
+        [void]$Presentation.DocumentElement.InsertBefore($Shows, $ShowAnchor)
+        $Properties = Get-PartDocument $Archive 'ppt/presProps.xml'
+        $PropertyNamespaces = Get-Namespaces $Properties
+        $All = $Properties.SelectSingleNode('//p:showPr/p:sldAll', $PropertyNamespaces)
+        if (-not $All) { throw 'Expected baseline all-slide show properties' }
+        $Selection = $Properties.CreateElement('p', 'custShow', $Namespaces.LookupNamespace('p'))
+        $Selection.SetAttribute('id', '0')
+        [void]$All.ParentNode.ReplaceChild($Selection, $All)
+        $Parts['ppt/presProps.xml'] = Get-XmlBytes $Properties
+        $Parts['ppt/presentation.xml'] = Get-XmlBytes $Presentation
+        $Parts['ppt/_rels/presentation.xml.rels'] = Get-XmlBytes $Relationships
+        $Parts['[Content_Types].xml'] = Get-XmlBytes $Types
+        $Parts['docProps/app.xml'] = Get-XmlBytes $App
+    }
     return ,$Parts
 }
 
@@ -214,7 +349,7 @@ function Update-BaselineNavigationNumbers {
 function Update-RouteNote {
     param([string]$Text, [int]$PartNumber, $Definition)
     if (-not $Definition.insertion) { return $Text }
-    if ($PartNumber -ne 55) { $Text = Update-BaselineNavigationNumbers $Text }
+    if ($PartNumber -notin @(55, 56)) { $Text = Update-BaselineNavigationNumbers $Text }
     if ($PartNumber -le 26) {
         $Timing = [regex]::Match($Text, '(?m)^TIMING: (\d+) s.*?(\d\d):(\d\d)-(\d\d):(\d\d)')
         if (-not $Timing.Success) { throw 'Main-route timing source is missing' }
@@ -311,6 +446,41 @@ function Test-CostStatusRevision {
     return $true
 }
 
+function Get-AzureCostSummaryElements {
+    param($Definition)
+    $Slide = @($Definition.slides | Where-Object { (Get-DeckPartNumber $_) -eq 6 })[0]
+    if (-not $Slide.azure_cost_summary) { return @() }
+    if ($Slide.azure_cost_summary -cne 'owner-requested-2026-11-27' -or
+        $Slide.layout -cne 'baseline' -or $Slide.replacements -or $Slide.elements -or
+        $Slide.images -or $Slide.revised_notes) {
+        throw 'Only the fixed additive Azure summary is approved on the forecast slide'
+    }
+    $ModelPath = Resolve-LocalInput (Join-Path $RepoRoot 'docs/capstone/source') 'azure-cost-model-2026-11-27.json'
+    $Model = Get-Content -LiteralPath $ModelPath -Raw | ConvertFrom-Json
+    return @(
+        [pscustomobject]@{
+            key = 'azure-monthly-summary'; box = @(6.9, 6.16, 5.833, 0.28)
+            text = "Azure: $($Model.display.monthly)/month, AI included"
+            size = 16; bold = $true; color = '173F35'
+        }
+        [pscustomobject]@{
+            key = 'azure-monthly-limit'; box = @(6.9, 6.46, 5.833, 0.23)
+            text = "Planning, not a bill. Persistent: $($Model.display.persistent)/month. Detail: B28."
+            size = 12; color = '50655E'
+        }
+    )
+}
+
+function Update-AzureCostSummaryNote {
+    param([string]$Text, [int]$Number, $Definition)
+    if ($Number -ne 6 -or -not $Definition) { return $Text }
+    $Elements = @(Get-AzureCostSummaryElements $Definition)
+    if (-not $Elements.Count) { return $Text }
+    return $Text + "`nAZURE PLANNING UPDATE, 27 NOVEMBER: " +
+        ($Elements.text -join '. ') +
+        ' Public retail thirty-day scenario, not full project TCO, production forecast, approved spending or a maximum invoice. Scale-to-zero reduces app compute; provisioned SQL and other persistent services remain, and scheduled jobs continue overnight. Historical whole-cohort inference and GBP works/grants above retain their original assumptions and must not be added or compared without compatible periods and approved FX. Source: docs/capstone/source/azure-cost-model-2026-11-27.json.'
+}
+
 function Get-CostStatusReplacements {
     param([int]$Number)
     if ($Number -eq 21) {
@@ -370,6 +540,11 @@ function Assert-CostSlide {
         $Expected = Set-TargetedPart $BaselineArchive $Name $Replacements @() $Number
     }
     $StatusUpdated = ((Get-ByteHash $Before) -cne (Get-ByteHash $Expected))
+    $Summary = @()
+    if ($Number -eq 6 -and $Definition) {
+        $Summary = @(Get-AzureCostSummaryElements $Definition)
+        if ($Summary.Count) { $Expected = Set-TargetedPart $BaselineArchive $Name @() $Summary $Number }
+    }
     $BeforeNavigation = $Expected
     $Expected = Update-VisibleNavigation $Expected $Number $Definition
     $Actual = Get-PartBytes $CandidateArchive $Name
@@ -380,6 +555,7 @@ function Assert-CostSlide {
     $AfterCost = Get-SlideInventory $CandidateArchive $Number
     $ExpectedNotes = Update-CostStatusNote (Update-NavigationNote $BeforeCost.notes) $Number $StatusRevision
     $ExpectedNotes = Update-RouteNote $ExpectedNotes $Number $Definition
+    $ExpectedNotes = Update-AzureCostSummaryNote $ExpectedNotes $Number $Definition
     if ($AfterCost.notes -cne $ExpectedNotes) {
         throw "Protected cost note changed beyond fixed navigation/status corrections: $Number"
     }
@@ -387,6 +563,7 @@ function Assert-CostSlide {
         status_updated = $StatusUpdated
         navigation_labels_updated = ((Get-ByteHash $BeforeNavigation) -cne (Get-ByteHash $Expected))
         notes_updated = ($AfterCost.notes -cne $BeforeCost.notes)
+        azure_summary_added = ($Summary.Count -gt 0)
     }
 }
 
@@ -431,6 +608,10 @@ function Assert-CostSlide {
             }
         }
         elseif ($Slide.layout -ne 'baseline') { throw "Unsupported slide layout: $($Slide.layout)" }
+        if ($PartNumber -eq 6) {
+            $Summary = @(Get-AzureCostSummaryElements $Definition)
+            if ($Summary.Count) { $Parts[$Name] = Set-TargetedPart $Archive $Name @() $Summary $Slide.number }
+        }
         if ($CostStatusRevision -and $PartNumber -in @(21, 52)) {
             if ($Slide.layout -cne 'baseline' -or $Slide.images) {
                 throw 'Protected cost-status pages must retain their complete baseline layouts'
@@ -450,11 +631,16 @@ function Assert-CostSlide {
         if ($Before.notes -ceq $Text -and -not $Definition.insertion) { continue }
         $Timing = @([regex]::Matches($Before.notes, '(?m)^TIMING:.*$') | ForEach-Object Value)
         $NewTiming = @([regex]::Matches($Text, '(?m)^TIMING:.*$') | ForEach-Object Value)
-        if ($PartNumber -ne 55) {
+        if ($PartNumber -notin @(55, 56)) {
             if (-not $NewTiming.Count -and $Timing.Count) { $Text += "`n" + ($Timing -join "`n") }
             elseif (($Timing -join "`n") -cne ($NewTiming -join "`n")) { throw "Timing changed on slide $($Slide.number)" }
         }
         $Text = Update-RouteNote $Text $PartNumber $Definition
+        $Text = Update-AzureCostSummaryNote $Text $PartNumber $Definition
+        if ($Definition.presentation_route -and $PartNumber -notin @(6, 11, 21, 32, 36, 52)) {
+            $Step = @($Definition.presentation_route.steps | Where-Object code -CEQ $Slide.code)
+            if ($Step.Count) { $Text += "`nDEMO-FIRST PITCH: $($Step[0].seconds) seconds. SAY: $($Step[0].say)" }
+        }
         $NoteName = "ppt/notesSlides/notesSlide$PartNumber.xml"
         $Document = Get-PartDocument $Archive "ppt/notesSlides/notesSlide$TemplateNumber.xml"
         $Namespaces = Get-Namespaces $Document
@@ -568,6 +754,10 @@ function Test-DeckCandidate {
             $AllowedAdded += @('ppt/slides/slide55.xml', 'ppt/slides/_rels/slide55.xml.rels',
                 'ppt/notesSlides/notesSlide55.xml', 'ppt/notesSlides/_rels/notesSlide55.xml.rels')
         }
+        if ($Definition.schema_version -eq 3) {
+            $AllowedAdded += @('ppt/slides/slide56.xml', 'ppt/slides/_rels/slide56.xml.rels',
+                'ppt/notesSlides/notesSlide56.xml', 'ppt/notesSlides/_rels/notesSlide56.xml.rels')
+        }
         if (($Added -join "`n") -cne (@($AllowedAdded | Sort-Object) -join "`n")) { throw 'Undeclared added package member' }
         $Changed = @()
         foreach ($Name in $ExpectedNames) {
@@ -589,7 +779,7 @@ function Test-DeckCandidate {
             if (-not $After.notes.Trim()) { throw "Empty notes on slide $($Slide.number)" }
             $BeforeTiming = @([regex]::Matches($Before.notes, '(?m)^TIMING:.*$') | ForEach-Object Value)
             $AfterTiming = @([regex]::Matches($After.notes, '(?m)^TIMING:.*$') | ForEach-Object Value)
-            if ($PartNumber -ne 55 -and ($BeforeTiming -join "`n") -cne ($AfterTiming -join "`n")) { throw 'Timing preservation failed' }
+            if ($PartNumber -notin @(55, 56) -and ($BeforeTiming -join "`n") -cne ($AfterTiming -join "`n")) { throw 'Timing preservation failed' }
             if (($Before.shapes.actions -join "`n") -cne ($After.shapes.actions -join "`n")) { throw 'Native navigation changed' }
             $Document = Get-PartDocument $Candidate "ppt/slides/slide$PartNumber.xml"
             $Ids = @($Document.SelectNodes('//p:cNvPr', (Get-Namespaces $Document)) | ForEach-Object id)
@@ -608,15 +798,41 @@ function Test-DeckCandidate {
         })
         $ExpectedOrder = @($Definition.slides | ForEach-Object { "slides/slide$(Get-DeckPartNumber $_).xml" })
         if (($Order -join ',') -cne ($ExpectedOrder -join ',')) { throw 'Physical presentation order differs from manifest' }
+        if ($Definition.presentation_route) {
+            $Routes = @($Definition.presentation_route)
+            if ($Definition.appendix_route) { $Routes += $Definition.appendix_route }
+            $Shows = @($Presentation.SelectNodes('/p:presentation/p:custShowLst/p:custShow', $Namespaces))
+            if ($Shows.Count -ne $Routes.Count) { throw 'Custom show count differs from source routes' }
+            for ($Index = 0; $Index -lt $Routes.Count; $Index++) {
+                if ($Shows[$Index].name -cne $Routes[$Index].name -or $Shows[$Index].id -cne [string]$Index) {
+                    throw 'Custom show identity differs from source'
+                }
+                $ActualRoute = @($Shows[$Index].SelectNodes('p:sldLst/p:sld', $Namespaces) | ForEach-Object {
+                    $Ref = $_.GetAttribute('id', 'http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+                    @($Relationships.DocumentElement.ChildNodes | Where-Object Id -CEQ $Ref)[0].Target
+                })
+                $ExpectedRoute = @($Routes[$Index].steps | ForEach-Object {
+                    $Spec = @($Definition.slides | Where-Object code -CEQ $_.code)[0]
+                    "slides/slide$(Get-DeckPartNumber $Spec).xml"
+                })
+                if (($ActualRoute -join ',') -cne ($ExpectedRoute -join ',')) { throw 'Custom show differs from source route' }
+            }
+            $Properties = Get-PartDocument $Candidate 'ppt/presProps.xml'
+            if ($Properties.SelectSingleNode('//p:showPr/p:custShow', (Get-Namespaces $Properties)).id -cne '0') {
+                throw 'Default custom show is not selected'
+            }
+        }
         $CostNavigationUpdates = @()
         $CostStatusUpdates = @()
         $CostLabelUpdates = @()
+        $CostSummaryUpdates = @()
         $CostStatusRevision = Test-CostStatusRevision $Definition
         foreach ($Number in @(6, 11, 21, 32, 36, 52)) {
             $CostResult = Assert-CostSlide $BaselineArchive $Candidate $Number $CostStatusRevision $Definition
             $Physical = $Number
             if ($Definition.insertion -and $Number -ge 13) { $Physical++ }
             if ($CostResult.status_updated) { $CostStatusUpdates += $Physical }
+            if ($CostResult.azure_summary_added) { $CostSummaryUpdates += $Physical }
             if ($CostResult.navigation_labels_updated) { $CostLabelUpdates += $Physical }
             if ($CostResult.notes_updated -and $Physical -notin $CostStatusUpdates) { $CostNavigationUpdates += $Physical }
         }
@@ -633,8 +849,10 @@ function Test-DeckCandidate {
             changed_members = $Changed; timing_preserved = $true
             baseline_mapping_preserved = $true; physical_slide_order_verified = $true
             inserted_main_slide = $(if ($Definition.insertion) { 13 } else { $null })
-            narration_seconds = $(if ($Definition.insertion) { 1470 } else { 1425 })
-            native_navigation_preserved = $true; six_cost_slide_bytes_preserved = ($CostStatusUpdates.Count -eq 0 -and $CostLabelUpdates.Count -eq 0)
+            narration_seconds = $(if ($Definition.presentation_route) { 900 - $Definition.presentation_route.reserve_seconds } elseif ($Definition.insertion) { 1470 } else { 1425 })
+            presentation_route = $Definition.presentation_route
+            native_navigation_preserved = $true; six_cost_slide_bytes_preserved = ($CostStatusUpdates.Count -eq 0 -and $CostLabelUpdates.Count -eq 0 -and $CostSummaryUpdates.Count -eq 0)
+            approved_additive_azure_summary_pages = $CostSummaryUpdates
             cost_financial_evidence_preserved = $true; approved_cost_status_updates = $CostStatusUpdates
             cost_navigation_label_updates = $CostLabelUpdates
             cost_note_calculations_preserved = $true; cost_note_navigation_and_route_updates = $CostNavigationUpdates
@@ -732,9 +950,72 @@ function Export-PitchMaterials {
                 $Inventory = Get-SlideInventory $Archive (Get-DeckPartNumber $Spec)
                 $Lines += @("## Page $Number / $($Spec.code)", '', $Spec.title, '', $Inventory.notes, '')
             }
+            if ($Kind -eq 'main' -and $Definition.presentation_route) {
+                $Route = $Definition.presentation_route
+                $Prepared = [int]$Route.slot_seconds - [int]$Route.reserve_seconds
+                $PreparedClock = '{0:00}:{1:00}' -f [Math]::Floor($Prepared / 60), ($Prepared % 60)
+                $ReserveClock = '{0}:{1:00}' -f [Math]::Floor($Route.reserve_seconds / 60), ($Route.reserve_seconds % 60)
+                $Lines = @(
+                    '---', 'title: Demo-first capstone speaker script'
+                    'description: Timed pitch with the complete demo runbook embedded; prepared, not rehearsed'
+                    "ms.date: $ContentDate", 'ms.topic: how-to', '---', ''
+                    '## Present this route', ''
+                    'Use the PowerPoint custom show "Demo-first pitch". Start the demo at 00:30; the complete demo lasts 1:50.'
+                    "The 15-minute slot includes $PreparedClock of planned narration/demo and $ReserveClock for questions or recovery."
+                    'Only the SAY paragraphs are spoken. Actions, source notes and the embedded operational runbook are presenter aids.'
+                    'Physical page numbers stay stable; the PDF contains the full deck, not the custom-show sequence.'
+                    'The shorter route replaces the former 24:30 narration plan. Original slide TIMING lines are historical reference only.'
+                    "Candidate SHA-256: ``$($Report.candidate_sha256)``. No performed rehearsal or current live acceptance is claimed.", ''
+                    '## Audience and decision', ''
+                    'Lead with the owned next action for the sponsor, demonstrate resident choice, then explain mechanisms and cost for technical and Finance questions.'
+                    'Ask for one bounded same-home validation, named Programme/Finance/Quality/Engagement/Digital review functions and a separately costed approval.', ''
+                    '## Timed speaking script', ''
+                )
+                $Runbook = [IO.File]::ReadAllText((Resolve-LocalInput $RepoRoot $Route.demo_source)).Replace("`r", '')
+                $Runbook = [regex]::Replace($Runbook, '\A---\n.*?\n---\n', '', [Text.RegularExpressions.RegexOptions]::Singleline)
+                $Runbook = [regex]::Replace($Runbook, '(\]\()(?![a-zA-Z][a-zA-Z0-9+.-]*:|#|/)([^)]+)(\))', {
+                    param($Match)
+                    $Target = $Match.Groups[2].Value
+                    $Resolved = [IO.Path]::GetFullPath((Join-Path (Join-Path $RepoRoot 'docs/capstone/demo') $Target.Split('#')[0]))
+                    $Relative = [IO.Path]::GetRelativePath((Join-Path $RepoRoot 'docs/capstone/pitch'), $Resolved).Replace('\', '/')
+                    if ($Target.Contains('#')) { $Relative += '#' + $Target.Split('#', 2)[1] }
+                    $Match.Groups[1].Value + $Relative + $Match.Groups[3].Value
+                })
+                $Hook = [regex]::Match($Runbook, '(?ms)^## Executive Hook\n(.*?)(?=^## |\z)')
+                if (-not $Hook.Success) { throw 'The demo runbook must contain an Executive Hook section' }
+                $Elapsed = 0
+                foreach ($Step in $Route.steps) {
+                    $Spec = @($Definition.slides | Where-Object code -CEQ $Step.code)[0]
+                    $End = $Elapsed + $Step.seconds
+                    $Window = '{0:00}:{1:00}-{2:00}:{3:00}' -f [Math]::Floor($Elapsed / 60), ($Elapsed % 60), [Math]::Floor($End / 60), ($End % 60)
+                    $Lines += @("### $Window | page $($Spec.number) / $($Spec.code)", '', $Spec.title.Trim(), '', "SAY: $($Step.say)", '')
+                    if ($Step.action) { $Lines += @("ACTION: $($Step.action)", '') }
+                    $Elapsed = $End
+                    if ($Step.code -ceq $Route.demo_after) {
+                        $Elapsed += $Route.demo_seconds
+                        $Lines += @('### 00:30-02:20 | embedded 1:50 demo', '', 'The clock below starts at demo 00:00 (pitch 00:30). Speak the quotations; the screen/action column is an operator aid.', '', $Hook.Groups[1].Value.Trim(), '', 'After the demo, return to page 4 / S04. Use one recovery within the existing window; never enlarge a model allowance.', '')
+                    }
+                }
+                $Lines += @("### $PreparedClock-15:00 | questions and recovery", '', 'Let the question finish. Restate the concern, answer directly, then open one appendix or identify the missing evidence and its owner. Do not repeat the pitch.', '', '## Delivery cues', '', '* Stand still for the opening and final decision; look at the room rather than the screen.', '* In the demo, point to the evidence and next owner. Stop moving the cursor while speaking.', '* Slow down for costs and denominators. An unknown accepted-outcome count is a result to disclose, not a number to fill in.', '* Use one gesture along the architecture path. Answer a deeper question from the mechanism and its failure route.', '* Keep the resident choice and independent safety service explicit; dress for the executive setting without distracting from the product.', '', '## Embedded demo runbook', '')
+                $Lines += @($Runbook.TrimEnd(), '', '## Slide evidence and appendix access', '', 'Use the [question bank](./questions-and-answers.md) for deeper answers and the [27 November review](../source/review-2026-11-27.md) for the claim register and assessment gaps. Original notes remain in the PowerPoint and source manifest.')
+                if ($Definition.appendix_route) {
+                    $Extra = $Definition.appendix_route
+                    $Lines += @('', '## Optional secondary story', '',
+                        "Use the separate PowerPoint custom show `"$($Extra.name)`" only when the panel confirms six additional minutes. It is not part of the 15-minute pitch or its two-minute question reserve. For one question, use only the relevant chapter and return deliberately to the interrupted page.", '')
+                    $Elapsed = 0
+                    foreach ($Step in $Extra.steps) {
+                        $Spec = @($Definition.slides | Where-Object code -CEQ $Step.code)[0]
+                        $End = $Elapsed + $Step.seconds
+                        $Window = '{0:00}:{1:00}-{2:00}:{3:00}' -f [Math]::Floor($Elapsed / 60), ($Elapsed % 60), [Math]::Floor($End / 60), ($End % 60)
+                        $Lines += @("### Optional $Window | page $($Spec.number) / $($Spec.code)", '',
+                            $Spec.title.Trim(), '', "SAY: $($Step.say)", '')
+                        $Elapsed = $End
+                    }
+                }
+            }
             $Content = ($Lines -join "`n").Replace("`r", '')
             $Content = [regex]::Replace($Content, '(?m)[ \t]+$', '')
-            [IO.File]::WriteAllText((Join-Path $Pitch $Name), $Content + "`n", [Text.UTF8Encoding]::new($false))
+            [IO.File]::WriteAllText((Join-Path $Pitch $Name), $Content.TrimEnd() + "`n", [Text.UTF8Encoding]::new($false))
         }
     } finally { $Archive.Dispose() }
 }

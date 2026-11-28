@@ -1,0 +1,16 @@
+{
+  "mode": "workflow",
+  "phaseGates": {"scope": "automation-derived", "review": "completed"},
+  "currentPhase": "original-review-retained",
+  "nextActions": ["Independent assessment of the corrected exact commit, then owner review."],
+  "boardItems": [
+    {
+      "id": "appendix-navigation",
+      "status": "author-corrected-awaiting-independent-verification",
+      "severity": "medium",
+      "originalVerdict": "approve_with_comments",
+      "originalHead": "30ea47662a9642fbe9ef566c682c75b1900625d6",
+      "summary": "Three revised appendix navigation lines were mapped twice."
+    }
+  ]
+}

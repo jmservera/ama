@@ -1,16 +1,42 @@
 ---
 title: Capstone Authoring Source
 description: Complete native-template and JSON editing contract, retained media and technology-decision evidence
-ms.date: 2026-11-16
+ms.date: 2026-11-27
 ms.topic: how-to
 ---
 
 ## Source Authority
 
+The current source is schema 3 with 56 slide records. It restores B28 to the
+reproducible builder and defines the native "Demo-first pitch" custom show.
+The delivered pitch starts the employee-site demo at 00:30, returns to slides
+at 02:20 and finishes the prepared story at 13:00, leaving 2:00 inside a
+15-minute slot. The demo is included, not a separate allowance.
+
+The [speaker script](../pitch/speaker-script.md) is generated from
+`presentation_route.steps` and embeds the entire
+[demo runbook](../demo/runbook.md), rebasing its links for the pitch folder.
+The route owns the spoken text and time budget. Slide `revised_notes` retain
+technical evidence and original `TIMING` lines; those 24:30 windows are the
+historical full-deck reference, not the operative short pitch.
+
+Physical pages and all original action destinations stay fixed. B28 is appended
+at page 56 using baseline part 54; it has its own slide/notes relationships,
+count/title metadata and copied fixed navigation. It is in the custom show
+before S18 but is not a new clickable entry on the dense legacy QX index.
+Use its direct page number or the custom show. Do not edit the generated PPTX
+to add it again.
+
+The [27 November review](./review-2026-11-27.md) records history coverage,
+current-source versus dated-live evidence, the full assessment challenge and
+validation limits. No architecture, deployment, model or financial authority
+changes through this authoring update.
+
 | Input | Responsibility |
 | --- | --- |
 | [baseline.pptx](./baseline.pptx) | Immutable snapshot of the actual owner-supplied 54-slide deck at this reorganization; native layouts, sections, media, relationships and untouched content |
-| [slides.json](./slides.json) | All 55 ordered records/notes, immutable baseline mapping, the added main-route deployment slide, exact text/bounds corrections and current narration |
+| [slides.json](./slides.json) | All 56 records/notes, immutable baseline mapping, deployment insertion, appended B28, demo-first custom show, exact text/bounds and spoken narration |
+| [Dated Azure cost model](./azure-cost-model-2026-11-27.json) | Public-rate meters, full low/high platform assumptions, visible allowances and proposed protected AI pools; not an invoice, spending authority or live control |
 | [assets/catalog.json](./assets/catalog.json) | Captured media in `media`; future-logo, journey and architecture projections in `additional_media`, with exact usage and SVG/native/PNG hashes |
 | [assets/media](./assets/media/) | All 36 original embedded media files, not flattened pictures of whole slides |
 | [Official product icons](./assets/official/README.md) | Fabric and Power BI source SVGs, native PNG derivatives, permitted-use guidance and archive provenance |
@@ -25,27 +51,53 @@ never an implicit fallback input. A complete rebuild needs the native baseline,
 JSON, catalog, all referenced media and both scripts above. The old 18-slide
 authoring inventory does not recreate the current deck.
 
-### Single Added Main-Route Slide
+The custom show has seventeen slides. B28 covers the full illustrative Azure
+envelope, including model use; B27 follows with a separate proposed budget
+policy before the preserved S18 inference scenario. Neither alters the six
+protected financial calculations. The cost-model hash is recorded in the delivery
+receipt and its arithmetic/pool allocation is checked against the slide source.
+
+The owner-requested `azure_cost_summary` marker on S05 permits only two fixed,
+source-derived text additions and an appended planning note on physical page 6.
+The original financial shapes, arithmetic and notes stay intact. The builder
+rejects arbitrary elements, replacements, images or revised financial notes on
+that page; the receipt reports the approved additive page separately rather
+than claiming all six financial pages are byte-identical.
+
+`appendix_route` owns the separate six-minute "Discovery and UK sovereignty"
+custom show and its timed SAY text. The default remains "Demo-first pitch".
+The secondary route never extends the primary 15-minute allocation or consumes
+its question reserve. It reuses existing appendix pages without moving physical
+pages or original action destinations.
+
+### Retained deployment insertion and reference route
 
 Schema 2 inserts `S11A` at physical page 13, immediately after `S11`.
 `number` is the current physical position, `part_number` is the stable
 OOXML slide/notes part identity, and `baseline_number` selects the immutable
 template. Existing parts 1-54 keep their names, IDs, actions and destinations;
-new part 55 uses template 12. The builder supports only this declared insertion,
-not arbitrary source packages or a new baseline pin.
+new part 55 uses template 12. Schema 3 additionally supports only the declared native B28 appendix and the
+validated demo-first route, not arbitrary templates or a new baseline pin.
 
-The main route is pages 1-27, QX is page 28, and B01-B27 are pages 29-55.
+The full reference story is pages 1-27, QX is page 28, and B01-B28 are pages 29-56.
 Original pages 13-54 move one physical position without changing their codes.
 The native product section includes the new slide. Original `TIMING` lines
 remain source provenance; `CURRENT ROUTE TIMING` adds the operative 45-second
-shift, giving 24:30 narration and 5:30 reserve in a 30-minute slot.
+shift, giving the historical 24:30 reference route. The 15-minute custom show above
+supersedes that plan for this pitch.
 Financial graphics/arithmetic are untouched. Explicit index/topic/answer labels
 are incremented without changing fonts, geometry or targets, including cost-page
 footer numbers. Cost notes permit only the existing fixed status/navigation
 corrections plus deterministic page-reference and current-route metadata;
-no general cost-note edit permission is added.
+no general cost-note edit permission is added. The fixed additive Azure summary
+and appended planning note on page 6 are the explicit 27 November exception.
 
-## Current Autonomy and Product Story
+## Earlier autonomy and product-story reviews
+
+The following dated reviews preserve the reasoning available then. They do
+not override the current source and dated-live reconciliation in the
+[27 November review](./review-2026-11-27.md), including Quality's source-coded
+proactive L4 review flags and the completed exploratory study.
 
 The [CxO/story continuation](./review-2026-11-08-cxo.md) brings the architecture,
 coded workflow and exact autonomy reasoning onto current main pages 9/12/15/17.
@@ -115,7 +167,9 @@ Use the existing native Build/Verify and Linux preview route, inspect pages
 receipt together. The receipt records current checks, not inherited metrics
 or acceptance from earlier reviews. Native PowerPoint and direct keyboard/
 assistive-technology acceptance remain unperformed unless separately evidenced.
-Preserve 55 slides, 108 jumps, original layouts/timing, the immutable baseline
+That 16 November revision preserved 55 slides and 108 jumps. The current
+schema adds B28 without moving those destinations: 56 slides and 111 actions,
+including the three copied appendix actions. Preserve the immutable baseline
 and all six protected financial records.
 
 The 16 November rebuild also repairs six stale architecture SVG/native catalog
@@ -183,7 +237,7 @@ explicit external directory and checks:
 * Exact expected package bytes: 293 captured baseline members plus six declared
   PNGs and four new slide/notes relationship members; four fixed metadata
   members declare the insertion without renumbering existing package parts
-* All 55 nonempty note blocks, retained source timing lines and revised route windows
+* All 56 nonempty note blocks, retained source timing lines and exact custom-show order
 * Native navigation actions and unique shape IDs
 * The six protected cost slides on pages 6, 11, 22, 33, 37 and 53; all financial
   evidence remains unchanged. Default protection permits only fixed
@@ -197,7 +251,7 @@ actual targets; neither their labels nor an older review establishes dynamic
 Last Slide Viewed behaviour. Native viewer/keyboard interaction still needs
 direct acceptance testing.
 
-Native Windows Render produces a PDF and 55 PNGs plus measured text bounds.
+Native Windows Render produces a PDF and 56 PNGs plus measured text bounds.
 The historical [Linux visual refresh](./review-2026-10-30.md#illustrated-visual-refresh-on-linux)
 used the explicitly separate preview route below: all 54 pages rendered,
 108 PDF jumps verified, all text present in 215 revised frames and the 40
@@ -284,7 +338,7 @@ pwsh -NoLogo -NoProfile -File tools/capstone/Invoke-Capstone.ps1 -Action Build -
 "$Run/venv/bin/python" -m tools.capstone.render_preview --input "$Run/build/zava-forward-cowork-v2-draft.pptx" --output-dir "$Run/preview"
 ```
 
-The preview writes the matching PDF, 55 slide PNGs and a compact report with
+The preview writes the matching PDF, 56 slide PNGs and a compact report with
 source/PDF hashes. LibreOffice drops these slide-jump actions on import, so the
 tool reads actual shape bounds, slide order and destinations from the candidate
 PPTX, reconstructs the fixed PDF links, then verifies every destination and hit

@@ -15660,6 +15660,37 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 ## [2026-11-27] add | Issue 2245 live recheck on revision 0000136 (Refs #2245)
 
 * Added [issue-2245-live-20261127T125527Z.md](research/issue-2245-live-20261127T125527Z.md): no 500 on 13 thread creates, rules-only replies state the spending hold, and chat_panel now retries the chat.answer and chat.turn audit writes on a SQL write-lock timeout. Live effect of the fix and the lock holder stay unproven.
+
+## [2026-11-27] update | Demo-first capstone presentation and embedded runbook (Refs #435, #432)
+
+* Added the [presentation evidence review](../capstone/source/review-2026-11-27.md): retained-history coverage, eight delivery decisions/adverse outcomes, current source versus dated live evidence, completed-study denominator limits and all twenty assessment criteria.
+* Updated the source-owned native custom show to start the complete 1:50 demo at 00:30, then return to architecture, costs and a bounded validation decision. Restored B28 to the builder, retained the original destinations and protected financial evidence, and embedded the complete operational runbook in the generated speaker script.
+* Distinguished homepage illustrations from actual cases, Quality's source-coded L4 review flag from its unproved live model leg, and measured token usage from full accepted-outcome cost. Prepared timing and local rendering are not rehearsal, human acceptance, deployment or a new spending authority.
+
+## [2026-11-27] update | Capstone independent-review navigation correction
+
+* Retained the [original independent review](../../.copilot-tracking/reviews/code-reviews/docs-demo-first-capstone/review.md), including its Medium double-mapping finding and `approve_with_comments` outcome.
+* Corrected baseline navigation numbers for B03, B06 and B13, then regenerated the native deck, PDF and question bank. A new regression failed for all three original instructions and passed after correction. All 56 native images and bounds remained identical; nine pitch tests, all 111 PDF destinations and the existing insertion, cost and hash guards passed.
+* Updated the [dated presentation review](../capstone/source/review-2026-11-27.md) and local receipt. Corrected exact-head independent assessment, hosted observations and human acceptance remain separate.
+
+## [2026-11-27] update | Full Azure costs and protected AI budget proposal
+
+* Extended [AI Tokenomics](./resources/ai-tokenomics.md#full-azure-planning-and-protected-ai-pools-2026-11-27) with a dated public-rate platform scenario and [source-owned cost model](../capstone/source/azure-cost-model-2026-11-27.json). Distinguished the USD 334.838 persistent-service subtotal from compute, jobs, storage, logging, security, monitoring, operations and model charges; allowances and temporary QA costs are explicit, not invoices.
+* Updated B28/B27 and the generated presentation aids to explain scale-to-zero limits and proposed disjoint recommendation/document/chat budgets. The 15-minute route retains the 00:30-02:20 demo and reserves 2:00 after a 13:00 prepared story.
+* Kept the original protected financial scenarios and measured synthetic batch separate. This update grants no deployment, spend, security/retention change or live-policy acceptance; local generation and exact-head review are recorded separately.
+
+## [2026-11-27] update | Physical cost slide, discovery appendix and UK sovereignty options
+
+* Added the owner-requested Azure monthly summary to physical page 6 while preserving its financial shape subtrees and original calculations. Rebuilt page 7's eight dated counters as a native grid; activity remains distinct from measured benefit.
+* Added a separate six-minute "Discovery and UK sovereignty" custom show and timed speaker-script chapters. The main demo-first route stays at 13:00 with a 2:00 reserve. Corrected the resident canvas notes; desk-research hypotheses and learning protocols are not resident interviews or experimental outcomes.
+* Extended the [region architecture document](../architecture/environment-region-quota-strategy.md#uk-data-boundary-and-sovereign-migration-options-2026-11-27) with official-source public/connected/disconnected service comparisons, UK inference/identity/provider exceptions, preview limitations, model retirement and possible migration gates. No platform, contract, spending or real-data approval is inferred.
+* Retained the original native-fit failures and corrections in the [presentation review](../capstone/source/review-2026-11-27.md) and compact receipt. Local rendering and engineering checks remain separate from exact-head review, hosted checks and human acceptance.
+
+## [2026-11-28] update | Not-for-profit privacy, UK processing target and Responsible AI pitch
+
+* Added a [dated official-source review](./regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md) for UK GDPR principles/current ADM provisions, RSH transparency, safeguarded transfers, draft ICO guidance and Microsoft Standard-model/provider limits. Preserved immutable snapshots and earlier adverse evidence; Legal/DPO applicability and real-data acceptance remain pending.
+* Integrated privacy and meaningful human decision authority into the main presentation and short demo cues. The not-for-profit mission connects resident benefit with accountable spending, without unrestricted disclosure or a blanket UK-only legal claim. The main 13:00 route, early 1:50 demo and 2:00 reserve remain unchanged.
+* Updated the [architecture synthesis](../architecture/environment-region-quota-strategy.md#privacy-and-accountable-human-review-2026-11-28) and cost scope: UK Standard processing is proposed, current Global/Sweden options remain explicit, and Global nano's low rate is not a UK-resident quotation. Full local sovereignty stays optional. No deployment, paid inference, personal-data use or operational control activation occurred.
 ## [2026-11-27] add | Issue 1830 timing analyzer header validation (Refs #1830)
 
 * Added [issue-1830-live-r17-2026-11-27.md](research/issue-1830-live-r17-2026-11-27.md): `rpi-gate-timing.py` now refuses hash-valid receipts lacking `jobs`, `image_cache` or an aware `sealed` instead of raising KeyError. Criteria 1, 3 and 4 stay partly proven or owner-gated.

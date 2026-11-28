@@ -86,14 +86,19 @@ class MeasurementProvenanceTests(unittest.TestCase):
         )
         editorial = bindings[bindings["current_editorial_revision"]]
         self.assertEqual(
-            editorial["prior_delivery_revision"], "final_source_corrections_2026_11_26"
+            editorial["prior_delivery_revision"], "final_arxiv_release_pass_2026_11_26"
+        )
+        previous_editorial = bindings[editorial["prior_delivery_revision"]]
+        self.assertEqual(
+            previous_editorial["prior_delivery_revision"], "final_source_corrections_2026_11_26"
         )
         self.assertEqual(
             bindings["final_source_corrections_2026_11_26"]["prior_delivery_revision"],
             "final_editorial_revision_2026_11_26",
         )
         for name, sha256 in {
-            **current["evidence_sha256"], **editorial["source_sha256"],
+            **current["evidence_sha256"], **previous_editorial["source_sha256"],
+            **editorial["source_sha256"],
         }.items():
             with self.subTest(source=name):
                 self.assertEqual(hashlib.sha256((PACKAGE / name).read_bytes()).hexdigest(), sha256)
@@ -416,6 +421,25 @@ class MeasurementProvenanceTests(unittest.TestCase):
             radius = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / denominator
             return centre - radius, centre + radius
 
+        def clopper_pearson(successes):
+            def inverse_cdf(k, target):
+                lower, upper = 0.0, 1.0
+                for _ in range(64):
+                    p = (lower + upper) / 2
+                    cumulative = sum(
+                        math.comb(21, i) * p**i * (1 - p)**(21 - i)
+                        for i in range(k + 1)
+                    )
+                    if cumulative > target:
+                        lower = p
+                    else:
+                        upper = p
+                return (lower + upper) / 2
+
+            lower = inverse_cdf(successes - 1, 0.9875) if successes else 0.0
+            upper = inverse_cdf(successes, 0.0125) if successes < 21 else 1.0
+            return lower, upper
+
         self.assertEqual(pooled, {
             "B -- D": ["63/63", "+1.1874", "[+0.1000, +2.2247]", "[+1.1874, +1.1874]"],
             "B -- A": ["63/63", "+1.4123", "[+0.3250, +2.4497]", "[+1.4123, +1.4123]"],
@@ -432,6 +456,13 @@ class MeasurementProvenanceTests(unittest.TestCase):
                 model = row[0].removeprefix(r"\midrule").strip()
                 left, right = (arm.strip() for arm in row[1].split("--"))
                 x, y = observed[(model, left)], observed[(model, right)]
+                registered_lower, registered_upper = [
+                    float(value) for value in row[3].strip("[]").split(",")
+                ]
+                cp_l1, cp_u1 = clopper_pearson(x)
+                cp_l2, cp_u2 = clopper_pearson(y)
+                self.assertAlmostEqual(registered_lower, 100 * (cp_l1 - cp_u2), places=2)
+                self.assertAlmostEqual(registered_upper, 100 * (cp_u1 - cp_l2), places=2)
                 l1, u1 = wilson(x)
                 l2, u2 = wilson(y)
                 difference = (x - y) / 21

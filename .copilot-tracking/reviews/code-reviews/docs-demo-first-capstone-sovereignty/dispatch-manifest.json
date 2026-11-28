@@ -1,0 +1,31 @@
+{
+  "schema_version": "1",
+  "mode": "non-interactive",
+  "head_commit": "90672b574dadd26e10107179cc88f77affa60964",
+  "base_commit": "92c61f991a7701b1c6fc6a207aa400c639415499",
+  "currentPhase": "review-complete",
+  "phaseGates": {
+    "scope_resolved": true,
+    "full_diff_read": true,
+    "independent_assessment_complete": true,
+    "human_review_complete": false,
+    "hosted_checks_observed": false,
+    "general_pr_comment_posting_authorized": false
+  },
+  "dispatches": [
+    {
+      "agent_id": "421b802e-8c17-43c2-a7da-9c3fb1b087cb",
+      "name": "capstone-sovereignty-review",
+      "scope": "Entire bounded follow-up, no nested agents or writes.",
+      "status": "complete",
+      "verdict": "approve"
+    }
+  ],
+  "boardItems": [],
+  "nextActions": [
+    "Persist original review without changing its verdict.",
+    "Assess the resulting artifact-only final head independently.",
+    "Publish through the existing stacked PR and observe exact-head hosted state.",
+    "Leave human acceptance and merge to the owner."
+  ]
+}

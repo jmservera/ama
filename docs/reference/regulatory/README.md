@@ -1,7 +1,7 @@
 ---
 title: Regulatory Context Reference Documents
 description: Authoritative reference documents for the Case Study 48 regulatory context
-ms.date: 2026-11-01
+ms.date: 2026-11-28
 ms.topic: reference
 ---
 
@@ -99,6 +99,17 @@ EU AI Act. The Legal and DPO decision record is `Pending`; no jurisdiction,
 risk tier or compliance is inferred.
 
 ## Managed Update Workflow
+
+The [28 November privacy/residency/RAI update](./reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
+checks current UK GDPR, RSH transparency, ICO transfer/draft ADM guidance and
+Microsoft regional-model/provider contracts. It distinguishes a proposed UK
+processing policy from legal compliance and current deployment attestation.
+Legal/DPO real-data acceptance remains pending; snapshots and earlier findings
+are preserved.
+
+| Reviewed update | Current-use status | Change likelihood | Official monitoring cadence |
+| --- | --- | --- | --- |
+| [Privacy, residency and RAI (2026-11-28)](./reviewed-updates/2026-11-28-privacy-residency-rai-review.md) | Dated presentation interpretation; no operational/legal acceptance | High for ADM/model/provider changes; Medium for transfer/RSH interpretation | Monthly and before real-data deployment or external assurance; weekly around announced changes |
 
 The production solution should maintain a regulatory source register separate
 from the searchable document index. Each source record needs:

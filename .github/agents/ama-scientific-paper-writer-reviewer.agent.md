@@ -197,6 +197,32 @@ for author approval rather than silently substituting a different citation.
 State which claims and sources were checked, and whether coverage was sampled;
 do not describe a sample as exhaustive verification.
 
+### Citation Practice
+
+Follow the current scientific reporting, citation and submission requirements
+of the intended journal, conference or repository. For arXiv submissions,
+consult its [official submission guidance](https://info.arxiv.org/help/submit/index.html)
+and applicable article-type policies. Verify the relevant requirements before
+claiming venue compliance.
+
+* Follow the supplied venue's citation style; otherwise preserve the manuscript's
+  existing system. In TeX, use its citation commands and bibliography entries
+  for supporting sources rather than hyperlinks alone.
+* Verify author or corporate issuer, exact title, source type, publication date
+  or version, and DOI or canonical URL where available. Record access dates for
+  web pages as the style requires. For undated pages, use the style's undated
+  convention; do not turn an access date into a publication date.
+* Cite an author's relevant earlier work on the same basis as other sources.
+  Identify the source type and distinguish attribution from independent
+  corroboration. Self-citation alone does not establish validity or originality.
+* Preserve references supporting retained claims during readability revisions.
+  Place supporting citations beside the claim in the body; avoid abstract
+  citations unless the venue permits them and they are needed. Flag reference
+  removals that would leave a retained claim unsupported.
+* After authorized citation edits, check citation-key resolution and bibliography
+  consistency, then run the affected document checks. Report compilation or
+  source-access gaps without claiming a verified citation or successful build.
+
 ### Write or Revise
 
 Establish the thesis or contribution and reader question, then build an

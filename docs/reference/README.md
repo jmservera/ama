@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-26
+ms.date: 2026-11-28
 ms.topic: overview
 ---
 
@@ -20,6 +20,25 @@ Topic hubs work like the Maps of Content used in personal knowledge
 management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
+
+The [28 November privacy/residency/Responsible AI review](./regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md)
+supports the main capstone story: not-for-profit stewardship, resident privacy,
+a proposed UK Standard-model processing target and accountable human decisions.
+The [architecture analysis](../architecture/environment-region-quota-strategy.md#privacy-and-accountable-human-review-2026-11-28)
+keeps current Global/Sweden options, provider-location exceptions and optional
+local sovereignty distinct. Real-data, legal and operational RAI acceptance
+remain pending; the low Global nano rate is not a UK-resident quotation.
+
+The [27 November demo-first presentation review](../capstone/source/review-2026-11-27.md)
+indexes the retained RPI/GitHub history and investigates eight delivery
+decisions and adverse outcomes. It distinguishes whole-corpus indexing from
+individual reads, current source from dated live observations and measured
+Tokenomics from unknown accepted-outcome cost. The
+[speaker script](../capstone/pitch/speaker-script.md) embeds the complete
+[demo runbook](../capstone/demo/runbook.md). Its native custom show begins
+the demo at 00:30 and fits the prepared route plus reserve inside fifteen
+minutes. The review corrects the completed-study and source-coded Quality
+flag story without claiming live model acceptance or a performed rehearsal.
 
 The paper's [final editorial pass](../capstone/thought-leadership/everything-but-the-software/README.md#final-editorial-pass-26-november)
 shortens the article, moves audit history into the existing Supplement,
@@ -1691,7 +1710,8 @@ or infra acceptance claimed.
 | [Applicability review pack for UK automated-decision rules and the EU AI Act](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) | Dated official-source check (legislation.gov.uk retrieved 2026-11-01; EUR-Lex AI Act and Regulation (EU) 2026/1744 read 2026-11-17), pending Legal/DPO decision record, review items and non-inference rules for OQ-019 | 2026-11-17 |
 | [Legal briefing on UK automated-decision rules and EU AI Act applicability](./research/rai/legal-briefing-adm-ai-act.md) | Briefing for the Legal contact: main points, 10 recommendations and gaps; adds S.I. 2026/82 reg. 5 read on 2026-11-04; EU text still unverified; no decision made. Capstone slide: [legal-briefing-224.pptx](../presentations/legal-briefing-224.pptx) | 2026-11-04 |
 | [Historical native agent process map](../capstone/history/README.md#archive-and-restore) | The superseded 24-slide deck and process/architecture exports are in the exact verified archive selection, not the current authoring route. [Original text equivalent and value tests](../capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13) remain preserved. Current page 16 retains five bounded capabilities and human authority | 2026-10-29 |
-| [Current Cowork v2 capstone working set](../capstone/README.md) | [8 November autonomy/story review](../capstone/source/review-2026-11-08.md): exact requested/current levels, scope gaps, three help modes, historical scoring/current generation, optional resident service and refreshable progress. All 55 slides/notes, 108 actions and protected cost contracts remain; Linux word-presence/navigation checks are not native PowerPoint, human or service acceptance. Prior reviews are preserved | 2026-11-08 |
+| [Current Cowork v2 capstone working set](../capstone/README.md) | Demo-first 13:00 pitch with 2:00 reserve; 56 reference pages and 111 actions. Full Azure planning costs, protected AI allocations and a separate six-minute discovery/UK-sovereignty story; source/live, human acceptance and financial authority remain distinct. Prior reviews preserved | 2026-11-27 |
+| [UK data boundary and sovereign migration options](../architecture/environment-region-quota-strategy.md#uk-data-boundary-and-sovereign-migration-options-2026-11-27) | Dated public controls versus connected/disconnected Azure Local service matrix; identity/inference/provider exceptions, GA/preview distinctions, model retirement and staged proof/approval gates. Analysis only, not deployment or contractual UK assurance | 2026-11-27 |
 | [Historical Zava Forward executive capstone deck](../capstone/history/README.md#archive-and-restore) | Superseded by Cowork v2 on 2026-10-23; restored and hash-checked before the owner-approved archive-backed removal of its redundant checkout exports. Restore map and original findings remain; no fallback scoring or acceptance claim | 2026-10-29 |
 | [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
@@ -2100,7 +2120,7 @@ official links for every snapshot. Check it before relying on any file below.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Zava Forward agent, customer evidence and lessons | 2026-09-25 |
-| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed. Includes the dated configured demo-model, limits and evidence-gap record for #108 (configuration only, no serving, region or evaluation proof) and its [2026-11-10 regional metadata pass](./resources/ai-tokenomics.md#regional-metadata-observation-2026-11-10-refs-108) (live app settings and deployment re-read; regional quota limit and unit unknown, even for the catalog-resolved usage name `OpenAI.GlobalStandard.gpt4.1-nano`); and a [current-main metering inventory](./resources/ai-tokenomics.md#current-main-metering-inventory-2026-11-17-refs-432) mapping #432 criteria to code and tests, with open criteria 5 and 8 and the smallest next step (Refs #432, no cost or acceptance claimed) | 2026-11-17 |
+| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics framing, dated model/metering observations and accepted-outcome gaps. Includes [27 November full Azure planning and protected AI pools](./resources/ai-tokenomics.md#full-azure-planning-and-protected-ai-pools-2026-11-27): persistent charges, explicit platform assumptions/allowances, nano/global versus mini/regional prices, proposed isolated class budgets and source-versus-live limits. The 18 November synthetic batch supersedes the dated 17 November "not run" state; actual billing, accepted-outcome cost and operational acceptance remain unproved. No internal Microsoft material is quoted | 2026-11-27 |
 
 ### Method and Memory
 

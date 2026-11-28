@@ -1,0 +1,43 @@
+{
+  "mode": ["improve"],
+  "target": ".github/agents/ama-scientific-paper-writer-reviewer.agent.md",
+  "baseline_sha256": "8c47e7221356e30a94b5fedf46e0c0899854bc7615e9800a7b4ae4bb84f60805",
+  "candidate_sha256": "f1a9963a74a926d0496d76cb1ea4835700ebb7f665f534b05c4ad660666f3990",
+  "requirements": [
+    "Describe the owner-created coordinator agent and the supported full-SDLC case without widening the coding experiment.",
+    "Preserve the delivered PDF when only source changes are authorized.",
+    "Use formal manuscript citations and verified, source-appropriate bibliography metadata.",
+    "Distinguish practitioner self-citation, independent evidence, metaphor priority and programme badge descriptions.",
+    "Preserve relevant public references during readability revisions."
+  ],
+  "maintenance": {
+    "retained": "All baseline instructions and frontmatter are unchanged.",
+    "added": "Case-specific coordinator/SDLC clarification, source-only preview handling and generic Citation Practice.",
+    "removed": [],
+    "moved": []
+  },
+  "validation": {
+    "result": "Pass",
+    "checks": [
+      "git diff --check passed for the agent and current manuscript source.",
+      "Frontmatter and every baseline instruction were preserved.",
+      "Headings are unique and all eight existing local links resolve.",
+      "The existing EOF convention was preserved."
+    ],
+    "initial_checker_failure": "An added terminal-newline assertion failed on the unchanged baseline EOF convention. The check was corrected to verify preservation; the source was not changed for this pre-existing condition.",
+    "distribution": "Not applicable: existing repository-local agent; no artifact membership or generated projection changed. HVE Core root npm validation scripts are not present in this repository.",
+    "hosted_ci": "Not run or observed; no push was authorized.",
+    "prose_scoring": "Detector unavailable in the inspected installed-plugin and skill paths."
+  },
+  "review": {
+    "reviewer": "Parent assistant, direct instruction-quality review",
+    "verdict": "Pass",
+    "scope": "Complete additive delta against the preserved agent contract and HVE Builder requirements catalog and review rubric.",
+    "findings": [],
+    "basis": "The additions have explicit triggers and preserve modes, write authority, evidence limits, human approvals, existing capabilities and the owner-voice skill's responsibility. Citation guidance follows supplied venue rules or the existing manuscript style without treating self-citation or badge metadata as independent outcome evidence.",
+    "limitations": "This is source-level instruction review, not independent human review or a native runtime evaluation of the revised agent."
+  },
+  "outcome": "Pass",
+  "source_correction_batches": 1,
+  "stop_reason": "Requested learnings are captured and applicable local validation and parent review pass; no required source corrections remain."
+}

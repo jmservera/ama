@@ -1,0 +1,38 @@
+{
+  "reviewTarget": {
+    "kind": "branch_diff",
+    "baseRef": "337d3999d5f1113752873b129a52f95aae6623ba",
+    "headRef": "feat/zava-site-icons",
+    "headSha": "f037bd977817c78940457146b6836330e6f1b746"
+  },
+  "reviewProfile": "custom",
+  "recommendedPerspectives": ["functional"],
+  "selectedPerspectives": ["functional"],
+  "recommendedDepth": "basic",
+  "depthTier": "basic",
+  "phaseGates": {
+    "orientationConfirmed": false,
+    "humanAccepted": false,
+    "walkbackComplete": true,
+    "emissionReady": false
+  },
+  "mode": "non-interactive-workflow",
+  "scopeOrigin": "automation-derived",
+  "currentPhase": "complete",
+  "nextActions": [
+    {"id": "hosted-ci", "kind": "publication", "target": "exact-head CI", "reason": "Not yet published at review time."},
+    {"id": "human-review", "kind": "approval", "target": "qualified human reviewer", "reason": "Owner approved appearance and publication, not engineering sign-off."}
+  ],
+  "boardItems": [
+    {
+      "id": "favicon-serving",
+      "area": "favicon serving and packaging",
+      "status": "complete",
+      "register": "register-2",
+      "summary": "Anonymous inline media, resident asset registration and versioned PNG links.",
+      "preliminarySignal": "Welcome must preserve its public allowlist; resident assets must be registered with both the snapshot and routing map.",
+      "links": ["src/api/src/zava_forward/api/welcome.py", "src/api/src/zava_forward/api/resident_preview/app.py"],
+      "selectableSymbols": ["media", "make_handler"]
+    }
+  ]
+}

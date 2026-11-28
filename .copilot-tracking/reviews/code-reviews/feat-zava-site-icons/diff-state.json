@@ -1,0 +1,75 @@
+{
+  "task": {
+    "kind": "perspective_batch",
+    "outputs": {
+      "functional": "/home/jmservera/source/ama/.copilot-tracking/reviews/code-reviews/feat-zava-site-icons/functional-findings.json"
+    }
+  },
+  "reviewTarget": {
+    "kind": "branch_diff",
+    "baseRef": "337d3999d5f1113752873b129a52f95aae6623ba",
+    "headRef": "feat/zava-site-icons",
+    "headSha": "f037bd977817c78940457146b6836330e6f1b746"
+  },
+  "reviewProfile": "custom",
+  "branch": "feat/zava-site-icons",
+  "base": "337d3999d5f1113752873b129a52f95aae6623ba",
+  "files": [
+    "src/api/README.md",
+    "src/api/src/zava_forward/api/resident_demo/app.py",
+    "src/api/src/zava_forward/api/resident_demo/web/index.html",
+    "src/api/src/zava_forward/api/resident_preview/app.py",
+    "src/api/src/zava_forward/api/resident_preview/web/index.html",
+    "src/api/src/zava_forward/api/web/favicon-employee.png",
+    "src/api/src/zava_forward/api/web/favicon-resident.png",
+    "src/api/src/zava_forward/api/web/index.html",
+    "src/api/src/zava_forward/api/web/law.html",
+    "src/api/src/zava_forward/api/web/welcome.html",
+    "src/api/src/zava_forward/api/welcome.py",
+    "src/api/tests/test_auth.py",
+    "src/api/tests/test_static_assets.py"
+  ],
+  "untrackedFiles": [],
+  "extensions": [".py", ".html", ".md", ".png"],
+  "diffPatchPath": "/home/jmservera/source/ama/.copilot-tracking/reviews/code-reviews/feat-zava-site-icons/diff.patch",
+  "findingsFolder": "/home/jmservera/source/ama/.copilot-tracking/reviews/code-reviews/feat-zava-site-icons",
+  "depthTier": "basic",
+  "recommendedDepth": "basic",
+  "depthRationale": "Narrow reversible branding change using existing media and static-asset mechanisms; no authentication, CSP, infrastructure, dependency or gate changes.",
+  "hotspots": [
+    "src/api/src/zava_forward/api/welcome.py",
+    "src/api/src/zava_forward/api/resident_preview/app.py",
+    "src/api/src/zava_forward/api/resident_demo/app.py",
+    "src/api/tests/test_static_assets.py"
+  ],
+  "outOfScope": [
+    "Uncommitted concurrent paper PDF and TeX edits",
+    "Private datasets",
+    "Unrelated pre-existing UI issues",
+    "Cloud deployment and human accessibility conformance"
+  ],
+  "changeBrief": "Use the supplied Z with an outlined circle for black-on-white resident and larger white-on-black employee favicons. Welcome embeds the employee PNG so public asset permissions remain unchanged; other employee pages and both resident surfaces use release-versioned assets. Owner approved icon appearance and publication.",
+  "validation": {
+    "tests": "127 combined static/welcome/accessibility/content/auth/preview tests plus 3 resident static/host/method boundary tests passed.",
+    "lint": "Ruff passed on all changed Python files.",
+    "format": "Four non-exempt Python files passed; test_auth.py is an existing repository format exclusion.",
+    "types": "API mypy passed on 383 files.",
+    "browser": "Headed Chromium selected and decoded icons on all nine entry paths, with native favicon requests observed.",
+    "image": "Opaque 64x64 PNGs; centered resident mark 52px and employee mark 60px, with correct white/black backgrounds."
+  },
+  "reviewStateProvenance": {
+    "scope": "automation-derived",
+    "changeRiskEvidence": "automation-derived",
+    "recommendedDepth": "automation-derived",
+    "depthTier": "automation-derived",
+    "depthRationale": "automation-derived"
+  },
+  "changeRiskEvidence": [
+    {"signal": "change-scope", "availability": "observed", "evidence": "13 files, 82 added and 7 removed text lines plus two PNGs."},
+    {"signal": "path-criticality", "availability": "observed", "evidence": "Only static branding registration and existing welcome rendering; auth and host controls unchanged."},
+    {"signal": "history", "availability": "qualitative", "evidence": "Existing shared resident assets and welcome inline image handling reused."},
+    {"signal": "test-presence", "availability": "observed", "evidence": "Existing static-asset and auth regression cases extended."},
+    {"signal": "coverage", "availability": "observed", "evidence": "130 focused tests and native headed browser/favicon image checks passed."},
+    {"signal": "rollback", "availability": "qualitative", "evidence": "Single isolated favicon commit, no schema or persistent state migration."}
+  ]
+}
