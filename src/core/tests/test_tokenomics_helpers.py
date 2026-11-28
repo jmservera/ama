@@ -66,6 +66,55 @@ class TimestampTest(unittest.TestCase):
             tokenomics._bound_timestamp(["x"], "start")
 
 
+class CallChargeTest(unittest.TestCase):
+    price = {"input_rate": "0.10", "cached_rate": "0.025", "output_rate": "0.40"}
+
+    def test_cached_tokens_are_priced_at_the_cached_rate(self) -> None:
+        used = {"prompt_tokens": 1000, "cached_tokens": 400, "completion_tokens": 500}
+        self.assertEqual(tokenomics._call_charge(used, self.price), Decimal("0.00027"))
+
+    def test_missing_or_null_cached_tokens_count_as_zero(self) -> None:
+        expected = Decimal("0.0003")
+        for used in (
+            {"prompt_tokens": 1000, "completion_tokens": 500},
+            {"prompt_tokens": 1000, "cached_tokens": None, "completion_tokens": 500},
+        ):
+            with self.subTest(used=used):
+                self.assertEqual(tokenomics._call_charge(used, self.price), expected)
+
+    def test_malformed_rate_fails_closed(self) -> None:
+        used = {"prompt_tokens": 1, "completion_tokens": 1}
+        with self.assertRaises(ValueError):
+            tokenomics._call_charge(used, {**self.price, "input_rate": "-1"})
+
+
+class MeterRootAndCapabilityTest(unittest.TestCase):
+    root = "a" * 64
+
+    def test_meter_root_requires_64_hex_and_prefers_top_level(self) -> None:
+        other = "b" * 64
+        self.assertEqual(tokenomics._extract_meter_root({"meter_root": self.root}), self.root)
+        nested = {"envelope": {"meter_root": other}}
+        self.assertEqual(tokenomics._extract_meter_root(nested), other)
+        both = {"meter_root": self.root, "envelope": {"meter_root": other}}
+        self.assertEqual(tokenomics._extract_meter_root(both), self.root)
+        for bad in ({"meter_root": "xyz"}, {"envelope": "x"}, {"meter_root": self.root[:-1]}, {}):
+            with self.subTest(bad=bad):
+                self.assertIsNone(tokenomics._extract_meter_root(bad))
+
+    def test_capability_defaults_to_priority_for_non_task_records(self) -> None:
+        self.assertEqual(tokenomics._rec_capability({"kind": "usage"}), "priority")
+        self.assertEqual(tokenomics._rec_capability({"kind": "ai_task"}), "priority")
+
+    def test_task_records_prefer_capability_over_task(self) -> None:
+        both = {"kind": "ai_task", "capability": "draft", "task": "other"}
+        self.assertEqual(tokenomics._rec_capability(both), tokenomics._capability_name("draft"))
+        self.assertEqual(
+            tokenomics._rec_capability({"task": "summarise"}),
+            tokenomics._capability_name("summarise"),
+        )
+
+
 def _unpriced_summary() -> dict[str, Any]:
     zero = {key: 0 for key in tokenomics.DENOMINATOR_KEYS}
     money = {
