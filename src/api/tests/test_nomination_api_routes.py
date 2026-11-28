@@ -901,6 +901,42 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertEqual(self.call_json("/api/cases/ZF-NOPE/resident", "sam", challenge)[0], 404)
         self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
+    def test_json_charset_callers_work_and_text_plain_write_needs_csrf_header(self) -> None:
+        self.assertEqual(
+            self.call_json("/api/cases/ZF-1/resident", "sam", self.nomination_payload())[0], 200
+        )
+        before = self.call_json("/api/cases/ZF-1", "sam")[1]
+        nom_id = before["nomination_records"][0]["id"]
+
+        def post(content_type: str, payload: dict[str, Any], extra: dict[str, str]) -> int:
+            req = Request(
+                self.base + "/api/cases/ZF-1/resident",
+                json.dumps(payload).encode(),
+                headers={
+                    "Cookie": self._login_cookie("sam"),
+                    "Content-Type": content_type,
+                    **extra,
+                },
+            )
+            try:
+                with urlopen(req, timeout=10) as response:
+                    return int(response.status)
+            except HTTPError as err:
+                return err.code
+
+        ack = self._ack_payload(nom_id, acknowledgement_ref="SYN-TEXTPLAIN")
+        with patch.object(self.app.provider, "name", "trusted-proxy"):
+            self.assertEqual(post("text/plain", ack, {}), 403)
+            self.assertEqual(post("text/plain;charset=UTF-8", ack, {}), 403)
+        self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
+        self.assertEqual(
+            post("application/json; charset=utf-8", ack, {"X-ZF-CSRF": "1"}),
+            200,
+        )
+        after = self.call_json("/api/cases/ZF-1", "sam")[1]
+        self.assertIn("SYN-TEXTPLAIN", json.dumps(after))
+        self.assertNotIn("SYN-TEXTPLAIN", json.dumps(before))
+
     def test_trusted_proxy_route_write_requires_csrf_header_and_writes_nothing_without_it(
         self,
     ) -> None:

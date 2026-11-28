@@ -241,6 +241,34 @@ class Gov:
             (v["cycle_time"]["verdict"], v["coordination_hours"]["verdict"]), ("Pass", "Fail")
         )
 
+    def test_target_verdict_and_percentage_input_edges(self):
+        self.assertEqual(g.target_verdict(30, None)["verdict"], "Not assessable")
+        self.assertEqual(g.target_verdict(30, 40, 99)["verdict"], "Interval estimate only")
+        self.assertEqual(g.target_verdict(30, 30)["verdict"], "Awaiting result")
+        self.assertEqual(g.target_verdict(30, 30, 30)["verdict"], "Pass")
+        self.assertEqual(g.target_verdict(30, 10, 29.9)["verdict"], "Fail")
+        self.assertEqual(g._pct("12.5", "the MDE"), 12.5)
+        self.assertEqual(g._pct(100, "the MDE"), 100.0)
+        for bad in ("abc", None, 0, -1, 100.1):
+            with self.assertRaisesRegex(ValueError, "^Enter the MDE"):
+                g._pct(bad, "the MDE")
+
+    def test_benefits_approval_and_claim_confirmation_refusals(self):
+        s = self.store
+        with self.assertRaisesRegex(ValueError, "Record the BG-011"):
+            s.benefits_approve(self.pm2, {})
+        self.assertFalse(s.governance_view(self.pm1)["capture_open"])
+        s.value_claim_record(self.pm1, CLAIM)
+        before = copy.deepcopy(s._gov()["value_claims"])
+        with self.assertRaisesRegex(ValueError, "Choose a recorded value claim"):
+            s.value_claim_confirm(
+                self.pm2,
+                dict(
+                    id="VC-missing", destination="spend avoided", budget_owner_ref="Synthetic ref"
+                ),
+            )
+        self.assertEqual(s._gov()["value_claims"], before)
+
     def test_shadow_and_live_need_phase_0_released(self):
         s = self.store
         self.approve_all()

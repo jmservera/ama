@@ -811,6 +811,30 @@ class UnusableArchivePathTests(RunnerBase):
         self.assertEqual((code, self.codes(res)), (2, ["archive_unreadable"]))
         self.assertEqual(self.archive.read_text(), "not a folder")
 
+    def test_unusable_shapes_exit_nonzero_through_main(self) -> None:
+        shapes = (
+            self.dangling_link,
+            self.dangling_ancestor,
+            self.symlink_loop,
+            self.ancestor_regular_file,
+        )
+        for make in shapes:
+            with self.subTest(make.__name__):
+                self.setUp()
+                sentinel = make()
+                before = os.path.lexists(sentinel), os.path.islink(sentinel)
+                cases = self.cases_file()
+                base = ("--archive", str(self.archive), "--today", TODAY)
+                with self.registry_patched():
+                    code_v, res_v = self.cli("verify", *base)
+                    code_s, res_s = self.cli("schedule", *base)
+                    code_p, res_p = self.cli("publish", *base, "--cases", str(cases))
+                self.assertEqual((code_v, code_s, code_p), (1, 1, 2))
+                self.assertEqual(self.codes(res_p), ["archive_unreadable"])
+                for res in (res_v, res_s, res_p):
+                    self.assertNotIn(str(self.root), json.dumps(res))
+                self.assertEqual((os.path.lexists(sentinel), os.path.islink(sentinel)), before)
+
     @unittest.skipIf(os.geteuid() == 0, "root bypasses directory permissions")
     def test_real_permission_denied_parent_is_unknown_not_creatable(self) -> None:
         locked = self.root / "locked"

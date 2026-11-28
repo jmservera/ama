@@ -121,6 +121,29 @@ class StaticPageStructure(unittest.TestCase):
                     named = page.button_text[index].strip() or a.get("aria-label")
                     self.assertTrue(named, (name, a))
 
+    def test_aria_and_label_idrefs_resolve(self) -> None:
+        for name in PAGES:
+            page = load(name)
+            ids = {a["id"] for _, a in page.tags if a.get("id")}
+            for _, a in page.tags:
+                refs = []
+                for attr in ("aria-labelledby", "aria-describedby", "aria-controls", "for"):
+                    refs += (a.get(attr) or "").split()
+                for ref in refs:
+                    self.assertIn(ref, ids, (name, ref))
+
+    def test_heading_levels_do_not_skip_downwards(self) -> None:
+        for name in PAGES:
+            levels = [
+                int(t[1])
+                for t, _ in load(name).tags
+                if len(t) == 2 and t[0] == "h" and t[1] in "123456"
+            ]
+            self.assertTrue(levels, name)
+            self.assertEqual(levels[0], 1, name)
+            for prev, cur in zip(levels, levels[1:], strict=False):
+                self.assertLessEqual(cur, prev + 1, (name, prev, cur))
+
     def test_new_tab_links_use_noopener(self) -> None:
         for name in PAGES:
             for _, a in load(name).named("a"):
