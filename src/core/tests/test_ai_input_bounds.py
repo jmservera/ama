@@ -143,6 +143,71 @@ class InputBounds(unittest.TestCase):
         self.assertEqual(self.meter.reserved, 0)
         self.urlopen.assert_not_called()
 
+    def test_text_budget_is_inclusive_and_counts_utf8_bytes(self) -> None:
+        part = {"type": "text", "text": "x" * (MAX_TEXT_BYTES - 1)}
+        self.ai.evidence("s", [part])
+        self.assertEqual(self.meter.reserved, 1)
+        self.meter.reserved = 0
+        self.refused([part], system="ss")
+        self.refused([{"type": "text", "text": "é" * (MAX_TEXT_BYTES // 2)}], system="s")
+
+    def test_plain_string_is_refused_at_the_serialized_limit(self) -> None:
+        # The string route also bounds the serialized request body, so the exact limit is refused.
+        out = self.ai.evidence("s", "x" * (MAX_TEXT_BYTES - 1))
+        self.assertEqual(out["reason"], "input-too-large")
+        self.ai.evidence("s", "x" * (MAX_TEXT_BYTES - 1024))
+        self.assertEqual(self.meter.reserved, 1)
+
+    def test_text_budget_is_summed_across_parts(self) -> None:
+        half = {"type": "text", "text": "x" * (MAX_TEXT_BYTES // 2)}
+        self.refused([half, half, {"type": "text", "text": "x"}])
+
+    def test_malformed_text_and_image_parts_are_refused(self) -> None:
+        png = "data:image/png;base64,AAAA"
+        for part in (
+            {"type": "text", "text": None},
+            {"type": "text", "text": b"bytes"},
+            {"type": "text"},
+            {"type": "image_url"},
+            {"type": "image_url", "image_url": "data:image/png;base64,AAAA"},
+            {"type": "image_url", "image_url": {"url": None}},
+            {"type": "image_url", "image_url": {}},
+            {"type": "image_url", "image_url": {"url": "image/png;base64,AAAA"}},
+            {"type": "image_url", "image_url": {"url": "data:image/png,AAAA"}},
+            {"type": "image_url", "image_url": {"url": "data:IMAGE/PNG;base64,AAAA"}},
+            {"type": "image_url", "image_url": {"url": "data:image/png ;base64,AAAA"}},
+            {"type": "image_url", "image_url": {"url": png}, "text": "hi"},
+        ):
+            with self.subTest(part=part):
+                self.refused([part])
+
+    def test_non_text_system_values_are_refused(self) -> None:
+        for system in (None, b"sys", 0, {"type": "text"}):
+            with self.subTest(system=system):
+                self.refused("user", system=system)
+
+    def test_image_budget_is_inclusive(self) -> None:
+        exact = "A" * (MAX_IMAGE_BYTES // 3 * 4)
+        image = {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{exact}"}}
+        self.ai.evidence("sys", [{"type": "text", "text": "hi"}, image])
+        self.assertEqual(self.meter.reserved, 1)
+
+    def test_look_at_image_limit_and_exact_type(self) -> None:
+        # The encoded size, with padding, is what the shared boundary measures.
+        # The exact limit is therefore refused.
+        out = self.ai.look_at("a.png", b"\0" * MAX_IMAGE_BYTES, "image/png")
+        self.assertEqual(out["error"], "InputRefused")
+        self.assertEqual(self.meter.reserved, 0)
+        self.ai.look_at("a.png", b"\0" * (MAX_IMAGE_BYTES - 3), "image/png")
+        self.assertEqual(self.meter.reserved, 1)
+        self.meter.reserved = 0
+        for mime in ("IMAGE/PNG", "image/png; charset=binary", "image/gif", "image/webp"):
+            with self.subTest(mime=mime):
+                out = self.ai.look_at("a.img", b"\x89PNG", mime)
+                self.assertEqual(out["source"], "template")
+        self.assertEqual(self.meter.reserved, 0)
+        self.urlopen.assert_not_called()
+
     def test_approved_list_payload_reaches_the_meter(self) -> None:
         part = {"type": "image_url", "image_url": {"url": "data:image/jpeg;base64,AAAA"}}
         self.ai.evidence("sys", [{"type": "text", "text": "hi"}, part])

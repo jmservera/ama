@@ -20,6 +20,16 @@ import test_assistants as ta
 import test_quality_sensors as qs
 
 WEB = Path(sensor_view.__file__).parents[4] / "api/src/zava_forward/api/web"
+HOME_FIELDS = {"address", "built", "epc", "postcode", "tenure", "town", "type"}
+SENSOR_FIELDS = {
+    "after", "after_absent", "age_minutes", "anchor", "as_of_rule", "before", "calibrated",
+    "citation_keys", "freshness", "freshness_notice", "future_dated_excluded", "home_id", "kind",
+    "latest", "max_readings", "provenance", "readings", "request_as_of", "retrofit_context",
+    "state", "units", "version",
+}  # fmt: skip
+SENSOR_ROW_FIELDS = {
+    "humidity_pct", "observed_at", "provenance_class", "reading_id", "sensor_id", "temperature_c",
+}  # fmt: skip
 READING_FIELDS = ("reading_id", "sensor_id", "temperature_c", "humidity_pct", "observed_at")
 
 
@@ -75,6 +85,54 @@ class Correlation(qs.Seed, ta.ApiTests):
         blob = json.dumps(self.provider.prompts[-1])
         for secret in ("PRIVATE-VULNERABILITY-REASON", "PRIVATE-HANDOFF-NOTE"):
             self.assertNotIn(secret, blob)
+
+    def test_model_request_is_an_allowlisted_minimized_snapshot(self) -> None:
+        self.ready()
+        self.put(3, home="ZF-2")
+        self.flag()
+        request = self.provider.prompts[-1]
+        self.assertEqual(set(request), {"capability", "evidence", "purpose"})
+        sources = request["evidence"]["sources"]
+        self.assertEqual(
+            set(sources), {"checklists", "documents", "home", "measures", "quality", "sensors"}
+        )
+        self.assertEqual(set(sources["home"]), HOME_FIELDS)
+        self.assertEqual(set(sources["sensors"]), SENSOR_FIELDS)
+        for row in [*sources["sensors"]["readings"], sources["sensors"]["latest"]]:
+            self.assertEqual(set(row), SENSOR_ROW_FIELDS)
+        self.assertEqual({r["sensor_id"] for r in sources["sensors"]["readings"]}, {qs.DEFAULT})
+        blob = json.dumps(request)
+        resident = self.store._case("ZF-1")["resident"]
+        withheld = [
+            resident["name"],
+            resident["formal"],
+            resident["phone"],
+            resident["adjustment"],
+            "ZF-2",
+            "SENS-SYN-2",
+            "R-ZF-2-000",
+            "9183461",
+            "PRIVATE-DOCUMENT-NAME",
+            "PRIVATE-AI-SUMMARY",
+            *(p["name"] for p in self.people.values()),
+            *(p["email"] for p in self.people.values()),
+        ]
+        for value in withheld:
+            self.assertNotIn(value, blob, value)
+        self.assertNotRegex(blob, r"(?i)api[_-]?key|bearer |password|connectionstring|sig=")
+
+    def test_withdrawn_consent_before_the_call_sends_no_reading_to_the_model(self) -> None:
+        self.ready()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        self.set_consent("declined")
+        self.service.execute(tid)
+        blob = json.dumps(self.provider.prompts)
+        for reading_id in ("R-ZF-1-000", "R-ZF-1-003", "LIVE-SENS-SYN-1"):
+            self.assertNotIn(reading_id, blob)
+        self.assertFalse(qs.exposes(self.provider.prompts, "11.25"))
+        flag = self.service.detail(self.pm, tid).get("review_flag")
+        self.assertFalse(flag and flag.get("autonomous") and flag.get("sensor_grounded"))
 
     def test_retrofit_context_is_stated_missing_in_api_snapshot_and_ui_source(self) -> None:
         self.ready()
