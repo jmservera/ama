@@ -15691,3 +15691,24 @@ Added `research/issue-184-live-cli-leak-2026-11-23.md` (simulator CLI hostile-en
 * Added a [dated official-source review](./regulatory/reviewed-updates/2026-11-28-privacy-residency-rai-review.md) for UK GDPR principles/current ADM provisions, RSH transparency, safeguarded transfers, draft ICO guidance and Microsoft Standard-model/provider limits. Preserved immutable snapshots and earlier adverse evidence; Legal/DPO applicability and real-data acceptance remain pending.
 * Integrated privacy and meaningful human decision authority into the main presentation and short demo cues. The not-for-profit mission connects resident benefit with accountable spending, without unrestricted disclosure or a blanket UK-only legal claim. The main 13:00 route, early 1:50 demo and 2:00 reserve remain unchanged.
 * Updated the [architecture synthesis](../architecture/environment-region-quota-strategy.md#privacy-and-accountable-human-review-2026-11-28) and cost scope: UK Standard processing is proposed, current Global/Sweden options remain explicit, and Global nano's low rate is not a UK-resident quotation. Full local sovereignty stays optional. No deployment, paid inference, personal-data use or operational control activation occurred.
+## [2026-11-27] add | Issue 1830 timing analyzer header validation (Refs #1830)
+
+* Added [issue-1830-live-r17-2026-11-27.md](research/issue-1830-live-r17-2026-11-27.md): `rpi-gate-timing.py` now refuses hash-valid receipts lacking `jobs`, `image_cache` or an aware `sealed` instead of raising KeyError. Criteria 1, 3 and 4 stay partly proven or owner-gated.
+
+## [2026-11-27] update | Capstone deck rebuilt with 27 November figures (Refs #435)
+
+* Rebuilt `docs/capstone/deck/zava-forward-cowork-v2-draft.pptx` and the LibreOffice preview PDF from `origin/main` 337d3999d5, verified 55 slides with notes, and widened the merged pull request figure frame on slide 7 so 2038 no longer wraps. The preview is not native PowerPoint validation and carries no human acceptance.
+
+## [2026-11-27] add | Issue 2245 live model-call proof on revision 0000149 (Refs #2245)
+
+* Added [issue-2245-live-20261127T174551Z.md](research/issue-2245-live-20261127T174551Z.md): a free-form case question routed to the general agent and made a model call (API model azure-openai; widget "Model calls: 1"); the widget draft failed the source check and the rules answer was shown. 13 of 13 thread creates at 200 but 5 to 11 s each. Lock holder and deployed-fix mapping stay unproven. No source change.
+## [2026-11-27] update | Issue 2061 live pass 3 (Refs #2061)
+
+* Added [issue-2061-live-evidence-2026-11-27.md](research/issue-2061-live-evidence-2026-11-27.md): live shape and role inventory re-read; `infra/resident-demo.bicep` gains opt-in sensor-consent parameters. Fresh what-if, sign-in re-run and the full receipt stay open.
+## [2026-11-27] update | Issue 1830 live r18 critical-chain hang
+
+* Added [issue-1830-live-r18-2026-11-27.md](research/issue-1830-live-r18-2026-11-27.md): `rpi-gate-timing.py` critical-chain walk looped forever on two zero-length commands at one instant; fixed with a regression test. The only receipts retained on this host are partial or unsealed, so multi-receipt measurement stays unproven.
+
+## [2026-11-27] update | Issue 2245 busy thread-create retry
+
+* Added [issue-2245-live-20261127T220700Z.md](research/issue-2245-live-20261127T220700Z.md): the live image tag maps to a commit holding the audit-write retry; the workspace script now repeats a handled lock-busy 503 on chat thread creation once. Deployed behaviour, the 2026-11-22 500 cause and the lock holder stay unproven.

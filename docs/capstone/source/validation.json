@@ -1,7 +1,7 @@
 {
   "source_as_of": "2026-11-28",
   "status": "partial",
-  "revision": "Not-for-profit stewardship, UK privacy target and Responsible AI on the main route; constructed-data demo; qualified regional-model and public-cloud cost scope. Stable 56 pages, 13:00 preparation, early 1:50 demo and 2:00 reserve.",
+  "revision": "Main merged into feat/zava-site-icons; retained newer not-for-profit, UK privacy and Responsible AI content and native progress grid. Main's regulatory-register date correction is incorporated. Rebuilt 56 pages with unchanged visible slide parts, 13:00 preparation, early 1:50 demo and 2:00 reserve.",
   "status_limit": "Local source/package/rendering checks passed. Prepared, not rehearsed or human-accepted. Retained diagrams have dated provenance failures; exact-head independent and hosted review are separate PR evidence.",
   "package": {
     "status": "pass",
@@ -56,9 +56,9 @@
       37
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
+    "candidate_sha256": "811c0cc17c2a7ce2986891332ff58fb722c11f95c517735648de33f1562e1a7d",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
-    "manifest_sha256": "57a12b2f7702320bfb5b72ac8cf575581fbcb658baaeb5c595a7711cd10621c3",
+    "manifest_sha256": "307c87d132d918426202b54a061e6d21290246b4b5e2f78fb569601e99b2322c",
     "asset_catalog_sha256": "c9743882738e54f90e3332036ff26bfe0898a88091cbe68323bb5b16ce02693c",
     "builder_sha256": "bae8eb2ec82ccb6edd526732dff53cfc18c17da579c416729e65d4fe187f6313",
     "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068",
@@ -108,6 +108,7 @@
     "unambiguous_hit_regions": true,
     "text_extraction_checked_pages": [
       1,
+      7,
       13,
       17,
       21,
@@ -115,26 +116,28 @@
     ],
     "all_checked_text_present": true,
     "renderer": "Microsoft PowerPoint 16.0 COM; existing PyMuPDF link reconstruction/readback",
-    "raw_native_pdf_sha256": "ef8e4647f7d46b6d7bf048d6e0f09a14b2152ba2e266f7ed79f6135464752fd8",
-    "delivered_pdf_sha256": "a48be8ca10007be21e94c2455cc59b4dad7626f0b4476e14bddd6810dbff7805"
+    "raw_native_pdf_sha256": "a226ce79b179851e36d5e742609b267d610a8c4521dc501289064d81a1e70487",
+    "delivered_pdf_sha256": "a28cf1159408f3450ca5872493a65fb8d67477fe42afd043b9ebf15c14207eaa"
   },
   "native": {
     "status": "render_pass",
     "renderer": "Microsoft PowerPoint 16.0 COM",
     "slides": 56,
-    "candidate_sha256": "3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687",
+    "candidate_sha256": "811c0cc17c2a7ce2986891332ff58fb722c11f95c517735648de33f1562e1a7d",
     "render_size": [
       1600,
       900
     ],
     "focused_pages": [
       1,
+      3,
+      7,
       13,
       17,
       21,
       56
     ],
-    "focused_revised_frames": 42,
+    "focused_revised_frames": 81,
     "focused_revised_bound_warnings": 0,
     "other_source_revised_bound_warnings": 28,
     "inherited_bound_warnings": 179,
@@ -143,7 +146,7 @@
     "keyboard_projector_and_real_AT": "not_run",
     "historical_note_only_correction_pixels_identical": true,
     "historical_note_only_correction_bounds_identical": true,
-    "followup_pixel_changes_vs_previous_delivery": [
+    "historical_privacy_followup_pixel_changes_vs_previous_delivery": [
       1,
       13,
       17,
@@ -289,8 +292,8 @@
     "reserve_seconds": 120,
     "demo_window": "00:30-02:20",
     "question_reserve": "13:00-15:00",
-    "speaker_script_sha256": "1be6fcf0334510fc78cbe973c1ec97b890c791af7b6d4a4daf6b4248fe22b34a",
-    "questions_and_answers_sha256": "6b0a48888ef56814effec29ff49bbfe56797121936168eb905cdd19f21a1e5b9",
+    "speaker_script_sha256": "6c3d7578ed44abeb44fe360425462fd1e229b77c1b60246ec1855a056dc9f80b",
+    "questions_and_answers_sha256": "ce2f649849716b016e0ff005e6a1d93d14d4e2f9d01daa773776c0d9834adc34",
     "runbook_sha256": "31deb5a6f423460280b480aef7993ab87b4c0a163bbefbf58c4e3f02bd12500f",
     "rehearsal_performed": false,
     "optional_story": {
@@ -309,10 +312,39 @@
       "consumes_primary_reserve": false
     }
   },
+  "merge_main_rebuild": {
+    "main_sha": "c402cafcdc7f4dd78f336330a13c557891947432",
+    "previous_branch_sha": "41246f40f0cc9e06c02d01996913b3d14f1f3509",
+    "conflicts_resolved": [
+      "docs/capstone/source/slides.json",
+      "docs/capstone/pitch/speaker-script.md",
+      "docs/capstone/pitch/questions-and-answers.md",
+      "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx",
+      "docs/capstone/deck/zava-forward-cowork-v2-draft.pdf"
+    ],
+    "source_resolution": "Retained native S06 progress grid instead of main's older text-replacement layout and count-box adjustment. Incorporated main's 1 November 2026 reviewed-update date in S03 notes.",
+    "generated_resolution": "Regenerated both pitch documents and both binary deliveries from the merged source instead of selecting either conflicting output.",
+    "changed_package_members_vs_previous_branch_delivery": [
+      "ppt/notesSlides/notesSlide3.xml"
+    ],
+    "all_56_visible_slide_parts_unchanged": true,
+    "six_protected_slide_and_note_pairs_unchanged": true,
+    "build_runtime": "Task-local Linux PowerShell 7.7.0; official Debian archive SHA-256 verified against Microsoft package metadata.",
+    "native_render": "Direct PowerPoint 16.0 COM commands under unchanged Windows RemoteSigned policy; no unsigned WSL script execution or policy change.",
+    "visual_inspection_pages": [
+      7,
+      13,
+      17
+    ],
+    "focused_tests": "16 pitch-document tests plus 3 subtests; 10 PDF-preview tests; native shape, insertion, protected-cost and exact source-hash guards passed.",
+    "diff_check": "Resolved presentation files passed. The full staged merge retains two pre-existing trailing-whitespace warnings from main in docs/reference/research/issue-1837-live-2026-11-27-c/live-static-probe.txt; unchanged by this task.",
+    "limit": "This rebuild refreshes package, rendering, navigation and pitch evidence only. Historical pricing/source reviews are not new retrievals; no rehearsal, direct assistive-technology test, independent exact-head review or hosted CI was performed."
+  },
   "publication": {
-    "classification": "focused: presentation content and native authoring support only; no application, deployment, dependency, security control or RPI gate semantics changed",
-    "parent_pr": 2467,
-    "base": "feat/zava-site-icons",
-    "independent_and_hosted_checks": "Recorded separately against the exact published head; not established by this local receipt."
+    "classification": "focused: presentation-only merge resolutions and regenerated outputs; incoming main application, infrastructure and CI changes were integrated without further edits",
+    "historical_parent_pr": 2467,
+    "pull_request": 2467,
+    "base": "main",
+    "independent_and_hosted_checks": "Not rerun for this local merge; no push authorized or performed."
   }
 }

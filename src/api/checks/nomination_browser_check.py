@@ -60,11 +60,14 @@ def run(axe_path: Path) -> dict[str, Any]:
             context = browser.new_context(
                 viewport={"width": 1280, "height": 900}, reduced_motion="reduce"
             )
+            # The assistants registry reads inside a write transaction and keeps running after the
+            # page navigates away, so it can starve the out-of-band writes; this check does not use it.
             context.route(
                 "**/*",
                 lambda route: (
                     route.continue_()
                     if route.request.url.startswith(fixture.base + "/")
+                    and not route.request.url.startswith(fixture.base + "/api/assistants")
                     else route.abort()
                 ),
             )

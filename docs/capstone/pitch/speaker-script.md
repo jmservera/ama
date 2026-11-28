@@ -12,7 +12,7 @@ The 15-minute slot includes 13:00 of planned narration/demo and 2:00 for questio
 Only the SAY paragraphs are spoken. Actions, source notes and the embedded operational runbook are presenter aids.
 Physical page numbers stay stable; the PDF contains the full deck, not the custom-show sequence.
 The shorter route replaces the former 24:30 narration plan. Original slide TIMING lines are historical reference only.
-Candidate SHA-256: `3499cbe39cc9fb8138bf629589c5cba043473205846f7671462e743286674687`. No performed rehearsal or current live acceptance is claimed.
+Candidate SHA-256: `811c0cc17c2a7ce2986891332ff58fb722c11f95c517735648de33f1562e1a7d`. No performed rehearsal or current live acceptance is claimed.
 
 ## Audience and decision
 

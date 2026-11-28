@@ -156,6 +156,88 @@ async function run(responses, signal) {
         )
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
 
+    def test_chat_thread_create_retries_one_handled_busy_503(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+assert.match(
+  source,
+  /path === "\/api\/chat\/threads" \? postThreadRetryingBusy : fetch/,
+  "only thread creation is wired",
+);
+const start = source.indexOf("const BUSY_RETRY_MESSAGE");
+const end = source.indexOf("async function fetchReadRetrying");
+assert.ok(start >= 0 && end > start);
+const code = source.slice(start, end);
+const reply = (status, retryAfter = null, type = "application/json") => ({status, ok: status < 400,
+  headers: {get: (name) => name === "retry-after" ? retryAfter : type}});
+async function run(responses, signal) {
+  const delays = [], shown = [], status = {textContent: "Ready"};
+  let calls = 0;
+  const context = vm.createContext({
+    workspaceStatus: status,
+    setTimeout(fn, delay) {
+      delays.push(delay);
+      shown.push(status.textContent);
+      queueMicrotask(fn);
+      return 1;
+    },
+    fetch: async () => { calls++; return responses.shift(); },
+  });
+  vm.runInContext(code, context);
+  context.options = {signal};
+  const res = await vm.runInContext(
+    'postThreadRetryingBusy("/api/chat/threads", options)', context);
+  return {res, calls, delays, shown, status: status.textContent};
+}
+(async () => {
+  let out = await run([reply(503, "5"), reply(200)]);
+  assert.equal(out.res.status, 200);
+  assert.equal(out.calls, 2);
+  assert.deepEqual(out.delays, [5000]);
+  assert.ok(
+    /busy saving other work/.test(out.shown[0]) && !/503|error/i.test(out.shown[0]),
+    "plain-language status",
+  );
+  assert.equal(out.status, "Ready", "status restored");
+
+  out = await run([reply(503, "2"), reply(200)]);
+  assert.deepEqual(out.delays, [2000]);
+  out = await run([reply(503, "60"), reply(200)]);
+  assert.deepEqual(out.delays, [5000], "delay is capped");
+
+  out = await run([reply(503, "1"), reply(503, "1"), reply(200)]);
+  assert.equal(out.calls, 2, "one retry only");
+  assert.equal(out.res.status, 503);
+
+  out = await run([reply(503, null, "text/plain"), reply(200)]);
+  assert.equal(out.calls, 1, "a gateway 503 is not retried");
+  out = await run([reply(503), reply(200)]);
+  assert.equal(out.calls, 1, "a 503 without Retry-After is not the busy answer");
+  out = await run([reply(500), reply(200)]);
+  assert.equal(out.calls, 1, "an application 500 is not retried");
+  out = await run([reply(200)]);
+  assert.equal(out.calls, 1);
+
+  const controller = new AbortController();
+  controller.abort();
+  await assert.rejects(run([reply(503, "1"), reply(200)], controller.signal));
+})().catch(error => { console.error(error); process.exitCode = 1; });
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
     def test_map_read_recovers_from_a_dropped_connection(self) -> None:
         result = subprocess.run(
             [

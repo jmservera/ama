@@ -325,7 +325,17 @@ class ChatMixin:
         with repo.txn():
             repo.insert_thread(t)
             repo.commit()
-        self._chat_event(user, "chat.thread.created", t, task=t["task"], task_version=t["task_version"], model=t["model"])
+        from .mssqlstore import is_write_lock_busy
+        attempt = 0
+        while True:
+            try:
+                self._chat_event(user, "chat.thread.created", t, task=t["task"], task_version=t["task_version"], model=t["model"])
+                break
+            except Exception as exc:
+                # The thread is committed, so a lock timeout here must not surface as a failed create that the client repeats (issue #2245).
+                attempt += 1
+                if attempt > 2 or not is_write_lock_busy(exc):
+                    raise
         return t
 
     def chat_add_message(self, user, tid, role, content, evidence=(), model="", expected_version=None, _finalize=None):

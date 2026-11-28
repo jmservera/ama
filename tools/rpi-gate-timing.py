@@ -55,6 +55,12 @@ def load_receipt(path: Path) -> dict[str, Any]:
         raise TimingError(
             EXIT_INPUT, f"Only passed schema 4 full-scope receipts are analysed: {path}"
         )
+    jobs = receipt.get("jobs")
+    if not isinstance(jobs, int) or isinstance(jobs, bool) or jobs < 1:
+        raise TimingError(EXIT_INPUT, f"Receipt jobs is missing or invalid: {path}")
+    if not isinstance(receipt.get("image_cache"), str):
+        raise TimingError(EXIT_INPUT, f"Receipt image_cache is missing or invalid: {path}")
+    aware_timestamp(receipt.get("sealed"), "sealed")
     return receipt  # type: ignore[no-any-return]
 
 
@@ -117,7 +123,13 @@ def critical_chain(
     steps = []
     while True:
         steps.append(current)
-        earlier = [c for c in commands if c["end"] <= current["start"] and c is not current]
+        # Strict (end, start) ordering guarantees the walk ends on coincident zero-length commands.
+        earlier = [
+            c
+            for c in commands
+            if c["end"] <= current["start"]
+            and (c["end"], c["start"]) < (current["end"], current["start"])
+        ]
         if not earlier:
             break
         current = max(earlier, key=lambda c: c["end"])

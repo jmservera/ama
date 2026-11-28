@@ -848,6 +848,10 @@ The [issue 2245 recheck after revision 0000086](./research/issue-2245-live-20261
 
 The [issue 2245 recheck on revision 0000136](./research/issue-2245-live-20261127T125527Z.md) records 13 of 13 thread creates at 200, rules-only asks that state the spending hold plainly, and a bounded retry of the two chat audit writes.
 
+The [issue 2245 client retry of a busy thread create](./research/issue-2245-live-20261127T220700Z.md) maps the demo image tag demo-337d3999d5 to a commit that holds the audit-write retry and records the browser retry of a handled lock-busy 503 on chat thread creation.
+
+The [issue 2245 live model-call proof on revision 0000149](./research/issue-2245-live-20261127T174551Z.md) records a free-form case question that called the model ("Model calls: 1", API model azure-openai), a widget answer replaced by the rules answer after the source check, and slow but successful thread creates.
+
 The [issue 2245 live recheck of 2026-11-26](./research/issue-2245-live-2026-11-26.md) records revision 0000079 (threads 8 of 8, widget "Model calls: 1"), the hourly demo budget slot that stops one held settlement pausing the model all day, and the per-criterion table.
 
 The [issue 2245 browser gateway error note](./research/issue-2245-browser-gateway-error-2026-11-23.md) records that the chat widget showed a JSON parser message when the ingress timed out an ask, the one-line client fix and its regression test.
@@ -1775,6 +1779,7 @@ or infra acceptance claimed.
 | [Issue 2061 live single-environment move (sqlTier dtu)](./research/issue-2061-live-single-environment-2026-11-20.md) | Live deploy, old environment deleted, KV 403/200 and employee sign-in proven; telemetry, Entra URIs and gate receipt unproven | 2026-11-20 |
 | [Issue 2061 live evidence pass](./research/issue-2061-live-evidence-2026-11-22.md) | Ingress, Entra URI table, employee and resident sign-in, resident identity negative probe, telemetry flow; import flow and stale URI removal unproven | 2026-11-22 |
 | [Issue 2061 live evidence pass 2](./research/issue-2061-live-evidence-2026-11-23.md) | Revisions 0000054 and 0000026: import workbook check, map with fresh sensor readings, sign-ins, infra tests; resident identity drift and stale URIs open | 2026-11-23 |
+| [Issue 2061 live evidence pass 3](./research/issue-2061-live-evidence-2026-11-27.md) | Read-only live re-check; resident sensor-consent wiring made expressible in Bicep (opt-in, default off); what-if, sign-in re-run and receipt open | 2026-11-27 |
 | [Capstone pitch Tokenomics status (#435)](./research/capstone-pitch-435-live-2026-11-18.md) | Per-criterion status for #435 on the synthetic demo: placement decision recorded (earlier note had criterion 1 unevidenced; deck coverage observed, raw output not retained), spend authority proven via #432, mentor confirmation not provable | 2026-11-18 |
 | [Capstone pitch Tokenomics status, third pass (#435)](./research/capstone-pitch-435-live-r3-2026-11-18.md) | Per-criterion table with retained deck and Azure read-only outputs: placement decision and spend authority proven, mentor confirmation and timed rehearsal unproven, criterion 3 tick conflicts with the rehearsal notes | 2026-11-18 |
 | [Capstone pitch Tokenomics status, fourth pass (#435)](./research/capstone-pitch-435-live-2026-11-20.md) | Retained deck and #432 batch evidence: placement decision and spend authority proven, mentor confirmation unproven; stale batch statement in the rehearsal notes fixed | 2026-11-20 |
@@ -2057,6 +2062,8 @@ or infra acceptance claimed.
 | [Issue 1830 Live r14, Map Check Settle Before Scan (#1830)](./research/issue-1830-live-r14-2026-11-25.md) | Preflight re-proved; the direct map check was intermittently red and a settle wait before the expanded scan took failures from 5 of 30 to 0 of 18 parallel runs |
 | [Issue 1830 Live r15, Filter-Tile Focus Fit Stability (#1830)](./research/issue-1830-live-r15-2026-11-27.md) | Preflight re-proved; the direct map check's intermittent filter-tile geometry failure (2 of 14) now waits for a stable layout, 0 of 12 after |
 | [Issue 1830 Live r16, Preflight Rejects Ignored Gate Options (#1830)](./research/issue-1830-live-r16-2026-11-27.md) | `rpi-checks.py --preflight` silently ignored `--extra-test` and other gate options; now refused, with a test |
+| [Issue 1830 Live r17, Timing Analyzer Refuses Incomplete Receipts (#1830)](./research/issue-1830-live-r17-2026-11-27.md) | `rpi-gate-timing.py report` raised KeyError on hash-valid receipts missing `jobs`, `image_cache` or `sealed`; now refused, with a test |
+| [Issue 1830 Live r18, Critical-Chain Hang (#1830)](./research/issue-1830-live-r18-2026-11-27.md) | `rpi-gate-timing.py report` never ended on coincident zero-length commands; fixed with a test; retained-receipt census |
 | [Issue 2188 Live, Gate Speed-up Criteria](./research/issue-2188-live-gate-speed-2026-11-21.md) | Per-criterion evidence: layer cache 80.7 s to 1.3 s on one image, retry not implemented, tamper rejection tests pass |
 | [Issue 2188 Live, Gate Speed-up Criteria Refresh](./research/issue-2188-live-gate-speed-2026-11-22.md) | Supersedes the retry finding: shard retry and receipt retries implemented, image build 70.5 s to 7.2 s, images still serial, gate-level pair unproven |
 | [Issue 2187 Live, Gate Heavy Lock Scope](./research/issue-2187-live-gate-lock-2026-11-23.md) | Heavy lock only for browser, SQL and image groups already merged in #2215; #2286 did not touch it; no remainder; per-criterion table |

@@ -123,6 +123,21 @@ class TemplateTests(unittest.TestCase):
             self.assertNotIn("value", secret)
             self.assertNotRegex(secret["keyVaultUrl"], r"/secrets/[^/]+/[0-9a-f]{32}")
 
+    def test_sensor_consent_is_opt_in_and_off_by_default(self):
+        params = self.template["parameters"]
+        self.assertEqual(params["sensorConsentIdentityId"]["defaultValue"], "")
+        env = {
+            e["name"]: e.get("value", "")
+            for e in self.app["properties"]["template"]["containers"][0]["env"]
+        }
+        self.assertIn("empty(parameters('sensorConsentIdentityId'))", env["ZF_DEMO_SENSOR_CONSENT"])
+        self.assertTrue(env["ZF_DEMO_SENSOR_CONSENT"].startswith("[if(empty("))
+        self.assertIn("0", env["ZF_DEMO_SENSOR_CONSENT"])
+        self.assertEqual(env["ZF_DEMO_SENSOR_CONSENT_SQL_AUTH"], "msi")
+        identities = self.app["identity"]["userAssignedIdentities"]
+        self.assertIn("empty(parameters('sensorConsentIdentityId'))", identities)
+        self.assertEqual(identities.count("sensorConsentIdentityId"), 2)
+
     def test_demo_chat_privacy_refs_are_set_without_changing_the_contract(self):
         env = {e["name"]: e for e in self.app["properties"]["template"]["containers"][0]["env"]}
         params = self.template["parameters"]

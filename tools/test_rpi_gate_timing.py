@@ -104,6 +104,20 @@ class ReportTests(unittest.TestCase):
         self.assertEqual([w["seconds"] for w in waits], [10.0])
         self.assertEqual(report["concurrency_seconds"]["2"], 10.0)
 
+    def test_coincident_zero_length_commands_do_not_hang_the_chain(self) -> None:
+        path = write_receipt(self.root / "z", [("c", 0, 3), ("a", 5, 5), ("b", 5, 5)])
+        done = subprocess.run(
+            ["python3", str(Path(timing.__file__)), "report", str(path)],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        self.assertEqual(done.returncode, 0, done.stderr)
+        report = json.loads(done.stdout)
+        self.assertEqual(report["chain_seconds"], report["span_seconds"])
+        self.assertIn("c", [s["group"] for s in report["critical_chain"]])
+
     def test_idle_gap_inside_a_group_and_queue_wait_from_the_log(self) -> None:
         commands = [("g", 0, 10), ("g", 30, 40)]
         path = write_receipt(self.root / "a", commands)
@@ -170,6 +184,30 @@ class ReportTests(unittest.TestCase):
                 path = write_receipt(self.root / name.replace(" ", "-"), [("g", 0, 5)])
                 receipt = json.loads(path.read_text())
                 receipt["commands"] = commands
+                path.write_text(json.dumps(receipt))
+                digest = hashlib.sha256(path.read_bytes()).hexdigest()
+                (path.parent / "receipt.sha256").write_text(digest + "\n")
+                code, _out, err = run("report", str(path))
+                self.assertEqual(code, 2)
+                self.assertIn("REFUSED", err)
+
+    def test_hash_valid_receipt_missing_header_fields_is_refused(self) -> None:
+        fields = {
+            "jobs": None,
+            "image_cache": None,
+            "sealed": None,
+            "naive sealed": "2026-11-16T10:00:00",
+            "zero jobs": 0,
+        }
+        for name, value in fields.items():
+            with self.subTest(name):
+                path = write_receipt(self.root / name.replace(" ", "-"), [("g", 0, 5)])
+                receipt = json.loads(path.read_text())
+                key = {"naive sealed": "sealed", "zero jobs": "jobs"}.get(name, name)
+                if value is None:
+                    del receipt[key]
+                else:
+                    receipt[key] = value
                 path.write_text(json.dumps(receipt))
                 digest = hashlib.sha256(path.read_bytes()).hexdigest()
                 (path.parent / "receipt.sha256").write_text(digest + "\n")
