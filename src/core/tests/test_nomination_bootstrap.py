@@ -170,6 +170,44 @@ class NominationBootstrapIdentityTests(unittest.TestCase):
                 code = f"import site; site.addsitedir({tmp!r})\n" + code
                 self._assert_source_identity(self._run(code, _TESTS, isolated=True))
 
+    def test_editable_dist_info_layout_reports_metadata_and_source_origins(self) -> None:
+        probe = (
+            "import importlib.metadata as md, json, sys\n"
+            "for name in {order}:\n"
+            "    __import__(name)\n"
+            "n = sys.modules['test_nomination_route']\n"
+            "b = sys.modules['test_bulk_edits']\n"
+            "print(json.dumps({{\n"
+            "    'conflict': n.ConflictError is b.ConflictError,\n"
+            "    'gate': n.GateError is sys.modules[n.GateError.__module__].GateError,\n"
+            "    'store': n.Store is b.Store,\n"
+            "    'patch_target': b.bulk_edits is sys.modules['zava_forward.core.bulk_edits'],\n"
+            "    'store_file': sys.modules['zava_forward.core.store'].__file__,\n"
+            "    'gate_file': sys.modules[n.GateError.__module__].__file__,\n"
+            "    'meta_version': md.version('zava-forward-core'),\n"
+            "}}))\n"
+        )
+        orders = (
+            ["test_bulk_edits", "test_nomination_route"],
+            ["test_nomination_route", "test_bulk_edits"],
+        )
+        for order in orders:
+            with self.subTest(order=order), tempfile.TemporaryDirectory() as tmp:
+                info = Path(tmp) / "zava_forward_core-0.1.0.dist-info"
+                info.mkdir()
+                (info / "METADATA").write_text(
+                    "Metadata-Version: 2.1\nName: zava-forward-core\nVersion: 0.1.0\n",
+                    encoding="utf-8",
+                )
+                (Path(tmp) / "zava-editable.pth").write_text(
+                    f"{_CORE_SRC}\n{_AGENTS_SRC}\n", encoding="utf-8"
+                )
+                code = f"import site; site.addsitedir({tmp!r})\n" + probe.format(order=order)
+                result = self._run(code, _TESTS, isolated=True)
+                self._assert_source_identity(result)
+                self.assertEqual(result["meta_version"], "0.1.0")
+                self.assertTrue(Path(str(result["gate_file"])).is_relative_to(_TESTS.parents[1]))
+
     def _noneditable_copy(self, tmp: str) -> Path:
         shutil.copytree(
             _CORE_SRC / "zava_forward",

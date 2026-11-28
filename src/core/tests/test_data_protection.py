@@ -86,6 +86,39 @@ class Register(unittest.TestCase):
         self.assertNotIn("SYNTH-1", str(rep))
 
 
+class ProductionApprovalGate(unittest.TestCase):
+    """Production use of an actual class stays blocked until every gate has a recorded reference."""
+
+    def actual_model_bound(self) -> list[str]:
+        return [c.id for c in DATA_CLASSES if c.kind == "actual" and c.model_bound]
+
+    def derivative(self, class_id: str) -> str | None:
+        return "reviewed_redacted" if BY_ID[class_id].needs_derivative else None
+
+    def test_each_gate_blocks_on_blank_whitespace_and_placeholder_refs(self) -> None:
+        class_ids = self.actual_model_bound()
+        self.assertTrue(class_ids)
+        for cid in class_ids:
+            for gate in required_gates(BY_ID[cid]):
+                for bad in ("", "   ", "SYNTH-1", "placeholder"):
+                    env = refs(cid)
+                    env[f"DP_{cid.upper()}_{gate}_REF"] = bad
+                    decision = model_dispatch(cid, env, self.derivative(cid))
+                    with self.subTest(cls=cid, gate=gate, ref=bad):
+                        self.assertFalse(decision["permitted"])
+                        self.assertIn(gate, decision["reason"])
+
+    def test_full_reference_set_is_the_only_way_through_and_is_not_approval(self) -> None:
+        for cid in self.actual_model_bound():
+            with self.subTest(cls=cid):
+                self.assertFalse(model_dispatch(cid, {}, self.derivative(cid))["permitted"])
+                env = refs(cid)
+                self.assertTrue(model_dispatch(cid, env, self.derivative(cid))["permitted"])
+                report = register_report(env)
+                self.assertFalse(report["dpo_reviewed"])
+                self.assertIn("not verified DPO or Legal approval", report["statement"])
+
+
 class Dispatch(unittest.TestCase):
     def test_constructed_fixture_allowed_actual_denied(self) -> None:
         self.assertTrue(model_dispatch("fixture_resident", {})["permitted"])

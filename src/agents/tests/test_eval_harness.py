@@ -6,10 +6,12 @@ import contextlib
 import copy
 import io
 import json
+import socket
 import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 from zava_forward.agents.eval_harness import (
     main,
@@ -120,6 +122,37 @@ class EvalHarnessTests(unittest.TestCase):
         result = run_eval(self.manifest, self.predictions)
         observed = {c["name"]: c["observed"] for c in result["critical_errors"]}
         self.assertEqual(observed["unsafe advice"], 1)
+
+    def test_accuracy_threshold_is_inclusive(self) -> None:
+        expected = self.manifest["held_out"]["expected"]
+        for case in self.predictions:
+            wrong = case in ("h4", "h5", "h6")
+            self.predictions[case]["answer"] = "wrong" if wrong else expected[case]
+        self.manifest["thresholds"]["min_accuracy"] = 0.5
+        at_limit = run_eval(reapproved(self.manifest), self.predictions)
+        self.assertEqual((at_limit["correct"], at_limit["outcome"]), (3, "pass"))
+        self.manifest["thresholds"]["min_accuracy"] = 0.51
+        below = run_eval(reapproved(self.manifest), self.predictions)
+        failed = [t["name"] for t in below["thresholds"] if not t["passed"]]
+        self.assertEqual((below["outcome"], failed), ("fail", ["min_accuracy"]))
+
+    def test_small_cohort_is_refused_as_not_frozen(self) -> None:
+        self.manifest["cohorts"] = dict(cohort_a=["h1", "h2"], cohort_b=["h3", "h4", "h5", "h6"])
+        result = run_eval(reapproved(self.manifest), self.predictions)
+        self.assertEqual(result["outcome"], "not_frozen")
+        self.assertIn("cohort_a has 2 cases", " ".join(result["problems"]))
+
+    def test_run_and_verification_open_no_network_connection(self) -> None:
+        def refuse(*_: object, **__: object) -> None:
+            raise AssertionError("network access attempted")
+
+        with (
+            mock.patch.object(socket.socket, "connect", refuse),
+            mock.patch.object(socket, "create_connection", refuse),
+        ):
+            result = run_eval(self.manifest, self.predictions)
+            verdict = verify_recorded(self.manifest, result)
+        self.assertEqual((result["outcome"], verdict["outcome"]), ("pass", "valid"))
 
     def test_cli_exit_codes_and_deterministic_output(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
