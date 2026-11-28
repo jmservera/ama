@@ -2644,6 +2644,41 @@ os.fstat(3)
                     with self.assertRaises(gate.GateError):
                         gate.verify(self.root, path, self.base)
             target.write_text(json.dumps(CHAT_SCANS))
+            retry_log = self.out / "0900-project-api.log"
+            retry_log.write_text("FAIL: FlakyOnce.test_first_run_fails\n")
+            retry = {
+                "group": "project-api",
+                "log": retry_log.name,
+                "sha256": real_digest(retry_log),
+                "exit_code": 1,
+                "argv": ["py", "-m", "unittest"],
+            }
+            with_retry = copy.deepcopy(original_receipt)
+            with_retry["retries"] = [retry]
+            with_retry["files"][retry_log.name] = retry["sha256"]
+            gate.atomic_json(path, with_retry)
+            (self.out / "receipt.sha256").write_text(real_digest(path))
+            gate.verify(self.root, path, self.base)
+            retry_log.write_text("edited after the gate ran\n")
+            with (
+                self.subTest(retry_evidence="log edited on disk"),
+                self.assertRaisesRegex(gate.GateError, "evidence file hash mismatch"),
+            ):
+                gate.verify(self.root, path, self.base)
+            retry_log.write_text("FAIL: FlakyOnce.test_first_run_fails\n")
+            reused = copy.deepcopy(with_retry)
+            reused["commands"][0]["log"] = retry_log.name
+            forged = copy.deepcopy(with_retry)
+            forged["retries"][0]["exit_code"] = 124
+            unhashed = copy.deepcopy(with_retry)
+            unhashed["files"].pop(retry_log.name)
+            for label, changed in (("reused", reused), ("timeout", forged), ("unhashed", unhashed)):
+                with self.subTest(retry_evidence=label):
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+            retry_log.unlink()
             gate.atomic_json(path, original_receipt)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             environment = self.out / "venvs/core"

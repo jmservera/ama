@@ -112,6 +112,26 @@ class FetchTests(unittest.TestCase):
         with self.assertRaisesRegex(mod.InstallError, "IncompleteRead"):
             self.run_fetch({"github.com": [cut] * 3, "api.github.com": [cut] * 3})
 
+    def test_connection_errors_and_timeouts_are_retried_then_recover(self) -> None:
+        result, network = self.run_fetch(
+            {"github.com": [urllib.error.URLError("reset"), TimeoutError("slow"), self.body]}
+        )
+        self.assertEqual(result, self.body)
+        self.assertEqual(len(network.requests), 3)
+
+    def test_requests_are_pinned_to_official_hosts_and_the_exact_version(self) -> None:
+        for asset in (mod.ARCHIVE, mod.CHECKSUMS):
+            urls = [url for url, _ in mod.sources(asset, None)]
+            self.assertEqual(
+                urls[0],
+                f"https://github.com/rhysd/actionlint/releases/download/v{mod.VERSION}/{asset.name}",
+            )
+            self.assertEqual(
+                urls[1],
+                f"https://api.github.com/repos/rhysd/actionlint/releases/assets/{asset.asset_id}",
+            )
+            self.assertEqual(len(urls), 2)
+
     def test_wrong_checksum_on_every_source_exhausts(self) -> None:
         wrong = b"x" * len(self.body)
         with self.assertRaisesRegex(mod.InstallError, "exhausted"):
@@ -216,6 +236,17 @@ class InstallTests(unittest.TestCase):
                 with self.assertRaises((mod.InstallError, tarfile.TarError)):
                     mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
                 self.assertEqual(list(Path(tmp).iterdir()), [])
+
+    def test_failed_replace_leaves_no_temporary_file(self) -> None:
+        network = Network({"github.com": [self.sums, self.archive]})
+        with (
+            self.patched(),
+            tempfile.TemporaryDirectory() as tmp,
+            mock.patch.object(mod.os, "replace", side_effect=OSError("disk full")),
+        ):
+            with self.assertRaises(OSError):
+                mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
+            self.assertEqual(list(Path(tmp).iterdir()), [])
 
     def test_main_exit_codes(self) -> None:
         with contextlib.redirect_stderr(io.StringIO()):
