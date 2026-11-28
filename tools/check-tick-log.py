@@ -257,9 +257,12 @@ def _decode_column(column: str, value: object) -> object:
         return bool(value)
     if isinstance(value, str):
         try:
-            return json.loads(value)
+            decoded = json.loads(value)
         except json.JSONDecodeError:
-            return [value] if value.strip() else []
+            decoded = None
+        if isinstance(decoded, list):
+            return decoded
+        return [value.strip()] if value.strip() else []
     return [] if value is None else value
 
 

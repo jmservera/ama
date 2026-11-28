@@ -95,6 +95,18 @@ class SurfaceCoverage(unittest.TestCase):
                 self.assertNotRegex(text, r"^__test__\s*=\s*False", module)
 
 
+class EpicModulesStayActive(unittest.TestCase):
+    def test_epic_149_modules_define_tests_and_are_not_disabled(self) -> None:
+        modules = sorted(TESTS.glob("test_epic149_*.py"))
+        self.assertGreaterEqual(len(modules), 6)
+        for path in modules:
+            with self.subTest(module=path.name):
+                self.assertTrue(test_names(path.stem), f"{path.name} defines no tests")
+                text = path.read_text()
+                self.assertNotRegex(text, r"@unittest\.skip\b|skipTest\(")
+                self.assertNotRegex(text, r"^__test__\s*=\s*False")
+
+
 class RenderedChecksAreOptIn(unittest.TestCase):
     def test_rendered_axe_and_keyboard_checks_exist_but_are_not_counted_here(self) -> None:
         for name in ("design_system_browser_check", "case_view_ux_browser_check"):
