@@ -424,7 +424,7 @@ The planned timings have not been validated by a rehearsal.
 | Requested proof | Script window | Evidence needed before claiming it was demonstrated |
 | --- | --- | --- |
 | AI across the applicable lifecycle stages and document analysis | 02:35-04:25 and 06:10-07:00 | Actual model-origin output, source comparison and task/model provenance per shown example; contracts alone do not prove execution |
-| Observability of the conversation just held | 04:25-05:15 | Exact interaction-to-trace correlation and receipt in the authorized Azure view; monitoring button separately verified or disclosed absent |
+| Observability of the conversation just held | 04:25-05:15 | Exact interaction-to-trace correlation and receipt in the authorized Azure view; the staff AI observability view (Assistants, model-call metrics) and its Azure portal link are present from demo API revision 0000161, but the portal view needs a Reader role on Application Insights and Log Analytics; verify the link and the role before the rehearsal, or disclose either as absent |
 | Sensor readings and alerts | 05:15-06:10 | Authorized retained readings and an actual alert, or an explicitly labelled fixture; rule alerts and AI findings distinguished |
 | Employee prioritisation and issue resolution | 01:50-04:25 | Explainable queue, source-checked assistance and an authorized correction/next action; no claim of a fixed issue while evidence is outstanding |
 | Full process | 06:10-07:00 | Same-home stage records or labelled contracts with missing stages disclosed; a completed live lifecycle requires separate proof |
