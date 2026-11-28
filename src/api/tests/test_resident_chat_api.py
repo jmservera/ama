@@ -428,6 +428,21 @@ class ChatApiTests(DemoTestCase):
         advisor.answer.assert_not_called()
         advisor.answer_question.assert_not_called()
 
+    def test_consent_is_per_request_and_not_remembered_after_a_consented_answer(self) -> None:
+        status, body = self.ask(question="What is my case status?")
+        self.assertEqual(status, 200)
+        self.assertIn("answer", body)
+        for path, request in (
+            ("/demo/assistant", {"question": "What is my case status?"}),
+            ("/demo/assistant", {"topic": "status", "use_record": False}),
+            ("/demo/agenda", {"action": "list"}),
+        ):
+            with patch.object(self.reader, "fetch_case") as read:
+                status, result, _ = self.client_one.call("POST", path, request)
+                self.assertEqual(status, 400, path)
+                self.assertNotIn("answer", result)
+                read.assert_not_called()
+
     def test_own_home_consent_unknown_and_untrusted_questions(self) -> None:
         for question in ("my home", "What is my address?", "What is recorded about my home?"):
             status, body = self.ask(question=question)
