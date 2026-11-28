@@ -88,6 +88,11 @@ class FetchTests(unittest.TestCase):
         self.assertEqual(len(network.requests), 3)
         self.assertEqual(self.sleeps, [2.0, 5.0])
 
+    def test_429_is_retried_on_the_same_source(self) -> None:
+        result, network = self.run_fetch({"github.com": [http_error(429), self.body]})
+        self.assertEqual(result, self.body)
+        self.assertEqual(len(network.requests), 2)
+
     def test_browser_exhaustion_falls_back_to_official_api(self) -> None:
         result, network = self.run_fetch(
             {"github.com": [http_error(504)] * 3, "api.github.com": [self.body]}
@@ -180,6 +185,22 @@ class InstallTests(unittest.TestCase):
             with self.assertRaisesRegex(mod.InstallError, "pinned archive digest"):
                 mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
             self.assertEqual(list(Path(tmp).iterdir()), [])
+
+    def test_exhausted_checksums_never_request_the_archive(self) -> None:
+        network = Network(
+            {"github.com": [http_error(504)] * 3, "api.github.com": [http_error(504)] * 3}
+        )
+        with self.patched(), tempfile.TemporaryDirectory() as tmp:
+            with self.assertRaisesRegex(mod.InstallError, "exhausted"):
+                mod.install(Path(tmp), opener=network, sleep=lambda _: None, log=lambda _: None)
+            self.assertEqual(list(Path(tmp).iterdir()), [])
+        self.assertEqual(len(network.requests), 6)
+        self.assertTrue(
+            all(
+                self.sums_asset.name in r.full_url or "/assets/2" in r.full_url
+                for r in network.requests
+            )
+        )
 
     def test_archive_without_binary_or_invalid_archive_installs_nothing(self) -> None:
         for body in (make_archive({"README.md": b"x"}), b"not a tarball at all"):
