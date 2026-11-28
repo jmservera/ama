@@ -411,11 +411,15 @@ def _require_creatable(path: str) -> None:
 
 def _names(archive_dir: Path) -> list[str]:
     path = os.fspath(archive_dir)
+    if not path:
+        raise OSError(errno.ENOENT, "The archive location is empty")
     try:
         usable = stat.S_ISDIR(os.stat(path).st_mode)
     except FileNotFoundError:
         _require_creatable(path)
         return []
+    except ValueError:
+        raise OSError(errno.EINVAL, "The archive location is not a valid path") from None
     if not usable:
         raise NotADirectoryError(errno.ENOTDIR, "The archive location is not a folder")
     names = os.listdir(archive_dir)
