@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import inspect
 import unittest
 from collections.abc import Callable
 from typing import Any
 
-from checks.employee_chat_browser_check import settle_route, wait_for_skills
+from checks.employee_chat_browser_check import late_success, settle_route, wait_for_skills
 from playwright.sync_api import Error as PlaywrightError
 from playwright.sync_api import Page, sync_playwright
 
@@ -37,6 +38,13 @@ class SettleRouteTests(unittest.TestCase):
                 page: Any = RecordingPage()
                 settle_route(page, destination)
                 self.assertEqual(page.calls, [("load", "networkidle")])
+
+
+class LateSuccessOrderTests(unittest.TestCase):
+    def test_snapshot_is_taken_only_after_the_route_settles(self) -> None:
+        source = inspect.getsource(late_success)
+        self.assertIn("settle_route(", source)
+        self.assertLess(source.index("settle_route("), source.index("state.snapshot ="))
 
 
 DELAYED_ROUTE = """
