@@ -2,6 +2,7 @@
 
 import string
 import unittest
+from typing import Any
 
 from zava_forward.core import ai_prompts, ai_registry, assistants, task_contracts
 
@@ -83,6 +84,24 @@ class TaskContractTests(unittest.TestCase):
         system, prompt = assistants.build_request(task)  # type: ignore[no-untyped-call]
         self.assertTrue(system)
         self.assertIn("Survey booked", prompt)
+
+    def test_final_prompt_text_with_prohibited_content_is_not_dispatched(self) -> None:
+        from unittest import mock
+
+        from zava_forward.core.ai import Ai
+
+        ai: Any = Ai()  # type: ignore[no-untyped-call]
+        ai.endpoint = "https://provider.invalid"
+        ai.consumption = mock.Mock()
+        with mock.patch("urllib.request.urlopen") as urlopen:
+            out = ai.run(
+                "funding_draft", "sys", "Citable: Contact: rang jo@example.org", "TEMPLATE"
+            )
+        self.assertEqual((out["source"], out["text"]), ("template", "TEMPLATE"))
+        self.assertIn("email address", out["reason"])
+        self.assertNotIn("example.org", out["reason"])
+        ai.consumption.reserve.assert_not_called()
+        urlopen.assert_not_called()
 
     def test_contract_does_not_claim_approval(self) -> None:
         for contract in task_contracts.CONTRACTS.values():

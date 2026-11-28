@@ -819,7 +819,7 @@ class NominationApiRoutesTests(unittest.TestCase):
         with self.assertRaises(HTTPError) as refused:
             urlopen(req, timeout=10)
         self.assertEqual(refused.exception.code, 400)
-        self.assertEqual(json.loads(refused.exception.read())["error"], "Could not read that.")
+        self.assertIn("needs scripts turned on", json.loads(refused.exception.read())["error"])
         self.assertEqual(self.call_json("/api/cases/ZF-1", "sam")[1], before)
 
     def test_correction_and_challenge_writes_refuse_unsafe_requests_and_write_nothing(

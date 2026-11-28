@@ -140,6 +140,19 @@ def get(task_id: str) -> dict[str, Any] | None:
     return CONTRACTS.get(task_id) if isinstance(task_id, str) else None
 
 
+def prohibited_in(task_id: str, *texts: object) -> str | None:
+    """Label of the first prohibited content in a contracted task's final prompt text, else None."""
+    contract = get(task_id)
+    if contract is None:
+        return None
+    for text in texts:
+        if isinstance(text, str):
+            for label, pattern in PROHIBITED.items():
+                if label in contract["prohibited_content"] and pattern.search(text):
+                    return label
+    return None
+
+
 def enforce(task_id: str, values: Mapping[str, object], *, user_permission: bool = False) -> None:
     """Refuse before a prompt is built. user_permission is accepted and deliberately ignored."""
     contract = get(task_id)

@@ -1950,6 +1950,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     actor = self._user()
                     if actor:
                         app.store.audit(actor["email"], "bulk_edit_rejected", "-", "Malformed bulk request object.")
+                if (self.headers.get("Content-Type") or "").split(";")[0].strip().lower() == "application/x-www-form-urlencoded":
+                    return self._json(400, {"error": "This form needs scripts turned on to send. Nothing was recorded; turn scripts on and try again, or use the manual route."})
                 return self._json(400, {"error": "Could not read that."})
             if url.path == "/api/login":
                 if not hasattr(app.provider, "login"):
