@@ -633,6 +633,73 @@ def region_confirmation(record):
                 deployments=[{f: d.get(f) for f in _DEPLOYMENT_FIELDS} for d in deployments], missing=missing)
 
 
+def _catalogue_sku(models, model, version, sku):
+    """The catalogue model entry and SKU row for a deployed model, version and SKU, or (None, None)."""
+    for entry in models:
+        m = entry.get("model") or {}
+        if m.get("name") == model and m.get("version") == version:
+            for s in m.get("skus") or []:
+                if s.get("name") == sku:
+                    return m, s
+    return None, None
+
+
+def build_serving_region_record(region, account, deployments, usage, models, retrieved_on, source):
+    """Derive a serving-region record from raw `az cognitiveservices` JSON.
+
+    `deployments`, `usage` and `models` are the parsed outputs of `deployment list`, `usage list`
+    and `model list`. Quota headroom is computed, not asserted: each deployment resolves through
+    the catalogue `usageName` to a usage row, and the status is `confirmed` only when every row
+    resolves, is not above its limit, covers the deployed capacity, and no model is past its
+    inference deprecation date at `retrieved_on`. Otherwise it is `unavailable` with reasons.
+    """
+    rows = {u["name"]["value"]: u for u in usage if (u.get("name") or {}).get("value")}
+    out, quota_rows, reasons = [], {}, []
+    for d in sorted(deployments, key=lambda x: x.get("name") or ""):
+        p = d.get("properties") or {}
+        m = p.get("model") or {}
+        sku = d.get("sku") or {}
+        limits = {r.get("key"): r.get("count") for r in p.get("rateLimits") or []}
+        out.append(dict(
+            name=d.get("name"), model=m.get("name"), version=m.get("version"), sku=sku.get("name"),
+            capacity=sku.get("capacity"),
+            rate_limits=dict(requests_per_minute=int(limits["request"]) if "request" in limits else None,
+                             tokens_per_minute=int(limits["token"]) if "token" in limits else None),
+            state=p.get("provisioningState")))
+        entry, cat_sku = _catalogue_sku(models, m.get("name"), m.get("version"), sku.get("name"))
+        if not entry:
+            reasons.append(f"{d.get('name')}: not offered in the {region} catalogue at {m.get('version')} ({sku.get('name')})")
+            continue
+        deprecated = (entry.get("deprecation") or {}).get("inference") or ""
+        if deprecated and deprecated[:10] <= retrieved_on:
+            reasons.append(f"{d.get('name')}: model past inference deprecation {deprecated[:10]}")
+        row = rows.get(cat_sku.get("usageName"))
+        if not row:
+            reasons.append(f"{d.get('name')}: no usage row {cat_sku.get('usageName')}")
+            continue
+        slot = quota_rows.setdefault(row["name"]["value"], dict(
+            name=row["name"]["value"], current=int(row["currentValue"]), limit=int(row["limit"]),
+            scope=row.get("scopeType"), deployment=[]))
+        slot["deployment"].append(d.get("name"))
+    for slot in quota_rows.values():
+        deployed = sum(x["capacity"] or 0 for x in out if x["name"] in slot["deployment"])
+        if slot["current"] > slot["limit"]:
+            reasons.append(f"{slot['name']}: current {slot['current']} above limit {slot['limit']}")
+        if slot["current"] < deployed:
+            reasons.append(f"{slot['name']}: current {slot['current']} below deployed capacity {deployed}")
+        slot["headroom"] = slot["limit"] - slot["current"]
+        slot["deployment"] = ", ".join(slot["deployment"])
+    if not out:
+        reasons.append("no deployments")
+    return dict(
+        region=region, account=f"{account.get('name')} ({account.get('kind')}, {account.get('location')})",
+        retrieved_on=retrieved_on, source=source, deployments=out,
+        quota_headroom=dict(status="unavailable" if reasons else "confirmed",
+                            source="az cognitiveservices usage list, resolved through the catalogue usageName",
+                            scope="subscription quota rows for the served SKUs; not a live call, accuracy or benefit claim",
+                            rows=sorted(quota_rows.values(), key=lambda r: r["name"]), reasons=reasons))
+
+
 def evidence_gate(raw, summary, scripted=True, coverage=None, serving_region=None):
     """Frozen-input hashes, per-task coverage and the claims this run may and may not support."""
     ms = summary["models"]
@@ -738,6 +805,16 @@ def run_eval(golden=GOLDEN, serving_region=None):
 def main(argv=None):
     args = sys.argv[1:] if argv is None else list(argv)
     region = None
+    if "--build-region" in args:
+        i = args.index("--build-region")
+        if len(args) < i + 8:
+            print("usage: --build-region REGION RETRIEVED_ON ACCOUNT.json DEPLOYMENTS.json USAGE.json MODELS.json SOURCE", file=sys.stderr)
+            return 2
+        reg, on, acc, dep, use, mod, src = args[i + 1:i + 8]
+        load = lambda p: json.loads(Path(p).read_text(encoding="utf-8"))
+        record = build_serving_region_record(reg, load(acc), load(dep), load(use), load(mod), on, src)
+        print(json.dumps(record, indent=1))
+        return 0 if record["quota_headroom"]["status"] == "confirmed" else 1
     if "--deployments" in args:
         region = json.loads(Path(args[args.index("--deployments") + 1]).read_text(encoding="utf-8"))
     rep = run_eval(serving_region=region)

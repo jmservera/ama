@@ -534,3 +534,60 @@ class ClosureAuditDocTests(unittest.TestCase):
         self.assertEqual(missing, [])
         for phrase in ("eb51af5c9ab0b1353ac380fc8960ee8dd96d17c4", "not on main", "Refs #108"):
             self.assertIn(phrase, text)
+
+
+RETRIEVAL = (
+    Path(__file__).resolve().parents[3] / "docs/reference/research/issue-108-live-20261128-2026-11-28"
+)
+
+
+class BuildServingRegionRecordTests(unittest.TestCase):
+    def inputs(self):
+        return [
+            json.loads((RETRIEVAL / n).read_text())
+            for n in ("account.json", "deployments.json", "usage.json", "models.json")
+        ]
+
+    def build(self, account, deployments, usage, models, on="2026-11-28"):
+        return ai_eval.build_serving_region_record("uksouth", account, deployments, usage, models, on, "az")
+
+    def test_headroom_is_computed_from_the_live_retrieval_and_passes_the_gate(self):
+        record = self.build(*self.inputs())
+        self.assertEqual(record["quota_headroom"]["status"], "confirmed")
+        self.assertEqual(
+            {r["name"]: r["headroom"] for r in record["quota_headroom"]["rows"]},
+            {"OpenAI.GlobalStandard.gpt4.1-nano": 15990, "OpenAI.Standard.gpt4.1-mini": 4990},
+        )
+        self.assertEqual(ai_eval.region_confirmation(record)["status"], "confirmed")
+        stored = json.loads((RETRIEVAL / "serving_region_record.json").read_text())
+        self.assertEqual(stored, record | dict(source=stored["source"]))
+
+    def test_unresolvable_or_exhausted_quota_is_never_confirmed(self):
+        account, deployments, usage, models = self.inputs()
+        broken = [u for u in usage if u["name"]["value"] != "OpenAI.Standard.gpt4.1-mini"]
+        record = self.build(account, deployments, broken, models)
+        self.assertEqual(record["quota_headroom"]["status"], "unavailable")
+        self.assertIn("resident-mini: no usage row", record["quota_headroom"]["reasons"][0])
+        self.assertEqual(ai_eval.region_confirmation(record)["status"], "partial")
+        for u in usage:
+            if u["name"]["value"] == "OpenAI.GlobalStandard.gpt4.1-nano":
+                u["currentValue"] = u["limit"] + 1
+        over = self.build(account, deployments, usage, models)
+        self.assertTrue(any("above limit" in r for r in over["quota_headroom"]["reasons"]))
+
+    def test_deprecated_model_or_missing_catalogue_entry_blocks_confirmation(self):
+        account, deployments, usage, models = self.inputs()
+        late = self.build(account, deployments, usage, models, on="2027-04-14")
+        self.assertTrue(any("deprecation" in r for r in late["quota_headroom"]["reasons"]))
+        absent = self.build(account, deployments, usage, [])
+        self.assertTrue(any("not offered" in r for r in absent["quota_headroom"]["reasons"]))
+        self.assertEqual(self.build(account, [], usage, models)["quota_headroom"]["status"], "unavailable")
+
+    def test_cli_builds_the_record_and_signals_unconfirmed_headroom(self):
+        paths = [str(RETRIEVAL / n) for n in ("account.json", "deployments.json", "usage.json", "models.json")]
+        with mock.patch("builtins.print") as out:
+            rc = ai_eval.main(["--build-region", "uksouth", "2026-11-28", *paths, "az"])
+        self.assertEqual(rc, 0)
+        self.assertEqual(json.loads(out.call_args[0][0])["quota_headroom"]["status"], "confirmed")
+        with mock.patch("builtins.print"):
+            self.assertEqual(ai_eval.main(["--build-region", "uksouth"]), 2)

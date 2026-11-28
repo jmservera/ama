@@ -1,0 +1,56 @@
+{
+ "region": "uksouth",
+ "account": "aif-cutover-test-rzsrg (AIServices, uksouth)",
+ "retrieved_on": "2026-11-28",
+ "source": "az cognitiveservices deployment list, usage list and model list, resource group ama, 2026-11-28",
+ "deployments": [
+  {
+   "name": "resident-mini",
+   "model": "gpt-4.1-mini",
+   "version": "2025-04-14",
+   "sku": "Standard",
+   "capacity": 10,
+   "rate_limits": {
+    "requests_per_minute": 10,
+    "tokens_per_minute": 10000
+   },
+   "state": "Succeeded"
+  },
+  {
+   "name": "standard",
+   "model": "gpt-4.1-nano",
+   "version": "2025-04-14",
+   "sku": "GlobalStandard",
+   "capacity": 10,
+   "rate_limits": {
+    "requests_per_minute": 10,
+    "tokens_per_minute": 10000
+   },
+   "state": "Succeeded"
+  }
+ ],
+ "quota_headroom": {
+  "status": "confirmed",
+  "source": "az cognitiveservices usage list, resolved through the catalogue usageName",
+  "scope": "subscription quota rows for the served SKUs; not a live call, accuracy or benefit claim",
+  "rows": [
+   {
+    "name": "OpenAI.GlobalStandard.gpt4.1-nano",
+    "current": 10,
+    "limit": 16000,
+    "scope": "Global",
+    "deployment": "standard",
+    "headroom": 15990
+   },
+   {
+    "name": "OpenAI.Standard.gpt4.1-mini",
+    "current": 10,
+    "limit": 5000,
+    "scope": "Regional",
+    "deployment": "resident-mini",
+    "headroom": 4990
+   }
+  ],
+  "reasons": []
+ }
+}
