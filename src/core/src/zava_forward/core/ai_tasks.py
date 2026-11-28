@@ -588,6 +588,14 @@ def _mean_seconds(bucket):
     return round(bucket["total_seconds"] / bucket["timed"], 2) if bucket["timed"] else None
 
 
+def _effort_delta_seconds(by_source):
+    """AI mean review time minus workflow-only mean, or None unless both are timed."""
+    ai, wf = by_source.get("ai"), by_source.get("workflow")
+    if not (ai and wf and ai["timed"] and wf["timed"]):
+        return None
+    return round(_mean_seconds(ai) - _mean_seconds(wf), 2)
+
+
 def live_report(store, user=None, *, start=None, end=None, as_of=None, assistants_service=None):
     """Reviewer outcomes, fallback reasons and AI consumption economics recorded so far."""
     from . import rai_control_plane
@@ -655,6 +663,7 @@ def live_report(store, user=None, *, start=None, end=None, as_of=None, assistant
             k: dict(
                 v,
                 mean_seconds=_mean_seconds(v),
+                effort_delta_seconds=_effort_delta_seconds(v["by_source"]),
                 by_source={s: dict(b, mean_seconds=_mean_seconds(b)) for s, b in v["by_source"].items()},
             )
             for k, v in effort.items()
