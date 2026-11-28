@@ -65,6 +65,21 @@ class OfferedHandoffVisibility(unittest.TestCase):
                 with self.subTest(role="Quality Inspector", state=state):
                     self.assertEqual(store.unaccepted_handoffs(staff["quin"], as_of=AS_OF), [])
 
+    def test_case_card_judges_an_old_offer_on_the_same_clock_as_the_waiting_list(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            store, staff, cid = self._store(tmp)
+            with change_provenance.controlled(store, staff["sam"], cid) as (c, actor):
+                c["handoff"]["offered_at"] = "2020-01-01T09:00+00:00"
+                c["handoff"]["due_at"] = "2020-01-04T09:00+00:00"
+                store._save_workflow(actor, "test_old_offer", cid, "old offer")
+            store.as_of = "2020-01-02"
+            card = store.detail(cid, staff["pam"])["handoff"]
+            row = store.unaccepted_handoffs(staff["pam"])[0]
+            self.assertTrue(card["overdue"])
+            self.assertTrue(card["needs_escalation"])
+            self.assertTrue(row["needs_escalation"])
+            self.assertGreater(card["elapsed_hours"], 24 * 365)
+
 
 if __name__ == "__main__":
     unittest.main()
