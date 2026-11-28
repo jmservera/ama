@@ -1,6 +1,8 @@
 """Behaviour tests for tools/check-deployed-image-provenance.py (Issue #203)."""
 
+import contextlib
 import importlib.util
+import io
 import subprocess
 import tempfile
 import unittest
@@ -68,6 +70,23 @@ class ProvenanceTests(unittest.TestCase):
         side = commit(self.root, {DOCKERFILE: "FROM busybox\n"})
         git(self.root, "checkout", "-q", "-")
         self.assertEqual(self.check(f"r/x:demo-{side}"), "failed")
+
+    def test_main_exit_codes(self):
+        sha = commit(self.root, {DOCKERFILE: "FROM scratch\n"})
+        good = f"r/x:demo-{sha}"
+        pin = "r/x@sha256:" + "a" * 64
+
+        def run(*images: str) -> int:
+            argv = ["--root", str(self.root)]
+            for image in images:
+                argv += ["--image", image]
+            with contextlib.redirect_stdout(io.StringIO()):
+                return tool.main(argv)
+
+        self.assertEqual(run(good), 0)
+        self.assertEqual(run(good, pin), 2)
+        self.assertEqual(run(good, "r/x:demo-deadbeef12"), 1)
+        self.assertEqual(run(pin, "r/x:demo-deadbeef12"), 1)
 
 
 if __name__ == "__main__":

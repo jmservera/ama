@@ -1,11 +1,15 @@
+import contextlib
 import copy
+import io
 import json
+import os
 import tempfile
 import threading
 import unittest
 from copy import deepcopy
 from pathlib import Path
 from typing import Any
+from unittest import mock
 
 import dataset as _dataset
 from zava_forward.core import change_provenance
@@ -106,6 +110,62 @@ class DemoHandoffDueSeed(unittest.TestCase):
         )
         self.assertEqual(shown["due_at"], "2026-10-16T08:00+00:00")
         self.assertEqual(shown["elapsed_hours"], 25.0)
+
+
+class SeedEdges(unittest.TestCase):
+    def test_every_pending_state_is_seeded_and_junk_times_are_skipped(self) -> None:
+        store = FakeStore(
+            {
+                "R": case("R", state="Received"),
+                "E": case("E", state="Escalated"),
+                "B": case("B", offered_at="not a time"),
+                "N": case("N", offered_at=None),
+                "D": case("D", state="Declined"),
+            }
+        )
+        report = seed.run(store, apply=True)
+        self.assertEqual(report["handoffs_to_write"], 2)
+        self.assertEqual(
+            report["skipped"],
+            {"offer_time_missing_or_already_aware": 2, "no_pending_handoff": 1},
+        )
+        self.assertEqual(store.cases["B"]["handoff"]["offered_at"], "not a time")
+        self.assertIsNone(store.cases["N"]["handoff"]["offered_at"])
+
+    def test_winter_wall_time_uses_greenwich_offset_and_summer_uses_bst(self) -> None:
+        store = FakeStore({"W": case("W", offered_at="2026-12-01T09:00")})
+        seed.run(store, apply=True)
+        handoff = store.cases["W"]["handoff"]
+        self.assertEqual(handoff["offered_at"], "2026-12-01T09:00+00:00")
+        self.assertEqual(handoff["due_at"], "2026-12-04T09:00+00:00")
+
+    def test_revert_keeps_a_due_time_it_did_not_seed(self) -> None:
+        store = FakeStore({"K": case("K", due_at="2026-10-20T10:00+00:00")})
+        seed.run(store, apply=True)
+        seed.revert(store)
+        self.assertEqual(store.cases["K"]["handoff"]["due_at"], "2026-10-20T10:00+00:00")
+        self.assertNotIn(seed.MARK, store.cases["K"]["handoff"])
+        self.assertEqual(seed.revert(store), {"handoffs_reverted": 0, "applied": False})
+
+    def test_cli_rejects_bad_arguments_and_missing_store_without_opening_one(self) -> None:
+        with mock.patch.dict(os.environ, {"ZF_STORE": "memory"}):
+            self.assertEqual(seed.main(["apply", "extra"]), 2)
+            self.assertEqual(seed.main(["wipe"]), 2)
+            self.assertEqual(seed.main(["inspect"]), 2)
+
+    def test_cli_inspect_prints_counts_only(self) -> None:
+        store = FakeStore({"C1": case("C1")})
+        out = io.StringIO()
+        with (
+            mock.patch.dict(os.environ, {"ZF_STORE": "sqlite"}),
+            mock.patch("zava_forward.core.factory.open_store", return_value=store),
+            contextlib.redirect_stdout(out),
+        ):
+            self.assertEqual(seed.main(["inspect"]), 0)
+        printed = json.loads(out.getvalue())
+        self.assertEqual((printed["handoffs_to_write"], printed["applied"]), (1, False))
+        self.assertNotIn("Miguel", out.getvalue())
+        self.assertEqual(store.saves, 0)
 
 
 class RealStoreSeed(unittest.TestCase):
