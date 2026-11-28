@@ -1252,5 +1252,172 @@ class RejectionBoundaries(unittest.TestCase):
             rights_status([row], datetime(2026, 11, 28))
 
 
+class RightsLedgerBoundaries(unittest.TestCase):
+    """In-memory ledger refusals: rights requests stay logged, bounded and human-owned (#121)."""
+
+    RECEIVED = "2026-10-01T09:00:00+00:00"
+
+    def _ledger(self) -> RightsRequestLedger:
+        ledger = RightsRequestLedger()
+        ledger.record_request(
+            request_id="R-1",
+            kind="erasure",
+            subject_key="staff-42",
+            received_at=self.RECEIVED,
+            actor="jo.officer",
+        )
+        return ledger
+
+    def test_record_request_rejects_each_malformed_shape(self) -> None:
+        base: dict[str, Any] = {
+            "request_id": "R-2",
+            "kind": "access",
+            "subject_key": "staff-42",
+            "received_at": self.RECEIVED,
+            "actor": "jo.officer",
+        }
+        bad: list[dict[str, Any]] = [
+            {"request_id": "R-1"},
+            {"request_id": "SYNTH-9"},
+            {"kind": "sell"},
+            {"subject_population": "everyone"},
+            {"actor": "SYNTH-bot"},
+            {"actor": "ai"},
+            {"notes_ref": "n" * 201},
+            {"received_at": "2026-10-01T09:00:00"},
+            {"request_id": " "},
+        ]
+        ledger = self._ledger()
+        for override in bad:
+            with self.subTest(override=override):
+                with self.assertRaises(ValueError):
+                    ledger.record_request(**{**base, **override})
+        self.assertEqual(len(ledger.requests()), 1)
+
+    def test_unknown_request_raises_key_error(self) -> None:
+        ledger = self._ledger()
+        with self.assertRaises(KeyError):
+            ledger.get("R-404")
+        with self.assertRaises(KeyError):
+            ledger.log_action(
+                "R-404", action="locate", actor="jo.officer", at="2026-10-02T09:00:00+00:00"
+            )
+        with self.assertRaises(KeyError):
+            ledger.answer_request(
+                "R-404", answered_at="2026-10-02T09:00:00+00:00", actor="jo.officer"
+            )
+
+    def test_log_action_rejects_bad_inputs_and_provider_erasure_claims(self) -> None:
+        ledger = self._ledger()
+        good: dict[str, Any] = {
+            "action": "erase",
+            "actor": "jo.officer",
+            "at": "2026-10-02T09:00:00+00:00",
+        }
+        bad: list[dict[str, Any]] = [
+            {"action": "shred"},
+            {"actor": "ai"},
+            {"record_count": -1},
+            {"record_count": True},
+            {"action": "locate", "local_deleted": True},
+            {"at": "2026-09-30T09:00:00+00:00"},
+            {"at": "2026-10-02T09:00:00"},
+            {"provider_erasure_confirmed": True},
+        ]
+        for override in bad:
+            with self.subTest(override=override):
+                with self.assertRaises(ValueError):
+                    ledger.log_action("R-1", **{**good, **override})
+        self.assertEqual(ledger.get("R-1")["actions"], [])
+        entry = ledger.log_action("R-1", **good, local_deleted=True, record_count=3)
+        self.assertFalse(entry["provider_erasure_confirmed"])
+        self.assertTrue(entry["local_deleted"])
+
+    def test_answer_request_rejects_bad_inputs_and_keeps_provider_flag_false(self) -> None:
+        ledger = self._ledger()
+        answered = "2026-10-05T09:00:00+00:00"
+        with self.assertRaises(ValueError):
+            ledger.answer_request(
+                "R-1", answered_at=answered, actor="jo.officer", provider_erasure_confirmed=True
+            )
+        with self.assertRaises(ValueError):
+            ledger.answer_request(
+                "R-1", answered_at="2026-09-01T00:00:00+00:00", actor="jo.officer"
+            )
+        with self.assertRaises(ValueError):
+            ledger.answer_request(
+                "R-1", answered_at=answered, actor="jo.officer", summary_ref="s" * 201
+            )
+        with self.assertRaises(ValueError):
+            ledger.answer_request("R-1", answered_at=answered, actor="review-bot")
+        row = ledger.answer_request(
+            "R-1",
+            answered_at=answered,
+            actor="jo.officer",
+            local_deleted=True,
+            audit_retention_refusal="Article 17(3) audit retention",
+        )
+        self.assertTrue(row["within_one_month"])
+        self.assertFalse(row["provider_erasure_confirmed"])
+        self.assertEqual(row["audit_retention_refusal"], "Article 17(3) audit retention")
+
+    def test_serialised_ledger_rejects_provider_erasure_and_non_objects(self) -> None:
+        with self.assertRaises(ValueError):
+            RightsRequestLedger.from_dict({"provider_erasure_confirmed": True})
+        with self.assertRaises(ValueError):
+            RightsRequestLedger.from_dict({"requests": "R-1"})
+        with self.assertRaises(ValueError):
+            RightsRequestLedger.from_json("[]")
+        restored = RightsRequestLedger.from_json(self._ledger().to_json())
+        self.assertEqual([r["request_id"] for r in restored.requests()], ["R-1"])
+
+    def test_module_helpers_refuse_unsupported_targets(self) -> None:
+        with self.assertRaises(TypeError):
+            record_rights_request(
+                object(),
+                request_id="R-9",
+                kind="access",
+                subject_key="staff-42",
+                received_at=self.RECEIVED,
+            )
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "ledger.json"
+            record_rights_request(
+                path,
+                request_id="R-9",
+                kind="access",
+                subject_key="staff-42",
+                received_at=self.RECEIVED,
+                actor="jo.officer",
+            )
+            report = rights_status(path, datetime(2026, 10, 2, tzinfo=UTC))
+            self.assertTrue(report["persisted"])
+            self.assertEqual(report["requests"][0]["state"], "open")
+
+    def test_status_separates_late_answers_and_refuses_confirmed_provider_erasure(self) -> None:
+        now = datetime(2026, 12, 15, tzinfo=UTC)
+        rows: list[dict[str, Any]] = [
+            {
+                "request_id": "A",
+                "kind": "access",
+                "received_at": "2026-10-01T00:00:00+00:00",
+                "answered_at": "2026-12-01T00:00:00+00:00",
+            },
+            {
+                "request_id": "B",
+                "kind": "access",
+                "received_at": "2026-10-01T00:00:00+00:00",
+                "answered_at": "2026-10-20T00:00:00+00:00",
+            },
+            {"request_id": "C", "kind": "erasure", "received_at": "2026-12-10T00:00:00+00:00"},
+        ]
+        report = rights_status(rows, now)
+        states = {r["id"]: r["state"] for r in report["requests"]}
+        self.assertEqual(states, {"A": "answered_late", "B": "answered", "C": "open"})
+        self.assertFalse(report["note"].startswith("Persisted"))
+        with self.assertRaises(ValueError):
+            rights_status([{**rows[0], "provider_erasure_confirmed": True}], now)
+
+
 if __name__ == "__main__":
     unittest.main()
