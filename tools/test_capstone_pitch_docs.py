@@ -135,6 +135,32 @@ class CapstonePitchDocsTest(unittest.TestCase):
         self.assertIn("not a saving", text)
         self.assertIn("Cost per accepted outcome | Unknown | Unknown | Unknown", text)
 
+    def test_cost_per_home_figures_follow_from_their_stated_inputs(self) -> None:
+        text = (CAPSTONE / "pitch" / "tokenomics-cost-per-home-vs-value.md").read_text(
+            encoding="utf-8"
+        )
+        per_home = Decimal(275_360) * Decimal("1.60") / Decimal(1_000_000)
+        derived = {
+            "0.440576": per_home,
+            "6,872.9856": per_home * 15_600,
+            "0.881152": per_home * 2,
+            "47,439,600": Decimal(3041) * 15_600,
+            "210.17": (Decimal(2522) / 12).quantize(Decimal("0.01")),
+        }
+        for quoted, value in derived.items():
+            self.assertIn(quoted, text)
+            self.assertEqual(Decimal(quoted.replace(",", "")), value, quoted)
+
+    def test_cost_per_home_page_keeps_gaps_unknown_and_claims_out(self) -> None:
+        text = (CAPSTONE / "pitch" / "tokenomics-cost-per-home-vs-value.md").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("No saving, payback or return can be stated", text)
+        lines = text.splitlines()
+        for row in ("Measured cost per home", "Settled cost per home", "Time saved"):
+            line = next(ln for ln in lines if ln.startswith(f"| {row}"))
+            self.assertIn("Unknown", line, row)
+
 
 if __name__ == "__main__":
     unittest.main()

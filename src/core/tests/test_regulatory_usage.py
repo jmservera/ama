@@ -8,7 +8,13 @@ from typing import Any
 from unittest import mock
 
 from zava_forward.core import regulatory_usage
-from zava_forward.core.regulatory_usage import economics, offline_usage, summarize, usage_metering
+from zava_forward.core.regulatory_usage import (
+    chat_cost_record,
+    economics,
+    offline_usage,
+    summarize,
+    usage_metering,
+)
 
 AT = "2026-10-16T12:00:00+00:00"
 ROLE = "Resident Liaison Officer"
@@ -114,6 +120,40 @@ class RegulatoryUsage(unittest.TestCase):
         ):
             with self.assertRaises(ValueError):
                 offline_usage(*args)
+
+    def test_priced_chat_cost_floors_minor_units_and_keeps_price_identity(self) -> None:
+        usage = offline_usage("regulatory-home-chat", "regulatory-chat-v1", "answer", AT)
+        usage.update(input_tokens=1500, output_tokens=999)
+        schedule = dict(
+            price_version="synth-2026-11",
+            currency="GBP",
+            input_minor_per_1k=3,
+            output_minor_per_1k=7,
+        )
+        priced = chat_cost_record(usage, "turn-1", price_schedule=schedule)
+        self.assertEqual(priced["cost"], "calculated")
+        self.assertEqual(priced["cost_minor_units"], 11)
+        self.assertEqual(priced["price_version"], "synth-2026-11")
+        self.assertEqual(priced["currency"], "GBP")
+        self.assertEqual(priced["input_tokens"], 1500)
+
+        unpriced = chat_cost_record(usage, "turn-1")
+        self.assertEqual(unpriced["cost"], "Unknown")
+        self.assertIsNone(unpriced["cost_minor_units"])
+
+    def test_price_schedule_rates_must_be_non_negative_integers(self) -> None:
+        usage = offline_usage("regulatory-home-chat", "regulatory-chat-v1", "answer", AT)
+        base: dict[str, Any] = dict(price_version="synth-2026-11", currency="GBP")
+        for bad in (-1, True, 1.5, None):
+            with self.subTest(rate=bad):
+                schedule = base | dict(input_minor_per_1k=bad, output_minor_per_1k=1)
+                with self.assertRaisesRegex(ValueError, "non-negative integers"):
+                    chat_cost_record(usage, "turn-1", price_schedule=schedule)
+
+    def test_cost_record_uses_supplied_occurred_at(self) -> None:
+        usage = offline_usage("regulatory-home-chat", "regulatory-chat-v1", "answer", AT)
+        at = "2026-10-17T08:30:00+00:00"
+        self.assertEqual(chat_cost_record(usage, "turn-1", occurred_at=at)["occurred_at"], at)
 
 
 if __name__ == "__main__":
