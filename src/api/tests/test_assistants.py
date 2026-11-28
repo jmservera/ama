@@ -1190,6 +1190,21 @@ class ReviewTests(Base):
                 with self.assertRaises(PermissionError):
                     self.service.authorize(db, dict(user, view_only=True), "stock-prioritisation", case_id)
 
+    def test_principal_bound_by_identity_bind_is_scoped_and_view_only_denied(self):
+        seed = self.bound_entra(case_ids=["ZF-2"])
+        raw = identity.principal(seed["tid"], seed["oid"], "Retrofit Programme Manager")
+        user = identity.bind(self.store, raw)
+        self.assertEqual(user["bound"], seed["bound"])
+        with self.service.transaction() as db:
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, user, "stock-prioritisation", "ZF-1")
+            self.assertEqual(self.service.authorize(db, user, "stock-prioritisation", "ZF-2")["id"], "ZF-2")
+        view_only = identity.bind(self.store, dict(raw, view_only=True))
+        self.assertTrue(view_only["view_only"])
+        with self.service.transaction() as db:
+            with self.assertRaises(PermissionError):
+                self.service.authorize(db, view_only, "stock-prioritisation", "ZF-2")
+
     def test_independent_qa_reviewer_and_separate_human_verification(self):
         self.case(lambda c: c.update(quality=[dict(measure="Loft insulation", state="Submitted",
                                                  recorded_by=self.pm["name"], recorded_by_code=self.pm["code"], items=[])]))
