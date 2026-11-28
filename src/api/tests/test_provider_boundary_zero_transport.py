@@ -110,6 +110,20 @@ class ProviderBoundaryZeroTransport(unittest.TestCase):
         self.assertEqual(out["outcome"], "input-refused")
         self.assert_nothing_sent()
 
+    def test_captured_readings_reach_the_meter_only_under_the_demo_opt_in(self) -> None:
+        opt_in = {
+            "ZF_DEPLOYMENT_PROFILE": "demo",
+            "ZF_DEMO_SENSOR_MODEL_DISPATCH": "synthetic-demo-only",
+        }
+        with ai_consumption.captured_readings():
+            self.assertEqual(self.ai.evidence("sys", "ok")["outcome"], "suspended-before-dispatch")
+            with mock.patch.dict("os.environ", opt_in):
+                self.assertNotEqual(
+                    self.ai.evidence("sys", "ok")["outcome"], "suspended-before-dispatch"
+                )
+        self.assertEqual(self.meter.reserved, 1)
+        self.urlopen.assert_not_called()
+
     def test_held_out_provider_refuses_before_building_a_request(self) -> None:
         opener = mock.Mock()
         call = heldout_aoai.make_provider(

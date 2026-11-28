@@ -234,7 +234,7 @@ class Ai:
     def _request_body(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
         approved_payload(system, user)
         seal = ai_consumption.SIMULATION_SEAL.get()
-        if ai_consumption.CAPTURED_READINGS.get() and seal is None:
+        if ai_consumption.CAPTURED_READINGS.get() and seal is None and not demo_sensor_dispatch():
             raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
         body = self.provider_body(system, user, max_tokens, temperature)
         if seal is not None:
