@@ -2776,6 +2776,32 @@ class JsonResidentDecisions(unittest.TestCase):
             )
         )
 
+    def test_service_route_writers_cannot_alter_protected_case_state(self) -> None:
+        self.scope()
+        self.action(
+            "service_open",
+            route="Service request",
+            summary="SYN",
+            desired_outcome="Speak to a person",
+            next_update="2099-01-01",
+            service_owner=self.pam["email"],
+            redress_owner=self.rae["email"],
+        )
+        original = self.store._res_service_update
+
+        def alters_hazard_clock(user: Any, case: Any, body: Any) -> str:
+            detail = original(user, case, body)
+            case["closed"] = True
+            return cast(str, detail)
+
+        update = dict(
+            action="service_update", id="SR-1", status="Resolved", next_update="2099-01-01"
+        )
+        with patch.object(self.store, "_res_service_update", alters_hazard_clock):
+            self.unchanged_failure(lambda: self.store.resident_action(self.pam, "ZF-1", update))
+        self.store.resident_action(self.pam, "ZF-1", update)
+        self.assertEqual(self.store.cases["ZF-1"]["service_requests"][0]["status"], "Resolved")
+
     def test_redress_independence_no_detriment_and_closed_case_access(self) -> None:
         self.scope()
         self.answer(status="Paused")
