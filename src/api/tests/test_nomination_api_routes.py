@@ -19,7 +19,10 @@ from urllib.request import Request, urlopen
 from tests.test_mvp import DATA
 from zava_forward.core.sqlstore import SqlStore
 
+from source_isolation import assert_source_isolated
 from zava_forward.api.server import App, make_handler
+
+assert_source_isolated("test_nomination_api_routes")
 
 
 class _AccessibleFormInspector(HTMLParser):

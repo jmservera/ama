@@ -84,10 +84,15 @@ def check_ticks(rows: list[dict[str, Any]], require_extended: bool = False) -> l
     ordered = sorted(rows, key=lambda r: r.get("tick") if isinstance(r.get("tick"), int) else -1)
     seen_items: set[str] = set()
     streak = 0
+    seen_ticks: set[int] = set()
     for row in ordered:
         tick = row.get("tick")
         if not isinstance(tick, int) or isinstance(tick, bool):
             violations.append(Violation(tick, "schema", "tick must be an integer"))
+        elif tick in seen_ticks:
+            violations.append(Violation(tick, "duplicate-tick", "tick number appears twice"))
+        else:
+            seen_ticks.add(tick)
         if not isinstance(row.get("counts"), dict):
             violations.append(Violation(tick, "schema", "counts object is required"))
         if require_extended:
@@ -175,6 +180,17 @@ def _check_approvals(row: dict[str, Any], tick: object) -> list[Violation]:
             expired_allowed = allowed
         else:
             granted_allowed = allowed
+    for task in sorted(expired_allowed & granted_allowed):
+        found.append(
+            Violation(tick, "approval-conflict", f"task {task} both expired and granted this tick")
+        )
+    for move in moves:
+        if move.get("to") == "ready" and str(move.get("task")) in expired_allowed:
+            found.append(
+                Violation(
+                    tick, "approval-conflict", f"task {move.get('task')} made ready after expiry"
+                )
+            )
     for move in moves:
         task = str(move.get("task"))
         if move.get("to") == "human-blocked" and task not in expired_allowed:
