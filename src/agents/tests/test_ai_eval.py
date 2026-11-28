@@ -54,7 +54,11 @@ class AiEvalTests(unittest.TestCase):
             rec = real(store, user, n, mode)
             if mode != "workflow":
                 i = len(returned) + 1
-                rec.update(model=f"returned-model-{i}", prompt_version=f"returned-prompt-{i}", latency_ms=i * 11.5)
+                rec.update(
+                    model=f"returned-model-{i}",
+                    prompt_version=f"returned-prompt-{i}",
+                    latency_ms=i * 11.5,
+                )
                 returned.append(copy.deepcopy(rec))
             return rec
 
@@ -87,7 +91,9 @@ class AiEvalTests(unittest.TestCase):
             with self.subTest(ai_first=ai_first):
                 sc = self.scenario(1)
                 valid = sc.pop("model_output")
-                sc["model_outputs"] = [valid, "invalid JSON"] if ai_first else ["invalid JSON", valid]
+                sc["model_outputs"] = (
+                    [valid, "invalid JSON"] if ai_first else ["invalid JSON", valid]
+                )
                 sc["expect"] = {}
                 returned = []
 
@@ -105,10 +111,22 @@ class AiEvalTests(unittest.TestCase):
                 rows = measures["run_results"]
                 self.assertEqual([r["source"] for r in rows], [r["source"] for r in returned])
                 self.assertEqual([r["model"] for r in rows], [r["model"] for r in returned])
-                self.assertEqual((summary["recommendation_runs"], summary["ai_runs"], summary["template_runs"]), (2, 1, 1))
-                self.assertEqual((summary["priority_scenarios"], summary["ai_scenarios"], summary["template_scenarios"]), (1, 1, 1))
+                self.assertEqual(
+                    (summary["recommendation_runs"], summary["ai_runs"], summary["template_runs"]),
+                    (2, 1, 1),
+                )
+                self.assertEqual(
+                    (
+                        summary["priority_scenarios"],
+                        summary["ai_scenarios"],
+                        summary["template_scenarios"],
+                    ),
+                    (1, 1, 1),
+                )
                 self.assertEqual(summary["models"], ["actual-returned-label"])
-                self.assertEqual(summary["prompt_versions"], ["returned-prompt-1", "returned-prompt-2"])
+                self.assertEqual(
+                    summary["prompt_versions"], ["returned-prompt-1", "returned-prompt-2"]
+                )
                 self.assertEqual(measures["source"], returned[-1]["source"])
                 self.assertEqual(summary["added_value"]["scenarios"], 0 if ai_first else 1)
                 self.assertEqual(sum(summary["reviewer"]["counts"].values()), 1)
@@ -121,8 +139,14 @@ class AiEvalTests(unittest.TestCase):
         self.assertEqual(failures, [])
         self.assertEqual([r["source"] for r in measures["run_results"]], ["template"] * 3)
         self.assertEqual([r["model"] for r in measures["run_results"]], [None] * 3)
-        self.assertEqual((summary["recommendation_runs"], summary["ai_runs"], summary["template_runs"]), (3, 0, 3))
-        self.assertEqual((summary["priority_scenarios"], summary["ai_scenarios"], summary["template_scenarios"]), (1, 0, 1))
+        self.assertEqual(
+            (summary["recommendation_runs"], summary["ai_runs"], summary["template_runs"]),
+            (3, 0, 3),
+        )
+        self.assertEqual(
+            (summary["priority_scenarios"], summary["ai_scenarios"], summary["template_scenarios"]),
+            (1, 0, 1),
+        )
         self.assertEqual(summary["models"], [])
         self.assertEqual(summary["latency_ms"]["runs"], 3)
         self.assertEqual(sum(summary["reviewer"]["counts"].values()), 1)
@@ -161,7 +185,9 @@ class AiEvalTests(unittest.TestCase):
         sc = self.scenario(1)
         valid = sc.pop("model_output")
         sc["model_outputs"] = [
-            json.dumps([dict(case_id="G-3", reason="Unsupported stage", cites=["Stage: Survey booked"])]),
+            json.dumps(
+                [dict(case_id="G-3", reason="Unsupported stage", cites=["Stage: Survey booked"])]
+            ),
             valid,
         ]
         sc["expect"] = {}
@@ -185,6 +211,7 @@ class AiEvalTests(unittest.TestCase):
             top["days_in_stage"] = 1000
             self.version += 1
             return rec
+
         with mock.patch.object(Store, "ai_priority", bad):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])
@@ -199,14 +226,23 @@ class AiEvalTests(unittest.TestCase):
             rec = real(self, user, n)
             self.resolve_priority(user, rec["id"], "accept")
             return rec
+
         with mock.patch.object(Store, "ai_priority", auto):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])
         self.assertIn("Proposed", " ".join(f for r in rep["results"] for f in r["failures"]))
 
     def test_harness_catches_a_model_answer_that_is_not_checked(self):
-        with mock.patch("zava_forward.core.ai.Ai.run", lambda self, task, s, u, t, strong=False, check=None:
-                        dict(text='[{"case_id": "G-999", "reason": "x"}]', source="ai", model="m", validated=True, task=task)):
+        with mock.patch(
+            "zava_forward.core.ai.Ai.run",
+            lambda self, task, s, u, t, strong=False, check=None: dict(
+                text='[{"case_id": "G-999", "reason": "x"}]',
+                source="ai",
+                model="m",
+                validated=True,
+                task=task,
+            ),
+        ):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])
 
@@ -218,13 +254,28 @@ class AiEvalTests(unittest.TestCase):
         self.assertTrue(ev["actual_model_evaluation"].startswith("not evaluated"))
         self.assertTrue(ev["calibration"].startswith("not applicable"))
         self.assertTrue(any("quota" in o for o in ev["open_items"]))
-        self.assertTrue(rep["prompt_version"] and "latency_ms" in rep["summary"] and rep["summary"]["reviewer"])
+        self.assertTrue(
+            rep["prompt_version"] and "latency_ms" in rep["summary"] and rep["summary"]["reviewer"]
+        )
 
     def test_region_confirmation_never_infers_quota_headroom(self):
-        dep = dict(name="d", model="gpt-4.1-nano", version="2025-04-14", sku="Standard", capacity=10,
-                   rate_limits=dict(requests_per_minute=10, tokens_per_minute=10000), state="Succeeded")
-        record = dict(region="uksouth", account="a", retrieved_on="2026-11-19", source="az", deployments=[dep],
-                      quota_headroom=dict(status="unavailable"))
+        dep = dict(
+            name="d",
+            model="gpt-4.1-nano",
+            version="2025-04-14",
+            sku="Standard",
+            capacity=10,
+            rate_limits=dict(requests_per_minute=10, tokens_per_minute=10000),
+            state="Succeeded",
+        )
+        record = dict(
+            region="uksouth",
+            account="a",
+            retrieved_on="2026-11-19",
+            source="az",
+            deployments=[dep],
+            quota_headroom=dict(status="unavailable"),
+        )
         self.assertEqual(ai_eval.region_confirmation(None)["status"], "none")
         part = ai_eval.region_confirmation(record)
         self.assertEqual((part["status"], part["missing"]), ("partial", ["quota headroom"]))
@@ -237,27 +288,36 @@ class AiEvalTests(unittest.TestCase):
 
     def test_serving_region_record_matches_infra_model_pins(self):
         import re
+
         root = Path(__file__).resolve().parents[3]
         record = json.loads((root / "src/agents/evals/serving_region_record.json").read_text())
         recorded = {(d["model"], d["version"]) for d in record["deployments"]}
 
         def pin(path, name_param, version_param):
             text = (root / path).read_text()
-            return tuple(re.search(rf"param {p} string = '([^']+)'", text).group(1) for p in (name_param, version_param))
+            return tuple(
+                re.search(rf"param {p} string = '([^']+)'", text).group(1)
+                for p in (name_param, version_param)
+            )
 
-        for pair in (pin("infra/main.bicep", "chatModelName", "chatModelVersion"),
-                     pin("infra/resident-assistant.bicep", "modelName", "modelVersion")):
+        for pair in (
+            pin("infra/main.bicep", "chatModelName", "chatModelVersion"),
+            pin("infra/resident-assistant.bicep", "modelName", "modelVersion"),
+        ):
             self.assertIn(pair, recorded)
 
     def test_resident_deployment_names_match_serving_record(self):
         import re
+
         root = Path(__file__).resolve().parents[3]
         record = json.loads((root / "src/agents/evals/serving_region_record.json").read_text())
         names = {d["name"] for d in record["deployments"]}
         code = (root / "src/api/src/zava_forward/api/resident_demo/aoai.py").read_text()
         bicep = (root / "infra/resident-assistant.bicep").read_text()
         in_code = re.search(r'^DEPLOYMENT = "([^"]+)"', code, re.M).group(1)
-        in_bicep = re.search(r"resource model '[^']+' = if \(active\) \{\s+parent: account\s+name: '([^']+)'", bicep).group(1)
+        in_bicep = re.search(
+            r"resource model '[^']+' = if \(active\) \{\s+parent: account\s+name: '([^']+)'", bicep
+        ).group(1)
         self.assertEqual(in_code, in_bicep)
         self.assertIn(in_code, names)
 
@@ -269,19 +329,41 @@ class AiEvalTests(unittest.TestCase):
             cases = {record_path: "confirmed", bad: "none", Path(tmp) / "absent.json": "none"}
             for path, status in cases.items():
                 with mock.patch.dict("os.environ", {ai_eval.SERVING_REGION_ENV: str(path)}):
-                    self.assertEqual(ai_eval.run_eval()["evidence"]["serving_region"]["status"], status)
+                    self.assertEqual(
+                        ai_eval.run_eval()["evidence"]["serving_region"]["status"], status
+                    )
         with mock.patch.dict("os.environ", {}, clear=False) as env:
             env.pop(ai_eval.SERVING_REGION_ENV, None)
             self.assertEqual(ai_eval.run_eval()["evidence"]["serving_region"]["status"], "none")
 
     def test_recorded_rate_limits_follow_capacity(self):
-        record = json.loads((Path(__file__).resolve().parents[3] / "src/agents/evals/serving_region_record.json").read_text())
+        record = json.loads(
+            (
+                Path(__file__).resolve().parents[3] / "src/agents/evals/serving_region_record.json"
+            ).read_text()
+        )
         for d in record["deployments"]:
             self.assertEqual(d["rate_limits"]["requests_per_minute"], d["capacity"], d["name"])
             self.assertEqual(d["rate_limits"]["tokens_per_minute"], d["capacity"] * 1000, d["name"])
 
+    def test_quota_rows_agree_with_their_deployment_sku_and_model(self):
+        record = json.loads(
+            (
+                Path(__file__).resolve().parents[3] / "src/agents/evals/serving_region_record.json"
+            ).read_text()
+        )
+        deployments = {d["name"]: d for d in record["deployments"]}
+        for row in record["quota_headroom"]["rows"]:
+            dep = deployments[row["deployment"]]
+            expected = f"OpenAI.{dep['sku']}.{dep['model'].replace('gpt-', 'gpt')}"
+            self.assertEqual(row["name"], expected, row["deployment"])
+
     def test_gate_keeps_region_open_item_until_headroom_is_confirmed(self):
-        record = json.loads((Path(__file__).resolve().parents[3] / "src/agents/evals/serving_region_record.json").read_text())
+        record = json.loads(
+            (
+                Path(__file__).resolve().parents[3] / "src/agents/evals/serving_region_record.json"
+            ).read_text()
+        )
         ev = ai_eval.run_eval(serving_region=record)["evidence"]
         self.assertEqual(ev["serving_region"]["status"], "confirmed")
         self.assertFalse(any("names, versions and quotas" in o for o in ev["open_items"]))
@@ -307,7 +389,10 @@ class AiEvalTests(unittest.TestCase):
         self.assertTrue(co["synthetic_not_fairness_evidence"])
         self.assertIn("OQ-018", co["non_fairness_provenance_notice"])
         self.assertIn("unapproved_thresholds", co["blockers"])
-        self.assertEqual(set(co["dimensions"]), {"sensor_completeness", "support_need", "source_completeness", "appointment_history"})
+        self.assertEqual(
+            set(co["dimensions"]),
+            {"sensor_completeness", "support_need", "source_completeness", "appointment_history"},
+        )
         for labels in co["dimensions"].values():
             self.assertEqual(sum(row["n"] for row in labels.values()), co["total_cases"])
         self.assertTrue(co["ai_task_cohorts"].startswith("not evaluated"))
@@ -330,6 +415,7 @@ class AiEvalTests(unittest.TestCase):
             s = real(results)
             s["critical_misses"] = 1
             return s
+
         with mock.patch.object(ai_eval, "summarise", missed):
             self.assertFalse(ai_eval.run_eval()["passed"])
 
@@ -350,41 +436,72 @@ class TaskCoverageTests(unittest.TestCase):
         for task_id, row in cov["tasks"].items():
             want = ai_eval.EXERCISED if task_id in RETAINED else ai_eval.NOT_EVALUATED
             self.assertEqual(row["status"], want, task_id)
-        for assistant in ("stock-prioritisation", "assessment-preparation", "funding-evidence",
-                          "works-resident-coordination", "quality-evidence"):
+        for assistant in (
+            "stock-prioritisation",
+            "assessment-preparation",
+            "funding-evidence",
+            "works-resident-coordination",
+            "quality-evidence",
+        ):
             self.assertEqual(cov["tasks"][assistant]["status"], ai_eval.NOT_EVALUATED)
         self.assertEqual(cov["namespace_errors"], [])
         self.assertIn("not held-out semantic accuracy", cov["note"])
 
     def test_a_template_fallback_is_not_coverage(self):
         def template(self, name, data, mime, off=False):
-            return dict(text="The file is stored.", source="template", model=None, validated=True, task="read_document")
+            return dict(
+                text="The file is stored.",
+                source="template",
+                model=None,
+                validated=True,
+                task="read_document",
+            )
+
         with mock.patch("zava_forward.core.ai.Ai.look_at", template):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])
-        self.assertEqual(rep["evidence"]["task_coverage"]["tasks"]["read_document"]["status"], ai_eval.FALLBACK_ONLY)
+        self.assertEqual(
+            rep["evidence"]["task_coverage"]["tasks"]["read_document"]["status"],
+            ai_eval.FALLBACK_ONLY,
+        )
 
     def test_a_late_quarantined_result_is_not_coverage(self):
         real = Store.continuity_publish
-        with mock.patch.object(Store, "continuity_publish",
-                               lambda self, task, epoch, source, publish: publish(True) if task == "funding_draft"
-                               else real(self, task, epoch, source, publish)):
+        with mock.patch.object(
+            Store,
+            "continuity_publish",
+            lambda self, task, epoch, source, publish: (
+                publish(True)
+                if task == "funding_draft"
+                else real(self, task, epoch, source, publish)
+            ),
+        ):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])
-        self.assertEqual(rep["evidence"]["task_coverage"]["tasks"]["funding_draft"]["status"], ai_eval.FALLBACK_ONLY)
+        self.assertEqual(
+            rep["evidence"]["task_coverage"]["tasks"]["funding_draft"]["status"],
+            ai_eval.FALLBACK_ONLY,
+        )
 
     def test_a_retained_task_that_is_never_exercised_fails_the_run(self):
         with mock.patch.object(ai_eval, "run_document_checks", lambda workdir, observed=None: []):
             rep = ai_eval.run_eval()
         self.assertFalse(rep["passed"])
-        self.assertEqual(rep["evidence"]["task_coverage"]["tasks"]["read_document"]["status"], ai_eval.NOT_EVALUATED)
+        self.assertEqual(
+            rep["evidence"]["task_coverage"]["tasks"]["read_document"]["status"],
+            ai_eval.NOT_EVALUATED,
+        )
         self.assertIn("read_document", " ".join(rep["evidence"]["task_coverage"]["failures"]))
 
     def test_assistant_or_prefixed_names_seen_by_the_spy_are_namespace_errors(self):
-        seen = [dict(kind="dispatch", task=name, via="run", source="ai", model_called=True)
-                for name in ("stock-prioritisation", "legacy:funding_draft")]
+        seen = [
+            dict(kind="dispatch", task=name, via="run", source="ai", model_called=True)
+            for name in ("stock-prioritisation", "legacy:funding_draft")
+        ]
         cov = ai_eval.task_coverage(seen)
-        self.assertEqual(sorted(cov["namespace_errors"]), ["legacy:funding_draft", "stock-prioritisation"])
+        self.assertEqual(
+            sorted(cov["namespace_errors"]), ["legacy:funding_draft", "stock-prioritisation"]
+        )
         self.assertEqual(cov["tasks"]["stock-prioritisation"]["status"], ai_eval.NOT_EVALUATED)
         self.assertEqual(cov["tasks"]["funding_draft"]["status"], ai_eval.NOT_EVALUATED)
 
@@ -401,14 +518,19 @@ class TaskCoverageTests(unittest.TestCase):
         self.assertTrue(_failures(rep, "document"))
 
 
-AUDIT = Path(__file__).resolve().parents[3] / "docs/reference/research/evaluation/issue-108-closure-audit.md"
+AUDIT = (
+    Path(__file__).resolve().parents[3]
+    / "docs/reference/research/evaluation/issue-108-closure-audit.md"
+)
 
 
 class ClosureAuditDocTests(unittest.TestCase):
     def test_audit_names_every_task_the_harness_does_not_evaluate(self):
         text = AUDIT.read_text()
         cov = ai_eval.run_eval()["evidence"]["task_coverage"]["tasks"]
-        missing = [t for t, row in cov.items() if row["status"] == ai_eval.NOT_EVALUATED and t not in text]
+        missing = [
+            t for t, row in cov.items() if row["status"] == ai_eval.NOT_EVALUATED and t not in text
+        ]
         self.assertEqual(missing, [])
         for phrase in ("eb51af5c9ab0b1353ac380fc8960ee8dd96d17c4", "not on main", "Refs #108"):
             self.assertIn(phrase, text)

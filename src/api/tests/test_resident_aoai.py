@@ -432,6 +432,30 @@ class AzureAdvisorTests(unittest.TestCase):
                     self.token.assert_not_called()
                     self.transport.assert_not_called()
 
+    def test_question_input_allowlist_refuses_before_any_provider_step(self) -> None:
+        base = chat.answer("repair", {})
+        cases = (
+            (None, resident_key("C-1")),
+            (b"A smell", resident_key("C-1")),
+            ("", resident_key("C-1")),
+            ("   ", resident_key("C-1")),
+            ("A smell", "C-1"),
+        )
+        for question, resident in cases:
+            with self.subTest(question=question, resident=resident):
+                self.setUp()
+                result = self.advisor.answer_question(
+                    question,  # type: ignore[arg-type]
+                    CASE,
+                    resident,
+                    base,
+                )
+                self.assertIn("Summary by rules", result.label)
+                self.assertEqual(result.answer, base.answer)
+                self.accounting.reserve.assert_not_called()
+                self.token.assert_not_called()
+                self.transport.assert_not_called()
+
     def test_question_expiry_after_response_rejects_generated_text(self) -> None:
         self.advisor.clock = Mock(side_effect=[EXPIRES - 1, EXPIRES - 1, EXPIRES])
         self.transport.side_effect = None

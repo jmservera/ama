@@ -414,6 +414,66 @@ class HumanReviewEffectiveness223Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             score_human_session(bool_timing)
 
+    def test_reviewer_identity_must_be_a_concrete_human(self) -> None:
+        for bad in ("TBD", "unassigned", "Workflow Agent", "model reviewer", "", None, 42):
+            self.assertFalse(is_valid_human_identity(bad), bad)
+        self.assertTrue(is_valid_human_identity("Priya Nair"))
+        self.assertTrue(is_valid_human_identity("priya.nair@example.test"))
+
+    def test_memory_citations_are_detected_but_plain_reasons_are_not(self) -> None:
+        for text in (
+            "As the assistant said earlier",
+            "taken from memory",
+            "Per the previous prompt",
+        ):
+            self.assertTrue(cites_memory(text), text)
+        self.assertFalse(cites_memory("Checked the survey record and the EPC certificate."))
+        self.assertFalse(cites_memory(None))
+
+    def test_human_session_scoring_refuses_malformed_submissions(self) -> None:
+        def good() -> dict[str, Any]:
+            return {
+                "reviewer": {
+                    "name": "Priya Nair",
+                    "email": "priya.nair@example.test",
+                    "role": "Resident Liaison Officer",
+                },
+                "items": [
+                    {
+                        "scenario_id": s.scenario_id,
+                        "response": {
+                            "disposition": s.competent_action,
+                            "edited_text": s.competent_text,
+                            "reason": s.competent_reason,
+                            "review_seconds": s.competent_review_seconds,
+                        },
+                    }
+                    for s in DEFAULT_SCENARIOS
+                ],
+            }
+
+        score_human_session(good())
+
+        def broken(mutate: Any) -> dict[str, Any]:
+            sub = good()
+            mutate(sub)
+            return sub
+
+        cases = {
+            "no reviewer": lambda s: s.pop("reviewer"),
+            "agent name": lambda s: s["reviewer"].update(name="Workflow Agent"),
+            "no at sign": lambda s: s["reviewer"].update(email="priya.nair"),
+            "no role": lambda s: s["reviewer"].update(role=" "),
+            "items string": lambda s: s.update(items="all"),
+            "omitted scenario": lambda s: s["items"].pop(),
+            "duplicate scenario": lambda s: s["items"].append(copy.deepcopy(s["items"][0])),
+            "unknown scenario": lambda s: s["items"][0].update(scenario_id="not-a-scenario"),
+            "bad disposition": lambda s: s["items"][0]["response"].update(disposition="approve"),
+        }
+        for label, mutate in cases.items():
+            with self.subTest(label), self.assertRaises(ValueError):
+                score_human_session(broken(mutate))
+
 
 if __name__ == "__main__":
     unittest.main()
