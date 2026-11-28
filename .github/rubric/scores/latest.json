@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-28T08:00:27+00:00",
-  "commit": "fd8962f6b9ccc275c066ea38f18c04eb46a4277d",
+  "scored_at": "2026-11-28T08:09:09+00:00",
+  "commit": "8312a69a79bd552de34a4c064618f778a57e5e35",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/46123292184",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/46124063327",
   "fingerprints": {
     "brd": "3f80d31c53d26b6d20a04e976e63c14fd6e36a89548132cd6349e4641fbb87d5",
     "prd": "9c48d869bb068b67d28a97382f626f3418c1e6a3e6bd132c9813bdd7e1fbe68d",
     "adr": "b57f49945945ec4ca2cbe1be00a5aa090b0d70bdfe09dfa1c601f27da28e3f48",
-    "solution-code": "5b0b6ead2bfada230ab6d25695f8c6012bb5d0e6a220238aed5ab89f766b8328",
+    "solution-code": "2033d1476c2d127bf2aabbb7f120c6c0f54d3f198c89d85ae346134af74b39d7",
     "infrastructure": "71a028040119015d7af269c20e82dcef7a31e4826060d090cfa314ba21cd7c03",
     "capstone-deck": "3fcb0be04913519de21b81e379c71336ada2af2efb24af7be5be2eaccc92095d",
     "pitch": "9b4fdfbe17acc6561fc2b364f8249ed8f6b4e384d6056f77dcc3b54a5a9cf8b5",
@@ -110,7 +110,10 @@
     },
     "B6": {
       "score": 4,
-      "evidence": [],
+      "evidence": [
+        "src/agents/tests/test_region_confirmation_branches.py",
+        "src/core/tests/test_review_flag_status_1288.py"
+      ],
       "rationale": "This diff touches test files only, not documentation; baseline documentation gap (undocumented nomination routes) unchanged. Retained at Good (4)."
     },
     "B7": {
