@@ -659,6 +659,24 @@ class ConsumptionTests(unittest.TestCase):
                 budgets=[dict(id=reference("partial"), calls=5, tokens=100000, amount="100")],
             )
 
+    def test_variance_equal_to_owner_tolerance_reconciles(self) -> None:
+        self.accepted()
+        self.bill(billed="0.000150", tolerance="0.1")
+        result = self.report()
+        self.assertEqual(result["reconciliation"], "reconciled")
+        self.assertEqual(result["token_cost"], "0.000150")
+
+    def test_variance_above_owner_tolerance_alerts(self) -> None:
+        self.accepted()
+        self.bill(billed="0.000150", tolerance="0.09")
+        self.assertEqual(self.report()["reconciliation"], "variance-alert")
+
+    def test_billing_tolerance_above_one_is_rejected(self) -> None:
+        self.accepted()
+        with self.assertRaisesRegex(ValueError, "owner tolerance"):
+            self.bill(tolerance="1.01")
+        self.assertEqual(self.report()["token_cost"], "Unknown")
+
     def test_duplicate_overlap_partial_currency_billing_fail_closed(self) -> None:
         self.accepted()
         self.bill(complete=False, currency="GBP")
