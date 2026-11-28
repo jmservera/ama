@@ -1,14 +1,18 @@
 from dataset import change_metadata
+import base64
 import copy
 import json
 import os
 import tempfile
 import unittest
+import urllib.error
 import urllib.parse
+import urllib.request
 from datetime import date, timedelta
 from pathlib import Path
 
 import test_mvp
+import test_ui_support as ui_support
 from zava_forward.core import (
     ai_tasks,
     assistants,
@@ -740,6 +744,69 @@ class RetentionTests(Base):
 
 class SqlRetentionTests(RetentionTests):
     sql = True
+
+
+class HttpScanGate(ui_support.Base):
+    """The scan gate as seen through the HTTP routes, with a Defender-style blob store."""
+
+    def setUp(self):
+        self.blob = DefenderBlob()
+        self.saved = (self.store.docstore, self.store.scanner)
+        self.store.docstore = AzureBlobDocumentStore(
+            "https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=self.blob
+        )
+        self.store.scanner = DefenderForStorageScanner(self.store.docstore)
+        self.addCleanup(lambda: setattr(self.store, "docstore", self.saved[0]))
+        self.addCleanup(lambda: setattr(self.store, "scanner", self.saved[1]))
+
+    def upload(self, ck, name, data):
+        raw = base64.b64encode(data).decode()
+        return self.call(ck, "/api/cases/ZF-3/upload", {"name": name, "kind": "EPC", "data": raw})
+
+    def download(self, ck, doc_id):
+        req = urllib.request.Request(self.base + f"/api/docs/ZF-3/{doc_id}", headers={"Cookie": ck})
+        try:
+            with urllib.request.urlopen(req) as response:
+                return response.status
+        except urllib.error.HTTPError as error:
+            return error.code
+
+    def test_pending_upload_is_unavailable_until_the_scanner_reports_clean(self):
+        sam = self.login("sam@example.test")
+        status, body, _ = self.upload(sam, "epc.pdf", b"%PDF-1")
+        self.assertEqual(status, 200)
+        doc = body["documents"][-1]
+        self.assertEqual(doc["scan"]["status"], "pending")
+        self.assertEqual(self.download(sam, doc["id"]), 403)
+        self.assertEqual(self.download(sam, doc["id"]), 403)
+
+        self.blob.result = "No threats found"
+        status, scan, _ = self.call(sam, "/api/cases/ZF-3/rescan-doc", {"id": doc["id"]})
+        self.assertEqual((status, scan["status"]), (200, "clean"))
+        self.assertEqual(self.download(sam, doc["id"]), 200)
+
+    def test_malicious_tag_removes_the_upload_and_the_blob(self):
+        sam = self.login("sam@example.test")
+        before = len(self.store._case("ZF-3")["documents"])
+        doc = self.upload(sam, "epc.pdf", b"%PDF-1")[1]["documents"][-1]
+        self.blob.result = "Malicious"
+        self.assertEqual(self.call(sam, "/api/cases/ZF-3/rescan-doc", {"id": doc["id"]})[0], 400)
+        self.assertEqual(self.download(sam, doc["id"]), 404)
+        self.assertNotIn(doc["id"], "".join(self.blob.blobs))
+        after = len(self.store._case("ZF-3")["documents"])
+        self.assertEqual(after, before)
+
+
+class HttpLocalScanGate(ui_support.Base):
+    def test_eicar_upload_is_refused_and_leaves_no_document(self):
+        sam = self.login("sam@example.test")
+        raw = base64.b64encode(b"%PDF-1.4 " + EICAR_SIGNATURE).decode()
+        status, body, _ = self.call(
+            sam, "/api/cases/ZF-3/upload", {"name": "epc.pdf", "kind": "EPC", "data": raw}
+        )
+        self.assertEqual(status, 400)
+        self.assertIn("failed the malware scan", body["error"])
+        self.assertNotIn("epc.pdf", [d["name"] for d in self.store._case("ZF-3")["documents"]])
 
 
 if __name__ == "__main__":
