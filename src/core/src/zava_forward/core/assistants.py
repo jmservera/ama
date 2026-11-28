@@ -2516,8 +2516,10 @@ class Assistants:
                     if field == "case_ids":
                         where += " AND case_id IN (" + ",".join("?" for _ in values) + ")"
                     else:
+                        # assistant_tasks.case_id has the database collation; cases.id is binary.
+                        collate = " COLLATE Latin1_General_100_BIN2" if self.mssql else ""
                         where += (
-                            " AND case_id IN (SELECT id FROM cases WHERE area IN ("
+                            f" AND case_id{collate} IN (SELECT id FROM cases WHERE area IN ("
                             + ",".join("?" for _ in values)
                             + "))"
                         )
