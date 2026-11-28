@@ -266,6 +266,38 @@ class ErrorLoggingTests(Base):
             self.assertEqual(len(calls), 2)
             self.assertEqual(len(listing()), before + 1)
 
+    def test_busy_first_chat_thread_create_then_retry_creates_exactly_one_thread(self) -> None:
+        busy, real = self.busy_error(), self.store.chat_create_thread
+        calls: list[int] = []
+
+        def create_busy_once(*args: Any, **kwargs: Any) -> Any:
+            calls.append(1)
+            if len(calls) == 1:
+                raise busy
+            return real(*args, **kwargs)
+
+        def listing() -> list[Any]:
+            req = urllib.request.Request(
+                self.base + "/api/chat/threads",
+                headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=OID_SAM)},  # type: ignore[no-untyped-call]
+            )
+            with urllib.request.urlopen(req, timeout=20) as r:
+                found: list[Any] = json.loads(r.read())
+                return found
+
+        with patch.dict(os.environ, CHAT_APPROVED):
+            before = len(listing())
+            with patch.object(self.store, "chat_create_thread", create_busy_once):
+                with self.assertLogs("zava_forward.api.server", "WARNING"):
+                    first = self.post("/api/chat/threads", {})
+                self.assertEqual((first[0], first[2]), (503, "5"))
+                self.assertEqual(len(listing()), before)
+                code, body, retry = self.post("/api/chat/threads", {})
+            self.assertEqual((code, retry), (200, None))
+            self.assertTrue(json.loads(body)["id"])
+            self.assertEqual(len(calls), 2)
+            self.assertEqual(len(listing()), before + 1)
+
     def test_busy_sql_write_lock_on_other_post_still_answers_500(self) -> None:
         # The container installs the process-wide log redaction at start; install it here so the
         # result does not depend on which earlier test module did.
