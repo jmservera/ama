@@ -558,6 +558,7 @@ class TasksMixin:
                 timed=2,
                 total_seconds=120.0,
                 mean_seconds=60.0,
+                effort_delta_seconds=None,
                 by_source={"ai": dict(timed=2, total_seconds=120.0, mean_seconds=60.0)},
             ),
         )
@@ -565,6 +566,9 @@ class TasksMixin:
         split = self.store.ai_live_report()["review_effort"]["summary"]["by_source"]
         self.assertEqual(split["workflow"], dict(timed=1, total_seconds=30.0, mean_seconds=30.0))
         self.assertEqual(split["ai"], dict(timed=1, total_seconds=90.0, mean_seconds=90.0))
+        self.assertEqual(
+            self.store.ai_live_report()["review_effort"]["summary"]["effort_delta_seconds"], 60.0
+        )
         for rid in ids:
             recs[rid].pop("review_evidence")
         self.assertEqual(self.store.ai_live_report()["review_effort"], {})
