@@ -99,6 +99,45 @@ class TickLogTests(unittest.TestCase):
         moves = [{"task": 7, "to": "ready", "scope": "send"}]
         self.assertEqual(rules([tick(1, approvals_granted=granted, reclassified=moves)]), [])
 
+    def test_duplicate_tick_number_is_flagged_once(self) -> None:
+        self.assertEqual(rules([tick(1), tick(1), tick(2)]), ["duplicate-tick"])
+
+    def test_same_tick_expiry_and_grant_conflict(self) -> None:
+        both = [{"scope": "a", "tasks": [5]}]
+        moves = [
+            {"task": 5, "to": "human-blocked", "scope": "a"},
+            {"task": 5, "to": "ready", "scope": "a"},
+        ]
+        found = rules([tick(1, approvals_expired=both, approvals_granted=both, reclassified=moves)])
+        self.assertEqual(sorted(set(found)), ["approval-conflict"])
+
+    def test_ready_after_expiry_without_grant_conflicts(self) -> None:
+        expired = [{"scope": "a", "tasks": [5]}]
+        moves = [
+            {"task": 5, "to": "human-blocked", "scope": "a"},
+            {"task": 5, "to": "ready", "scope": "a"},
+        ]
+        self.assertEqual(
+            rules([tick(1, approvals_expired=expired, reclassified=moves)]), ["approval-conflict"]
+        )
+
+    def test_expiry_then_later_grant_across_ticks_is_clean(self) -> None:
+        expired = [{"scope": "a", "tasks": [5]}]
+        granted = [{"scope": "b", "tasks": [5]}]
+        rows = [
+            tick(
+                1,
+                approvals_expired=expired,
+                reclassified=[{"task": 5, "to": "human-blocked", "scope": "a"}],
+            ),
+            tick(
+                2,
+                approvals_granted=granted,
+                reclassified=[{"task": 5, "to": "ready", "scope": "b"}],
+            ),
+        ]
+        self.assertEqual(rules(rows), [])
+
     def test_global_stop_with_remaining_work_is_flagged(self) -> None:
         self.assertEqual(rules([tick(1, global_stop=True)]), ["global-stop"])
 
