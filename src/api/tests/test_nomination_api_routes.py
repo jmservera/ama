@@ -1022,10 +1022,10 @@ class NominationApiRoutesTests(unittest.TestCase):
                 page.route("**/resident", lambda route: route.abort())
                 button.click()
                 page.wait_for_function(
-                    "id => document.getElementById(id).textContent.includes('Nothing was')",
+                    "id => document.getElementById(id).textContent.includes('result is unknown')",
                     arg=f"nomination-ack-{nom_id}-feedback",
                 )
-                self.assertTrue(button.is_enabled())
+                self.assertTrue(button.is_disabled())
             finally:
                 browser.close()
 
@@ -1078,6 +1078,79 @@ class NominationApiRoutesTests(unittest.TestCase):
         self.assertIn("javascript", ctype)
         self.assertIn('"Content-Type": "application/json"', script)
         self.assertIn('"X-ZF-CSRF": "1"', script)
+
+    def test_route_form_script_serialises_writes_across_forms(self) -> None:
+        harness = r"""
+const fs = require("fs");
+const code = fs.readFileSync(process.argv[2], "utf8");
+async function scenario(outcomes) {
+  class HTMLFormElement {
+    constructor(id) { this.id = id; this.button = { disabled: false }; }
+    getAttribute(n) { return n === "id" ? this.id : "/api/cases/ZF-1/resident"; }
+    querySelector(sel) { return sel.startsWith("button") ? this.button : null; }
+  }
+  const forms = [
+    new HTMLFormElement("nomination-ack-1"),
+    new HTMLFormElement("nomination-correct-1"),
+  ];
+  let handler = null, calls = 0, reloads = 0;
+  global.HTMLFormElement = HTMLFormElement;
+  global.FormData = class { entries() { return [["action", "x"]][Symbol.iterator](); } };
+  global.window = { location: { reload() { reloads += 1; } } };
+  global.document = {
+    addEventListener(_, h) { handler = h; },
+    getElementById() { return null; },
+    querySelectorAll() { return forms; },
+  };
+  global.fetch = () => { calls += 1; return outcomes.shift()(); };
+  new Function(code)();
+  const first = handler({ target: forms[0], preventDefault() {} });
+  const during = handler({ target: forms[1], preventDefault() {} });
+  await first; await during;
+  const afterFirst = calls;
+  await handler({ target: forms[1], preventDefault() {} });
+  return { afterFirst, total: calls, reloads, disabled: forms.map((f) => f.button.disabled) };
+}
+const json = (ok, status) => () => Promise.resolve({
+  ok, status, json: () => Promise.resolve(ok ? {} : { error: "no" }),
+});
+(async () => {
+  const out = {};
+  out.uncertain = await scenario([() => Promise.reject(new Error("net")), json(true, 200)]);
+  out.recorded = await scenario([json(true, 200), json(true, 200)]);
+  out.refused = await scenario([json(false, 400), json(false, 400)]);
+  console.log(JSON.stringify(out));
+})();
+"""
+        import shutil
+        import subprocess
+
+        node = shutil.which("node")
+        if node is None:
+            self.skipTest("node is required for the form script test")
+        script = (
+            Path(__file__).resolve().parents[1] / "src/zava_forward/api/web/nomination-routes.js"
+        )
+        with tempfile.TemporaryDirectory() as tmp:
+            runner = Path(tmp) / "run.js"
+            runner.write_text(harness, encoding="utf-8")
+            done = subprocess.run(
+                [node, str(runner), str(script)],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=True,
+            )
+        out = json.loads(done.stdout)
+        self.assertEqual(
+            out["uncertain"], {"afterFirst": 1, "total": 1, "reloads": 0, "disabled": [True, True]}
+        )
+        self.assertEqual(
+            out["recorded"], {"afterFirst": 1, "total": 1, "reloads": 1, "disabled": [True, True]}
+        )
+        self.assertEqual(
+            out["refused"], {"afterFirst": 1, "total": 2, "reloads": 0, "disabled": [False, False]}
+        )
 
 
 if __name__ == "__main__":
