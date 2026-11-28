@@ -2,7 +2,7 @@
 
 An image tagged `<repo>:demo-<sha>` is accepted only when `<sha>` exists, is an
 ancestor of `--ref`, contains the Dockerfile named by `--dockerfile` and has no
-retired `mvp/` or `prototype/` tree. The tag is the publisher's assertion, not a
+retired `mvp/` or `prototype/` tree (archive tag v0.21.0). The tag is the publisher's assertion, not a
 build attestation. Digest-pinned references carry no commit and are reported as
 unverifiable.
 
